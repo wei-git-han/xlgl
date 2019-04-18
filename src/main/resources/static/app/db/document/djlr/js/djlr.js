@@ -98,13 +98,6 @@ var pageModule = function(){
 			$("#searchwrap").toggle();
 		});
 		
-		/*$("body").click(function(e){
-			if($(e.target).hasClass("searchAll") || $(e.target).hasClass("form-group") || $(e.target).parents("div").hasClass("searchwrap")){
-				return;
-			};
-			$(".searchwrap").slideUp(50);
-		});*/
-		
 		//筛选功能
 		$("#sure").click(function(){
 			 $("#searchwrap").slideUp(50);
@@ -144,10 +137,11 @@ var pageModule = function(){
 			}
 		});
 		
-		$("#classType li").click(function(){
-			$(this).siblings().removeClass("active");
-			$(this).addClass("active");
+		//新增
+		$("#add").click(function(){
+			window.location.href="/app/db/document/djlr/html/add.html";
 		});
+		
 	}
 	
 	var inittree = function(){
