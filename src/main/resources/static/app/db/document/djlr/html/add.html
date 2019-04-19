@@ -62,28 +62,18 @@ License: You must have a valid license purchased only from themeforest(the above
 							<div class="newtitlecont">
 								<font>扫描件显示区</font>
 							</div>
-							<!-- <div class="newbuttoncont">
-								<button onclick="tryScan()" class="btn btn-primary"><i class="fa fa-barcode"></i> 扫描录入</button>
-							</div>
-							<div class="newbuttoncont">
-				        		<button id="scanKeepTransfer" class="btn btn-primary"><i class="fa fa-barcode  uploadPdf"></i> 扫描续传</button>
-							</div>
-							<div class="newbuttoncont">
-								<button type="button" class="btn btn-primary" id="smsz"> 扫描设置 </button>
-							</div>
 							<div class="newbuttoncont">
 				        		<form class="form-horizontal" id="form3" target="iframe7" role="form" method="post" enctype="multipart/form-data" action="/filefj/savePDF">
 									<input type="hidden"  id="idpdf" name="idpdf"/>
 									<div class="fileinput fileinput-new" data-provides="fileinput">
 										<span class="fileinput-filename" style="padding-right:10px;line-height:30px;display:none"></span>
 			                            <span>
-			                             	<button type="button" id="uploadFile" class="btn btn-primary"><i class="fa fa-upload  uploadPdf"></i> 上传文件</button>
 			                            	<input type="file" name="pdf" id="pdf" accept=".pdf,.ofd" style="display:none" />
 			                            </span>
 			                        </div> 
 		                        </form>
 		                        <iframe name="iframe7" style="display: none;"></iframe>
-							</div> -->
+							</div> 
 						</div>
 						
 						<div class="newlayout3_cont">
@@ -278,23 +268,63 @@ License: You must have a valid license purchased only from themeforest(the above
 													</table>
 										        </div>
 										        <div class="tab-pane wg100" id="tab_15_2">
-										            <div class="wg100 scroller" style="padding:0px 20px;">
+										            <div class="wg100 scroller">
 											           	<div class="xgfileWrap">
+											           		<div class="btn-group">
+															    <div class="btn-group">
+															        <button type="button" class="btn dropdown-toggle tableBtns" data-toggle="dropdown">
+															        	新增附件<i class="fa fa-angle-down"></i>
+															        </button>
+															        <ul class="dropdown-menu">
+															            <li>
+															                <a href="javascript:;" id="addFj">上传文件</a>
+															            </li>
+															            <li>
+															                <a href="javascript:;" id="addScan" onclick="tryScan()">扫描录入</a>
+															            </li>
+															            <li>
+															                <a href="javascript:;" id="scanKeepTransfer">扫描续传</a>
+															            </li>
+															        </ul>
+															    </div>
+															</div>
 											           		<button type="button" class="btn tableBtns" id="scanSet">扫描设置</button>
 															<button type="button" class="btn tableBtns" id="reName">重命名</button>
-															<button type="button" class="btn tableBtns"  id="delFile">删除</button>
+															<button type="button" class="btn tableBtns"  id="delfj">删除</button>
 											           	</div>
-											           	<ul class="file_all" id="file_all">
-									            			<li><input type="checkbox" /> <a>附件</a></li>
-									            			<li><input type="checkbox" /> <a>十九大学习报告.wps</a></li>
-									            			<li><input type="checkbox" /> <a>十九大学习报告.wps</a></li>
-									            			<li><input type="checkbox" /> <a>十九大学习报告.wps</a></li>
-									            			<li><input type="checkbox" /> <a>十九大学习报告.wps</a></li>
-											           	</ul>
+											           	<div>
+											           		<!-- <div class="record_title">
+											           			<label class="pull-left">附件</label>
+											           			​<div class="btn-group pull-right">
+																    <div class="btn-group">
+																        <button type="button" class="btn addfjbtns dropdown-toggle" data-toggle="dropdown">
+																        	<i class="fa fa-plus"></i> 
+																        </button>
+																        <ul class="dropdown-menu">
+																            <li>
+																                <a href="javascript:;" id="addFj">上传文件</a>
+																            </li>
+																            <li>
+																                <a href="javascript:;" id="addScan">扫描录入</a>
+																            </li>
+																            <li>
+																                <a href="javascript:;" id="addScan2">扫描续传</a>
+																            </li>
+																        </ul>
+																    </div>
+																</div>
+											           		</div> -->
+									            			<div class="clearfix"></div>
+									            			<ul  class="file_all" id="file_all">
+										            			<li><input type="checkbox" name="fjcheckbox" data="1"/> <a>十九大学习报告.wps</a></li>
+										            			<li><input type="checkbox" name="fjcheckbox" data="2"/> <a>十九大学习报告.wps</a></li>
+										            			<li><input type="checkbox" name="fjcheckbox" data="3"/> <a>十九大学习报告.wps</a></li>
+									            			</ul>
+											           	</div>
 											        </div>
 										        </div>
 										        <div class="tab-pane wg100" id="tab_15_3">
-										           <div class="wg100 scroller" style="padding:0px 20px;">
+										           <div class="wg100 scroller">
 										           		<div class="record_title"><label class="pull-left">转办记录</label><button type="button" class="btn pull-right tableBtns" id="editzbUser">修改转办对象</button></div>
 											           	<div class="zbrecord" id="zbrecord">
 												            <div class="record">
@@ -335,56 +365,7 @@ License: You must have a valid license purchased only from themeforest(the above
 			<button type="button" class="btn tableBtns"  id="return">取消并退出</button>
 			<button type="button" class="btn tableBtns"  id="zhuanban">转办</button>
 		</div>
-		<!-- 扫描设置开始 -->
-	<!-- 	<div style="width:750px;padding:10px;border:1px solid #ccc;background-color:#FAFAFA;position:absolute;left:20px;top:100px;display:none;" class="smczcont">
-			<div class="form-horizontal" role="form">
-			    <div class="form-body">
-			        <div class="form-group" style="margin:0;padding:0;margin-bottom:10px;">
-			            <label class="col-xs-1 control-label control-label2" style="width:70px;">扫描方式</label>
-			            <div class="col-xs-1" style="width:150px;">
-			                <select class="form-control" style="width:115px" name="sel_source" id="sel_source" onchange="ChangeSource(this.value)"></select>
-			                纸张大小，设定为隐藏域
-							<select class="form-control" name="sel_paper-size" id="sel_paper-size" style="display:none"></select>
-							扫描模式，设定为隐藏域
-							<select class="form-control" name="sel_mode" id="sel_mode" style="display:none"></select>
-			            </div>
-			            
-			            <label class="col-xs-1 control-label control-label2" style="width:50px;">分辨率</label>
-			            <div class="col-xs-1" style="width:150px;">
-			                <select class="form-control" style="width:80px" name="sel_resolution" id="sel_resolution"></select>
-			            </div>
-			            
-			            <label class="col-xs-1 control-label control-label2" style="width:40px;">亮度</label>
-			            <div class="col-xs-1" style="width:100px;">
-			                <input type="text" min="-100" max="100" value="-5"  id="range_brightness"  class="form-control"  />
-			            </div>
-			            
-			            <label class="col-xs-1 control-label control-label2" style="width:50px;">对比度</label>
-			            <div class="col-xs-1" style="width:100px;">
-			                <input type="text" min="-100" max="100" value="50" id="range_contrast"  class="form-control" />
-			            </div>
-			         </div>
-		         	<div class="form-group" style="margin:0;padding:0;">
-			            <label class="col-xs-1 control-label control-label2" style="width:70px;">画质</label>
-			            <div class="col-xs-1" style="width:100px;">
-			                <input type="text" min="1" max="100" value="75"  id="range_quality"  class="form-control"  />
-			            </div>
-			            
-			            <label class="col-xs-1 control-label control-label2" style="width:40px;">补边</label>
-			            <div class="col-xs-1" style="width:100px;">
-			                <input type="text" min="0" max="255" value="0"  id="range_borderfill"  class="form-control"  />
-			            </div>
-			            
-			            <div class="col-xs-1" style="width:250px;">
-			                <div class="checkbox-list">
-			                    <label class="checkbox-inline"><input type="checkbox" name="chk_swcrop" checked="checked"  id="chk_swcrop" value="ckn"/>自动裁切</label>
-				        		<label class="checkbox-inline"><input type="checkbox" name="chk_swdeskew" checked="checked" id="chk_swdeskew" value="ckn"/>自动框正</label>
-			                </div>
-			            </div>
-			        </div>
-			    </div>
-			</div>
-		</div>
+		<!-- 
 		扫描续传功能上传页面开始
 		<div class="modal fade bs-modal-lg" id="showScanUpload" tabindex="-1" role="dialog" aria-hidden="true" >
 		    <div class="modal-dialog modal-lg" style="width:800px;">
@@ -457,6 +438,14 @@ License: You must have a valid license purchased only from themeforest(the above
 jQuery(document).ready(function() {
 	pageModule.initControl();
 });
+
+function tryScan(){
+	 if($("#returnFileId").val() == "" || $("#returnFileId").val() == null || typeof($("#returnFileId").val()) == undefined){
+		newbootbox.alertInfo("请先保存要素信息再开始扫描！"); 
+		return  false;
+	} 
+	Scan();
+}
 </script>
 <!-- END JAVASCRIPTS -->
 </body>

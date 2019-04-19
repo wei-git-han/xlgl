@@ -200,6 +200,7 @@ html, body {
 }
 .tabbable-line > .tab-content{
 	background:transparent;
+	padding-top:10px;
 }
 .tabbable-line > .nav-tabs > li.open,.tabbable-line > .nav-tabs > li:hover {
   border-bottom: 4px solid #95BEF2;
@@ -294,12 +295,14 @@ html, body {
 	width:100%;
 	height:42px;
 	text-align:right;
-	border-bottom:1px solid #D7D7D7;
 }
 .file_all{
 	list-style:none;
 }
 
+.file_all input{
+	vertical-align: top;
+}
 .file_all li>a{
 	color:#333;
 	font-size:16px;
@@ -307,4 +310,14 @@ html, body {
 .file_all li{
 	line-height:50px;
 	border-bottom:1px dashed #BCBCBC;
+}
+.addfjbtns{
+	background: #6699FF;
+	color: #fff;
+	padding: 1px 4px;
+	border-radius: 50% !important;
+	margin-top: 5px;
+}
+.addfj:hover,.addfj:actived,.addfj:link,.addfj:visited{
+	color:#fff;
 }

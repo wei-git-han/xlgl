@@ -1,7 +1,6 @@
-//var usertree = {"url":"/app/base/user/allTree","dataType":"text"}; /*查阅人树*/
+var ifsuccess = {"url":"/app/db/document/djlr/data/success.json","dataType":"text"}; /*查阅人树*/
 var usertree = {"url":"/app/base/user/treeByPost","dataType":"text"}; /*查阅人树*/
 var dicturl = {"url":rootPath +"/dic/all","dataType":"text"}; /*返回的下拉框字典值*/
-//var dicturl1 = {"url":rootPath +"/dic/getDicts?type=file_type","dataType":"text"}; /*返回的下拉框字典值*/
 var speedUrl = {"url":rootPath +"/dic/getDicts?type=emergency_gegree","dataType":"text"}; /*紧急程度*/
 var updateurl={"url":rootPath +"/fileinfo/update","dataType":"json"}; /*返回的数据*/
 var loginUser =  {"url":rootPath +"/fileinfo/loginUser","dataType":"text"};//获取当前登录人---录入人
@@ -92,9 +91,6 @@ var pageModule = function(){
 			}
 		});
 	}
-	
-	
-	
 	var getdatefn = function(date){
 		if(date!=""&&date!=null&&typeof(date)!=undefined){
 			return date.substr(0,10);
@@ -103,11 +99,6 @@ var pageModule = function(){
 	}
 
 	var initother = function(){
-		//扫描设置
-		$("#smsz").click(function(){
-			$(".smczcont").toggle();
-		});
-		
 		$(".date-picker").datepicker({
 		    language:"zh-CN",
 		    rtl: Metronic.isRTL(),
@@ -146,14 +137,6 @@ var pageModule = function(){
 							window.top.$(".newclose").click();
 								setTimeout(function(){
 									newbootbox.alert("保存成功！").done(function(){
-										window.top.wjgl_jy = {};//不知道这是干啥的？？？？？
-										if(addFlag){
-											window.location.href="/app/dzbms/document/wjgl/html/wjgl_buru_add.html"
-										}else if(returnSave){
-											window.location.href = "/app/dzbms/document/wjgl/html/wjgllb.html";
-										}
-										/*window.top.wjgl_jy = {};
-										window.location.href="/app/dzbms/document/wjgl/html/wjgl_buru.html?id="+data.id*/
 									});
 								},200);
 						}else{
@@ -241,12 +224,19 @@ var pageModule = function(){
 		
 		//增加批示
 		$("#addcq").click(function(){
+			if($.trim($("#cqcontent").val()) == "" || $.trim($("#cqcontent").val()) == null){
+				newbootbox.alert('请输入抄清内容！');
+				return;
+			}
 			$("#showcq").prepend(
 				'<div class="cqline">'+
 				'	<div><span>'+psszName+'</span><span>'+$("#cqDate").val()+'</span></div>'+
 				'	<div>'+$("#cqcontent").val()+'</div>'+
 				'</div>'
 			);
+			$("#cqDate").val("");
+			$("#cqcontent").val("");
+			psszName="";
 		});
 		
 		//转办
@@ -272,11 +262,33 @@ var pageModule = function(){
 				url:"/app/db/document/blfk/html/zhuanbanDialog.html?fileId=",//fileId呢？？？？？
 			})
 		});
+		
+		//删除附件
+		$("#delfj").click(function(){
+			if($("#file_all").find("input[name=fjcheckbox]:checked").length>0){
+				var checkId = [];
+				$("#file_all").find("input[name=fjcheckbox]").each(function(){
+					if($(this).is(":checked")){
+						checkId.push($(this).attr("data"));
+					}
+				})
+				$ajax({
+					url:ifsuccess,
+					data:{id:checkId.toString()},
+					success:function(data){
+						if(data.result == "success" && data.url != ""){
+							newbootbox.alert("删除成功！"); 
+						}
+					}
+				})
+			}else{
+				newbootbox.alert("请选中要删除的附件！"); 
+			}
+		});
 	}
 	
 	var initPdf = function(){
 		$("#uploadPdf").click(function(){
-			/*$("#showupload").modal("show");*/
 			$("#FireFoxOFDDIV").hide();
 		})
 		
@@ -336,7 +348,7 @@ var pageModule = function(){
 		   }
 		});
 		
-		$("#uploadFile").click(function(){
+		$("#addFj").click(function(){
 			$("#pdf").unbind("click");
 			$("#pdf").unbind("change");
 			$("#pdf").click();
