@@ -19,8 +19,8 @@ public class DocumentFile implements Serializable {
 	private String id;
 	//主文件id
 	private String docInfoId;
-	//文件类型
-	private String fileType;
+	//文件标题
+	private String fileName;
 	//排序
 	private Integer sort;
 	//创建时间
@@ -57,14 +57,14 @@ public class DocumentFile implements Serializable {
 	/**
 	 * 设置：文件类型
 	 */
-	public void setFileType(String fileType) {
-		this.fileType = fileType;
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 	/**
 	 * 获取：文件类型
 	 */
-	public String getFileType() {
-		return fileType;
+	public String getFileName() {
+		return fileName;
 	}
 	/**
 	 * 设置：排序

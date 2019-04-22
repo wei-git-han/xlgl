@@ -16,6 +16,7 @@ import com.css.base.utils.PageUtils;
 import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 import com.css.base.utils.Response;
+import com.css.base.utils.StringUtils;
 import com.css.app.db.business.entity.DocumentFile;
 import com.css.app.db.business.service.DocumentFileService;
 
@@ -28,7 +29,7 @@ import com.css.app.db.business.service.DocumentFileService;
  * @date 2019-04-18 16:39:11
  */
 @Controller
-@RequestMapping("/documentfile")
+@RequestMapping("/app/db/documentfile")
 public class DocumentFileController {
 	@Autowired
 	private DocumentFileService documentFileService;
@@ -38,16 +39,14 @@ public class DocumentFileController {
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	@RequiresPermissions("dbdocumentfile:list")
-	public void list(Integer page, Integer limit){
-		Map<String, Object> map = new HashMap<>();
-		PageHelper.startPage(page, limit);
-		
-		//查询列表数据
-		List<DocumentFile> dbDocumentFileList = documentFileService.queryList(map);
-		
-		PageUtils pageUtil = new PageUtils(dbDocumentFileList);
-		Response.json("page",pageUtil);
+	public void list(String infoId){
+		List<DocumentFile> fileList=null;
+		if(StringUtils.isNotBlank(infoId)) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("infoId", infoId);
+			 fileList = documentFileService.queryList(map);
+		}
+		Response.json(fileList);
 	}
 	
 	

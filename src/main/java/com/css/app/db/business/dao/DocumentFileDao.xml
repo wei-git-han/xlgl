@@ -17,13 +17,17 @@
  	<select id="queryTotal" resultType="int">
 		select count(*) from DB_DOCUMENT_FILE 
 	</select>
+	
+	<select id="queryMinSort" resultType="int">
+		select  nvl(max(sort)+1,1) from DB_DOCUMENT_FILE where DOC_INFO_ID=#{docInfoId}
+	</select>
 	 
 	<insert id="save" parameterType="com.css.app.db.business.entity.DocumentFile">
 		insert into DB_DOCUMENT_FILE
 		(
 			"ID", 
 			"DOC_INFO_ID", 
-			"FILE_TYPE", 
+			"FILE_NAME", 
 			"SORT", 
 			"CREATED_TIME", 
 			"FILE_SERVER_STREAM_ID", 
@@ -33,7 +37,7 @@
 		(
 			#{id}, 
 			#{docInfoId}, 
-			#{fileType}, 
+			#{fileName}, 
 			#{sort}, 
 			#{createdTime}, 
 			#{fileServerStreamId}, 
@@ -45,7 +49,7 @@
 		update DB_DOCUMENT_FILE 
 		<set>
 			<if test="docInfoId != null">"DOC_INFO_ID" = #{docInfoId}, </if>
-			<if test="fileType != null">"FILE_TYPE" = #{fileType}, </if>
+			<if test="fileName != null">"FILE_NAME" = #{fileName}, </if>
 			<if test="sort != null">"SORT" = #{sort}, </if>
 			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
 			<if test="fileServerStreamId != null">"FILE_SERVER_STREAM_ID" = #{fileServerStreamId}, </if>

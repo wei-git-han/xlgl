@@ -4,6 +4,7 @@ var saveSzpsUrl = {"url":rootPath +"/documentszps/save","dataType":"text"}; //�
 var getSzpsListUrl = {"url":rootPath +"/documentszps/queryList","dataType":"text"}; //保存首长批示
 var updateUrl={"url":rootPath +"/documentinfo/update","dataType":"json"}; //表单数据保存
 var uploadFileUrl = "/app/db/documentinfo/uploadFile";//文件上传
+var getFileListUrl = {"url":rootPath +"/documentfile/ist","dataType":"text"}//获取所有相关文件
 
 var ifsuccess = {"url":"/app/db/document/djlr/data/success.json","dataType":"text"}; /*查阅人树*/
 var usertree = {"url":"/app/base/user/treeByPost","dataType":"text"}; /*查阅人树*/

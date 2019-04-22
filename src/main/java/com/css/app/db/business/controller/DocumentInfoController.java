@@ -3,9 +3,11 @@ package com.css.app.db.business.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,7 +31,9 @@ import com.css.addbase.FileBaseUtil;
 import com.css.addbase.apporgmapped.entity.BaseAppOrgMapped;
 import com.css.addbase.constant.AppConstant;
 import com.css.addbase.suwell.OfdTransferUtil;
+import com.css.app.db.business.entity.DocumentFile;
 import com.css.app.db.business.entity.DocumentInfo;
+import com.css.app.db.business.service.DocumentFileService;
 import com.css.app.db.business.service.DocumentInfoService;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.PageUtils;
@@ -51,102 +55,82 @@ import cn.com.css.filestore.impl.HTTPFile;
 @RequestMapping("/app/db/documentinfo")
 public class DocumentInfoController {
 	@Autowired
+	private AppConfig appConfig;
+	@Autowired
 	private DocumentInfoService documentInfoService;
 	@Autowired
-	private AppConfig appConfig;
+	private DocumentFileService documentFileService;
+	
 	
 	
 	/**
 	 * 文件上传保存
+	 * @param idpdf 主记录id(documentInfo的id)
+	 * @param pdf 文件
 	 */
 	@ResponseBody
 	@RequestMapping("/uploadFile")
 	public void savePDF(String idpdf,@RequestParam(value = "pdf", required = false) MultipartFile pdf){
-			DocumentInfo documentInfo = documentInfoService.queryObject(idpdf);//idpdf是记录id
-			String formatDownPath = "";
-			String fileId = "";
-			String streamId = "";
-			String formatId  = "";
-			if (pdf != null && pdf.getSize() > 0) {
-				String fileType =pdf.getOriginalFilename().substring(pdf.getOriginalFilename().lastIndexOf(".")+1);
-				/*if(!StringUtils.equals("ofd", fileType)){
-					// 保存附件
-					streamId = FileBaseUtil.fileServiceUpload(pdf);
-					HTTPFile hf = new HTTPFile(streamId);
-					result.put("streamUrl", hf.getAssginDownloadURL());
-					try {
-						String path = appConfig.getLocalFilePath() + UUIDUtils.random() + "." + hf.getSuffix();
+			String formatDownPath = "";//版式文件下载路径
+			String streamId = null;//流式文件id
+			String formatId  = null;//版式文件id
+			JSONObject json = new JSONObject();
+			if(StringUtils.isNotBlank(idpdf)) {				
+				if (pdf != null && pdf.getSize() > 0) {
+					String fileName=pdf.getOriginalFilename();
+					//获取文件后缀
+					String fileType =fileName.substring(fileName.lastIndexOf(".")+1);
+					//如果文件是流式则流式转换为版式
+					if(!StringUtils.equals("ofd", fileType)){
+						streamId = FileBaseUtil.fileServiceUpload(pdf);
+						HTTPFile hf = new HTTPFile(streamId);
 						try {
-							FileUtils.moveFile(new File(hf.getFilePath()) , new File(path));
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-						if(StringUtils.isNotBlank(path)){
-							formatId = OfdTransferUtil.convertLocalFileToOFD(path);
-						}
-						//删除本地的临时流式文件
-						if(new File(path).exists()){
-							new File(path).delete();
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}else{
-					formatId=FileBaseUtil.fileServiceUpload(attach);	
-				}
-				*/
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				fileId = FileBaseUtil.fileServiceUpload(pdf);
-				HTTPFile httpFile = new HTTPFile(fileId);
-				if(httpFile!=null) {
-					formatDownPath = httpFile.getAssginDownloadURL(true);
-				}
-				if(fileType.equals("pdf")||fileType.equals("PDF")) {
-					try {
-						String path = appConfig.getLocalFilePath() + UUIDUtils.random() + "." + httpFile.getSuffix();
-						try {
-							FileUtils.moveFile(new File(httpFile.getFilePath()) , new File(path));
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-						if(StringUtils.isNotBlank(path)){
-							fileId = OfdTransferUtil.convertLocalFileToOFD(path);
-						}						
-						if(StringUtils.isNotBlank(fileId)) {
-							HTTPFile httpFiles = new HTTPFile(fileId);
-							if(httpFiles!=null) {
-								formatDownPath = httpFiles.getAssginDownloadURL(true);
+							String path = appConfig.getLocalFilePath() + UUIDUtils.random() + "." + hf.getSuffix();
+							try {
+								FileUtils.moveFile(new File(hf.getFilePath()) , new File(path));
+							} catch (IOException e) {
+								e.printStackTrace();
 							}
+							if(StringUtils.isNotBlank(path)){
+								formatId = OfdTransferUtil.convertLocalFileToOFD(path);
+							}
+							//删除本地的临时流式文件
+							if(new File(path).exists()){
+								new File(path).delete();
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
-					} catch (Exception e) {
-						e.printStackTrace();
+					}else{
+						formatId=FileBaseUtil.fileServiceUpload(pdf);	
 					}
+					if(StringUtils.isNotBlank(formatId)) {
+						//获取版式文件的下载路径
+						HTTPFile httpFiles = new HTTPFile(formatId);
+						if(httpFiles!=null) {
+							formatDownPath = httpFiles.getAssginDownloadURL(true);
+						}
+						//保存文件相关数据
+						DocumentFile file=new DocumentFile();
+						file.setId(UUIDUtils.random());
+						file.setDocInfoId(idpdf);
+						file.setSort(documentFileService.queryMinSort(idpdf));
+						file.setFileName(fileName);
+						file.setCreatedTime(new Date());
+						if(StringUtils.isNotBlank(streamId)) {
+							file.setFileServerStreamId(streamId);
+						}
+						file.setFileServerFormatId(formatId);
+						documentFileService.save(file);
+					}
+					json.put("smjId", formatId);
+					json.put("smjFilePath", formatDownPath);
+					json.put("result", "success");
 				}
-				if(StringUtils.isNotBlank(fileId)&&documentInfo!=null){
-					//documentInfo.setScanId(fileId);
-					documentInfoService.update(documentInfo);
-					/*// 获得批示首页文件的绝对路径
-					HTTPFile httpFile1 = new HTTPFile(fileId);
-					psPath = httpFile1.getAssginDownloadURL(true);*/
-				}
+			}else {
+				json.put("result", "fail");
 			}
-			JSONObject result = new JSONObject();
-			result.put("result", "success");
-			result.put("smjId", fileId);
-			result.put("smjFilePath", formatDownPath);
-			Response.json(result);
+			Response.json(json);
 	}
 	
 	

@@ -16,4 +16,6 @@ import com.css.base.dao.BaseDao;
 @Mapper
 public interface DocumentFileDao extends BaseDao<DocumentFile> {
 	
+	int queryMinSort(String docInfoId);
+	
 }

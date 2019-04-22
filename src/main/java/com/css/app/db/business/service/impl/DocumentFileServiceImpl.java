@@ -46,5 +46,10 @@ public class DocumentFileServiceImpl implements DocumentFileService {
 	public void deleteBatch(String[] ids){
 		documentFileDao.deleteBatch(ids);
 	}
+
+	@Override
+	public int queryMinSort(String docInfoId) {
+		return documentFileDao.queryMinSort(docInfoId);
+	}
 	
 }
