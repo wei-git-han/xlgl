@@ -10,16 +10,15 @@ var ifsuccess = {"url":"/app/db/document/djlr/data/success.json","dataType":"tex
 var usertree = {"url":"/app/base/user/treeByPost","dataType":"text"}; /*查阅人树*/
 var speedUrl = {"url":rootPath +"/dic/getDicts?type=emergency_gegree","dataType":"text"}; /*紧急程度*/  
 var orgTree1 = {"url":"/app/base/dept/tree","dataType":"text"}; //录入单位选择树
-//本单位
-var orgTree_fw = {"url":"/app/dzbms/swfworg/tree?type=1","dataType":"text"};
-//外单位
-var orgTree_sw = {"url":"/app/dzbms/swfworg/tree?type=0","dataType":"text"};
-var scanFilePath = "";//扫描件路径
-
+var orgTree_fw = {"url":"/app/dzbms/swfworg/tree?type=1","dataType":"text"};//本单位
+var orgTree_sw = {"url":"/app/dzbms/swfworg/tree?type=0","dataType":"text"};//外单位
 var getPdfPath = {"url":rootPath +"/fileinfo/getFormaFileUrl","dataType":"text"};
-
 var getData ={"url":rootPath +"/dic/getOne","dataType":"json"}; /*返回的数据*/
 var UserTreeUrl = {"url":"/app/base/user/treeByPost","dataType":"text"}; /*查阅人树*/
+var zbjlDataUrl = {"url":"/app/db/document/view/data/zbjlList.json","dataType":"text"}; //文件转办-转办记录list
+var fileDataUrl = {"url":"/app/db/document/djlr/data/fujianList.json","dataType":"text"}; //相关文件-附件list
+var fileId=getUrlParam("fileId")||""; //主文件id
+var scanFilePath = "";//扫描件路径
 var pagedate = new Date();
 var month = pagedate.getMonth()+1;
 if(month<10){
@@ -115,10 +114,52 @@ var pageModule = function(){
 		}
 		return "";
 	}
+	
+	//文件转办——转办记录
+	var initzbjlfn = function(){
+		$ajax({
+			url:zbjlDataUrl,
+			data:{fileId:fileId},
+			success:function(data){
+				$("#zbrecord").html("");
+				$.each(data,function(i,item){
+					$("#zbrecord").append(
+						'<div class="record">'+
+			            '	<label class="zbUser">转办人:</label>'+
+			            '	<div><span>'+item.zbUser+'</span><span class="zbDate">'+item.zbdate+'</span></div>'+
+			            '	<label class="cbdw">承办单位/人:</label>'+
+			            '	<div>'+item.unit+'</div>'+
+			            '</div>'
+		            )
+				});
+			}
+		});	
+	}
+	
+	//相关文件
+	var initfilefn = function(){
+		$ajax({
+			url:fileDataUrl,
+			data:{fileId:fileId},
+			success:function(data){
+				$("#file_all").html("");
+				$.each(data,function(i,item){
+					$("#file_all").append(
+						'<li data="'+item.fujId+'" data_url="'+item.scanFilePath+'"><input type="checkbox" name="fjcheckbox" /> <a>'+item.fujText+'</a></li>'
+		            )
+				});
+				$("#file_all>li").click(function(){
+					var scanId = $(this).attr("data");
+					var scanFilePath = $(this).attr("data_url");
+					psLoad(scanId,scanFilePath);
+				})
+			}
+		});	
+	}
 
 	var initother = function(){
 		//扫描设置
-		$("#smsz").click(function(){
+		$("#scanSet").click(function(){
 			$(".smczcont").toggle();
 		});
 		
@@ -307,7 +348,9 @@ var pageModule = function(){
 					data:{id:checkId.toString()},
 					success:function(data){
 						if(data.result == "success" && data.url != ""){
-							newbootbox.alert("删除成功！"); 
+							newbootbox.alert("删除成功！").done(function(){
+								initfilefn();
+							}); 
 						}
 					}
 				})
@@ -379,6 +422,10 @@ var pageModule = function(){
 		});
 		
 		$("#addFj").click(function(){
+			if($("#id").val() == "" || $("#id").val() == null || typeof($("#id").val()) == undefined){
+				newbootbox.alertInfo("请先保存要素信息再开始扫描！"); 
+				return  false;
+			} 
 			$("#pdf").unbind("click");
 			$("#pdf").unbind("change");
 			$("#pdf").click();
@@ -422,6 +469,8 @@ var pageModule = function(){
 		initControl:function(){
 			initdictionary();
 			initCqfn();
+			initfilefn();
+			initzbjlfn();
 			initUserTree();
 			makeLoginUser();
 			initother();

@@ -301,7 +301,9 @@ html, body {
 }
 
 .file_all input{
-	vertical-align: top;
+	vertical-align:middle;
+	margin-top: 0px;
+	cursor:pointer;
 }
 .file_all li>a{
 	color:#333;
