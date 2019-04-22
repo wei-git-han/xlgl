@@ -1,8 +1,6 @@
 var peopleTreeUrl = {"url":"/app/base/user/tree","dataType":"text"}; //人员树
-var sureUrl = {"url":"../data/success.json","dataType":"text"}; //保存
-var fileId=getUrlParam("fileId")||""; //主文件id
-var userName;
-var userId;
+var userName;//选择的首长名字
+var userId;//选择的首长id
 var pageModule = function(){
 	var initTree = function(){
 		$ajax({

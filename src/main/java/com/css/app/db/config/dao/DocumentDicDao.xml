@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.db.config.dao.DocumentDicDao">
+
+	<select id="queryObject" resultType="com.css.app.db.config.entity.DocumentDic">
+		select * from DB_DOCUMENT_DIC where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.db.config.entity.DocumentDic">
+		select * from DB_DOCUMENT_DIC 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+	<select id="queryDicByType" resultType="com.css.app.db.config.entity.DocumentDic">
+		select * from DB_DOCUMENT_DIC where DIC_TYPE = #{docType}
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from DB_DOCUMENT_DIC 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.db.config.entity.DocumentDic">
+		insert into DB_DOCUMENT_DIC
+		(
+			"ID", 
+			"VALUE", 
+			"TEXT", 
+			"DIC_TYPE", 
+			"SORT", 
+			"CREATOR_ID", 
+			"CREATOR", 
+			"CREATED_TIME"
+		)
+		values
+		(
+			#{id}, 
+			#{value}, 
+			#{text}, 
+			#{dicType}, 
+			#{sort}, 
+			#{creatorId}, 
+			#{creator}, 
+			#{createdTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.db.config.entity.DocumentDic">
+		update DB_DOCUMENT_DIC 
+		<set>
+			<if test="value != null">"VALUE" = #{value}, </if>
+			<if test="text != null">"TEXT" = #{text}, </if>
+			<if test="dicType != null">"DIC_TYPE" = #{dicType}, </if>
+			<if test="sort != null">"SORT" = #{sort}, </if>
+			<if test="creatorId != null">"CREATOR_ID" = #{creatorId}, </if>
+			<if test="creator != null">"CREATOR" = #{creator}, </if>
+			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from DB_DOCUMENT_DIC where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from DB_DOCUMENT_DIC where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

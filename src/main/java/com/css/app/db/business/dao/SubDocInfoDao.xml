@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.db.business.dao.SubDocInfoDao">
+
+	<select id="queryObject" resultType="com.css.app.db.business.entity.SubDocInfo">
+		select * from DB_SUB_DOC_INFO where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.db.business.entity.SubDocInfo">
+		select * from DB_SUB_DOC_INFO 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from DB_SUB_DOC_INFO 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.db.business.entity.SubDocInfo">
+		insert into DB_SUB_DOC_INFO
+		(
+			"ID", 
+			"INFO_ID", 
+			"SUB_DEPT_ID", 
+			"SUB_DEPT_NAME", 
+			"CREATED_TIME", 
+			"DOC_STATUS", 
+			"REMARK"
+		)
+		values
+		(
+			#{id}, 
+			#{infoId}, 
+			#{subDeptId}, 
+			#{subDeptName}, 
+			#{createdTime}, 
+			#{docStatus}, 
+			#{remark}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.db.business.entity.SubDocInfo">
+		update DB_SUB_DOC_INFO 
+		<set>
+			<if test="infoId != null">"INFO_ID" = #{infoId}, </if>
+			<if test="subDeptId != null">"SUB_DEPT_ID" = #{subDeptId}, </if>
+			<if test="subDeptName != null">"SUB_DEPT_NAME" = #{subDeptName}, </if>
+			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
+			<if test="docStatus != null">"DOC_STATUS" = #{docStatus}, </if>
+			<if test="remark != null">"REMARK" = #{remark}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from DB_SUB_DOC_INFO where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch"> 
+		delete from DB_SUB_DOC_INFO where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
