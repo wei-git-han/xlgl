@@ -961,6 +961,36 @@ var newbootbox = {
 	        }
 	    });
 	},
+	confirm100:function(obj){
+		window.top.bootbox.dialog({
+	        title: obj.title,
+	        message: obj.message,
+            className:"cjDialog",
+	        buttons: {
+	          success: {
+	            label: "保存",
+	            className: "btn-primary",
+	            callback: function() {
+					obj.callback1();	
+	            }
+	          },
+	          danger1: {
+	            label: "不保存",
+	            className: "btn-primary",
+	            callback: function() {
+	            	obj.callback2();
+	            }
+	          },
+	          danger: {
+	            label: "取消",
+	            className: "btn-default",
+	            callback: function() {
+	            	//obj.callback3();
+	            }
+	          },
+	        }
+	    });
+	},
 	//插件的确认框
 	Tconfirm:function(obj){
 		window.top.bootbox.dialog({

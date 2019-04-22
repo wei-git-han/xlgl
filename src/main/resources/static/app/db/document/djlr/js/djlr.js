@@ -1,8 +1,7 @@
-var tableList= {"url":"/app/db/document/grdb/data/tablegrid.json","dataType":"text"};//原table数据
+var tableList= {"url":"/app/db/documentinfo/list","dataType":"text"};//原table数据
 var numsList={"url":rootPath +"/documentFlow/numsList","dataType":"text"};//筛选状态数字统计
 var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//部门树
 var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//人员树
-var leaderId=getUrlParam("menuid")||"";//代理领导
 var grid = null;
 var total=0;//列表中，数据的总条数
 var pageModule = function(){

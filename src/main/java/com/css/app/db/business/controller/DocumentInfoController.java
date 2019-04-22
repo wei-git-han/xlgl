@@ -2,20 +2,14 @@ package com.css.app.db.business.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.tomcat.jni.FileInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,14 +22,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.AppConfig;
 import com.css.addbase.FileBaseUtil;
-import com.css.addbase.apporgmapped.entity.BaseAppOrgMapped;
-import com.css.addbase.constant.AppConstant;
 import com.css.addbase.suwell.OfdTransferUtil;
 import com.css.app.db.business.entity.DocumentFile;
 import com.css.app.db.business.entity.DocumentInfo;
 import com.css.app.db.business.service.DocumentFileService;
 import com.css.app.db.business.service.DocumentInfoService;
 import com.css.base.utils.CurrentUser;
+import com.css.base.utils.GwPageUtils;
 import com.css.base.utils.PageUtils;
 import com.css.base.utils.Response;
 import com.css.base.utils.UUIDUtils;
@@ -139,16 +132,13 @@ public class DocumentInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	@RequiresPermissions("dbdocumentinfo:list")
-	public void list(Integer page, Integer limit){
+	public void list(Integer page, Integer pagesize){
 		Map<String, Object> map = new HashMap<>();
-		PageHelper.startPage(page, limit);
-		
+		PageHelper.startPage(page, pagesize);
 		//查询列表数据
-		List<DocumentInfo> dbDocumentInfoList = documentInfoService.queryList(map);
-		
-		PageUtils pageUtil = new PageUtils(dbDocumentInfoList);
-		Response.json("page",pageUtil);
+		List<DocumentInfo> infoList = documentInfoService.queryList(map);
+		GwPageUtils pageUtil = new GwPageUtils(infoList);
+		Response.json(pageUtil);
 	}
 	
 	

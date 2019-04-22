@@ -89,11 +89,9 @@ public class DocumentFileController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	@RequiresPermissions("dbdocumentfile:delete")
-	public void delete(@RequestBody String[] ids){
-		documentFileService.deleteBatch(ids);
-		
-		Response.ok();
+	public void delete(String id){
+		documentFileService.delete(id);
+		Response.json("result","success");
 	}
 	
 }

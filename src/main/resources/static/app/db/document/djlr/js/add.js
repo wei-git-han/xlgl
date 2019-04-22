@@ -151,17 +151,22 @@ var pageModule = function(){
 			    	"urgencyId","urgencyDegree","docCode","banjianNumber","userId","userName","applyTime","printDate","jobContent","remark"];
 				var paramdata = getformdata(elementarry);
 				paramdata.id = $("#id").val();
-				newbootbox.alert('正在保存，请稍候...',false);
+				//newbootbox.alert('正在保存，请稍候...',false);
 				$ajax({
 					url:updateUrl,
 					data:paramdata,
-					//type:'post',
 					success:function(data){
 						$("#id").val(data.id);
 						window.top.$(".newclose").click();
-						setTimeout(function(){
-							newbootbox.alert("保存成功！").done(function(){});
-						},200);
+						if(addFlag){
+							window.location.href="/app/db/document/djlr/html/add.html";
+						}else if(returnSave){
+							window.location.href = "/app/db/document/djlr/html/djlr.html";
+						}else{
+							setTimeout(function(){
+								newbootbox.alert("保存成功！").done(function(){});
+							},200);
+						}
 					}
 				})
 		    },
@@ -194,7 +199,7 @@ var pageModule = function(){
 			    	$("#commentForm").submit();
 			    },
 			    callback2:function(){
-			    	window.location.href = "/app/dzbms/document/wjgl/html/wjgllb.html";
+			    	window.location.href = "/app/db/document/djlr/html/djlr.html";
 			    }
 			});
 		})
@@ -281,17 +286,6 @@ var pageModule = function(){
 			})
 		});
 		
-		//修改转办对象
-		$("#editzbUser").click(function(){
-			newbootbox.newdialog({
-				id:"zhuanbanDialog",
-				width:800,
-				height:600,
-				header:true,
-				title:"修改转办对象",
-				url:"/app/db/document/blfk/html/zhuanbanDialog.html?fileId=",//fileId呢？？？？？
-			})
-		});
 		
 		//删除附件
 		$("#delfj").click(function(){
