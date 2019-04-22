@@ -20,6 +20,7 @@ var sealcountinofdfile = 0;
  *            域名
  */
 function openOFDFile(filePath, areaDivId,width,height, optionType) {
+	//alert(filePath+"=="+areaDivId+"=-==="+width+"===="+height+"==="+optionType)
 	if (filePath != '' && filePath != null) {
 		/*$("#hidemodal").show();
 		$('#suwellOfdLoading').show();*/

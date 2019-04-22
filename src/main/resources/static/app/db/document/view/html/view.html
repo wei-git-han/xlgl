@@ -12,9 +12,6 @@
 	<link rel="stylesheet" type="text/css" href="../../../../../assets/global/plugins/jstree/dist/themes/default/style.min.css" />
 	<link rel="stylesheet" type="text/css" href="../../../../../assets/global/css/components.css" id="style_components"/>
 	<link rel="stylesheet" type="text/css" href="../../../../../assets/global/plugins/jstree/dist/themes/default/style.min.css"/>
-	<link rel="stylesheet" type="text/css" href="../../../../../assets/global/plugins/clockface/css/clockface.css"/>
-	<link rel="stylesheet" type="text/css" href="../../../../../assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css"/>
-	<link rel="stylesheet" type="text/css" href="../../../../../assets/global/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css"/>
 	<link rel="stylesheet" type="text/css" href="../../../../../assets/global/css/plugins.css"/>
 	<link rel="stylesheet" type="text/css" href="../../../../../assets/admin/pages/css/tasks.css"/>
 	<link rel="stylesheet" type="text/css" href="../../../../../assets/admin/layout/css/layout.css"/>
@@ -40,40 +37,24 @@
 						</div>
 					</div>
 					<div class="tabbable tabbable-tabdrop">
-					    <ul class="nav nav-tabs">
-					        <li class="active">
-					            <a href="#tab1" data-toggle="tab">tab1tab1tab1tab1</a>
-					        </li>
-					        <li>
-					            <a href="#tab2" data-toggle="tab">tab2</a>
-					        </li>
-					        <li>
-					            <a href="#tab3" data-toggle="tab">tab3</a>
-					        </li>
+					    <ul class="nav nav-tabs" id="takeMenu">
 					    </ul>
 					</div>
 				</div>
 				<div class="left_main">
 					<div class="pr100">
-						<div class="tabbable tabbable-tabdrop">
-						    <div class="tab-content">
-						        <div class="tab-pane active" id="tab1">
-						            <p>
-						                 111111111
-						            </p>
-						        </div>
-						        <div class="tab-pane" id="tab2">
-						            <p>
-						                 22222222222
-						            </p>
-						        </div>
-						        <div class="tab-pane" id="tab3">
-						            <p>
-						                 3333333333333
-						            </p>
-						        </div>
-						    </div>
+						<!-- lsTip用于打开流式文件的提示 -->
+						<div id="lsTip" class="lsTip">
+							<p class="lsTipWord">当前版本不支持流式文件在线预览</p>
 						</div>
+						
+						<div id="cssOffice" style="width:100%;height:100%;display:none">
+						<!-- 	这里放流式插件 -->
+						</div> 			
+						<div id="suwell" style="width:100%;height:100%;display:none">
+							<!-- 这里放版式插件 -->
+						</div>
+						<object id="csseOfficeplugin" type="application/x-csse" width="0px" height="0px" ></object>
 					</div>
 				</div>
 			</div>
@@ -103,12 +84,12 @@
 						            <div class="scroller right_top" style="padding: 0px 20px">
 						            	<div class="commonHtml">
 						            	</div>
-						            	<ul class="line4">
-					            			<li><a>附件</a></li>
+						            	<div class="wjlb_title">附件</div>
+						            	<ul class="line4" id="fjList">
+					            			<!-- <li><a>十九大学习报告.wps</a></li>
 					            			<li><a>十九大学习报告.wps</a></li>
 					            			<li><a>十九大学习报告.wps</a></li>
-					            			<li><a>十九大学习报告.wps</a></li>
-					            			<li><a>十九大学习报告.wps</a></li>
+					            			<li><a>十九大学习报告.wps</a></li> -->
 					            		</ul>
 						            </div>
 						        </div>
@@ -122,17 +103,29 @@
 			    																			
 			    								</div>
 						        			</div>
-							            	
 						            	</div>
 						            	<div class="blfk_bottom">
 						            		<div class="pr100">
 												<div class="sryj_title">输入意见/反馈：</div>
 							        			<div class="sryj_center">
-							        				<textarea class="opinionContent" placeholder="此处填写办理进度供部内审议" id="opinionContent" maxlength="500"></textarea>
+							        				<textarea class="opinionContent" id="opinionContent" maxlength="500" placeholder="此处填写办理进度供部内审议" ></textarea>
 							        			</div>
 							        			<div class="sryj_footer">
 							        				<button type="button" id="tijiao">提交草稿</button>
-							        				<button type="button" id="clear">取消</button>
+							        				<button type="button" id="clear">清屏</button>
+							        				<div style="display:inline-block;">
+							        					<button type="button" id="addfjbtn" class="addfjbtn"><i class="fa fa-link"></i>添加附件</button>
+							        					<form class="form-horizontal" id="form3" target="iframe7" role="form" method="post" enctype="multipart/form-data" action="/filefj/savePDF">
+															<input type="hidden"  id="idpdf" name="idpdf"/>
+															<div class="fileinput fileinput-new" data-provides="fileinput">
+																<span class="fileinput-filename" style="padding-right:10px;line-height:30px;display:none"></span>
+									                            <span>
+									                            	<input type="file" name="pdf" id="pdf" accept=".pdf,.ofd,.doc,.docx,.wps" multiple style="display:none" />
+									                            </span>
+									                        </div> 
+								                        </form>
+								                        <iframe name="iframe7" style="display: none;"></iframe>
+							        				</div>
 							        			</div>
 						            		</div>
 						            	</div>
@@ -144,7 +137,7 @@
 							            	<div class="pr100">
 							            		<div class="part_zbjl_top">
 									            	<div class="tabbable-line">
-													    <ul class="nav nav-tabs" style="padding-left:15px;border-bottom: 1px solid #ddd;">
+													    <ul class="nav nav-tabs" style="padding-left:20px;border-bottom: 1px solid #ddd;">
 													        <li class="active">
 													            <a href="#tab_16_1" data-toggle="tab">转办记录</a>
 													        </li>
@@ -164,60 +157,60 @@
 														        <div class="tab-pane active" id="tab_16_1">
 														        	<div class="scroller" style="padding:10px 20px">
 														        		<div class="zbrecord" id="zbrecord">
-																            <div class="record">
+																            <!-- <div class="record">
 																            	<label class="zbUser">转办人:</label>
-																            	<div><span>李雪</span><span class="zbDate">2019-04-05 18:20:50</span></div>
+																            	<div><span>某某</span><span class="zbDate">2019-04-05 18:20:50</span></div>
 																            	<label class="cbdw">承办单位/人:</label>
 																            	<div>信息局，绿化局</div>
 																            </div>
 																            <div class="record">
 																            	<label class="zbUser">转办人:</label>
-																            	<div><span>李雪</span><span class="zbDate">2019-04-05 18:20:50</span></div>
+																            	<div><span>某某</span><span class="zbDate">2019-04-05 18:20:50</span></div>
 																            	<label class="cbdw">承办单位/人:</label>
 																            	<div>信息局，绿化局</div>
 																            </div>
 																            <div class="record">
 																            	<label class="zbUser">转办人:</label>
-																            	<div><span>李雪</span><span class="zbDate">2019-04-05 18:20:50</span></div>
+																            	<div><span>某某</span><span class="zbDate">2019-04-05 18:20:50</span></div>
 																            	<label class="cbdw">承办单位/人:</label>
 																            	<div>信息局，绿化局</div>
-																            </div>
+																            </div> -->
 																         </div>
 															        </div>
 														        </div>
 														        <div class="tab-pane" id="tab_16_2">
 														           <div class="scroller" style="padding:10px 20px">
 														           		<div class="cbrecord" id="cbrecord">
-																            <div class="record">
+																            <!-- <div class="record">
 																            	<label class="zbUser">催办人:</label>
-																            	<div><span>李雪</span><span class="cbDate">2019-04-05 18:20:50</span></div>
+																            	<div><span>某某</span><span class="cbDate">2019-04-05 18:20:50</span></div>
 																            	<label class="cbdw">催办留言:</label>
 																            	<div>催办留言催办留言催办留言催办留言催办留言催办留言催办留言催办留言催办留言</div>
 																            	<label class="xiangy">承办人响应:</label>
-																            	<div><span>李雪</span><span class="cbDate">2019-04-05 18:20:50</span><span class="xycontent">承办人响应承办人响应</span></div>
+																            	<div><span>某某</span><span class="cbDate">2019-04-05 18:20:50</span><span class="xycontent">承办人响应承办人响应</span></div>
 																            </div>
 																            <div class="record">
 																            	<label class="zbUser">催办人:</label>
-																            	<div><span>李雪</span><span class="cbDate">2019-04-05 18:20:50</span></div>
+																            	<div><span>某某</span><span class="cbDate">2019-04-05 18:20:50</span></div>
 																            	<label class="cbdw">催办留言:</label>
 																            	<div>催办留言催办留言催办留言催办留言催办留言催办留言催办留言催办留言催办留言</div>
 																            	<label class="xiangy">承办人响应:</label>
-																            	<div><span>李雪</span><span class="cbDate">2019-04-05 18:20:50</span><span class="xycontent">承办人响应承办人响应</span></div>
-																            </div>
+																            	<div><span>某某</span><span class="cbDate">2019-04-05 18:20:50</span><span class="xycontent">承办人响应承办人响应</span></div>
+																            </div> -->
 																        </div>
 															        </div>
 														        </div>
 														        <div class="tab-pane" id="tab_16_3">
 														        	<div class="scroller" style="padding:10px 20px">
 															            <div class="jybjrecord" id="jybjrecord">
-																            <div class="record">
+																           <!--  <div class="record">
 																            	<div><span>信息局</span><span class="bjuser">李明亮</span></div>
 																            	<div><span>建议办结</span><span class="bjDate">2019-04-05 18:20:50</span></div>
 																            </div>
 																            <div class="record">
 																            	<div><span>信息局</span><span class="bjuser">李明亮</span></div>
 																            	<div><span>建议办结</span><span class="bjDate">2019-04-05 18:20:50</span></div>
-																            </div>
+																            </div> -->
 																         </div>
 															        </div>
 														        </div>
@@ -242,6 +235,7 @@
 			</div>
 		</div>
 	</div>
+<script type="text/javascript" src="../../../css/js/office.js"  charset="utf-8"></script>
 <script src="../../../../../assets/global/plugins/jquery.min.js" type="text/javascript"></script>
 <script src="../../../../../assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
 <script src="../../../../../assets/global/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
@@ -252,13 +246,9 @@
 <script src="../../../../../assets/global/plugins/jquery.cokie.min.js" type="text/javascript"></script>
 <script src="../../../../../assets/global/plugins/uniform/jquery.uniform.min.js" type="text/javascript"></script>
 <script src="../../../../../assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
-<script src="../../../../../assets/global/plugins/gridtable/gridtable2.js"></script>
 <script src="../../../../../assets/global/plugins/jstree/dist/jstree.min.js"></script>
 <script src="../../../../../assets/global/plugins/bootbox/bootbox.min.js" type="text/javascript"></script>
 <script src="../../../../../assets/global/plugins/bootstrap-tabdrop/js/bootstrap-tabdrop.js" type="text/javascript"></script>
-
-<script src="../../../../../assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
-<script src="../../../../../assets/global/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js" type="text/javascript"></script>
 <script src="../../../../../assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
 <script src="../../../../../assets/global/plugins/jquery-validation/js/additional-methods.js" type="text/javascript"></script>
 <script src="../../../../../assets/global/plugins/jquery-validation/js/localization/messages_zh.js" type="text/javascript"></script>
@@ -269,12 +259,30 @@
 <script src="../../../../../assets/admin/layout/scripts/demo.js" type="text/javascript"></script>
 <script src="../../../../../assets/admin/pages/scripts/tasks.js" type="text/javascript"></script>
 <script src="../../../../../templates/admin/commons/js/commons.js" type="text/javascript"></script>
+<script src="../../../../../templates/admin/commons/js/jquery.form.js" type="text/javascript" ></script>
 <script src="../../../common/js/commons.js" type="text/javascript"></script>
 <script src="../js/view.js" type="text/javascript"></script>
+
+<!-- 数科插件JS -->
+<script src="../../../common/suwell/suwell.js" type="text/javascript"></script>
+<script src="../../../common/suwell/suwell_ofdReader.js" type="text/javascript"></script>
+<script src="../../../css/js/office/csseOfficeplugin.js" type="text/javascript"></script>  
+
 <script type="text/javascript">
 	jQuery(document).ready(function() {
 		pageModule.initControl();
 	});
+	//对本页面的可以输入的控件进行焦点重定向，此类控件包括textarea和input
+	var textareaS=document.getElementsByTagName("textarea");
+	for(var i=0;i<textareaS.length;i++)
+	{
+		$(textareaS[i]).click(function(){fixForcesBug();});
+	}
+	var inputS=document.getElementsByTagName("input");
+	for(var i=0;i<inputS.length;i++)
+	{
+		$(inputS[i]).click(function(){fixForcesBug();});
+	}
 </script>
 </body>
 </html>

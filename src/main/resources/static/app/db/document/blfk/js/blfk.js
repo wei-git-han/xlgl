@@ -2,6 +2,7 @@ var tableList= {"url":"/app/db/document/grdb/data/tablegrid.json","dataType":"te
 var numsList={"url":rootPath +"/documentFlow/numsList","dataType":"text"};//筛选状态数字统计
 var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//部门树
 var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//人员树
+var leftMenuUrl = {"url":"/app/db/document/blfk/data/leftMenu.json","dataType":"text"};//左侧菜单
 var leaderId=getUrlParam("menuid")||"";//代理领导
 var grid = null;
 var total=0;//列表中，数据的总条数
@@ -56,6 +57,25 @@ var pageModule = function(){
             },
             url: tableList
        });
+	}
+	
+	//左侧菜单树
+	var leftMenufn = function(){
+		$ajax({
+			url:leftMenuUrl,
+			success:function(data){
+				$("#classType").html("");
+				$.each(data,function(i,item){
+					$("#classType").append('<li class="'+(i==0?"active":"")+'" id="'+item.id+'"><span>'+item.text+'</span><font>('+item.num+')</font><i class="fa fa-angle-right"></i></li>');
+				});
+				
+				$("#classType li").click(function(){
+					$(this).siblings().removeClass("active");
+					$(this).addClass("active");
+					refreshgrid();
+				});
+			}
+		});	
 	}
 	
 	var numsListfn = function(){
@@ -144,11 +164,6 @@ var pageModule = function(){
 			}
 		});
 		
-		$("#classType li").click(function(){
-			$(this).siblings().removeClass("active");
-			$(this).addClass("active");
-		});
-		
 		//催办
 		$("#cuiban").click(function(){
 			var datas=grid.getcheckrow();
@@ -176,6 +191,24 @@ var pageModule = function(){
 				newbootbox.alertInfo("请先选择要转办的数据！");
 			}
 		});
+		
+		
+		//菜单左缩进
+		$("#suo").click(function(){
+			if($(this).find("i").hasClass("fa-chevron-right")){
+				$(this).find("i").removeClass("fa-chevron-right").addClass("fa-chevron-left");
+				$("#right_content").css("left","256px");
+				$(this).parent().css("left","256px");
+				$("#left_content").show();
+			}else{
+				$(this).find("i").removeClass("fa-chevron-left").addClass("fa-chevron-right");
+				$("#left_content").hide();
+				$(this).parent().css("left","0px");
+				$("#right_content").css("left","0px");
+			}
+			pageModule.initgrid2();
+		});
+		
 	}
 	
 	var inittree = function(){
@@ -212,6 +245,7 @@ var pageModule = function(){
 	return{
 		//加载页面处理程序
 		initControl:function(){
+			leftMenufn();
 			initgrid();
 			numsListfn();
 			initother();
@@ -220,13 +254,16 @@ var pageModule = function(){
 		initgrid:function(){
 			initgrid();
 			numsListfn();
+		},
+		initgrid2:function(){
+			initgrid();
 		}
 	};
 }();
 //查询
 function refreshgrid(){
 	var search = $("#searchVal").val();
-	grid.setparams({search:search,documentStatus:$("input[name='documentStatus']:checked").val()});
+	grid.setparams({search:search,documentStatus:$("input[name='documentStatus']:checked").val(),menuId:$("#classType li.active").attr("id")});
 	grid.loadtable();
 }
 

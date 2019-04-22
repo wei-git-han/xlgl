@@ -370,7 +370,7 @@ var pageModule = function(){
 			        			psLoad('', data.smjFilePath);
 		    				});
 						}else{
-							newbootbox.alert("保存失败！"); 
+							newbootbox.alert("上传失败！"); 
 						}
 					}
 				}
