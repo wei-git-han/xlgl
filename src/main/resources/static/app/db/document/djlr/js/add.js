@@ -9,8 +9,6 @@ var getFileListUrl = {"url":rootPath +"/documentfile/ist","dataType":"text"}//�
 var ifsuccess = {"url":"/app/db/document/djlr/data/success.json","dataType":"text"}; /*查阅人树*/
 var usertree = {"url":"/app/base/user/treeByPost","dataType":"text"}; /*查阅人树*/
 var speedUrl = {"url":rootPath +"/dic/getDicts?type=emergency_gegree","dataType":"text"}; /*紧急程度*/  
-
-
 var orgTree1 = {"url":"/app/base/dept/tree","dataType":"text"}; //录入单位选择树
 //本单位
 var orgTree_fw = {"url":"/app/dzbms/swfworg/tree?type=1","dataType":"text"};
