@@ -1,13 +1,10 @@
-var isadmin = getUrlParam("isadmin");
-var menulist={"url":"/app/db/common/data/menu.json","dataType":"text"};
+var menulist={"url":"/app/db/menu/menuList","dataType":"text"};
 var show = getUrlParam("show")||"";
-var menuIndex = getUrlParam("menuIndex")||"";
 var pageModule = function(){
 	//动态加载菜单
 	var initMenuList =function(){
 		$ajax({
 			url:menulist,
-			data:{isadmin:isadmin},
 			success:function(data){
 				var lis = '';
 				if(data.length == 0) {
@@ -15,10 +12,10 @@ var pageModule = function(){
 				}else{
 					$.each(data, function(i, item) {
 						if(i==0){
-							$("#iframe1").attr("src",item.href+"?menuId="+item.id);
+							$("#iframe1").attr("src",item.defaultPage+"?menuId="+item.id);
 						}
 						
-						lis += '<li id="'+item.id+'"><a href="'+item.href+'" target="iframe1">'+item.text;
+						lis += '<li id="'+item.id+'"><a href="'+item.defaultPage+'" target="iframe1">'+item.menuName;
 						lis +='</a></li>';
 					});
 					

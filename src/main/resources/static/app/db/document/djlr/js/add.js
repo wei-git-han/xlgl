@@ -1,9 +1,15 @@
+var loginUser =  {"url":rootPath +"/documentinfo/getLoginUser","dataType":"text"};//获取当前登录人---录入人
+var dicUrl = {"url":rootPath +"/documentdic/getDicByTypet","dataType":"text"}; //返回的下拉框字典值
+var saveSzpsUrl = {"url":rootPath +"/documentszps/save","dataType":"text"}; //保存首长批示
+var getSzpsListUrl = {"url":rootPath +"/documentszps/queryList","dataType":"text"}; //保存首长批示
+var updateUrl={"url":rootPath +"/documentinfo/update","dataType":"json"}; //表单数据保存
+var uploadFileUrl = "/app/db/documentinfo/uploadFile";//文件上传
+
 var ifsuccess = {"url":"/app/db/document/djlr/data/success.json","dataType":"text"}; /*查阅人树*/
 var usertree = {"url":"/app/base/user/treeByPost","dataType":"text"}; /*查阅人树*/
-var dicturl = {"url":rootPath +"/dic/all","dataType":"text"}; /*返回的下拉框字典值*/
-var speedUrl = {"url":rootPath +"/dic/getDicts?type=emergency_gegree","dataType":"text"}; /*紧急程度*/
-var updateurl={"url":rootPath +"/fileinfo/update","dataType":"json"}; /*返回的数据*/
-var loginUser =  {"url":rootPath +"/fileinfo/loginUser","dataType":"text"};//获取当前登录人---录入人
+var speedUrl = {"url":rootPath +"/dic/getDicts?type=emergency_gegree","dataType":"text"}; /*紧急程度*/  
+
+
 var orgTree1 = {"url":"/app/base/dept/tree","dataType":"text"}; //录入单位选择树
 //本单位
 var orgTree_fw = {"url":"/app/dzbms/swfworg/tree?type=1","dataType":"text"};
@@ -34,35 +40,54 @@ var pageModule = function(){
 		$ajax({
 			url:loginUser,  
 			success:function(data){
-				if(data.result=="success"){
-					$("#registrantId").val(data.userId);
-					$("#registrantName").val(data.name);
-				}
+				$("#userId").val(data.userId);
+				$("#userName").val(data.userName);
 			}
 		})
 	}
 	
 	var initUserTree = function(){
-		$("#registrantName").createSelecttree({
+		$("#userName").createSelecttree({
 			url :UserTreeUrl,
 			width : '100%',
 			success : function(data, treeobj) {},
 			selectnode : function(e, data) {
-				$("#registrantName").val(data.node.text);
-				$("#registrantId").val(data.node.id);
+				$("#userName").val(data.node.text);
+				$("#userId").val(data.node.id);
 			}
 		});
 	}
 	
+	//请求各字典数据
 	var initdictionary = function(){
 		$ajax({
-			url:dicturl,
+			url:dicUrl,
+			data:{dicType:"all"},
 			success:function(data){
 				if(data.code!=500){//&&data.security_classification!="" && data.security_classification!=null && typeof(data.security_classification)!=undefined){
-					initselect("secretLevel",data.security_classification);
-					initselect("emergencyGegreeId",data.emergency_gegree);
+					initselect("docTypeId",data.document_type);
+					initselect("securityId",data.security_classification);
+					initselect("urgencyId",data.urgency_degree);
 				}
-				
+			}
+		});
+	}
+	
+	//获取抄清list
+	var initCqfn = function(){
+		$ajax({
+			url:getSzpsListUrl,
+			data:{infoId:$("#id").val()},
+			success:function(data){
+				$("#showcq").html("");
+				$.each(data,function(i,item){
+					$("#showcq").prepend(
+						'<div class="cqline">'+
+						'	<div><span>'+item.userName+'</span><span>'+item.createdTime+'</span></div>'+
+						'	<div>'+item.leaderComment+'</div>'+
+						'</div>'
+					);
+				});
 			}
 		});
 	}
@@ -75,16 +100,10 @@ var pageModule = function(){
 			if(data.yaosu!=null){
 				data.yaosu.id=$("#id").val();
 				setformdata(data.yaosu);
-				if(data.yaosu.timeLimit!="" && data.yaosu.timeLimit!=null && typeof(data.yaosu.timeLimit)!=undefined){
-					$("#timeLimit").val((data.yaosu.timeLimit).substring(0,16));
-				}
-				if(data.yaosu.receiveFileDate!="" && data.yaosu.receiveFileDate!=null && typeof(data.yaosu.receiveFileDate)!=undefined){
-					$("#receiveFileDate").val((data.yaosu.receiveFileDate).substring(0,10));
+				if(data.yaosu.printDate!="" && data.yaosu.printDate!=null && typeof(data.yaosu.printDate)!=undefined){
+					$("#printDate").val((data.yaosu.printDate).substring(0,10));
 				}else{
-					$("#receiveFileDate").val(year+"-"+month+"-"+day);
-				}
-				if(data.yaosu.madeFileDate!="" && data.yaosu.madeFileDate!=null && typeof(data.yaosu.madeFileDate)!=undefined){
-					$("#madeFileDate").val((data.yaosu.madeFileDate).substring(0,10));
+					$("#printDate").val(year+"-"+month+"-"+day);
 				}
 			}
 			 	
@@ -99,6 +118,11 @@ var pageModule = function(){
 	}
 
 	var initother = function(){
+		//扫描设置
+		$("#smsz").click(function(){
+			$(".smczcont").toggle();
+		});
+		
 		$(".date-picker").datepicker({
 		    language:"zh-CN",
 		    rtl: Metronic.isRTL(),
@@ -116,35 +140,31 @@ var pageModule = function(){
 		
 
 		var newdate = (new Date()).format("yyyy-MM-dd");
-		$("#createDate").val(newdate);
+		$("#applyTime").val(newdate);
 		
 		$("#commentForm").validate({
 			ignore:'',
 		    submitHandler: function() {
-		    	$("#secretLevelName").val($("#secretLevel option:checked").text());
-		    	$("#emergencyGegreeName").val($("#emergencyGegreeId option:checked").text());
-			    var elementarry = [];
+		    	$("#docTypeName").val($("#docTypeId option:checked").text());
+		    	$("#securityClassification").val($("#securityId option:checked").text());
+		    	$("#urgencyDegree").val($("#urgencyId option:checked").text());
+			    var elementarry = ["docTypeId","docTypeName","docTitle","securityId","securityClassification",
+			    	"urgencyId","urgencyDegree","docCode","banjianNumber","userId","userName","applyTime","printDate","jobContent","remark"];
 				var paramdata = getformdata(elementarry);
 				paramdata.id = $("#id").val();
 				newbootbox.alert('正在保存，请稍候...',false);
 				$ajax({
-					url:updateurl,
+					url:updateUrl,
 					data:paramdata,
-					type:'post',
+					//type:'post',
 					success:function(data){
-						if(data.result=="success"){
-							$("#id").val(data.id);
-							window.top.$(".newclose").click();
-								setTimeout(function(){
-									newbootbox.alert("保存成功！").done(function(){
-									});
-								},200);
-						}else{
-							newbootbox.alert(data.result); 
-						}
+						$("#id").val(data.id);
+						window.top.$(".newclose").click();
+						setTimeout(function(){
+							newbootbox.alert("保存成功！").done(function(){});
+						},200);
 					}
 				})
-
 		    },
 		    errorPlacement: function(error, element) {
 	    	 	if($(element).parent().hasClass("selecttree")){
@@ -218,25 +238,36 @@ var pageModule = function(){
 				height:600,
 				header:true,
 				title:"选择首长",
-				url:"/app/db/document/djlr/html/chooseszDialog.html?fileId="+id,
+				url:"/app/db/document/djlr/html/chooseszDialog.html",
 			})
 		});
 		
 		//增加批示
 		$("#addcq").click(function(){
-			if($.trim($("#cqcontent").val()) == "" || $.trim($("#cqcontent").val()) == null){
+			var leaderComment=$("#cqcontent").val();
+			var createdTime=$("#cqDate").val();
+			if($.trim(leaderComment) == "" || $.trim(leaderComment) == null){
 				newbootbox.alert('请输入抄清内容！');
 				return;
 			}
-			$("#showcq").prepend(
-				'<div class="cqline">'+
-				'	<div><span>'+psszName+'</span><span>'+$("#cqDate").val()+'</span></div>'+
-				'	<div>'+$("#cqcontent").val()+'</div>'+
-				'</div>'
-			);
+			
+			$ajax({
+				url:saveSzpsUrl,
+				data:{infoId:$("#id").val(),userId:psszId,userName:psszName,leaderComment:leaderComment,createdTime:createdTime},
+				success:function(data){
+					if(data.result == "success"){
+						$("#id").val(data.id);
+						newbootbox.alert("保存成功！").done(function(){
+							initCqfn();
+						});
+					}
+				}
+			});
+			//清空之前选中和复制的参数
 			$("#cqDate").val("");
 			$("#cqcontent").val("");
 			psszName="";
+			psszId = "";
 		});
 		
 		//转办
@@ -328,7 +359,7 @@ var pageModule = function(){
 		    	$("#dialogzz").css("display","table");
 				var ajax_option ={
 					type: "post",
-					url:"/app/dzbms/fileinfo/savePDF",//默认是form action
+					url:uploadFileUrl,//默认是form action
 					success:function(data){
 						$("#dialogzz").hide();
 						if(data.result == "success"){
@@ -362,7 +393,7 @@ var pageModule = function(){
 				}
 				$(".fileinput-filename").text(fileName);
 				
-				var id=$("#returnFileId").val();
+				var id=$("#id").val();
 				$("#idpdf").val(id);
 				$("#form3").submit();
 			});
@@ -390,9 +421,10 @@ var pageModule = function(){
 	return{
 		//加载页面处理程序
 		initControl:function(){
+			initdictionary();
+			initCqfn();
 			initUserTree();
 			makeLoginUser();
-			initdictionary();
 			initother();
 			initPdf();
 			initdatafn();

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.db.business.dao.DocumentInfoDao">
+
+	<select id="queryObject" resultType="com.css.app.db.business.entity.DocumentInfo">
+		select * from DB_DOCUMENT_INFO where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.db.business.entity.DocumentInfo">
+		select * from DB_DOCUMENT_INFO 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from DB_DOCUMENT_INFO 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.db.business.entity.DocumentInfo">
+		insert into DB_DOCUMENT_INFO
+		(
+			"ID", 
+			"DOC_TITLE", 
+			"SECURITY_ID", 
+			"SECURITY_CLASSIFICATION", 
+			"URGENCY_ID", 
+			"URGENCY_DEGREE", 
+			"DOC_CODE", 
+			"BANJIAN_NUMBER", 
+			"USER_ID", 
+			"USER_NAME", 
+			"APPLY_TIME", 
+			"PRINT_DATE", 
+			"JOB_CONTENT", 
+			"FIRST_ZB_TIME", 
+			"SZ_READ_IDS", 
+			"CUIBAN_FLAG", 
+			"DOC_TYPE_ID", 
+			"DOC_TYPE_NAME", 
+			"REMARK"
+		)
+		values
+		(
+			#{id}, 
+			#{docTitle}, 
+			#{securityId}, 
+			#{securityClassification}, 
+			#{urgencyId}, 
+			#{urgencyDegree}, 
+			#{docCode}, 
+			#{banjianNumber}, 
+			#{userId}, 
+			#{userName}, 
+			#{applyTime}, 
+			#{printDate}, 
+			#{jobContent}, 
+			#{firstZbTime}, 
+			#{szReadIds}, 
+			#{cuibanFlag}, 
+			#{docTypeId}, 
+			#{docTypeName},
+			#{remark}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.db.business.entity.DocumentInfo">
+		update DB_DOCUMENT_INFO 
+		<set>
+			<if test="docTitle != null">"DOC_TITLE" = #{docTitle}, </if>
+			<if test="securityId != null">"SECURITY_ID" = #{securityId}, </if>
+			<if test="securityClassification != null">"SECURITY_CLASSIFICATION" = #{securityClassification}, </if>
+			<if test="urgencyId != null">"URGENCY_ID" = #{urgencyId}, </if>
+			<if test="urgencyDegree != null">"URGENCY_DEGREE" = #{urgencyDegree}, </if>
+			<if test="docCode != null">"DOC_CODE" = #{docCode}, </if>
+			<if test="banjianNumber != null">"BANJIAN_NUMBER" = #{banjianNumber}, </if>
+			<if test="userId != null">"USER_ID" = #{userId}, </if>
+			<if test="userName != null">"USER_NAME" = #{userName}, </if>
+			<if test="applyTime != null">"APPLY_TIME" = #{applyTime}, </if>
+			<if test="printDate != null">"PRINT_DATE" = #{printDate}, </if>
+			<if test="jobContent != null">"JOB_CONTENT" = #{jobContent}, </if>
+			<if test="firstZbTime != null">"FIRST_ZB_TIME" = #{firstZbTime}, </if>
+			<if test="szReadIds != null">"SZ_READ_IDS" = #{szReadIds}, </if>
+			<if test="cuibanFlag != null">"CUIBAN_FLAG" = #{cuibanFlag}, </if>
+			<if test="docTypeId != null">"DOC_TYPE_ID" = #{docTypeId}, </if>
+			<if test="docTypeName != null">"DOC_TYPE_NAME" = #{docTypeName}, </if>
+			<if test="remark != null">"REMARK" = #{remark}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from DB_DOCUMENT_INFO where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from DB_DOCUMENT_INFO where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

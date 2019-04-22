@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.db.config.dao.RoleSetDao">
+
+	<select id="queryObject" resultType="com.css.app.db.config.entity.RoleSet">
+		select * from DB_ROLE_SET where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.db.config.entity.RoleSet">
+		select * from DB_ROLE_SET 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from DB_ROLE_SET 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.db.config.entity.RoleSet">
+		insert into DB_ROLE_SET
+		(
+			"ID", 
+			"USER_ID", 
+			"USER_NAME", 
+			"DEPT_ID", 
+			"DEPT_NAME", 
+			"ROLE_FLAG", 
+			"REMARK"
+		)
+		values
+		(
+			#{id}, 
+			#{userId}, 
+			#{userName}, 
+			#{deptId}, 
+			#{deptName}, 
+			#{roleFlag}, 
+			#{remark}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.db.config.entity.RoleSet">
+		update DB_ROLE_SET 
+		<set>
+			<if test="userId != null">"USER_ID" = #{userId}, </if>
+			<if test="userName != null">"USER_NAME" = #{userName}, </if>
+			<if test="deptId != null">"DEPT_ID" = #{deptId}, </if>
+			<if test="deptName != null">"DEPT_NAME" = #{deptName}, </if>
+			<if test="roleFlag != null">"ROLE_FLAG" = #{roleFlag}, </if>
+			<if test="remark != null">"REMARK" = #{remark}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from DB_ROLE_SET where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from DB_ROLE_SET where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

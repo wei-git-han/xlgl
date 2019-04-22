@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.db.config.dao.AdminSetDao">
+
+	<select id="queryObject" resultType="com.css.app.db.config.entity.AdminSet">
+		select * from DB_ADMIN_SET where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.db.config.entity.AdminSet">
+		select * from DB_ADMIN_SET where 1=1
+		<if test="userId != null and userId != null">
+			and USER_ID = #{userId}
+		</if>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from DB_ADMIN_SET 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.db.config.entity.AdminSet">
+		insert into DB_ADMIN_SET
+		(
+			"ID", 
+			"USER_ID", 
+			"USER_NAME", 
+			"DEPT_ID", 
+			"DEPT_NAME", 
+			"ADMIN_TYPE", 
+			"REMARK"
+		)
+		values
+		(
+			#{id}, 
+			#{userId}, 
+			#{userName}, 
+			#{deptId}, 
+			#{deptName}, 
+			#{adminType}, 
+			#{remark}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.db.config.entity.AdminSet">
+		update DB_ADMIN_SET 
+		<set>
+			<if test="userId != null">"USER_ID" = #{userId}, </if>
+			<if test="userName != null">"USER_NAME" = #{userName}, </if>
+			<if test="deptId != null">"DEPT_ID" = #{deptId}, </if>
+			<if test="deptName != null">"DEPT_NAME" = #{deptName}, </if>
+			<if test="adminType != null">"ADMIN_TYPE" = #{adminType}, </if>
+			<if test="remark != null">"REMARK" = #{remark}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from DB_ADMIN_SET where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from DB_ADMIN_SET where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
