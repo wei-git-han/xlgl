@@ -113,6 +113,19 @@
 							        			<div class="sryj_footer">
 							        				<button type="button" id="tijiao">提交草稿</button>
 							        				<button type="button" id="clear">清屏</button>
+							        				<div style="display:inline-block;">
+							        					<button type="button" id="addfjbtn" class="addfjbtn"><i class="fa fa-link"></i>添加附件</button>
+							        					<form class="form-horizontal" id="form3" target="iframe7" role="form" method="post" enctype="multipart/form-data" action="/filefj/savePDF">
+															<input type="hidden"  id="idpdf" name="idpdf"/>
+															<div class="fileinput fileinput-new" data-provides="fileinput">
+																<span class="fileinput-filename" style="padding-right:10px;line-height:30px;display:none"></span>
+									                            <span>
+									                            	<input type="file" name="pdf" id="pdf" accept=".pdf,.ofd,.doc,.docx,.wps" multiple style="display:none" />
+									                            </span>
+									                        </div> 
+								                        </form>
+								                        <iframe name="iframe7" style="display: none;"></iframe>
+							        				</div>
 							        			</div>
 						            		</div>
 						            	</div>
@@ -246,6 +259,7 @@
 <script src="../../../../../assets/admin/layout/scripts/demo.js" type="text/javascript"></script>
 <script src="../../../../../assets/admin/pages/scripts/tasks.js" type="text/javascript"></script>
 <script src="../../../../../templates/admin/commons/js/commons.js" type="text/javascript"></script>
+<script src="../../../../../templates/admin/commons/js/jquery.form.js" type="text/javascript" ></script>
 <script src="../../../common/js/commons.js" type="text/javascript"></script>
 <script src="../js/view.js" type="text/javascript"></script>
 

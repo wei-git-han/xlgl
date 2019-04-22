@@ -669,6 +669,13 @@ ul{
 	margin:auto;
 }
 
+.addfjbtn{
+	color:#999!important;
+	text-decoration:underline;
+	background:none!important;
+	border:0!important;
+}
 
-
-
+.addfjbtn:hover{
+	color:#666!important;
+}

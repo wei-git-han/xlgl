@@ -8,6 +8,8 @@ var cbDataUrl = {"url":"/app/db/document/view/data/cbList.json","dataType":"text
 var bjDataUrl = {"url":"/app/db/document/view/data/bjList.json","dataType":"text"}; //文件转办-办结记录list
 var banjieUrl = {"url":"/app/db/document/view/data/tjsuccess.json","dataType":"text"}; //办结地址
 var chengbanUrl = {"url":"/app/db/document/view/data/tjsuccess.json","dataType":"text"}; //承办地址
+var uploadFileUrl = "/app/db/documentinfo/uploadFile";//文件上传
+
 var fileId=getUrlParam("fileId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 
@@ -260,9 +262,7 @@ var pageModule = function(){
 			}
 		});	
 	}
-	
-	
-	
+
 	var initother = function(){
 		//返回
 		$("#goback").click(function(){
@@ -328,6 +328,44 @@ var pageModule = function(){
 			 	}
 			});
 		});
+		
+		//办理反馈-添加附件
+		$("#form3").validate({
+		    submitHandler: function() {
+				var ajax_option ={
+					type: "post",
+					url:uploadFileUrl,//默认是form action
+					success:function(data){
+						if(data.result == "success"){
+							newbootbox.alert('上传成功！').done(function(){
+				        		$(".fileinput-filename").text("");
+				    			$("#pdf").val("");
+		    				});
+						}else{
+							newbootbox.alert("上传失败！"); 
+						}
+					}
+				}
+				$('#form3').ajaxSubmit(ajax_option);
+		   }
+		});
+		
+		$("#addfjbtn").click(function(){
+			$("#pdf").unbind("change");
+			$("#pdf").click();
+			$("#pdf").change(function(){
+				//alert($("#pdf").val())
+				/*var fileNameArry = $(this).val().split("\\");
+				var fileName;
+				if(fileNameArry.length==1){
+					fileName=fileNameArry[0];
+				}else{
+					fileName=fileNameArry[fileNameArry.length-1];
+				}
+				$(".fileinput-filename").text(fileName);
+				$("#form3").submit();*/
+			});
+		})
 	}
 		
 	return{
