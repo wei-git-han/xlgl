@@ -1,6 +1,6 @@
 var deptTreeUrl = {"url":"/app/base/dept/list","dataType":"text"}; //部门树
-var sureUrl = {"url":"/app/db/documentzbjl","dataType":"text"}; //保存
-var fileId=getUrlParam("fileId")||""; //主文件id
+var sureUrl = {"url":"/app/db/documentzbjl/save","dataType":"text"}; //保存
+var infoId=getUrlParam("infoId")||""; //主文件id
 var pageModule = function(){
 	var initTree = function(){
 		$ajax({
@@ -44,7 +44,7 @@ var pageModule = function(){
 			
 			$ajax({
 				url:sureUrl,
-				data:{id:fileId,names:names.toString(),ids:ids.toString()},
+				data:{infoId:infoId,deptNames:names.toString(),deptIds:ids.toString()},
 				success:function(data){
 					newbootbox.newdialogClose("zhuanbanDialog");
 					if(data.result=="success"){
