@@ -22,8 +22,10 @@ import com.css.base.utils.StringUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
+import com.css.app.db.business.entity.DocumentInfo;
 import com.css.app.db.business.entity.DocumentZbjl;
 import com.css.app.db.business.entity.SubDocInfo;
+import com.css.app.db.business.service.DocumentInfoService;
 import com.css.app.db.business.service.DocumentZbjlService;
 import com.css.app.db.business.service.SubDocInfoService;
 import com.css.app.db.util.DbDocStatusDefined;
@@ -45,37 +47,29 @@ public class DocumentZbjlController {
 	private SubDocInfoService subDocInfoService;
 	@Autowired
 	private BaseAppOrganService baseAppOrganService;
+	@Autowired
+	private DocumentInfoService documentInfoService;
 	/**
 	 * 列表
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	@RequiresPermissions("dbdocumentzbjl:list")
-	public void list(Integer page, Integer limit){
-		Map<String, Object> map = new HashMap<>();
-		PageHelper.startPage(page, limit);
-		
-		//查询列表数据
-		List<DocumentZbjl> dbDocumentZbjlList = documentZbjlService.queryList(map);
-		
-		PageUtils pageUtil = new PageUtils(dbDocumentZbjlList);
-		Response.json("page",pageUtil);
+	public void list(String infoId){
+		List<DocumentZbjl> zbjlList = null;
+		if(StringUtils.isNotBlank(infoId)) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("infoId", infoId);
+			zbjlList = documentZbjlService.queryList(map);
+		}
+		Response.json(zbjlList);
 	}
 	
 	
 	/**
-	 * 信息
-	 */
-	@ResponseBody
-	@RequestMapping("/info/{id}")
-	@RequiresPermissions("dbdocumentzbjl:info")
-	public void info(@PathVariable("id") String id){
-		DocumentZbjl dbDocumentZbjl = documentZbjlService.queryObject(id);
-		Response.json("dbDocumentZbjl", dbDocumentZbjl);
-	}
-	
-	/**
-	 * 保存
+	 * 保存转办信息
+	 * @param infoId 主文件id
+	 * @param deptIds 选中部门的ids
+	 * @param deptNames 选中部门的名称
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
@@ -87,6 +81,7 @@ public class DocumentZbjlController {
 			String loginUserName=CurrentUser.getUsername();
 			String loginUserDeptId=CurrentUser.getDepartmentId();
 			String loginUserDeptName=CurrentUser.getOrgName();
+			Date date = new Date();
 			//添加转办记录
 			DocumentZbjl zbjl=new DocumentZbjl();
 			zbjl.setId(UUIDUtils.random());
@@ -97,8 +92,14 @@ public class DocumentZbjlController {
 			zbjl.setDeptName(loginUserDeptName);
 			zbjl.setReceiverIds(deptIds);
 			zbjl.setReceiverNames(deptNames);
-			zbjl.setCreatedTime(new Date());
+			zbjl.setCreatedTime(date);
 			documentZbjlService.save(zbjl);
+			//第一次转办时间同步到主表
+			DocumentInfo info = documentInfoService.queryObject(infoId);
+			if(info != null) {
+				info.setFirstZbTime(date);
+				documentInfoService.update(info);
+			}
 			//添加子分支主记录
 			String[] deptArray = deptIds.split(",");
 			for (String deptId : deptArray) {
@@ -119,30 +120,5 @@ public class DocumentZbjlController {
 			json.put("result", "fail");
 		}		
 		Response.json(json);
-	}
-	
-	/**
-	 * 修改
-	 */
-	@ResponseBody
-	@RequestMapping("/update")
-	@RequiresPermissions("dbdocumentzbjl:update")
-	public void update(@RequestBody DocumentZbjl dbDocumentZbjl){
-		documentZbjlService.update(dbDocumentZbjl);
-		
-		Response.ok();
-	}
-	
-	/**
-	 * 删除
-	 */
-	@ResponseBody
-	@RequestMapping("/delete")
-	@RequiresPermissions("dbdocumentzbjl:delete")
-	public void delete(@RequestBody String[] ids){
-		documentZbjlService.deleteBatch(ids);
-		
-		Response.ok();
-	}
-	
+	}	
 }

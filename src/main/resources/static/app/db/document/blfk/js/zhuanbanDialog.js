@@ -1,11 +1,10 @@
-var deptTreeUrl = {"url":"/app/base/dept/list","dataType":"text"}; //部门树
+var deptTreeUrl = {"url":"/app/base/dept/tree_onlyroot","dataType":"text"}; //部门树
 var sureUrl = {"url":"/app/db/documentzbjl/save","dataType":"text"}; //保存
-var infoId=getUrlParam("infoId")||""; //主文件id
+var infoId=getUrlParam("fileId")||""; //主文件id
 var pageModule = function(){
 	var initTree = function(){
 		$ajax({
 			url:deptTreeUrl,
-			data : {organId:"root"},
 			success:function(data){
 				$("#people-tree").jstree({
 				    "plugins": ["wholerow", "types" , "checkbox"],
