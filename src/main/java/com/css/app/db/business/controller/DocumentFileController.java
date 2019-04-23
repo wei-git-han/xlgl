@@ -7,16 +7,18 @@ import java.util.Map;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONObject;
 import com.css.app.db.business.entity.DocumentFile;
 import com.css.app.db.business.service.DocumentFileService;
 import com.css.base.utils.Response;
 import com.css.base.utils.StringUtils;
 import com.css.base.utils.UUIDUtils;
+
+import cn.com.css.filestore.impl.HTTPFile;
 
 
 /**
@@ -52,11 +54,22 @@ public class DocumentFileController {
 	 * 信息
 	 */
 	@ResponseBody
-	@RequestMapping("/info/{id}")
-	@RequiresPermissions("dbdocumentfile:info")
-	public void info(@PathVariable("id") String id){
-		DocumentFile dbDocumentFile = documentFileService.queryObject(id);
-		Response.json("dbDocumentFile", dbDocumentFile);
+	@RequestMapping("/getFile")
+	public void info(String id){
+		DocumentFile documentFile = documentFileService.queryObject(id);
+		JSONObject json= new JSONObject();
+		if(documentFile!=null) {
+			String formatId=documentFile.getFileServerFormatId();
+			if(StringUtils.isNotBlank(formatId)){
+				//获取版式文件的下载路径
+				HTTPFile httpFiles = new HTTPFile(formatId);
+				if(httpFiles!=null) {
+					json.put("formatId", formatId);
+					json.put("downFormatIdUrl", httpFiles.getAssginDownloadURL(true));
+				}
+			}
+		}
+		Response.json(json);
 	}
 	
 	/**
@@ -89,9 +102,12 @@ public class DocumentFileController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	public void delete(String id){
-		documentFileService.delete(id);
-		Response.json("result","success");
+	public void delete(String ids){
+		if(StringUtils.isNotBlank(ids)) {
+			String[] idArray = ids.split(",");
+			documentFileService.deleteBatch(idArray);
+			Response.json("result","success");
+		}
 	}
 	
 }

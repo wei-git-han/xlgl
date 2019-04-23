@@ -51,6 +51,8 @@ public class DocumentInfo implements Serializable {
 	private String docTypeId;
 	//文件类型
 	private String docTypeName;
+	//创建时间
+	private Date createdTime;
 	//备注
 	private String remark;
 
@@ -269,6 +271,18 @@ public class DocumentInfo implements Serializable {
 	 */
 	public void setDocTypeName(String docTypeName) {
 		this.docTypeName = docTypeName;
+	}
+	/**
+	 * 设置：创建时间
+	 */
+	public Date getCreatedTime() {
+		return createdTime;
+	}
+	/**
+	 * 设置：创建时间
+	 */
+	public void setCreatedTime(Date createdTime) {
+		this.createdTime = createdTime;
 	}
 	/**
 	 * 设置：备注

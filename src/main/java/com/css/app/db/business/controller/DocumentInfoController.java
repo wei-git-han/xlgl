@@ -29,7 +29,6 @@ import com.css.app.db.business.service.DocumentFileService;
 import com.css.app.db.business.service.DocumentInfoService;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.GwPageUtils;
-import com.css.base.utils.PageUtils;
 import com.css.base.utils.Response;
 import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
@@ -180,6 +179,7 @@ public class DocumentInfoController {
 		} else {
 			uuid=UUIDUtils.random();
 			documentInfo.setId(uuid);
+			documentInfo.setCreatedTime(new Date());
 			documentInfoService.save(documentInfo);
 			jo.put("id",uuid);
 		}

@@ -4,20 +4,18 @@ var saveSzpsUrl = {"url":rootPath +"/documentszps/save","dataType":"text"}; //�
 var getSzpsListUrl = {"url":rootPath +"/documentszps/queryList","dataType":"text"}; //保存首长批示
 var updateUrl={"url":rootPath +"/documentinfo/update","dataType":"json"}; //表单数据保存
 var uploadFileUrl = "/app/db/documentinfo/uploadFile";//文件上传
-var getFileListUrl = {"url":rootPath +"/documentfile/ist","dataType":"text"}//获取所有相关文件
+var fileDataUrl = {"url":rootPath +"/documentfile/list","dataType":"text"}; //相关文件-附件list
+var delFileUrl = {"url":"/app/db/documentfile/delete","dataType":"text"}; /*相关文件--删除附件*/
+var zbjlDataUrl = {"url":"/app/db/document/view/data/zbjlList.json","dataType":"text"}; //文件转办-转办记录list
+var getFormatFileUrl = {"url":"/app/db/documentfile/getFile","dataType":"text"}; /*相关文件-点击获取对应文件*/
 
-var ifsuccess = {"url":"/app/db/document/djlr/data/success.json","dataType":"text"}; /*查阅人树*/
-var usertree = {"url":"/app/base/user/treeByPost","dataType":"text"}; /*查阅人树*/
-var speedUrl = {"url":rootPath +"/dic/getDicts?type=emergency_gegree","dataType":"text"}; /*紧急程度*/  
+var usertree = {"url":"/app/base/user/treeByPost","dataType":"text"}; /*查阅人树*/ 
 var orgTree1 = {"url":"/app/base/dept/tree","dataType":"text"}; //录入单位选择树
-var orgTree_fw = {"url":"/app/dzbms/swfworg/tree?type=1","dataType":"text"};//本单位
-var orgTree_sw = {"url":"/app/dzbms/swfworg/tree?type=0","dataType":"text"};//外单位
 var getPdfPath = {"url":rootPath +"/fileinfo/getFormaFileUrl","dataType":"text"};
 var getData ={"url":rootPath +"/dic/getOne","dataType":"json"}; /*返回的数据*/
 var UserTreeUrl = {"url":"/app/base/user/treeByPost","dataType":"text"}; /*查阅人树*/
-var zbjlDataUrl = {"url":"/app/db/document/view/data/zbjlList.json","dataType":"text"}; //文件转办-转办记录list
-var fileDataUrl = {"url":"/app/db/document/djlr/data/fujianList.json","dataType":"text"}; //相关文件-附件list
-var fileId=getUrlParam("fileId")||""; //主文件id
+
+//var fileId=getUrlParam("fileId")||""; //主文件id
 var scanFilePath = "";//扫描件路径
 var pagedate = new Date();
 var month = pagedate.getMonth()+1;
@@ -119,7 +117,7 @@ var pageModule = function(){
 	var initzbjlfn = function(){
 		$ajax({
 			url:zbjlDataUrl,
-			data:{fileId:fileId},
+			data:{fileId:$("#id").val()},
 			success:function(data){
 				$("#zbrecord").html("");
 				$.each(data,function(i,item){
@@ -140,18 +138,23 @@ var pageModule = function(){
 	var initfilefn = function(){
 		$ajax({
 			url:fileDataUrl,
-			data:{fileId:fileId},
+			data:{infoId:$("#id").val()},
 			success:function(data){
 				$("#file_all").html("");
 				$.each(data,function(i,item){
 					$("#file_all").append(
-						'<li data="'+item.fujId+'" data_url="'+item.scanFilePath+'"><input type="checkbox" name="fjcheckbox" /> <a>'+item.fujText+'</a></li>'
+						'<li><input type="checkbox" name="fjcheckbox" data="'+item.id+'" /> <a data="'+item.id+'">'+item.fileName+'</a></li>'
 		            )
 				});
-				$("#file_all>li").click(function(){
+				$("#file_all>li>a").click(function(){
 					var scanId = $(this).attr("data");
-					var scanFilePath = $(this).attr("data_url");
-					psLoad(scanId,scanFilePath);
+					$ajax({
+						url:getFormatFileUrl,
+						data:{id:scanId},
+						success:function(data){
+							psLoad(data.formatId,data.downFormatIdUrl);
+						}
+			    	});
 				})
 			}
 		});	
@@ -205,7 +208,8 @@ var pageModule = function(){
 							window.location.href = "/app/db/document/djlr/html/djlr.html";
 						}else{
 							setTimeout(function(){
-								newbootbox.alert("保存成功！").done(function(){});
+								newbootbox.alert("保存成功！").done(function(){
+								});
 							},200);
 						}
 					}
@@ -338,8 +342,8 @@ var pageModule = function(){
 					}
 				})
 				$ajax({
-					url:ifsuccess,
-					data:{id:checkId.toString()},
+					url:delFileUrl,
+					data:{ids:checkId.toString()},
 					success:function(data){
 						if(data.result == "success" && data.url != ""){
 							newbootbox.alert("删除成功！").done(function(){
@@ -405,6 +409,7 @@ var pageModule = function(){
 				    			$("#pdf").val("");
 				    			$("#scanId").val(data.smjId);
 			        			psLoad('', data.smjFilePath);
+			        			initfilefn();
 		    				});
 						}else{
 							newbootbox.alert("上传失败！"); 
@@ -463,7 +468,6 @@ var pageModule = function(){
 		initControl:function(){
 			initdictionary();
 			initCqfn();
-			initfilefn();
 			initzbjlfn();
 			initUserTree();
 			makeLoginUser();

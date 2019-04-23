@@ -8,38 +8,32 @@ var pageModule = function(){
 	var initgrid = function(){
         grid = $("#gridcont").createGrid({
             columns:[
-                 {display:"军委办件号",name:"",width:"10%",align:"center",render:function(rowdata,n){
-                	 
+                 {display:"军委办件号",name:"",width:"15%",align:"center",render:function(rowdata,n){
+                	 return rowdata.banjianNumber;
                  }},
-                 {display:"局内状态",name:"",width:"5%",align:"center",render:function(rowdata,n){
-                	 
+                 {display:"办理状态",name:"",width:"6%",align:"center",render:function(rowdata,n){
+                	 return '';
                  }},
                  {display:"办件标题",name:"",width:"15%",align:"left",render:function(rowdata){
-                	 
+                	 return rowdata.docTitle
                  }},
-                 {display:"紧急程度",name:"",width:"5%",align:"center",paixu:true,render:function(rowdata){
-                 
+                 {display:"紧急程度",name:"",width:"6%",align:"center",paixu:true,render:function(rowdata){
+                	 return rowdata.urgencyDegree;
                  }},
                  {display:"批示指示内容",name:"",width:"12%",align:"center",paixu:true,render:function(rowdata){
-                     
+                	 return '';
                  }},
-                 {display:"督办落实情况",name:"",width:"10%",align:"left",paixu:true,render:function(rowdata){
-                
+                 {display:"承办单位/人",name:"",width:"13%",align:"center",paixu:true,render:function(rowdata){
+                	 return '';
                  }},
-                 {display:"承办单位/人",name:"",width:"10%",align:"center",paixu:true,render:function(rowdata){
-                 
+                 {display:"办件分类",name:"",width:"15%",align:"center",paixu:true,render:function(rowdata){
+                	 return rowdata.docTypeName;
                  }},
-                 {display:"办件分类",name:"",width:"5%",align:"center",paixu:true,render:function(rowdata){
-                	
-                 }},
-                 {display:"转办时间",name:"",width:"10%",align:"center",render:function(rowdata){
-                	 
-                 }},
-                 {display:"接收时间",name:"",width:"10%",align:"center",paixu:true,render:function(rowdata){
-                	
+                 {display:"创建时间",name:"",width:"10%",align:"center",render:function(rowdata){
+                	 return rowdata.createdTime;
                  }},
                  {display:"操作",name:"do",width:"8%",align:"center",render:function(rowdata){
-                	
+                	 return '';
                  }}
             ],
             width:"100%",

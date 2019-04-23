@@ -1,7 +1,6 @@
 package com.css.app.db.business.entity;
 
 import java.io.Serializable;
-import java.util.Date;
 
 
 
