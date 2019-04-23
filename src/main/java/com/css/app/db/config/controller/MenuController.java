@@ -51,7 +51,7 @@ public class MenuController {
 		boolean admin = CurrentUser.getIsManager(appId, clientSecret);
 		Map<String, Object> menuMap = new HashMap<>();
 		String[] menuIds = null;
-		if (!admin) {
+		/*if (!admin) {
 			Map<String, Object> map = new HashMap<>();
 			map.put("userId", CurrentUser.getUserId());
 			List<AdminSet> list = adminSetService.queryList(map);
@@ -66,7 +66,7 @@ public class MenuController {
 			}else {
 				menuIds= new String[] {"001","003","006"};
 			}
-		}
+		}*/
 		menuMap.put("menuIds", menuIds);
 		List<Menu> menuList = menuService.queryList(menuMap);
 		Response.json(menuList);
