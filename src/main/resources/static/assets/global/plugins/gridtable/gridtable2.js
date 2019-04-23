@@ -57,7 +57,7 @@ function createtable(obj){
 						datatableborder:"1px solid blue",//n
 						datefont:{},//n
 						pageyno:true,
-						pageheight:"38px",
+						pageheight:"43px",
 						pagebackgroundcolor:"transparent",
 						checkbox:false,
 						rownumberyon:false,
@@ -133,7 +133,7 @@ function createtable(obj){
 			});
 			if(thdata.paixu==true){
 				thobj.css({"position":"relative"})
-				thobj.append('<span style="position:absolute;right:5px;cursor:pointer;" class="paixuname" id="'+thdata.name+'_col"><i style="position:absolute;right:0px;top:2px;" class="fa fa-sort-asc"></i><i  style="position:absolute;right:0px;top:2px;" class="fa  fa-sort-desc"></i></span>')
+				thobj.append('<span style="position:absolute;right:5px;cursor:pointer;" class="paixuname" id="'+thdata.name+'_col"><i style="position:absolute;right:0px;top:7px;" class="fa fa-sort-asc"></i><i  style="position:absolute;right:0px;top:6px;" class="fa  fa-sort-desc"></i></span>')
 				var sorttext = "asc";
 				thobj.find("span").click(function(){
 					if(loadfg!=0){
@@ -142,10 +142,10 @@ function createtable(obj){
 							sorttype = sorttext;
 							$(".paixuname").html('<i style="position:absolute;right:0px;top:2px;" class="fa fa-sort-asc"></i><i  style="position:absolute;right:0px;top:2px;" class="fa  fa-sort-desc"></i>')
 							if(sorttext == "asc"){
-								$("#"+thdata.name+"_col").html('<i style="position:absolute;right:0px;top:2px;" class="fa fa-sort-asc"></i>');
+								$("#"+thdata.name+"_col").html('<i style="position:absolute;right:0px;top:7px;" class="fa fa-sort-asc"></i>');
 								sorttext = "desc";
 							}else{
-								$("#"+thdata.name+"_col").html('<i  style="position:absolute;right:0px;top:2px;" class="fa  fa-sort-desc"></i>')
+								$("#"+thdata.name+"_col").html('<i  style="position:absolute;right:0px;top:6px;" class="fa  fa-sort-desc"></i>')
 								sorttext = "asc";
 							}
 							

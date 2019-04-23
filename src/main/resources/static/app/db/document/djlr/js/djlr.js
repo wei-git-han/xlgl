@@ -2,6 +2,9 @@ var tableList= {"url":"/app/db/documentinfo/list","dataType":"text"};//原table�
 var numsList={"url":rootPath +"/documentFlow/numsList","dataType":"text"};//筛选状态数字统计
 var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//部门树
 var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//人员树
+var delDocUrl = {"url":"/app/db/document/djlr/data/success.json","dataType":"text"};//表格数据删除
+var chehuiDocUrl = {"url":"/app/db/document/djlr/data/success.json","dataType":"text"};//表格数据撤回
+
 var grid = null;
 var total=0;//列表中，数据的总条数
 var pageModule = function(){
@@ -42,7 +45,12 @@ var pageModule = function(){
                 	 return rowdata.createdTime;
                  }},
                  {display:"操作",name:"do",width:"8%",align:"center",render:function(rowdata){
-                	 return '';
+                	 var caozuo = '';
+                	 if(rowdata.firstZbTime == "" || rowdata.firstZbTime == null || rowdata.firstZbTime=="undefined"){
+                     	 caozuo +='<a title="撤回" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="chehuiDoc(\''+rowdata.id+'\')"><i class="fa fa-mail-reply"></i></a>';
+                     	 caozuo +='<a title="删除" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="deleteDoc(\''+rowdata.id+'\')"><i class="fa fa-trash-o"></i></a>';
+    				 }
+                	 return caozuo;
                  }}
             ],
             width:"100%",
@@ -230,4 +238,52 @@ function refreshgrid(){
 	var search = $("#searchVal").val();
 	grid.setparams({search:search,documentStatus:$("input[name='documentStatus']:checked").val()});
 	grid.loadtable();
+}
+
+//删除数据
+function deleteDoc(docId) {
+	newbootbox.confirm({
+	    title: "提示",
+	    message: "是否要进行删除操作？",
+	    callback1:function(){
+			$ajax({
+				url:delDocUrl,
+				data:{id:docId},
+				type: "GET",
+				success:function(data){
+					if(data.result=='success'){
+						newbootbox.alertInfo('删除成功！').done(function(){
+							pageModule.initgrid();
+						});
+					}else{
+						newbootbox.alertInfo('删除失败！')
+					}
+				}
+			});
+	    }
+	});
+}
+
+//撤回数据
+function chehuiDoc(docId) {
+	newbootbox.confirm({
+	    title: "提示",
+	    message: "是否要进行撤回操作？",
+	    callback1:function(){
+			$ajax({
+				url:chehuiDocUrl,
+				data:{id:docId},
+				type: "GET",
+				success:function(data){
+					if(data.result=='success'){
+						newbootbox.alertInfo('撤回成功！').done(function(){
+							pageModule.initgrid();
+						});
+					}else{
+						newbootbox.alertInfo('撤回失败！')
+					}
+				}
+			});
+	    }
+	});
 }
