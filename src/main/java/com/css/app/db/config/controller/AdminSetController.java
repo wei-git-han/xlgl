@@ -1,23 +1,23 @@
 package com.css.app.db.config.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.stereotype.Controller;
 
-import com.css.base.utils.PageUtils;
-import com.css.base.utils.UUIDUtils;
-import com.github.pagehelper.PageHelper;
-import com.css.base.utils.Response;
+import com.css.addbase.apporgan.entity.BaseAppOrgan;
+import com.css.addbase.apporgan.entity.BaseAppUser;
+import com.css.addbase.apporgan.service.BaseAppOrganService;
+import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.db.config.entity.AdminSet;
 import com.css.app.db.config.service.AdminSetService;
+import com.css.base.utils.GwPageUtils;
+import com.css.base.utils.Response;
+import com.css.base.utils.UUIDUtils;
+import com.github.pagehelper.PageHelper;
 
 
 /**
@@ -28,26 +28,25 @@ import com.css.app.db.config.service.AdminSetService;
  * @date 2019-04-19 10:22:04
  */
 @Controller
-@RequestMapping("/adminset")
+@RequestMapping("/app/db/adminset")
 public class AdminSetController {
 	@Autowired
 	private AdminSetService adminSetService;
+	@Autowired
+	private BaseAppOrganService baseAppOrganService;
 	
+	@Autowired
+	private BaseAppUserService baseAppUserService;
 	/**
 	 * 列表
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	@RequiresPermissions("dbadminset:list")
-	public void list(Integer page, Integer limit){
-		Map<String, Object> map = new HashMap<>();
-		PageHelper.startPage(page, limit);
-		
-		//查询列表数据
-		List<AdminSet> dbAdminSetList = adminSetService.queryList(map);
-		
-		PageUtils pageUtil = new PageUtils(dbAdminSetList);
-		Response.json("page",pageUtil);
+	public void list(Integer page, Integer pagesize){
+		PageHelper.startPage(page, pagesize);
+		List<AdminSet> adminSetList = adminSetService.queryList(null);
+		GwPageUtils pageUtil = new GwPageUtils(adminSetList);
+		Response.json(pageUtil);
 	}
 	
 	
@@ -55,36 +54,42 @@ public class AdminSetController {
 	 * 信息
 	 */
 	@ResponseBody
-	@RequestMapping("/info/{id}")
-	@RequiresPermissions("dbadminset:info")
-	public void info(@PathVariable("id") String id){
-		AdminSet dbAdminSet = adminSetService.queryObject(id);
-		Response.json("dbAdminSet", dbAdminSet);
+	@RequestMapping("/info")
+	public void info(String id){
+		AdminSet adminSet = adminSetService.queryObject(id);
+		Response.json(adminSet);
 	}
 	
 	/**
 	 * 保存
 	 */
 	@ResponseBody
-	@RequestMapping("/save")
-	@RequiresPermissions("dbadminset:save")
-	public void save(@RequestBody AdminSet dbAdminSet){
-		dbAdminSet.setId(UUIDUtils.random());
-		adminSetService.save(dbAdminSet);
-		
-		Response.ok();
-	}
-	
-	/**
-	 * 修改
-	 */
-	@ResponseBody
-	@RequestMapping("/update")
-	@RequiresPermissions("dbadminset:update")
-	public void update(@RequestBody AdminSet dbAdminSet){
-		adminSetService.update(dbAdminSet);
-		
-		Response.ok();
+	@RequestMapping("/saveOrUpdate")
+	public void save(AdminSet adminSet){
+		String orgId="";
+		String orgName="";
+		String userId = adminSet.getUserId();
+		if(StringUtils.isNotBlank(userId)) {
+			List<BaseAppUser> users = baseAppUserService.findByUserId(userId);
+			if(users != null) {
+				orgId = users.get(0).getOrganid();
+				BaseAppOrgan organ = baseAppOrganService.queryObject(orgId);
+				if(organ != null) {
+					orgName=organ.getName();
+				}
+			}
+		}
+		if(StringUtils.isNotBlank(adminSet.getId())) {
+			adminSet.setDeptId(orgId);
+			adminSet.setDeptName(orgName);
+			adminSetService.update(adminSet);
+		}else {
+			adminSet.setId(UUIDUtils.random());
+			adminSet.setDeptId(orgId);
+			adminSet.setDeptName(orgName);
+			adminSetService.save(adminSet);
+		}
+		Response.json("result", "success");
 	}
 	
 	/**
@@ -92,11 +97,10 @@ public class AdminSetController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	@RequiresPermissions("dbadminset:delete")
-	public void delete(@RequestBody String[] ids){
-		adminSetService.deleteBatch(ids);
-		
-		Response.ok();
+	public void delete(String ids){
+		String[] idArry = ids.split(",");
+		adminSetService.deleteBatch(idArry);
+		Response.json("result","success");
 	}
 	
 }

@@ -1,36 +1,28 @@
 var grid = null;
-var delUrl={"url":rootPath + '/documentclerkset/delete',"dataType":'json'};
+var tableUrl = {"url":rootPath +"/adminset/list","dataType":"text"}; 
+var delUrl = {"url":rootPath +"/adminset/delete","dataType":"text"};  
 var pageModule = function() {
 	var initgrid = function() {
 		grid = $("#gridcont").createGrid({
-			columns: [{
-				display: "所在单位",
-				name: "name",
-				width: "30%",
-				align: "left",
-				render: function(rowdata){
-					 return rowdata.deptName; 
-				}
-			}, {
-				display: "人员",
-				name: "children",
-				width: "30%",
-				align: "center",
-				render:  function(rowdata){
-					 return rowdata.userName; 
-				}
-			},
- 			{
-				display : "角色",
-				name : "directortype",
-				width: "40%",
-				align : "center",
-				render : function(rowdata) {
-					return rowdata.directortype=='1'?"正局":"副局";
-				}
-			}
-			],
-			
+			columns: [
+				  {display: "部门",name:"deptName",width: "40%",align: "left",render: function(rowdata,n){
+					  return rowdata.deptName;   
+				  }}, 
+				  {display: "姓名",name: "userName",width: "40%",align: "center",render: function(rowdata,n){
+					  return rowdata.userName;   
+				  }}, 
+				  {display: "管理员类型",name: "adminType",width: "10%",align: "center",render: function(rowdata,n){
+					  if('1'==rowdata.adminType){
+						  return "部管理员"
+					  }
+					  if('2'==rowdata.adminType){
+						  return "局管理员"
+					  }
+				  }}, 
+				  {display: "操作",name: "do",width: "10%",align: "center",render: function(rowdata,n){
+					  return '<i class="fa fa fa-pencil" style="cursor:pointer;background:#5498EB;padding:4px 5px;color:#fff;" onclick="editfn(\''+rowdata.id+'\')" title="编辑"></i>';
+				  }}
+				 ],
 			width: "100%",
 			height: "100%",
 			checkbox: true,
@@ -41,13 +33,13 @@ var pageModule = function() {
 			url: tableUrl
 			
 		});
-
 	}
 
 	var initother = function() {
 		$("#add").click(function() {
 			window.location.href="edit.html";
 		});
+		
 		$("#edit").click(function() {
 			var datas = grid.getcheckrow();
 			var ids=[];
@@ -105,3 +97,8 @@ var pageModule = function() {
 	}
 
 }();
+
+//编辑
+var editfn = function(id){
+	window.location.href="edit.html?id="+id;
+}

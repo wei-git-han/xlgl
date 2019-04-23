@@ -1,8 +1,9 @@
-var tableList= {"url":"/app/db/documentinfo/list","dataType":"text"};//原table数据
-var numsList={"url":rootPath +"/documentFlow/numsList","dataType":"text"};//筛选状态数字统计
+var tableList= {"url":"/app/db/documentinfo/list","dataType":"text"};//table数据
+var delDocUrl = {"url":"/app/db/documentinfo/delete","dataType":"text"};//表格数据删除
+var numsList={"url":"/app/db/documentinfo/numsList","dataType":"text"};//筛选状态数字统计
+
 var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//部门树
 var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//人员树
-var delDocUrl = {"url":"/app/db/document/djlr/data/success.json","dataType":"text"};//表格数据删除
 var chehuiDocUrl = {"url":"/app/db/document/djlr/data/success.json","dataType":"text"};//表格数据撤回
 
 var grid = null;
@@ -46,8 +47,8 @@ var pageModule = function(){
                  }},
                  {display:"操作",name:"do",width:"8%",align:"center",render:function(rowdata){
                 	 var caozuo = '';
+                	 caozuo +='<a title="撤回" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="chehuiDoc(\''+rowdata.id+'\')"><i class="fa fa-mail-reply"></i></a>';
                 	 if(rowdata.firstZbTime == "" || rowdata.firstZbTime == null || rowdata.firstZbTime=="undefined"){
-                     	 caozuo +='<a title="撤回" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="chehuiDoc(\''+rowdata.id+'\')"><i class="fa fa-mail-reply"></i></a>';
                      	 caozuo +='<a title="删除" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="deleteDoc(\''+rowdata.id+'\')"><i class="fa fa-trash-o"></i></a>';
     				 }
                 	 return caozuo;
@@ -60,7 +61,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 15,
             pageyno:true,
-            paramobj:{},
+            paramobj:{search:$("#searchVal").val(),documentStatus:$("input[name='documentStatus']:checked").val()},
             loadafter:function(data){
             	total=data.total;
             },
@@ -71,7 +72,7 @@ var pageModule = function(){
 	var numsListfn = function(){
 		$ajax({
 			url:numsList,
-			data:{},
+			data:{search:$("#searchVal").val()},
 			success:function(data){
 				$.each(data,function(i,item){
 					var id = "grdb"+i;

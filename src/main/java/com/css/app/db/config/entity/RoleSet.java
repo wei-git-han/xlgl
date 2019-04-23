@@ -24,7 +24,7 @@ public class RoleSet implements Serializable {
 	private String deptId;
 	//用户部门
 	private String deptName;
-	//角色标识（1：局长；2：局秘书；3：处长；4：参谋；5：首长秘书；6：首长；）
+	//角色标识（3：局长；4：局秘书；5：处长；6：参谋；2：首长秘书；1：首长；）
 	private String roleFlag;
 	//备注
 	private String remark;

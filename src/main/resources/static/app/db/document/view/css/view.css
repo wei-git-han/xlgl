@@ -177,6 +177,7 @@ ul{
 	color:#797979;
 	font-size:16px;
 	font-weight:700;
+	text-align: center;
 }
 .wjlb_title{
 	margin-top:10px;
@@ -664,3 +665,12 @@ ul{
 .addfjbtn:hover{
 	color:#666!important;
 }
+
+.psxqBtn{
+	cursor:pointer;	
+	color:#5599EB;
+	font-size:14px;
+	text-decoration:underline;
+	margin-left:5px;
+}
+

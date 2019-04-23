@@ -9,11 +9,8 @@ import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -127,22 +124,47 @@ public class DocumentInfoController {
 	
 	
 	/**
-	 * 列表
+	 * 列表查询
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	public void list(Integer page, Integer pagesize){
+	public void list(Integer page, Integer pagesize,String search,String documentStatus){
 		Map<String, Object> map = new HashMap<>();
+		map.put("search", search);
+		map.put("docStatus", documentStatus);
 		PageHelper.startPage(page, pagesize);
-		//查询列表数据
 		List<DocumentInfo> infoList = documentInfoService.queryList(map);
 		GwPageUtils pageUtil = new GwPageUtils(infoList);
 		Response.json(pageUtil);
 	}
 	
+	/**
+	 * 录入界面列表筛选数量统计
+	 * @param search 搜索参数
+	 */
+	@ResponseBody
+	@RequestMapping("/numsList")
+	public void numsList(String search) {
+		int [] arr = {0,0,0};
+		Map<String, Object> map = new HashMap<>();
+		map.put("search", search);
+		List<DocumentInfo> infoList = documentInfoService.queryList(map);
+		if(infoList != null && infoList.size()>0) {
+			arr[0]=infoList.size();
+			for (DocumentInfo documentInfo : infoList) {
+				if(documentInfo.getFirstZbTime() != null) {
+					arr[2] += 1;
+				}else {
+					arr[1] += 1;
+				}
+			}
+		}
+		Response.json(arr);
+	}
 	
 	/**
-	 * 信息
+	 * 获取文件信息
+	 * @param id 文件id
 	 */
 	@ResponseBody
 	@RequestMapping("/info")
@@ -152,20 +174,7 @@ public class DocumentInfoController {
 	}
 	
 	/**
-	 * 保存
-	 */
-	@ResponseBody
-	@RequestMapping("/save")
-	@RequiresPermissions("dbdocumentinfo:save")
-	public void save(@RequestBody DocumentInfo dbDocumentInfo){
-		dbDocumentInfo.setId(UUIDUtils.random());
-		documentInfoService.save(dbDocumentInfo);
-		
-		Response.ok();
-	}
-	
-	/**
-	 * 修改
+	 * 新增或修改
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
@@ -186,17 +195,18 @@ public class DocumentInfoController {
 	}
 	
 	/**
-	 * 删除
+	 * 删除文件
+	 * @param id 主文件id
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	@RequiresPermissions("dbdocumentinfo:delete")
-	public void delete(@RequestBody String[] ids){
-		documentInfoService.deleteBatch(ids);
-		
-		Response.ok();
+	public void delete(String id){
+		documentInfoService.delete(id);
+		Response.json("result", "success");
 	}
-	
+	/**
+	 * 获取当前登录人信息
+	 */
 	@ResponseBody
 	@RequestMapping("/getLoginUser")
 	public void getLoginUser() {

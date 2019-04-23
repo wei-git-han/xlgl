@@ -1,12 +1,11 @@
 var loginUser =  {"url":rootPath +"/documentinfo/getLoginUser","dataType":"text"};//获取当前登录人---录入人
 var dicUrl = {"url":rootPath +"/documentdic/getDicByTypet","dataType":"text"}; //返回的下拉框字典值
 var saveSzpsUrl = {"url":rootPath +"/documentszps/save","dataType":"text"}; //保存首长批示
-var getSzpsListUrl = {"url":rootPath +"/documentszps/queryList","dataType":"text"}; //保存首长批示
+var getSzpsListUrl = {"url":rootPath +"/documentszps/queryList","dataType":"text"}; //获取首长批示
 var updateUrl={"url":rootPath +"/documentinfo/update","dataType":"json"}; //表单数据保存
 var uploadFileUrl = "/app/db/documentinfo/uploadFile";//文件上传
 var fileDataUrl = {"url":rootPath +"/documentfile/list","dataType":"text"}; //相关文件-附件list
 var delFileUrl = {"url":"/app/db/documentfile/delete","dataType":"text"}; /*相关文件--删除附件*/
-var zbjlDataUrl = {"url":"/app/db/document/view/data/zbjlList.json","dataType":"text"}; //文件转办-转办记录list
 var getFormatFileUrl = {"url":"/app/db/documentfile/getFile","dataType":"text"}; /*相关文件-点击获取对应文件*/
 var getPdfPath = {"url":rootPath +"/fileinfo/getFormaFileUrl","dataType":"text"};
 var UserTreeUrl = {"url":"/app/base/user/treeByPost","dataType":"text"}; //登记人树
@@ -71,27 +70,6 @@ var pageModule = function(){
 				});
 			}
 		});
-	}
-	
-	//文件转办——转办记录
-	var initzbjlfn = function(){
-		$ajax({
-			url:zbjlDataUrl,
-			data:{fileId:$("#id").val()},
-			success:function(data){
-				$("#zbrecord").html("");
-				$.each(data,function(i,item){
-					$("#zbrecord").append(
-						'<div class="record">'+
-			            '	<label class="zbUser">转办人:</label>'+
-			            '	<div><span>'+item.zbUser+'</span><span class="zbDate">'+item.zbdate+'</span></div>'+
-			            '	<label class="cbdw">承办单位/人:</label>'+
-			            '	<div>'+item.unit+'</div>'+
-			            '</div>'
-		            )
-				});
-			}
-		});	
 	}
 	
 	//相关文件
@@ -342,23 +320,23 @@ var pageModule = function(){
 
 		$("#addfile2").click(function(){
 			$(this).parent().parent().before(
-	                '<div class="form-group has-success new_success">'+
-	                '    <div class="col-xs-12">'+
-	                '        <div class="fileinput fileinput-new" data-provides="fileinput">'+
-	                '            <span class="btn default btn-file" style="padding-left:50px;padding-right:50px;">'+
-	                '            <span class="fileinput-new">'+
-	                '            上传 </span>'+
-	                '            <span class="fileinput-exists">'+
-	                '            修改 </span>'+
-	                '            <input type="file" name="...">'+
-	                '            </span>'+
-	                '            <span class="fileinput-filename" style="padding-left:20px;">'+
-	                '            </span>'+
-	                '            &nbsp; <a href="javascript:;" class="close fileinput-exists" data-dismiss="fileinput">'+
-	                '            </a>'+
-	                '        </div>'+
-	                '    </div>'+
-	                '</div>'
+                '<div class="form-group has-success new_success">'+
+                '    <div class="col-xs-12">'+
+                '        <div class="fileinput fileinput-new" data-provides="fileinput">'+
+                '            <span class="btn default btn-file" style="padding-left:50px;padding-right:50px;">'+
+                '            <span class="fileinput-new">'+
+                '            上传 </span>'+
+                '            <span class="fileinput-exists">'+
+                '            修改 </span>'+
+                '            <input type="file" name="...">'+
+                '            </span>'+
+                '            <span class="fileinput-filename" style="padding-left:20px;">'+
+                '            </span>'+
+                '            &nbsp; <a href="javascript:;" class="close fileinput-exists" data-dismiss="fileinput">'+
+                '            </a>'+
+                '        </div>'+
+                '    </div>'+
+                '</div>'
 			)
 		})
 		
@@ -398,21 +376,14 @@ var pageModule = function(){
 			$("#pdf").unbind("change");
 			$("#pdf").click();
 			$("#pdf").change(function(){
-				/*var fileNameArry = $(this).val().split("\\");
+				var fileNameArry = $(this).val().split("\\");
 				var fileName;
 				if(fileNameArry.length==1){
 					fileName=fileNameArry[0];
 				}else{
 					fileName=fileNameArry[fileNameArry.length-1];
 				}
-				$(".fileinput-filename").text(fileName);*/
-				var uploadfiles = document.querySelector("#pdf").files;
-				var filesName = [];
-				$.each(uploadfiles,function(i,item){
-					filesName.push(item.name);
-				});
-				$(".fileinput-filename").text(filesName.toString());
-				
+				$(".fileinput-filename").text(fileName);
 				var id=$("#id").val();
 				$("#idpdf").val(id);
 				$("#form3").submit();
@@ -443,7 +414,6 @@ var pageModule = function(){
 		//加载页面处理程序
 		initControl:function(){
 			initdictionary();
-			initzbjlfn();
 			initfilefn();
 			initCqfn();
 			initUserTree();

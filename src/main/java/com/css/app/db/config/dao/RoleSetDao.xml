@@ -8,7 +8,8 @@
 	</select>
 
 	<select id="queryList" resultType="com.css.app.db.config.entity.RoleSet">
-		select * from DB_ROLE_SET 
+		select * from DB_ROLE_SET where 1=1
+		order by ROLE_FLAG
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>

@@ -1,21 +1,16 @@
-var menuUrl = {"url":rootPath +"/documentfile/list","dataType":"text"};;//左侧文件menulist
-var getDataUrl = {"url":"/app/db/document/view/data/getData.json","dataType":"text"};;//右侧获取文件信息
-var getFileUrl = {"url":"/app/db/documentfile/getFile","dataType":"text"};;//左侧获取文件信息
+var menuUrl = {"url":rootPath +"/documentfile/list","dataType":"text"};;//左侧文件menulist（文件列表-附件list）
+var getFileUrl = {"url":"/app/db/documentfile/getFile","dataType":"text"};;//左侧页签获取文件信息
+var getDataUrl = {"url":"/app/db/documentinfo/info","dataType":"json"};//右侧获取主文件信息
+var getSzpsListUrl = {"url":rootPath +"/documentszps/queryList","dataType":"text"}; //获取首长批示
+var zbjlDataUrl = {"url":"/app/db/documentzbjl/list","dataType":"json"}; //文件转办-转办记录list
+
 var listUrl = {"url":"/app/db/document/view/data/blfkList.json","dataType":"text"}; //办理反馈list
-var fjDataUrl = {"url":"/app/db/document/view/data/fjList.json","dataType":"text"}; //文件列表-附件list
 var tjUrl = {"url":"/app/db/document/view/data/tjsuccess.json","dataType":"text"}; //办理反馈提交
-var zbjlDataUrl = {"url":"/app/db/document/view/data/zbjlList.json","dataType":"text"}; //文件转办-转办记录list
 var cbDataUrl = {"url":"/app/db/document/view/data/cbList.json","dataType":"text"}; //文件转办-催办记录list
 var bjDataUrl = {"url":"/app/db/document/view/data/bjList.json","dataType":"text"}; //文件转办-办结记录list
 var banjieUrl = {"url":"/app/db/document/view/data/tjsuccess.json","dataType":"text"}; //办结地址
 var chengbanUrl = {"url":"/app/db/document/view/data/tjsuccess.json","dataType":"text"}; //承办地址
 var uploadFileUrl = "/app/db/documentinfo/uploadFile";//文件上传
-
-
-/*
-var delFileUrl = {"url":"/app/db/documentfile/delete","dataType":"text"}; 相关文件--删除附件
-var zbjlDataUrl = {"url":"/app/db/documentzbjl/list","dataType":"json"}; //文件转办-转办记录list
-var getData ={"url":"/app/db/documentinfo/info","dataType":"json"}; 编辑返回的数据*/
 
 var fileId=getUrlParam("fileId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
@@ -80,17 +75,30 @@ var pageModule = function(){
 		});	
 	}
 	
+	//批示信息
+	var initps = function(){
+		$ajax({
+			url:getSzpsListUrl,
+			data:{infoId:fileId},
+			success:function(data){
+				var psxqBtn="";
+				if(data.length>1){
+					psxqBtn='<a href="javascript:;" class="psxqBtn">详情</a>'
+				}
+				$(".option").html('<font>'+data[0].userName+'批示：'+data[0].leaderComment+'</font>'+psxqBtn);
+			}
+		});	
+	}
 	
 	var initdata = function(){
 		$ajax({
 			url:getDataUrl,
-			data:{fileId:fileId},
+			data:{id:fileId},
 			success:function(data){
 				$(".commonHtml").html("");
 				$(".commonHtml").append(
-					'<div class="line1"><span class="fileName">'+data.fileName+'</span><font class="miji secretLevelName">'+data.secretLevelName+'</font></div>'+
-	            	'<div class="line2 fileNum">'+data.fileNum+'</div>'+
-	            	'<div class="line3"><i class="fa fa-info-circle" style="color:#33CC99"></i> <span class="option">'+data.option+'</span></div>'
+					'<div class="line1"><span class="fileName">'+data.docTitle+'</span><font class="miji secretLevelName">'+data.urgencyDegree+'</font></div>'+
+	            	'<div class="line2 fileNum">'+data.banjianNumber+'</div>'
 				)
 			}
 		});	
@@ -170,16 +178,16 @@ var pageModule = function(){
 	var initzbjlfn = function(){
 		$ajax({
 			url:zbjlDataUrl,
-			data:{fileId:fileId},
+			data:{infoId:fileId},
 			success:function(data){
 				$("#zbrecord").html("");
 				$.each(data,function(i,item){
 					$("#zbrecord").append(
 						'<div class="record">'+
 			            '	<label class="zbUser">转办人:</label>'+
-			            '	<div><span>'+item.zbUser+'</span><span class="zbDate">'+item.zbdate+'</span></div>'+
+			            '	<div><span>'+item.userName+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
 			            '	<label class="cbdw">承办单位/人:</label>'+
-			            '	<div>'+item.unit+'</div>'+
+			            '	<div>'+item.receiverNames+'</div>'+
 			            '</div>'
 		            )
 				});
@@ -320,20 +328,14 @@ var pageModule = function(){
 			$("#pdf").unbind("change");
 			$("#pdf").click();
 			$("#pdf").change(function(){
-				var uploadfiles = document.querySelector("#pdf").files;
-				var filesName = [];
-				$.each(uploadfiles,function(i,item){
-					filesName.push(item.name);
-				});
-				/*var fileNameArry = $(this).val().split("\\");
+				var fileNameArry = $(this).val().split("\\");
 				var fileName;
 				if(fileNameArry.length==1){
 					fileName=fileNameArry[0];
 				}else{
 					fileName=fileNameArry[fileNameArry.length-1];
 				}
-				$(".fileinput-filename").text(fileName);*/
-				$(".fileinput-filename").text(filesName.toString());
+				$(".fileinput-filename").text(fileName);
 				$("#form3").submit();
 			});
 		})
@@ -346,6 +348,7 @@ var pageModule = function(){
 			initdata();
 			initFjfn();
 			initblfkList();
+			initps();
 			initzbjlfn();
 			initcbfn();
 			initbjfn();

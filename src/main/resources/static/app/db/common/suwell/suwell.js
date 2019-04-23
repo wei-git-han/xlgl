@@ -34,7 +34,7 @@ function openOFDFile(filePath, areaDivId,width,height, optionType) {
 			// 设定插件区域自适应宽度
 //			ocx.performClick("vzmode_fitwidth");
 			//缩放倍数
-			//ocx.setScale(200);
+			ocx.setScale(100);
 			//启动签批模式
 			//ocx.performClick("t_tablet/signpen_05mm");
 			// 隐藏打开本地文件按钮
@@ -59,18 +59,17 @@ function openOFDFile(filePath, areaDivId,width,height, optionType) {
 			ocx.setCompsiteVisible("toolbar_document",false);
 			// 文本注解工具栏
 			if(typeof(fileFrom)!="undefined" && fileFrom!=""  && fileFrom!=null){
-				if(wenjiantype!="bwly" && (fileFrom=="gwgl"||fileFrom=="wsh"||fileFrom=="gwlz"||fileFrom=="trgwb_gwlz"||fileFrom=="trgwb_wsh")){
+				/*if(wenjiantype!="bwly" && (fileFrom=="gwgl"||fileFrom=="wsh"||fileFrom=="gwlz"||fileFrom=="trgwb_gwlz"||fileFrom=="trgwb_wsh")){*/
 					ocx.setCompsiteVisible("toolbar_annott",true);
 					ocx.setCompsiteVisible("tt_highlight",true);
 					ocx.setCompsiteVisible("tt_underline",false);
 					ocx.setCompsiteVisible("tt_deleteline",false);
 					ocx.setCompsiteVisible("tt_wavyline",false);
 					ocx.setCompsiteVisible("t_freetext",true);
-					
-				}else{
+				/*}else{
 					ocx.setCompsiteVisible("toolbar_annott",false);
 					ocx.setCompsiteVisible("t_freetext",false);
-				}
+				}*/
 			}else{
 				ocx.setCompsiteVisible("toolbar_annott",false);
 				ocx.setCompsiteVisible("t_freetext",false);

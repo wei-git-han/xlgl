@@ -1,23 +1,23 @@
 package com.css.app.db.config.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.stereotype.Controller;
 
-import com.css.base.utils.PageUtils;
-import com.css.base.utils.UUIDUtils;
-import com.github.pagehelper.PageHelper;
-import com.css.base.utils.Response;
+import com.css.addbase.apporgan.entity.BaseAppOrgan;
+import com.css.addbase.apporgan.entity.BaseAppUser;
+import com.css.addbase.apporgan.service.BaseAppOrganService;
+import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.db.config.entity.RoleSet;
 import com.css.app.db.config.service.RoleSetService;
+import com.css.base.utils.GwPageUtils;
+import com.css.base.utils.Response;
+import com.css.base.utils.UUIDUtils;
+import com.github.pagehelper.PageHelper;
 
 
 /**
@@ -28,26 +28,25 @@ import com.css.app.db.config.service.RoleSetService;
  * @date 2019-04-19 10:22:36
  */
 @Controller
-@RequestMapping("/roleset")
+@RequestMapping("/app/db/roleset")
 public class RoleSetController {
 	@Autowired
 	private RoleSetService roleSetService;
+	@Autowired
+	private BaseAppOrganService baseAppOrganService;
 	
+	@Autowired
+	private BaseAppUserService baseAppUserService;
 	/**
 	 * 列表
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	@RequiresPermissions("dbroleset:list")
-	public void list(Integer page, Integer limit){
-		Map<String, Object> map = new HashMap<>();
-		PageHelper.startPage(page, limit);
-		
-		//查询列表数据
-		List<RoleSet> dbRoleSetList = roleSetService.queryList(map);
-		
-		PageUtils pageUtil = new PageUtils(dbRoleSetList);
-		Response.json("page",pageUtil);
+	public void list(Integer page, Integer pagesize){
+		PageHelper.startPage(page, pagesize);
+		List<RoleSet> roleSetList = roleSetService.queryList(null);
+		GwPageUtils pageUtil = new GwPageUtils(roleSetList);
+		Response.json(pageUtil);
 	}
 	
 	
@@ -55,36 +54,42 @@ public class RoleSetController {
 	 * 信息
 	 */
 	@ResponseBody
-	@RequestMapping("/info/{id}")
-	@RequiresPermissions("dbroleset:info")
-	public void info(@PathVariable("id") String id){
-		RoleSet dbRoleSet = roleSetService.queryObject(id);
-		Response.json("dbRoleSet", dbRoleSet);
+	@RequestMapping("/info")
+	public void info(String id){
+		RoleSet roleSet = roleSetService.queryObject(id);
+		Response.json(roleSet);
 	}
 	
 	/**
 	 * 保存
 	 */
 	@ResponseBody
-	@RequestMapping("/save")
-	@RequiresPermissions("dbroleset:save")
-	public void save(@RequestBody RoleSet dbRoleSet){
-		dbRoleSet.setId(UUIDUtils.random());
-		roleSetService.save(dbRoleSet);
-		
-		Response.ok();
-	}
-	
-	/**
-	 * 修改
-	 */
-	@ResponseBody
-	@RequestMapping("/update")
-	@RequiresPermissions("dbroleset:update")
-	public void update(@RequestBody RoleSet dbRoleSet){
-		roleSetService.update(dbRoleSet);
-		
-		Response.ok();
+	@RequestMapping("/saveOrUpdate")
+	public void save(RoleSet dbRoleSet){
+		String orgId="";
+		String orgName="";
+		String userId = dbRoleSet.getUserId();
+		if(StringUtils.isNotBlank(userId)) {
+			List<BaseAppUser> users = baseAppUserService.findByUserId(userId);
+			if(users != null) {
+				orgId = users.get(0).getOrganid();
+				BaseAppOrgan organ = baseAppOrganService.queryObject(orgId);
+				if(organ != null) {
+					orgName=organ.getName();
+				}
+			}
+		}
+		if(StringUtils.isNotBlank(dbRoleSet.getId())) {
+			dbRoleSet.setDeptId(orgId);
+			dbRoleSet.setDeptName(orgName);
+			roleSetService.update(dbRoleSet);
+		}else {
+			dbRoleSet.setId(UUIDUtils.random());
+			dbRoleSet.setDeptId(orgId);
+			dbRoleSet.setDeptName(orgName);
+			roleSetService.save(dbRoleSet);
+		}
+		Response.json("result", "success");
 	}
 	
 	/**
@@ -92,11 +97,10 @@ public class RoleSetController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	@RequiresPermissions("dbroleset:delete")
-	public void delete(@RequestBody String[] ids){
-		roleSetService.deleteBatch(ids);
-		
-		Response.ok();
+	public void delete(String ids){
+		String[] idArry = ids.split(",");
+		roleSetService.deleteBatch(idArry);
+		Response.json("result","success");
 	}
 	
 }

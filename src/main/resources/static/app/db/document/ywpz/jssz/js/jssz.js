@@ -1,24 +1,36 @@
-var listUrl = {"url":rootPath +"/orgAdmin/list","dataType":"text"}; 
-var del = {"url":rootPath +"/orgAdmin/delete","dataType":"text"};  
+var listUrl = {"url":rootPath +"/roleset/list","dataType":"text"}; 
+var delUrl = {"url":rootPath +"/roleset/delete","dataType":"text"};  
 var grid = null;
 var pageModule = function() {
 	var initgrid = function() {
 		grid = $("#gridcont").createGrid({
 			columns: [
-					  {display: "单位",name:"orgName",width: "40%",align: "left",render: function(rowdata,n){
-						  return rowdata.orgName;   
+					  {display: "部门",name:"deptName",width: "40%",align: "left",render: function(rowdata,n){
+						  return rowdata.deptName;   
 					  }}, 
-					  {display: "姓名",name: "adminName",width: "40%",align: "center",render: function(rowdata,n){
-						  return rowdata.adminName;   
+					  {display: "姓名",name: "userName",width: "40%",align: "center",render: function(rowdata,n){
+						  return rowdata.userName;   
 					  }}, 
-					  {display: "级别",name: "orgLevel",width: "10%",align: "center",render: function(rowdata,n){
-						  if(0==rowdata.orgLevel){
-							  return "局级"
+					  {display: "角色",name: "roleFlag",width: "10%",align: "center",render: function(rowdata,n){
+						  if('1'==rowdata.roleFlag){
+							  return "首长"
 						  }
-						  if(1==rowdata.orgLevel){
-							  return "处级"
+						  if('2'==rowdata.roleFlag){
+							  return "首长秘书"
 						  }
-						  return rowdata.orgLevel;   
+						  if('3'==rowdata.roleFlag){
+							  return "局长"
+						  }
+						  if('4'==rowdata.roleFlag){
+							  return "局秘书"
+						  }
+						  if('5'==rowdata.roleFlag){
+							  return "处长"
+						  }
+						  if('6'==rowdata.roleFlag){
+							  return "参谋"
+						  }
+						  
 					  }}, 
 					  {display: "操作",name: "do",width: "10%",align: "center",render: function(rowdata,n){
 						  return '<i class="fa fa fa-pencil" style="cursor:pointer;background:#5498EB;padding:4px 5px;color:#fff;" onclick="editfn(\''+rowdata.id+'\')" title="编辑"></i>';
@@ -73,7 +85,7 @@ var removefn = function(id){
     	message: "是否要进行删除操作？",
     	callback1:function(){
    		$ajax({
-				url:del,
+				url:delUrl,
 				data:{ids:id},
 				success:function(data){
 					if(data.result=="success"){
