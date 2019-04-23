@@ -12,7 +12,16 @@ var pageModule = function(){
                 	 return rowdata.banjianNumber;
                  }},
                  {display:"办理状态",name:"",width:"6%",align:"center",render:function(rowdata,n){
-                	 return '';
+                 	 var bgColor="#FF6600";
+                 	 var documentStatusName = "";
+             		 if(rowdata.firstZbTime == "" || rowdata.firstZbTime == null || rowdata.firstZbTime=="undefined"){
+             			 documentStatusName="待处理";
+             			 bgColor="#FF6600";
+    				 }else{
+    					 documentStatusName="已处理";
+    					 bgColor="#999999";
+    				 }
+   				  	 return '<div title="'+documentStatusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+documentStatusName+'</div>';
                  }},
                  {display:"办件标题",name:"",width:"15%",align:"left",render:function(rowdata){
                 	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../view/html/view.html?fileId='+rowdata.id+'&fileFrom=djlr" target="iframe1">'+rowdata.docTitle+'</a>'
@@ -135,6 +144,40 @@ var pageModule = function(){
 			window.location.href="/app/db/document/djlr/html/add.html";
 		});
 		
+		//编辑
+		$("#edit").click(function(){
+			var datas=grid.getcheckrow();
+			var ids=[];
+			if(datas.length==1){
+				$(datas).each(function(i){
+					ids[i]=this.id;
+				});
+				window.location.href="/app/db/document/djlr/html/edit.html?fileId="+ids.toString();
+			}else{
+				newbootbox.alertInfo("请选择一条数据进行补录！");
+			}
+		})
+		
+		$("#zhuanban").click(function(){
+			var datas=grid.getcheckrow();
+			var ids=[];
+			if(datas.length>0){
+				$(datas).each(function(i){
+					ids[i]=this.id;
+				});
+				newbootbox.newdialog({
+					id:"zhuanbanDialog",
+					width:800,
+					height:600,
+					header:true,
+					title:"转办",
+					classed:"cjDialog",
+					url:"/app/db/document/blfk/html/zhuanbanDialog.html?fileId="+ids.toString()
+				})
+			}else{
+				newbootbox.alertInfo("请勾选要转办的数据！");
+			}
+		});
 	}
 	
 	var inittree = function(){

@@ -8,13 +8,17 @@ var fileDataUrl = {"url":rootPath +"/documentfile/list","dataType":"text"}; //�
 var delFileUrl = {"url":"/app/db/documentfile/delete","dataType":"text"}; /*相关文件--删除附件*/
 var zbjlDataUrl = {"url":"/app/db/document/view/data/zbjlList.json","dataType":"text"}; //文件转办-转办记录list
 var getFormatFileUrl = {"url":"/app/db/documentfile/getFile","dataType":"text"}; /*相关文件-点击获取对应文件*/
+var getData ={"url":rootPath +"/dic/getOne","dataType":"json"}; /*编辑返回的数据*/
+
 
 var usertree = {"url":"/app/base/user/treeByPost","dataType":"text"}; /*查阅人树*/ 
 var orgTree1 = {"url":"/app/base/dept/tree","dataType":"text"}; //录入单位选择树
 var getPdfPath = {"url":rootPath +"/fileinfo/getFormaFileUrl","dataType":"text"};
+
 var UserTreeUrl = {"url":"/app/base/user/treeByPost","dataType":"text"}; /*查阅人树*/
 
-//var fileId=getUrlParam("fileId")||""; //主文件id
+var fileId=getUrlParam("fileId")||""; //主文件id
+$("#id").val(fileId);
 var scanFilePath = "";//扫描件路径
 var pagedate = new Date();
 var month = pagedate.getMonth()+1;
@@ -72,7 +76,7 @@ var pageModule = function(){
 	var initCqfn = function(){
 		$ajax({
 			url:getSzpsListUrl,
-			data:{infoId:$("#id").val()},
+			data:{infoId:fileId},
 			success:function(data){
 				$("#showcq").html("");
 				$.each(data,function(i,item){
@@ -87,11 +91,30 @@ var pageModule = function(){
 		});
 	}
 	
+	var initdatafn = function(){
+		$ajax({
+			url:getData,
+			async:false,
+			data:{id:fileId},
+			success:function(data){
+				setformdata(data);
+			}
+		});
+	}
+	
+	
+	var getdatefn = function(date){
+		if(date!=""&&date!=null&&typeof(date)!=undefined){
+			return date.substr(0,10);
+		}
+		return "";
+	}
+	
 	//文件转办——转办记录
 	var initzbjlfn = function(){
 		$ajax({
 			url:zbjlDataUrl,
-			data:{fileId:$("#id").val()},
+			data:{fileId:fileId},
 			success:function(data){
 				$("#zbrecord").html("");
 				$.each(data,function(i,item){
@@ -112,7 +135,7 @@ var pageModule = function(){
 	var initfilefn = function(){
 		$ajax({
 			url:fileDataUrl,
-			data:{infoId:$("#id").val()},
+			data:{infoId:fileId},
 			success:function(data){
 				$("#file_all").html("");
 				$.each(data,function(i,item){
@@ -168,13 +191,12 @@ var pageModule = function(){
 			    var elementarry = ["docTypeId","docTypeName","docTitle","securityId","securityClassification",
 			    	"urgencyId","urgencyDegree","docCode","banjianNumber","userId","userName","applyTime","printDate","jobContent","remark"];
 				var paramdata = getformdata(elementarry);
-				paramdata.id = $("#id").val();
+				paramdata.id = fileId;
 				//newbootbox.alert('正在保存，请稍候...',false);
 				$ajax({
 					url:updateUrl,
 					data:paramdata,
 					success:function(data){
-						$("#id").val(data.id);
 						window.top.$(".newclose").click();
 						if(addFlag){
 							window.location.href="/app/db/document/djlr/html/add.html";
@@ -273,7 +295,6 @@ var pageModule = function(){
 				newbootbox.alert('请输入抄清内容！');
 				return;
 			}
-			
 			$ajax({
 				url:saveSzpsUrl,
 				data:{infoId:$("#id").val(),userId:psszId,userName:psszName,leaderComment:leaderComment,createdTime:createdTime},
@@ -295,18 +316,12 @@ var pageModule = function(){
 		
 		//转办
 		$("#zhuanban").click(function(){
-			if($("#id").val() == "" || $("#id").val() == null || typeof($("#id").val()) == undefined){
-				newbootbox.alertInfo("请先保存要素信息再开始转办！"); 
-				return  false;
-			} 
-			var fileId = $("#id").val();
 			newbootbox.newdialog({
 				id:"zhuanbanDialog",
 				width:800,
 				height:600,
 				header:true,
 				title:"转办",
-				classed:"cjDialog",
 				url:"/app/db/document/blfk/html/zhuanbanDialog.html?fileId="+fileId
 			})
 		});
@@ -429,7 +444,6 @@ var pageModule = function(){
 				$("#form3").submit();
 			});
 		})
-
 		
 		//扫描件表单提交
 		$("#smjForm").validate({
@@ -456,11 +470,12 @@ var pageModule = function(){
 			initdictionary();
 			initCqfn();
 			initzbjlfn();
-			initfilefn();
+			initfilefn():
 			initUserTree();
 			makeLoginUser();
 			initother();
 			initPdf();
+			initdatafn();
 		},
 		getUserData:function(message1,message2){
 			psszName=message1;
