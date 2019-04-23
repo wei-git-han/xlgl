@@ -354,7 +354,11 @@ var pageModule = function(){
 			$("#pdf").unbind("change");
 			$("#pdf").click();
 			$("#pdf").change(function(){
-				//alert($("#pdf").val())
+				var uploadfiles = document.querySelector("#pdf").files;
+				var filesName = [];
+				$.each(uploadfiles,function(i,item){
+					filesName.push(item.name);
+				});
 				/*var fileNameArry = $(this).val().split("\\");
 				var fileName;
 				if(fileNameArry.length==1){
@@ -362,8 +366,9 @@ var pageModule = function(){
 				}else{
 					fileName=fileNameArry[fileNameArry.length-1];
 				}
-				$(".fileinput-filename").text(fileName);
-				$("#form3").submit();*/
+				$(".fileinput-filename").text(fileName);*/
+				$(".fileinput-filename").text(filesName.toString());
+				$("#form3").submit();
 			});
 		})
 	}
@@ -390,6 +395,8 @@ var pageModule = function(){
 function skip(){
 	if(show == 0){
 		windowClose();
+	}else if(fileFrom == "djlr"){//文件来源于登记录入
+		window.location.href="/app/db/document/djlr/html/djlr.html?searchType=djlr";
 	}else if(fileFrom == "grdb"){//文件来源于个人待办
 		window.location.href="/app/db/document/grdb/html/grdb.html?searchType=grdb";
 	}else if(fileFrom=="blfk"){  //文件来源于办理反馈

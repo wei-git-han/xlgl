@@ -429,20 +429,42 @@ var pageModule = function(){
 			$("#pdf").unbind("change");
 			$("#pdf").click();
 			$("#pdf").change(function(){
-				var fileNameArry = $(this).val().split("\\");
+				/*var fileNameArry = $(this).val().split("\\");
 				var fileName;
 				if(fileNameArry.length==1){
 					fileName=fileNameArry[0];
 				}else{
 					fileName=fileNameArry[fileNameArry.length-1];
 				}
-				$(".fileinput-filename").text(fileName);
+				$(".fileinput-filename").text(fileName);*/
+				var uploadfiles = document.querySelector("#pdf").files;
+				var filesName = [];
+				$.each(uploadfiles,function(i,item){
+					filesName.push(item.name);
+				});
+				$(".fileinput-filename").text(filesName.toString());
 				
 				var id=$("#id").val();
 				$("#idpdf").val(id);
 				$("#form3").submit();
 			});
 		})
+		
+		
+		$("#pdf").unbind("change");
+		$("#pdf").click();
+		$("#pdf").change(function(){
+			var uploadfiles = document.querySelector("#pdf").files;
+			var filesName = [];
+			$.each(uploadfiles,function(i,item){
+				filesName.push(item.name);
+			});
+			$(".fileinput-filename").text(filesName.toString());
+			$("#form3").submit();
+		});
+	})
+		
+		
 		
 		//扫描件表单提交
 		$("#smjForm").validate({
@@ -469,6 +491,7 @@ var pageModule = function(){
 			initdictionary();
 			initCqfn();
 			initzbjlfn();
+			initfilefn():
 			initUserTree();
 			makeLoginUser();
 			initother();

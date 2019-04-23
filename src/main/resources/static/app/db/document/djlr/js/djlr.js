@@ -15,7 +15,7 @@ var pageModule = function(){
                 	 return '';
                  }},
                  {display:"办件标题",name:"",width:"15%",align:"left",render:function(rowdata){
-                	 return rowdata.docTitle
+                	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../view/html/view.html?fileId='+rowdata.id+'&fileFrom=djlr" target="iframe1">'+rowdata.docTitle+'</a>'
                  }},
                  {display:"紧急程度",name:"",width:"6%",align:"center",paixu:true,render:function(rowdata){
                 	 return rowdata.urgencyDegree;
