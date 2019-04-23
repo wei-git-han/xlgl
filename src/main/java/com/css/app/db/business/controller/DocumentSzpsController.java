@@ -56,9 +56,7 @@ public class DocumentSzpsController {
 		if(StringUtils.isBlank(documentSzps.getId())) {
 			documentSzps.setId(UUIDUtils.random());
 			if(StringUtils.isBlank(infoId)) {
-				infoId=UUIDUtils.random();
-				documentSzps.setInfoId(infoId);
-				json.put("id", infoId);
+				documentSzps.setInfoId(UUIDUtils.random());
 			}
 			documentSzpsService.save(documentSzps);
 		}else {

@@ -47,11 +47,11 @@ var pageModule = function(){
 				success:function(data){
 					newbootbox.newdialogClose("zhuanbanDialog");
 					if(data.result=="success"){
-						newbootbox.alertInfo("转办成功！").done(function(){
-							window.top.iframe1.window.pageModule.initgrid();
+						newbootbox.alert("转办成功！").done(function(){
+							$("#iframe1",window.top.document).attr("src","/app/db/document/djlr/html/djlr.html");
 						});
 					}else{
-						newbootbox.alertInfo("转办失败！");
+						newbootbox.alert("转办失败！");
 					}
 				}
 			})

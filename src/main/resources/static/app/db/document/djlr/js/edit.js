@@ -6,43 +6,53 @@ var updateUrl={"url":rootPath +"/documentinfo/update","dataType":"json"}; //表�
 var uploadFileUrl = "/app/db/documentinfo/uploadFile";//文件上传
 var fileDataUrl = {"url":rootPath +"/documentfile/list","dataType":"text"}; //相关文件-附件list
 var delFileUrl = {"url":"/app/db/documentfile/delete","dataType":"text"}; /*相关文件--删除附件*/
-var zbjlDataUrl = {"url":"/app/db/document/view/data/zbjlList.json","dataType":"text"}; //文件转办-转办记录list
+var zbjlDataUrl = {"url":"/app/db/documentzbjl/list","dataType":"json"}; //文件转办-转办记录list
 var getFormatFileUrl = {"url":"/app/db/documentfile/getFile","dataType":"text"}; /*相关文件-点击获取对应文件*/
-var getData ={"url":rootPath +"/dic/getOne","dataType":"json"}; /*编辑返回的数据*/
-
-
-var usertree = {"url":"/app/base/user/treeByPost","dataType":"text"}; /*查阅人树*/ 
-var orgTree1 = {"url":"/app/base/dept/tree","dataType":"text"}; //录入单位选择树
+var getData ={"url":"/app/db/documentinfo/info","dataType":"json"}; /*编辑返回的数据*/
 var getPdfPath = {"url":rootPath +"/fileinfo/getFormaFileUrl","dataType":"text"};
-
-var UserTreeUrl = {"url":"/app/base/user/treeByPost","dataType":"text"}; /*查阅人树*/
+var UserTreeUrl = {"url":"/app/base/user/treeByPost","dataType":"text"}; //登记人树
 
 var fileId=getUrlParam("fileId")||""; //主文件id
 $("#id").val(fileId);
 var scanFilePath = "";//扫描件路径
-var pagedate = new Date();
-var month = pagedate.getMonth()+1;
-if(month<10){
-	month = "0"+month;
-}
-var day = pagedate.getDate();
-if(day<10){
-	day = "0"+day;
-}
 //带入批示首长信息
 var psszName = "";
 var psszId = "";
-var year = pagedate.getFullYear();
 var pageModule = function(){
-	 /*带入录入人*/
-	var makeLoginUser = function(){
+	//请求各字典数据
+	var initdictionary = function(){
 		$ajax({
-			url:loginUser,  
+			url:dicUrl,
+			data:{dicType:"all"},
+			async:false,
 			success:function(data){
-				$("#userId").val(data.userId);
-				$("#userName").val(data.userName);
+				if(data.code!=500){//&&data.security_classification!="" && data.security_classification!=null && typeof(data.security_classification)!=undefined){
+					initselect("docTypeId",data.document_type);
+					initselect("securityId",data.security_classification);
+					initselect("urgencyId",data.urgency_degree);
+				}
 			}
-		})
+		});
+	}
+	
+	
+	var initdatafn = function(){
+		$ajax({
+			url:getData,
+			async:false,
+			data:{id:fileId},
+			success:function(data){
+				setformdata(data);
+			}
+		});
+	}
+	
+	
+	var getdatefn = function(date){
+		if(date!=""&&date!=null&&typeof(date)!=undefined){
+			return date.substr(0,10);
+		}
+		return "";
 	}
 	
 	var initUserTree = function(){
@@ -53,21 +63,6 @@ var pageModule = function(){
 			selectnode : function(e, data) {
 				$("#userName").val(data.node.text);
 				$("#userId").val(data.node.id);
-			}
-		});
-	}
-	
-	//请求各字典数据
-	var initdictionary = function(){
-		$ajax({
-			url:dicUrl,
-			data:{dicType:"all"},
-			success:function(data){
-				if(data.code!=500){//&&data.security_classification!="" && data.security_classification!=null && typeof(data.security_classification)!=undefined){
-					initselect("docTypeId",data.document_type);
-					initselect("securityId",data.security_classification);
-					initselect("urgencyId",data.urgency_degree);
-				}
 			}
 		});
 	}
@@ -91,39 +86,22 @@ var pageModule = function(){
 		});
 	}
 	
-	var initdatafn = function(){
-		$ajax({
-			url:getData,
-			async:false,
-			data:{id:fileId},
-			success:function(data){
-				setformdata(data);
-			}
-		});
-	}
 	
-	
-	var getdatefn = function(date){
-		if(date!=""&&date!=null&&typeof(date)!=undefined){
-			return date.substr(0,10);
-		}
-		return "";
-	}
 	
 	//文件转办——转办记录
 	var initzbjlfn = function(){
 		$ajax({
 			url:zbjlDataUrl,
-			data:{fileId:fileId},
+			data:{infoId:fileId},
 			success:function(data){
 				$("#zbrecord").html("");
 				$.each(data,function(i,item){
 					$("#zbrecord").append(
 						'<div class="record">'+
 			            '	<label class="zbUser">转办人:</label>'+
-			            '	<div><span>'+item.zbUser+'</span><span class="zbDate">'+item.zbdate+'</span></div>'+
+			            '	<div><span>'+item.userName+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
 			            '	<label class="cbdw">承办单位/人:</label>'+
-			            '	<div>'+item.unit+'</div>'+
+			            '	<div>'+item.receiverNames+'</div>'+
 			            '</div>'
 		            )
 				});
@@ -138,11 +116,24 @@ var pageModule = function(){
 			data:{infoId:fileId},
 			success:function(data){
 				$("#file_all").html("");
+				var scanId ="";
 				$.each(data,function(i,item){
+					if(i==0){
+						scanId = item.id;
+					}
 					$("#file_all").append(
 						'<li><input type="checkbox" name="fjcheckbox" data="'+item.id+'" /> <a data="'+item.id+'">'+item.fileName+'</a></li>'
 		            )
 				});
+				$ajax({
+					url:getFormatFileUrl,
+					data:{id:scanId},
+					success:function(data){
+						psLoad(data.formatId,data.downFormatIdUrl);
+					}
+		    	});
+				
+				//相关文件点击事件
 				$("#file_all>li>a").click(function(){
 					var scanId = $(this).attr("data");
 					$ajax({
@@ -152,7 +143,7 @@ var pageModule = function(){
 							psLoad(data.formatId,data.downFormatIdUrl);
 						}
 			    	});
-				})
+				});
 			}
 		});	
 	}
@@ -283,6 +274,7 @@ var pageModule = function(){
 				height:600,
 				header:true,
 				title:"选择首长",
+				classed:"cjDialog",
 				url:"/app/db/document/djlr/html/chooseszDialog.html",
 			})
 		});
@@ -300,7 +292,6 @@ var pageModule = function(){
 				data:{infoId:$("#id").val(),userId:psszId,userName:psszName,leaderComment:leaderComment,createdTime:createdTime},
 				success:function(data){
 					if(data.result == "success"){
-						$("#id").val(data.id);
 						newbootbox.alert("保存成功！").done(function(){
 							initCqfn();
 						});
@@ -322,6 +313,7 @@ var pageModule = function(){
 				height:600,
 				header:true,
 				title:"转办",
+				classed:"cjDialog",
 				url:"/app/db/document/blfk/html/zhuanbanDialog.html?fileId="+fileId
 			})
 		});
@@ -468,14 +460,13 @@ var pageModule = function(){
 		//加载页面处理程序
 		initControl:function(){
 			initdictionary();
+			initdatafn();
 			initCqfn();
 			initzbjlfn();
-			initfilefn():
+			initfilefn();
 			initUserTree();
-			makeLoginUser();
 			initother();
 			initPdf();
-			initdatafn();
 		},
 		getUserData:function(message1,message2){
 			psszName=message1;

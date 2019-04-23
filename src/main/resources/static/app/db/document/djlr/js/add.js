@@ -8,27 +8,13 @@ var fileDataUrl = {"url":rootPath +"/documentfile/list","dataType":"text"}; //�
 var delFileUrl = {"url":"/app/db/documentfile/delete","dataType":"text"}; /*相关文件--删除附件*/
 var zbjlDataUrl = {"url":"/app/db/document/view/data/zbjlList.json","dataType":"text"}; //文件转办-转办记录list
 var getFormatFileUrl = {"url":"/app/db/documentfile/getFile","dataType":"text"}; /*相关文件-点击获取对应文件*/
-
-var usertree = {"url":"/app/base/user/treeByPost","dataType":"text"}; /*查阅人树*/ 
-var orgTree1 = {"url":"/app/base/dept/tree","dataType":"text"}; //录入单位选择树
 var getPdfPath = {"url":rootPath +"/fileinfo/getFormaFileUrl","dataType":"text"};
-var UserTreeUrl = {"url":"/app/base/user/treeByPost","dataType":"text"}; /*查阅人树*/
+var UserTreeUrl = {"url":"/app/base/user/treeByPost","dataType":"text"}; //登记人树
 
-//var fileId=getUrlParam("fileId")||""; //主文件id
 var scanFilePath = "";//扫描件路径
-var pagedate = new Date();
-var month = pagedate.getMonth()+1;
-if(month<10){
-	month = "0"+month;
-}
-var day = pagedate.getDate();
-if(day<10){
-	day = "0"+day;
-}
 //带入批示首长信息
 var psszName = "";
 var psszId = "";
-var year = pagedate.getFullYear();
 var pageModule = function(){
 	 /*带入录入人*/
 	var makeLoginUser = function(){
@@ -233,7 +219,7 @@ var pageModule = function(){
 			    	$("#commentForm").submit();
 			    },
 			    callback2:function(){
-			    	window.location.href = "/app/dzbms/document/wjgl/html/wjgllb.html";
+			    	window.location.href = "/app/db/document/djlr/html/djlr.html";
 			    }
 			});
 		});
@@ -261,25 +247,28 @@ var pageModule = function(){
 				height:600,
 				header:true,
 				title:"选择首长",
+				classed:"cjDialog",
 				url:"/app/db/document/djlr/html/chooseszDialog.html",
 			})
 		});
 		
 		//增加批示
 		$("#addcq").click(function(){
+			if($("#id").val() == "" || $("#id").val() == null || typeof($("#id").val()) == undefined){
+				newbootbox.alertInfo("请先保存要素信息再增加批示！"); 
+				return  false;
+			} 
 			var leaderComment=$("#cqcontent").val();
 			var createdTime=$("#cqDate").val();
 			if($.trim(leaderComment) == "" || $.trim(leaderComment) == null){
 				newbootbox.alert('请输入抄清内容！');
 				return;
 			}
-			
 			$ajax({
 				url:saveSzpsUrl,
 				data:{infoId:$("#id").val(),userId:psszId,userName:psszName,leaderComment:leaderComment,createdTime:createdTime},
 				success:function(data){
 					if(data.result == "success"){
-						$("#id").val(data.id);
 						newbootbox.alert("保存成功！").done(function(){
 							initCqfn();
 						});
@@ -454,9 +443,9 @@ var pageModule = function(){
 		//加载页面处理程序
 		initControl:function(){
 			initdictionary();
-			initCqfn();
 			initzbjlfn();
 			initfilefn();
+			initCqfn();
 			initUserTree();
 			makeLoginUser();
 			initother();

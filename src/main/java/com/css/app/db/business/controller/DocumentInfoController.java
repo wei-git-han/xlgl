@@ -145,11 +145,10 @@ public class DocumentInfoController {
 	 * 信息
 	 */
 	@ResponseBody
-	@RequestMapping("/info/{id}")
-	@RequiresPermissions("dbdocumentinfo:info")
-	public void info(@PathVariable("id") String id){
-		DocumentInfo dbDocumentInfo = documentInfoService.queryObject(id);
-		Response.json("dbDocumentInfo", dbDocumentInfo);
+	@RequestMapping("/info")
+	public void info(String id){
+		DocumentInfo documentInfo = documentInfoService.queryObject(id);
+		Response.json(documentInfo);
 	}
 	
 	/**

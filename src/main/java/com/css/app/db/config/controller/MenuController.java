@@ -52,21 +52,19 @@ public class MenuController {
 		Map<String, Object> menuMap = new HashMap<>();
 		String[] menuIds = null;
 		if (!admin) {
-			if(!StringUtils.equals("aff24098-f016-48ae-8286-a8d08478bb7f", CurrentUser.getUserId())) {
-				Map<String, Object> map = new HashMap<>();
-				map.put("userId", CurrentUser.getUserId());
-				List<AdminSet> list = adminSetService.queryList(map);
-				
-				if(list!=null && list.size()>0) {
-					String adminType = list.get(0).getAdminType();
-					if(StringUtils.equals("1", adminType)) {
-						menuIds= new String[] {"002","003"};
-					}else if(StringUtils.equals("2", adminType)) {
-						menuIds= new String[] {"001"};
-					}
-				}else {
-					menuIds= new String[] {"001","003","006"};
+			Map<String, Object> map = new HashMap<>();
+			map.put("userId", CurrentUser.getUserId());
+			List<AdminSet> list = adminSetService.queryList(map);
+			
+			if(list!=null && list.size()>0) {
+				String adminType = list.get(0).getAdminType();
+				if(StringUtils.equals("1", adminType)) {
+					menuIds= new String[] {"002","003"};
+				}else if(StringUtils.equals("2", adminType)) {
+					menuIds= new String[] {"001"};
 				}
+			}else {
+				menuIds= new String[] {"001","003","006"};
 			}
 		}
 		menuMap.put("menuIds", menuIds);
