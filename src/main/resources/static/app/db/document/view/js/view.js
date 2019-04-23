@@ -354,7 +354,11 @@ var pageModule = function(){
 			$("#pdf").unbind("change");
 			$("#pdf").click();
 			$("#pdf").change(function(){
-				//alert($("#pdf").val())
+				var uploadfiles = document.querySelector("#pdf").files;
+				var filesName = [];
+				$.each(uploadfiles,function(i,item){
+					filesName.push(item.name);
+				});
 				/*var fileNameArry = $(this).val().split("\\");
 				var fileName;
 				if(fileNameArry.length==1){
@@ -362,8 +366,9 @@ var pageModule = function(){
 				}else{
 					fileName=fileNameArry[fileNameArry.length-1];
 				}
-				$(".fileinput-filename").text(fileName);
-				$("#form3").submit();*/
+				$(".fileinput-filename").text(fileName);*/
+				$(".fileinput-filename").text(filesName.toString());
+				$("#form3").submit();
 			});
 		})
 	}
