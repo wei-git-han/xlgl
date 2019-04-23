@@ -1,5 +1,6 @@
-var menuUrl = {"url":"/app/db/document/view/data/menuUrl.json","dataType":"text"};;//左侧文件menulist
+var menuUrl = {"url":rootPath +"/documentfile/list","dataType":"text"};;//左侧文件menulist
 var getDataUrl = {"url":"/app/db/document/view/data/getData.json","dataType":"text"};;//右侧获取文件信息
+var getFileUrl = {"url":"/app/db/documentfile/getFile","dataType":"text"};;//左侧获取文件信息
 var listUrl = {"url":"/app/db/document/view/data/blfkList.json","dataType":"text"}; //办理反馈list
 var fjDataUrl = {"url":"/app/db/document/view/data/fjList.json","dataType":"text"}; //文件列表-附件list
 var tjUrl = {"url":"/app/db/document/view/data/tjsuccess.json","dataType":"text"}; //办理反馈提交
@@ -10,6 +11,12 @@ var banjieUrl = {"url":"/app/db/document/view/data/tjsuccess.json","dataType":"t
 var chengbanUrl = {"url":"/app/db/document/view/data/tjsuccess.json","dataType":"text"}; //承办地址
 var uploadFileUrl = "/app/db/documentinfo/uploadFile";//文件上传
 
+
+/*
+var delFileUrl = {"url":"/app/db/documentfile/delete","dataType":"text"}; 相关文件--删除附件
+var zbjlDataUrl = {"url":"/app/db/documentzbjl/list","dataType":"json"}; //文件转办-转办记录list
+var getData ={"url":"/app/db/documentinfo/info","dataType":"json"}; 编辑返回的数据*/
+
 var fileId=getUrlParam("fileId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 
@@ -19,55 +26,20 @@ var pageModule = function(){
 	var takeMenufn = function(id){
 		$ajax({
 			url:menuUrl,
-			data:{fileId:fileId},
+			data:{infoId:fileId},
 			success:function(data){
-				var canRecover="";//判断是否有恢复按钮：1为有恢复权限
-				var canZb="";//判断是否有转版按钮：1为有转版权限
-				var showStreamDownload = "";//判断是否有流式文件；1代表有流式文件，显示下载流式按钮；2代表没有流式文件，不显示下载按钮；
-				var fileType="";
-				var fileUrl="";
-				var fileTitle="";
 				var html1 = "";
-				if(data &&　data.menuAr.length>0){
-					$.each(data.menuAr,function(i,o){
-						var id = o.id;
-						var name = o.name;
-						var typeKey = o.typeKey;
-						var suffix = o.suffix;
+				var firstFileId="";
+				if(data &&　data.length>0){
+					$.each(data,function(i,o){
 						if(i==0){
-							canRecover = o.canRecover;
-							canZb = o.canZb;
-							showStreamDownload = o.showStreamDownload;//判断是否有流式文件；1代表有流式文件，显示下载流式按钮；2代表没有流式文件，不显示下载按钮；
-							fileType=o.type;
-							fileUrl=o.url;
-							//alert(fileUrl+"==="+fileType);
-							if(fileType == '1'){
-								$("#lsTip").show();
-							}else{
-								$("#lsTip").hide();
-								if(fileUrl != null && fileUrl != ''){
-									if($("#suwell").is(":hidden")){
-										$("#suwell").show();
-									};
-									//openOFDFile(fileUrl, "suwell",$("#suwell").width(),$("#suwell").height(), "showTablet");
-								}
-							}
+							firstFileId = o.id;
 						}
-						if(typeKey=="cpj"){
-							fileTitle="主文件";
-						};
-						if(typeKey=="fj"){
-							fileTitle="附件";
-						};
-						if(typeKey=="bwly"){
-							fileTitle="办文来源";
-							$("#downStream").hide();
-						}else{
-							$("#downStream").show();
-						};
-						
-						html1 = '	<li id="menu_'+id+'" data_id="'+id+'" class="'+(i==0?"active":"")+ '"  data_type="'+typeKey+'" file_type="'+fileType+'" >'+
-								'		<a  href="#tab'+i+'"  data-toggle="tab" title="'+fileTitle+':'+name+'">'+fileTitle+':'+name+'</a>'+
+						var id = o.id;
+						var fileName = o.fileName;
+						var fileServerFormatId = o.fileServerFormatId;
+						html1 = '	<li id="menu_'+id+'" data_id="'+id+'" class="'+(i==0?"active":"")+'" formatId="'+fileServerFormatId+'" >'+
+								'		<a  href="#tab'+i+'"  data-toggle="tab" title="'+fileName+'">'+fileName+'</a>'+
 								'	</li>';
 						$("#takeMenu").append(html1);
 						
@@ -81,39 +53,28 @@ var pageModule = function(){
 				Metronic.refreshtabs();
 				//页签点击
 				$("#takeMenu li").click(function(){
+					if($(this).hasClass("tabdrop")){
+						return;
+					}
 					var clickfileId = $(this).attr("data_id");
-					var clickfileType = $(this).attr("filetype");
-					getFile(clickfileId,clickfileType);
+					getFile(clickfileId);
 				}); 
+				
+				getFile(firstFileId);
 			}
 		});	
 	}
 	
-	var getFile = function(clickfileId,clickfileType){
+	var getFile = function(clickfileId){
 		$ajax({
-			url:getDataUrl,
-			data:{fileId:clickfileId,fileType:clickfileType},
+			url:getFileUrl,
+			data:{id:clickfileId},
 			success:function(data){
-				fileUrl = data.url;
-				fType2 = data.type;
-				var canRecover=data.canRecover;//判断是否有恢复按钮：1为有恢复权限
-				var canZb=data.canZb;//判断是否有转版按钮：1为有转版权限
-				var showStreamDownload = data.showStreamDownload;//判断是否有流式文件；1代表有流式文件，显示下载流式按钮；2代表没有流式文件，不显示下载按钮；
-				
-				if(fType2 == '1'){
-					$("#lsTip").show();
-				}else{
-					$("#lsTip").hide();
-					if(fileUrl != null && fileUrl != ''){
-						//版式文件下当文件类型为办文来源时不显示笔等按钮
-						if($("#suwell").is(":hidden")){
-							$("#suwell").show();
-						};
-						$("#cssOffice").hide();
-						openOFDFile(fileUrl, "suwell",$("#suwell").width(),$("#suwell").height(), "showTablet");
-					}else{//没有文件仅初始化插件
-						suwell.ofdReaderInit("suwell",$("#suwell").width(),$("#suwell").height());
-					}
+				var downFormatIdUrl = data.downFormatIdUrl;
+				if(downFormatIdUrl != null && downFormatIdUrl != ''){
+					openOFDFile(downFormatIdUrl, "suwell",$("#suwell").width(),$("#suwell").height(), "showTablet");
+				}else{//没有文件仅初始化插件
+					suwell.ofdReaderInit("suwell",$("#suwell").width(),$("#suwell").height());
 				}
 			}
 		});	
@@ -138,13 +99,18 @@ var pageModule = function(){
 	//文件列表——附件
 	var initFjfn = function(){
 		$ajax({
-			url:fjDataUrl,
-			data:{fileId:fileId},
+			url:menuUrl,
+			data:{infoId:fileId},
 			success:function(data){
 				$("#fjList").html("");
 				$.each(data,function(i,item){
-					$("#fjList").append('<li id="'+item.fileId+'" data_fileType="'+item.fileType+'" data_type="'+item.type+'"><a>'+item.fileName+'</a></li>');
+					$("#fjList").append('<li id="'+item.id+'" formatId="'+item.fileServerFormatId+'" ><a>'+item.fileName+'</a></li>');
 				});
+				//点击附件名称
+				$("#fjList li").click(function(){
+					var clickfileId = $(this).attr("id");
+					getFile(clickfileId);
+				}); 
 			}
 		});	
 	}

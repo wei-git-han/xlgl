@@ -237,7 +237,7 @@ ul{
 	border-radius:4px!important;
 }
 
-/* ×ª°ì¼ÇÂ¼ÏÂµÄtabÒ³Ç© */
+/* ×ªï¿½ï¿½ï¿½Â¼ï¿½Âµï¿½tabÒ³Ç© */
 .right_top_zbjl .tabbable-line > .nav-tabs > li > a {
     border: 0;
     margin-right: 0;
@@ -316,7 +316,7 @@ ul{
 
 
 
-/* °ìÀí·´À¡ÑùÊ½ */
+/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ */
 .timelinesview{
 	margin-top:10px;
 	background:#fff;
@@ -592,7 +592,7 @@ ul{
 }
 
 
-/* ÊäÈëÒâ¼û */
+/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 .sryj_title{
 	position:absolute;
 	top:0;
@@ -652,21 +652,6 @@ ul{
 
 #takeMenu .dropdown-menu>li>a{
 	border-radius: 0px !important;
-}
-
-.lsTip{
-	width:100%;height:100%;position:relative;
-	background:rgba(0,0,0,.5);display:none;
-}
-.lsTipWord{
-	color:#fff;
-	font-weight:900;
-	font-size:38px;
-	width:980px;height:120px;
-	line-height:50px;
-	text-align:center;
-	position:absolute;left:0;right:0;top:0;bottom:0;
-	margin:auto;
 }
 
 .addfjbtn{

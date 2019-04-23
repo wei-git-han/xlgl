@@ -44,11 +44,10 @@ public class DocumentFileController {
 		if(StringUtils.isNotBlank(infoId)) {
 			Map<String, Object> map = new HashMap<>();
 			map.put("infoId", infoId);
-			 fileList = documentFileService.queryList(map);
+			fileList = documentFileService.queryList(map);
 		}
 		Response.json(fileList);
 	}
-	
 	
 	/**
 	 * 信息
