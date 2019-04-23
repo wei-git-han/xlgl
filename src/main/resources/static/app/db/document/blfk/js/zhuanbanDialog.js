@@ -1,10 +1,11 @@
-var peopleTreeUrl = {"url":"/app/base/user/tree","dataType":"text"}; //人员树
-var sureUrl = {"url":"../data/success.json","dataType":"text"}; //保存
+var deptTreeUrl = {"url":"/app/base/dept/list","dataType":"text"}; //部门树
+var sureUrl = {"url":"/app/db/documentzbjl","dataType":"text"}; //保存
 var fileId=getUrlParam("fileId")||""; //主文件id
 var pageModule = function(){
 	var initTree = function(){
 		$ajax({
-			url:peopleTreeUrl,
+			url:deptTreeUrl,
+			data : {organId:"root"},
 			success:function(data){
 				$("#people-tree").jstree({
 				    "plugins": ["wholerow", "types" , "checkbox"],
@@ -43,7 +44,7 @@ var pageModule = function(){
 			
 			$ajax({
 				url:sureUrl,
-				data:{id:id,names:names.toString(),ids:ids.toString()},
+				data:{id:fileId,names:names.toString(),ids:ids.toString()},
 				success:function(data){
 					newbootbox.newdialogClose("zhuanbanDialog");
 					if(data.result=="success"){

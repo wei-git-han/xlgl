@@ -1,5 +1,7 @@
 var id = getUrlParam2("id");
 var clerkUrl = {"url":"/app/gwcl/documentclerkset/info","dataType":"text"}
+var saveUrl = {"url":rootPath +"/documentclerkset/save","dataType":"text"};
+var userTree = {"url":"/app/base/user/allTree","dataType":"text"}; //人员选择树
 
 var pageModule = function(){
 	var initdatafn = function(){

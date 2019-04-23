@@ -321,13 +321,19 @@ var pageModule = function(){
 		
 		//转办
 		$("#zhuanban").click(function(){
+			if($("#id").val() == "" || $("#id").val() == null || typeof($("#id").val()) == undefined){
+				newbootbox.alertInfo("请先保存要素信息再开始转办！"); 
+				return  false;
+			} 
+			var fileId = $("#id").val();
 			newbootbox.newdialog({
 				id:"zhuanbanDialog",
 				width:800,
 				height:600,
 				header:true,
 				title:"转办",
-				url:"/app/db/document/blfk/html/zhuanbanDialog.html?fileId=",//fileId呢？？？？？
+				classed:"cjDialog",
+				url:"/app/db/document/blfk/html/zhuanbanDialog.html?fileId="+fileId
 			})
 		});
 		
@@ -449,22 +455,7 @@ var pageModule = function(){
 				$("#form3").submit();
 			});
 		})
-		
-		
-		$("#pdf").unbind("change");
-		$("#pdf").click();
-		$("#pdf").change(function(){
-			var uploadfiles = document.querySelector("#pdf").files;
-			var filesName = [];
-			$.each(uploadfiles,function(i,item){
-				filesName.push(item.name);
-			});
-			$(".fileinput-filename").text(filesName.toString());
-			$("#form3").submit();
-		});
-	})
-		
-		
+
 		
 		//扫描件表单提交
 		$("#smjForm").validate({
@@ -491,7 +482,7 @@ var pageModule = function(){
 			initdictionary();
 			initCqfn();
 			initzbjlfn();
-			initfilefn():
+			initfilefn();
 			initUserTree();
 			makeLoginUser();
 			initother();
@@ -501,7 +492,6 @@ var pageModule = function(){
 		getUserData:function(message1,message2){
 			psszName=message1;
 			psszId=message2;
-			//$("#cqcontent").val(psszName+"："); 
 		}
 	}
 	

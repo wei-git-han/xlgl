@@ -28,7 +28,7 @@ import com.css.app.db.business.service.DocumentZbjlService;
  * @date 2019-04-18 16:39:37
  */
 @Controller
-@RequestMapping("/documentzbjl")
+@RequestMapping("/app/db/documentzbjl")
 public class DocumentZbjlController {
 	@Autowired
 	private DocumentZbjlService documentZbjlService;
@@ -67,10 +67,9 @@ public class DocumentZbjlController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	@RequiresPermissions("dbdocumentzbjl:save")
-	public void save(@RequestBody DocumentZbjl dbDocumentZbjl){
-		dbDocumentZbjl.setId(UUIDUtils.random());
-		documentZbjlService.save(dbDocumentZbjl);
+	public void save(String infoId,String deptIds){
+		/*dbDocumentZbjl.setId(UUIDUtils.random());
+		documentZbjlService.save(dbDocumentZbjl);*/
 		
 		Response.ok();
 	}
