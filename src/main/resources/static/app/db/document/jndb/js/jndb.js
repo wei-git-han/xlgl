@@ -40,7 +40,7 @@ var pageModule = function(){
                 	 var caozuo = '';
                 	 if(rowdata.docStatus == "1"){
                 		 //待修改
-                     	 caozuo +='<a title="转办" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="zhuanbanDoc(\''+rowdata.id+'\',\''+rowdata.infoId+'\')"><i class="fa fa-mail-reply"></i></a>';
+                     	 caozuo +='<a title="转办" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="zhuanbanDoc(\''+rowdata.id+'\',\''+rowdata.infoId+'\')"><i class="fa fa-external-link"></i></a>';
     				 }
                 	 return caozuo;
                  }}
