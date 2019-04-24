@@ -3,7 +3,6 @@ var getFileUrl = {"url":"/app/db/documentfile/getFile","dataType":"text"};;//左
 var getDataUrl = {"url":"/app/db/documentinfo/info","dataType":"json"};//右侧获取主文件信息
 var getSzpsListUrl = {"url":rootPath +"/documentszps/queryList","dataType":"text"}; //获取首长批示
 var zbjlDataUrl = {"url":"/app/db/documentzbjl/list","dataType":"json"}; //文件转办-转办记录list
-
 var listUrl = {"url":"/app/db/document/view/data/blfkList.json","dataType":"text"}; //办理反馈list
 var tjUrl = {"url":"/app/db/document/view/data/tjsuccess.json","dataType":"text"}; //办理反馈提交
 var cbDataUrl = {"url":"/app/db/document/view/data/cbList.json","dataType":"text"}; //文件转办-催办记录list
@@ -11,7 +10,6 @@ var bjDataUrl = {"url":"/app/db/document/view/data/bjList.json","dataType":"text
 var banjieUrl = {"url":"/app/db/document/view/data/tjsuccess.json","dataType":"text"}; //办结地址
 var chengbanUrl = {"url":"/app/db/document/view/data/tjsuccess.json","dataType":"text"}; //承办地址
 var uploadFileUrl = "/app/db/documentinfo/uploadFile";//文件上传
-
 var fileId=getUrlParam("fileId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 
@@ -92,6 +90,7 @@ var pageModule = function(){
 			url:getDataUrl,
 			data:{id:fileId},
 			success:function(data){
+				$("#gwName").text(data.docTitle);
 				$(".commonHtml").html("");
 				$(".commonHtml").append(
 					'<div class="line1"><span class="fileName">'+data.docTitle+'</span><font class="miji secretLevelName">'+data.urgencyDegree+'</font></div>'+
@@ -364,9 +363,7 @@ var pageModule = function(){
 
 //跳转返回事件
 function skip(){
-	if(show == 0){
-		windowClose();
-	}else if(fileFrom == "djlr"){//文件来源于登记录入
+	if(fileFrom == "djlr"){//文件来源于登记录入
 		window.location.href="/app/db/document/djlr/html/djlr.html?searchType=djlr";
 	}else if(fileFrom == "grdb"){//文件来源于个人待办
 		window.location.href="/app/db/document/grdb/html/grdb.html?searchType=grdb";
