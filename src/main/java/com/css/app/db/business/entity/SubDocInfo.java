@@ -23,13 +23,30 @@ public class SubDocInfo implements Serializable {
 	private String subDeptId;
 	//分局名称
 	private String subDeptName;
-	//带一次转办时间
+	//第一次转办时间
 	private Date createdTime;
-	//文件局内状态（1：退回修改；2：待落实；3：待审批；4：办理中；5：建议办结）
+	//文件局内状态（1:待转办；3：退回修改；5：待落实；7：待审批；9：办理中；11：建议办结）
 	private Integer docStatus;
 	//备用字段
 	private String remark;
-
+/*----------------------------以下字段只用来列表接收值用--------------start----------------------*/	
+	//文件局内状态
+	private String statusName;
+	//文件标题
+	private String docTitle;
+	//密级
+	private String securityClassification;
+	//紧急程度
+	private String urgencyDegree;
+	//文件号
+	private String docCode;
+	//军委办件号
+	private String banjianNumber;
+	//催办标识
+	private String cuibanFlag;
+	//文件类型
+	private String docTypeName;
+	/*----------------------------列表接收值---------end---------------------------*/	
 	/**
 	 * 设置：唯一标识
 	 */
@@ -114,4 +131,54 @@ public class SubDocInfo implements Serializable {
 	public String getRemark() {
 		return remark;
 	}
+	public String getStatusName() {
+		return statusName;
+	}
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
+	public String getDocTitle() {
+		return docTitle;
+	}
+	public void setDocTitle(String docTitle) {
+		this.docTitle = docTitle;
+	}
+	public String getSecurityClassification() {
+		return securityClassification;
+	}
+	public void setSecurityClassification(String securityClassification) {
+		this.securityClassification = securityClassification;
+	}
+	public String getUrgencyDegree() {
+		return urgencyDegree;
+	}
+	public void setUrgencyDegree(String urgencyDegree) {
+		this.urgencyDegree = urgencyDegree;
+	}
+	public String getDocCode() {
+		return docCode;
+	}
+	public void setDocCode(String docCode) {
+		this.docCode = docCode;
+	}
+	public String getBanjianNumber() {
+		return banjianNumber;
+	}
+	public void setBanjianNumber(String banjianNumber) {
+		this.banjianNumber = banjianNumber;
+	}
+	public String getCuibanFlag() {
+		return cuibanFlag;
+	}
+	public void setCuibanFlag(String cuibanFlag) {
+		this.cuibanFlag = cuibanFlag;
+	}
+	public String getDocTypeName() {
+		return docTypeName;
+	}
+	public void setDocTypeName(String docTypeName) {
+		this.docTypeName = docTypeName;
+	}
+	
+	
 }

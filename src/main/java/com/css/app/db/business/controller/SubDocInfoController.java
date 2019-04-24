@@ -12,10 +12,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.stereotype.Controller;
 
+import com.css.base.utils.CurrentUser;
+import com.css.base.utils.GwPageUtils;
 import com.css.base.utils.PageUtils;
 import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 import com.css.base.utils.Response;
+import com.css.base.utils.StringUtils;
+import com.css.addbase.apporgan.service.BaseAppOrganService;
+import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.service.SubDocInfoService;
 
@@ -28,26 +33,37 @@ import com.css.app.db.business.service.SubDocInfoService;
  * @date 2019-04-18 16:40:43
  */
 @Controller
-@RequestMapping("/subdocinfo")
+@RequestMapping("/app/db/subdocinfo")
 public class SubDocInfoController {
 	@Autowired
 	private SubDocInfoService subDocInfoService;
+	@Autowired
+	private BaseAppOrganService baseAppOrganService;
 	
+	@Autowired
+	private BaseAppUserService baseAppUserService;
 	/**
 	 * 列表
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	@RequiresPermissions("dbsubdocinfo:list")
-	public void list(Integer page, Integer limit){
+	public void list(Integer page, Integer pagesize,String search, String docStatus){
 		Map<String, Object> map = new HashMap<>();
-		PageHelper.startPage(page, limit);
-		
+		PageHelper.startPage(page, pagesize);
+		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
+		if(StringUtils.isNotBlank(orgId)) {
+			map.put("orgId", orgId);
+		}
+		if(StringUtils.isNotBlank(search)) {
+			map.put("search", search);
+		}
+		if(StringUtils.isNotBlank(docStatus)) {
+			map.put("docStatus", docStatus);
+		}
 		//查询列表数据
-		List<SubDocInfo> dbSubDocInfoList = subDocInfoService.queryList(map);
-		
-		PageUtils pageUtil = new PageUtils(dbSubDocInfoList);
-		Response.json("page",pageUtil);
+		List<SubDocInfo> subDocInfoList = subDocInfoService.queryList(map);
+		GwPageUtils pageUtil = new GwPageUtils(subDocInfoList);
+		Response.json(pageUtil);
 	}
 	
 	

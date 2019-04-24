@@ -106,8 +106,8 @@ public class DocumentZbjlController {
 				if(organ !=null) {
 					subInfo.setSubDeptName(organ.getName());
 				}
-				subInfo.setDocStatus(DbDocStatusDefined.DAI_LUO_SHI);
-				subInfo.setCreatedTime(new Date());
+				subInfo.setDocStatus(DbDocStatusDefined.DAI_ZHUAN_BAN);
+				subInfo.setCreatedTime(date);
 				subDocInfoService.save(subInfo);
 			}
 			json.put("result", "success");
