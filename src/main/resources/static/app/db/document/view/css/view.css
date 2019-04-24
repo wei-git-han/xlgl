@@ -32,7 +32,6 @@ ul{
 	height:90px;
 	background:#EDF2FC;
 	border-bottom:1px solid #D2E0FD; 
-	padding-left: 30px;
 }
 .left_main{
 	width:100%;
@@ -41,6 +40,7 @@ ul{
 }
 .titlecont {
     height: 50px;
+    padding-left: 30px;
 }
 .titleleft {
     float: left;
@@ -655,11 +655,6 @@ ul{
 	font-weight:100;
 }
 
-
-#takeMenu .dropdown-menu>li>a{
-	border-radius: 0px !important;
-}
-
 .addfjbtn{
 	color:#999!important;
 	text-decoration:underline;
@@ -674,20 +669,90 @@ ul{
 	color: #0063dc;
 }
 
-.nav-tabs .dropdown.open > .dropdown-toggle, .nav-pills .dropdown.open > .dropdown-toggle {
-    background: #95BEF2;
-    color: #fff;
-    border-color: transparent;
-    cursor:pointer;
-}
-.dropdown {
-	cursor:pointer;
-}
-
 .psxqBtn{
 	cursor:pointer;	
 	color:#5599EB;
 	font-size:14px;
 	text-decoration:underline;
 	margin-left:5px;
+}
+
+
+/* 新页签样式 */
+.tabs li.tabs-selected a.tabs-inner {
+    background: #6699FF!important;
+	border: none;
+	color: #fff;
+}
+.tabs li a.tabs-inner {
+    padding: 0 20px;
+    background-color: #95BEF2!important;
+    color: #fff!important;
+    border:none!important;
+    border-radius: 10px 10px 0 0 !important;
+}
+.tabs>li>a:hover{
+	color: #fff!important;
+    border:none!important;
+    background-color: #6699FF!important;
+}
+.tabs>li>a{
+	display: inline-block;
+	max-width: 180px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.tabs-header{
+	border:none;background:transparent;
+}
+.tabs-title {
+    font-size: 16px;
+}
+.tabs li a.tabs-inner {
+	padding: 0 20px;
+	background-color:#6699FF;
+	color:#fff;
+    border-radius:10px 10px 0 0!important;
+}
+.tabs li:hover a.tabs-inner {
+	background-color:#fff;
+	color:#777;
+	border-color: #D4D4D4;
+	border-bottom:transparent;
+}
+.tabs li a.tabs-close {
+	position:absolute;
+	top:15px;
+	right:5px;
+    background: url('../images/close.png') no-repeat ;
+}
+.tabs li.tabs-selected a.tabs-close,.tabs li:hover a.tabs-close{
+    position:absolute;
+    top:15px;
+    right:5px;
+    background: url('../images/close2.png') no-repeat ;
+}
+.tabs-scroller-left {
+    background: #6699FF url('../images/left.png') no-repeat center;
+}
+.tabs-scroller-left:hover {
+    background: #fff url('../images/left2.png') no-repeat center;
+}
+.tabs-scroller-right {
+    background: #6699FF url('../images/right.png') no-repeat center;
+}
+.tabs-scroller-right:hover {
+    background: #fff url('../images/right2.png') no-repeat center;
+}
+
+
+.psstyle{
+	display: inline-block;
+	max-width: 50%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	vertical-align: middle;
 }

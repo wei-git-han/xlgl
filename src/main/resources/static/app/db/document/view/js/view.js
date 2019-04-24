@@ -15,7 +15,6 @@ var uploadFileUrl = "/app/db/documentinfo/uploadFile";//文件上传
 var fileId=getUrlParam("fileId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 
-var tabn = 0;
 var pageModule = function(){
 	//文件menu
 	var takeMenufn = function(id){
@@ -26,6 +25,9 @@ var pageModule = function(){
 				var html1 = "";
 				var firstFileId="";
 				if(data &&　data.length>0){
+					$("#ttcont").append(`
+						<div id="tt" class="easyui-tabs" data-options="tabHeight:40,tabWidth:180" style="width:100%;"></div>	
+					`);
 					$.each(data,function(i,o){
 						if(i==0){
 							firstFileId = o.id;
@@ -33,26 +35,24 @@ var pageModule = function(){
 						var id = o.id;
 						var fileName = o.fileName;
 						var fileServerFormatId = o.fileServerFormatId;
-						html1 = '	<li id="menu_'+id+'" data_id="'+id+'" title="'+fileName+'" class="'+(i==0?"active":"")+'" formatId="'+fileServerFormatId+'" >'+
-								'		<a  href="#tab'+i+'"  data-toggle="tab" >'+fileName+'</a>'+
-								'	</li>';
-						$("#takeMenu").append(html1);
+						$("#tt").append(`
+							<div title="<font title='${fileName}'>${fileName}</font>" id="${id}" fileServerFormatId="${fileServerFormatId}">
+							</div>
+						`);
+					}); 
+					$('#tt').tabs({
+						onSelect:function(title){
+							var tab = $('#tt').tabs('getSelected');
+							var id = tab.attr("id");
+							var fileServerFormatId = tab.attr("fileServerFormatId");
+							$("#fjList>li>a").removeClass("fjactive");
+							$("#fj_"+id).find("a").addClass("fjactive");
+							getFile(id);
+						},
+						onClose:function(title){
+						}
 					});
 				}
-				tabn = 1;
-				Metronic.refreshtabs();
-				//页签点击
-				$("#takeMenu li").click(function(){
-					if($(this).hasClass("tabdrop")){
-						return;
-					}
-					var clickfileId = $(this).attr("data_id");
-					$("#fjList>li>a").removeClass("fjactive");
-					$("#"+clickfileId).find("a").addClass("fjactive");
-					getFile(clickfileId);
-				}); 
-				
-				getFile(firstFileId);
 			}
 		});	
 	}
@@ -80,9 +80,9 @@ var pageModule = function(){
 			success:function(data){
 				var psxqBtn="";
 				if(data.length>1){
-					psxqBtn='<a href="javascript:;" class="psxqBtn">详情</a>'
+					psxqBtn='<a href="javascript:;" class="psxqBtn" onclick="showXQ(\''+fileId+'\')">详情</a>'
 				}
-				$(".option").html('<font>'+data[0].userName+'批示：'+data[0].leaderComment+'</font>'+psxqBtn);
+				$(".option").html('<font class="psstyle">'+data[0].userName+'批示：'+data[0].leaderComment+'</font>'+psxqBtn);
 			}
 		});	
 	}
@@ -109,16 +109,17 @@ var pageModule = function(){
 			success:function(data){
 				$("#fjList").html("");
 				$.each(data,function(i,item){
-					$("#fjList").append('<li id="'+item.id+'" formatId="'+item.fileServerFormatId+'" ><a class="'+(i==0?"fjactive":"")+'">'+item.fileName+'</a></li>');
+					$("#fjList").append('<li num="'+i+'" id="fj_'+item.id+'"  data_id="'+item.id+'" formatId="'+item.fileServerFormatId+'" ><a class="'+(i==0?"fjactive":"")+'">'+item.fileName+'</a></li>');
 				});
 				//点击附件名称
 				$("#fjList li").click(function(){
 					$("#fjList>li>a").removeClass("fjactive");
 					$(this).find("a").addClass("fjactive");
-					var clickfileId = $(this).attr("id");
-					$("#takeMenu li").removeClass("active");
-					$("#menu_"+clickfileId).addClass("active");
+					var clickfileId = $(this).attr("data_id");
+					/*$(".tabs-panels>div").hide();
+					$(".tabs-panels").find("#"+clickfileId).show();*/
 					getFile(clickfileId);
+					$("#tt").tabs("select",parseInt($(this).attr("num")))
 				}); 
 			}
 		});	
@@ -374,4 +375,17 @@ function skip(){
 	}else{ 
 		window.location.href="/app/db/document/grdb/html/grdb.html?searchType=grdb";
 	}
+}
+
+//批示详情
+function showXQ(id){
+	newbootbox.newdialog({
+		id:"psDialog",
+		width:800,
+		height:600,
+		header:true,
+		title:"批示详情",
+		classed:"cjDialog",
+		url:"/app/db/document/view/html/psDialog.html?fileId="+id,
+	})
 }
