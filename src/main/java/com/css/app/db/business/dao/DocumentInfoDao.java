@@ -2,6 +2,9 @@ package com.css.app.db.business.dao;
 
 import com.css.app.db.business.entity.DocumentInfo;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.css.base.dao.BaseDao;
@@ -15,5 +18,13 @@ import com.css.base.dao.BaseDao;
  */
 @Mapper
 public interface DocumentInfoDao extends BaseDao<DocumentInfo> {
+
+	List<Map<String, Object>> queryListByYear(Map<String, Object> map);
+
+	List<Map<String, Object>> queryListByOrgYear(Map<String, Object> map);
+
+	List<Map<String, Object>> queryListByDicType(Map<String, Object> map);
+
+	List<Map<String, Object>> queryListByDicStu(Map<String, Object> map);
 	
 }

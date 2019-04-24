@@ -18,12 +18,12 @@ import org.springframework.web.WebApplicationInitializer;
 @EnableEurekaClient
 @EnableScheduling
 @EnableTransactionManagement
-public class OneNumberApplication extends SpringBootServletInitializer implements WebApplicationInitializer {
+public class ZfDbApplication extends SpringBootServletInitializer implements WebApplicationInitializer {
 	    @Override
 	    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-	        return application.sources(OneNumberApplication.class);
+	        return application.sources(ZfDbApplication.class);
 	    }
 	public static void main(String[] args) {
-		SpringApplication.run(OneNumberApplication.class, args);
+		SpringApplication.run(ZfDbApplication.class, args);
 	}
 }

@@ -25,4 +25,12 @@ public interface DocumentInfoService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+
+	List<Map<String, Object>> queryListByYear(Map<String, Object> map);
+
+	List<Map<String, Object>> queryListByOrgYear(Map<String, Object> map);
+
+	List<Map<String, Object>> queryListByDicType(Map<String, Object> map);
+
+	List<Map<String, Object>> queryListByDicStu(Map<String, Object> map);
 }
