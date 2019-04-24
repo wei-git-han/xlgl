@@ -210,11 +210,6 @@ ul{
 }
 
 .right_top_zbjl{
-	position:absolute;
-	bottom:50px;
-	left:0;
-}
-.right_top_zbjl{
 	position: absolute;
 	bottom: 60px;
 	left: 0;
@@ -230,7 +225,7 @@ ul{
 	width:100%;
 	background:#DFE6F6;
 	text-align:center;
-	botder-top:1px solid #D3E1FB;
+	border-top:1px solid #D3E1FB;
 }
 .doBtns{
 	display:inline-block;
