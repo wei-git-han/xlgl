@@ -33,15 +33,10 @@ var pageModule = function(){
 						var id = o.id;
 						var fileName = o.fileName;
 						var fileServerFormatId = o.fileServerFormatId;
-						html1 = '	<li id="menu_'+id+'" data_id="'+id+'" class="'+(i==0?"active":"")+'" formatId="'+fileServerFormatId+'" >'+
-								'		<a  href="#tab'+i+'"  data-toggle="tab" title="'+fileName+'">'+fileName+'</a>'+
+						html1 = '	<li id="menu_'+id+'" data_id="'+id+'" title="'+fileName+'" class="'+(i==0?"active":"")+'" formatId="'+fileServerFormatId+'" >'+
+								'		<a  href="#tab'+i+'"  data-toggle="tab" >'+fileName+'</a>'+
 								'	</li>';
 						$("#takeMenu").append(html1);
-						
-						if(id!=null&&typeof(id)!="undefined"&&id!=""){
-							$("#takeMenu li").removeClass("active");
-							$("#menu_"+id).addClass("active");
-						};  
 					});
 				}
 				tabn = 1;
@@ -52,6 +47,8 @@ var pageModule = function(){
 						return;
 					}
 					var clickfileId = $(this).attr("data_id");
+					$("#fjList>li>a").removeClass("fjactive");
+					$("#"+clickfileId).find("a").addClass("fjactive");
 					getFile(clickfileId);
 				}); 
 				
@@ -112,11 +109,15 @@ var pageModule = function(){
 			success:function(data){
 				$("#fjList").html("");
 				$.each(data,function(i,item){
-					$("#fjList").append('<li id="'+item.id+'" formatId="'+item.fileServerFormatId+'" ><a>'+item.fileName+'</a></li>');
+					$("#fjList").append('<li id="'+item.id+'" formatId="'+item.fileServerFormatId+'" ><a class="'+(i==0?"fjactive":"")+'">'+item.fileName+'</a></li>');
 				});
 				//点击附件名称
 				$("#fjList li").click(function(){
+					$("#fjList>li>a").removeClass("fjactive");
+					$(this).find("a").addClass("fjactive");
 					var clickfileId = $(this).attr("id");
+					$("#takeMenu li").removeClass("active");
+					$("#menu_"+clickfileId).addClass("active");
 					getFile(clickfileId);
 				}); 
 			}

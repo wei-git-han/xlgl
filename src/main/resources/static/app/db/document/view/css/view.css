@@ -62,7 +62,7 @@ ul{
 }
 
 
-/* tabҳǩ */
+/* tab页签 */
 .left_menu .nav-tabs {
     border: none;
 }
@@ -71,13 +71,18 @@ ul{
     cursor:pointer;
 }
 .left_menu .nav-tabs > li a{
-	cursor:pointer;
+	cursor:pointer!important;
     background-color: #95BEF2;
     border: none;
     color:#fff;
     border-radius: 10px 10px 0 0 !important;
     padding: 8px 15px;
     font-size:16px;
+    display: inline-block;
+	max-width: 180px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 .left_menu .nav-tabs > li a:hover,.left_menu .nav-tabs > li a:focus,.left_menu .nav-tabs > li a:active{
 	background-color: #6699FF;
@@ -238,7 +243,7 @@ ul{
 	border-radius:4px!important;
 }
 
-/* ת���¼�µ�tabҳǩ */
+/* 转锟斤拷锟铰硷拷碌锟絫ab页签 */
 .right_top_zbjl .tabbable-line > .nav-tabs > li > a {
     border: 0;
     margin-right: 0;
@@ -317,7 +322,7 @@ ul{
 
 
 
-/* ��������ʽ */
+/* 锟斤拷锟斤拷锟斤拷锟斤拷式 */
 .timelinesview{
 	margin-top:10px;
 	background:#fff;
@@ -593,7 +598,7 @@ ul{
 }
 
 
-/* ������� */
+/* 锟斤拷锟斤拷锟斤拷锟� */
 .sryj_title{
 	position:absolute;
 	top:0;
@@ -665,6 +670,19 @@ ul{
 .addfjbtn:hover{
 	color:#666!important;
 }
+.line4 li > a.fjactive{
+	color: #0063dc;
+}
+
+.nav-tabs .dropdown.open > .dropdown-toggle, .nav-pills .dropdown.open > .dropdown-toggle {
+    background: #95BEF2;
+    color: #fff;
+    border-color: transparent;
+    cursor:pointer;
+}
+.dropdown {
+	cursor:pointer;
+}
 
 .psxqBtn{
 	cursor:pointer;	
@@ -673,4 +691,3 @@ ul{
 	text-decoration:underline;
 	margin-left:5px;
 }
-
