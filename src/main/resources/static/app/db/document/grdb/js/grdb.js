@@ -15,16 +15,16 @@ var pageModule = function(){
                	 var bgColor="#FF6600";
   				  	 return '<div title="'+rowdata.statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+rowdata.statusNam+'</div>';
                 }},
-                {display:"办件标题",name:"docTitle",width:"15%",align:"left",render:function(rowdata){
+                {display:"办件标题",name:"docTitle",width:"13%",align:"left",render:function(rowdata){
                	 return rowdata.docTitle;
                 }},
                 {display:"紧急程度",name:"urgencyDegree",width:"7%",align:"center",paixu:false,render:function(rowdata){
                	 return rowdata.urgencyDegree;
                 }},
-                {display:"批示指示内容",name:"",width:"12%",align:"center",paixu:false,render:function(rowdata){
+                {display:"批示指示内容",name:"",width:"10%",align:"center",paixu:false,render:function(rowdata){
                	 return "";
                 }},
-                {display:"督办落实情况",name:"",width:"12%",align:"left",paixu:false,render:function(rowdata){
+                {display:"督办落实情况",name:"",width:"10%",align:"left",paixu:false,render:function(rowdata){
                	 return "";
                 }},
                 {display:"承办单位/人",name:"",width:"10%",align:"center",paixu:false,render:function(rowdata){
@@ -36,10 +36,7 @@ var pageModule = function(){
                 {display:"转办时间",name:"createdTime",width:"10%",align:"center",render:function(rowdata){
                	 return rowdata.createdTime;
                 }},
-                 {display:"接收时间",name:"",width:"10%",align:"center",paixu:true,render:function(rowdata){
-                	
-                 }},
-                 {display:"操作",name:"do",width:"8%",align:"center",render:function(rowdata){
+                 {display:"接收时间",name:"",width:"10%",align:"center",paixu:false,render:function(rowdata){
                 	
                  }}
             ],
