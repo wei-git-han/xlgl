@@ -51,7 +51,8 @@
 			"DOC_TYPE_NAME",
 			"CREATED_TIME", 
 			"REMARK",
-			"STATUS"
+			"STATUS",
+			"FINISH_TIME"
 		)
 		values
 		(
@@ -75,7 +76,8 @@
 			#{docTypeName},
 			#{createdTime},
 			#{remark},
-			#{status}
+			#{status},
+			#{finishTime}
 		)
 	</insert>
 	 
@@ -101,7 +103,8 @@
 			<if test="docTypeName != null">"DOC_TYPE_NAME" = #{docTypeName}, </if>
 			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
 			<if test="remark != null">"REMARK" = #{remark},</if>
-			<if test="status != null">"STATUS" = #{status}</if>
+			<if test="status != null">"STATUS" = #{status},</if>
+			<if test="finishTime != null">"FINISH_TIME" = #{finishTime}</if>
 		</set>
 		where ID = #{id}
 	</update>

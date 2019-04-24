@@ -12,11 +12,11 @@ var pageModule = function(){
                	 return rowdata.banjianNumber;
                 }},
                 {display:"局内状态",name:"statusName",width:"10%",align:"center",render:function(rowdata,n){
-               	 var bgColor="#FF6600";
-  				  	 return '<div title="'+rowdata.statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+rowdata.statusNam+'</div>';
+               	 	var bgColor="#FF6600";
+  				  	return '<div title="'+rowdata.statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+rowdata.statusNam+'</div>';
                 }},
                 {display:"办件标题",name:"docTitle",width:"13%",align:"left",render:function(rowdata){
-               	 return rowdata.docTitle;
+               	 	return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../view/html/view.html?fileId='+rowdata.id+'&fileFrom=grdb" target="iframe1">'+rowdata.docTitle+'</a>'
                 }},
                 {display:"紧急程度",name:"urgencyDegree",width:"7%",align:"center",paixu:false,render:function(rowdata){
                	 return rowdata.urgencyDegree;
@@ -115,29 +115,6 @@ var pageModule = function(){
 		//重置
 		$("#reset").click(function(){
 			removeInputData(["title","deptid","deptname","username","userid","blstatus","designStart","designEnd","fileType"]);
-		});
-		
-		//导出
-		$("#export").click(function(){
-			var datas=grid.getcheckrow();
-			var ids='';
-			var t_count=0;
-			$(datas).each(function(i){
-				ids+=i!=0?(','+this.id):this.id;
-				t_count++;
-			});
-			t_count=t_count>0?t_count:total;
-			if(datas.length>0){
-				newbootbox.confirm({
-			     	title:"提示",
-			     	message: "将导出"+t_count+"条数据！",
-			     	callback1:function(){
-			     		/*window.location.href=后台地址+'?ids='+ids;*/
-			     	}
-			    });
-			}else{
-				newbootbox.alertInfo("请选择要导出的数据！");
-			}
 		});
 	}
 	

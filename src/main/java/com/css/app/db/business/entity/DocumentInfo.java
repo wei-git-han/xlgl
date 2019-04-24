@@ -55,6 +55,8 @@ public class DocumentInfo implements Serializable {
 	private Date createdTime;
 	//办理反馈状态
 	private Integer status; 
+	//完成时间
+	private Date finishTime;
 	//备注
 	private String remark;
 
@@ -304,6 +306,11 @@ public class DocumentInfo implements Serializable {
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
-	
+	public Date getFinishTime() {
+		return finishTime;
+	}
+	public void setFinishTime(Date finishTime) {
+		this.finishTime = finishTime;
+	}
 	
 }

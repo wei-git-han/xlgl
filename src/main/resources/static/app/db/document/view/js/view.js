@@ -80,7 +80,9 @@ var pageModule = function(){
 				if(data.length>1){
 					psxqBtn='<a href="javascript:;" class="psxqBtn" onclick="showXQ(\''+fileId+'\')">详情</a>'
 				}
-				$(".option").html('<font class="psstyle">'+data[0].userName+'批示：'+data[0].leaderComment+'</font>'+psxqBtn);
+				if(data&&data.length>0){
+					$(".line3").html('<i class="fa fa-info-circle" style="color:#33CC99"></i> <span class="option"><font class="psstyle">'+data[0].userName+'批示：'+data[0].leaderComment+'</font>'+psxqBtn+'</span>');
+				}
 			}
 		});	
 	}
@@ -90,12 +92,14 @@ var pageModule = function(){
 			url:getDataUrl,
 			data:{id:fileId},
 			success:function(data){
-				$("#gwName").text(data.docTitle);
-				$(".commonHtml").html("");
-				$(".commonHtml").append(
-					'<div class="line1"><span class="fileName">'+data.docTitle+'</span><font class="miji secretLevelName">'+data.urgencyDegree+'</font></div>'+
-	            	'<div class="line2 fileNum">'+data.banjianNumber+'</div>'
-				)
+				if(data && !!data){
+					$("#gwName").text(data.docTitle);
+					$(".commonHtml").html("");
+					$(".commonHtml").append(
+						'<div class="line1"><span class="fileName">'+data.docTitle+'</span><font class="miji secretLevelName">'+data.urgencyDegree+'</font></div>'+
+		            	'<div class="line2 fileNum">'+data.banjianNumber+'</div>'
+					)
+				}
 			}
 		});	
 	}
@@ -106,20 +110,20 @@ var pageModule = function(){
 			url:menuUrl,
 			data:{infoId:fileId},
 			success:function(data){
-				$("#fjList").html("");
-				$.each(data,function(i,item){
-					$("#fjList").append('<li num="'+i+'" id="fj_'+item.id+'"  data_id="'+item.id+'" formatId="'+item.fileServerFormatId+'" ><a class="'+(i==0?"fjactive":"")+'">'+item.fileName+'</a></li>');
-				});
-				//点击附件名称
-				$("#fjList li").click(function(){
-					$("#fjList>li>a").removeClass("fjactive");
-					$(this).find("a").addClass("fjactive");
-					var clickfileId = $(this).attr("data_id");
-					/*$(".tabs-panels>div").hide();
-					$(".tabs-panels").find("#"+clickfileId).show();*/
-					getFile(clickfileId);
-					$("#tt").tabs("select",parseInt($(this).attr("num")))
-				}); 
+				if(data&&data.length>0){
+					$("#fjList").html("");
+					$.each(data,function(i,item){
+						$("#fjList").append('<li num="'+i+'" id="fj_'+item.id+'"  data_id="'+item.id+'" formatId="'+item.fileServerFormatId+'" ><a class="'+(i==0?"fjactive":"")+'">'+item.fileName+'</a></li>');
+					});
+					//点击附件名称
+					$("#fjList li").click(function(){
+						$("#fjList>li>a").removeClass("fjactive");
+						$(this).find("a").addClass("fjactive");
+						var clickfileId = $(this).attr("data_id");
+						getFile(clickfileId);
+						$("#tt").tabs("select",parseInt($(this).attr("num")))
+					}); 
+				}
 			}
 		});	
 	}
@@ -130,47 +134,49 @@ var pageModule = function(){
 			url:listUrl,
  			data:{fileId:fileId},
 			success:function(data){
-				var html1= "";
-				$.each(data,function(i,o){
-					var listdate = o.listdate;
-					html1=	'<div class="timelinesheys ">'+
-							'	<div class="timeline-icon1">'+
-							'		<i class="icontime"></i>'+
-							'	</div>'+
-							'	<div class="timeline-user">'+
-							'		<span style="color:#999;">'+listdate+'</span>'+
-							'	</div>'+
-							'	<div class="timeline-body">';
-							$.each(o.rows,function(k,b){
-								var borderStyle="";
-								var answerStyle="";
-								var answer = b.answer;
-								var isOK = b.isOK;
-								var isOKobj = "";
-								if(isOK == "1"){
-									isOKobj ="审批通过";
-								}
-								if(answer !="0"){
-									answerStyle = "margin-left:20px!important;"
-								}
-								if(k>0){
-									borderStyle = "border-top:none;"
-								}
-								html1 += '<div class="timeline-content" style="'+borderStyle+answerStyle+'">'+
-								         '	<div class="listUser"><img src="../images/userh.png" class="listicon"> '+b.uerName+'<span class="isOkFlag">'+isOKobj+'</span></div>';
-								html1 += '	<div class="listContent">';
-								html1 += '		<span>'+b.content+'</span><span>'+b.createdTime+'</span><div class="listfj">';
-								$.each(b.fj,function(s,t){
-									html1 += '		<a id="'+t.fjId+'">'+t.fjName+'</a>';
+				if(data&&data.length>0){
+					var html1= "";
+					$.each(data,function(i,o){
+						var listdate = o.listdate;
+						html1=	'<div class="timelinesheys ">'+
+								'	<div class="timeline-icon1">'+
+								'		<i class="icontime"></i>'+
+								'	</div>'+
+								'	<div class="timeline-user">'+
+								'		<span style="color:#999;">'+listdate+'</span>'+
+								'	</div>'+
+								'	<div class="timeline-body">';
+								$.each(o.rows,function(k,b){
+									var borderStyle="";
+									var answerStyle="";
+									var answer = b.answer;
+									var isOK = b.isOK;
+									var isOKobj = "";
+									if(isOK == "1"){
+										isOKobj ="审批通过";
+									}
+									if(answer !="0"){
+										answerStyle = "margin-left:20px!important;"
+									}
+									if(k>0){
+										borderStyle = "border-top:none;"
+									}
+									html1 += '<div class="timeline-content" style="'+borderStyle+answerStyle+'">'+
+									         '	<div class="listUser"><img src="../images/userh.png" class="listicon"> '+b.uerName+'<span class="isOkFlag">'+isOKobj+'</span></div>';
+									html1 += '	<div class="listContent">';
+									html1 += '		<span>'+b.content+'</span><span>'+b.createdTime+'</span><div class="listfj">';
+									$.each(b.fj,function(s,t){
+										html1 += '		<a id="'+t.fjId+'">'+t.fjName+'</a>';
+									})
+									html1 += '	</div></div>';
+									html1 += '</div>';
 								})
-								html1 += '	</div></div>';
-								html1 += '</div>';
-							})
-							
-							html1 +='	</div>'+
-									'</div>'
-					$(".timelinesview").append(html1);
-				})
+								
+								html1 +='	</div>'+
+										'</div>'
+						$(".timelinesview").append(html1);
+					})
+				}
 			}
 		})
 	}
@@ -181,17 +187,19 @@ var pageModule = function(){
 			url:zbjlDataUrl,
 			data:{infoId:fileId},
 			success:function(data){
-				$("#zbrecord").html("");
-				$.each(data,function(i,item){
-					$("#zbrecord").append(
-						'<div class="record">'+
-			            '	<label class="zbUser">转办人:</label>'+
-			            '	<div><span>'+item.userName+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
-			            '	<label class="cbdw">承办单位/人:</label>'+
-			            '	<div>'+item.receiverNames+'</div>'+
-			            '</div>'
-		            )
-				});
+				if(data&&data.length>0){
+					$("#zbrecord").html("");
+					$.each(data,function(i,item){
+						$("#zbrecord").append(
+							'<div class="record">'+
+				            '	<label class="zbUser">转办人:</label>'+
+				            '	<div><span>'+item.userName+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
+				            '	<label class="cbdw">承办单位/人:</label>'+
+				            '	<div>'+item.receiverNames+'</div>'+
+				            '</div>'
+			            )
+					});
+				}
 			}
 		});	
 	}
@@ -202,17 +210,19 @@ var pageModule = function(){
 			url:cbDataUrl,
 			data:{fileId:fileId},
 			success:function(data){
-				$("#cbrecord").html("");
-				$.each(data,function(i,item){
-					$("#cbrecord").append(
-						'<div class="record">'+
-			            '	<label class="zbUser">转办人:</label>'+
-			            '	<div><span>'+item.zbUser+'</span><span class="zbDate">'+item.zbdate+'</span></div>'+
-			            '	<label class="cbdw">承办单位/人:</label>'+
-			            '	<div>'+item.unit+'</div>'+
-			            '</div>'
-		            )
-				});
+				if(data&&data.length>0){
+					$("#cbrecord").html("");
+					$.each(data,function(i,item){
+						$("#cbrecord").append(
+							'<div class="record">'+
+				            '	<label class="zbUser">转办人:</label>'+
+				            '	<div><span>'+item.zbUser+'</span><span class="zbDate">'+item.zbdate+'</span></div>'+
+				            '	<label class="cbdw">承办单位/人:</label>'+
+				            '	<div>'+item.unit+'</div>'+
+				            '</div>'
+			            )
+					});
+				}
 			}
 		});	
 	}
@@ -223,17 +233,19 @@ var pageModule = function(){
 			url:bjDataUrl,
 			data:{fileId:fileId},
 			success:function(data){
-				$("#jybjrecord").html("");
-				$.each(data,function(i,item){
-					$("#jybjrecord").append(
-						'<div class="record">'+
-			            '	<label class="zbUser">转办人:</label>'+
-			            '	<div><span>'+item.zbUser+'</span><span class="zbDate">'+item.zbdate+'</span></div>'+
-			            '	<label class="cbdw">承办单位/人:</label>'+
-			            '	<div>'+item.unit+'</div>'+
-			            '</div>'
-		            )
-				});
+				if(data&&data.length>0){
+					$("#jybjrecord").html("");
+					$.each(data,function(i,item){
+						$("#jybjrecord").append(
+							'<div class="record">'+
+				            '	<label class="zbUser">转办人:</label>'+
+				            '	<div><span>'+item.zbUser+'</span><span class="zbDate">'+item.zbdate+'</span></div>'+
+				            '	<label class="cbdw">承办单位/人:</label>'+
+				            '	<div>'+item.unit+'</div>'+
+				            '</div>'
+			            )
+					});
+				}
 			}
 		});	
 	}
