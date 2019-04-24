@@ -12,7 +12,7 @@ var pageModule = function(){
 	var initgrid = function(){
         grid = $("#gridcont").createGrid({
             columns:[
-                 {display:"军委办件号",name:"",width:"15%",align:"center",render:function(rowdata,n){
+                 {display:"军委办件号",name:"",width:"15%",align:"left",title:true,render:function(rowdata,n){
                 	 return rowdata.banjianNumber;
                  }},
                  {display:"办理状态",name:"",width:"6%",align:"center",render:function(rowdata,n){
@@ -30,20 +30,20 @@ var pageModule = function(){
                  {display:"办件标题",name:"",width:"15%",align:"left",render:function(rowdata){
                 	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../view/html/view.html?fileId='+rowdata.id+'&fileFrom=djlr" target="iframe1">'+rowdata.docTitle+'</a>'
                  }},
-                 {display:"紧急程度",name:"",width:"6%",align:"center",paixu:true,render:function(rowdata){
+                 {display:"紧急程度",name:"",width:"6%",align:"center",paixu:false,render:function(rowdata){
                 	 return rowdata.urgencyDegree;
                  }},
-                 {display:"批示指示内容",name:"",width:"12%",align:"center",paixu:true,render:function(rowdata){
+                 {display:"批示指示内容",name:"",width:"12%",align:"left",paixu:false,title:true,render:function(rowdata){
                 	 return '';
                  }},
-                 {display:"承办单位/人",name:"",width:"13%",align:"center",paixu:true,render:function(rowdata){
+                 {display:"承办单位/人",name:"",width:"13%",align:"left",paixu:false,title:true,render:function(rowdata){
                 	 return '';
                  }},
-                 {display:"办件分类",name:"",width:"15%",align:"center",paixu:true,render:function(rowdata){
+                 {display:"办件分类",name:"",width:"15%",align:"left",paixu:false,title:true,render:function(rowdata){
                 	 return rowdata.docTypeName;
                  }},
-                 {display:"创建时间",name:"",width:"10%",align:"center",render:function(rowdata){
-                	 return rowdata.createdTime;
+                 {display:"创建时间",name:"",width:"10%",align:"center",title:true,render:function(rowdata){
+                	 return rowdata.createdTime.substring(0,10);
                  }},
                  {display:"操作",name:"do",width:"8%",align:"center",render:function(rowdata){
                 	 var caozuo = '';
