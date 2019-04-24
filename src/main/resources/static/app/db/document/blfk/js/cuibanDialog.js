@@ -6,7 +6,7 @@ var pageModule = function(){
 			
 		});
 		
-		//关不
+		//关闭
 		$("#close").click(function(){
 			newbootbox.newdialogClose("cuibanDialog");
 		})

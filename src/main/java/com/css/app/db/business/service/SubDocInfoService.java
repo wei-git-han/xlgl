@@ -25,4 +25,6 @@ public interface SubDocInfoService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+	
+	List<SubDocInfo> queryPersonList(Map<String, Object> map);
 }

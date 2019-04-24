@@ -1,46 +1,42 @@
-var tableList= {"url":"/app/db/document/grdb/data/tablegrid.json","dataType":"text"};//原table数据
+var tableList= {"url":"/app/db/subdocinfo/personList","dataType":"text"};//原table数据
 var numsList={"url":rootPath +"/documentFlow/numsList","dataType":"text"};//筛选状态数字统计
-var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//部门树
-var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//人员树
-var leaderId=getUrlParam("menuid")||"";//代理领导
+var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//高级搜索--部门树
+var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//高级搜索--人员树
 var grid = null;
 var total=0;//列表中，数据的总条数
 var pageModule = function(){
 	var initgrid = function(){
         grid = $("#gridcont").createGrid({
             columns:[
-                 {display:"军委办件号",name:"",width:"10%",align:"center",render:function(rowdata,n){
-                	 
-                 }},
-                 {display:"局内状态",name:"",width:"5%",align:"center",render:function(rowdata,n){
-                	 
-                 }},
-                 {display:"办件标题",name:"",width:"15%",align:"left",render:function(rowdata){
-                	 
-                 }},
-                 {display:"紧急程度",name:"",width:"5%",align:"center",paixu:true,render:function(rowdata){
-                 
-                 }},
-                 {display:"批示指示内容",name:"",width:"12%",align:"center",paixu:true,render:function(rowdata){
-                     
-                 }},
-                 {display:"督办落实情况",name:"",width:"10%",align:"left",paixu:true,render:function(rowdata){
-                
-                 }},
-                 {display:"承办单位/人",name:"",width:"10%",align:"center",paixu:true,render:function(rowdata){
-                 
-                 }},
-                 {display:"办件分类",name:"",width:"5%",align:"center",paixu:true,render:function(rowdata){
-                	
-                 }},
-                 {display:"转办时间",name:"",width:"10%",align:"center",render:function(rowdata){
-                	 
-                 }},
-                 {display:"接收时间",name:"",width:"10%",align:"center",paixu:true,render:function(rowdata){
-                	
-                 }},
-                 {display:"操作",name:"do",width:"8%",align:"center",render:function(rowdata){
-                	
+            	{display:"军委办件号",name:"banjianNumber",width:"10%",align:"center",render:function(rowdata,n){
+               	 return rowdata.banjianNumber;
+                }},
+                {display:"局内状态",name:"statusName",width:"10%",align:"center",render:function(rowdata,n){
+               	 	var bgColor="#FF6600";
+  				  	return '<div title="'+rowdata.statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+rowdata.statusNam+'</div>';
+                }},
+                {display:"办件标题",name:"docTitle",width:"13%",align:"left",render:function(rowdata){
+               	 	return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../view/html/view.html?fileId='+rowdata.id+'&fileFrom=grdb" target="iframe1">'+rowdata.docTitle+'</a>'
+                }},
+                {display:"紧急程度",name:"urgencyDegree",width:"7%",align:"center",paixu:false,render:function(rowdata){
+               	 return rowdata.urgencyDegree;
+                }},
+                {display:"批示指示内容",name:"",width:"10%",align:"center",paixu:false,render:function(rowdata){
+               	 return "";
+                }},
+                {display:"督办落实情况",name:"",width:"10%",align:"left",paixu:false,render:function(rowdata){
+               	 return "";
+                }},
+                {display:"承办单位/人",name:"",width:"10%",align:"center",paixu:false,render:function(rowdata){
+               	 return "";
+                }},
+                {display:"办件分类",name:"docTypeName",width:"10%",align:"center",paixu:false,render:function(rowdata){
+               	 return rowdata.docTypeName;
+                }},
+                {display:"转办时间",name:"createdTime",width:"10%",align:"center",render:function(rowdata){
+               	 return rowdata.createdTime;
+                }},
+                 {display:"接收时间",name:"",width:"10%",align:"center",paixu:false,render:function(rowdata){                	
                  }}
             ],
             width:"100%",
@@ -50,7 +46,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 15,
             pageyno:true,
-            paramobj:{},
+            paramobj:{search:$("#searchVal").val(),docStatus:$("input[name='documentStatus']:checked").val()},
             loadafter:function(data){
             	total=data.total;
             },
@@ -119,29 +115,6 @@ var pageModule = function(){
 		//重置
 		$("#reset").click(function(){
 			removeInputData(["title","deptid","deptname","username","userid","blstatus","designStart","designEnd","fileType"]);
-		});
-		
-		//导出
-		$("#export").click(function(){
-			var datas=grid.getcheckrow();
-			var ids='';
-			var t_count=0;
-			$(datas).each(function(i){
-				ids+=i!=0?(','+this.id):this.id;
-				t_count++;
-			});
-			t_count=t_count>0?t_count:total;
-			if(datas.length>0){
-				newbootbox.confirm({
-			     	title:"提示",
-			     	message: "将导出"+t_count+"条数据！",
-			     	callback1:function(){
-			     		/*window.location.href=后台地址+'?ids='+ids;*/
-			     	}
-			    });
-			}else{
-				newbootbox.alertInfo("请选择要导出的数据！");
-			}
 		});
 	}
 	

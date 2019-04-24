@@ -4,10 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -16,7 +14,6 @@ import com.css.app.db.business.entity.DocumentFile;
 import com.css.app.db.business.service.DocumentFileService;
 import com.css.base.utils.Response;
 import com.css.base.utils.StringUtils;
-import com.css.base.utils.UUIDUtils;
 
 import cn.com.css.filestore.impl.HTTPFile;
 
@@ -71,30 +68,6 @@ public class DocumentFileController {
 		Response.json(json);
 	}
 	
-	/**
-	 * 保存
-	 */
-	@ResponseBody
-	@RequestMapping("/save")
-	@RequiresPermissions("dbdocumentfile:save")
-	public void save(@RequestBody DocumentFile dbDocumentFile){
-		dbDocumentFile.setId(UUIDUtils.random());
-		documentFileService.save(dbDocumentFile);
-		
-		Response.ok();
-	}
-	
-	/**
-	 * 修改
-	 */
-	@ResponseBody
-	@RequestMapping("/update")
-	@RequiresPermissions("dbdocumentfile:update")
-	public void update(@RequestBody DocumentFile dbDocumentFile){
-		documentFileService.update(dbDocumentFile);
-		
-		Response.ok();
-	}
 	
 	/**
 	 * 删除

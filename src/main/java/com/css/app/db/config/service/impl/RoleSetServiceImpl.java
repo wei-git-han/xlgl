@@ -46,5 +46,10 @@ public class RoleSetServiceImpl implements RoleSetService {
 	public void deleteBatch(String[] ids){
 		roleSetDao.deleteBatch(ids);
 	}
+
+	@Override
+	public int deleteByUserId(String userId) {
+		return roleSetDao.deleteByUserId(userId);
+	}
 	
 }

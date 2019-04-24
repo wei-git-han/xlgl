@@ -16,4 +16,5 @@ import com.css.base.dao.BaseDao;
 @Mapper
 public interface RoleSetDao extends BaseDao<RoleSet> {
 	
+	int deleteByUserId(String userId);
 }

@@ -1,9 +1,11 @@
 package com.css.app.db.business.dao;
 
-import com.css.app.db.business.entity.SubDocInfo;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.css.app.db.business.entity.SubDocInfo;
 import com.css.base.dao.BaseDao;
 
 /**
@@ -15,5 +17,7 @@ import com.css.base.dao.BaseDao;
  */
 @Mapper
 public interface SubDocInfoDao extends BaseDao<SubDocInfo> {
+	
+	List<SubDocInfo> queryPersonList(Map<String, Object> map);
 	
 }

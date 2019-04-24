@@ -46,5 +46,10 @@ public class AdminSetServiceImpl implements AdminSetService {
 	public void deleteBatch(String[] ids){
 		adminSetDao.deleteBatch(ids);
 	}
+
+	@Override
+	public int deleteByUserId(String userId) {
+		return adminSetDao.deleteByUserId(userId);
+	}
 	
 }

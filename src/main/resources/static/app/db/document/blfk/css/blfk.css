@@ -117,6 +117,7 @@ body {
 	padding-top:62px;
 }
 .searchAll{
+	display:none;
 	margin-left:10px;
 	font-size:15px;
 }

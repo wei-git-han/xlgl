@@ -20,7 +20,7 @@
 	<link href="../../../../../assets/global/plugins/easyui2/themes/icon.css" rel="stylesheet" type="text/css"/>
 	<link href="../../../../../assets/global/plugins/easyui2/demo/demo.css" rel="stylesheet" type="text/css"/>
 	<link rel="stylesheet" type="text/css" href="../../../common/css/common.css"/>
-	<link rel="stylesheet" type="text/css" href="../css/view.css"/>
+	<link rel="stylesheet" type="text/css" href="../css/djlr_view.css"/>
 </head>
 <body>
 	<div class="pr100">
@@ -94,31 +94,6 @@
 			    								</div>
 						        			</div>
 						            	</div>
-						            	<div class="blfk_bottom">
-						            		<div class="pr100">
-												<div class="sryj_title">输入意见/反馈：</div>
-							        			<div class="sryj_center">
-							        				<textarea class="opinionContent" id="opinionContent" maxlength="500" placeholder="此处填写办理进度供部内审议" ></textarea>
-							        			</div>
-							        			<div class="sryj_footer">
-							        				<button type="button" id="tijiao">提交草稿</button>
-							        				<button type="button" id="clear">清屏</button>
-							        				<div style="display:inline-block;">
-							        					<button type="button" id="addfjbtn" class="addfjbtn"><i class="fa fa-link"></i>添加附件</button>
-							        					<form class="form-horizontal" id="form3" target="iframe7" role="form" method="post" enctype="multipart/form-data" action="/filefj/savePDF">
-															<input type="hidden"  id="idpdf" name="idpdf"/>
-															<div class="fileinput fileinput-new" data-provides="fileinput">
-																<span class="fileinput-filename" style="padding-right:10px;line-height:30px;display:none"></span>
-									                            <span>
-									                            	<input type="file" name="pdf" id="pdf" accept=".pdf,.ofd,.doc,.docx,.wps" multiple style="display:none" />
-									                            </span>
-									                        </div> 
-								                        </form>
-								                        <iframe name="iframe7" style="display: none;"></iframe>
-							        				</div>
-							        			</div>
-						            		</div>
-						            	</div>
 						        	</div>
 						        </div>
 						        <div class="tab-pane" id="tab_15_3">
@@ -168,12 +143,6 @@
 												</div>
 											</div>
 							            </div>
-							            <div class="right_zbjl">
-							            	<button class="doBtns" type="button" id="chengban">承办</button>
-							            	<button class="doBtns" type="button" id="banjie">办结</button>
-							            	<button class="doBtns" type="button" id="luoshi">常态落实</button>
-							            	<button class="doBtns" type="button" id="zhuanban">转办</button>
-							            </div>
 							        </div>
 						        </div>
 					        </div>
@@ -210,7 +179,7 @@
 <script src="../../../../../templates/admin/commons/js/commons.js" type="text/javascript"></script>
 <script src="../../../../../templates/admin/commons/js/jquery.form.js" type="text/javascript" ></script>
 <script src="../../../common/js/commons.js" type="text/javascript"></script>
-<script src="../js/view.js" type="text/javascript"></script>
+<script src="../js/djlr_view.js" type="text/javascript"></script>
 
 <!-- 数科插件JS -->
 <script src="../../../common/suwell/suwell.js" type="text/javascript"></script>
