@@ -36,8 +36,7 @@ var pageModule = function(){
                 {display:"转办时间",name:"createdTime",width:"10%",align:"center",render:function(rowdata){
                	 return rowdata.createdTime;
                 }},
-                 {display:"接收时间",name:"",width:"10%",align:"center",paixu:false,render:function(rowdata){
-                	
+                 {display:"接收时间",name:"",width:"10%",align:"center",paixu:false,render:function(rowdata){                	
                  }}
             ],
             width:"100%",
