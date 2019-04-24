@@ -1,4 +1,4 @@
-var tableList= {"url":"/app/db/document/grdb/data/tablegrid.json","dataType":"text"};//原table数据
+var tableList= {"url":"/app/db/subdocinfo/list","dataType":"text"};//原table数据
 var numsList={"url":rootPath +"/documentFlow/numsList","dataType":"text"};//筛选状态数字统计
 var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//部门树
 var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//人员树
@@ -9,49 +9,41 @@ var pageModule = function(){
 	var initgrid = function(){
         grid = $("#gridcont").createGrid({
             columns:[
-                 {display:"军委办件号",name:"",width:"10%",align:"center",render:function(rowdata,n){
-                	 
+                 {display:"军委办件号",name:"banjianNumber",width:"10%",align:"center",render:function(rowdata,n){
+                	 return rowdata.banjianNumber;
                  }},
-                 {display:"局内状态",name:"",width:"5%",align:"center",render:function(rowdata,n){
-                	 /*var bgColor="#FF6600";
-                 	 var documentStatusName = "";
-             		 if(rowdata.firstZbTime == "" || rowdata.firstZbTime == null || rowdata.firstZbTime=="undefined"){
-             			 documentStatusName="待处理";
-             			 bgColor="#FF6600";
-    				 }else{
-    					 documentStatusName="已处理";
-    					 bgColor="#999999";
+                 {display:"局内状态",name:"statusName",width:"10%",align:"center",render:function(rowdata,n){
+                	 var bgColor="#FF6600";
+   				  	 return '<div title="'+rowdata.statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+rowdata.statusNam+'</div>';
+                 }},
+                 {display:"办件标题",name:"docTitle",width:"15%",align:"left",render:function(rowdata){
+                	 return rowdata.docTitle;
+                 }},
+                 {display:"紧急程度",name:"urgencyDegree",width:"7%",align:"center",paixu:false,render:function(rowdata){
+                	 return rowdata.urgencyDegree;
+                 }},
+                 {display:"批示指示内容",name:"",width:"12%",align:"center",paixu:false,render:function(rowdata){
+                	 return "";
+                 }},
+                 {display:"督办落实情况",name:"",width:"12%",align:"left",paixu:false,render:function(rowdata){
+                	 return "";
+                 }},
+                 {display:"承办单位/人",name:"",width:"10%",align:"center",paixu:false,render:function(rowdata){
+                	 return "";
+                 }},
+                 {display:"办件分类",name:"docTypeName",width:"10%",align:"center",paixu:false,render:function(rowdata){
+                	 return rowdata.docTypeName;
+                 }},
+                 {display:"转办时间",name:"createdTime",width:"10%",align:"center",render:function(rowdata){
+                	 return rowdata.createdTime;
+                 }},
+                 {display:"操作",name:"do",width:"4%",align:"center",render:function(rowdata){
+                	 var caozuo = '';
+                	 if(rowdata.docStatus == "1"){
+                		 //待修改
+                     	 caozuo +='<a title="转办" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="zhuanbanDoc(\''+rowdata.id+'\')"><i class="fa fa-mail-reply"></i></a>';
     				 }
-   				  	 return '<div title="'+documentStatusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+documentStatusName+'</div>';*/
-                 }},
-                 {display:"办件标题",name:"",width:"15%",align:"left",render:function(rowdata){
-                	 
-                 }},
-                 {display:"紧急程度",name:"",width:"5%",align:"center",paixu:true,render:function(rowdata){
-                 
-                 }},
-                 {display:"批示指示内容",name:"",width:"12%",align:"center",paixu:true,render:function(rowdata){
-                     
-                 }},
-                 {display:"督办落实情况",name:"",width:"10%",align:"left",paixu:true,render:function(rowdata){
-                
-                 }},
-                 {display:"承办单位/人",name:"",width:"10%",align:"center",paixu:true,render:function(rowdata){
-                 
-                 }},
-                 {display:"办件分类",name:"",width:"5%",align:"center",paixu:true,render:function(rowdata){
-                	
-                 }},
-                 {display:"转办时间",name:"",width:"10%",align:"center",render:function(rowdata){
-                	 
-                 }},
-                 {display:"操作",name:"do",width:"8%",align:"center",render:function(rowdata){
-                	 /*var caozuo = '';
-                	 if(rowdata.firstZbTime == "" || rowdata.firstZbTime == null || rowdata.firstZbTime=="undefined"){
-                     	 caozuo +='<a title="撤回" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="chehuiDoc(\''+rowdata.id+'\')"><i class="fa fa-mail-reply"></i></a>';
-                     	 caozuo +='<a title="删除" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="deleteDoc(\''+rowdata.id+'\')"><i class="fa fa-trash-o"></i></a>';
-    				 }
-                	 return caozuo;*/
+                	 return caozuo;
                  }}
             ],
             width:"100%",
@@ -61,7 +53,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 15,
             pageyno:true,
-            paramobj:{},
+            paramobj:{search:$("#searchVal").val(),docStatus:$("input[name='documentStatus']:checked").val()},
             loadafter:function(data){
             	total=data.total;
             },
@@ -197,6 +189,18 @@ var pageModule = function(){
 
 function refreshgrid(){
 	var search = $("#searchVal").val();
-	grid.setparams({search:search,documentStatus:$("input[name='documentStatus']:checked").val()});
+	grid.setparams({search:search,docStatus:$("input[name='documentStatus']:checked").val()});
 	grid.loadtable();
+}
+
+
+function zhuanbanDoc(id){
+	newbootbox.newdialog({
+		id:"zhuanbanDialog",
+		width:800,
+		height:600,
+		header:true,
+		title:"转办",
+		url:"/app/db/document/jndb/html/zhuanbanDialog.html?fileId="+id,
+	})
 }

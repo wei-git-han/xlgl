@@ -8,7 +8,18 @@
 	</select>
 
 	<select id="queryList" resultType="com.css.app.db.business.entity.SubDocInfo">
-		select * from DB_SUB_DOC_INFO 
+		select * from "ZF_MINISTRY_APP_DB".DB_SUB_DOC_INFO a 
+		left join "ZF_MINISTRY_APP_DB".DB_DOCUMENT_INFO b on a.INFO_ID=b.ID where 1=1 
+		<if test="orgId != null and orgId != ''">
+		   and a.SUB_DEPT_ID = #{orgId}
+		</if>
+		<if test="search != null and search != ''">
+			and DOC_TITLE like '%'||#{search}||'%'
+		</if>
+		<if test="docStatus != null and docStatus != ''">
+			and DOC_STATUS = #{docStatus}
+		</if>		
+		 	order by a.CREATED_TIME desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
