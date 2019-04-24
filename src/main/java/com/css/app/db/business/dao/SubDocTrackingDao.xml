@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.db.business.dao.SubDocTrackingDao">
+
+	<select id="queryObject" resultType="com.css.app.db.business.entity.SubDocTracking">
+		select * from DB_SUB_DOC_TRACKING where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.db.business.entity.SubDocTracking">
+		select * from DB_SUB_DOC_TRACKING 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from DB_SUB_DOC_TRACKING 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.db.business.entity.SubDocTracking">
+		insert into DB_SUB_DOC_TRACKING
+		(
+			"ID", 
+			"SUB_ID", 
+			"SENDER_ID", 
+			"SENDER_NAME", 
+			"SEN_DEPT_ID", 
+			"SEN_DEPT_NAME", 
+			"CREATED_TIME", 
+			"RECEIVER_ID", 
+			"RECEIVER_NAME", 
+			"REC_DEPT_ID", 
+			"REC_DEPT_NAME", 
+			"TRACKING_TYPE", 
+			"REMARK"
+		)
+		values
+		(
+			#{id}, 
+			#{subId}, 
+			#{senderId}, 
+			#{senderName}, 
+			#{senDeptId}, 
+			#{senDeptName}, 
+			#{createdTime}, 
+			#{receiverId}, 
+			#{receiverName}, 
+			#{recDeptId}, 
+			#{recDeptName}, 
+			#{trackingType}, 
+			#{remark}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.db.business.entity.SubDocTracking">
+		update DB_SUB_DOC_TRACKING 
+		<set>
+			<if test="subId != null">"SUB_ID" = #{subId}, </if>
+			<if test="senderId != null">"SENDER_ID" = #{senderId}, </if>
+			<if test="senderName != null">"SENDER_NAME" = #{senderName}, </if>
+			<if test="senDeptId != null">"SEN_DEPT_ID" = #{senDeptId}, </if>
+			<if test="senDeptName != null">"SEN_DEPT_NAME" = #{senDeptName}, </if>
+			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
+			<if test="receiverId != null">"RECEIVER_ID" = #{receiverId}, </if>
+			<if test="receiverName != null">"RECEIVER_NAME" = #{receiverName}, </if>
+			<if test="recDeptId != null">"REC_DEPT_ID" = #{recDeptId}, </if>
+			<if test="recDeptName != null">"REC_DEPT_NAME" = #{recDeptName}, </if>
+			<if test="trackingType != null">"TRACKING_TYPE" = #{trackingType}, </if>
+			<if test="remark != null">"REMARK" = #{remark}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from DB_SUB_DOC_TRACKING where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from DB_SUB_DOC_TRACKING where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

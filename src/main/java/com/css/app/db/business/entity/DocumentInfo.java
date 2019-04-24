@@ -53,6 +53,8 @@ public class DocumentInfo implements Serializable {
 	private String docTypeName;
 	//创建时间
 	private Date createdTime;
+	//办理反馈状态
+	private Integer status; 
 	//备注
 	private String remark;
 
@@ -296,4 +298,12 @@ public class DocumentInfo implements Serializable {
 	public String getRemark() {
 		return remark;
 	}
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+	
+	
 }

@@ -3,7 +3,7 @@ package com.css.app.db.util;
 public class DbDocStatusDefined {
 	
 	/**
-	 * 文件状态：退回修改
+	 * 文件状态：待转办
 	 */
 	public final static Integer DAI_ZHUAN_BAN = 1;
 	

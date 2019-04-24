@@ -1,8 +1,7 @@
 var tableList= {"url":"/app/db/subdocinfo/list","dataType":"text"};//原table数据
 var numsList={"url":rootPath +"/documentFlow/numsList","dataType":"text"};//筛选状态数字统计
-var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//部门树
-var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//人员树
-var leaderId=getUrlParam("menuid")||"";//代理领导
+var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//高级搜索--部门树
+var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//高级搜索--人员树
 var grid = null;
 var total=0;//列表中，数据的总条数
 var pageModule = function(){
@@ -41,7 +40,7 @@ var pageModule = function(){
                 	 var caozuo = '';
                 	 if(rowdata.docStatus == "1"){
                 		 //待修改
-                     	 caozuo +='<a title="转办" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="zhuanbanDoc(\''+rowdata.id+'\')"><i class="fa fa-mail-reply"></i></a>';
+                     	 caozuo +='<a title="转办" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="zhuanbanDoc(\''+rowdata.id+'\',\''+rowdata.infoId+'\')"><i class="fa fa-mail-reply"></i></a>';
     				 }
                 	 return caozuo;
                  }}
@@ -194,13 +193,13 @@ function refreshgrid(){
 }
 
 
-function zhuanbanDoc(id){
+function zhuanbanDoc(subId,infoId){
 	newbootbox.newdialog({
 		id:"zhuanbanDialog",
 		width:800,
 		height:600,
 		header:true,
 		title:"转办",
-		url:"/app/db/document/jndb/html/zhuanbanDialog.html?fileId="+id,
+		url:"/app/db/document/jndb/html/zhuanbanDialog.html?subId="+subId+"&infoId="+infoId,
 	})
 }

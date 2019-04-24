@@ -16,4 +16,5 @@ import com.css.base.dao.BaseDao;
 @Mapper
 public interface AdminSetDao extends BaseDao<AdminSet> {
 	
+	int deleteByUserId(String userId);
 }

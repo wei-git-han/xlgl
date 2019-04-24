@@ -9,6 +9,9 @@
 
 	<select id="queryList" resultType="com.css.app.db.config.entity.RoleSet">
 		select * from DB_ROLE_SET where 1=1
+		<if test="userId != null and userId != null">
+			and USER_ID = #{userId}
+		</if>
 		order by ROLE_FLAG
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
@@ -57,6 +60,10 @@
 	
 	<delete id="delete">
 		delete from DB_ROLE_SET where ID = #{value}
+	</delete>
+	
+	<delete id="deleteByUserId">
+		delete from DB_ADMIN_SET where USER_ID = #{userId}
 	</delete>
 	
 	<delete id="deleteBatch">

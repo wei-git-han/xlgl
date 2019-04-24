@@ -84,6 +84,7 @@ public class AdminSetController {
 			adminSet.setDeptName(orgName);
 			adminSetService.update(adminSet);
 		}else {
+			adminSetService.deleteByUserId(userId);
 			adminSet.setId(UUIDUtils.random());
 			adminSet.setDeptId(orgId);
 			adminSet.setDeptName(orgName);

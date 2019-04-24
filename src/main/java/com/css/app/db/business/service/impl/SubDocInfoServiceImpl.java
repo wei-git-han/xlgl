@@ -46,5 +46,10 @@ public class SubDocInfoServiceImpl implements SubDocInfoService {
 	public void deleteBatch(String[] ids){
 		subDocInfoDao.deleteBatch(ids);
 	}
+
+	@Override
+	public List<SubDocInfo> queryPersonList(Map<String, Object> map) {
+		return subDocInfoDao.queryPersonList(map);
+	}
 	
 }

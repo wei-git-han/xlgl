@@ -84,6 +84,7 @@ public class RoleSetController {
 			dbRoleSet.setDeptName(orgName);
 			roleSetService.update(dbRoleSet);
 		}else {
+			roleSetService.deleteByUserId(userId);
 			dbRoleSet.setId(UUIDUtils.random());
 			dbRoleSet.setDeptId(orgId);
 			dbRoleSet.setDeptName(orgName);

@@ -62,6 +62,10 @@
 		delete from DB_ADMIN_SET where ID = #{value}
 	</delete>
 	
+	<delete id="deleteByUserId">
+		delete from DB_ADMIN_SET where USER_ID = #{userId}
+	</delete>
+	
 	<delete id="deleteBatch">
 		delete from DB_ADMIN_SET where ID in 
 		<foreach item="id" collection="array" open="(" separator="," close=")">
