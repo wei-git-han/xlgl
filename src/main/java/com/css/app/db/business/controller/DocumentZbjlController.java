@@ -79,48 +79,51 @@ public class DocumentZbjlController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public void save(String infoId,String deptIds,String deptNames){
+	public void save(String infoIds,String deptIds,String deptNames){
 		JSONObject json =new JSONObject();
-		if(StringUtils.isNotBlank(infoId) && StringUtils.isNotBlank(deptIds)) {
+		if(StringUtils.isNotBlank(infoIds) && StringUtils.isNotBlank(deptIds)) {
+			String[] ids = infoIds.split(",");
 			//获取当前登录人信息
 			String loginUserId=CurrentUser.getUserId();
 			String loginUserName=CurrentUser.getUsername();
 			String loginUserDeptId=CurrentUser.getDepartmentId();
 			String loginUserDeptName=CurrentUser.getOrgName();
-			//时间取一个保证数据的统一
-			Date date = new Date();
-			//添加转办记录
-			DocumentZbjl zbjl=new DocumentZbjl();
-			zbjl.setId(UUIDUtils.random());
-			zbjl.setInfoId(infoId);
-			zbjl.setUserId(loginUserId);
-			zbjl.setUserName(loginUserName);
-			zbjl.setDeptId(loginUserDeptId);
-			zbjl.setDeptName(loginUserDeptName);
-			zbjl.setReceiverIds(deptIds);
-			zbjl.setReceiverNames(deptNames);
-			zbjl.setCreatedTime(date);
-			documentZbjlService.save(zbjl);
-			//第一次转办时间同步到主表
-			DocumentInfo info = documentInfoService.queryObject(infoId);
-			if(info != null) {
-				info.setFirstZbTime(date);
-				documentInfoService.update(info);
-			}
-			//添加子分支主记录
-			String[] deptArray = deptIds.split(",");
-			for (String deptId : deptArray) {
-				BaseAppOrgan organ = baseAppOrganService.queryObject(deptId);
-				SubDocInfo subInfo=new SubDocInfo();
-				subInfo.setId(UUIDUtils.random());
-				subInfo.setInfoId(infoId);
-				subInfo.setSubDeptId(deptId);
-				if(organ !=null) {
-					subInfo.setSubDeptName(organ.getName());
+			for (String infoId : ids) {
+				//时间取一个保证数据的统一
+				Date date = new Date();
+				//添加转办记录
+				DocumentZbjl zbjl=new DocumentZbjl();
+				zbjl.setId(UUIDUtils.random());
+				zbjl.setInfoId(infoId);
+				zbjl.setUserId(loginUserId);
+				zbjl.setUserName(loginUserName);
+				zbjl.setDeptId(loginUserDeptId);
+				zbjl.setDeptName(loginUserDeptName);
+				zbjl.setReceiverIds(deptIds);
+				zbjl.setReceiverNames(deptNames);
+				zbjl.setCreatedTime(date);
+				documentZbjlService.save(zbjl);
+				//第一次转办时间同步到主表
+				DocumentInfo info = documentInfoService.queryObject(infoId);
+				if(info != null) {
+					info.setFirstZbTime(date);
+					documentInfoService.update(info);
 				}
-				subInfo.setDocStatus(DbDocStatusDefined.DAI_ZHUAN_BAN);
-				subInfo.setCreatedTime(date);
-				subDocInfoService.save(subInfo);
+				//添加子分支主记录,文件状态为待转办
+				String[] deptArray = deptIds.split(",");
+				for (String deptId : deptArray) {
+					BaseAppOrgan organ = baseAppOrganService.queryObject(deptId);
+					SubDocInfo subInfo=new SubDocInfo();
+					subInfo.setId(UUIDUtils.random());
+					subInfo.setInfoId(infoId);
+					subInfo.setSubDeptId(deptId);
+					if(organ !=null) {
+						subInfo.setSubDeptName(organ.getName());
+					}
+					subInfo.setDocStatus(DbDocStatusDefined.DAI_ZHUAN_BAN);
+					subInfo.setCreatedTime(date);
+					subDocInfoService.save(subInfo);
+				}
 			}
 			json.put("result", "success");
 		}else {
@@ -185,6 +188,12 @@ public class DocumentZbjlController {
 			tracking.setTrackingType("1");
 			tracking.setCreatedTime(new Date());
 			subDocTrackingService.save(tracking);
+			//改变文件状态 ，文件状态为待落实
+			SubDocInfo subInfo = subDocInfoService.queryObject(subId);
+			if(subInfo != null) {
+				subInfo.setDocStatus(DbDocStatusDefined.DAI_LUO_SHI);
+				subDocInfoService.update(subInfo);
+			}
 			json.put("result", "success");
 		}else {
 			json.put("result", "fail");

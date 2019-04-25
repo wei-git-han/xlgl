@@ -25,4 +25,6 @@ public interface SubDocTrackingService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+	
+	SubDocTracking  queryLatestRecord(String subId);
 }

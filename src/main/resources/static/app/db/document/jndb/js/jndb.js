@@ -2,6 +2,7 @@ var tableList= {"url":"/app/db/subdocinfo/list","dataType":"text"};//原table数
 var numsList={"url":rootPath +"/documentFlow/numsList","dataType":"text"};//筛选状态数字统计
 var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//高级搜索--部门树
 var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//高级搜索--人员树
+var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var grid = null;
 var total=0;//列表中，数据的总条数
 var pageModule = function(){
@@ -16,7 +17,7 @@ var pageModule = function(){
    				  	 return '<div title="'+rowdata.statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+rowdata.statusNam+'</div>';
                  }},
                  {display:"办件标题",name:"docTitle",width:"15%",align:"left",title:true,render:function(rowdata){
-                	 return rowdata.docTitle;
+                	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+rowdata.docTitle+'</a>'
                  }},
                  {display:"紧急程度",name:"urgencyDegree",width:"7%",align:"center",paixu:false,render:function(rowdata){
                 	 return rowdata.urgencyDegree;
@@ -200,6 +201,6 @@ function zhuanbanDoc(subId,infoId){
 		height:600,
 		header:true,
 		title:"转办",
-		url:"/app/db/document/jndb/html/zhuanbanDialog.html?subId="+subId+"&infoId="+infoId,
+		url:"/app/db/document/jndb/html/zhuanbanDialog.html?subId="+subId+"&infoId="+infoId+"&fileFrom="+fileFrom
 	})
 }

@@ -16,7 +16,7 @@ var pageModule = function(){
   				  	return '<div title="'+rowdata.statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+rowdata.statusNam+'</div>';
                 }},
                 {display:"办件标题",name:"docTitle",width:"13%",align:"left",render:function(rowdata){
-               	 	return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../view/html/view.html?fileId='+rowdata.id+'&fileFrom=grdb" target="iframe1">'+rowdata.docTitle+'</a>'
+               	 	return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../view/html/view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&fileFrom=grdb" target="iframe1">'+rowdata.docTitle+'</a>'
                 }},
                 {display:"紧急程度",name:"urgencyDegree",width:"7%",align:"center",paixu:false,render:function(rowdata){
                	 return rowdata.urgencyDegree;

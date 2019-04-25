@@ -208,14 +208,21 @@ ul{
 	width:100%;
 	height:100%;
 }
-
-.right_top_zbjl{
+/* .right_top_zbjl{
 	position: absolute;
 	bottom: 60px;
 	left: 0;
 	top: 0;
 	width: 100%;
+} */
+.right_top_zbjl{
+	position: absolute;
+	bottom: 0px;
+	left: 0;
+	top: 0;
+	width: 100%;
 }
+
 .right_zbjl{
 	position:absolute;
 	bottom:0px;
@@ -570,7 +577,7 @@ ul{
 	margin-right:20px;
 	text-decoration:underline;
 }
-.blfk_top{
+/* .blfk_top{
 	position:absolute;
 	top:0px;
 	left:0;
@@ -578,6 +585,15 @@ ul{
 	bottom:40%;
 	width:100%;
 	height:58%;
+} */
+.blfk_top{
+	position:absolute;
+	top:0px;
+	left:0;
+	right:0;
+	bottom:0;
+	width:100%;
+	height:100%;
 }
 .blfk_bottom{
 	position:absolute;
@@ -750,4 +766,9 @@ ul{
 	overflow: hidden;
 	text-overflow: ellipsis;
 	vertical-align: middle;
+}
+
+/* 按钮权限控制 */
+.ifShow{
+	display:none;
 }

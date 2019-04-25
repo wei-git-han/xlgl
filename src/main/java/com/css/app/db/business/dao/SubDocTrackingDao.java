@@ -16,4 +16,5 @@ import com.css.base.dao.BaseDao;
 @Mapper
 public interface SubDocTrackingDao extends BaseDao<SubDocTracking> {
 	
+	SubDocTracking  queryLatestRecord(String subId);
 }

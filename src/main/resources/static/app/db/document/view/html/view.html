@@ -16,9 +16,9 @@
 	<link rel="stylesheet" type="text/css" href="../../../../../assets/admin/pages/css/tasks.css"/>
 	<link rel="stylesheet" type="text/css" href="../../../../../assets/admin/layout/css/layout.css"/>
 	<link rel="stylesheet" type="text/css" href="../../../../../assets/admin/layout/css/custom.css"/>
-	<link href="../../../../../assets/global/plugins/easyui2/themes/bootstrap/easyui.css" rel="stylesheet" type="text/css"/>
-	<link href="../../../../../assets/global/plugins/easyui2/themes/icon.css" rel="stylesheet" type="text/css"/>
-	<link href="../../../../../assets/global/plugins/easyui2/demo/demo.css" rel="stylesheet" type="text/css"/>
+	<link rel="stylesheet" href="../../../../../assets/global/plugins/easyui2/themes/bootstrap/easyui.css"  type="text/css"/>
+	<link rel="stylesheet" href="../../../../../assets/global/plugins/easyui2/themes/icon.css"  type="text/css"/>
+	<link rel="stylesheet" href="../../../../../assets/global/plugins/easyui2/demo/demo.css"  type="text/css"/>
 	<link rel="stylesheet" type="text/css" href="../../../common/css/common.css"/>
 	<link rel="stylesheet" type="text/css" href="../css/view.css"/>
 </head>
@@ -94,14 +94,16 @@
 			    								</div>
 						        			</div>
 						            	</div>
-						            	<div class="blfk_bottom">
+						            	<div class="ifShow blfk_bottom">
 						            		<div class="pr100">
 												<div class="sryj_title">输入意见/反馈：</div>
 							        			<div class="sryj_center">
 							        				<textarea class="opinionContent" id="opinionContent" maxlength="500" placeholder="此处填写办理进度供部内审议" ></textarea>
 							        			</div>
 							        			<div class="sryj_footer">
-							        				<button type="button" id="tijiao">提交草稿</button>
+							        				<button type="button" class="ifShow" id="sptg">审批通过</button>
+							        				<button type="button" class="ifShow" id="fhxg">返回修改</button>
+							        				<button type="button" class="ifShow" id="tijiao">提交</button>
 							        				<button type="button" id="clear">清屏</button>
 							        				<div style="display:inline-block;">
 							        					<button type="button" id="addfjbtn" class="addfjbtn"><i class="fa fa-link"></i>添加附件</button>
@@ -168,11 +170,11 @@
 												</div>
 											</div>
 							            </div>
-							            <div class="right_zbjl">
-							            	<button class="doBtns" type="button" id="chengban">承办</button>
-							            	<button class="doBtns" type="button" id="banjie">办结</button>
-							            	<button class="doBtns" type="button" id="luoshi">常态落实</button>
-							            	<button class="doBtns" type="button" id="zhuanban">转办</button>
+							            <div class="ifShow right_zbjl">
+							            	<button class="ifShow doBtns" type="button" id="chengban">承办</button>
+							            	<button class="ifShow doBtns" type="button" id="banjie">办结</button>
+							            	<button class="ifShow doBtns" type="button" id="luoshi">常态落实</button>
+							            	<button class="ifShow doBtns" type="button" id="zhuanban">转办</button>
 							            </div>
 							        </div>
 						        </div>

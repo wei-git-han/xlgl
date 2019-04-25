@@ -17,7 +17,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.AppConfig;
 import com.css.app.db.business.service.DocumentFileService;
 import com.css.app.db.business.service.DocumentInfoService;
-import com.css.app.db.util.DbDicTypeDefined;
+import com.css.app.db.util.DbDefined;
 import com.css.base.utils.GwPageUtils;
 import com.css.base.utils.Response;
 

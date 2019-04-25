@@ -181,7 +181,7 @@ var pageModule = function(){
 					header:true,
 					title:"转办",
 					classed:"cjDialog",
-					url:"/app/db/document/blfk/html/zhuanbanDialog.html?fileId="+ids.toString()
+					url:"/app/db/document/blfk/html/zhuanbanDialog.html?fileIds="+ids.toString()
 				})
 			}else{
 				newbootbox.alertInfo("请勾选要转办的数据！");

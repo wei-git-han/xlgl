@@ -27,8 +27,10 @@ public class SubDocInfo implements Serializable {
 	private Date createdTime;
 	//文件局内状态（1:待转办；3：退回修改；5：待落实；7：待审批；9：办理中；11：建议办结）
 	private Integer docStatus;
-	//备用字段
-	private String remark;
+	//是否承办
+	private String undertaker;
+	//完成时间
+	private String finishTime;
 /*----------------------------以下字段只用来列表接收值用--------------start----------------------*/	
 	//文件局内状态
 	private String statusName;
@@ -119,17 +121,17 @@ public class SubDocInfo implements Serializable {
 	public Integer getDocStatus() {
 		return docStatus;
 	}
-	/**
-	 * 设置：备用字段
-	 */
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public String getUndertaker() {
+		return undertaker;
 	}
-	/**
-	 * 获取：备用字段
-	 */
-	public String getRemark() {
-		return remark;
+	public void setUndertaker(String undertaker) {
+		this.undertaker = undertaker;
+	}
+	public String getFinishTime() {
+		return finishTime;
+	}
+	public void setFinishTime(String finishTime) {
+		this.finishTime = finishTime;
 	}
 	public String getStatusName() {
 		return statusName;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.css.app.db.config.entity.DocumentDic;
 import com.css.app.db.config.service.DocumentDicService;
-import com.css.app.db.util.DbDicTypeDefined;
+import com.css.app.db.util.DbDefined;
 import com.css.base.utils.PageUtils;
 import com.css.base.utils.Response;
 import com.css.base.utils.UUIDUtils;
@@ -46,10 +46,10 @@ public class DocumentDicController {
 	public void getDicByType(String dicType) {
 		JSONObject json = new JSONObject();
 		if(StringUtils.isNotBlank(dicType)) {
-			if(StringUtils.equals(DbDicTypeDefined.ALL_DIC, dicType)) {
-				 json.put(DbDicTypeDefined.DOCUMENT_TYPE, documentDicService.queryDicByType(DbDicTypeDefined.DOCUMENT_TYPE));
-				 json.put(DbDicTypeDefined.URGENCY_DEGREE, documentDicService.queryDicByType(DbDicTypeDefined.URGENCY_DEGREE));
-				 json.put(DbDicTypeDefined.SECURITY_CLASSIFICATION, documentDicService.queryDicByType(DbDicTypeDefined.SECURITY_CLASSIFICATION));
+			if(StringUtils.equals(DbDefined.ALL_DIC, dicType)) {
+				 json.put(DbDefined.DOCUMENT_TYPE, documentDicService.queryDicByType(DbDefined.DOCUMENT_TYPE));
+				 json.put(DbDefined.URGENCY_DEGREE, documentDicService.queryDicByType(DbDefined.URGENCY_DEGREE));
+				 json.put(DbDefined.SECURITY_CLASSIFICATION, documentDicService.queryDicByType(DbDefined.SECURITY_CLASSIFICATION));
 			}else {
 				 json.put(dicType, documentDicService.queryDicByType(dicType));
 			}

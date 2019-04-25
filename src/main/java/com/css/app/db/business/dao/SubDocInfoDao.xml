@@ -61,7 +61,8 @@
 			"SUB_DEPT_NAME", 
 			"CREATED_TIME", 
 			"DOC_STATUS", 
-			"REMARK"
+			"UNDERTAKER",
+			"FINISH_TIME"
 		)
 		values
 		(
@@ -71,7 +72,8 @@
 			#{subDeptName}, 
 			#{createdTime}, 
 			#{docStatus}, 
-			#{remark}
+			#{undertaker},
+			#{finishTime}
 		)
 	</insert>
 	 
@@ -83,7 +85,8 @@
 			<if test="subDeptName != null">"SUB_DEPT_NAME" = #{subDeptName}, </if>
 			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
 			<if test="docStatus != null">"DOC_STATUS" = #{docStatus}, </if>
-			<if test="remark != null">"REMARK" = #{remark}</if>
+			<if test="undertaker != null">"UNDERTAKER" = #{undertaker},</if>
+			<if test="finishTime != null">"FINISH_TIME" = #{finishTime}</if>
 		</set>
 		where ID = #{id}
 	</update>

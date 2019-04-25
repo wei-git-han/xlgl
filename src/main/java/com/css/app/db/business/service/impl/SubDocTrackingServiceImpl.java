@@ -46,5 +46,10 @@ public class SubDocTrackingServiceImpl implements SubDocTrackingService {
 	public void deleteBatch(String[] ids){
 		subDocTrackingDao.deleteBatch(ids);
 	}
+
+	@Override
+	public SubDocTracking queryLatestRecord(String subId) {
+		return subDocTrackingDao.queryLatestRecord(subId);
+	}
 	
 }

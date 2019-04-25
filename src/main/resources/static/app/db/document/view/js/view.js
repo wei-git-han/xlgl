@@ -3,17 +3,60 @@ var getFileUrl = {"url":"/app/db/documentfile/getFile","dataType":"text"};;//左
 var getDataUrl = {"url":"/app/db/documentinfo/info","dataType":"json"};//右侧获取主文件信息
 var getSzpsListUrl = {"url":rootPath +"/documentszps/queryList","dataType":"text"}; //获取首长批示
 var zbjlDataUrl = {"url":"/app/db/documentzbjl/list","dataType":"json"}; //文件转办-转办记录list
+var getButtonParamUrl = {"url":"/app/db/subdocinfo/buttonParam","dataType":"json"}; //获取按钮显示控制参数
+var chengbanUrl = {"url":"/app/db/subdocinfo/undertakeOperation","dataType":"text"}; //承办地址
+
 var listUrl = {"url":"/app/db/document/view/data/blfkList.json","dataType":"text"}; //办理反馈list
 var tjUrl = {"url":"/app/db/document/view/data/tjsuccess.json","dataType":"text"}; //办理反馈提交
 var cbDataUrl = {"url":"/app/db/document/view/data/cbList.json","dataType":"text"}; //文件转办-催办记录list
 var bjDataUrl = {"url":"/app/db/document/view/data/bjList.json","dataType":"text"}; //文件转办-办结记录list
 var banjieUrl = {"url":"/app/db/document/view/data/tjsuccess.json","dataType":"text"}; //办结地址
-var chengbanUrl = {"url":"/app/db/document/view/data/tjsuccess.json","dataType":"text"}; //承办地址
+
 var uploadFileUrl = "/app/db/documentinfo/uploadFile";//文件上传
 var fileId=getUrlParam("fileId")||""; //主文件id
+var subId=getUrlParam("subId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 
 var pageModule = function(){
+	
+	/* 按钮权限控制 */
+	var showButton = function(){
+		$ajax({
+			url:getButtonParamUrl,
+			data:{subId:subId},
+			success:function(data){
+				$(".ifShow").hide();
+				/*Integer docStatus=0;//1:待转办；3：退回修改；5：待落实；7：待审批；9：办理中；11：建议办结;
+				String roleType = DbDefined.ROLE_6;//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
+				boolean isCheckUser=false;//是否是当前办理人
+				boolean isUndertaken=false;//是否已承办
+				boolean isUndertaker=false;//是否承办人*/
+				if(!data.isUndertaken && data.isCheckUser){//承办、转办按钮都显示，输入框相关不显示
+					$(".right_top_zbjl").css("bottom","60px");//按钮父元素上方元素样式控制
+					$(".right_zbjl").show();//按钮父元素样式控制
+					$("#chengban").show();
+					$("#zhuanban").show();
+				}else{
+					if(data.isCheckUser){//显示办结、常态落实,输入框
+						$(".right_zbjl").show();
+						$("#luoshi").show();
+						$("#banjie").show();
+						$(".blfk_bottom").show(); //意见框
+						$(".blfk_top").css({"bottom":"40%","height":"58%"});   //意见框上方元素样式控制
+						if(data.roleType=='3'){//是局长显示审批完成否则显示提交
+							$("#sptg").show();
+						}else{
+							$("#tijiao").show();
+						}
+						if(!isUndertaker){//当前处理人是承办人则不显示返回修改
+							$("#fhxg").show();
+						}
+					}
+				}
+			}
+		});	
+	}
+	
 	//文件menu
 	var takeMenufn = function(id){
 		$ajax({
@@ -87,6 +130,7 @@ var pageModule = function(){
 		});	
 	}
 	
+	/*公文信息*/
 	var initdata = function(){
 		$ajax({
 			url:getDataUrl,
@@ -284,16 +328,27 @@ var pageModule = function(){
 		$("#chengban").click(function(){
 			$ajax({
 				url:chengbanUrl,
-				data:{fileId:fileId},
+				data:{subId:subId},
 				type: "GET",
 				success:function(data){
 					if(data.result == "success"){
-						newbootbox.alert("承办...！").done(function(){
-							/*成功后的回调*/
-						});
+						showButton();
 					}
 				}
 			});
+		});
+		
+		//转办
+		$("#zhuanban").click(function(){
+			newbootbox.newdialog({
+				id:"zhuanbanDialog",
+				width:800,
+				height:600,
+				header:true,
+				title:"转办",
+				classed:"cjDialog",
+				url:"/app/db/document/jndb/html/zhuanbanDialog.html?subId="+subId+"&infoId="+fileId+"&fileFrom="+fileFrom
+			})
 		});
 		
 		//办结
@@ -357,6 +412,7 @@ var pageModule = function(){
 	return{
 		//加载页面处理程序
 		initControl:function(){
+			showButton();
 			takeMenufn();
 			initdata();
 			initFjfn();

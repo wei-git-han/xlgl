@@ -13,6 +13,9 @@
 			limit #{offset}, #{limit}
 		</if>
 	</select>
+	<select id="queryLatestRecord" resultType="com.css.app.db.business.entity.SubDocTracking">
+		select top 1 * from DB_SUB_DOC_TRACKING where SUB_ID=#{subId} order by CREATED_TIME desc
+	</select>
 	
  	<select id="queryTotal" resultType="int">
 		select count(*) from DB_SUB_DOC_TRACKING 
