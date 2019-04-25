@@ -8,19 +8,16 @@ var chengbanUrl = {"url":"/app/db/subdocinfo/undertakeOperation","dataType":"tex
 var saveUrl = {"url":"/app/db/document/view/data/tjsuccess.json","dataType":"text"}; //办理反馈保存
 var luoShiUrl = {"url":"/app/db/subdocinfo/luoShiOperation","dataType":"text"}; //常态落实操作
 var banjieUrl = {"url":"/app/db/subdocinfo/banJieOperation","dataType":"text"}; //办结地址
-
 var listUrl = {"url":"/app/db/document/view/data/blfkList.json","dataType":"text"}; //办理反馈list
 var cbDataUrl = {"url":"/app/db/document/view/data/cbList.json","dataType":"text"}; //文件转办-催办记录list
 var bjDataUrl = {"url":"/app/db/document/view/data/bjList.json","dataType":"text"}; //文件转办-办结记录list
-
-
 var uploadFileUrl = "/app/db/documentinfo/uploadFile";//文件上传
+var downLoadUrl = {"url":"","dataType":"text"}; //附件下载
 var fileId=getUrlParam("fileId")||""; //主文件id
 var subId=getUrlParam("subId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
-
+var delfjArry = [];
 var pageModule = function(){
-	
 	/* 按钮权限控制 */
 	var showButton = function(){
 		$ajax({
@@ -53,7 +50,7 @@ var pageModule = function(){
 						}else{
 							$("#tijiao").show();
 						}
-						if(!isUndertaker){//当前处理人是承办人则不显示返回修改
+						if(!data.isUndertaker){//当前处理人是承办人则不显示返回修改
 							$("#fhxg").show();
 						}
 					}
@@ -201,6 +198,7 @@ var pageModule = function(){
 									var answer = b.answer;
 									var isOK = b.isOK;
 									var isOKobj = "";
+									var ifeditbtn = b.ifeditbtn;
 									if(isOK == "1"){
 										isOKobj ="审批通过";
 									}
@@ -215,9 +213,13 @@ var pageModule = function(){
 									html1 += '	<div class="listContent">';
 									html1 += '		<span>'+b.content+'</span><span>'+b.createdTime+'</span><div class="listfj">';
 									$.each(b.fj,function(s,t){
-										html1 += '		<a id="'+t.fjId+'">'+t.fjName+'</a>';
+										html1 += '		<div class="fujianwrap"><a class="fujian" id="'+t.fjId+'" onclick="downloadfn(\''+t.fileServerId+'\')">'+t.fjName+'</a><i title="删除附件" class="fa fa-times-circle delx" data="'+t.fjId+'"></i></div>';
 									})
-									html1 += '	</div></div>';
+									html1 += '	</div>';
+									if(ifeditbtn == "1"){
+										html1 += '		<div class="editwrap"><button class="editBtn" id="'+b.id+'" data_val="'+b.content+'">编辑</button></div>';
+									}
+									html1 += '	</div>';
 									html1 += '</div>';
 								})
 								
@@ -226,6 +228,27 @@ var pageModule = function(){
 						$(".timelinesview").append(html1);
 					})
 				}
+
+				//意见记录编辑
+				$(".editBtn").click(function(){
+					if($.trim($(this).text())=="编辑"){
+						$(this).text("取消编辑");
+						$("#opinionContent").val($(this).attr("data_val"));
+						$("#editRecordId").val($(this).attr("id"));
+						$(this).parents(".timeline-content").find(".fujianwrap .delx").attr("style","display:inline-block!important");
+					}else{
+						$(this).text("编辑");
+						$("#opinionContent").val("");
+						$("#editRecordId").val("");
+						$(this).parents(".timeline-content").find(".fujianwrap .delx").attr("style","display:none!important");
+					}
+				});
+				
+				//删除附件
+				$(".delx").click(function(){
+					$(this).parent().remove();
+					delfjArry.push($(this).attr("data"));
+				});
 			}
 		})
 	}
@@ -305,7 +328,7 @@ var pageModule = function(){
 			skip();
 		});
 		
-		//办理反馈
+		//办理反馈清屏
 		$("#clear").click(function(){
 			$("#opinionContent").val("");
 		});
@@ -404,12 +427,15 @@ var pageModule = function(){
 		//表单
 		$("#commentForm").validate({
 		    submitHandler: function() {
+		    	$("#delfjId").val(delfjArry.toString());//存放编辑-删除的附件
 		    	var ajax_option = {
 					url : saveUrl.url,// 默认是form action
-					data:{infoId:fileId,subId:subId},
+					data:{infoId:fileId,subId:subId,opinionContent:$("#opinionContent").val()},
 					success : function(data) {
 						if (data.result == "success") {
 							newbootbox.alertInfo("提交成功！").done(function(){
+								$("#opinionContent").val("");
+								initblfkList();
 							}); 
 						} else {
 							newbootbox.alertInfo("提交失败，请稍后重试！"); 
@@ -428,6 +454,14 @@ var pageModule = function(){
 		//查看附件
 		$("#showfj").click(function(){
 			$(".filelist").toggle();
+		});
+		
+		
+		$("body").click(function(e){
+			if($(e.target).hasClass("showfj") || $(e.target).parents("div").hasClass("filelist")){
+				return;
+			};
+			$(".filelist").hide();
 		});
 	}
 		
@@ -475,4 +509,17 @@ function showXQ(id){
 		classed:"cjDialog",
 		url:"/app/db/document/view/html/psDialog.html?fileId="+id,
 	})
+}
+
+//下载
+function downloadfn(fileServerId){
+	$ajax({
+		url:downLoadUrl,
+		data:{fileId:fileServerId},
+	    success:function(data){
+	    	if(data.url != null && data.url != ''){
+	    		window.location.href = data.url;
+	    	}
+	    }
+	});
 }

@@ -16,11 +16,11 @@
 	<link rel="stylesheet" type="text/css" href="../../../../../assets/admin/pages/css/tasks.css"/>
 	<link rel="stylesheet" type="text/css" href="../../../../../assets/admin/layout/css/layout.css"/>
 	<link rel="stylesheet" type="text/css" href="../../../../../assets/admin/layout/css/custom.css"/>
-	<link rel="stylesheet" href="../../../../../assets/global/plugins/easyui2/themes/bootstrap/easyui.css"  type="text/css"/>
-	<link rel="stylesheet" href="../../../../../assets/global/plugins/easyui2/themes/icon.css"  type="text/css"/>
-	<link rel="stylesheet" href="../../../../../assets/global/plugins/easyui2/demo/demo.css"  type="text/css"/>
-	<link rel="stylesheet" type="text/css" href="../../../common/css/common.css"/>
-	<link rel="stylesheet" type="text/css" href="../css/view.css"/>
+	<link rel="stylesheet" type="text/css" href="../../../../../assets/global/plugins/easyui2/themes/bootstrap/easyui.css"  type="text/css"/>
+	<link rel="stylesheet" type="text/css" href="../../../../../assets/global/plugins/easyui2/themes/icon.css"  type="text/css"/>
+	<link rel="stylesheet" type="text/css" href="../../../../../assets/global/plugins/easyui2/demo/demo.css"  type="text/css"/>
+	<link rel="stylesheet" type="text/css" type="text/css" href="../../../common/css/common.css"/>
+	<link rel="stylesheet" type="text/css" type="text/css" href="../css/view.css"/>
 </head>
 <body>
 	<div class="pr100">
@@ -97,6 +97,8 @@
 						            	<div class="ifShow blfk_bottom">
 						            		<div class="pr100">
 						            			<form action="" class="pr100" id="commentForm" method="post" enctype="multipart/form-data">
+						            				<input type="hidden" id="editRecordId" name="editRecordId" /><!-- 编辑的附件id -->
+						            				<input type="hidden" id="delfjId" name="delfjId" /><!--存放 编辑删除的附件id -->
 													<div class="sryj_title">输入意见/反馈：</div>
 								        			<div class="sryj_center">
 								        				<textarea class="opinionContent" id="opinionContent" maxlength="500" placeholder="此处填写办理进度供部内审议" ></textarea>
@@ -108,8 +110,8 @@
 								        				<button type="button" class="ifShow" id="save">保存</button>
 								        				<button type="button" id="clear">清屏</button>
 								        				<div style="display:inline-block;vertical-align: top;margin-right: 20px;margin-top: 6px;float:right">
-																<a class="filebutton addfjbtn" id="file1"><i class="fa fa-link"></i> 添加附件 </a>
-											                    <div class="filelist"  name="file1">附件列表:</div>
+															<a class="filebutton addfjbtn" id="file1"><i class="fa fa-link"></i> 添加附件 </a>
+											                <div class="filelist"  name="file1">附件列表:</div>
 								        				</div>
 								        				<button type="button" class="ifShow showfj" id="showfj">附件</button>
 								        			</div>

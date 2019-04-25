@@ -781,7 +781,7 @@ ul{
 .filelist{
 	display:none;
 	position:absolute;
-	right:20px;
+	right:88px;
 	padding:10px;
 	overflow:auto;
 	bottom:30px;
@@ -797,4 +797,27 @@ ul{
 }
 .filelist>div{
 	line-height:28px;
+}
+.fujianwrap{
+	display:inline-block;
+	position:relative
+}
+.editwrap{
+	padding:0;
+	margin:0;
+	text-align:right;
+}
+.editwrap button{
+	color:#333!important;
+	border:none;
+	background:#e2e2e2;
+}
+
+.delx{
+	display:none!important; 
+	position:absolute;
+	right:0;top:0;
+	color:#aaa;
+	font-size:15px;
+	cursor:pointer
 }
