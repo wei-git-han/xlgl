@@ -51,5 +51,15 @@ public class SubDocInfoServiceImpl implements SubDocInfoService {
 	public List<SubDocInfo> queryPersonList(Map<String, Object> map) {
 		return subDocInfoDao.queryPersonList(map);
 	}
+
+	@Override
+	public int updateDocStatus(Integer status, String infoId) {
+		return subDocInfoDao.updateDocStatus(status, infoId);
+	}
+
+	@Override
+	public int queryMinDocStatus(String infoId,String subDeptId) {
+		return subDocInfoDao.queryMinDocStatus(infoId,subDeptId);
+	}
 	
 }
