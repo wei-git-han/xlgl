@@ -5,7 +5,7 @@ var getSzpsListUrl = {"url":rootPath +"/documentszps/queryList","dataType":"text
 var zbjlDataUrl = {"url":"/app/db/documentzbjl/list","dataType":"json"}; //文件转办-转办记录list
 var getButtonParamUrl = {"url":"/app/db/subdocinfo/buttonParam","dataType":"json"}; //获取按钮显示控制参数
 var chengbanUrl = {"url":"/app/db/subdocinfo/undertakeOperation","dataType":"text"}; //承办地址
-var tjUrl = {"url":"/app/db/subdocinfo/submitOperation","dataType":"text"}; //办理反馈提交
+var saveUrl = {"url":"/app/db/document/view/data/tjsuccess.json","dataType":"text"}; //办理反馈保存
 var luoShiUrl = {"url":"/app/db/subdocinfo/luoShiOperation","dataType":"text"}; //常态落实操作
 
 var listUrl = {"url":"/app/db/document/view/data/blfkList.json","dataType":"text"}; //办理反馈list
@@ -44,6 +44,9 @@ var pageModule = function(){
 						$("#banjie").show();
 						$(".blfk_bottom").show(); //意见框
 						$(".blfk_top").css({"bottom":"40%","height":"58%"});   //意见框上方元素样式控制
+						$("#save").show();
+						$("#showfj").show();
+						
 						if(data.roleType=='3'){//是局长显示审批完成否则显示提交
 							$("#sptg").show();
 						}else{
@@ -308,21 +311,15 @@ var pageModule = function(){
 		
 		//办理反馈提交
 		$("#tijiao").click(function(){
-			if($.trim($("#opinionContent").val()) == "" || $.trim($("#opinionContent").val())=="null"){
-				newbootbox.alert("意见不能为空！");
-				return;
-			}
-			$ajax({
-				url:tjUrl,
-				data:{subId:subId,opinionContent:$("#opinionContent").val()},
-				success:function(data){
-					if(data.result == "success"){
-						newbootbox.alert("保存成功！").done(function(){
-							/*成功后的回调*/
-						});
-					}
-				}
-			});	
+			newbootbox.newdialog({
+				id:"tijiaoDialog",
+				width:800,
+				height:600,
+				header:true,
+				title:"提交",
+				classed:"cjDialog",
+				url:"/app/db/document/view/html/tijiaoDialog.html?subId="+subId+"&infoId="+fileId+"&fileFrom="+fileFrom+"&opinionContent="+$("#opinionContent").val()
+			})
 		});
 		
 		//承办
@@ -348,7 +345,7 @@ var pageModule = function(){
 				header:true,
 				title:"转办",
 				classed:"cjDialog",
-				url:"/app/db/document/jndb/html/zhuanbanDialog.html?subId="+subId+"&infoId="+fileId+"&fileFrom="+fileFrom
+				url:"/app/db/document/jndb/html/zhuanbandx.html?subId="+subId+"&infoId="+fileId+"&fileFrom="+fileFrom
 			})
 		});
 		
@@ -391,42 +388,46 @@ var pageModule = function(){
 			 	}
 			});
 		});
+		
 		//办理反馈-添加附件
-		$("#form3").validate({
+		var o1 = $("#file1").createfile({
+			//initdata:filedata1,
+			yn:true,//true 多个  false 单个
+			view:"view1",//view1 列表视图  view2 图片视图
+			name:"file",// 后端获取文件的名称
+			type:["ofd","pdf","doc","docx","wps"],
+			maxsize:500*1024*1024,
+			cssStyle:"width:0px;height:0px"
+		});
+		
+		//表单
+		$("#commentForm").validate({
 		    submitHandler: function() {
-				var ajax_option ={
-					type: "post",
-					url:uploadFileUrl,//默认是form action
-					success:function(data){
-						if(data.result == "success"){
-							newbootbox.alert('上传成功！').done(function(){
-				        		$(".fileinput-filename").text("");
-				    			$("#pdf").val("");
-		    				});
-						}else{
-							newbootbox.alert("上传失败！"); 
+		    	var ajax_option = {
+					url : saveUrl.url,// 默认是form action
+					data:{infoId:fileId,subId:subId},
+					success : function(data) {
+						if (data.result == "success") {
+							newbootbox.alertInfo("提交成功！").done(function(){
+							}); 
+						} else {
+							newbootbox.alertInfo("提交失败，请稍后重试！"); 
 						}
 					}
 				}
-				$('#form3').ajaxSubmit(ajax_option);
-		   }
+				$('#commentForm').ajaxSubmit(ajax_option); 
+		    }
 		});
 		
-		$("#addfjbtn").click(function(){
-			$("#pdf").unbind("change");
-			$("#pdf").click();
-			$("#pdf").change(function(){
-				var fileNameArry = $(this).val().split("\\");
-				var fileName;
-				if(fileNameArry.length==1){
-					fileName=fileNameArry[0];
-				}else{
-					fileName=fileNameArry[fileNameArry.length-1];
-				}
-				$(".fileinput-filename").text(fileName);
-				$("#form3").submit();
-			});
-		})
+		//保存
+		$("#save").click(function(){
+			$("#commentForm").submit();
+		});
+		
+		//查看附件
+		$("#showfj").click(function(){
+			$(".filelist").toggle();
+		});
 	}
 		
 	return{

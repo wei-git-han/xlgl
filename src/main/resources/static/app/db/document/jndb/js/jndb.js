@@ -201,6 +201,6 @@ function zhuanbanDoc(subId,infoId){
 		height:600,
 		header:true,
 		title:"转办",
-		url:"/app/db/document/jndb/html/zhuanbanDialog.html?subId="+subId+"&infoId="+infoId+"&fileFrom="+fileFrom
+		url:"/app/db/document/jndb/html/zhuanbandx.html?subId="+subId+"&infoId="+infoId+"&fileFrom="+fileFrom
 	})
 }

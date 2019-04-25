@@ -1795,3 +1795,142 @@ var initudgroup = function(){
 		}
 	})
 }
+
+//上传图片（支持同时上传多个图片）
+jQuery.fn.extend({ //成员函数
+	createfile:function(obj){
+		var targetid = $(this).attr("id");
+		var filen = 0;
+		var deletefilekey = [];
+		var name = obj.name;
+		var yn = obj.yn;
+		var view = obj.view;
+		var cssStyle = obj.cssStyle;
+		var delbtn = obj.delbtn;
+		if(obj.initdata){
+			var filelist = obj.initdata;
+			$.each(filelist,function(i,o){
+				if(view=="view1"){
+					$(".filelist[name="+targetid+"]").append(
+						'<div style="display:block;position:relative;text-align: left;margin-right:20px;margin-bottom: 10px;" id="filecont_'+targetid+'_'+o.fileServerId+'" class="fileview_'+targetid+'" data="'+o.fileServerId+'">'+
+						'	<i class="fa fa-file-o"></i><a onclick="downloadfn(\''+o.fileServerId+'\')" title="下载" style="margin-left:3px;margin-right:8px;">'+o.fileName+'</a>'+
+						'	<a id="'+o.id+'" class="delfj">删除</a>'+
+						'</div>'
+					);
+					
+				}else if(view=="view2"){
+					$(".filelist[name="+targetid+"]").append(
+						'<div style="display:inline-block;'+cssStyle+';position:relative;float:left;margin-right:20px;margin-bottom:10px;" id="filecont_'+targetid+'_'+o.code+'" class="fileview_'+targetid+'" data="'+o.code+'">'+
+						'	<div style="width:20px;height:20px;position:absolute;top:0;right:0;text-align:center;background:#cccccc;cursor:pointer;color:#fff;" id="'+o.code+'">x</div>'+
+						'	<div style="width:100%;height:100%;">'+
+						'		<img src="'+o.load+'"  style="width:100%;height:100%;"/>'+
+						'	</div>'+
+						'</div>'
+					);
+					
+				}
+				$("#"+o.code).click(function(){
+					$(this).parent().remove();
+					deletefilekey.push(this.id);
+				});
+			})
+		}
+		$("#"+targetid).click(function(){
+			filen+=1;
+			if(view=="view1"){
+				$(".filelist[name="+targetid+"]").append(
+					'<div style="display:block;position:relative;display:none;text-align: left;margin-right:20px;margin-bottom:10px;" id="filecont_'+targetid+'_'+filen+'">'+
+					'	<input type="file" name="'+name+'" style="display:none;" id="file_'+targetid+'_'+filen+'"/>'+
+					'</div>'
+				);
+			}else if(view=="view2"){
+				$(".filelist[name="+targetid+"]").append(
+					'<div style="display:inline-block;'+cssStyle+';position:relative;display:none;float:left;margin-right:20px;margin-bottom:10px;" id="filecont_'+targetid+'_'+filen+'">'+
+					'	<input type="file" name="'+name+'" style="display:none;" id="file_'+targetid+'_'+filen+'"/>'+
+					'</div>'
+				);
+			}
+			$("#file_"+targetid+"_"+filen).change(function(){
+				var filename = this.value;
+				var array = filename.split("\\");
+				filename = array[array.length-1];
+				var typearray = filename.split(".");
+				var filetype = typearray[typearray.length-1];
+				var type = obj.type;
+				type = type.join(",");
+				if(type.indexOf(filetype)==-1){
+					$(this).val("");
+					$('.filemessage[name='+targetid+']').html('不支持.'+filetype+'文件类型');
+					$('.filemessage[name='+targetid+']').show();
+					return;
+				}
+				var filesize = this.files[0].size;
+				var maxsize = obj.maxsize;
+				if(filesize > maxsize){
+					$(this).val("");
+					$('.filemessage[name='+targetid+']').html('您上传的文件超过'+(maxsize/1024/1024).toFixed(2)+'M，请重新上传!');
+					$('.filemessage[name='+targetid+']').show();
+					return;
+				}
+				if(view=="view1"){
+					
+					$("#filecont_"+targetid+"_"+filen).append(
+						'	<i class="fa fa-file-o" style="margin-right:3px;"></i><font class="filename">'+filename+'</font>'+
+						'	<a id="close_'+targetid+'_'+filen+'">删除</a>'
+					);
+				}else if(view=="view2"){
+					$("#filecont_"+targetid+"_"+filen).append(
+						'<div style="width:20px;height:20px;position:absolute;top:0;right:0;text-align:center;background:#cccccc;cursor:pointer;color:#fff;" class="close_btn" id="close_'+targetid+'_'+filen+'">x</div>'+
+						'<div style="width:100%;height:100%;">'+
+						'	<img id="img_'+targetid+'_'+filen+'" class="pic" style="width:100%;height:100%;"/>'+
+						'</div>'
+					);
+					$(".filemessage").html("");
+				}
+				if(view=="view2"){
+					var otype="jpg,png,jpeg,JPG,JPEG,PNG"
+					if(otype.indexOf(filetype)==-1){
+						$(this).val("");
+						$('.filemessage[name='+targetid+']').html('当前视图不支持.'+filetype+'文件类型！');
+						$('.filemessage[name='+targetid+']').show();
+						return;
+					}
+					
+					var file = this.files[0];
+					var reader = new FileReader();
+					reader.onload = function(re){
+						$("#img_"+targetid+"_"+filen).attr("src",re.target.result);
+					}
+					reader.readAsDataURL(file);
+				}
+				if(yn==false){
+					if($(".fileview_"+targetid).length!=0){
+						deletefilekey.push($(".fileview_"+targetid).attr("data"));
+						$(".fileview_"+targetid).remove();
+					};
+					
+					for(var i=0;i<filen;i++){
+						if(i!=(filen-1)){
+							$("#filecont_"+targetid+"_"+(i+1)).remove();
+						}
+					}
+					
+				}
+				if(view=="view2"){
+					$("#filecont_"+targetid+"_"+filen).css("display","inline-block");
+				}else{
+					$("#filecont_"+targetid+"_"+filen).css("display","block");
+				}
+				$("#close_"+targetid+"_"+filen).click(function(){
+					$(this).parent().remove();
+				});
+			})
+			$("#file_"+targetid+"_"+filen).click()
+		});
+		return {
+			getdeletefilekey:function(){
+				return deletefilekey;
+			}
+		}
+	}
+})

@@ -633,7 +633,7 @@ ul{
 	height:40px;
 	width:100%;
 	text-align:center;
-	padding-top:10px;
+	padding-top:11px;
 }
 .sryj_footer button{
 	display: inline-block;
@@ -669,8 +669,7 @@ ul{
 .addfjbtn{
 	color:#999!important;
 	text-decoration:underline;
-	background:none!important;
-	border:0!important;
+	font-size:15px;
 }
 
 .addfjbtn:hover{
@@ -771,4 +770,31 @@ ul{
 /* 按钮权限控制 */
 .ifShow{
 	display:none;
+}
+.showfj{
+	color:#6699FF!important;
+	text-decoration:underline;
+	border:none!important;
+	background:none!important;
+	float:right;
+}
+.filelist{
+	display:none;
+	position:absolute;
+	right:20px;
+	padding:10px;
+	overflow:auto;
+	bottom:30px;
+	width:auto;
+	height:auto;
+	max-width:90%;
+	max-height:500px;
+	border:1px solid #ccc;
+	background:#fff;
+	font-size:14px;
+	z-index:999;
+	text-align: left;
+}
+.filelist>div{
+	line-height:28px;
 }
