@@ -20,4 +20,7 @@ public interface SubDocInfoDao extends BaseDao<SubDocInfo> {
 	
 	List<SubDocInfo> queryPersonList(Map<String, Object> map);
 	
+	int updateDocStatus(Integer status,String infoId);
+	
+	int queryMinDocStatus(String infoId,String subDeptId);
 }

@@ -47,11 +47,15 @@
 			limit #{offset}, #{limit}
 		</if>
 	</select>
-	
+	<select id="queryMinDocStatus" resultType="int">
+		select min(DOC_STATUS) from DB_SUB_DOC_INFO where INFO_ID=#{0} and SUB_DEPT_ID !=#{1}
+	</select>
  	<select id="queryTotal" resultType="int">
 		select count(*) from DB_SUB_DOC_INFO 
 	</select>
-	 
+	<update id="updateDocStatus" parameterType="com.css.app.db.business.entity.SubDocInfo">
+		update DB_SUB_DOC_INFO set DOC_STATUS=#{0} where where=#{1}
+	</update>
 	<insert id="save" parameterType="com.css.app.db.business.entity.SubDocInfo">
 		insert into DB_SUB_DOC_INFO
 		(

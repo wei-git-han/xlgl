@@ -7,11 +7,12 @@ var getButtonParamUrl = {"url":"/app/db/subdocinfo/buttonParam","dataType":"json
 var chengbanUrl = {"url":"/app/db/subdocinfo/undertakeOperation","dataType":"text"}; //承办地址
 var saveUrl = {"url":"/app/db/document/view/data/tjsuccess.json","dataType":"text"}; //办理反馈保存
 var luoShiUrl = {"url":"/app/db/subdocinfo/luoShiOperation","dataType":"text"}; //常态落实操作
+var banjieUrl = {"url":"/app/db/subdocinfo/banJieOperation","dataType":"text"}; //办结地址
 
 var listUrl = {"url":"/app/db/document/view/data/blfkList.json","dataType":"text"}; //办理反馈list
 var cbDataUrl = {"url":"/app/db/document/view/data/cbList.json","dataType":"text"}; //文件转办-催办记录list
 var bjDataUrl = {"url":"/app/db/document/view/data/bjList.json","dataType":"text"}; //文件转办-办结记录list
-var banjieUrl = {"url":"/app/db/document/view/data/tjsuccess.json","dataType":"text"}; //办结地址
+
 
 var uploadFileUrl = "/app/db/documentinfo/uploadFile";//文件上传
 var fileId=getUrlParam("fileId")||""; //主文件id
@@ -357,7 +358,7 @@ var pageModule = function(){
 			 	callback1:function(){
 	 				$ajax({
 	 					url:banjieUrl,
-	 					data:{fileId:fileId},
+	 					data:{infoId:fileId,subId:subId},
 	 					type: "GET",
 	 					success:function(data){
 	 						if(data.result == "success"){
