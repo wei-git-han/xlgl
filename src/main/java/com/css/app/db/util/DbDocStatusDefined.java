@@ -30,6 +30,16 @@ public class DbDocStatusDefined {
 	/**
 	 * 文件状态：建议办结
 	 */
+	public final static Integer JIAN_YI_BAN_JIE = 10;
+	
+	/**
+	 * 文件状态：办结
+	 */
 	public final static Integer BAN_JIE = 11;
+	
+	/**
+	 * 文件状态：常态落实
+	 */
+	public final static Integer CHANG_TAI_LUO_SHI = 12;
 
 }

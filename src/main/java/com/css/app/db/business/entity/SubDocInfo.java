@@ -25,7 +25,7 @@ public class SubDocInfo implements Serializable {
 	private String subDeptName;
 	//第一次转办时间
 	private Date createdTime;
-	//文件局内状态（1:待转办；3：退回修改；5：待落实；7：待审批；9：办理中；11：建议办结）
+	//文件局内状态（1:待转办；3：退回修改；5：待落实；7：待审批；9：办理中；10：建议办结；11：办结；12：常态落实）
 	private Integer docStatus;
 	//是否承办
 	private String undertaker;

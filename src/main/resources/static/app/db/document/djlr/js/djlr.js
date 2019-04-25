@@ -161,7 +161,7 @@ var pageModule = function(){
 				$(datas).each(function(i){
 					ids[i]=this.id;
 				});
-				window.location.href="/app/db/document/djlr/html/add.html?fileId="+ids.toString();
+				window.location.href="/app/db/document/djlr/html/edit.html?fileId="+ids.toString();
 			}else{
 				newbootbox.alertInfo("请选择一条数据进行补录！");
 			}

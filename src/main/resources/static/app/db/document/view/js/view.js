@@ -5,9 +5,10 @@ var getSzpsListUrl = {"url":rootPath +"/documentszps/queryList","dataType":"text
 var zbjlDataUrl = {"url":"/app/db/documentzbjl/list","dataType":"json"}; //文件转办-转办记录list
 var getButtonParamUrl = {"url":"/app/db/subdocinfo/buttonParam","dataType":"json"}; //获取按钮显示控制参数
 var chengbanUrl = {"url":"/app/db/subdocinfo/undertakeOperation","dataType":"text"}; //承办地址
+var tjUrl = {"url":"/app/db/subdocinfo/submitOperation","dataType":"text"}; //办理反馈提交
+var luoShiUrl = {"url":"/app/db/subdocinfo/luoShiOperation","dataType":"text"}; //常态落实操作
 
 var listUrl = {"url":"/app/db/document/view/data/blfkList.json","dataType":"text"}; //办理反馈list
-var tjUrl = {"url":"/app/db/document/view/data/tjsuccess.json","dataType":"text"}; //办理反馈提交
 var cbDataUrl = {"url":"/app/db/document/view/data/cbList.json","dataType":"text"}; //文件转办-催办记录list
 var bjDataUrl = {"url":"/app/db/document/view/data/bjList.json","dataType":"text"}; //文件转办-办结记录list
 var banjieUrl = {"url":"/app/db/document/view/data/tjsuccess.json","dataType":"text"}; //办结地址
@@ -313,7 +314,7 @@ var pageModule = function(){
 			}
 			$ajax({
 				url:tjUrl,
-				data:{fileId:fileId,opinionContent:$("#opinionContent").val()},
+				data:{subId:subId,opinionContent:$("#opinionContent").val()},
 				success:function(data){
 					if(data.result == "success"){
 						newbootbox.alert("保存成功！").done(function(){
@@ -363,7 +364,7 @@ var pageModule = function(){
 	 					type: "GET",
 	 					success:function(data){
 	 						if(data.result == "success"){
-	 							skip();
+	 							showButton();
 	 						}
 	 					}
 	 				});
@@ -371,6 +372,25 @@ var pageModule = function(){
 			});
 		});
 		
+		//常态落实
+		$("#luoshi").click(function(){
+			newbootbox.oconfirm({
+			 	title:"提示",
+			 	message: "是否确认要进行文件常态落实操作？",
+			 	callback1:function(){
+	 				$ajax({
+	 					url:luoShiUrl,
+	 					data:{infoId:fileId,subId:subId},
+	 					type: "GET",
+	 					success:function(data){
+	 						if(data.result == "success"){
+	 							showButton();
+	 						}
+	 					}
+	 				});
+			 	}
+			});
+		});
 		//办理反馈-添加附件
 		$("#form3").validate({
 		    submitHandler: function() {

@@ -163,26 +163,23 @@ public class SubDocInfoController {
 		Response.json("result", "success");
 	}
 	
-	/**
-	 * 修改
-	 */
+
 	@ResponseBody
-	@RequestMapping("/update")
-	@RequiresPermissions("dbsubdocinfo:update")
-	public void update(@RequestBody SubDocInfo dbSubDocInfo){
-		subDocInfoService.update(dbSubDocInfo);
-		
+	@RequestMapping("/submitOperation")
+	public void update(String subId ){
 		Response.ok();
 	}
 	
-	/**
-	 * 删除
-	 */
+	
 	@ResponseBody
-	@RequestMapping("/delete")
-	@RequiresPermissions("dbsubdocinfo:delete")
-	public void delete(@RequestBody String[] ids){
-		subDocInfoService.deleteBatch(ids);
+	@RequestMapping("/luoShiOperation")
+	public void luoShiOperation(String subId,String infoId){
+		JSONObject json= new JSONObject();
+		if(StringUtils.isNotBlank(subId) && StringUtils.isNotBlank(infoId)) {
+			
+		}else {
+			json.put("result", "fail");
+		}
 		
 		Response.ok();
 	}
