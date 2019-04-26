@@ -6,13 +6,13 @@ import java.util.Date;
 
 
 /**
- * 意见反馈表
+ * 办结记录表
  * 
  * @author 中软信息系统工程有限公司
  * @email 
- * @date 2019-04-25 15:15:38
+ * @date 2019-04-25 19:46:10
  */
-public class ReplyOpinion implements Serializable {
+public class DocumentBjjl implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	//唯一标识
@@ -21,14 +21,16 @@ public class ReplyOpinion implements Serializable {
 	private String userId;
 	//创建人
 	private String userName;
-	//意见反馈内容
-	private String opinionContent;
+	//创建人部门id
+	private String deptId;
+	//创建人部门
+	private String deptName;
 	//创建时间
 	private Date createdTime;
-	//流转类型
-	private String trackingType;
-	//发布标识（0：临时1：发布）
-	private String opVersion;
+	//办结类型
+	private String content;
+	//主文件id
+	private String infoId;
 
 	/**
 	 * 设置：唯一标识
@@ -67,16 +69,28 @@ public class ReplyOpinion implements Serializable {
 		return userName;
 	}
 	/**
-	 * 设置：意见反馈内容
+	 * 设置：创建人部门id
 	 */
-	public void setOpinionContent(String opinionContent) {
-		this.opinionContent = opinionContent;
+	public void setDeptId(String deptId) {
+		this.deptId = deptId;
 	}
 	/**
-	 * 获取：意见反馈内容
+	 * 获取：创建人部门id
 	 */
-	public String getOpinionContent() {
-		return opinionContent;
+	public String getDeptId() {
+		return deptId;
+	}
+	/**
+	 * 设置：创建人部门
+	 */
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
+	}
+	/**
+	 * 获取：创建人部门
+	 */
+	public String getDeptName() {
+		return deptName;
 	}
 	/**
 	 * 设置：创建时间
@@ -91,27 +105,27 @@ public class ReplyOpinion implements Serializable {
 		return createdTime;
 	}
 	/**
-	 * 设置：流转类型
+	 * 设置：办结类型
 	 */
-	public void setTrackingType(String trackingType) {
-		this.trackingType = trackingType;
+	public void setContent(String content) {
+		this.content = content;
 	}
 	/**
-	 * 获取：流转类型
+	 * 获取：办结类型
 	 */
-	public String getTrackingType() {
-		return trackingType;
+	public String getContent() {
+		return content;
 	}
 	/**
-	 * 设置：发布标识（0：临时1：发布）
+	 * 设置：主文件id
 	 */
-	public void setOpVersion(String opVersion) {
-		this.opVersion = opVersion;
+	public void setInfoId(String infoId) {
+		this.infoId = infoId;
 	}
 	/**
-	 * 获取：发布标识（0：临时1：发布）
+	 * 获取：主文件id
 	 */
-	public String getOpVersion() {
-		return opVersion;
+	public String getInfoId() {
+		return infoId;
 	}
 }

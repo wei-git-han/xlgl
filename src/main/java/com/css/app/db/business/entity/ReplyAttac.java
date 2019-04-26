@@ -6,19 +6,19 @@ import java.util.Date;
 
 
 /**
- * 意见反馈附件表
+ * 办理反馈附件表
  * 
  * @author 中软信息系统工程有限公司
  * @email 
- * @date 2019-04-25 15:10:36
+ * @date 2019-04-25 19:07:17
  */
-public class OpinionAttac implements Serializable {
+public class ReplyAttac implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	//唯一标识
 	private String id;
-	//意见id
-	private String opinionId;
+	//分支主id
+	private String keyId;
 	//文件名
 	private String fileName;
 	//对应文件服务上的ID
@@ -41,16 +41,16 @@ public class OpinionAttac implements Serializable {
 		return id;
 	}
 	/**
-	 * 设置：意见id
+	 * 设置：分支主id
 	 */
-	public void setOpinionId(String opinionId) {
-		this.opinionId = opinionId;
+	public void setKeyId(String keyId) {
+		this.keyId = keyId;
 	}
 	/**
-	 * 获取：意见id
+	 * 获取：分支主id
 	 */
-	public String getOpinionId() {
-		return opinionId;
+	public String getKeyId() {
+		return keyId;
 	}
 	/**
 	 * 设置：文件名

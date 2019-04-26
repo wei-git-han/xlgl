@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.css.app.db.business.dao.OpinionAttacDao">
+<mapper namespace="com.css.app.db.business.dao.ReplyAttacDao">
 
-	<select id="queryObject" resultType="com.css.app.db.business.entity.OpinionAttac">
-		select * from DB_OPINION_ATTAC where ID = #{value}
+	<select id="queryObject" resultType="com.css.app.db.business.entity.ReplyAttac">
+		select * from DB_REPLY_ATTAC where ID = #{value}
 	</select>
 
-	<select id="queryList" resultType="com.css.app.db.business.entity.OpinionAttac">
-		select * from DB_OPINION_ATTAC 
+	<select id="queryList" resultType="com.css.app.db.business.entity.ReplyAttac">
+		select * from DB_REPLY_ATTAC 
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
 	</select>
 	
  	<select id="queryTotal" resultType="int">
-		select count(*) from DB_OPINION_ATTAC 
+		select count(*) from DB_REPLY_ATTAC 
 	</select>
 	 
-	<insert id="save" parameterType="com.css.app.db.business.entity.OpinionAttac">
-		insert into DB_OPINION_ATTAC
+	<insert id="save" parameterType="com.css.app.db.business.entity.ReplyAttac">
+		insert into DB_REPLY_ATTAC
 		(
 			"ID", 
-			"OPINION_ID", 
+			"KEY_ID", 
 			"FILE_NAME", 
 			"FILE_SERVER_ID", 
 			"CREATED_TIME", 
@@ -31,7 +31,7 @@
 		values
 		(
 			#{id}, 
-			#{opinionId}, 
+			#{keyId}, 
 			#{fileName}, 
 			#{fileServerId}, 
 			#{createdTime}, 
@@ -39,10 +39,10 @@
 		)
 	</insert>
 	 
-	<update id="update" parameterType="com.css.app.db.business.entity.OpinionAttac">
-		update DB_OPINION_ATTAC 
+	<update id="update" parameterType="com.css.app.db.business.entity.ReplyAttac">
+		update DB_REPLY_ATTAC 
 		<set>
-			<if test="opinionId != null">"OPINION_ID" = #{opinionId}, </if>
+			<if test="keyId != null">"KEY_ID" = #{keyId}, </if>
 			<if test="fileName != null">"FILE_NAME" = #{fileName}, </if>
 			<if test="fileServerId != null">"FILE_SERVER_ID" = #{fileServerId}, </if>
 			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
@@ -52,11 +52,11 @@
 	</update>
 	
 	<delete id="delete">
-		delete from DB_OPINION_ATTAC where ID = #{value}
+		delete from DB_REPLY_ATTAC where ID = #{value}
 	</delete>
 	
 	<delete id="deleteBatch">
-		delete from DB_OPINION_ATTAC where ID in 
+		delete from DB_REPLY_ATTAC where ID in 
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
 		</foreach>

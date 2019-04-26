@@ -1,9 +1,8 @@
 var deptTreeUrl = {"url":"/app/base/user/tree","dataType":"text"}; //部门树
-var sureUrl = {"url":"....","dataType":"text"}; //保存
+var sureUrl = {"url":"/app/db/subdocinfo/submitOperation","dataType":"text"}; //保存
 var subId=getUrlParam("subId")||""; //子分支主id
 var infoId=getUrlParam("infoId")||""; //主文件id
-var fileFrom=getUrlParam("fileFrom")||""; //文件来源
-var opinionContent=getUrlParam2("opinionContent")||""; //文件来源
+var replyContent=getUrlParam2("replyContent")||""; //文件来源
 var userId;
 var userName;
 
@@ -46,7 +45,7 @@ var pageModule = function(){
 		$("#sure").click(function(){
 			$ajax({
 				url:sureUrl,
-				data:{subId:subId,infoId:infoId,userName:userName,userId:userId,opinionContent:opinionContent},
+				data:{subId:subId,infoId:infoId,userName:userName,userId:userId,replyContent:replyContent},
 				success:function(data){
 					newbootbox.newdialogClose("zhuanbanDialog");
 					if(data.result=="success"){

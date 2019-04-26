@@ -5,12 +5,13 @@ var getSzpsListUrl = {"url":rootPath +"/documentszps/queryList","dataType":"text
 var zbjlDataUrl = {"url":"/app/db/documentzbjl/list","dataType":"json"}; //文件转办-转办记录list
 var getButtonParamUrl = {"url":"/app/db/subdocinfo/buttonParam","dataType":"json"}; //获取按钮显示控制参数
 var chengbanUrl = {"url":"/app/db/subdocinfo/undertakeOperation","dataType":"text"}; //承办地址
-var saveUrl = {"url":"/app/db/document/view/data/tjsuccess.json","dataType":"text"}; //办理反馈保存
+var saveUrl = {"url":"/app/db/replyexplain/save","dataType":"text"}; //办理反馈保存
 var luoShiUrl = {"url":"/app/db/subdocinfo/luoShiOperation","dataType":"text"}; //常态落实操作
-var banjieUrl = {"url":"/app/db/subdocinfo/banJieOperation","dataType":"text"}; //办结地址
+var banjieUrl = {"url":"/app/db/subdocinfo/banJieOperation","dataType":"text"}; //办结操作
+var bjDataUrl = {"url":"/app/db/documentbjjl/list","dataType":"text"}; //办结记录
+
 var listUrl = {"url":"/app/db/document/view/data/blfkList.json","dataType":"text"}; //办理反馈list
 var cbDataUrl = {"url":"/app/db/document/view/data/cbList.json","dataType":"text"}; //文件转办-催办记录list
-var bjDataUrl = {"url":"/app/db/document/view/data/bjList.json","dataType":"text"}; //文件转办-办结记录list
 var uploadFileUrl = "/app/db/documentinfo/uploadFile";//文件上传
 var downLoadUrl = {"url":"","dataType":"text"}; //附件下载
 var fileId=getUrlParam("fileId")||""; //主文件id
@@ -233,12 +234,12 @@ var pageModule = function(){
 				$(".editBtn").click(function(){
 					if($.trim($(this).text())=="编辑"){
 						$(this).text("取消编辑");
-						$("#opinionContent").val($(this).attr("data_val"));
+						$("#replyContent").val($(this).attr("data_val"));
 						$("#editRecordId").val($(this).attr("id"));
 						$(this).parents(".timeline-content").find(".fujianwrap .delx").attr("style","display:inline-block!important");
 					}else{
 						$(this).text("编辑");
-						$("#opinionContent").val("");
+						$("#replyContent").val("");
 						$("#editRecordId").val("");
 						$(this).parents(".timeline-content").find(".fujianwrap .delx").attr("style","display:none!important");
 					}
@@ -303,7 +304,7 @@ var pageModule = function(){
 	var initbjfn = function(){
 		$ajax({
 			url:bjDataUrl,
-			data:{fileId:fileId},
+			data:{infoId:fileId},
 			success:function(data){
 				if(data&&data.length>0){
 					$("#jybjrecord").html("");
@@ -330,7 +331,7 @@ var pageModule = function(){
 		
 		//办理反馈清屏
 		$("#clear").click(function(){
-			$("#opinionContent").val("");
+			$("#replyContent").val("");
 		});
 		
 		//办理反馈提交
@@ -342,7 +343,7 @@ var pageModule = function(){
 				header:true,
 				title:"提交",
 				classed:"cjDialog",
-				url:"/app/db/document/view/html/tijiaoDialog.html?subId="+subId+"&infoId="+fileId+"&fileFrom="+fileFrom+"&opinionContent="+$("#opinionContent").val()
+				url:"/app/db/document/view/html/tijiaoDialog.html?subId="+subId+"&infoId="+fileId+"&replyContent="+$("#replyContent").val()
 			})
 		});
 		
@@ -430,11 +431,11 @@ var pageModule = function(){
 		    	$("#delfjId").val(delfjArry.toString());//存放编辑-删除的附件
 		    	var ajax_option = {
 					url : saveUrl.url,// 默认是form action
-					data:{infoId:fileId,subId:subId,opinionContent:$("#opinionContent").val()},
+					data:{subId:subId,replyContent:$("#replyContent").val()},
 					success : function(data) {
 						if (data.result == "success") {
 							newbootbox.alertInfo("提交成功！").done(function(){
-								$("#opinionContent").val("");
+								$("#replyContent").val("");
 								initblfkList();
 							}); 
 						} else {
@@ -455,7 +456,6 @@ var pageModule = function(){
 		$("#showfj").click(function(){
 			$(".filelist").toggle();
 		});
-		
 		
 		$("body").click(function(e){
 			if($(e.target).hasClass("showfj") || $(e.target).parents("div").hasClass("filelist")){

@@ -16,37 +16,37 @@ import com.css.base.utils.PageUtils;
 import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 import com.css.base.utils.Response;
-import com.css.app.db.business.entity.ReplyOpinion;
-import com.css.app.db.business.service.ReplyOpinionService;
+import com.css.app.db.business.entity.ApprovalOpinion;
+import com.css.app.db.business.service.ApprovalOpinionService;
 
 
 /**
- * 意见反馈表
+ * 审批意见表
  * 
  * @author 中软信息系统工程有限公司
  * @email 
- * @date 2019-04-25 15:10:37
+ * @date 2019-04-25 19:09:02
  */
 @Controller
-@RequestMapping("/dbreplyopinion")
-public class ReplyOpinionController {
+@RequestMapping("/dbapprovalopinion")
+public class ApprovalOpinionController {
 	@Autowired
-	private ReplyOpinionService dbReplyOpinionService;
+	private ApprovalOpinionService dbApprovalOpinionService;
 	
 	/**
 	 * 列表
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	@RequiresPermissions("dbreplyopinion:list")
+	@RequiresPermissions("dbapprovalopinion:list")
 	public void list(Integer page, Integer limit){
 		Map<String, Object> map = new HashMap<>();
 		PageHelper.startPage(page, limit);
 		
 		//查询列表数据
-		List<ReplyOpinion> dbReplyOpinionList = dbReplyOpinionService.queryList(map);
+		List<ApprovalOpinion> dbApprovalOpinionList = dbApprovalOpinionService.queryList(map);
 		
-		PageUtils pageUtil = new PageUtils(dbReplyOpinionList);
+		PageUtils pageUtil = new PageUtils(dbApprovalOpinionList);
 		Response.json("page",pageUtil);
 	}
 	
@@ -56,10 +56,10 @@ public class ReplyOpinionController {
 	 */
 	@ResponseBody
 	@RequestMapping("/info/{id}")
-	@RequiresPermissions("dbreplyopinion:info")
+	@RequiresPermissions("dbapprovalopinion:info")
 	public void info(@PathVariable("id") String id){
-		ReplyOpinion dbReplyOpinion = dbReplyOpinionService.queryObject(id);
-		Response.json("dbReplyOpinion", dbReplyOpinion);
+		ApprovalOpinion dbApprovalOpinion = dbApprovalOpinionService.queryObject(id);
+		Response.json("dbApprovalOpinion", dbApprovalOpinion);
 	}
 	
 	/**
@@ -67,10 +67,10 @@ public class ReplyOpinionController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	@RequiresPermissions("dbreplyopinion:save")
-	public void save(@RequestBody ReplyOpinion dbReplyOpinion){
-		dbReplyOpinion.setId(UUIDUtils.random());
-		dbReplyOpinionService.save(dbReplyOpinion);
+	@RequiresPermissions("dbapprovalopinion:save")
+	public void save(@RequestBody ApprovalOpinion dbApprovalOpinion){
+		dbApprovalOpinion.setId(UUIDUtils.random());
+		dbApprovalOpinionService.save(dbApprovalOpinion);
 		
 		Response.ok();
 	}
@@ -80,9 +80,9 @@ public class ReplyOpinionController {
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	@RequiresPermissions("dbreplyopinion:update")
-	public void update(@RequestBody ReplyOpinion dbReplyOpinion){
-		dbReplyOpinionService.update(dbReplyOpinion);
+	@RequiresPermissions("dbapprovalopinion:update")
+	public void update(@RequestBody ApprovalOpinion dbApprovalOpinion){
+		dbApprovalOpinionService.update(dbApprovalOpinion);
 		
 		Response.ok();
 	}
@@ -92,9 +92,9 @@ public class ReplyOpinionController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	@RequiresPermissions("dbreplyopinion:delete")
+	@RequiresPermissions("dbapprovalopinion:delete")
 	public void delete(@RequestBody String[] ids){
-		dbReplyOpinionService.deleteBatch(ids);
+		dbApprovalOpinionService.deleteBatch(ids);
 		
 		Response.ok();
 	}

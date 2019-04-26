@@ -1,5 +1,6 @@
 package com.css.app.db.business.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,10 +11,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.css.addbase.apporgan.entity.BaseAppOrgan;
+import com.css.addbase.apporgan.entity.BaseAppUser;
+import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
+import com.css.app.db.business.entity.DocumentBjjl;
 import com.css.app.db.business.entity.DocumentInfo;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.entity.SubDocTracking;
+import com.css.app.db.business.service.DocumentBjjlService;
 import com.css.app.db.business.service.DocumentInfoService;
 import com.css.app.db.business.service.SubDocInfoService;
 import com.css.app.db.business.service.SubDocTrackingService;
@@ -25,6 +31,7 @@ import com.css.base.utils.CurrentUser;
 import com.css.base.utils.GwPageUtils;
 import com.css.base.utils.Response;
 import com.css.base.utils.StringUtils;
+import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 
 
@@ -48,6 +55,10 @@ public class SubDocInfoController {
 	private SubDocTrackingService subDocTrackingService;
 	@Autowired
 	private DocumentInfoService documentInfoService;
+	@Autowired
+	private DocumentBjjlService documentBjjlService;
+	@Autowired
+	private BaseAppOrganService baseAppOrganService;
 	/**
 	 * 局内待办列表
 	 */
@@ -174,21 +185,35 @@ public class SubDocInfoController {
 	@RequestMapping("/banJieOperation")
 	public void banJieOperation(String infoId,String subId){
 		String loginUserDeptId=CurrentUser.getDepartmentId();
+		String loginUserId=CurrentUser.getUserId();
+		String loginUserName=CurrentUser.getUsername();
+		String loginUserDeptName=CurrentUser.getOrgName();
 		JSONObject json= new JSONObject();
 		if(StringUtils.isNotBlank(infoId) && StringUtils.isNotBlank(subId) && StringUtils.isNotBlank(loginUserDeptId)) {
+			DocumentBjjl bjjl=new DocumentBjjl();
 			//取除本分支机构外的其他机构的最小状态值
 			int minDocStatus = subDocInfoService.queryMinDocStatus(infoId,loginUserDeptId);
 			SubDocInfo subInfo = subDocInfoService.queryObject(subId);
 			//如果最小状态值小于建议办结的状态，则将本分支局状态标示为建议办结
 			if(minDocStatus< DbDocStatusDefined.JIAN_YI_BAN_JIE) {
 				subInfo.setDocStatus(DbDocStatusDefined.JIAN_YI_BAN_JIE);
+				bjjl.setContent("建议办结");
 			}else {//如果最小状态值不小于建议办结的状态，说明本分支机构状态为最后一个办结的文，则将本分支局状态标示为办结，主文件也标示为办结
 				DocumentInfo info = documentInfoService.queryObject(infoId);
 				info.setStatus(2);
 				documentInfoService.update(info);
 				subInfo.setDocStatus(DbDocStatusDefined.BAN_JIE);
+				bjjl.setContent("自动办结");
 			}
 			subDocInfoService.update(subInfo);
+			//添加办结记录
+			bjjl.setUserId(loginUserId);
+			bjjl.setUserName(loginUserName);
+			bjjl.setDeptId(loginUserDeptId);
+			bjjl.setDeptName(loginUserDeptName);
+			bjjl.setInfoId(infoId);
+			bjjl.setCreatedTime(new Date());
+			documentBjjlService.save(bjjl);
 			json.put("result", "success");
 		}else {
 			json.put("result", "fail");
@@ -219,7 +244,37 @@ public class SubDocInfoController {
 	
 	@ResponseBody
 	@RequestMapping("/submitOperation")
-	public void update(String subId ){
+	public void update(String subId,String infoId,String userName,String userId,String replyContent){
+		//获取当前登录人信息
+		String loginUserId=CurrentUser.getUserId();
+		String loginUserName=CurrentUser.getUsername();
+		String loginUserDeptId=CurrentUser.getDepartmentId();
+		String loginUserDeptName=CurrentUser.getOrgName();
+		String deptId = null;
+		String deptName = null;
+		List<BaseAppUser> list = baseAppUserService.findByUserId(userId);
+		if(list !=null && list.size()>0) {
+			deptId = list.get(0).getOrganid();
+			if(StringUtils.isNotBlank(deptId)) {
+				BaseAppOrgan organ = baseAppOrganService.queryObject(deptId);
+				deptName=organ.getName();
+			}
+		}
+		//添加流转记录
+		SubDocTracking tracking = new SubDocTracking();
+		tracking.setId(UUIDUtils.random());
+		tracking.setSenderId(loginUserId);
+		tracking.setSenderName(loginUserName);
+		tracking.setSenDeptId(loginUserDeptId);
+		tracking.setSenDeptName(loginUserDeptName);
+		tracking.setReceiverId(userId);
+		tracking.setReceiverName(userName);
+		tracking.setRecDeptId(deptId);
+		tracking.setRecDeptName(deptName);
+		tracking.setSubId(subId);
+		tracking.setTrackingType("2");
+		tracking.setCreatedTime(new Date());
+		subDocTrackingService.save(tracking);
 		Response.ok();
 	}
 }

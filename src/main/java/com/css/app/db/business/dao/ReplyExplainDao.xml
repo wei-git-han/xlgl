@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.db.business.dao.ReplyExplainDao">
+
+	<select id="queryObject" resultType="com.css.app.db.business.entity.ReplyExplain">
+		select * from DB_REPLY_EXPLAIN where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.db.business.entity.ReplyExplain">
+		select * from DB_REPLY_EXPLAIN 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from DB_REPLY_EXPLAIN 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.db.business.entity.ReplyExplain">
+		insert into DB_REPLY_EXPLAIN
+		(
+			"ID", 
+			"USER_ID", 
+			"USER_NAME", 
+			"REPLY_CONTENT", 
+			"CREATED_TIME", 
+			"INFO_ID", 
+			"SUB_ID", 
+			"SHOW_FLAG",
+			"SUB_DEPT_ID", 
+			"SUB_DEPT_NAME"
+		)
+		values
+		(
+			#{id}, 
+			#{userId}, 
+			#{userName}, 
+			#{replyContent}, 
+			#{createdTime}, 
+			#{infoId}, 
+			#{subId}, 
+			#{showFlag},
+			#{subDeptId}, 
+			#{subDeptName}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.db.business.entity.ReplyExplain">
+		update DB_REPLY_EXPLAIN 
+		<set>
+			<if test="userId != null">"USER_ID" = #{userId}, </if>
+			<if test="userName != null">"USER_NAME" = #{userName}, </if>
+			<if test="replyContent != null">"REPLY_CONTENT" = #{replyContent}, </if>
+			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
+			<if test="infoId != null">"INFO_ID" = #{infoId}, </if>
+			<if test="subId != null">"SUB_ID" = #{subId}, </if>
+			<if test="showFlag != null">"SHOW_FLAG" = #{showFlag},</if>
+				<if test="subDeptId != null">"SUB_DEPT_ID" = #{subDeptId}, </if>
+			<if test="subDeptName != null">"SUB_DEPT_NAME" = #{subDeptName} </if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from DB_REPLY_EXPLAIN where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from DB_REPLY_EXPLAIN where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
