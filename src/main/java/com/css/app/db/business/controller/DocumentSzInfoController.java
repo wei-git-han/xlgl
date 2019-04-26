@@ -1,0 +1,366 @@
+package com.css.app.db.business.controller;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.css.addbase.AppConfig;
+import com.css.addbase.apporgan.entity.BaseAppOrgan;
+import com.css.addbase.apporgan.service.BaseAppOrganService;
+import com.css.app.db.business.entity.DocumentCbjl;
+import com.css.app.db.business.entity.DocumentInfo;
+import com.css.app.db.business.entity.ReplyExplain;
+import com.css.app.db.business.service.DocumentCbjlService;
+import com.css.app.db.business.service.DocumentFileService;
+import com.css.app.db.business.service.DocumentInfoService;
+import com.css.app.db.business.service.ReplyExplainService;
+import com.css.app.db.config.entity.RoleSet;
+import com.css.app.db.config.service.RoleSetService;
+import com.css.base.utils.CurrentUser;
+import com.css.base.utils.GwPageUtils;
+import com.css.base.utils.Response;
+import com.css.base.utils.UUIDUtils;
+import com.github.pagehelper.PageHelper;
+
+import dm.jdbc.util.StringUtil;
+
+/**
+ * 督办基本信息表
+ * 
+ * @author 中软信息系统工程有限公司
+ * @email 
+ * @date 2019-04-18 16:34:38
+ */
+@Controller
+@RequestMapping("/app/db/documentszinfo")
+public class DocumentSzInfoController {
+	@Autowired
+	private AppConfig appConfig;
+	@Autowired
+	private DocumentInfoService documentInfoService;
+	@Autowired
+	private DocumentFileService documentFileService;
+	@Autowired
+	private DocumentCbjlService documentCbjlService;
+	@Autowired
+	private ReplyExplainService replyExplainService;
+	@Autowired
+	private RoleSetService roleSetService;
+	@Autowired
+	private BaseAppOrganService baseAppOrganService;
+	
+	/**
+	 * 首长左侧类型分组
+	 * [
+	{"id":"01","name":"军委主席重要批示","count":"10"},
+	{"id":"02","name":"军委主席重要批示","count":"10"},
+	{"id":"03","name":"军委主席重要批示","count":"10"}
+]
+
+	 */
+	@ResponseBody
+	@RequestMapping("/grouplist")
+	public void grouplist(String search){
+		JSONObject jo2=new JSONObject();
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy");
+		Map<String, Object> map = new HashMap<>();
+		/*if(StringUtil.isEmpty(year)) {
+			year=sdf.format(new Date());
+		}*/
+		map.put("search", search);
+		List<Map<String, Object>> infoList = documentInfoService.queryListByDicType(map);
+		JSONArray valdata=new JSONArray();
+		if (infoList!=null&&infoList.size()>0) {
+			for (Map<String, Object> map2 : infoList) {
+				JSONObject jo=new JSONObject();
+				jo.put("name", (String) map2.get("name"));
+				jo.put("count", (long) map2.get("num"));
+				jo.put("id", (String)map2.get("TYPE"));
+				valdata.add(jo);
+				
+			}
+		}
+		//jo2.put("valdata", valdata);
+		Response.json(valdata);
+	}
+	
+	
+	/**
+	 * 列表查询
+	 * type//属于六大指标的类型
+	 * orgid//单位id
+	 * 
+	 * 
+	 * "total":100,
+		"page":1,
+		"rows":[       
+					{
+						"id":"01",
+						"blzt":"0",
+						"jwbjh":"【2019】办01",
+						"title":"关于十九大讲话的学习安排的报告",
+						"pszsmr":"此文件十分重要，需要在5月份前办理完成，希望一处主办。",
+						"dblsqk":"此文件十分重要，需要在5月份前办理完成，希望一处主办。",
+						"cbdwry":"计划局/李丽(3716688)",
+						"update":"2018-4-10 12:00",
+						"zbdate":"2018-4-10 12:00",
+						"other":0
+					}]
+	 * 
+	 */
+	@ResponseBody
+	@RequestMapping("/list")
+	public void list(Integer page, Integer pagesize,String search,String type,String orgid){
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		String userid=CurrentUser.getUserId();
+		Map<String, Object> map = new HashMap<>();
+		map.put("offset", ((page - 1) * pagesize));
+		map.put("limit", pagesize);
+		
+		
+		map.put("search", search);
+		map.put("docStatus", "2");
+		map.put("type", type);
+		map.put("orgid", orgid);
+		//PageHelper.startPage(page, pagesize);
+		List<DocumentInfo> infoList = documentInfoService.queryList(map);
+		map.remove("offset");
+		map.remove("limit");
+		JSONObject jo=new JSONObject();
+		JSONArray ja=new JSONArray();
+		for (DocumentInfo documentInfo : infoList) {
+			jo=new JSONObject();
+			jo.put("id", documentInfo.getId());
+			jo.put("blzt", documentInfo.getStatus());
+			jo.put("jwbjh", documentInfo.getBanjianNumber());
+			jo.put("title", documentInfo.getDocTitle());
+			jo.put("pszsmr",documentInfo.getJobContent() );
+			jo.put("dblsqk","" );
+			jo.put("cbdwry","" );
+			jo.put("update",sdf.format(documentInfo.getCreatedTime()) );
+			jo.put("zbdate",sdf.format(documentInfo.getCreatedTime()) );
+			String sz=documentInfo.getSzReadIds();
+			if(StringUtils.isEmpty(sz)||!(sz).contains(userid)) {
+				jo.put("other","0");
+			}else {				
+				jo.put("other","1");
+			}
+			ja.add(jo);
+		}
+		infoList = documentInfoService.queryList(map);
+		JSONObject jo2=new JSONObject();
+		jo2.put("total",infoList==null?0:infoList.size());
+		jo2.put("page",page);
+		jo2.put("rows",ja);
+		//GwPageUtils pageUtil = new GwPageUtils(infoList);
+		Response.json(jo2);
+	}
+	
+	/**
+	 * 列表查询
+	 * "total":100,
+		"page":1,
+		"rows":[       
+					{
+						"id":"01",
+						"blzt":"0",
+						"jwbjh":"【2019】办01",
+						"title":"关于十九大讲话的学习安排的报告",
+						"pszsmr":"此文件十分重要，需要在5月份前办理完成，希望一处主办。",
+						"dblsqk":"此文件十分重要，需要在5月份前办理完成，希望一处主办。",
+						"cbdwry":"计划局/李丽(3716688)",
+						"update":"2018-4-10 12:00",
+						"zbdate":"2018-4-10 12:00",
+						"other":0,
+						"miji":"绝密",
+						"tbdw":"JWZBFZBXXX",
+						"tbrq":"2019年1月29日",
+						"array":[
+                    					{
+                    						"dw":"信息局",
+                    						"ry":"张参谋",
+                    						"cont":"一切顺利，初期、中期已经完成。一切顺利，初期、中期已经完成。"
+                    					},
+                    					{
+                    						"dw":"信息局",
+                    						"ry":"张参谋",
+                    						"cont":"一切顺利，初期、中期已经完成。一切顺利，初期、中期已经完成。"
+                    					}
+                    	]
+
+					}
+	 */
+	@ResponseBody
+	@RequestMapping("/homelist")
+	public void homelist(Integer page, Integer pagesize,String search,String type){
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		SimpleDateFormat sdf2=new SimpleDateFormat("yyyy年MM月dd日");
+		String userid=CurrentUser.getUserId();
+		Map<String, Object> map = new HashMap<>();
+		map.put("search", search);
+		map.put("docStatus", "2");
+		map.put("type", type);
+		//PageHelper.startPage(page, pagesize);
+		map.put("offset", ((page - 1) * pagesize));
+		map.put("limit", pagesize);
+		List<DocumentInfo> infoList = documentInfoService.queryList(map);
+		map.remove("offset");
+		map.remove("limit");
+		JSONObject jo=new JSONObject();
+		JSONObject yijianjo=new JSONObject();
+		JSONArray ja=new JSONArray();
+		JSONArray yijianja=new JSONArray();
+		Map<String, Object> danweimap = new HashMap<>();
+		for (DocumentInfo documentInfo : infoList) {
+			jo=new JSONObject();
+			jo.put("id", documentInfo.getId());
+			jo.put("blzt", documentInfo.getStatus());
+			jo.put("jwbjh", documentInfo.getBanjianNumber());
+			jo.put("title", documentInfo.getDocTitle());
+			jo.put("pszsmr",documentInfo.getJobContent() );
+			jo.put("dblsqk","" );
+			jo.put("cbdwry","" );
+			jo.put("update",sdf.format(documentInfo.getCreatedTime()) );
+			jo.put("zbdate",sdf.format(documentInfo.getCreatedTime()) );
+			String sz=documentInfo.getSzReadIds();
+			if(StringUtils.isEmpty(sz)||!(sz).contains(userid)) {
+				jo.put("other","0");
+			}else {				
+				jo.put("other","1");
+			}
+			//单位意见
+			danweimap = new HashMap<>();
+			danweimap.put("",documentInfo.getId());
+			//查询列表数据
+			List<ReplyExplain> dbReplyExplainList = replyExplainService.queryList(danweimap);
+			for (ReplyExplain replyExplain : dbReplyExplainList) {
+				yijianjo=new JSONObject();
+				yijianjo.put("dw",replyExplain.getSubDeptName());
+				yijianjo.put("ry", replyExplain.getUserName());
+				yijianjo.put("cont", replyExplain.getReplyContent());
+				
+				yijianja.add(yijianjo);
+			}
+			jo.put("array",yijianja);//
+			jo.put("miji",documentInfo.getSecurityClassification());
+			jo.put("tbdw","新增");
+			jo.put("tbrq",sdf.format(documentInfo.getFirstZbTime()));
+			ja.add(jo);
+		}
+		infoList = documentInfoService.queryList(map);
+		JSONObject jo2=new JSONObject();
+		jo2.put("total",infoList==null?0:infoList.size());
+		jo2.put("page",page);
+		jo2.put("rows",ja);
+		//GwPageUtils pageUtil = new GwPageUtils(infoList);
+		//Response.json(pageUtil);
+		Response.json(jo2);
+	}
+	
+	/**
+	 * 首长已读按钮
+	 */
+	@ResponseBody
+	@RequestMapping("/read")
+	public void read(String ids){
+		String ids_[]=ids.split(",");
+		for (String id : ids_) {
+			DocumentInfo info=documentInfoService.queryObject(id);
+			String szreadids=info.getSzReadIds();
+			if(StringUtils.isBlank(szreadids)) {
+				info.setSzReadIds(CurrentUser.getUserId());
+			}else {
+				info.setSzReadIds(szreadids+","+CurrentUser.getUserId());				
+			}
+			documentInfoService.update(info);
+		}
+		
+		
+		Response.json("result", "success");
+	}
+	
+	
+	/**
+	 * 首长催办按钮
+	 */
+	@ResponseBody
+	@RequestMapping("/press")
+	public void press(String id,String textarea){
+		DocumentInfo info=documentInfoService.queryObject(id);
+		info.setCuibanFlag("1");//首长催办
+		documentInfoService.update(info);
+		//保存催办历史
+		DocumentCbjl cb=new DocumentCbjl();
+		cb.setUrgeContent(textarea);
+		cb.setFinishFlag(0);
+		cb.setInfoId(id);
+		documentCbjlService.save(cb);
+		Response.json("result", "success");
+	}
+	
+	/**
+	 * 首长催办按钮
+	 */
+	@ResponseBody
+	@RequestMapping("/listpress")
+	public void listpress(String id){
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("infoId", id);
+		List<DocumentCbjl> list=documentCbjlService.queryList(map);
+		for (DocumentCbjl documentCbjl : list) {
+			
+		}
+		
+		/*DocumentInfo info=documentInfoService.queryObject(id);
+		info.setCuibanFlag("1");//首长催办
+		documentInfoService.update(info);
+		//保存催办历史
+		DocumentCbjl cb=new DocumentCbjl();
+		cb.setUrgeContent(textarea);
+		cb.setFinishFlag(0);
+		cb.setInfoId(id);
+		documentCbjlService.save(cb);
+		Response.json("result", "success");*/
+	}
+	
+	/**
+	 * 获取当前登录人信息(角色)
+	 */
+	@ResponseBody
+	@RequestMapping("/getRoleType")
+	public void getRoleType() {
+		//当前登录人的角色
+		//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
+		JSONObject jo=new JSONObject();
+		Map<String, Object> roleMap = new HashMap<>();
+		String userid=CurrentUser.getUserId();
+		roleMap.put("userId",userid);
+		List<RoleSet> roleList = roleSetService.queryList(roleMap);
+		String roleType="";
+		String orgid="";
+		if(roleList != null && roleList.size()>0) {
+			roleType = roleList.get(0).getRoleFlag();
+		}
+		BaseAppOrgan org = baseAppOrganService.queryObject(CurrentUser.getDepartmentId());
+		if(org != null){
+			String[] pathArr = org.getTreePath().split(",");
+			if(pathArr.length > 2){
+				orgid= pathArr[2];
+			} 
+		}
+		jo.put("roleType", roleType);
+		jo.put("orgid", orgid);
+		Response.json(jo);
+	}
+}

@@ -8,10 +8,14 @@
 	</select>
 
 	<select id="queryList" resultType="com.css.app.db.business.entity.DocumentCbjl">
-		select * from DB_DOCUMENT_CBJL 
+		select * from DB_DOCUMENT_CBJL where 1=1 
+		<if test="infoId != null">
+			and "INFO_ID" = #{infoId}
+		</if>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
+		order by CREATED_TIME desc
 	</select>
 	
  	<select id="queryTotal" resultType="int">
