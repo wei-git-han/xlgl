@@ -47,7 +47,7 @@ var pageModule = function(){
 				url:sureUrl,
 				data:{subId:subId,infoId:infoId,userName:userName,userId:userId,replyContent:replyContent},
 				success:function(data){
-					newbootbox.newdialogClose("zhuanbanDialog");
+					newbootbox.newdialogClose("tijiaoDialog");
 					if(data.result=="success"){
 						newbootbox.alert("提交成功！").done(function(){
 							$("#iframe1",window.top.document).attr("src","/app/db/document/grdb/html/grdb.html");
@@ -59,7 +59,7 @@ var pageModule = function(){
 			})
 		});
 		
-		//关不
+		//关闭
 		$("#close").click(function(){
 			newbootbox.newdialogClose("tijiaoDialog");
 		})

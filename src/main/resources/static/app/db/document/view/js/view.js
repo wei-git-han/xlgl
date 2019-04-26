@@ -61,7 +61,7 @@ var pageModule = function(){
 	}
 	
 	//文件menu
-	var takeMenufn = function(id){
+	var takeMenufn = function(){
 		$ajax({
 			url:menuUrl,
 			data:{infoId:fileId},
@@ -96,6 +96,20 @@ var pageModule = function(){
 						onClose:function(title){
 						}
 					});
+					
+					//文件列表——附件
+					$("#fjList").html("");
+					$.each(data,function(i,item){
+						$("#fjList").append('<li num="'+i+'" id="fj_'+item.id+'"  data_id="'+item.id+'" formatId="'+item.fileServerFormatId+'" ><a class="'+(i==0?"fjactive":"")+'">'+item.fileName+'</a></li>');
+					});
+					//点击附件名称
+					$("#fjList li").click(function(){
+						$("#fjList>li>a").removeClass("fjactive");
+						$(this).find("a").addClass("fjactive");
+						var clickfileId = $(this).attr("data_id");
+						getFile(clickfileId);
+						$("#tt").tabs("select",parseInt($(this).attr("num")))
+					}); 
 				}
 			}
 		});	
@@ -151,29 +165,6 @@ var pageModule = function(){
 		});	
 	}
 	
-	//文件列表——附件
-	var initFjfn = function(){
-		$ajax({
-			url:menuUrl,
-			data:{infoId:fileId},
-			success:function(data){
-				if(data&&data.length>0){
-					$("#fjList").html("");
-					$.each(data,function(i,item){
-						$("#fjList").append('<li num="'+i+'" id="fj_'+item.id+'"  data_id="'+item.id+'" formatId="'+item.fileServerFormatId+'" ><a class="'+(i==0?"fjactive":"")+'">'+item.fileName+'</a></li>');
-					});
-					//点击附件名称
-					$("#fjList li").click(function(){
-						$("#fjList>li>a").removeClass("fjactive");
-						$(this).find("a").addClass("fjactive");
-						var clickfileId = $(this).attr("data_id");
-						getFile(clickfileId);
-						$("#tt").tabs("select",parseInt($(this).attr("num")))
-					}); 
-				}
-			}
-		});	
-	}
 	
 	//办理反馈记录
 	var initblfkList = function(){
@@ -452,6 +443,19 @@ var pageModule = function(){
 			$("#commentForm").submit();
 		});
 		
+		//催办
+		$("#cuiban").click(function(){
+			newbootbox.newdialog({
+				id:"cuibanDialog",
+				width:800,
+				height:600,
+				header:true,
+				title:"催办",
+				classed:"cjDialog",
+				url:"/app/db/document/view/html/cuibanDialog.html?fileId="+fileId,
+			})
+		});
+		
 		//查看附件
 		$("#showfj").click(function(){
 			$(".filelist").toggle();
@@ -471,7 +475,6 @@ var pageModule = function(){
 			showButton();
 			takeMenufn();
 			initdata();
-			initFjfn();
 			initblfkList();
 			initps();
 			initzbjlfn();
