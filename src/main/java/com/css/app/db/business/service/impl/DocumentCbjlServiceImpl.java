@@ -3,12 +3,15 @@ package com.css.app.db.business.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import com.css.app.db.business.dao.DocumentCbjlDao;
 import com.css.app.db.business.entity.DocumentCbjl;
 import com.css.app.db.business.service.DocumentCbjlService;
+import com.css.base.utils.CurrentUser;
+import com.css.base.utils.UUIDUtils;
 
 
 
@@ -29,6 +32,10 @@ public class DocumentCbjlServiceImpl implements DocumentCbjlService {
 	
 	@Override
 	public void save(DocumentCbjl dbDocumentCbjl){
+		dbDocumentCbjl.setId(UUIDUtils.random());
+		dbDocumentCbjl.setCreatedTime(new Date());
+		dbDocumentCbjl.setUserId(CurrentUser.getUserId());
+		dbDocumentCbjl.setUserName(CurrentUser.getUsername());
 		documentCbjlDao.save(dbDocumentCbjl);
 	}
 	

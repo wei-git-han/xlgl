@@ -8,17 +8,27 @@
 	</select>
 
 	<select id="queryList" resultType="com.css.app.db.business.entity.DocumentInfo">
-		select * from DB_DOCUMENT_INFO where 1=1
+		select t.* from DB_DOCUMENT_INFO t
+		<if test="orgid != null">
+			left join DB_SUB_DOC_INFO  dadi on t.id=dadi.INFO_ID
+		</if>
+		 where 1=1
+		 <if test="orgid != null">
+			and dadi.SUB_DEPT_ID=#{orgid}
+		</if>
 		<if test='docStatus == "1"'>
-			and (FIRST_ZB_TIME is null or FIRST_ZB_TIME='')
+			and (t.FIRST_ZB_TIME is null or t.FIRST_ZB_TIME='')
 		</if>
 		<if test='docStatus == "2"'>
-		and (FIRST_ZB_TIME is not null or FIRST_ZB_TIME !='')
+		and (t.FIRST_ZB_TIME is not null or t.FIRST_ZB_TIME !='')
 		</if>
 		<if test="search != null and search != ''">
-			and DOC_TITLE like '%'||#{search}||'%'
+			and t.DOC_TITLE like '%'||#{search}||'%'
 		</if>
-		order by FIRST_ZB_TIME,CREATED_TIME desc
+		<if test="type != null">
+			and t.DOC_TYPE_ID=#{type}
+		</if>
+		order by t.STATUS asc,t.FIRST_ZB_TIME,t.CREATED_TIME desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
@@ -31,7 +41,7 @@
 	        (case when ddi.STATUS='2' then count(ddi.STATUS) else 0 end ) as bj,
 	        (case when ddi.STATUS='3' then count(ddi.STATUS) else 0 end ) as ctls       
         from DB_DOCUMENT_INFO  ddi
-		where 1=1
+		where 1=1 and FIRST_ZB_TIME is not null
 		<if test="year != null">
 			and to_char(ddi.FIRST_ZB_TIME) like '%'||#{year}||'%'
 		</if>
@@ -58,10 +68,10 @@
 	        (case when ddi.STATUS='3' then count(ddi.STATUS) else 0 end ) as ctls
 	        
 	        from DB_DOCUMENT_INFO  ddi
-			left join (select SUB_DEPT_ID,SUB_DEPT_NAME,INFO_ID,CREATED_TIME
+			left join (select SUB_DEPT_ID,SUB_DEPT_NAME,INFO_ID,CREATED_TIME,DOC_STATUS
 	                          from DB_SUB_DOC_INFO)  dadi
 			on ddi.id=dadi.INFO_ID
-			where 1=1
+			where 1=1 and ddi.FIRST_ZB_TIME is not null
 			<if test="year != null">
 				and to_char(dadi.CREATED_TIME) like '%'||#{year}||'%'
 			</if>
@@ -72,15 +82,17 @@
 	</select>
 	
 	<select id="queryListByDicType" resultType="map">
-	select dic.TEXT as name,ifnull(shu.num,0) as num
+	select dic.TEXT as name,dic.value as type,ifnull(shu.num,0) as num
 		 from DB_DOCUMENT_DIC dic
 		left join
 	
 	(
 			select DOC_TYPE_ID,count(DOC_TYPE_ID) as num
 	        from DB_DOCUMENT_INFO  
-			where 1=1
-			
+			where 1=1 and FIRST_ZB_TIME is not null
+			<if test="search != null and search != ''">
+				and DOC_TITLE like '%'||#{search}||'%'
+			</if>
 			GROUP by DOC_TYPE_ID
 	)shu on dic.value=shu.DOC_TYPE_ID where dic.DIC_TYPE='document_type' order by dic.SORT asc
 	</select>
@@ -100,7 +112,7 @@
 	        (case when ddi.STATUS='2' then count(ddi.STATUS) else 0 end ) as bj,
 	        (case when ddi.STATUS='3' then count(ddi.STATUS) else 0 end ) as ctls
 	        
-	        from DB_DOCUMENT_INFO  ddi
+	        from DB_DOCUMENT_INFO  ddi where  ddi.FIRST_ZB_TIME is not null
 			group by ddi.DOC_TYPE_ID,ddi.STATUS
 			
 	)shu on dic.value=shu.DOC_TYPE_ID where dic.DIC_TYPE='document_type' group by dic.DIC_TYPE,dic.text  
