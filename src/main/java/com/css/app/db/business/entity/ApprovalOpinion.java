@@ -31,7 +31,8 @@ public class ApprovalOpinion implements Serializable {
 	private String showFlag;
 	//流转类型（1：流转；2：审批完成；3：退回修改)
 	private String trackingType;
-
+	//办理反馈的teamId
+	private String replyTeamId;
 	/**
 	 * 设置：唯一标识
 	 */
@@ -122,5 +123,12 @@ public class ApprovalOpinion implements Serializable {
 	public void setTrackingType(String trackingType) {
 		this.trackingType = trackingType;
 	}
+	public String getReplyTeamId() {
+		return replyTeamId;
+	}
+	public void setReplyTeamId(String replyTeamId) {
+		this.replyTeamId = replyTeamId;
+	}
+	
 	
 }

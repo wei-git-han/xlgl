@@ -171,6 +171,7 @@ public class SubDocInfoController {
 		//获取文件
 		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
 		subDocInfo.setUndertaker(CurrentUser.getUserId());
+		subDocInfo.setUndertakerName(CurrentUser.getUsername());
 		subDocInfo.setDocStatus(DbDocStatusDefined.BAN_LI_ZHONG);
 		subDocInfoService.update(subDocInfo);
 		Response.json("result", "success");

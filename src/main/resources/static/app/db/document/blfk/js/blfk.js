@@ -22,10 +22,10 @@ var pageModule = function(){
                  {display:"紧急程度",name:"",width:"5%",align:"center",paixu:false,render:function(rowdata){
                  
                  }},
-                 {display:"批示指示内容",name:"",width:"12%",align:"left",paixu:false,title:true,render:function(rowdata){
+                 {display:"批示指示内容",name:"",width:"20%",align:"left",paixu:false,title:true,render:function(rowdata){
                      
                  }},
-                 {display:"督办落实情况",name:"",width:"10%",align:"left",paixu:false,title:true,render:function(rowdata){
+                 {display:"督办落实情况",name:"",width:"20%",align:"left",paixu:false,title:true,render:function(rowdata){
                 
                  }},
                  {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,title:true,render:function(rowdata){
@@ -48,7 +48,7 @@ var pageModule = function(){
             height:"100%",
             checkbox: true,
             rownumberyon:true,
-            overflowx:false,
+            overflowx:true,
             pagesize: 15,
             pageyno:true,
             paramobj:{},

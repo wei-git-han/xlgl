@@ -1,7 +1,7 @@
 html{
 	background-color: ffffff;
 	font-family: "Microsoft Yahei";
-	/* font-size: 16px; */
+	/* font-size: 14px; */
 }
 body {
 	background-color: ffffff;
@@ -23,7 +23,7 @@ p {
 }
 
 label {
-	font-size: 16px;
+	font-size: 14px;
 }
 
 .cke_bottom.cke_reset_all {
@@ -231,7 +231,7 @@ span.required,.error{
 	padding: 0px 15px;
 	padding-left: 20px;
 	color: #333;
-	font-size: 16px;
+	font-size: 14px;
 }
 .contentsearch .search{
 	position: absolute;
@@ -460,7 +460,7 @@ p.tiaoj{
 	white-space: nowrap;
 	padding: 1px 3px;
 	cursor: default;
-	font-size: 16px;
+	font-size: 14px;
 }
 
 .cart_head_left .btn {
@@ -496,7 +496,7 @@ p.tiaoj{
 	height: 92px;
 	padding-right: 0px;
 	line-height: 20px;
-	font-size: 16px;
+	font-size: 14px;
 	color: #000;
 }
 
@@ -650,7 +650,7 @@ p.tiaoj{
 .table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th,
 .table-bordered>tfoot>tr>td, .table-bordered>tfoot>tr>th,
 .table-bordered>thead>tr>td, .table-bordered>thead>tr>th {
-	font-size: 18px;
+	font-size: 14px;
 }
 .table-striped>tbody>tr:nth-of-type(2n+1){
 	background-color: transparent;
@@ -665,9 +665,9 @@ p.tiaoj{
 .table .new_button1,
 .table .new_button2{
 	display:inline-block;
-	width:28px;
-	height:28px;
-	line-height:28px;
+	width: 25px;
+	height: 25px;
+	line-height: 22px;
 	text-align:center;
 	padding:0px;
 	font-size:20px;
@@ -678,7 +678,7 @@ p.tiaoj{
 .table [class*=" fa-"]:not(.fa-stack), 
 .table [class*=" glyphicon-"], 
 .table [class*=" icon-"]{
-	font-size:20px;
+	font-size:16px;
 }
 .pagination > li > a, .pagination > li > span{
 	padding:5px 12px;
@@ -943,5 +943,5 @@ div.radio, div.radio span, div.radio input {
     overflow: hidden;
     text-overflow: ellipsis;
     color: #fff!important;
-    font-size: 16px;
+    font-size: 14px;
 }

@@ -28,7 +28,7 @@ function createtable(obj){
 	//多选框列宽度
 	var checkwidth = 50;
 	//行号列宽度
-	var numberwidth = 80;
+	var numberwidth = 40;
 	var c1 = {};
 	$(window).resize(function(){
 		clearTimeout(c1);

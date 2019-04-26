@@ -46,5 +46,10 @@ public class ReplyExplainServiceImpl implements ReplyExplainService {
 	public void deleteBatch(String[] ids){
 		replyExplainDao.deleteBatch(ids);
 	}
+
+	@Override
+	public ReplyExplain queryLastestTempReplyByTeamId(String subId, String teamId, String userId) {
+		return replyExplainDao.queryLastestTempReplyByTeamId(subId, teamId, userId);
+	}
 	
 }

@@ -25,4 +25,6 @@ public interface ReplyExplainService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+	
+	ReplyExplain queryLastestTempReplyByTeamId(String subId,String teamId,String userId);
 }
