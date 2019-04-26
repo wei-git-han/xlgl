@@ -230,6 +230,7 @@ var pageModule = function(){
 				}
 
 				//意见记录编辑
+				$(".editBtn").unbind("click");
 				$(".editBtn").click(function(){
 					if($.trim($(this).text())=="编辑"){
 						$(this).text("取消编辑");
@@ -445,12 +446,12 @@ var pageModule = function(){
 					data:{subId:subId,replyContent:$("#replyContent").val()},
 					success : function(data) {
 						if (data.result == "success") {
-							newbootbox.alertInfo("提交成功！").done(function(){
+							newbootbox.alert("提交成功！").done(function(){
 								$("#replyContent").val("");
 								initblfkList();
 							}); 
 						} else {
-							newbootbox.alertInfo("提交失败，请稍后重试！"); 
+							newbootbox.alert("提交失败，请稍后重试！"); 
 						}
 					}
 				}
