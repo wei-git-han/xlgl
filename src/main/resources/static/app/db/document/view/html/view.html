@@ -98,7 +98,6 @@
 						            		<div class="pr100">
 						            			<form action="" class="pr100" id="commentForm" method="post" enctype="multipart/form-data">
 						            				<input type="hidden" id="editRecordId" name="editRecordId" /><!-- 编辑的附件id -->
-						            				<input type="hidden" id="delfjId" name="delfjId" /><!--存放 编辑删除的附件id -->
 													<div class="sryj_title">输入意见/反馈：</div>
 								        			<div class="sryj_center">
 								        				<textarea class="opinionContent" id="replyContent" maxlength="500" placeholder="此处填写办理进度供部内审议" ></textarea>
@@ -109,7 +108,7 @@
 								        				<button type="button" class="ifShow" id="tijiao">送审批</button>
 								        				<button type="button" class="ifShow" id="save">保存</button>
 								        				<button type="button" id="clear">清屏</button>
-								        				<div style="display:inline-block;vertical-align: top;margin-right: 20px;margin-top: 6px;float:right">
+								        				<div class="ifShow" id="ifaddfj" style="display:inline-block;vertical-align: top;margin-right: 20px;margin-top: 6px;float:right;">
 															<a class="filebutton addfjbtn" id="file1"><i class="fa fa-link"></i> 添加附件 </a>
 											                <div class="filelist"  name="file1">附件列表:</div>
 								        				</div>

@@ -28,7 +28,8 @@
 			"CREATED_TIME", 
 			"SUB_ID", 
 			"SHOW_FLAG",
-			"TRACKING_TYPE"
+			"TRACKING_TYPE",
+			"REPLY_TEAM_ID"
 		)
 		values
 		(
@@ -39,7 +40,8 @@
 			#{createdTime}, 
 			#{subId}, 
 			#{showFlag},
-			#{trackingType}
+			#{trackingType},
+			#{replyTeamId}
 		)
 	</insert>
 	 
@@ -52,7 +54,8 @@
 			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
 			<if test="subId != null">"SUB_ID" = #{subId}, </if>
 			<if test="showFlag != null">"SHOW_FLAG" = #{showFlag},</if>
-			<if test="trackingType != null">"TRACKING_TYPE" = #{trackingType} </if>
+			<if test="trackingType != null">"TRACKING_TYPE" = #{trackingType}, </if>
+			<if test="replyTeamId != null">"REPLY_TEAM_ID" = #{replyTeamId} </if>
 		</set>
 		where ID = #{id}
 	</update>

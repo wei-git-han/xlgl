@@ -16,4 +16,6 @@ import com.css.base.dao.BaseDao;
 @Mapper
 public interface ReplyExplainDao extends BaseDao<ReplyExplain> {
 	
+	ReplyExplain queryLastestTempReplyByTeamId(String subId,String teamId,String userId);
+	
 }

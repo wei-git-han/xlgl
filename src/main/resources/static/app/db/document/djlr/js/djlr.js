@@ -33,7 +33,7 @@ var pageModule = function(){
                  {display:"紧急程度",name:"",width:"6%",align:"center",paixu:false,render:function(rowdata){
                 	 return rowdata.urgencyDegree;
                  }},
-                 {display:"批示指示内容",name:"",width:"12%",align:"left",paixu:false,title:true,render:function(rowdata){
+                 {display:"批示指示内容",name:"",width:"20%",align:"left",paixu:false,title:true,render:function(rowdata){
                 	 return '';
                  }},
                  {display:"承办单位/人",name:"",width:"13%",align:"left",paixu:false,title:true,render:function(rowdata){
@@ -58,7 +58,7 @@ var pageModule = function(){
             height:"100%",
             checkbox: true,
             rownumberyon:true,
-            overflowx:false,
+            overflowx:true,
             pagesize: 15,
             pageyno:true,
             paramobj:{search:$("#searchVal").val(),documentStatus:$("input[name='documentStatus']:checked").val()},

@@ -6,9 +6,13 @@ var zbjlDataUrl = {"url":"/app/db/documentzbjl/list","dataType":"json"}; //文�
 var getButtonParamUrl = {"url":"/app/db/subdocinfo/buttonParam","dataType":"json"}; //获取按钮显示控制参数
 var chengbanUrl = {"url":"/app/db/subdocinfo/undertakeOperation","dataType":"text"}; //承办地址
 var saveUrl = {"url":"/app/db/replyexplain/save","dataType":"text"}; //办理反馈保存
+
+//var Url = {"url":"/app/db/replyexplain/edit","dataType":"text"}; //办理反馈保存
 var luoShiUrl = {"url":"/app/db/subdocinfo/luoShiOperation","dataType":"text"}; //常态落实操作
 var banjieUrl = {"url":"/app/db/subdocinfo/banJieOperation","dataType":"text"}; //办结操作
 var bjDataUrl = {"url":"/app/db/documentbjjl/list","dataType":"text"}; //办结记录
+var delfjUrl = {"url":"/app/db/replyexplain/deleteAttch","dataType":"text"}; //删除办理反馈中的附件
+var downLoadUrl= {"url":"/app/db/replyexplain/downLoad","dataType":"text"}; //下载办理反馈中的附件
 
 var listUrl = {"url":"/app/db/document/view/data/blfkList.json","dataType":"text"}; //办理反馈list
 var cbDataUrl = {"url":"/app/db/document/view/data/cbList.json","dataType":"text"}; //文件转办-催办记录list
@@ -17,7 +21,7 @@ var downLoadUrl = {"url":"","dataType":"text"}; //附件下载
 var fileId=getUrlParam("fileId")||""; //主文件id
 var subId=getUrlParam("subId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
-var delfjArry = [];
+var isCbr = 0;
 var pageModule = function(){
 	/* 按钮权限控制 */
 	var showButton = function(){
@@ -53,6 +57,10 @@ var pageModule = function(){
 						}
 						if(!data.isUndertaker){//当前处理人是承办人则不显示返回修改
 							$("#fhxg").show();
+						}else{
+							$("#ifaddfj").show();
+							$("#showfj").show();
+							isCbr = 1;
 						}
 					}
 				}
@@ -227,7 +235,10 @@ var pageModule = function(){
 						$(this).text("取消编辑");
 						$("#replyContent").val($(this).attr("data_val"));
 						$("#editRecordId").val($(this).attr("id"));
-						$(this).parents(".timeline-content").find(".fujianwrap .delx").attr("style","display:inline-block!important");
+						if(isCbr && isCbr == 1){
+							$(this).parents(".timeline-content").find(".fujianwrap .delx").attr("style","display:inline-block!important");
+							return;
+						}
 					}else{
 						$(this).text("编辑");
 						$("#replyContent").val("");
@@ -239,7 +250,17 @@ var pageModule = function(){
 				//删除附件
 				$(".delx").click(function(){
 					$(this).parent().remove();
-					delfjArry.push($(this).attr("data"));
+					var delId = $(this).attr("data");
+					$ajax({
+	 					url:delfjUrl,
+	 					data:{id:delId},
+	 					type: "GET",
+	 					success:function(data){
+	 						if(data.result == "success"){
+	 							showButton();
+	 						}
+	 					}
+	 				});
 				});
 			}
 		})
@@ -419,7 +440,6 @@ var pageModule = function(){
 		//表单
 		$("#commentForm").validate({
 		    submitHandler: function() {
-		    	$("#delfjId").val(delfjArry.toString());//存放编辑-删除的附件
 		    	var ajax_option = {
 					url : saveUrl.url,// 默认是form action
 					data:{subId:subId,replyContent:$("#replyContent").val()},

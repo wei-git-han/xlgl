@@ -30,11 +30,15 @@ public class ReplyExplain implements Serializable {
 	//分支主id
 	private String subId;
 	//是否发布
-	private String showFlag = "0";
+	private String showFlag;
 	//分局id
 	private String subDeptId;
 	//分局名称
 	private String subDeptName;
+	//反馈次数区别
+	private String teamId;
+	//临时反馈还是已发布
+	private String reVersion ="0";
 
 	/**
 	 * 设置：唯一标识
@@ -144,5 +148,18 @@ public class ReplyExplain implements Serializable {
 	public void setSubDeptName(String subDeptName) {
 		this.subDeptName = subDeptName;
 	}
+	public String getTeamId() {
+		return teamId;
+	}
+	public void setTeamId(String teamId) {
+		this.teamId = teamId;
+	}
+	public String getReVersion() {
+		return reVersion;
+	}
+	public void setReVersion(String reVersion) {
+		this.reVersion = reVersion;
+	}
+	
 	
 }

@@ -106,7 +106,7 @@ public class ReplyExplainController {
 	
 	/**
 	 * 删除附件
-	 * @param id 腹肌id
+	 * @param id 附件id
 	 */
 	@ResponseBody
 	@RequestMapping("/deleteAttch")

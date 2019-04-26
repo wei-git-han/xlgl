@@ -14,7 +14,7 @@ var pageModule = function(){
                  }},
                  {display:"局内状态",name:"statusName",width:"10%",align:"center",render:function(rowdata,n){
                 	 var bgColor="#FF6600";
-   				  	 return '<div title="'+rowdata.statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+rowdata.statusNam+'</div>';
+   				  	 return '<div title="'+rowdata.statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">待XXX办理</div>';
                  }},
                  {display:"办件标题",name:"docTitle",width:"15%",align:"left",title:true,render:function(rowdata){
                 	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+rowdata.docTitle+'</a>'
@@ -22,20 +22,20 @@ var pageModule = function(){
                  {display:"紧急程度",name:"urgencyDegree",width:"7%",align:"center",paixu:false,render:function(rowdata){
                 	 return rowdata.urgencyDegree;
                  }},
-                 {display:"批示指示内容",name:"",width:"12%",align:"left",paixu:false,title:true,render:function(rowdata){
-                	 return "";
+                 {display:"批示指示内容",name:"",width:"20%",align:"left",paixu:false,title:true,render:function(rowdata){
+                	 return "且兄对咯我局我空手道可尽快的润滑剂且兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道可尽快的润滑剂";
                  }},
-                 {display:"督办落实情况",name:"",width:"12%",align:"left",paixu:false,title:true,render:function(rowdata){
-                	 return "";
+                 {display:"督办落实情况",name:"",width:"20%",align:"left",paixu:false,title:true,render:function(rowdata){
+                	 return "且兄对咯我局我空手道可尽快的润滑剂且兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道可尽快的润滑剂";
                  }},
                  {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,title:true,render:function(rowdata){
-                	 return "";
+                	 return "且兄对咯我局我空手道可尽快的润滑剂且兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道";
                  }},
                  {display:"办件分类",name:"docTypeName",width:"10%",align:"left",paixu:false,render:function(rowdata){
                 	 return rowdata.docTypeName;
                  }},
                  {display:"转办时间",name:"createdTime",width:"10%",align:"center",render:function(rowdata){
-                	 return rowdata.createdTime;
+                	 return rowdata.createdTime.substring(0,10);
                  }},
                  {display:"操作",name:"do",width:"4%",align:"center",render:function(rowdata){
                 	 var caozuo = '';
@@ -50,7 +50,7 @@ var pageModule = function(){
             height:"100%",
             checkbox: true,
             rownumberyon:true,
-            overflowx:false,
+            overflowx:true,
             pagesize: 15,
             pageyno:true,
             paramobj:{search:$("#searchVal").val(),docStatus:$("input[name='documentStatus']:checked").val()},

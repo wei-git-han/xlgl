@@ -21,10 +21,10 @@ var pageModule = function(){
                 {display:"紧急程度",name:"urgencyDegree",width:"7%",align:"center",paixu:false,render:function(rowdata){
                	 return rowdata.urgencyDegree;
                 }},
-                {display:"批示指示内容",name:"",width:"10%",align:"center",paixu:false,render:function(rowdata){
+                {display:"批示指示内容",name:"",width:"20%",align:"center",paixu:false,render:function(rowdata){
                	 return "";
                 }},
-                {display:"督办落实情况",name:"",width:"10%",align:"left",paixu:false,render:function(rowdata){
+                {display:"督办落实情况",name:"",width:"20%",align:"left",paixu:false,render:function(rowdata){
                	 return "";
                 }},
                 {display:"承办单位/人",name:"",width:"10%",align:"center",paixu:false,render:function(rowdata){
@@ -34,7 +34,7 @@ var pageModule = function(){
                	 return rowdata.docTypeName;
                 }},
                 {display:"转办时间",name:"createdTime",width:"10%",align:"center",render:function(rowdata){
-               	 return rowdata.createdTime;
+               	 return rowdata.createdTime.substring(0,10);
                 }},
                  {display:"接收时间",name:"",width:"10%",align:"center",paixu:false,render:function(rowdata){                	
                  }}
@@ -43,7 +43,7 @@ var pageModule = function(){
             height:"100%",
             checkbox: true,
             rownumberyon:true,
-            overflowx:false,
+            overflowx:true,
             pagesize: 15,
             pageyno:true,
             paramobj:{search:$("#searchVal").val(),docStatus:$("input[name='documentStatus']:checked").val()},

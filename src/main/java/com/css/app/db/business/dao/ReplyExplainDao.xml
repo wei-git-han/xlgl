@@ -8,7 +8,28 @@
 	</select>
 
 	<select id="queryList" resultType="com.css.app.db.business.entity.ReplyExplain">
-		select * from DB_REPLY_EXPLAIN 
+		select * from DB_REPLY_EXPLAIN where 1=1
+		<if test="userId != null and userId != ''">
+			and USER_ID= #{userId}
+		</if>
+		<if test="subId != null and subId != ''">
+			and SUB_ID= #{subId}
+		</if>
+		<if test="infoId != null and infoId != ''">
+			and INFO_ID= #{infoId}
+		</if>
+		<if test="showFlag != null and showFlag != ''">
+			and SHOW_FLAG= #{showFlag}
+		</if>
+		<if test="subDeptId != null and subDeptId != ''">
+			and SUB_DEPT_ID= #{subDeptId}
+		</if>
+		<if test="teamId != null and teamId != ''">
+			and TEAM_ID= #{teamId}
+		</if>
+		<if test="version != null and version != ''">
+			and RE_VERSION= #{version}
+		</if>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
@@ -16,6 +37,10 @@
 	
  	<select id="queryTotal" resultType="int">
 		select count(*) from DB_REPLY_EXPLAIN 
+	</select>
+	
+	<select id="queryLastestTempReplyByTeamId">
+		select top 1 * from DB_REPLY_EXPLAIN where SUB_ID=#{0} and TEAM_ID=#{1} and USER_ID = #{2}  and RE_VERSION = 0 order by CREATED_TIME desc
 	</select>
 	 
 	<insert id="save" parameterType="com.css.app.db.business.entity.ReplyExplain">
@@ -30,7 +55,9 @@
 			"SUB_ID", 
 			"SHOW_FLAG",
 			"SUB_DEPT_ID", 
-			"SUB_DEPT_NAME"
+			"SUB_DEPT_NAME",
+			"TEAM_ID",
+			"RE_VERSION"
 		)
 		values
 		(
@@ -43,7 +70,9 @@
 			#{subId}, 
 			#{showFlag},
 			#{subDeptId}, 
-			#{subDeptName}
+			#{subDeptName},
+			#{teamId}, 
+			#{reVersion}
 		)
 	</insert>
 	 
@@ -57,8 +86,10 @@
 			<if test="infoId != null">"INFO_ID" = #{infoId}, </if>
 			<if test="subId != null">"SUB_ID" = #{subId}, </if>
 			<if test="showFlag != null">"SHOW_FLAG" = #{showFlag},</if>
-				<if test="subDeptId != null">"SUB_DEPT_ID" = #{subDeptId}, </if>
-			<if test="subDeptName != null">"SUB_DEPT_NAME" = #{subDeptName} </if>
+			<if test="subDeptId != null">"SUB_DEPT_ID" = #{subDeptId}, </if>
+			<if test="subDeptName != null">"SUB_DEPT_NAME" = #{subDeptName}, </if>
+			<if test="teamId != null">"TEAM_ID" = #{teamId}, </if>
+			<if test="reVersion != null">"RE_VERSION" = #{reVersion} </if>
 		</set>
 		where ID = #{id}
 	</update>

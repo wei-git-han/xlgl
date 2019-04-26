@@ -27,10 +27,12 @@ public class SubDocInfo implements Serializable {
 	private Date createdTime;
 	//文件局内状态（1:待转办；3：退回修改；5：待落实；7：待审批；9：办理中；10：建议办结；11：办结；12：常态落实）
 	private Integer docStatus;
-	//是否承办
+	//承办人id
 	private String undertaker;
 	//完成时间
 	private String finishTime;
+	//承办人
+	private String undertakerName;
 /*----------------------------以下字段只用来列表接收值用--------------start----------------------*/	
 	//文件局内状态
 	private String statusName;
@@ -180,6 +182,12 @@ public class SubDocInfo implements Serializable {
 	}
 	public void setDocTypeName(String docTypeName) {
 		this.docTypeName = docTypeName;
+	}
+	public String getUndertakerName() {
+		return undertakerName;
+	}
+	public void setUndertakerName(String undertakerName) {
+		this.undertakerName = undertakerName;
 	}
 	
 	
