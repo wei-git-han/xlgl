@@ -67,7 +67,8 @@
 			"DOC_STATUS", 
 			"UNDERTAKER",
 			"FINISH_TIME",
-			"UNDERTAKER_NAME"
+			"UNDERTAKER_NAME",
+			"FINISH_FLAG"
 		)
 		values
 		(
@@ -79,7 +80,8 @@
 			#{docStatus}, 
 			#{undertaker},
 			#{finishTime},
-			#{undertakerName}
+			#{undertakerName},
+			#{finishFlag}
 		)
 	</insert>
 	 
@@ -93,7 +95,8 @@
 			<if test="docStatus != null">"DOC_STATUS" = #{docStatus}, </if>
 			<if test="undertaker != null">"UNDERTAKER" = #{undertaker},</if>
 			<if test="finishTime != null">"FINISH_TIME" = #{finishTime},</if>
-			<if test="undertakerName != null">"UNDERTAKER_NAME" = #{undertakerName}</if>
+			<if test="undertakerName != null">"UNDERTAKER_NAME" = #{undertakerName},</if>
+			<if test="finishFlag != null">"FINISH_FLAG" = #{finishFlag}</if>
 		</set>
 		where ID = #{id}
 	</update>

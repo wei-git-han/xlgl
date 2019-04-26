@@ -3,12 +3,14 @@ package com.css.app.db.business.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import com.css.app.db.business.dao.ReplyExplainDao;
 import com.css.app.db.business.entity.ReplyExplain;
 import com.css.app.db.business.service.ReplyExplainService;
+import com.css.base.utils.UUIDUtils;
 
 
 
@@ -48,8 +50,30 @@ public class ReplyExplainServiceImpl implements ReplyExplainService {
 	}
 
 	@Override
-	public ReplyExplain queryLastestTempReplyByTeamId(String subId, String teamId, String userId) {
-		return replyExplainDao.queryLastestTempReplyByTeamId(subId, teamId, userId);
+	public ReplyExplain queryLastestTempReply(Map<String, Object> map) {
+		return replyExplainDao.queryLastestTempReply(map);
+	}
+
+	@Override
+	public void saveReply(String subId, String infoId, String userId, String userName, String teamId,
+			String replyContent, String subDeptId, String subDeptName) {
+		ReplyExplain reply=new ReplyExplain();
+		reply.setId(UUIDUtils.random());
+		reply.setSubId(subId);
+		reply.setInfoId(infoId);
+		reply.setUserId(userId);
+		reply.setUserName(userName);
+		reply.setCreatedTime(new Date());
+		reply.setReplyContent(replyContent);
+		reply.setTeamId(teamId);
+		reply.setSubDeptId(subDeptId);
+		reply.setSubDeptName(subDeptName);
+		replyExplainDao.save(reply);
+	}
+
+	@Override
+	public int updateShowFlag(String subId) {
+		return replyExplainDao.updateShowFlag(subId);
 	}
 	
 }

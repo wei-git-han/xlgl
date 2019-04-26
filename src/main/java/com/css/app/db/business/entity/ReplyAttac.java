@@ -25,8 +25,8 @@ public class ReplyAttac implements Serializable {
 	private String fileServerId;
 	//创建时间
 	private Date createdTime;
-	//排序
-	private Integer sort;
+	//反馈teamId
+	private String replyTeamId;
 
 	/**
 	 * 设置：唯一标识
@@ -88,16 +88,11 @@ public class ReplyAttac implements Serializable {
 	public Date getCreatedTime() {
 		return createdTime;
 	}
-	/**
-	 * 设置：排序
-	 */
-	public void setSort(Integer sort) {
-		this.sort = sort;
+	public String getReplyTeamId() {
+		return replyTeamId;
 	}
-	/**
-	 * 获取：排序
-	 */
-	public Integer getSort() {
-		return sort;
+	public void setReplyTeamId(String replyTeamId) {
+		this.replyTeamId = replyTeamId;
 	}
+	
 }

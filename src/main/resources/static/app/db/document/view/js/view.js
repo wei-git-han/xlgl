@@ -451,10 +451,10 @@ var pageModule = function(){
 		    submitHandler: function() {
 		    	var ajax_option = {
 					url : saveUrl.url,// 默认是form action
-					data:{subId:subId,replyContent:$("#replyContent").val()},
+					data:{subId:subId,infoId:fileId,teamId:$("#editTeamId").val(),replyContent:$("#replyContent").val()},
 					success : function(data) {
 						if (data.result == "success") {
-							newbootbox.alertInfo("提交成功！").done(function(){
+							newbootbox.alert("保存成功！").done(function(){
 								$("#replyContent").val("");
 								initblfkList();
 							}); 

@@ -1,9 +1,9 @@
 package com.css.app.db.business.service;
 
-import com.css.app.db.business.entity.ReplyExplain;
-
 import java.util.List;
 import java.util.Map;
+
+import com.css.app.db.business.entity.ReplyExplain;
 
 /**
  * 办理反馈表
@@ -26,5 +26,9 @@ public interface ReplyExplainService {
 	
 	void deleteBatch(String[] ids);
 	
-	ReplyExplain queryLastestTempReplyByTeamId(String subId,String teamId,String userId);
+	ReplyExplain queryLastestTempReply(Map<String, Object> map);
+	
+	void saveReply(String subId,String infoId,String userId,String userName,String teamId,String replyContent,String subDeptId,String subDeptName);
+	
+	int updateShowFlag(String subId);
 }

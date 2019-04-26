@@ -29,8 +29,8 @@ public class ReplyExplain implements Serializable {
 	private String infoId;
 	//分支主id
 	private String subId;
-	//是否发布
-	private String showFlag;
+	//是否发布(给别的局或部首长看)
+	private String showFlag ="0";
 	//分局id
 	private String subDeptId;
 	//分局名称

@@ -44,7 +44,9 @@
 			#{replyTeamId}
 		)
 	</insert>
-	 
+	<update id="updateShowFlag">
+		update DB_APPROVAL_OPINION set SHOW_FLAG='1' where SUB_ID=#{subId}
+	</update>
 	<update id="update" parameterType="com.css.app.db.business.entity.ApprovalOpinion">
 		update DB_APPROVAL_OPINION 
 		<set>

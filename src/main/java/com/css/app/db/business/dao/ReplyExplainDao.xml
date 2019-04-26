@@ -39,8 +39,24 @@
 		select count(*) from DB_REPLY_EXPLAIN 
 	</select>
 	
-	<select id="queryLastestTempReplyByTeamId">
-		select top 1 * from DB_REPLY_EXPLAIN where SUB_ID=#{0} and TEAM_ID=#{1} and USER_ID = #{2}  and RE_VERSION = 0 order by CREATED_TIME desc
+	<select id="queryLastestTempReply">
+		select top 1 * from DB_REPLY_EXPLAIN where RE_VERSION = 0
+		<if test="userId != null and userId != ''">
+			and USER_ID= #{userId}
+		</if>
+		<if test="subId != null and subId != ''">
+			and SUB_ID= #{subId}
+		</if>
+		<if test="showFlag != null and showFlag != ''">
+			and SHOW_FLAG= #{showFlag}
+		</if>
+		<if test="subDeptId != null and subDeptId != ''">
+			and SUB_DEPT_ID= #{subDeptId}
+		</if>
+		<if test="teamId != null and teamId != ''">
+			and TEAM_ID= #{teamId}
+		</if>
+		order by CREATED_TIME desc
 	</select>
 	 
 	<insert id="save" parameterType="com.css.app.db.business.entity.ReplyExplain">
@@ -75,7 +91,9 @@
 			#{reVersion}
 		)
 	</insert>
-	 
+	<update id="updateShowFlag">
+		update DB_REPLY_EXPLAIN set SHOW_FLAG='1' where SUB_ID=#{subId}
+	</update>
 	<update id="update" parameterType="com.css.app.db.business.entity.ReplyExplain">
 		update DB_REPLY_EXPLAIN 
 		<set>

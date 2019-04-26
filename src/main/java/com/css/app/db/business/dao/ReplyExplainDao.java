@@ -2,6 +2,8 @@ package com.css.app.db.business.dao;
 
 import com.css.app.db.business.entity.ReplyExplain;
 
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.css.base.dao.BaseDao;
@@ -16,6 +18,6 @@ import com.css.base.dao.BaseDao;
 @Mapper
 public interface ReplyExplainDao extends BaseDao<ReplyExplain> {
 	
-	ReplyExplain queryLastestTempReplyByTeamId(String subId,String teamId,String userId);
-	
+	ReplyExplain queryLastestTempReply(Map<String, Object> map);
+	int updateShowFlag(String subId);
 }

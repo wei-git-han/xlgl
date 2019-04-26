@@ -17,10 +17,13 @@ import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.db.business.entity.DocumentBjjl;
 import com.css.app.db.business.entity.DocumentInfo;
+import com.css.app.db.business.entity.ReplyExplain;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.entity.SubDocTracking;
+import com.css.app.db.business.service.ApprovalOpinionService;
 import com.css.app.db.business.service.DocumentBjjlService;
 import com.css.app.db.business.service.DocumentInfoService;
+import com.css.app.db.business.service.ReplyExplainService;
 import com.css.app.db.business.service.SubDocInfoService;
 import com.css.app.db.business.service.SubDocTrackingService;
 import com.css.app.db.config.entity.RoleSet;
@@ -59,6 +62,10 @@ public class SubDocInfoController {
 	private DocumentBjjlService documentBjjlService;
 	@Autowired
 	private BaseAppOrganService baseAppOrganService;
+	@Autowired
+	private ReplyExplainService replyExplainService;
+	@Autowired
+	private ApprovalOpinionService approvalOpinionService;
 	/**
 	 * 局内待办列表
 	 */
@@ -245,7 +252,66 @@ public class SubDocInfoController {
 	
 	@ResponseBody
 	@RequestMapping("/submitOperation")
-	public void update(String subId,String infoId,String userName,String userId,String replyContent){
+	public void submitOperation(String subId,String userName,String userId){
+		//流转到下一个人并将临时反馈变为发布
+		this.submitRelation(subId, userName, userId);
+		//分支文件更新完成审批标识
+		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+		if(subDocInfo != null) {
+			subDocInfo.setFinishFlag("0");
+			subDocInfoService.update(subDocInfo);
+		}
+		Response.json("result", "success");
+	}
+	
+	@ResponseBody
+	@RequestMapping("/sendOperation")
+	public void sendOperation(String subId,String userName,String userId,String replyContent){
+		//流转到下一个人并将临时反馈变为发布
+		this.submitRelation(subId, userName, userId);
+		//保存审批意见
+		approvalOpinionService.saveOpinion(subId, replyContent, "1");
+		Response.json("result", "success");
+	}
+	
+	@ResponseBody
+	@RequestMapping("/returnOperation")
+	public void returnOperation(String subId,String replyContent){
+		JSONObject json=new JSONObject();
+		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+		if(subDocInfo != null) {
+			if(StringUtils.isNotBlank(subDocInfo.getUndertaker())) {
+				//流转到下一个人并将临时反馈变为发布
+				this.submitRelation(subId, subDocInfo.getUndertakerName(),subDocInfo.getUndertaker());
+				//保存审批意见
+				approvalOpinionService.saveOpinion(subId, replyContent, "3");
+			}else {
+				json.put("result", "fail");
+			}
+		}else {
+			json.put("result", "fail");
+		}
+		Response.json("result", "success");
+	}
+	
+	@ResponseBody
+	@RequestMapping("/finishOperation")
+	public void finishOperation(String subId,String replyContent){
+		//保存意见
+		approvalOpinionService.saveOpinion(subId, replyContent, "2");
+		//反馈对他局和部可见
+		replyExplainService.updateShowFlag(subId);
+		//意见对他局和部可见
+		approvalOpinionService.updateShowFlag(subId);
+		//分支文件更新完成审批标识
+		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+		if(subDocInfo != null) {
+			subDocInfo.setFinishFlag("1");
+			subDocInfoService.update(subDocInfo);
+		}
+	}
+	
+	private void submitRelation(String subId,String userName,String userId) {
 		//获取当前登录人信息
 		String loginUserId=CurrentUser.getUserId();
 		String loginUserName=CurrentUser.getUsername();
@@ -276,6 +342,15 @@ public class SubDocInfoController {
 		tracking.setTrackingType("2");
 		tracking.setCreatedTime(new Date());
 		subDocTrackingService.save(tracking);
-		Response.ok();
+		//将临时反馈变为发布
+		Map<String, Object> map =new HashMap<>();
+		map.put("subId", subId);
+		map.put("userId", loginUserId);
+		map.put("showFlag", "0");
+		ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
+		if(tempReply!=null) {
+			tempReply.setReVersion("1");
+		}
+		replyExplainService.update(tempReply);
 	}
 }

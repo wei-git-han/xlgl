@@ -25,4 +25,8 @@ public interface ApprovalOpinionService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+	
+	void saveOpinion(String subId,String replyContent,String trackingType);
+	
+	int updateShowFlag(String subId);
 }
