@@ -57,8 +57,10 @@ html,body{background:#2E4A83;height:100%;}
 .table-button2{background:#67779C;width:100px;padding:5px 10px;}
 .table-button3{border:1px solid #33CCFF;background:transparent;width:100px;padding:5px 10px;color:#33CCFF;}
 .table-label{background:#FFCC00;padding:0 5px;color:#000;margin-right:5px;}
+.table-label2{background:red;padding:0 5px;color:#fff;margin-right:5px;}
 
-.modal-content{padding:20px;background:#243758;}
+.modal-header {background-color: transparent;}
+.modal-content{padding:20px;background:#243758;border:1px solid #515F78;border-radius:5px!important;}
 .modal-backdrop{display:none;}
 .modal-title{color:#fff;font-size:20px;font-weight:bold;}
 .close {width:20px;height:20px;opacity: 1;background-image: url("../image/close.png") !important;}

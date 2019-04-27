@@ -32,7 +32,7 @@ var pageModule = function(){
 							<li class="${i==0?'active':''}" id="${id}">
 								<a>
 									<i class="fa fa-chevron-right "></i>
-									<font>${name}</font>
+									<font title="${name}" >${name}</font>
 									<font title="${count}" >${count2}</font>
 								</a>
 							</li>
@@ -83,6 +83,17 @@ var pageModule = function(){
                     				var tbrq = rowdata.tbrq;
                     				var array = rowdata.array;
                     				
+	                               	var cuiban = '';
+	                            	var CuibanFlag = rowdata.CuibanFlag;
+	                            	if(CuibanFlag==1){
+	                            		 cuiban = '<label class="table-label2">催办</label>';
+	                            	}
+                    				
+                    				//fileId,subId,fileFrom
+                    				title=`
+                    					${cuiban} <font title="${title}" onclick="viewpage('${id}','${id}','${id}')" style="cursor:pointer;" >${title}</font>
+                    				`
+                    				
                     				var button1 = "";
                     				if(blzt==1){
                     					button1 = '<button type="button" class="btn btn-info table-button1">办理中</button>';
@@ -94,11 +105,22 @@ var pageModule = function(){
                     				
                     				var button2 = '';
                     				var button3 = '';
-                    				if(other==0){
-                    					button3 = '<a class="btn btn-info newpanel-button1"  onclick="ydfn(\''+rowdata.id+'\')">确认已读</a>';
-                    				}else if(other==1){
-                    					button2 = '<button type="button" class="btn btn-info table-button3" onclick="cbfn(\''+rowdata.id+'\')">催办</button>';
+                    				if(blzt==1){
+                    					if(other==0){
+                        					button3 = '<a class="btn btn-info newpanel-button1"  onclick="ydfn(\''+rowdata.id+'\')">确认已读</a>';
+                        				}else if(other==1){
+                        					button2 = '<button type="button" class="btn btn-info table-button3" onclick="cbfn(\''+rowdata.id+'\')">催办</button>';
+                        				}
                     				}
+                    				
+                    				
+                    				var gengxin = rowdata.gengxin;
+                    				var button4 = '';
+                    				if(gengxin==1){
+                    					button4 = '<label class="table-label">已更新</label>';
+                    				}
+                    				
+                    				
                     				
                     				var html2 = "";
                     				$.each(array,function(i){
@@ -150,12 +172,11 @@ var pageModule = function(){
 												<table>
 													<thead>
 														<tr>
-															<th>序号</th>
+															<th style="width:50px;">序号</th>
 															<th>状态</th>
 															<th>军委办件号</th>
 															<th>文件标题</th>
 															<th>批示指示内容</th>
-															<th>办件状态</th>
 															<th>承办单位/人</th>
 															<th>转办时间</th>
 															<th>反馈更新</th>
@@ -164,16 +185,15 @@ var pageModule = function(){
 													</thead>
 													<tbody>
 														<tr>
-															<td>${n}</td>
-															<td>${button1}</td>
+															<td style="text-align:center;">${n}</td>
+															<td style="text-align:center;">${button1}</td>
 															<td>${jwbjh}</td>
 															<td>${title}</td>
 															<td>${pszsmr}</td>
-															<td>${dblsqk}</td>
 															<td>${cbdwry}</td>
 															<td>${update}</td>
 															<td>${zbdate}</td>
-															<td>${button2}</td>
+															<td style="text-align:center;">${button2}</td>
 														</tr>
 													</tbody>
 												</table>
@@ -191,7 +211,7 @@ var pageModule = function(){
 															<div class="nc-left-top">
 																<div class="nc-left-top-title">
 																	<font>督办落实情况</font>
-																	<label class="table-label">已更新</label>
+																	${button4}
 																</div>
 															</div>
 															<div class="nc-left-cent">
@@ -216,7 +236,7 @@ var pageModule = function(){
                     height:"100%",
                     checkbox: false,
                     rownumberyon:false,
-                    paramobj:{},
+                    paramobj:{month:'all'},
                     overflowx:false,
                     rownumberwidth:"50px",
                     pagesize: 4,
@@ -254,7 +274,7 @@ var pageModule = function(){
 		$("#fasong").click(function(){
 			var textarea = $("#textarea").val();
 			if($.trim(textarea)==""){
-				newbootbox.alert("请填写内容!");
+				newbootbox.alertInfo("请填写内容!");
 				return;
 			}
 			$ajax({
@@ -263,14 +283,12 @@ var pageModule = function(){
 				success:function(data){
 					if(data.result=="success"){
 						$("#viewcont").modal("hide");
-						newbootbox.alert("操作成功!");
+						newbootbox.alertInfo("操作成功!");
 						grid.refresh();
 					}
 				}
 			});
 		})
-		
-		
 		
 		
 		$("#quxiao").click(function(){
@@ -283,6 +301,13 @@ var pageModule = function(){
 			grid.setparams({state:value});
 			grid.loadtable();
 		})
+		
+		
+		$("#chartbutton").click(function(){
+			window.location.href = "index.html"
+		});
+		
+		
 		
 	}
 	
@@ -303,27 +328,31 @@ var pageModule = function(){
 }();
 
 var ydfn = function(ids){
-	
-	newbootbox.confirm({
+	$ajax({
+		url:url3,
+		data:{ids:ids},
+		success:function(data){
+			if(data.result=="success"){
+				newbootbox.alertInfo("确认已读!");
+				grid.refresh();
+			}
+		}
+	});
+	/*newbootbox.confirm({
 		title:"提示!",
 		message:"是否确认已读!",
 		callback1:function(){
-			$ajax({
-				url:url3,
-				data:{ids:ids},
-				success:function(data){
-					if(data.result=="success"){
-						newbootbox.alert("确认已读!");
-						grid.refresh();
-					}
-				}
-			});
+			
 		}
-	});
+	});*/
 }
 
 var cbrenid = "";
 var cbfn = function(ids){
 	cbrenid = ids;
 	$("#viewcont").modal("show");
+}
+
+var viewpage = function(fileId,subId,fileFrom){
+	window.location.href = "../../view2/html/view.html";
 }

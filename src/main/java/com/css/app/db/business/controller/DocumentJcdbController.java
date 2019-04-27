@@ -15,9 +15,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.AppConfig;
+import com.css.addbase.apporgan.entity.BaseAppOrgan;
+import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.app.db.business.service.DocumentFileService;
 import com.css.app.db.business.service.DocumentInfoService;
+import com.css.app.db.config.entity.RoleSet;
+import com.css.app.db.config.service.RoleSetService;
 import com.css.app.db.util.DbDefined;
+import com.css.base.utils.CurrentUser;
 import com.css.base.utils.GwPageUtils;
 import com.css.base.utils.Response;
 
@@ -41,6 +46,10 @@ public class DocumentJcdbController {
 	private DocumentInfoService documentInfoService;
 	@Autowired
 	private DocumentFileService documentFileService;
+	@Autowired
+	private RoleSetService roleSetService;
+	@Autowired
+	private BaseAppOrganService baseAppOrganService;
 	
 	
 	
@@ -100,7 +109,10 @@ public class DocumentJcdbController {
 	{"id":"04","dwname":"办公厅","blz":"100","bj":"101","ctls":"102"},
 	{"id":"05","dwname":"办公厅","blz":"100","bj":"101","ctls":"102"}
 	
-	
+		public String getRoleType() {
+		//当前登录人的角色
+		//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
+		 * 
 	d.SUB_DEPT_ID,d.SUB_DEPT_NAME,sum(blz) as blz,sum(bj) as bj,sum(ctls) as ctls
 	 */
 	@ResponseBody
@@ -120,16 +132,46 @@ public class DocumentJcdbController {
 		}
 		map.put("year", year);
 		List<Map<String, Object>> infoList = documentInfoService.queryListByOrgYear(map);
+		String role=getRoleType();
+		String orgid="";
+		if(!"1".equals(role)&&!"2".equals(role)) {
+			BaseAppOrgan org = baseAppOrganService.queryObject(CurrentUser.getDepartmentId());
+			if(org != null){
+				String[] pathArr = org.getTreePath().split(",");
+				if(pathArr.length > 2){
+					orgid= pathArr[2];
+				} 
+			}
+		}
 		//blz= (int) map2.get("blz");
 		JSONArray ja=new JSONArray();
 		if (infoList!=null&&infoList.size()>0) {
 			for (Map<String, Object> map2 : infoList) {
+				String danweiid=(String) map2.get("ID");
 				JSONObject jo=new JSONObject();
 				jo.put("blz", (long) map2.get("blz"));
 				jo.put("bj", (long) map2.get("bj"));
 				jo.put("ctls", (long) map2.get("ctls"));
-				jo.put("id", (String) map2.get("id"));
+				jo.put("id",danweiid);
 				jo.put("dwname", (String) map2.get("dwname"));
+				
+				if("1".equals(role)) {//首长
+					jo.put("state", "1");//点击所有单位
+					jo.put("type", "1");
+				}else {
+					if("2".equals(role)) {//部管理员
+						jo.put("state", "1");//点击所有单位
+					}else {
+						if(orgid.equals(danweiid)) {//局
+							jo.put("state", "1");//该局的数据
+						}else {
+							jo.put("state", "0");
+						}
+					}
+					jo.put("type", "0");
+				}
+				//state
+				
 				ja.add(jo);
 			}
 		}
@@ -146,6 +188,27 @@ public class DocumentJcdbController {
 	"blzdata":[2, 4, 7, 23, 25, 76, 135, 162, 32, 20],
 	"bjdata":[2, 5, 9, 26, 28, 70, 175, 182, 48, 18],
 	"ctlsdata":[2, 5, 9, 26, 28, 70, 175, 182, 48, 18]
+	
+	
+	
+	"otherdata":{
+		"部首长":{
+			"blz":{"type":"","id":"","month":""},
+			"bj":{"type":"","id":"","month":""},
+			"ctls":{"type":"","id":"","month":""}
+		},
+		"办公厅":{
+			"blz":{"type":"","id":"","month":""},
+			"bj":{"type":"","id":"","month":""},
+			"ctls":{"type":"","id":"","month":""}
+		}
+	
+	
+	
+	
+	
+	
+	
 }
 	 */
 	@ResponseBody
@@ -164,8 +227,46 @@ public class DocumentJcdbController {
 		JSONArray bjdata=new JSONArray();
 		JSONArray ctlsdata=new JSONArray();
 		JSONArray legend=new JSONArray();
+		JSONArray otherdata=new JSONArray();
+		JSONObject jo=new JSONObject();
+		JSONObject jo3=new JSONObject();
+		String role=getRoleType();
+		String orgid="";
+		String month="all";
+		if(!"1".equals(role)&&!"2".equals(role)) {
+			BaseAppOrgan org = baseAppOrganService.queryObject(CurrentUser.getDepartmentId());
+			if(org != null){
+				String[] pathArr = org.getTreePath().split(",");
+				if(pathArr.length > 2){
+					orgid= pathArr[2];
+				} 
+			}
+		}
 		if (infoList!=null&&infoList.size()>0) {
 			for (Map<String, Object> map2 : infoList) {
+				String danweiid=(String) map2.get("ID");
+				//授权--------strat
+				jo=new JSONObject();
+				jo.put("id",danweiid);
+				jo.put("month",month);
+				if("1".equals(role)) {//首长
+					jo.put("state", "1");//点击所有单位
+					jo.put("type", "1");
+				}else {
+					if("2".equals(role)) {//部管理员
+						jo.put("state", "1");//点击所有单位
+					}else {
+						if(orgid.equals(danweiid)) {//局
+							jo.put("state", "1");//该局的数据
+						}else {
+							jo.put("state", "0");
+						}
+					}
+					jo.put("type", "0");
+				}
+				jo3.put((String) map2.get("dwname"), jo);
+				//授权--------end
+				//otherdata.add(jo);
 				xdata.add((String) map2.get("dwname"));
 				blzdata.add((long) map2.get("blz"));
 				bjdata.add((long) map2.get("bj"));
@@ -180,6 +281,7 @@ public class DocumentJcdbController {
 		jo2.put("blzdata", blzdata);
 		jo2.put("bjdata", bjdata);
 		jo2.put("ctlsdata", ctlsdata);
+		jo2.put("otherdata", jo3);
 		
 		
 		
@@ -268,4 +370,31 @@ public class DocumentJcdbController {
 		jo2.put("wcldata", wcldata);
 		Response.json(jo2);
 	}
+	
+	public String getRoleType() {
+		//当前登录人的角色
+		//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
+		JSONObject jo=new JSONObject();
+		Map<String, Object> roleMap = new HashMap<>();
+		String userid=CurrentUser.getUserId();
+		roleMap.put("userId",userid);
+		List<RoleSet> roleList = roleSetService.queryList(roleMap);
+		String roleType="";
+		String orgid="";
+		if(roleList != null && roleList.size()>0) {
+			return roleType = roleList.get(0).getRoleFlag();
+		}
+		return "";
+		/*BaseAppOrgan org = baseAppOrganService.queryObject(CurrentUser.getDepartmentId());
+		if(org != null){
+			String[] pathArr = org.getTreePath().split(",");
+			if(pathArr.length > 2){
+				orgid= pathArr[2];
+			} 
+		}
+		jo.put("roleType", roleType);
+		jo.put("orgid", orgid);
+		Response.json(jo);*/
+	}
+	
 }

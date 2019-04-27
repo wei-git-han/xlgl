@@ -34,10 +34,10 @@
 		<div class="newlayout-top" >
 			
 			<div class="top-left">
-				<div class="top-title">
+				<a class="top-title" >
 					<i class="fa fa-chevron-circle-left"></i>
 					<font>监察督办</font>
-				</div>
+				</a>
 			</div>
 			
 		</div>
@@ -45,7 +45,7 @@
 		<div class="newlayout-cent">
 			
 			
-			<div class="cent-left">
+			<div class="cent-left" style="display:none;">
 				
 				<div class="left-top">
 					<div class="left-top-left">
@@ -68,11 +68,11 @@
 			<div class="cent-right">
 				
 				<div class="right-top">
-					<div class="right-top-left">
+					<!-- <div class="right-top-left">
 						<div class="right-title">
 							<font onclick="location.reload();" style="cursor:pointer;">JW主席批示指示督办落实情况表</font>
 						</div>
-					</div>
+					</div> -->
 					<div class="right-top-right">
 						<div class="right-btn-group">
 							<a class="btn btn-info right-btn">批量已读</a>
@@ -98,7 +98,33 @@
 
 	
 
-
+	<div class="modal fade bs-modal-lg" id="viewcont" tabindex="-1" role="dialog" aria-hidden="true">
+	    <div class="modal-dialog modal-lg" style="width:800px;">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+	                <h4 class="modal-title">催办</h4>
+	            </div>
+	            <div class="modal-body" style="padding:0px;">
+					<form role="form">
+					    <div class="form-body">
+					        
+					        <div class="form-group">
+					            <label>留言给承办人</label>
+					            <textarea class="form-control" rows="10" placeholder="请尽快反馈办理进度.." id="textarea" name="textarea" ></textarea>
+					        </div>
+					        
+					    </div>
+					    <div class="form-actions">
+					        <a type="submit" class="btn btn-info form-button" id="fasong" >发送</a>
+					        <a type="button" class="btn btn-info form-button" id="quxiao" >取消</a>
+					    </div>
+					</form>
+	                	
+	            </div>
+	        </div>
+	    </div>
+	</div>
 
 
 

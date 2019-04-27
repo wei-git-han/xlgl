@@ -1,6 +1,7 @@
 package com.css.app.db.business.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -199,17 +200,38 @@ public class DocumentSzInfoController {
                     	]
 
 					}
+					id为类型
 	 */
 	@ResponseBody
 	@RequestMapping("/homelist")
-	public void homelist(Integer page, Integer pagesize,String search,String type){
+	public void homelist(Integer page, Integer pagesize,String search,String id ,String state,String month,String year){
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		SimpleDateFormat sdf2=new SimpleDateFormat("yyyy年MM月dd日");
+		SimpleDateFormat sdf3=new SimpleDateFormat("yyyy");
 		String userid=CurrentUser.getUserId();
 		Map<String, Object> map = new HashMap<>();
 		map.put("search", search);
 		map.put("docStatus", "2");
-		map.put("type", type);
+		map.put("type", id);
+		if(StringUtils.isNotBlank(state)) {
+			if("0".equals(state)) {
+				
+				map.put("state", "1");//办理中
+				map.put("isnotuserid", userid);
+			}else {
+				map.put("state", state);
+			}
+		}
+		if(StringUtil.isEmpty(year)) {
+			int mon=Calendar.MONTH+1;
+			year=sdf3.format(new Date());
+			if(StringUtil.isEmpty(month)) {				
+				year+="-"+(mon<10?"0"+mon:mon+"");
+			}else if(!StringUtil.equals("all", month)){
+				year+="-"+month;
+			}
+		}
+		map.put("year", year);
 		//PageHelper.startPage(page, pagesize);
 		map.put("offset", ((page - 1) * pagesize));
 		map.put("limit", pagesize);
@@ -219,7 +241,6 @@ public class DocumentSzInfoController {
 		JSONObject jo=new JSONObject();
 		JSONObject yijianjo=new JSONObject();
 		JSONArray ja=new JSONArray();
-		JSONArray yijianja=new JSONArray();
 		Map<String, Object> danweimap = new HashMap<>();
 		for (DocumentInfo documentInfo : infoList) {
 			jo=new JSONObject();
@@ -228,29 +249,51 @@ public class DocumentSzInfoController {
 			jo.put("jwbjh", documentInfo.getBanjianNumber());
 			jo.put("title", documentInfo.getDocTitle());
 			jo.put("pszsmr",documentInfo.getJobContent() );
-			jo.put("dblsqk","" );
-			jo.put("cbdwry","" );
+			
 			jo.put("update",sdf.format(documentInfo.getCreatedTime()) );
 			jo.put("zbdate",sdf.format(documentInfo.getCreatedTime()) );
 			String sz=documentInfo.getSzReadIds();
 			if(StringUtils.isEmpty(sz)||!(sz).contains(userid)) {
-				jo.put("other","0");
+				jo.put("other","0");//确认已读按钮显示
 			}else {				
 				jo.put("other","1");
 			}
+			String CuibanFlag=documentInfo.getCuibanFlag();
+			jo.put("CuibanFlag",CuibanFlag );//是否催办    1显示      0不显示
 			//单位意见
 			danweimap = new HashMap<>();
-			danweimap.put("",documentInfo.getId());
+			danweimap.put("infoId",documentInfo.getId());
+			JSONArray yijianja=new JSONArray();
 			//查询列表数据
+			String cbdw="";
+			String cbry="";
+			String cont="";
+			String gengxin="0";
 			List<ReplyExplain> dbReplyExplainList = replyExplainService.queryList(danweimap);
 			for (ReplyExplain replyExplain : dbReplyExplainList) {
 				yijianjo=new JSONObject();
-				yijianjo.put("dw",replyExplain.getSubDeptName());
-				yijianjo.put("ry", replyExplain.getUserName());
-				yijianjo.put("cont", replyExplain.getReplyContent());
+				cbdw=replyExplain.getSubDeptName();
+				cbry=replyExplain.getUserName();
+				cont=replyExplain.getReplyContent();
+				yijianjo.put("dw",cbdw);
+				yijianjo.put("ry", cbry);
+				yijianjo.put("cont", cont);
 				
 				yijianja.add(yijianjo);
+				if(StringUtils.isEmpty(sz)||!(sz).contains(userid)) {
+					gengxin="1";//已更新显示
+				}
+				break;
 			}
+			jo.put("gengxin",gengxin);//已更新显示
+			jo.put("dblsqk",cont);
+			if("".equals(cbdw)) {
+				jo.put("cbdwry","");				
+			}else {
+				jo.put("cbdwry",cbdw+"/"+cbry);								
+			}
+			
+			
 			jo.put("array",yijianja);//
 			jo.put("miji",documentInfo.getSecurityClassification());
 			jo.put("tbdw","新增");

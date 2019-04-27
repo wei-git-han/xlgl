@@ -1,0 +1,80 @@
+[
+	{
+		listdate:"2019-01-02 01:10:01",
+		rows:[
+			{
+	            "createdTime": "2017-10-06 00:00:00",
+	            "content": "已经开始办理，初期、中期已完成",
+	            "uerName": "李参谋",
+	            "isOK": "0", //1为办理通过
+	            "id": "1",
+	            "answer":"0",
+	            "ifeditbtn":"1",//有没有编辑按钮，0没有，1有
+	            "fj": [
+	                {
+	                    "fjName": "办理进度 1.wps",
+	                    "fjId": "111000",
+	                    "fileServerId":"0002304344"
+	                },
+	                {
+	                    "fjName": "办理进度2.wps",
+	                    "fjId": "1110400",
+	                    "fileServerId":"000230434fdsf4"
+	                },
+	            ]
+	        },
+	        {
+	            "createdTime": "2017-12-45 00:00:00",
+	            "content": "呦西呦西呦西呦西呦西呦西呦西",
+	            "uerName": "李参谋",
+	            "isOK": "1", //办理通过
+	            "id": "1",
+	            "answer":"1",
+	            "ifeditbtn":"0",//有没有编辑按钮，0没有，1有
+	            "fj": [
+	                {
+	                    "fjName": "办理进度 1.wps",
+	                    "fjId": "111000",
+	                    "fileServerId":"0dfsf2304344"
+	                },
+	                {
+	                    "fjName": "办理进度2.wps",
+	                    "fjId": "1110400",
+	                    "fileServerId":"111112304344"
+	                },
+	            ]
+	        }
+		]
+	},
+	{
+		listdate:"2019-05-12 12:02:11",
+		rows:[
+			{
+	            "createdTime": "2018-10-06 07:12:05",
+	            "content": "已经开始办理，初期、中期已完成",
+	            "uerName": "李参谋",
+	            "isOK": "3", //办理通过
+	            "id": "3",
+	            "answer":"0",
+	            "ifeditbtn":"0",//有没有编辑按钮，0没有，1有
+	            "fj": [
+	                {
+	                    "fjName": "办理进度 1.wps",
+	                    "fjId": "111003454330",
+	                    "fileServerId":"6666604344"
+	                },
+	                {
+	                    "fjName": "办理进度2.wps",
+	                    "fjId": "1110464564500",
+	                    "fileServerId":"000255555555544"
+	                },
+	            ]
+	        }
+		]
+	}
+]
+
+
+
+
+
