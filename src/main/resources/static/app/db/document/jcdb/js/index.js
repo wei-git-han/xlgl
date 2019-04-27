@@ -72,9 +72,14 @@ var pageModule = function(){
 					var blz = this.blz;
 					var bj = this.bj;
 					var ctls = this.ctls;
+					var state = this.state;
+					var type = this.type;
+					var month_ = month;
+					var html = ` style="cursor:pointer" onclick="topage('${id}','${type}','${month_}')" `;
+					if(state==0){html=""}
 					$("#tbody").append(
 						`
-							<tr id="${id}" style="cursor:pointer;">
+							<tr id="${id}" ${html}>
 								<td>${i+1}</td>
 								<td>${dwname}</td>
 								<td>${blz}</td>
@@ -226,10 +231,32 @@ var pageModule = function(){
 				    ]
 			    });
 			    
-				myChart.on("click",function(o){
+			    var otherdata = data.otherdata;
+				myChart.on("click",function(o,n){
+					
+					console.log(otherdata)
 					var name = o.name;
 					var seriesIndex = o.seriesIndex;
 					var value = o.value;
+					
+					var object = otherdata[name];
+					var state = object.state;
+					var id = object.id;
+					var type = object.type;
+					var month = object.month;
+					var ytype = 0;
+					console.log(state);
+					if(seriesIndex==0){
+						ytype = 1;
+					}else if(seriesIndex==1){
+						ytype = 2;
+					}else if(seriesIndex==2){
+						ytype = 3;
+					}
+					if(state!=0){
+						topage(id,type,month,ytype);
+					}
+					
 				})
 			}
 		});
@@ -442,6 +469,7 @@ var pageModule = function(){
 			var month = this.value;
 			inittable(month);
 		})
+		
 		inittable(month);
 	}
 	
@@ -455,3 +483,12 @@ var pageModule = function(){
 	}
 	
 }();
+
+var topage = function(orgid,type,month,ytype){
+	if(type==1){
+		window.location.href = "table.html?ifmenu=false&orgid="+orgid+"&month="+month+"&ytype="+ytype;
+	}else{
+		window.location.href = "/app/db/document/blfk/html/blfk.html?fileFrom=blfk&ifmenu=false&orgid="+orgid+"&month="+month+"&ytype="+ytype;
+	}
+	
+}

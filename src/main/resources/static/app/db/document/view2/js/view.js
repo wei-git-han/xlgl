@@ -6,18 +6,18 @@ var zbjlDataUrl = {"url":"/app/db/documentzbjl/list","dataType":"json"}; //文�
 var getButtonParamUrl = {"url":"/app/db/subdocinfo/buttonParam","dataType":"json"}; //获取按钮显示控制参数
 var chengbanUrl = {"url":"/app/db/subdocinfo/undertakeOperation","dataType":"text"}; //承办地址
 var saveUrl = {"url":"/app/db/replyexplain/save","dataType":"text"}; //办理反馈保存
-var finishUrl = {"url":"/app/db/subdocinfo/finishOperation","dataType":"text"}; //完成审批操作
-var returnUrl = {"url":"/app/db/subdocinfo/returnOperation","dataType":"text"}; //返回修改操作
+
+//var Url = {"url":"/app/db/replyexplain/edit","dataType":"text"}; //办理反馈保存
 var luoShiUrl = {"url":"/app/db/subdocinfo/luoShiOperation","dataType":"text"}; //常态落实操作
 var banjieUrl = {"url":"/app/db/subdocinfo/banJieOperation","dataType":"text"}; //办结操作
 var bjDataUrl = {"url":"/app/db/documentbjjl/list","dataType":"text"}; //办结记录
 var delfjUrl = {"url":"/app/db/replyexplain/deleteAttch","dataType":"text"}; //删除办理反馈中的附件
 var downLoadUrl= {"url":"/app/db/replyexplain/downLoad","dataType":"text"}; //下载办理反馈中的附件
-var subReplyListUrl = {"url":"/app/db/replyexplain/subReplyList","dataType":"text"}; //局内办理反馈list
-var allReplyListUrl = {"url":"/app/db/replyexplain/allReplyList","dataType":"text"}; //各局办理反馈list
-var opinionUrl = {"url":"/app/db/replyexplain/getOpinion","dataType":"text"}; //各局办理反馈list
+
+var listUrl = {"url":"/app/db/document/view/data/blfkList.json","dataType":"text"}; //办理反馈list
 var cbDataUrl = {"url":"/app/db/document/view/data/cbList.json","dataType":"text"}; //文件转办-催办记录list
 var uploadFileUrl = "/app/db/documentinfo/uploadFile";//文件上传
+var downLoadUrl = {"url":"","dataType":"text"}; //附件下载
 var fileId=getUrlParam("fileId")||""; //主文件id
 var subId=getUrlParam("subId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
@@ -35,38 +35,35 @@ var pageModule = function(){
 				boolean isCheckUser=false;//是否是当前办理人
 				boolean isUndertaken=false;//是否已承办
 				boolean isUndertaker=false;//是否承办人*/
-				if(data.docStatus<10){//文件为办理中
-					if(!data.isUndertaken && data.isCheckUser){//承办、转办按钮显示，输入框相关不显示
-						$(".right_top_zbjl").css("bottom","60px");//按钮父元素上方元素样式控制
-						$(".right_zbjl").show();//按钮父元素样式控制
-						$("#chengban").show();
-						$("#zhuanban").show();
-					}else{
-						if(data.isCheckUser){//显示办结、常态落实,输入框
-							$(".right_zbjl").show();
-							$("#luoshi").show();
-							$("#banjie").show();
-							$(".blfk_bottom").show(); //意见框
-							$(".blfk_top").css({"bottom":"40%","height":"58%"});   //意见框上方元素样式控制
-							$("#save").show();
+				if(!data.isUndertaken && data.isCheckUser){//承办、转办按钮都显示，输入框相关不显示
+					$(".right_top_zbjl").css("bottom","60px");//按钮父元素上方元素样式控制
+					$(".right_zbjl").show();//按钮父元素样式控制
+					$("#chengban").show();
+					$("#zhuanban").show();
+				}else{
+					if(data.isCheckUser){//显示办结、常态落实,输入框
+						$(".right_zbjl").show();
+						$("#luoshi").show();
+						$("#banjie").show();
+						$(".blfk_bottom").show(); //意见框
+						$(".blfk_top").css({"bottom":"40%","height":"58%"});   //意见框上方元素样式控制
+						$("#save").show();
+						$("#showfj").show();
+						
+						if(data.roleType=='3'){//是局长显示审批完成否则显示提交
+							$("#sptg").show();
+						}else{
+							$("#tijiao").show();
+						}
+						if(!data.isUndertaker){//当前处理人是承办人则不显示返回修改
+							$("#fhxg").show();
+						}else{
+							$("#ifaddfj").show();
 							$("#showfj").show();
-							
-							if(data.roleType=='3'){//是局长显示审批完成否则显示提交
-								$("#sptg").show();
-							}else{
-								$("#tijiao").show();
-							}
-							if(!data.isUndertaker){//当前处理人是承办人则不显示返回修改
-								$("#fhxg").show();
-							}else{
-								$("#ifaddfj").show();
-								$("#showfj").show();
-								isCbr = 1;
-							}
+							isCbr = 1;
 						}
 					}
 				}
-					
 			}
 		});	
 	}
@@ -180,8 +177,8 @@ var pageModule = function(){
 	//办理反馈记录
 	var initblfkList = function(){
 		$ajax({
-			url:subReplyListUrl,
- 			data:{infoId:fileId,subId:subId},
+			url:listUrl,
+ 			data:{fileId:fileId},
 			success:function(data){
 				if(data&&data.length>0){
 					var html1= "";
@@ -192,79 +189,52 @@ var pageModule = function(){
 								'		<i class="icontime"></i>'+
 								'	</div>'+
 								'	<div class="timeline-user">'+
-								/*'		<span style="color:#999;">'+listdate+'</span>'+*/
-								'		<span style="color:#999;">2019-05-01 09:00:00</span>'+
+								'		<span style="color:#999;">'+listdate+'</span>'+
 								'	</div>'+
 								'	<div class="timeline-body">';
+								$.each(o.rows,function(k,b){
 									var borderStyle="";
-									var showZhankaiStyle="";
-									var cuoweiStyle="";
-									var showZhankai = o.showZhankai;
-									var cuowei = o.cuowei;
-									if(cuowei && cuowei == "1"){
-										cuoweiStyle = "margin-left:20px!important;"
+									var answerStyle="";
+									var answer = b.answer;
+									var isOK = b.isOK;
+									var isOKobj = "";
+									var ifeditbtn = b.ifeditbtn;
+									if(isOK == "1"){
+										isOKobj ="审批通过";
 									}
-									//var ifeditbtn = o.ifeditbtn;
-									var ifeditbtn = "1";
-									if(i>0){
+									if(answer !="0"){
+										answerStyle = "margin-left:20px!important;"
+									}
+									if(k>0){
 										borderStyle = "border-top:none;"
 									}
-									if(showZhankai =="1"){//1展开（有margin）      0不展开
-										showZhankaiStyle = "margin-left:30px!important;"
-									}
-									html1 += '<div class="timeline-content" style="'+borderStyle+'">'+
-									         '	<div class="listUser" data_id="'+o.teamId+'"><img src="../images/userh.png" class="listicon"> '+o.cbrName+'</div>';
+									html1 += '<div class="timeline-content" style="'+borderStyle+answerStyle+'">'+
+									         '	<div class="listUser"><img src="../images/userh.png" class="listicon"> '+b.uerName+'<span class="isOkFlag">'+isOKobj+'</span></div>';
 									html1 += '	<div class="listContent">';
-									html1 += '		<span>'+o.content+'</span><span>'+o.updateTime+'</span><div class="listfj">';
-									
-									
-									$.each(o.attchList,function(s,t){
-										html1 += '		<div class="fujianwrap"><a class="fujian" id="'+t.id+'" onclick="downloadfn(\''+t.fileServerId+'\')">'+t.fileName+'</a><i title="删除附件" class="fa fa-times-circle delx" data="'+t.id+'"></i></div>';
+									html1 += '		<span>'+b.content+'</span><span>'+b.createdTime+'</span><div class="listfj">';
+									$.each(b.fj,function(s,t){
+										html1 += '		<div class="fujianwrap"><a class="fujian" id="'+t.fjId+'" onclick="downloadfn(\''+t.fileServerId+'\')">'+t.fjName+'</a><i title="删除附件" class="fa fa-times-circle delx" data="'+t.fjId+'"></i></div>';
 									})
-									
 									html1 += '	</div>';
 									if(ifeditbtn == "1"){
-										html1 += '		<div class="editwrap"><button class="editBtn" id="'+o.teamId+'" data_val="'+o.content+'">编辑</button></div>';
+										html1 += '		<div class="editwrap"><button class="editBtn" id="'+b.id+'" data_val="'+b.content+'">编辑</button></div>';
 									}
 									html1 += '	</div>';
-									html1 += '	</div>';
-									if(showZhankai =="1"){
-										html1 +='<div class="zhankaiwrap"><a id="zhankai_'+o.teamId+'" class="zhankai">展开  <i class="fa fa-plus"></i></a></div>'
-									}
-									$.each(o.opinionList,function(s,k){
-										var trackingType = k.trackingType;
-										var trackingTypeobj = "";
-										if(trackingType == "3"){
-											trackingTypeobj ="返回修改";
-										}else{
-											trackingTypeobj ="审批通过";
-										}
-										
-										html1 += '<div class="timeline-content '+o.teamId+'" style="'+borderStyle+cuoweiStyle+'display:none;">'+
-										         '	<div class="listUser" data_id="'+k.id+'"><img src="../images/userh.png" class="listicon"> '+k.userName+'<span class="isOkFlag">'+trackingTypeobj+'</span></div>';
-										html1 += '	<div class="listContent">';
-										html1 += '		<span>'+k.opinionContent+'</span><span>'+k.createdTime+'</span>';
-										html1 += '	</div>';
-										html1 += '</div>';
-									})
-									html1 +='	</div>';
+									html1 += '</div>';
+								})
 								
-								
-								
-								
-								html1 +='	</div>'
+								html1 +='	</div>'+
+										'</div>'
 						$(".timelinesview").append(html1);
 					})
 				}
 
 				//意见记录编辑
-				$(".editBtn").unbind("click");
 				$(".editBtn").click(function(){
 					if($.trim($(this).text())=="编辑"){
 						$(this).text("取消编辑");
 						$("#replyContent").val($(this).attr("data_val"));
 						$("#editRecordId").val($(this).attr("id"));
-						$("#editTeamId").val($(this).attr("id"))
 						if(isCbr && isCbr == 1){
 							$(this).parents(".timeline-content").find(".fujianwrap .delx").attr("style","display:inline-block!important");
 							return;
@@ -291,11 +261,6 @@ var pageModule = function(){
 	 						}
 	 					}
 	 				});
-				});
-				
-				//展开
-				$("#"+).click(function(){
-					
 				});
 			}
 		})
@@ -381,18 +346,8 @@ var pageModule = function(){
 			$("#replyContent").val("");
 		});
 		
-		//送审
+		//办理反馈提交
 		$("#tijiao").click(function(){
-			var cbrFlag="";
-			if(isCbr && isCbr == 1){
-				cbrFlag="1";
-			}
-			if(isCbr != 1){
-				if($("#replyContent").val() == "" || $("#replyContent").val() == null || $("#replyContent").val() == "undefined"){
-					newbootbox.alert("意见不能为空！");
-					return;
-				}
-			}
 			newbootbox.newdialog({
 				id:"tijiaoDialog",
 				width:800,
@@ -400,7 +355,7 @@ var pageModule = function(){
 				header:true,
 				title:"提交",
 				classed:"cjDialog",
-				url:"/app/db/document/view/html/tijiaoDialog.html?subId="+subId+"&infoId="+fileId+"&replyContent="+$("#replyContent").val()+"&cbrFlag="+cbrFlag
+				url:"/app/db/document/view/html/tijiaoDialog.html?subId="+subId+"&infoId="+fileId+"&replyContent="+$("#replyContent").val()
 			})
 		});
 		
@@ -409,45 +364,6 @@ var pageModule = function(){
 			$ajax({
 				url:chengbanUrl,
 				data:{subId:subId},
-				type: "GET",
-				success:function(data){
-					if(data.result == "success"){
-						showButton();
-					}
-				}
-			});
-		});
-		
-		
-		//返回修改
-		$("#fhxg").click(function(){
-			var replyContent = $("#replyContent").val();
-			if(replyContent == "" || replyContent== null || replyContent == "undefined"){
-				newbootbox.alert("意见不能为空！");
-				return;
-			}
-			$ajax({
-				url:returnUrl,
-				data:{subId:subId,replyContent:replyContent},
-				type: "GET",
-				success:function(data){
-					if(data.result == "success"){
-						showButton();
-					}
-				}
-			});
-		});
-		
-		//审批通过
-		$("#sptg").click(function(){
-			var replyContent = $("#replyContent").val();
-			if(replyContent == "" || replyContent== null || replyContent == "undefined"){
-				newbootbox.alert("意见不能为空！");
-				return;
-			}
-			$ajax({
-				url:finishUrl,
-				data:{subId:subId,replyContent:replyContent},
 				type: "GET",
 				success:function(data){
 					if(data.result == "success"){
@@ -526,15 +442,15 @@ var pageModule = function(){
 		    submitHandler: function() {
 		    	var ajax_option = {
 					url : saveUrl.url,// 默认是form action
-					data:{subId:subId,infoId:fileId,teamId:$("#editTeamId").val(),replyContent:$("#replyContent").val()},
+					data:{subId:subId,replyContent:$("#replyContent").val()},
 					success : function(data) {
 						if (data.result == "success") {
-							newbootbox.alert("保存成功！").done(function(){
+							newbootbox.alertInfo("提交成功！").done(function(){
 								$("#replyContent").val("");
 								initblfkList();
 							}); 
 						} else {
-							newbootbox.alert("提交失败，请稍后重试！"); 
+							newbootbox.alertInfo("提交失败，请稍后重试！"); 
 						}
 					}
 				}
@@ -542,7 +458,7 @@ var pageModule = function(){
 		    }
 		});
 		
-		//办理反馈保存
+		//保存
 		$("#save").click(function(){
 			$("#commentForm").submit();
 		});

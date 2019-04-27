@@ -62,7 +62,7 @@ ul{
 }
 
 
-/* tab页签 */
+/* tab椤电 */
 .left_menu .nav-tabs {
     border: none;
 }
@@ -198,7 +198,7 @@ ul{
 }
 .line4 li>a{
 	color:#333;
-	font-size:14px;
+	font-size:16px;
 }
 .line4 li{
 	line-height:50px;
@@ -245,7 +245,7 @@ ul{
 	border-radius:4px!important;
 }
 
-/* 转锟斤拷锟铰硷拷碌锟絫ab页签 */
+/* 杞敓鏂ゆ嫹閿熼摪纭锋嫹纰岄敓绲玜b椤电 */
 .right_top_zbjl .tabbable-line > .nav-tabs > li > a {
     border: 0;
     margin-right: 0;
@@ -312,7 +312,7 @@ ul{
 	line-height:30px;
 }
 .record span{
-	font-size:14px;
+	font-size:16px;
 }
 .zbDate,.xycontent,.cbDate,.bjDate{
 	color:#aaa;
@@ -324,7 +324,7 @@ ul{
 
 
 
-/* 锟斤拷锟斤拷锟斤拷锟斤拷式 */
+/* 閿熸枻鎷烽敓鏂ゆ嫹閿熸枻鎷烽敓鏂ゆ嫹寮� */
 .timelinesview{
 	margin-top:10px;
 	background:#fff;
@@ -458,7 +458,7 @@ ul{
 
 .timelinesview>.timelinesheys{
 	position: relative;
-	/* padding-bottom:10px; */
+	padding-bottom:10px;
 }
 .timelinesview>.timelinesheys::before{
     content: '';
@@ -471,7 +471,7 @@ ul{
     margin-left: -10px;
 }
 .timelinesview>.timelinesheys:last-child::before{
-   /* background: none; */
+   background: none;
 }
 
 .timelinesview > .timelinesheys .timeline-user {
@@ -573,7 +573,7 @@ ul{
 }
 .listfj a{
 	color:#999;
-	font-size:14px;
+	font-size:16px;
 	margin-right:20px;
 	text-decoration:underline;
 }
@@ -609,7 +609,7 @@ ul{
 }
 
 
-/* 锟斤拷锟斤拷锟斤拷锟� */
+/* 閿熸枻鎷烽敓鏂ゆ嫹閿熸枻鎷烽敓锟� */
 .sryj_title{
 	position:absolute;
 	top:0;
@@ -688,7 +688,7 @@ ul{
 }
 
 
-/* 新页签样式 */
+/* 鏂伴〉绛炬牱寮� */
 .tabs li.tabs-selected a.tabs-inner {
     background: #6699FF!important;
 	border: none;
@@ -767,7 +767,7 @@ ul{
 	vertical-align: middle;
 }
 
-/* 按钮权限控制 */
+/* 鎸夐挳鏉冮檺鎺у埗 */
 .ifShow{
 	display:none;
 }
@@ -821,14 +821,32 @@ ul{
 	font-size:15px;
 	cursor:pointer
 }
-
-.zhankaiwrap{
-	width: 100%;
-	text-align: right;
-	padding-top: 10px;
-	padding-right:10px;
-	padding-bottom:10px;
-}
-.zhankaiwrap a{
-	text-decoration:underline;
-}
+body{background: #3F5C9A;}
+.pr100{background:transparent;}
+.rightwrap {background: rgba(0,0,0,0.2);border:none;}
+.right_menu {background: rgba(0,0,0,0.2);}
+.right_main {background-color: transparent!importnat;}
+.leftwrap{background-color: transparent!importnat;}
+.left_menu {background-color: rgba(0,0,0,0.2);}
+.titlefont {font-size: 20px;color: #fff;}
+.facont .fa {color: #fff;}
+.tabbable-line > .tab-content {border:none;}
+.tabbable-line > .nav-tabs > li.active > a, .tabbable-line > .nav-tabs > li.active > a:focus, .tabbable-line > .nav-tabs > li.active > a:hover {color: #00B2DF !important;}
+.tabbable-line > .nav-tabs > li.active {border-bottom: 4px solid #00B2DF;}
+.line1,.line2,.line3 {color: #fff;}
+.wjlb_title{color:#fff;}
+.line4 li > a.fjactive {color: #fff;}
+.line4 li > a {color: #fff;}
+.timelinesview {background: rgba(255,255,255,0.1);}
+.timeline-user>span{color:#fff!important;}
+.timelinesview > .timelinesheys .timeline-content {border:none;background:#6F7B97;border-left: 5px solid #00CCCC;}
+.listUser{color:#fff;}
+.listContent span:first-child {color: #fff;}
+.listContent > span:nth-child(2) {color: #fff;}
+.listfj a {color: #fff;}
+.blfk_bottom {background: rgba(255,255,255,0.1);}
+.sryj_title {color:#fff;}
+.right_top_zbjl .tabbable-line .nav > li > a {color: #fff;}
+.right_top_zbjl .tabbable-line > .nav-tabs > li.active > a, .right_top_zbjl .tabbable-line > .nav-tabs > li.active > a:focus, .right_top_zbjl .tabbable-line > .nav-tabs > li.active > a:hover {color: #00B2DF !important;}
+.right_top_zbjl .tabbable-line > .nav-tabs > li.active {border-bottom: 4px solid #00B2DF;}
+.record{color:#fff;}
