@@ -38,8 +38,20 @@
  	<select id="queryTotal" resultType="int">
 		select count(*) from DB_REPLY_EXPLAIN 
 	</select>
-	
-	<select id="queryLastestTempReply">
+	<!-- 查询所有分支局的反馈 -->
+	<select id="queryAllLatestReply" resultType="com.css.app.db.business.entity.ReplyExplain">
+	select * from(
+	select *,row_number() over(partition by sub_id,team_id order by created_time desc) as num from DB_REPLY_EXPLAIN where info_id = #{infoId}
+	)where num = '1' order by CREATED_TIME desc;
+	</select>
+	<!-- 查询某分支局的反馈 -->
+	<select id="querySubLatestReply" resultType="com.css.app.db.business.entity.ReplyExplain">
+	select * from(
+	select *,row_number() over(partition by team_id order by created_time desc) as num from DB_REPLY_EXPLAIN where info_id = #{0} and sub_id = #{1}
+	)where num = '1' order by CREATED_TIME desc;
+	</select>
+	<!-- 获取临时反馈 -->
+	<select id="queryLastestTempReply" resultType="com.css.app.db.business.entity.ReplyExplain">
 		select top 1 * from DB_REPLY_EXPLAIN where RE_VERSION = 0
 		<if test="userId != null and userId != ''">
 			and USER_ID= #{userId}

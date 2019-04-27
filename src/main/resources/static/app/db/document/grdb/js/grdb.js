@@ -12,7 +12,36 @@ var pageModule = function(){
                	 return rowdata.banjianNumber;
                 }},
                 {display:"局内状态",name:"statusName",width:"10%",align:"center",render:function(rowdata,n){
+                	var statusName="";
                	 	var bgColor="#FF6600";
+               	 	if(rowdata.docStatus==3){
+	               	 	statusName="退回修改";
+	               		bgColor="rgba(240, 96, 0, 1)";
+	           	 		if(rowdata.dealUserName){
+	           	 			statusName="待"+dealUserName+"修改";
+	           	 		}
+               	 	}else if(rowdata.docStatus==5){
+	               	 	statusName="待落实";
+	               	 	bgColor="rgba(240, 96, 0, 1)";
+	           	 		if(rowdata.dealUserName){
+	           	 			statusName="待"+dealUserName+"落实";
+	           	 		}
+               	 	}else if(rowdata.docStatus==7){
+	               	 	statusName="待审批";
+	               	 	bgColor="rgba(60, 123, 255, 1)";
+	           	 		if(rowdata.dealUserName){
+	           	 			statusName="待"+dealUserName+"审批";
+	           	 		}
+               	 	}else if(rowdata.docStatus==9){
+	               	 	statusName="办理中";
+	               	 	bgColor="rgba(43, 170, 129, 1)";
+	           	 		if(rowdata.dealUserName){
+	           	 			statusName=dealUserName+"办理中";
+	           	 		}
+               	 	}else if(rowdata.docStatus==10){
+	               	 	statusName="建议办结";
+	               	 	bgColor="rgba(153, 153, 153, 1)";
+               	 	}
   				  	return '<div title="'+rowdata.statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+rowdata.statusNam+'</div>';
                 }},
                 {display:"办件标题",name:"docTitle",width:"13%",align:"left",render:function(rowdata){

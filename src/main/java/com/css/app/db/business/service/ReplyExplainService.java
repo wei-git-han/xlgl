@@ -31,4 +31,8 @@ public interface ReplyExplainService {
 	void saveReply(String subId,String infoId,String userId,String userName,String teamId,String replyContent,String subDeptId,String subDeptName);
 	
 	int updateShowFlag(String subId);
+	//查询所有分支局的反馈
+	List<ReplyExplain> queryAllLatestReply(String infoId);
+	//查询某分支局的反馈
+	List<ReplyExplain> querySubLatestReply(String infoId,String subId);
 }

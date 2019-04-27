@@ -75,5 +75,15 @@ public class ReplyExplainServiceImpl implements ReplyExplainService {
 	public int updateShowFlag(String subId) {
 		return replyExplainDao.updateShowFlag(subId);
 	}
+
+	@Override
+	public List<ReplyExplain> queryAllLatestReply(String infoId) {
+		return replyExplainDao.queryAllLatestReply(infoId);
+	}
+
+	@Override
+	public List<ReplyExplain> querySubLatestReply(String infoId, String subId) {
+		return replyExplainDao.querySubLatestReply(infoId, subId);
+	}
 	
 }

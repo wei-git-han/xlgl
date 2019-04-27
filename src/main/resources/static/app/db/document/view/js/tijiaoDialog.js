@@ -1,7 +1,9 @@
 var deptTreeUrl = {"url":"/app/base/user/tree","dataType":"text"}; //部门树
 var sureUrl = {"url":"/app/db/subdocinfo/submitOperation","dataType":"text"}; //保存
+var sendUrl = {"url":"/app/db/subdocinfo/sendOperation","dataType":"text"}; //保存
 var subId=getUrlParam("subId")||""; //子分支主id
 var replyContent=getUrlParam2("replyContent")||""; //文件来源
+var cbrFlag=getUrlParam("cbrFlag")||""; //是否是承办人
 var userId;
 var userName;
 
@@ -42,23 +44,40 @@ var pageModule = function(){
 	var initother = function(){
 		//确定
 		$("#sure").click(function(){
-			$ajax({
-				url:sureUrl,
-				data:{subId:subId,userName:userName,userId:userId,replyContent:replyContent},
-				success:function(data){
-					newbootbox.newdialogClose("zhuanbanDialog");
-					if(data.result=="success"){
-						newbootbox.alert("提交成功！").done(function(){
-							$("#iframe1",window.top.document).attr("src","/app/db/document/grdb/html/grdb.html");
-						});
-					}else{
-						newbootbox.alert("提交失败！");
+			if(isCbr && isCbr == 1){
+				$ajax({
+					url:sureUrl,
+					data:{subId:subId,userName:userName,userId:userId},
+					success:function(data){
+						newbootbox.newdialogClose("zhuanbanDialog");
+						if(data.result=="success"){
+							newbootbox.alert("提交成功！").done(function(){
+								$("#iframe1",window.top.document).attr("src","/app/db/document/grdb/html/grdb.html");
+							});
+						}else{
+							newbootbox.alert("提交失败！");
+						}
 					}
-				}
-			})
+				})
+			}else{
+				$ajax({
+					url:sendUrl,
+					data:{subId:subId,userName:userName,userId:userId,replyContent:replyContent},
+					success:function(data){
+						newbootbox.newdialogClose("zhuanbanDialog");
+						if(data.result=="success"){
+							newbootbox.alert("提交成功！").done(function(){
+								$("#iframe1",window.top.document).attr("src","/app/db/document/grdb/html/grdb.html");
+							});
+						}else{
+							newbootbox.alert("提交失败！");
+						}
+					}
+				})
+			}
 		});
 		
-		//关不
+		//关闭
 		$("#close").click(function(){
 			newbootbox.newdialogClose("tijiaoDialog");
 		})

@@ -8,7 +8,23 @@
 	</select>
 
 	<select id="queryList" resultType="com.css.app.db.business.entity.ApprovalOpinion">
-		select * from DB_APPROVAL_OPINION 
+		select * from DB_APPROVAL_OPINION where 1=1
+		<if test="userId != null and userId != ''">
+			and USER_ID= #{userId}
+		</if>
+		<if test="noUser != null and noUser != ''">
+			and USER_ID != #{noUser}
+		</if>
+		<if test="subId != null and subId != ''">
+			and SUB_ID= #{subId}
+		</if>
+		<if test="showFlag != null and showFlag != ''">
+			and SHOW_FLAG= #{showFlag}
+		</if>
+		<if test="teamId != null and teamId != ''">
+			and REPLY_TEAM_ID= #{teamId}
+		</if>
+		order by CREATED_TIME
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>

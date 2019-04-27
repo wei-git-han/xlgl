@@ -458,7 +458,7 @@ ul{
 
 .timelinesview>.timelinesheys{
 	position: relative;
-	padding-bottom:10px;
+	/* padding-bottom:10px; */
 }
 .timelinesview>.timelinesheys::before{
     content: '';
@@ -471,7 +471,7 @@ ul{
     margin-left: -10px;
 }
 .timelinesview>.timelinesheys:last-child::before{
-   background: none;
+   /* background: none; */
 }
 
 .timelinesview > .timelinesheys .timeline-user {
@@ -573,7 +573,7 @@ ul{
 }
 .listfj a{
 	color:#999;
-	font-size:16px;
+	font-size:14px;
 	margin-right:20px;
 	text-decoration:underline;
 }
@@ -820,4 +820,15 @@ ul{
 	color:#aaa;
 	font-size:15px;
 	cursor:pointer
+}
+
+.zhankaiwrap{
+	width: 100%;
+	text-align: right;
+	padding-top: 10px;
+	padding-right:10px;
+	padding-bottom:10px;
+}
+.zhankaiwrap a{
+	text-decoration:underline;
 }

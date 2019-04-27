@@ -87,6 +87,15 @@ public class SubDocInfoController {
 		//查询列表数据
 		PageHelper.startPage(page, pagesize);
 		List<SubDocInfo> subDocInfoList = subDocInfoService.queryList(map);
+		for (SubDocInfo subDocInfo : subDocInfoList) {
+			//当前审核人
+			SubDocTracking latestRecord = subDocTrackingService.queryLatestRecord(subDocInfo.getId());
+			if(latestRecord != null) {
+				if(!StringUtils.equals(loginUserId, latestRecord.getReceiverId())) {
+					subDocInfo.setDealUserName(latestRecord.getReceiverName());
+				}
+			}
+		}
 		GwPageUtils pageUtil = new GwPageUtils(subDocInfoList);
 		Response.json(pageUtil);
 	}
@@ -115,6 +124,15 @@ public class SubDocInfoController {
 		//查询列表数据
 		PageHelper.startPage(page, pagesize);
 		List<SubDocInfo> subDocInfoList = subDocInfoService.queryPersonList(map);
+		for (SubDocInfo subDocInfo : subDocInfoList) {
+			//当前审核人
+			SubDocTracking latestRecord = subDocTrackingService.queryLatestRecord(subDocInfo.getId());
+			if(latestRecord != null) {
+				if(!StringUtils.equals(loginUserId, latestRecord.getReceiverId())) {
+					subDocInfo.setDealUserName(latestRecord.getReceiverName());
+				}
+			}
+		}
 		GwPageUtils pageUtil = new GwPageUtils(subDocInfoList);
 		Response.json(pageUtil);
 	}
@@ -306,9 +324,11 @@ public class SubDocInfoController {
 		//分支文件更新完成审批标识
 		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
 		if(subDocInfo != null) {
+			subDocInfo.setDocStatus(DbDocStatusDefined.BAN_LI_ZHONG);
 			subDocInfo.setFinishFlag("1");
 			subDocInfoService.update(subDocInfo);
 		}
+		Response.json("result", "success");
 	}
 	
 	private void submitRelation(String subId,String userName,String userId) {

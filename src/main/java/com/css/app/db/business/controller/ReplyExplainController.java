@@ -12,9 +12,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.css.app.db.business.entity.ApprovalOpinion;
+import com.css.app.db.business.entity.ReplyAttac;
 import com.css.app.db.business.entity.ReplyExplain;
 import com.css.app.db.business.entity.SubDocInfo;
+import com.css.app.db.business.service.ApprovalOpinionService;
 import com.css.app.db.business.service.ReplyAttacService;
 import com.css.app.db.business.service.ReplyExplainService;
 import com.css.app.db.business.service.SubDocInfoService;
@@ -41,16 +45,146 @@ public class ReplyExplainController {
 	private ReplyAttacService replyAttacService;
 	@Autowired
 	private SubDocInfoService subDocInfoService;
+	@Autowired
+	private ApprovalOpinionService approvalOpinionService;
 	
 	/**
-	 * 列表
+	 * 获取某个分支局反馈
+	 * @param infoId 主文件id
+	 * @param subId 分支局id
 	 */
 	@ResponseBody
-	@RequestMapping("/list")
-	public void list(Integer page, Integer limit){
-		Map<String, Object> map = new HashMap<>();	
-		List<ReplyExplain> dbReplyExplainList = replyExplainService.queryList(map);	
-		Response.json(dbReplyExplainList);
+	@RequestMapping("/subReplyList")
+	public void subReplyList(String infoId,String subId){
+		JSONArray jsonArray = new JSONArray();
+		if(StringUtils.isNotBlank(infoId) && StringUtils.isNotBlank(subId)) {
+			//承办人
+			SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+			if(subDocInfo != null) {
+				String cbrId=subDocInfo.getUndertaker();
+				if(StringUtils.isNotBlank(cbrId)) {
+					List<ReplyExplain> dbReplyExplainList = replyExplainService.querySubLatestReply(infoId, subId);
+					for (ReplyExplain replyExplain : dbReplyExplainList) {
+						JSONObject json=new JSONObject();
+						String teamId=replyExplain.getTeamId();
+						json.put("cbrId", cbrId);
+						json.put("cbrName", subDocInfo.getUndertakerName());
+						json.put("teamId", teamId);
+						json.put("content",replyExplain.getReplyContent());
+						json.put("updateTime",replyExplain.getCreatedTime());
+						//附件
+						Map<String, Object> map = new HashMap<>();
+						map.put("teamId", teamId);
+						map.put("subId", subId);
+						List<ReplyAttac> attchList = replyAttacService.queryList(map);
+						json.put("attchList",attchList);
+						/*//是否有审批详情，有则显示“展开”，否则不显示
+						Map<String, Object> opinionMap = new HashMap<>();
+						map.put("subId", subId);
+						map.put("teamId", teamId);
+						map.put("noUser", cbrId);
+						List<ApprovalOpinion> queryList = approvalOpinionService.queryList(opinionMap);
+						if(queryList!=null && queryList.size()>0) {
+							json.put("showZhankai","1");
+						}else {
+							json.put("showZhankai","0");
+						}*/
+						Map<String, Object> opMap = new HashMap<>();
+						opMap.put("subId", subId);
+						opMap.put("teamId", teamId);
+						List<ApprovalOpinion> opinionList = approvalOpinionService.queryList(map);
+						if(opinionList != null && opinionList.size()>0) {
+							json.put("cuowei","1");
+							json.put("opinionList",opinionList);
+						}else {
+							json.put("cuowei","0");
+						}
+						//未完成审批的默认展开标识
+						if(StringUtils.equals("1", replyExplain.getShowFlag())) {
+							json.put("show","0");
+						}else {
+							json.put("show","1");
+						}
+						jsonArray.add(json);
+					}
+				}
+			}
+		}
+		Response.json(jsonArray);
+	}
+	
+	/**
+	 * 获取所有分支局反馈
+	 * @param infoId 主文件id
+	 */
+	@ResponseBody
+	@RequestMapping("/allReplyList")
+	public void allReplyList(String infoId){
+		JSONArray jsonArray = new JSONArray();
+		if(StringUtils.isNotBlank(infoId)) {
+			List<ReplyExplain> dbReplyExplainList = replyExplainService.queryAllLatestReply(infoId);
+			for (ReplyExplain replyExplain : dbReplyExplainList) {
+				String subId=replyExplain.getSubId();
+				SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+				if(subDocInfo != null) {
+					String cbrId=subDocInfo.getUndertaker();
+					if(StringUtils.isNotBlank(cbrId)) {
+						JSONObject json=new JSONObject();
+						String teamId=replyExplain.getTeamId();
+						json.put("cbrId", cbrId);
+						json.put("cbrName", subDocInfo.getUndertakerName());
+						json.put("subId", subId);
+						json.put("teamId", teamId);
+						json.put("content",replyExplain.getReplyContent());
+						json.put("updateTime",replyExplain.getCreatedTime());
+						//附件
+						Map<String, Object> map = new HashMap<>();
+						map.put("teamId", teamId);
+						map.put("subId", subId);
+						List<ReplyAttac> attchList = replyAttacService.queryList(map);
+						json.put("attchList",attchList);
+						//是否有审批详情，有则显示“展开”，否则不显示
+						Map<String, Object> opinionMap = new HashMap<>();
+						opinionMap.put("subId", subId);
+						opinionMap.put("teamId", teamId);
+						opinionMap.put("noUser", cbrId);
+						List<ApprovalOpinion> queryList = approvalOpinionService.queryList(opinionMap);
+						if(queryList!=null && queryList.size()>0) {
+							json.put("showZhankai","1");
+						}else {
+							json.put("showZhankai","0");
+						}
+						Map<String, Object> opMap = new HashMap<>();
+						opMap.put("subId", subId);
+						opMap.put("teamId", teamId);
+						List<ApprovalOpinion> opinionList = approvalOpinionService.queryList(map);
+						if(opinionList != null && opinionList.size()>0) {
+							json.put("cuowei","1");
+							json.put("opinionList",opinionList);
+						}else {
+							json.put("cuowei","0");
+						}
+						jsonArray.add(json);
+					}
+				}
+			}
+		}
+		Response.json(jsonArray);
+	}
+	
+	/**
+	 * 获取某个反馈的审批意见
+	 * @param subId 分局主id
+	 * @param teamId 某个反馈
+	 */
+	@ResponseBody
+	@RequestMapping("/getOpinion")
+	public void getOpinion(String subId,String teamId) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("subId", subId);
+		map.put("teamId", teamId);
+		List<ApprovalOpinion> queryList = approvalOpinionService.queryList(map);
+		Response.json(queryList);
 	}
 	
 	/**

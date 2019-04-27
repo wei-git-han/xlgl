@@ -36,8 +36,7 @@ public class SubDocInfo implements Serializable {
 	//完成审批表示，用来控制多轮反馈
 	private String finishFlag ="0";
 /*----------------------------以下字段只用来列表接收值用--------------start----------------------*/	
-	//文件局内状态
-	private String statusName;
+	private String dealUserName;
 	//文件标题
 	private String docTitle;
 	//密级
@@ -137,11 +136,12 @@ public class SubDocInfo implements Serializable {
 	public void setFinishTime(String finishTime) {
 		this.finishTime = finishTime;
 	}
-	public String getStatusName() {
-		return statusName;
+	
+	public String getDealUserName() {
+		return dealUserName;
 	}
-	public void setStatusName(String statusName) {
-		this.statusName = statusName;
+	public void setDealUserName(String dealUserName) {
+		this.dealUserName = dealUserName;
 	}
 	public String getDocTitle() {
 		return docTitle;
