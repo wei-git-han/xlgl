@@ -3,16 +3,19 @@ var getFileUrl = {"url":"/app/db/documentfile/getFile","dataType":"text"};;//左
 var getDataUrl = {"url":"/app/db/documentinfo/info","dataType":"json"};//右侧获取主文件信息
 var getSzpsListUrl = {"url":rootPath +"/documentszps/queryList","dataType":"text"}; //获取首长批示
 var zbjlDataUrl = {"url":"/app/db/documentzbjl/list","dataType":"json"}; //文件转办-转办记录list
-var listUrl = {"url":"/app/db/document/view/data/blfkList.json","dataType":"text"}; //办理反馈list
+var bjDataUrl = {"url":"/app/db/documentbjjl/list","dataType":"text"}; //办结记录
+var delfjUrl = {"url":"/app/db/replyexplain/deleteAttch","dataType":"text"}; //删除办理反馈中的附件
+var downLoadUrl= {"url":"/app/db/replyexplain/downLoad","dataType":"text"}; //下载办理反馈中的附件
+var allReplyListUrl = {"url":"/app/db/replyexplain/allReplyList","dataType":"text"}; //各局办理反馈list
+var opinionUrl = {"url":"/app/db/replyexplain/getOpinion","dataType":"text"}; //各局办理反馈list
 var cbDataUrl = {"url":"/app/db/document/view/data/cbList.json","dataType":"text"}; //文件转办-催办记录list
-var bjDataUrl = {"url":"/app/db/document/view/data/bjList.json","dataType":"text"}; //文件转办-办结记录list
 var uploadFileUrl = "/app/db/documentinfo/uploadFile";//文件上传
 var fileId=getUrlParam("fileId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 
 var pageModule = function(){
 	//文件menu
-	var takeMenufn = function(id){
+	var takeMenufn = function(){
 		$ajax({
 			url:menuUrl,
 			data:{infoId:fileId},
@@ -47,6 +50,20 @@ var pageModule = function(){
 						onClose:function(title){
 						}
 					});
+					
+					//文件列表——附件
+					$("#fjList").html("");
+					$.each(data,function(i,item){
+						$("#fjList").append('<li num="'+i+'" id="fj_'+item.id+'"  data_id="'+item.id+'" formatId="'+item.fileServerFormatId+'" ><a class="'+(i==0?"fjactive":"")+'">'+item.fileName+'</a></li>');
+					});
+					//点击附件名称
+					$("#fjList li").click(function(){
+						$("#fjList>li>a").removeClass("fjactive");
+						$(this).find("a").addClass("fjactive");
+						var clickfileId = $(this).attr("data_id");
+						getFile(clickfileId);
+						$("#tt").tabs("select",parseInt($(this).attr("num")))
+					}); 
 				}
 			}
 		});	
@@ -84,6 +101,7 @@ var pageModule = function(){
 		});	
 	}
 	
+	/*公文信息*/
 	var initdata = function(){
 		$ajax({
 			url:getDataUrl,
@@ -101,35 +119,12 @@ var pageModule = function(){
 		});	
 	}
 	
-	//文件列表——附件
-	var initFjfn = function(){
-		$ajax({
-			url:menuUrl,
-			data:{infoId:fileId},
-			success:function(data){
-				if(data&&data.length>0){
-					$("#fjList").html("");
-					$.each(data,function(i,item){
-						$("#fjList").append('<li num="'+i+'" id="fj_'+item.id+'"  data_id="'+item.id+'" formatId="'+item.fileServerFormatId+'" ><a class="'+(i==0?"fjactive":"")+'">'+item.fileName+'</a></li>');
-					});
-					//点击附件名称
-					$("#fjList li").click(function(){
-						$("#fjList>li>a").removeClass("fjactive");
-						$(this).find("a").addClass("fjactive");
-						var clickfileId = $(this).attr("data_id");
-						getFile(clickfileId);
-						$("#tt").tabs("select",parseInt($(this).attr("num")))
-					}); 
-				}
-			}
-		});	
-	}
 	
 	//办理反馈记录
 	var initblfkList = function(){
 		$ajax({
-			url:listUrl,
- 			data:{fileId:fileId},
+			url:allReplyListUrl,
+ 			data:{infoId:fileId},
 			success:function(data){
 				if(data&&data.length>0){
 					var html1= "";
@@ -140,40 +135,79 @@ var pageModule = function(){
 								'		<i class="icontime"></i>'+
 								'	</div>'+
 								'	<div class="timeline-user">'+
-								'		<span style="color:#999;">'+listdate+'</span>'+
+								/*'		<span style="color:#999;">'+listdate+'</span>'+*/
+								'		<span style="color:#999;">2019-05-01 09:00:00</span>'+
 								'	</div>'+
 								'	<div class="timeline-body">';
-								$.each(o.rows,function(k,b){
 									var borderStyle="";
-									var answerStyle="";
-									var answer = b.answer;
-									var isOK = b.isOK;
-									var isOKobj = "";
-									if(isOK == "1"){
-										isOKobj ="审批通过";
+									var showZhankaiStyle="";
+									var cuoweiStyle="";
+									var showZhankai = o.showZhankai;
+									var cuowei = o.cuowei;
+									if(cuowei && cuowei == "1"){
+										cuoweiStyle = "margin-left:20px!important;"
 									}
-									if(answer !="0"){
-										answerStyle = "margin-left:20px!important;"
-									}
-									if(k>0){
+									if(i>0){
 										borderStyle = "border-top:none;"
 									}
-									html1 += '<div class="timeline-content" style="'+borderStyle+answerStyle+'">'+
-									         '	<div class="listUser"><img src="../images/userh.png" class="listicon"> '+b.uerName+'<span class="isOkFlag">'+isOKobj+'</span></div>';
+									if(showZhankai =="1"){//1展开（有margin）      0不展开
+										showZhankaiStyle = "margin-left:30px!important;"
+									}
+									html1 += '<div class="timeline-content" style="'+borderStyle+'">'+
+									         '	<div class="listUser" data_id="'+o.teamId+'"><img src="../images/userh.png" class="listicon"> '+o.cbrName+'</div>';
 									html1 += '	<div class="listContent">';
-									html1 += '		<span>'+b.content+'</span><span>'+b.createdTime+'</span><div class="listfj">';
-									$.each(b.fj,function(s,t){
-										html1 += '		<a id="'+t.fjId+'">'+t.fjName+'</a>';
+									html1 += '		<span>'+o.content+'</span><span>'+o.updateTime+'</span><div class="listfj">';
+									
+									
+									$.each(o.attchList,function(s,t){
+										html1 += '		<div class="fujianwrap"><a class="fujian" id="'+t.id+'" onclick="downloadfn(\''+t.fileServerId+'\')">'+t.fileName+'</a><i title="删除附件" class="fa fa-times-circle delx" data="'+t.id+'"></i></div>';
 									})
-									html1 += '	</div></div>';
-									html1 += '</div>';
-								})
+									html1 += '	</div>';
+									html1 += '	</div>';
+									if(cuowei && cuowei == "1"){
+										html1 +='<div class="zhankaiwrap"><a data_id="'+o.teamId+'" class="zhankai">展开</a>  <i class="fa fa-angle-down" style="color:#5b9bd1"></i></div>'
+									}
+									$.each(o.opinionList,function(s,k){
+										var trackingType = k.trackingType;
+										var trackingTypeobj = "";
+										if(trackingType == "3"){
+											trackingTypeobj ="返回修改";
+										}else{
+											trackingTypeobj ="审批通过";
+										}
+										
+										html1 += '<div class="timeline-content '+o.teamId+'" style="'+borderStyle+cuoweiStyle+'display:none;">'+
+										         '	<div class="listUser" data_id="'+k.id+'"><img src="../images/userh.png" class="listicon"> '+k.userName+'<span class="isOkFlag">'+trackingTypeobj+'</span></div>';
+										html1 += '	<div class="listContent">';
+										html1 += '		<span>'+k.opinionContent+'</span><span>'+k.createdTime+'</span>';
+										html1 += '	</div>';
+										html1 += '</div>';
+									})
+									html1 +='	</div>';
 								
-								html1 +='	</div>'+
-										'</div>'
+								
+								
+								
+								html1 +='	</div>'
 						$(".timelinesview").append(html1);
 					})
+				}else{
+					$(".timelinesview").attr("style","padding:0px!important");
 				}
+
+				//展开
+				$(".zhankai").click(function(e){
+					var dataId = $(this).attr("data_id");
+					if($.trim($(this).text()) == "展开"){
+						$("."+dataId).slideDown(500);
+						$(this).text("收起");
+						$(this).siblings().removeClass("fa-angle-down").addClass("fa-angle-up");
+					}else{
+						$("."+dataId).slideUp(500);
+						$(this).text("展开");
+						$(this).siblings().removeClass("fa-angle-up").addClass("fa-angle-down");
+					}
+				});
 			}
 		})
 	}
@@ -228,7 +262,7 @@ var pageModule = function(){
 	var initbjfn = function(){
 		$ajax({
 			url:bjDataUrl,
-			data:{fileId:fileId},
+			data:{infoId:fileId},
 			success:function(data){
 				if(data&&data.length>0){
 					$("#jybjrecord").html("");
@@ -252,6 +286,30 @@ var pageModule = function(){
 		$("#goback").click(function(){
 			skip();
 		});
+		
+		//办理反馈-添加附件
+		var o1 = $("#file1").createfile({
+			//initdata:filedata1,
+			yn:true,//true 多个  false 单个
+			view:"view1",//view1 列表视图  view2 图片视图
+			name:"file",// 后端获取文件的名称
+			type:["ofd","pdf","doc","docx","wps"],
+			maxsize:500*1024*1024,
+			cssStyle:"width:0px;height:0px"
+		});
+
+		
+		//查看附件
+		$("#showfj").click(function(){
+			$(".filelist").toggle();
+		});
+		
+		$("body").click(function(e){
+			if($(e.target).hasClass("showfj") || $(e.target).parents("div").hasClass("filelist")){
+				return;
+			};
+			$(".filelist").hide();
+		});
 	}
 		
 	return{
@@ -259,7 +317,6 @@ var pageModule = function(){
 		initControl:function(){
 			takeMenufn();
 			initdata();
-			initFjfn();
 			initblfkList();
 			initps();
 			initzbjlfn();
@@ -297,4 +354,17 @@ function showXQ(id){
 		classed:"cjDialog",
 		url:"/app/db/document/view/html/psDialog.html?fileId="+id,
 	})
+}
+
+//下载
+function downloadfn(fileServerId){
+	$ajax({
+		url:downLoadUrl,
+		data:{fileId:fileServerId},
+	    success:function(data){
+	    	if(data.url != null && data.url != ''){
+	    		window.location.href = data.url;
+	    	}
+	    }
+	});
 }
