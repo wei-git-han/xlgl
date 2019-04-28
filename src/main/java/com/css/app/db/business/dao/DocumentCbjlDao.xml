@@ -8,14 +8,17 @@
 	</select>
 
 	<select id="queryList" resultType="com.css.app.db.business.entity.DocumentCbjl">
-		select * from DB_DOCUMENT_CBJL where 1=1 
-		<if test="infoId != null">
-			and "INFO_ID" = #{infoId}
+		select * from DB_DOCUMENT_CBJL where 1=1
+		<if test="infoId != null and infoId != ''">
+			and INFO_ID= #{infoId}
 		</if>
+		<if test="finishFlag != null and finishFlag != ''">
+			and FINISH_FLAG= #{finishFlag}
+		</if>
+			order by CREATED_TIME
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
-		order by CREATED_TIME desc
 	</select>
 	
  	<select id="queryTotal" resultType="int">
@@ -31,7 +34,10 @@
 			"USER_NAME", 
 			"URGE_CONTENT", 
 			"CREATED_TIME", 
-			"FINISH_FLAG"
+			"FINISH_FLAG", 
+			"CBR_ID", 
+			"CBR_NAME", 
+			"CB_TIME"
 		)
 		values
 		(
@@ -41,7 +47,10 @@
 			#{userName}, 
 			#{urgeContent}, 
 			#{createdTime}, 
-			#{finishFlag}
+			#{finishFlag}, 
+			#{cbrId}, 
+			#{cbrName}, 
+			#{cbTime}
 		)
 	</insert>
 	 
@@ -53,7 +62,10 @@
 			<if test="userName != null">"USER_NAME" = #{userName}, </if>
 			<if test="urgeContent != null">"URGE_CONTENT" = #{urgeContent}, </if>
 			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
-			<if test="finishFlag != null">"FINISH_FLAG" = #{finishFlag}</if>
+			<if test="finishFlag != null">"FINISH_FLAG" = #{finishFlag}, </if>
+			<if test="cbrId != null">"CBR_ID" = #{cbrId}, </if>
+			<if test="cbrName != null">"CBR_NAME" = #{cbrName}, </if>
+			<if test="cbTime != null">"CB_TIME" = #{cbTime}</if>
 		</set>
 		where ID = #{id}
 	</update>

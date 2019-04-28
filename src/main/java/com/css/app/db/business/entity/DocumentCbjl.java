@@ -10,7 +10,7 @@ import java.util.Date;
  * 
  * @author 中软信息系统工程有限公司
  * @email 
- * @date 2019-04-18 16:40:16
+ * @date 2019-04-28 16:43:15
  */
 public class DocumentCbjl implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -28,7 +28,13 @@ public class DocumentCbjl implements Serializable {
 	//催办时间
 	private Date createdTime;
 	//是否结束（0：未结束；1：已结束）
-	private Integer finishFlag;
+	private Integer finishFlag = 0;
+	//承办人id
+	private String cbrId;
+	//响应的承办人
+	private String cbrName;
+	//响应时间
+	private Date cbTime;
 
 	/**
 	 * 设置：唯一标识
@@ -113,5 +119,41 @@ public class DocumentCbjl implements Serializable {
 	 */
 	public Integer getFinishFlag() {
 		return finishFlag;
+	}
+	/**
+	 * 设置：承办人id
+	 */
+	public void setCbrId(String cbrId) {
+		this.cbrId = cbrId;
+	}
+	/**
+	 * 获取：承办人id
+	 */
+	public String getCbrId() {
+		return cbrId;
+	}
+	/**
+	 * 设置：响应的承办人
+	 */
+	public void setCbrName(String cbrName) {
+		this.cbrName = cbrName;
+	}
+	/**
+	 * 获取：响应的承办人
+	 */
+	public String getCbrName() {
+		return cbrName;
+	}
+	/**
+	 * 设置：响应时间
+	 */
+	public void setCbTime(Date cbTime) {
+		this.cbTime = cbTime;
+	}
+	/**
+	 * 获取：响应时间
+	 */
+	public Date getCbTime() {
+		return cbTime;
 	}
 }

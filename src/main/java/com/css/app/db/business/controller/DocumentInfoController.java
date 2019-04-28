@@ -21,8 +21,12 @@ import com.css.addbase.AppConfig;
 import com.css.addbase.FileBaseUtil;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.addbase.suwell.OfdTransferUtil;
+import com.css.app.db.business.entity.DocumentBjjl;
+import com.css.app.db.business.entity.DocumentCbjl;
 import com.css.app.db.business.entity.DocumentFile;
 import com.css.app.db.business.entity.DocumentInfo;
+import com.css.app.db.business.service.DocumentBjjlService;
+import com.css.app.db.business.service.DocumentCbjlService;
 import com.css.app.db.business.service.DocumentFileService;
 import com.css.app.db.business.service.DocumentInfoService;
 import com.css.app.db.config.entity.AdminSet;
@@ -61,6 +65,10 @@ public class DocumentInfoController {
 	private RoleSetService roleSetService;
 	@Autowired
 	private BaseAppUserService baseAppUserService;
+	@Autowired
+	private DocumentCbjlService documentCbjlService;
+	@Autowired
+	private DocumentBjjlService documentBjjlService;
 	
 	
 	/**
@@ -149,7 +157,7 @@ public class DocumentInfoController {
 		Response.json(pageUtil);
 	}
 	/**
-	 * 登记录入列表查询
+	 * 办理反馈列表查询
 	 */
 	@ResponseBody
 	@RequestMapping("/replyList")
@@ -271,5 +279,59 @@ public class DocumentInfoController {
 		jo.put("userId", CurrentUser.getUserId());
 		jo.put("userName", CurrentUser.getUsername());
 		Response.json(jo);
+	}
+	
+	/**
+	 * 部管理员添加催办
+	 * @param textarea 催办内容
+	 * @param infoId 主文件id
+	 */
+	@ResponseBody
+	@RequestMapping("/saveCuiBan")
+	public void saveCuiBan(String textarea,String infoId){
+		//保存催办历史
+		DocumentCbjl cb=new DocumentCbjl();
+		cb.setUrgeContent(textarea);
+		cb.setInfoId(infoId);
+		documentCbjlService.save(cb);
+		//主文件标识催办
+		DocumentInfo info=documentInfoService.queryObject(infoId);
+		info.setCuibanFlag("1");
+		documentInfoService.update(info);
+		Response.json("result", "success");
+	}
+	
+	/**
+	 * 催办记录列表
+	 * @param infoId 主文件id
+	 */
+	@ResponseBody
+	@RequestMapping("/getCuiBanlist")
+	public void getCuiBanlist(String infoId){
+		List<DocumentCbjl> list=null;
+		if(StringUtils.isNotBlank(infoId)) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("infoId", infoId);
+			//查询列表数据
+			list = documentCbjlService.queryList(map);
+		}
+		Response.json(list);
+	}
+	
+	/**
+	 * 办结记录列表
+	 * @param infoId
+	 */
+	@ResponseBody
+	@RequestMapping("/getBanJieList")
+	public void getBanJieList(String infoId){
+		List<DocumentBjjl> bjjlList=null;
+		if(StringUtils.isNotBlank(infoId)) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("infoId", infoId);
+			//查询列表数据
+			bjjlList = documentBjjlService.queryList(map);
+		}
+		Response.json(bjjlList);
 	}
 }

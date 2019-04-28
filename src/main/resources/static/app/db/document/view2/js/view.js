@@ -10,7 +10,7 @@ var saveUrl = {"url":"/app/db/replyexplain/save","dataType":"text"}; //办理反
 //var Url = {"url":"/app/db/replyexplain/edit","dataType":"text"}; //办理反馈保存
 var luoShiUrl = {"url":"/app/db/subdocinfo/luoShiOperation","dataType":"text"}; //常态落实操作
 var banjieUrl = {"url":"/app/db/subdocinfo/banJieOperation","dataType":"text"}; //办结操作
-var bjDataUrl = {"url":"/app/db/documentbjjl/list","dataType":"text"}; //办结记录
+var bjDataUrl = {"url":"/app/db/documentinfo/getBanJieList","dataType":"text"}; //办结记录
 var delfjUrl = {"url":"/app/db/replyexplain/deleteAttch","dataType":"text"}; //删除办理反馈中的附件
 var downLoadUrl= {"url":"/app/db/replyexplain/downLoad","dataType":"text"}; //下载办理反馈中的附件
 

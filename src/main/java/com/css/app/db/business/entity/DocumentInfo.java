@@ -46,7 +46,7 @@ public class DocumentInfo implements Serializable {
 	//已读首长ids
 	private String szReadIds;
 	//催办标识
-	private String cuibanFlag;
+	private String cuibanFlag = "0";
 	//文件类型id
 	private String docTypeId;
 	//文件类型

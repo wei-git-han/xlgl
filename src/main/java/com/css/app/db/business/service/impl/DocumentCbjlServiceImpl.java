@@ -31,12 +31,12 @@ public class DocumentCbjlServiceImpl implements DocumentCbjlService {
 	}
 	
 	@Override
-	public void save(DocumentCbjl dbDocumentCbjl){
-		dbDocumentCbjl.setId(UUIDUtils.random());
-		dbDocumentCbjl.setCreatedTime(new Date());
-		dbDocumentCbjl.setUserId(CurrentUser.getUserId());
-		dbDocumentCbjl.setUserName(CurrentUser.getUsername());
-		documentCbjlDao.save(dbDocumentCbjl);
+	public void save(DocumentCbjl documentCbjl){
+		documentCbjl.setId(UUIDUtils.random());
+		documentCbjl.setUserId(CurrentUser.getUserId());
+		documentCbjl.setUserName(CurrentUser.getUsername());
+		documentCbjl.setCreatedTime(new Date());
+		documentCbjlDao.save(documentCbjl);
 	}
 	
 	@Override

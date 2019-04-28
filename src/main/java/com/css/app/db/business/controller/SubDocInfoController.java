@@ -16,12 +16,14 @@ import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.db.business.entity.DocumentBjjl;
+import com.css.app.db.business.entity.DocumentCbjl;
 import com.css.app.db.business.entity.DocumentInfo;
 import com.css.app.db.business.entity.ReplyExplain;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.entity.SubDocTracking;
 import com.css.app.db.business.service.ApprovalOpinionService;
 import com.css.app.db.business.service.DocumentBjjlService;
+import com.css.app.db.business.service.DocumentCbjlService;
 import com.css.app.db.business.service.DocumentInfoService;
 import com.css.app.db.business.service.ReplyExplainService;
 import com.css.app.db.business.service.SubDocInfoService;
@@ -66,6 +68,8 @@ public class SubDocInfoController {
 	private ReplyExplainService replyExplainService;
 	@Autowired
 	private ApprovalOpinionService approvalOpinionService;
+	@Autowired
+	private DocumentCbjlService documentCbjlService;
 	/**
 	 * 局内待办列表
 	 */
@@ -149,7 +153,7 @@ public class SubDocInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/buttonParam")
-	public void info( String subId){
+	public void buttonParam( String subId){
 		Integer docStatus=0;//1:待转办；3：退回修改；5：待落实；7：待审批；9：办理中；11：建议办结;
 		String roleType = DbDefined.ROLE_6;//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
 		boolean isCheckUser=false;//是否是当前办理人
@@ -362,13 +366,19 @@ public class SubDocInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/finishOperation")
-	public void finishOperation(String subId,String replyContent){
+	public void finishOperation(String infoId,String subId,String replyContent){
+		//将临时反馈变为发布
+		Map<String, Object> map =new HashMap<>();
+		map.put("subId", subId);
+		map.put("userId", CurrentUser.getUserId());
+		map.put("showFlag", "0");
+		ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
+		if(tempReply!=null) {
+			tempReply.setReVersion("1");
+			replyExplainService.update(tempReply);
+		}
 		//保存意见
 		approvalOpinionService.saveOpinion(subId, replyContent, "2");
-		//反馈对他局和部可见
-		replyExplainService.updateShowFlag(subId);
-		//意见对他局和部可见
-		approvalOpinionService.updateShowFlag(subId);
 		//分支文件更新完成审批标识
 		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
 		if(subDocInfo != null) {
@@ -377,6 +387,38 @@ public class SubDocInfoController {
 			subDocInfo.setUpdateTime(new Date());
 			subDocInfoService.update(subDocInfo);
 		}
+		//催办完成
+		DocumentInfo info = documentInfoService.queryObject(infoId);
+		if(StringUtils.equals("1", info.getCuibanFlag())){
+			//催办记录添加响应承办人，并标识完成
+			Map<String, Object> repMap = new HashMap<>();
+			repMap.put("subId", subId);
+			repMap.put("showFlag", "0");
+			repMap.put("sort", "asc");
+			List<ReplyExplain> list = replyExplainService.queryList(repMap);
+			if(list != null && list.size()>0) {
+				ReplyExplain explain = list.get(0);
+				Map<String, Object> cuiBanMap = new HashMap<>();
+				cuiBanMap.put("infoId", infoId);
+				cuiBanMap.put("finishFlag", 0);
+				List<DocumentCbjl> cuibanList = documentCbjlService.queryList(cuiBanMap);
+				if(cuibanList != null && cuibanList.size()>0) {
+					DocumentCbjl cbjl = cuibanList.get(0);
+					cbjl.setCbrId(explain.getUserId());
+					cbjl.setCbrName(explain.getUserName());
+					cbjl.setCbTime(new Date());
+					cbjl.setFinishFlag(1);
+					documentCbjlService.update(cbjl);
+				}
+			}
+			//主记录不标识催办
+			info.setCuibanFlag("0");
+			documentInfoService.update(info);
+		}
+		//反馈对他局和部可见(顺序必须放标识催办完成后边，因为showFlag的值作为参数进行了查询)
+		replyExplainService.updateShowFlag(subId);
+		//意见对他局和部可见
+		approvalOpinionService.updateShowFlag(subId);
 		Response.json("result", "success");
 	}
 	

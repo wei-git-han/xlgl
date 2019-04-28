@@ -345,7 +345,6 @@ public class DocumentSzInfoController {
 		//保存催办历史
 		DocumentCbjl cb=new DocumentCbjl();
 		cb.setUrgeContent(textarea);
-		cb.setFinishFlag(0);
 		cb.setInfoId(id);
 		documentCbjlService.save(cb);
 		Response.json("result", "success");
