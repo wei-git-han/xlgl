@@ -95,6 +95,9 @@ public class SubDocInfoController {
 					subDocInfo.setDealUserName(latestRecord.getReceiverName());
 				}
 			}
+			if(StringUtils.equals("1", subDocInfo.getFinishFlag()) && subDocInfo.getDocStatus()<10) {
+				subDocInfo.setDealUserName(subDocInfo.getUndertakerName());
+			}
 		}
 		GwPageUtils pageUtil = new GwPageUtils(subDocInfoList);
 		Response.json(pageUtil);
@@ -132,6 +135,9 @@ public class SubDocInfoController {
 					subDocInfo.setDealUserName(latestRecord.getReceiverName());
 				}
 			}
+			if(StringUtils.equals("1", subDocInfo.getFinishFlag()) && subDocInfo.getDocStatus()<10) {
+				subDocInfo.setDealUserName(subDocInfo.getUndertakerName());
+			}
 		}
 		GwPageUtils pageUtil = new GwPageUtils(subDocInfoList);
 		Response.json(pageUtil);
@@ -159,15 +165,22 @@ public class SubDocInfoController {
 		}
 		if(StringUtils.isNotBlank(subId)){
 			//获取文件状态
-			SubDocInfo dbSubDocInfo = subDocInfoService.queryObject(subId);
-			if(dbSubDocInfo != null) {
-				docStatus = dbSubDocInfo.getDocStatus();
-				if(StringUtils.isNotBlank(dbSubDocInfo.getUndertaker())) {
+			SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+			if(subDocInfo != null) {
+				docStatus = subDocInfo.getDocStatus();
+				if(StringUtils.isNotBlank(subDocInfo.getUndertaker())) {
 					isUndertaken=true;
-					if(StringUtils.equals(loginUserId, dbSubDocInfo.getUndertaker())) {
+					if(StringUtils.equals(loginUserId, subDocInfo.getUndertaker())) {
 						isUndertaker=true;
 					}
+					//审批完成以后，新一轮开启的审核人
+					if(DbDocStatusDefined.BAN_LI_ZHONG==docStatus && StringUtils.equals("1", subDocInfo.getFinishFlag())) {
+						if(StringUtils.equals(loginUserId,subDocInfo.getUndertaker())) {
+							isCheckUser=true;
+						}
+					}
 				}
+				
 			}
 			//当前审核人
 			SubDocTracking latestRecord = subDocTrackingService.queryLatestRecord(subId);
@@ -176,6 +189,7 @@ public class SubDocInfoController {
 					isCheckUser=true;
 				}
 			}
+			
 		}
 		JSONObject json=new JSONObject();
 		json.put("docStatus", docStatus);
@@ -231,6 +245,7 @@ public class SubDocInfoController {
 				subInfo.setDocStatus(DbDocStatusDefined.BAN_JIE);
 				bjjl.setContent("自动办结");
 			}
+			subInfo.setUpdateTime(new Date());
 			subDocInfoService.update(subInfo);
 			//添加办结记录
 			bjjl.setUserId(loginUserId);
@@ -260,7 +275,7 @@ public class SubDocInfoController {
 			info.setStatus(3);
 			documentInfoService.update(info);
 			//各分支文件变为常态落实
-			subDocInfoService.updateDocStatus(DbDocStatusDefined.CHANG_TAI_LUO_SHI, infoId);
+			subDocInfoService.updateDocStatus(DbDocStatusDefined.CHANG_TAI_LUO_SHI, new Date() , infoId);
 			json.put("result", "success");
 		}else {
 			json.put("result", "fail");
@@ -268,6 +283,12 @@ public class SubDocInfoController {
 		Response.json(json);
 	}
 	
+	/**
+	 * 承办人送审批
+	 * @param subId 分支主id
+	 * @param userName 接收人
+	 * @param userId 接收人id
+	 */
 	@ResponseBody
 	@RequestMapping("/submitOperation")
 	public void submitOperation(String subId,String userName,String userId){
@@ -277,11 +298,19 @@ public class SubDocInfoController {
 		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
 		if(subDocInfo != null) {
 			subDocInfo.setFinishFlag("0");
+			subDocInfo.setUpdateTime(new Date());
 			subDocInfoService.update(subDocInfo);
 		}
 		Response.json("result", "success");
 	}
 	
+	/**
+	 * 送审批（含保存意见）
+	 * @param subId 分支主id
+	 * @param userName 接收人
+	 * @param userId 接收人id
+	 * @param replyContent 意见内容
+	 */
 	@ResponseBody
 	@RequestMapping("/sendOperation")
 	public void sendOperation(String subId,String userName,String userId,String replyContent){
@@ -289,9 +318,20 @@ public class SubDocInfoController {
 		this.submitRelation(subId, userName, userId);
 		//保存审批意见
 		approvalOpinionService.saveOpinion(subId, replyContent, "1");
+		//保存最新更新时间
+		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+		if(subDocInfo != null) {
+			subDocInfo.setUpdateTime(new Date());
+			subDocInfoService.update(subDocInfo);
+		}
 		Response.json("result", "success");
 	}
 	
+	/**
+	 * 返回修改操作
+	 * @param subId 分支主id
+	 * @param replyContent 意见内容
+	 */
 	@ResponseBody
 	@RequestMapping("/returnOperation")
 	public void returnOperation(String subId,String replyContent){
@@ -303,6 +343,9 @@ public class SubDocInfoController {
 				this.submitRelation(subId, subDocInfo.getUndertakerName(),subDocInfo.getUndertaker());
 				//保存审批意见
 				approvalOpinionService.saveOpinion(subId, replyContent, "3");
+				//保存最新更新时间
+				subDocInfo.setUpdateTime(new Date());
+				subDocInfoService.update(subDocInfo);
 			}else {
 				json.put("result", "fail");
 			}
@@ -312,6 +355,11 @@ public class SubDocInfoController {
 		Response.json("result", "success");
 	}
 	
+	/**
+	 * 完成审批操作
+	 * @param subId 分支主id
+	 * @param replyContent 意见内容
+	 */
 	@ResponseBody
 	@RequestMapping("/finishOperation")
 	public void finishOperation(String subId,String replyContent){
@@ -326,6 +374,7 @@ public class SubDocInfoController {
 		if(subDocInfo != null) {
 			subDocInfo.setDocStatus(DbDocStatusDefined.BAN_LI_ZHONG);
 			subDocInfo.setFinishFlag("1");
+			subDocInfo.setUpdateTime(new Date());
 			subDocInfoService.update(subDocInfo);
 		}
 		Response.json("result", "success");
@@ -370,7 +419,7 @@ public class SubDocInfoController {
 		ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
 		if(tempReply!=null) {
 			tempReply.setReVersion("1");
+			replyExplainService.update(tempReply);
 		}
-		replyExplainService.update(tempReply);
 	}
 }

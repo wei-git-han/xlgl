@@ -1,5 +1,6 @@
 package com.css.app.db.business.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public interface SubDocInfoDao extends BaseDao<SubDocInfo> {
 	
 	List<SubDocInfo> queryPersonList(Map<String, Object> map);
 	
-	int updateDocStatus(Integer status,String infoId);
+	int updateDocStatus(Integer status,Date updateTime,String infoId);
 	
 	int queryMinDocStatus(String infoId,String subDeptId);
 }

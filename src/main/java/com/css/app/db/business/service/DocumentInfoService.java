@@ -33,4 +33,6 @@ public interface DocumentInfoService {
 	List<Map<String, Object>> queryListByDicType(Map<String, Object> map);
 
 	List<Map<String, Object>> queryListByDicStu(Map<String, Object> map);
+	
+	List<DocumentInfo> queryPersonList(Map<String, Object> map);
 }

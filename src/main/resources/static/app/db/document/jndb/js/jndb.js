@@ -13,8 +13,40 @@ var pageModule = function(){
                 	 return rowdata.banjianNumber;
                  }},
                  {display:"局内状态",name:"statusName",width:"10%",align:"center",render:function(rowdata,n){
-                	 var bgColor="#FF6600";
-   				  	 return '<div title="'+rowdata.statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">待XXX办理</div>';
+                 	var statusName="";
+               	 	var bgColor="";
+               	 	if(rowdata.docStatus==1){
+	               	 	statusName="待转办";
+	               		bgColor="rgba(240, 96, 0, 1)";
+            	 	}else if(rowdata.docStatus==3){
+	               	 	statusName="退回修改";
+	               		bgColor="rgba(240, 96, 0, 1)";
+	           	 		if(rowdata.dealUserName){
+	           	 			statusName="待"+rowdata.dealUserName+"修改";
+	           	 		}
+               	 	}else if(rowdata.docStatus==5){
+	               	 	statusName="待落实";
+	               	 	bgColor="rgba(240, 96, 0, 1)";
+	           	 		if(rowdata.dealUserName){
+	           	 			statusName="待"+rowdata.dealUserName+"落实";
+	           	 		}
+               	 	}else if(rowdata.docStatus==7){
+	               	 	statusName="待审批";
+	               	 	bgColor="rgba(60, 123, 255, 1)";
+	           	 		if(rowdata.dealUserName){
+	           	 			statusName="待"+rowdata.dealUserName+"审批";
+	           	 		}
+               	 	}else if(rowdata.docStatus==9){
+	               	 	statusName="办理中";
+	               	 	bgColor="rgba(43, 170, 129, 1)";
+	           	 		if(rowdata.dealUserName){
+	           	 			statusName=rowdata.dealUserName+"办理中";
+	           	 		}
+               	 	}else if(rowdata.docStatus==10){
+	               	 	statusName="建议办结";
+	               	 	bgColor="rgba(153, 153, 153, 1)";
+               	 	}   				  	
+               	 	return '<div title="'+statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+statusName+'</div>';
                  }},
                  {display:"办件标题",name:"docTitle",width:"15%",align:"left",title:true,render:function(rowdata){
                 	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+rowdata.docTitle+'</a>'
@@ -23,19 +55,19 @@ var pageModule = function(){
                 	 return rowdata.urgencyDegree;
                  }},
                  {display:"批示指示内容",name:"",width:"20%",align:"left",paixu:false,title:true,render:function(rowdata){
-                	 return "且兄对咯我局我空手道可尽快的润滑剂且兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道可尽快的润滑剂";
+                	 return "";
                  }},
                  {display:"督办落实情况",name:"",width:"20%",align:"left",paixu:false,title:true,render:function(rowdata){
-                	 return "且兄对咯我局我空手道可尽快的润滑剂且兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道可尽快的润滑剂";
+                	 return "";
                  }},
                  {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,title:true,render:function(rowdata){
-                	 return "且兄对咯我局我空手道可尽快的润滑剂且兄对咯我局我空手道可尽快的润滑剂且qwokpeidr94u93兄对咯我局我空手道";
+                	 return "";
                  }},
                  {display:"办件分类",name:"docTypeName",width:"10%",align:"left",paixu:false,render:function(rowdata){
                 	 return rowdata.docTypeName;
                  }},
                  {display:"转办时间",name:"createdTime",width:"10%",align:"center",render:function(rowdata){
-                	 return rowdata.createdTime.substring(0,10);
+                	 return rowdata.createdTime.substring(0,16);
                  }},
                  {display:"操作",name:"do",width:"4%",align:"center",render:function(rowdata){
                 	 var caozuo = '';

@@ -49,26 +49,27 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 
 	@Override
 	public List<Map<String, Object>> queryListByYear(Map<String, Object> map) {
-		// TODO Auto-generated method stub
 		return documentInfoDao.queryListByYear(map);
 	}
 
 	@Override
 	public List<Map<String, Object>> queryListByOrgYear(Map<String, Object> map) {
-		// TODO Auto-generated method stub
 		return documentInfoDao.queryListByOrgYear(map);
 	}
 
 	@Override
 	public List<Map<String, Object>> queryListByDicType(Map<String, Object> map) {
-		// TODO Auto-generated method stub
 		return documentInfoDao.queryListByDicType(map);
 	}
 
 	@Override
 	public List<Map<String, Object>> queryListByDicStu(Map<String, Object> map) {
-		// TODO Auto-generated method stub
 		return documentInfoDao.queryListByDicStu(map);
+	}
+
+	@Override
+	public List<DocumentInfo> queryPersonList(Map<String, Object> map) {
+		return documentInfoDao.queryPersonList(map);
 	}
 	
 }

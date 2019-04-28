@@ -12,7 +12,7 @@ var pageModule = function(){
 	var initgrid = function(){
         grid = $("#gridcont").createGrid({
             columns:[
-                 {display:"军委办件号",name:"",width:"15%",align:"left",title:true,render:function(rowdata,n){
+                 {display:"军委办件号",name:"",width:"8%",align:"left",title:true,render:function(rowdata,n){
                 	 return rowdata.banjianNumber;
                  }},
                  {display:"办理状态",name:"",width:"6%",align:"center",render:function(rowdata,n){
@@ -36,19 +36,19 @@ var pageModule = function(){
                  {display:"批示指示内容",name:"",width:"20%",align:"left",paixu:false,title:true,render:function(rowdata){
                 	 return '';
                  }},
-                 {display:"承办单位/人",name:"",width:"13%",align:"left",paixu:false,title:true,render:function(rowdata){
+                 {display:"承办单位/人",name:"",width:"20%",align:"left",paixu:false,title:true,render:function(rowdata){
                 	 return '';
                  }},
                  {display:"办件分类",name:"",width:"15%",align:"left",paixu:false,title:true,render:function(rowdata){
                 	 return rowdata.docTypeName;
                  }},
                  {display:"创建时间",name:"",width:"10%",align:"center",title:true,render:function(rowdata){
-                	 return rowdata.createdTime.substring(0,10);
+                	 return rowdata.createdTime.substring(0,16);
                  }},
                  {display:"操作",name:"do",width:"8%",align:"center",render:function(rowdata){
                 	 var caozuo = '';
                 	 caozuo +='<a title="撤回" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="chehuiDoc(\''+rowdata.id+'\')"><i class="fa fa-mail-reply"></i></a>';
-                	 if(rowdata.firstZbTime == "" || rowdata.firstZbTime == null || rowdata.firstZbTime=="undefined"){
+                	 if(rowdata.status==0){
                      	 caozuo +='<a title="删除" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="deleteDoc(\''+rowdata.id+'\')"><i class="fa fa-trash-o"></i></a>';
     				 }
                 	 return caozuo;

@@ -107,6 +107,7 @@ public class DocumentZbjlController {
 				DocumentInfo info = documentInfoService.queryObject(infoId);
 				if(info != null) {
 					info.setFirstZbTime(date);
+					info.setStatus(1);
 					documentInfoService.update(info);
 				}
 				//添加子分支主记录,文件状态为待转办

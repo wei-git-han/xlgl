@@ -44,7 +44,7 @@ var pageModule = function(){
 	var initother = function(){
 		//确定
 		$("#sure").click(function(){
-			if(isCbr && isCbr == 1){
+			if(cbrFlag && cbrFlag == 1){
 				$ajax({
 					url:sureUrl,
 					data:{subId:subId,userName:userName,userId:userId},

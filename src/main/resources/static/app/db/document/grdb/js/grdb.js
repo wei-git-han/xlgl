@@ -18,31 +18,31 @@ var pageModule = function(){
 	               	 	statusName="退回修改";
 	               		bgColor="rgba(240, 96, 0, 1)";
 	           	 		if(rowdata.dealUserName){
-	           	 			statusName="待"+dealUserName+"修改";
+	           	 			statusName="待"+rowdata.dealUserName+"修改";
 	           	 		}
                	 	}else if(rowdata.docStatus==5){
 	               	 	statusName="待落实";
 	               	 	bgColor="rgba(240, 96, 0, 1)";
 	           	 		if(rowdata.dealUserName){
-	           	 			statusName="待"+dealUserName+"落实";
+	           	 			statusName="待"+rowdata.dealUserName+"落实";
 	           	 		}
                	 	}else if(rowdata.docStatus==7){
 	               	 	statusName="待审批";
 	               	 	bgColor="rgba(60, 123, 255, 1)";
 	           	 		if(rowdata.dealUserName){
-	           	 			statusName="待"+dealUserName+"审批";
+	           	 			statusName="待"+rowdata.dealUserName+"审批";
 	           	 		}
                	 	}else if(rowdata.docStatus==9){
 	               	 	statusName="办理中";
 	               	 	bgColor="rgba(43, 170, 129, 1)";
 	           	 		if(rowdata.dealUserName){
-	           	 			statusName=dealUserName+"办理中";
+	           	 			statusName=rowdata.dealUserName+"办理中";
 	           	 		}
                	 	}else if(rowdata.docStatus==10){
 	               	 	statusName="建议办结";
 	               	 	bgColor="rgba(153, 153, 153, 1)";
                	 	}
-  				  	return '<div title="'+rowdata.statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+rowdata.statusNam+'</div>';
+  				  	return '<div title="'+statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+statusName+'</div>';
                 }},
                 {display:"办件标题",name:"docTitle",width:"13%",align:"left",render:function(rowdata){
                	 	return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../view/html/view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&fileFrom=grdb" target="iframe1">'+rowdata.docTitle+'</a>'
@@ -63,9 +63,10 @@ var pageModule = function(){
                	 return rowdata.docTypeName;
                 }},
                 {display:"转办时间",name:"createdTime",width:"10%",align:"center",render:function(rowdata){
-               	 return rowdata.createdTime.substring(0,10);
+               	 return rowdata.createdTime.substring(0,16);
                 }},
-                 {display:"接收时间",name:"",width:"10%",align:"center",paixu:false,render:function(rowdata){                	
+                 {display:"更新时间",name:"",width:"10%",align:"center",paixu:false,render:function(rowdata){
+                	 return rowdata.updateTime.substring(0,16);
                  }}
             ],
             width:"100%",

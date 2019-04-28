@@ -54,7 +54,7 @@ public class DocumentInfo implements Serializable {
 	//创建时间
 	private Date createdTime;
 	//办理反馈状态
-	private Integer status; 
+	private Integer status = 0; 
 	//完成时间
 	private Date finishTime;
 	//备注

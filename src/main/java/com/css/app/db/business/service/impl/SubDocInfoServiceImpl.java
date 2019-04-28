@@ -3,6 +3,7 @@ package com.css.app.db.business.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -53,8 +54,8 @@ public class SubDocInfoServiceImpl implements SubDocInfoService {
 	}
 
 	@Override
-	public int updateDocStatus(Integer status, String infoId) {
-		return subDocInfoDao.updateDocStatus(status, infoId);
+	public int updateDocStatus(Integer status,Date updateTime,String infoId) {
+		return subDocInfoDao.updateDocStatus(status, updateTime,infoId);
 	}
 
 	@Override

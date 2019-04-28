@@ -1,4 +1,4 @@
-var tableList= {"url":"/app/db/document/grdb/data/tablegrid.json","dataType":"text"};//原table数据
+var tableList= {"url":"/app/db/documentinfo/replyList","dataType":"text"};//原table数据
 var numsList={"url":rootPath +"/documentFlow/numsList","dataType":"text"};//筛选状态数字统计
 var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//部门树
 var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//人员树
@@ -10,37 +10,40 @@ var pageModule = function(){
 	var initgrid = function(){
         grid = $("#gridcont").createGrid({
             columns:[
-                 {display:"军委办件号",name:"",width:"10%",align:"left",title:true,render:function(rowdata,n){
-                	 
+            	{display:"军委办件号",name:"",width:"8%",align:"left",title:true,render:function(rowdata,n){
+               	 	return rowdata.banjianNumber;
+                }},
+                {display:"办理状态",name:"",width:"6%",align:"center",render:function(rowdata,n){
+                	var statusName="";
+               	 	var bgColor="";
+               	 	if(rowdata.status==1){
+	               	 	statusName="办理中";
+	               		bgColor="rgba(240, 96, 0, 1)";
+            	 	}else if(rowdata.status==2){
+	               	 	statusName="已办结";
+	               		bgColor="rgba(240, 96, 0, 1)";
+               	 	}else if(rowdata.status==3){
+	               	 	statusName="常态落实";
+	               	 	bgColor="rgba(240, 96, 0, 1)";
+               	 	}
+  				  	 return '<div title="'+statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+statusName+'</div>';
                  }},
-                 {display:"局内状态",name:"",width:"5%",align:"center",render:function(rowdata,n){
-                	 
-                 }},
-                 {display:"办件标题",name:"",width:"15%",align:"left",title:true,render:function(rowdata){
-                	 
-                 }},
-                 {display:"紧急程度",name:"",width:"5%",align:"center",paixu:false,render:function(rowdata){
-                 
+                 {display:"办件标题",name:"",width:"15%",align:"left",render:function(rowdata){
+                	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'" target="iframe1">'+rowdata.docTitle+'</a>'
                  }},
                  {display:"批示指示内容",name:"",width:"20%",align:"left",paixu:false,title:true,render:function(rowdata){
-                     
+                	 return '';
                  }},
                  {display:"督办落实情况",name:"",width:"20%",align:"left",paixu:false,title:true,render:function(rowdata){
-                
+                	 return '';
                  }},
-                 {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,title:true,render:function(rowdata){
-                 
-                 }},
-                 {display:"办件分类",name:"",width:"5%",align:"left",paixu:false,title:true,render:function(rowdata){
-                	
+                 {display:"承办单位/人",name:"",width:"11%",align:"left",paixu:false,title:true,render:function(rowdata){
+               		return '';
                  }},
                  {display:"转办时间",name:"",width:"10%",align:"center",render:function(rowdata){
-                	 
+                	 return rowdata.firstZbTime.substring(0,16); 
                  }},
-                 {display:"接收时间",name:"",width:"10%",align:"center",paixu:true,render:function(rowdata){
-                	
-                 }},
-                 {display:"操作",name:"do",width:"8%",align:"center",render:function(rowdata){
+                 {display:"最新反馈时间",name:"",width:"10%",align:"center",paixu:false,render:function(rowdata){
                 	
                  }}
             ],
@@ -51,7 +54,7 @@ var pageModule = function(){
             overflowx:true,
             pagesize: 15,
             pageyno:true,
-            paramobj:{},
+            paramobj:{search:$("#searchVal").val(),docStatus:$("input[name='documentStatus']:checked").val()},
             loadafter:function(data){
             	total=data.total;
             },

@@ -19,7 +19,7 @@
 		<if test="docStatus != null and docStatus != ''">
 			and a.DOC_STATUS = #{docStatus}
 		</if>		
-		 	order by a.CREATED_TIME desc
+		 	and a.DOC_STATUS &lt; 11 order by a.DOC_STATUS,a.CREATED_TIME desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
@@ -42,7 +42,7 @@
 		<if test="docStatus != null and docStatus != ''">
 			and a.DOC_STATUS = #{docStatus}
 		</if>		
-		 	order by a.CREATED_TIME desc
+		 	and a.DOC_STATUS &lt; 11 order by a.DOC_STATUS a.CREATED_TIME desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
@@ -54,7 +54,7 @@
 		select count(*) from DB_SUB_DOC_INFO 
 	</select>
 	<update id="updateDocStatus" parameterType="com.css.app.db.business.entity.SubDocInfo">
-		update DB_SUB_DOC_INFO set DOC_STATUS=#{0} where where=#{1}
+		update DB_SUB_DOC_INFO set DOC_STATUS=#{0},UPDATE_TIME = #{1} where INFO_ID=#{2}
 	</update>
 	<insert id="save" parameterType="com.css.app.db.business.entity.SubDocInfo">
 		insert into DB_SUB_DOC_INFO
@@ -66,7 +66,7 @@
 			"CREATED_TIME", 
 			"DOC_STATUS", 
 			"UNDERTAKER",
-			"FINISH_TIME",
+			"UPDATE_TIME",
 			"UNDERTAKER_NAME",
 			"FINISH_FLAG"
 		)
@@ -79,7 +79,7 @@
 			#{createdTime}, 
 			#{docStatus}, 
 			#{undertaker},
-			#{finishTime},
+			#{updateTime},
 			#{undertakerName},
 			#{finishFlag}
 		)
@@ -94,7 +94,7 @@
 			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
 			<if test="docStatus != null">"DOC_STATUS" = #{docStatus}, </if>
 			<if test="undertaker != null">"UNDERTAKER" = #{undertaker},</if>
-			<if test="finishTime != null">"FINISH_TIME" = #{finishTime},</if>
+			<if test="updateTime != null">"UPDATE_TIME" = #{updateTime},</if>
 			<if test="undertakerName != null">"UNDERTAKER_NAME" = #{undertakerName},</if>
 			<if test="finishFlag != null">"FINISH_FLAG" = #{finishFlag}</if>
 		</set>

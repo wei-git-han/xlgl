@@ -19,11 +19,17 @@ import org.springframework.web.multipart.MultipartFile;
 import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.AppConfig;
 import com.css.addbase.FileBaseUtil;
+import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.addbase.suwell.OfdTransferUtil;
 import com.css.app.db.business.entity.DocumentFile;
 import com.css.app.db.business.entity.DocumentInfo;
 import com.css.app.db.business.service.DocumentFileService;
 import com.css.app.db.business.service.DocumentInfoService;
+import com.css.app.db.config.entity.AdminSet;
+import com.css.app.db.config.entity.RoleSet;
+import com.css.app.db.config.service.AdminSetService;
+import com.css.app.db.config.service.RoleSetService;
+import com.css.app.db.util.DbDefined;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.GwPageUtils;
 import com.css.base.utils.Response;
@@ -49,7 +55,12 @@ public class DocumentInfoController {
 	private DocumentInfoService documentInfoService;
 	@Autowired
 	private DocumentFileService documentFileService;
-	
+	@Autowired
+	private AdminSetService adminSetService;
+	@Autowired
+	private RoleSetService roleSetService;
+	@Autowired
+	private BaseAppUserService baseAppUserService;
 	
 	
 	/**
@@ -124,7 +135,7 @@ public class DocumentInfoController {
 	
 	
 	/**
-	 * 列表查询
+	 * 登记录入列表查询
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
@@ -134,6 +145,52 @@ public class DocumentInfoController {
 		map.put("docStatus", documentStatus);
 		PageHelper.startPage(page, pagesize);
 		List<DocumentInfo> infoList = documentInfoService.queryList(map);
+		GwPageUtils pageUtil = new GwPageUtils(infoList);
+		Response.json(pageUtil);
+	}
+	/**
+	 * 登记录入列表查询
+	 */
+	@ResponseBody
+	@RequestMapping("/replyList")
+	public void replyList(Integer page, Integer pagesize,String search,String status){
+		String loginUserId=CurrentUser.getUserId();
+		String adminType = null;//管理员类型（1：部管理员；2：局管理员）
+		String roleType = DbDefined.ROLE_6;//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
+		//当前登录人的管理员类型
+		Map<String, Object> adminMap = new HashMap<>();
+		adminMap.put("userId", loginUserId);
+		List<AdminSet> adminList = adminSetService.queryList(adminMap);
+		if(adminList != null && adminList.size()>0) {
+			adminType = adminList.get(0).getAdminType();
+		}
+		//当前登录人的角色
+		Map<String, Object> roleMap = new HashMap<>();
+		roleMap.put("userId", loginUserId);
+		List<RoleSet> roleList = roleSetService.queryList(roleMap);
+		if(roleList != null && roleList.size()>0) {
+			roleType = roleList.get(0).getRoleFlag();
+		}
+		List<DocumentInfo> infoList =null;
+		Map<String, Object> map = new HashMap<>();
+		map.put("docStatus", "2");
+		map.put("search", search);
+		map.put("state", status);
+		if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType)
+				&& !StringUtils.equals("1", roleType) && !StringUtils.equals("3", roleType)) {
+			map.put("loginUserId", loginUserId);
+			PageHelper.startPage(page, pagesize);
+			infoList = documentInfoService.queryPersonList(map);
+		} else {
+			if(StringUtils.equals("2", adminType)|| StringUtils.equals("3", roleType)) {
+				String orgId = baseAppUserService.getBareauByUserId(loginUserId);
+				if(StringUtils.isNotBlank(orgId)) {
+					map.put("orgid", orgId);
+				}
+			}
+			PageHelper.startPage(page, pagesize);
+			infoList = documentInfoService.queryList(map);
+		}
 		GwPageUtils pageUtil = new GwPageUtils(infoList);
 		Response.json(pageUtil);
 	}

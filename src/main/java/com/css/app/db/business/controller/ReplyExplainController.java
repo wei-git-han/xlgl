@@ -78,17 +78,6 @@ public class ReplyExplainController {
 						map.put("subId", subId);
 						List<ReplyAttac> attchList = replyAttacService.queryList(map);
 						json.put("attchList",attchList);
-						/*//是否有审批详情，有则显示“展开”，否则不显示
-						Map<String, Object> opinionMap = new HashMap<>();
-						map.put("subId", subId);
-						map.put("teamId", teamId);
-						map.put("noUser", cbrId);
-						List<ApprovalOpinion> queryList = approvalOpinionService.queryList(opinionMap);
-						if(queryList!=null && queryList.size()>0) {
-							json.put("showZhankai","1");
-						}else {
-							json.put("showZhankai","0");
-						}*/
 						Map<String, Object> opMap = new HashMap<>();
 						opMap.put("subId", subId);
 						opMap.put("teamId", teamId);
@@ -143,17 +132,6 @@ public class ReplyExplainController {
 						map.put("subId", subId);
 						List<ReplyAttac> attchList = replyAttacService.queryList(map);
 						json.put("attchList",attchList);
-						//是否有审批详情，有则显示“展开”，否则不显示
-						Map<String, Object> opinionMap = new HashMap<>();
-						opinionMap.put("subId", subId);
-						opinionMap.put("teamId", teamId);
-						opinionMap.put("noUser", cbrId);
-						List<ApprovalOpinion> queryList = approvalOpinionService.queryList(opinionMap);
-						if(queryList!=null && queryList.size()>0) {
-							json.put("showZhankai","1");
-						}else {
-							json.put("showZhankai","0");
-						}
 						Map<String, Object> opMap = new HashMap<>();
 						opMap.put("subId", subId);
 						opMap.put("teamId", teamId);

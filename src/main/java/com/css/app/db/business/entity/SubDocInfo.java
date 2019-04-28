@@ -29,8 +29,8 @@ public class SubDocInfo implements Serializable {
 	private Integer docStatus;
 	//承办人id
 	private String undertaker;
-	//完成时间
-	private String finishTime;
+	//更新时间（最近一次呈送、退回、审批完成、建议办结、常态落实时间）
+	private Date updateTime;
 	//承办人
 	private String undertakerName;
 	//完成审批表示，用来控制多轮反馈
@@ -130,13 +130,12 @@ public class SubDocInfo implements Serializable {
 	public void setUndertaker(String undertaker) {
 		this.undertaker = undertaker;
 	}
-	public String getFinishTime() {
-		return finishTime;
+	public Date getUpdateTime() {
+		return updateTime;
 	}
-	public void setFinishTime(String finishTime) {
-		this.finishTime = finishTime;
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
 	}
-	
 	public String getDealUserName() {
 		return dealUserName;
 	}
