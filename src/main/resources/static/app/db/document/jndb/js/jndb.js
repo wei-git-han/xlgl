@@ -45,6 +45,9 @@ var pageModule = function(){
                	 	}else if(rowdata.docStatus==10){
 	               	 	statusName="建议办结";
 	               	 	bgColor="rgba(153, 153, 153, 1)";
+               	 	}else if(rowdata.docStatus==11){
+	               	 	statusName="常态落实";
+	               	 	bgColor="rgba(153, 153, 153, 1)";
                	 	}   				  	
                	 	return '<div title="'+statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+statusName+'</div>';
                  }},

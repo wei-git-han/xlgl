@@ -19,7 +19,7 @@
 		<if test="docStatus != null and docStatus != ''">
 			and a.DOC_STATUS = #{docStatus}
 		</if>		
-		 	and a.DOC_STATUS &lt; 11 order by a.DOC_STATUS,a.CREATED_TIME desc
+		 	and a.DOC_STATUS &lt; 12 order by a.DOC_STATUS,a.CREATED_TIME desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
@@ -42,13 +42,16 @@
 		<if test="docStatus != null and docStatus != ''">
 			and a.DOC_STATUS = #{docStatus}
 		</if>		
-		 	and a.DOC_STATUS &lt; 11 order by a.DOC_STATUS, a.CREATED_TIME desc
+		 	and a.DOC_STATUS &lt; 12 order by a.DOC_STATUS, a.CREATED_TIME desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
 	</select>
 	<select id="queryMinDocStatus" resultType="int">
 		select min(DOC_STATUS) from DB_SUB_DOC_INFO where INFO_ID=#{0} and SUB_DEPT_ID !=#{1}
+	</select>
+	<select id="queryMaxDocStatus" resultType="int">
+		select max(DOC_STATUS) from DB_SUB_DOC_INFO where INFO_ID=#{0} and SUB_DEPT_ID !=#{1}
 	</select>
  	<select id="queryTotal" resultType="int">
 		select count(*) from DB_SUB_DOC_INFO 

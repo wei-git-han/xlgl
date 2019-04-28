@@ -32,4 +32,6 @@ public interface SubDocInfoService {
 	int updateDocStatus(Integer status,Date updateTime,String infoId);
 	
 	int queryMinDocStatus(String infoId,String subDeptId);
+	
+	int queryMaxDocStatus(String infoId,String subDeptId);
 }
