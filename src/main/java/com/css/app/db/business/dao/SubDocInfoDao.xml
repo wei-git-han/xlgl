@@ -42,7 +42,7 @@
 		<if test="docStatus != null and docStatus != ''">
 			and a.DOC_STATUS = #{docStatus}
 		</if>		
-		 	and a.DOC_STATUS &lt; 11 order by a.DOC_STATUS a.CREATED_TIME desc
+		 	and a.DOC_STATUS &lt; 11 order by a.DOC_STATUS, a.CREATED_TIME desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>

@@ -66,7 +66,11 @@ var pageModule = function(){
                	 return rowdata.createdTime.substring(0,16);
                 }},
                  {display:"更新时间",name:"",width:"10%",align:"center",paixu:false,render:function(rowdata){
-                	 return rowdata.updateTime.substring(0,16);
+                	 var updateTime="";
+                	 if(rowdata.updateTime){
+                		 updateTime = rowdata.updateTime.substring(0,16);
+                	 }
+                	 return updateTime;
                  }}
             ],
             width:"100%",
