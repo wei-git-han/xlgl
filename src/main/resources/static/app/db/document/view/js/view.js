@@ -49,7 +49,7 @@ var pageModule = function(){
 							$(".blfk_bottom").show(); //意见框
 							$(".blfk_top").css({"bottom":"40%","height":"58%"});   //意见框上方元素样式控制
 							$("#save").show();
-							$("#showfj").show();
+							//$("#showfj").show();
 							
 							if(data.roleType=='3'){//是局长显示审批完成否则显示提交
 								$("#sptg").show();
@@ -228,8 +228,8 @@ var pageModule = function(){
 									}
 									html1 += '	</div>';
 									html1 += '	</div>';
-									if(showZhankai =="1"){
-										html1 +='<div class="zhankaiwrap"><a id="zhankai_'+o.teamId+'" class="zhankai">展开  <i class="fa fa-plus"></i></a></div>'
+									if(cuowei && cuowei == "1"){
+										html1 +='<div class="zhankaiwrap"><a data_id="'+o.teamId+'" class="zhankai">展开</a>  <i class="fa fa-angle-down" style="color:#5b9bd1"></i></div>'
 									}
 									$.each(o.opinionList,function(s,k){
 										var trackingType = k.trackingType;
@@ -255,6 +255,8 @@ var pageModule = function(){
 								html1 +='	</div>'
 						$(".timelinesview").append(html1);
 					})
+				}else{
+					$(".timelinesview").attr("style","padding:0px!important");
 				}
 
 				//意见记录编辑
@@ -294,8 +296,17 @@ var pageModule = function(){
 				});
 				
 				//展开
-				$("#"+).click(function(){
-					
+				$(".zhankai").click(function(e){
+					var dataId = $(this).attr("data_id");
+					if($.trim($(this).text()) == "展开"){
+						$("."+dataId).slideDown(500);
+						$(this).text("收起");
+						$(this).siblings().removeClass("fa-angle-down").addClass("fa-angle-up");
+					}else{
+						$("."+dataId).slideUp(500);
+						$(this).text("展开");
+						$(this).siblings().removeClass("fa-angle-up").addClass("fa-angle-down");
+					}
 				});
 			}
 		})

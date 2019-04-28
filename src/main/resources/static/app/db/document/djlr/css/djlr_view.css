@@ -62,7 +62,7 @@ ul{
 }
 
 
-/* tab椤电 */
+/* tab页签 */
 .left_menu .nav-tabs {
     border: none;
 }
@@ -208,8 +208,13 @@ ul{
 	width:100%;
 	height:100%;
 }
-
-
+/* .right_top_zbjl{
+	position: absolute;
+	bottom: 60px;
+	left: 0;
+	top: 0;
+	width: 100%;
+} */
 .right_top_zbjl{
 	position: absolute;
 	bottom: 0px;
@@ -218,6 +223,17 @@ ul{
 	width: 100%;
 }
 
+.right_zbjl{
+	position:absolute;
+	bottom:0px;
+	left:0;
+	height:60px;
+	padding-top: 13px;
+	width:100%;
+	background:#DFE6F6;
+	text-align:center;
+	border-top:1px solid #D3E1FB;
+}
 .doBtns{
 	display:inline-block;
 	width:20%;
@@ -229,7 +245,7 @@ ul{
 	border-radius:4px!important;
 }
 
-/* 杞敓鏂ゆ嫹閿熼摪纭锋嫹纰岄敓绲玜b椤电 */
+/* 转锟斤拷锟铰硷拷碌锟絫ab页签 */
 .right_top_zbjl .tabbable-line > .nav-tabs > li > a {
     border: 0;
     margin-right: 0;
@@ -308,7 +324,7 @@ ul{
 
 
 
-/* 閿熸枻鎷烽敓鏂ゆ嫹閿熸枻鎷烽敓鏂ゆ嫹寮� */
+/* 锟斤拷锟斤拷锟斤拷锟斤拷式 */
 .timelinesview{
 	margin-top:10px;
 	background:#fff;
@@ -442,7 +458,7 @@ ul{
 
 .timelinesview>.timelinesheys{
 	position: relative;
-	padding-bottom:10px;
+	/* padding-bottom:10px; */
 }
 .timelinesview>.timelinesheys::before{
     content: '';
@@ -455,7 +471,7 @@ ul{
     margin-left: -10px;
 }
 .timelinesview>.timelinesheys:last-child::before{
-  /*  background: none; */
+   /* background: none; */
 }
 
 .timelinesview > .timelinesheys .timeline-user {
@@ -561,18 +577,82 @@ ul{
 	margin-right:20px;
 	text-decoration:underline;
 }
+/* .blfk_top{
+	position:absolute;
+	top:0px;
+	left:0;
+	right:0;
+	bottom:40%;
+	width:100%;
+	height:58%;
+} */
 .blfk_top{
 	position:absolute;
 	top:0px;
 	left:0;
 	right:0;
-	bottom:0%;
+	bottom:0;
 	width:100%;
 	height:100%;
 }
+.blfk_bottom{
+	position:absolute;
+	bottom:0px;
+	left:0;
+	right:0;
+	top:60%;
+	width:100%;
+	height:40%;
+	background:#fff;
+	padding:15px;
+	padding-top:5px;
+}
 
 
-/* 閿熸枻鎷烽敓鏂ゆ嫹閿熸枻鎷烽敓锟� */
+/* 锟斤拷锟斤拷锟斤拷锟� */
+.sryj_title{
+	position:absolute;
+	top:0;
+	left:0;
+	height:40px;
+	line-height:40px;
+	width:100%;
+	font-weight:700;
+	font-size:18px;
+}
+.sryj_center{
+	width:100%;
+	height:100%;
+	padding:40px 0px;
+}
+
+.sryj_footer{
+	position:absolute;
+	left:0;
+	bottom:0;
+	height:40px;
+	width:100%;
+	text-align:center;
+	padding-top:11px;
+}
+.sryj_footer button{
+	display: inline-block;
+	padding:5px 20px;
+	background: #6699FF;
+	color: #fff;
+	font-size: 16px;
+	border: none;
+	border-radius: 4px !important;
+}
+
+.opinionContent{
+	border:1px dashed #ccc;
+	width:100%;
+	height:100%;
+	resize:none;
+	padding:8px;
+	font-size: 16px;
+}
 
 .listicon{
 	float: left;
@@ -589,8 +669,7 @@ ul{
 .addfjbtn{
 	color:#999!important;
 	text-decoration:underline;
-	background:none!important;
-	border:0!important;
+	font-size:15px;
 }
 
 .addfjbtn:hover{
@@ -609,7 +688,7 @@ ul{
 }
 
 
-/* 鏂伴〉绛炬牱寮� */
+/* 新页签样式 */
 .tabs li.tabs-selected a.tabs-inner {
     background: #6699FF!important;
 	border: none;
@@ -686,4 +765,71 @@ ul{
 	overflow: hidden;
 	text-overflow: ellipsis;
 	vertical-align: middle;
+}
+
+/* 按钮权限控制 */
+.ifShow{
+	display:none;
+}
+.showfj{
+	color:#6699FF!important;
+	text-decoration:underline;
+	border:none!important;
+	background:none!important;
+	float:right;
+}
+.filelist{
+	display:none;
+	position:absolute;
+	right:88px;
+	padding:10px;
+	overflow:auto;
+	bottom:30px;
+	width:auto;
+	height:auto;
+	max-width:90%;
+	max-height:500px;
+	border:1px solid #ccc;
+	background:#fff;
+	font-size:14px;
+	z-index:999;
+	text-align: left;
+}
+.filelist>div{
+	line-height:28px;
+}
+.fujianwrap{
+	display:inline-block;
+	position:relative
+}
+.editwrap{
+	padding:0;
+	margin:0;
+	text-align:right;
+}
+.editwrap button{
+	color:#333!important;
+	border:none;
+	background:#e2e2e2;
+}
+
+.delx{
+	display:none!important; 
+	position:absolute;
+	right:0;top:0;
+	color:#aaa;
+	font-size:15px;
+	cursor:pointer
+}
+
+.zhankaiwrap{
+	width: 100%;
+	text-align: right;
+	padding-top: 10px;
+	padding-right:10px;
+	padding-bottom:10px;
+	font-size: 14px;
+}
+.zhankaiwrap a{
+	text-decoration:underline;
 }
