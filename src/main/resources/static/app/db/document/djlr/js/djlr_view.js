@@ -4,15 +4,15 @@ var getDataUrl = {"url":"/app/db/documentinfo/info","dataType":"json"};//右侧�
 var getSzpsListUrl = {"url":rootPath +"/documentszps/queryList","dataType":"text"}; //获取首长批示
 var zbjlDataUrl = {"url":"/app/db/documentzbjl/list","dataType":"json"}; //文件转办-转办记录list
 var bjDataUrl = {"url":"/app/db/documentinfo/getBanJieList","dataType":"text"}; //办结记录
-var delfjUrl = {"url":"/app/db/replyexplain/deleteAttch","dataType":"text"}; //删除办理反馈中的附件
+//var delfjUrl = {"url":"/app/db/replyexplain/deleteAttch","dataType":"text"}; //删除办理反馈中的附件
 var downLoadUrl= {"url":"/app/db/replyexplain/downLoad","dataType":"text"}; //下载办理反馈中的附件
 var allReplyListUrl = {"url":"/app/db/replyexplain/allReplyList","dataType":"text"}; //各局办理反馈list
-var opinionUrl = {"url":"/app/db/replyexplain/getOpinion","dataType":"text"}; //各局办理反馈list
+//var opinionUrl = {"url":"/app/db/replyexplain/getOpinion","dataType":"text"}; //各局办理反馈list
 var cbDataUrl = {"url":"/app/db/document/view/data/cbList.json","dataType":"text"}; //文件转办-催办记录list
-var uploadFileUrl = "/app/db/documentinfo/uploadFile";//文件上传
+var personReplyUrl = {"url":"/app/db/replyexplain/personReply","dataType":"text"}; //某个人的办理反馈
+var cuibanurl = {"url":"/app/db/documentszinfo/press","dataType":"text"};
 var fileId=getUrlParam("fileId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
-
 var pageModule = function(){
 	//文件menu
 	var takeMenufn = function(){
@@ -122,92 +122,218 @@ var pageModule = function(){
 	
 	//办理反馈记录
 	var initblfkList = function(){
+		
+		var eachfn = function(array,el,n){
+			
+			$.each(array,function(i,o){
+				
+				var id = ``;
+				var cbrId = ``;
+				var date = ``;
+				var danwei = ``;
+				var ld = ``;
+				var content = ``;
+				var state = ``;
+				var file = ``;
+				var edit = ``;
+				var teamId = ``;
+				var subId = ``;
+				if(n==1){
+					id = o.teamId;
+					teamId = o.teamId;
+					cbrId = o.cbrId;
+					date = o.updateTime;
+					danwei = o.danwei||"某单位";
+					ld = o.cbrName;
+					content = o.content;
+					subId = o.subId;
+					//edit = o.edit;
+					//if(edit==true){
+					//	edit = `<div class="nrt-cont-top-btn">
+					//		<a class="" onclick="editfn('${id}','${content}',this)" >编辑</a>
+					//	</div>`;
+					//}else{edit=``};
+					
+					var attchList = o.attchList;
+					if(typeof(attchList)!="undefined"&&attchList!=null&&$.trim(attchList)!=""){
+						var remove = ``;
+						$.each(attchList,function(){
+							var fileid = this.id;
+							var fileName = this.fileName;
+							var fileServerId = this.fileServerId;
+							var replyTeamId = this.replyTeamId;
+							//if(isCbr==1){
+							//	remove = `<a class="remove" onclick="removefn('${fileid}',this)" >删除</a>`
+							//}
+							file+=`<div class="">${remove}<a id="${fileid}" onclick="downloadfn('${fileServerId}')">${fileName}</a></div>`;
+						})
+					}
+					
+				}else if(n==2){
+					id = o.id;
+					teamId = o.replyTeamId;
+					cbrId = o.userId;
+					date = o.createdTime;
+					danwei = o.danwei||"某单位";
+					ld = o.userName;
+					content = o.opinionContent;
+					state = o.trackingType;
+					
+					if(state<3){
+						state = "审批通过";
+					}else{
+						state = "返回修改";
+					}
+				};
+				var child = o.opinionList;
+				var zkgb = `<br>`;
+				if(typeof(child)!="undefined"&&child!=null&&$.trim(child)!=""){
+					if(child.length>0){
+						zkgb = `
+									<button class="btn btn-link">
+										<font class="zhankai">展开<i class="fa fa-chevron-down" ></i></font>
+										<font class="guanbi">关闭<i class="fa fa-chevron-up" ></i></font>
+									</button>
+								`;
+					}
+				}
+				
+				var pl = 20;
+				var li = ``;
+				
+				if(n==1){
+					var active=""
+					//active = o.show;
+					//if(active==1){active="active"}
+					var color = "#00CCCC";
+					
+					if((i+3)%3==0){
+						color = "#00CCCC";
+					}else if((i+2)%3==0){
+						color = "#FFCC33";
+					}else if((i+1)%3==0){
+						color = "#CCCCCC";
+					}
+					
+					li = `
+						<div class="newpanel-cont ${active}" color="${color}" subId=${subId};>
+							<div class="newpanel-inner">
+								<div class="newpanel-left">
+									<div class="wh100">
+										<i class="fa fa-circle-o"></i>
+										<div class="newoanel-left-line"></div>
+									</div>
+								</div>
+								<div class="newpanel-right">
+									<div class="newpanel-right-top">
+										<div class="nrt-date">
+											<font>${date}</font>
+										</div>
+									</div>
+									
+									<div class="newpanel-right-cent" id="${id}">
+										<div class="nrt-cont" style="border-color:${color}">
+											<div class="nrt-cont-top">
+												<div class="nrt-cont-top-left">
+													<div class="nrt-cont-top-title" onclick="viewcont('${cbrId}','${teamId}','${subId}')">
+														<i class="fa fa-user"></i>
+														<font>${danwei}-${ld}</font>
+													</div>
+												</div>
+												<div class="nrt-cont-top-left">
+													<div class="nrt-cont-top-title2">
+														<font>${date}</font>
+													</div>
+												</div>
+												<div class="nrt-cont-top-right">
+													${edit}
+												</div>
+											</div>
+											<div class="nrt-cont-cent">
+												<div class="wh100 scroller">
+													<font class="nrt-cont-cent-font" >${content}</font>
+												</div>
+											</div>
+											<div class="nrt-cont-bottom">
+												<div class="nrt-cont-file">
+													${file}
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="newpanel-right-cent2" style="padding-left:${pl*n}px;">
+										
+									</div>
+									
+									<div class="newpanel-right-bottom">
+										${zkgb}
+									</div>
+								</div>
+							</div>
+						</div>
+					`;
+				}else{
+					var color = el.parents(".newpanel-cont").attr("color");
+					subId = el.parents(".newpanel-cont").attr("subId");
+					li = `
+									<div class="newpanel-right-cent" id="${id}">
+										<div class="nrt-cont" style="border-color:${color}">
+											<div class="nrt-cont-top">
+												<div class="nrt-cont-top-left">
+													<div class="nrt-cont-top-title" onclick="viewcont('${cbrId}','${teamId}','${subId}')">
+														<i class="fa fa-user"></i>
+														<font>${danwei}-${ld}</font>
+													</div>
+												</div>
+												<div class="nrt-cont-top-left">
+													<div class="nrt-cont-top-state">
+														<font>${state}</font>
+													</div>
+												</div>
+												<div class="nrt-cont-top-left">
+													<div class="nrt-cont-top-title2">
+														<font>${date}</font>
+													</div>
+												</div>
+											</div>
+											<div class="nrt-cont-cent">
+												<div class="wh100 scroller">
+													<font class="nrt-cont-cent-font" >${content}</font>
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="newpanel-right-cent2" style="padding-left:${pl*n}px;">
+										
+									</div>
+					`;
+				}
+				li = $(li);
+				el.append(li);
+				if(typeof(child)!="undefined"&&child!=null&&$.trim(child)!=""){
+					if(child.length>0){
+						var ul = $(li).find(".newpanel-right-cent2");
+						eachfn(child,ul,n+1);
+					}
+				}
+			})
+		}
+		
+		
 		$ajax({
 			url:allReplyListUrl,
  			data:{infoId:fileId},
 			success:function(data){
 				if(data&&data.length>0){
-					var html1= "";
-					$.each(data,function(i,o){
-						var listdate = o.listdate;
-						html1=	'<div class="timelinesheys ">'+
-								'	<div class="timeline-icon1">'+
-								'		<i class="icontime"></i>'+
-								'	</div>'+
-								'	<div class="timeline-user">'+
-								/*'		<span style="color:#999;">'+listdate+'</span>'+*/
-								'		<span style="color:#999;">2019-05-01 09:00:00</span>'+
-								'	</div>'+
-								'	<div class="timeline-body">';
-									var borderStyle="";
-									var showZhankaiStyle="";
-									var cuoweiStyle="";
-									var showZhankai = o.showZhankai;
-									var cuowei = o.cuowei;
-									if(cuowei && cuowei == "1"){
-										cuoweiStyle = "margin-left:20px!important;"
-									}
-									if(i>0){
-										borderStyle = "border-top:none;"
-									}
-									if(showZhankai =="1"){//1展开（有margin）      0不展开
-										showZhankaiStyle = "margin-left:30px!important;"
-									}
-									html1 += '<div class="timeline-content" style="'+borderStyle+'">'+
-									         '	<div class="listUser" data_id="'+o.teamId+'"><img src="../images/userh.png" class="listicon"> '+o.cbrName+'</div>';
-									html1 += '	<div class="listContent">';
-									html1 += '		<span>'+o.content+'</span><span>'+o.updateTime+'</span><div class="listfj">';
-									
-									
-									$.each(o.attchList,function(s,t){
-										html1 += '		<div class="fujianwrap"><a class="fujian" id="'+t.id+'" onclick="downloadfn(\''+t.fileServerId+'\')">'+t.fileName+'</a><i title="删除附件" class="fa fa-times-circle delx" data="'+t.id+'"></i></div>';
-									})
-									html1 += '	</div>';
-									html1 += '	</div>';
-									if(cuowei && cuowei == "1"){
-										html1 +='<div class="zhankaiwrap"><a data_id="'+o.teamId+'" class="zhankai">展开</a>  <i class="fa fa-angle-down" style="color:#5b9bd1"></i></div>'
-									}
-									$.each(o.opinionList,function(s,k){
-										var trackingType = k.trackingType;
-										var trackingTypeobj = "";
-										if(trackingType == "3"){
-											trackingTypeobj ="返回修改";
-										}else{
-											trackingTypeobj ="审批通过";
-										}
-										
-										html1 += '<div class="timeline-content '+o.teamId+'" style="'+borderStyle+cuoweiStyle+'display:none;">'+
-										         '	<div class="listUser" data_id="'+k.id+'"><img src="../images/userh.png" class="listicon"> '+k.userName+'<span class="isOkFlag">'+trackingTypeobj+'</span></div>';
-										html1 += '	<div class="listContent">';
-										html1 += '		<span>'+k.opinionContent+'</span><span>'+k.createdTime+'</span>';
-										html1 += '	</div>';
-										html1 += '</div>';
-									})
-									html1 +='	</div>';
-								
-								
-								
-								
-								html1 +='	</div>'
-						$(".timelinesview").append(html1);
-					})
-				}else{
-					$(".timelinesview").attr("style","padding:0px!important");
+					console.log(data);
+					eachfn(data,$(".pagemenu"),1);
+					$(".newpanel-right-bottom .btn-link").unbind("click");
+					$(".newpanel-right-bottom .btn-link").click(function(){
+						$(this).parents(".newpanel-cont").toggleClass("active");
+					});
 				}
-
-				//展开
-				$(".zhankai").click(function(e){
-					var dataId = $(this).attr("data_id");
-					if($.trim($(this).text()) == "展开"){
-						$("."+dataId).slideDown(500);
-						$(this).text("收起");
-						$(this).siblings().removeClass("fa-angle-down").addClass("fa-angle-up");
-					}else{
-						$("."+dataId).slideUp(500);
-						$(this).text("展开");
-						$(this).siblings().removeClass("fa-angle-up").addClass("fa-angle-down");
-					}
-				});
 			}
 		})
 	}
@@ -286,7 +412,6 @@ var pageModule = function(){
 		$("#goback").click(function(){
 			skip();
 		});
-		
 		//办理反馈-添加附件
 		var o1 = $("#file1").createfile({
 			//initdata:filedata1,
@@ -297,19 +422,42 @@ var pageModule = function(){
 			maxsize:500*1024*1024,
 			cssStyle:"width:0px;height:0px"
 		});
-
-		
 		//查看附件
 		$("#showfj").click(function(){
 			$(".filelist").toggle();
 		});
-		
 		$("body").click(function(e){
 			if($(e.target).hasClass("showfj") || $(e.target).parents("div").hasClass("filelist")){
 				return;
 			};
 			$(".filelist").hide();
 		});
+		
+		$("#cuiban").click(function(){
+			$("#viewcont2").modal("show")
+		})
+		
+		$("#fasong").click(function(){
+			var textarea = $("#textarea").val();
+			if($.trim(textarea)==""){
+				newbootbox.alert("请填写内容!");
+				return;
+			}
+			$ajax({
+				url:cuibanurl,
+				data:{textarea:textarea,id:fileId},
+				success:function(data){
+					if(data.result=="success"){
+						$("#viewcont2").modal("hide");
+						newbootbox.alert("操作成功!");
+						initcbfn();
+					}
+				}
+			});
+		})
+		$("#quxiao").click(function(){
+			$("#viewcont2").modal("hide");
+		})
 	}
 		
 	return{
@@ -367,4 +515,36 @@ function downloadfn(fileServerId){
 	    	}
 	    }
 	});
+}
+function editfn(id,content,el){
+	$(el).parents(".nrt-cont").find(".nrt-cont-file .remove").show();
+	$("#editTeamId").attr("id",id);
+	$("#replyContent").text(content);
+}
+
+function removefn(id,el){
+	$ajax({
+		url:delfjUrl,
+		data:{id:id},
+	    success:function(data){
+	    	if(data.result=="success"){
+	    		$(el).parent().remove();
+	    		newbootbox.alert("附件已删除！");
+	    	}
+	    }
+	});
+}
+
+function viewcont(userId,teamId,subId){
+	$ajax({
+		url:personReplyUrl,
+		data:{subId:subId,teamId:teamId,userId:userId},
+	    success:function(data){
+	    	if(data){
+	    		$(".viewcontent").text(data.replyContent);
+	    		$("#viewcont").modal("show");
+	    	}
+	    }
+	});
+	
 }

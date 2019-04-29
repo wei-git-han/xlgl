@@ -67,5 +67,11 @@ public class SubDocInfoServiceImpl implements SubDocInfoService {
 	public int queryMaxDocStatus(String infoId, String subDeptId) {
 		return subDocInfoDao.queryMaxDocStatus(infoId, subDeptId);
 	}
+
+	@Override
+	public List<String> queryAllSubDeptIds(String infoId) {
+		return subDocInfoDao.queryAllSubDeptIds(infoId);
+				
+	}
 	
 }

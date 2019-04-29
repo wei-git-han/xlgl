@@ -34,4 +34,6 @@ public interface SubDocInfoService {
 	int queryMinDocStatus(String infoId,String subDeptId);
 	
 	int queryMaxDocStatus(String infoId,String subDeptId);
+	
+	List<String> queryAllSubDeptIds(String infoId);
 }

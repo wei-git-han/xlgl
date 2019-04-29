@@ -112,7 +112,13 @@ public class DocumentZbjlController {
 				}
 				//添加子分支主记录,文件状态为待转办
 				String[] deptArray = deptIds.split(",");
+				List<String> subDeptIds = subDocInfoService.queryAllSubDeptIds(infoId);
 				for (String deptId : deptArray) {
+					if(subDeptIds != null && subDeptIds.size()>0) {
+						if(subDeptIds.contains(deptId)) {
+							continue;
+						}
+					}
 					BaseAppOrgan organ = baseAppOrganService.queryObject(deptId);
 					SubDocInfo subInfo=new SubDocInfo();
 					subInfo.setId(UUIDUtils.random());

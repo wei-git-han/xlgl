@@ -27,4 +27,6 @@ public interface SubDocInfoDao extends BaseDao<SubDocInfo> {
 	
 	int queryMaxDocStatus(String infoId,String subDeptId);
 	
+	List<String> queryAllSubDeptIds(String infoId);
+	
 }

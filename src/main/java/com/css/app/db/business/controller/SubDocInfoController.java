@@ -168,7 +168,6 @@ public class SubDocInfoController {
 		boolean isCheckUser=false;//是否是当前办理人
 		boolean isUndertaken=false;//是否已承办
 		boolean isUndertaker=false;//是否承办人
-		boolean finishFlag = false;//是处在审批完成
 		String loginUserId = CurrentUser.getUserId();
 		//当前登录人的角色
 		Map<String, Object> roleMap = new HashMap<>();
@@ -192,7 +191,6 @@ public class SubDocInfoController {
 						if(StringUtils.equals(loginUserId,subDocInfo.getUndertaker())) {
 							isCheckUser=true;
 						}
-						finishFlag=true;
 					}
 				}
 				//当前审核人

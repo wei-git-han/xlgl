@@ -47,6 +47,9 @@
 			limit #{offset}, #{limit}
 		</if>
 	</select>
+	<select id="queryAllSubDeptIds"  resultType="String">
+		select SUB_DEPT_ID from DB_SUB_DOC_INFO where INFO_ID = #{value}
+	</select>
 	<select id="queryMinDocStatus" resultType="int">
 		select min(DOC_STATUS) from DB_SUB_DOC_INFO where INFO_ID=#{0} and SUB_DEPT_ID !=#{1}
 	</select>

@@ -166,6 +166,27 @@ public class ReplyExplainController {
 	}
 	
 	/**
+	 * 获取某个人的反馈
+	 * @param subId 分支主文件id
+	 * @param teamId 某组反馈的id
+	 * @param userId 人的id
+	 */
+	@ResponseBody
+	@RequestMapping("/personReply")
+	public void personReply(String subId,String teamId,String userId) {
+		ReplyExplain reply=null;
+		Map<String, Object> map = new HashMap<>();
+		map.put("subId", subId);
+		map.put("teamId", teamId);
+		map.put("userId", userId);
+		List<ReplyExplain> queryList = replyExplainService.queryList(map);
+		if(queryList !=null && queryList.size()>0) {
+			reply=queryList.get(0);
+		}
+		Response.json(reply);
+	}
+	
+	/**
 	 * 保存反馈意见
 	 */
 	@ResponseBody
