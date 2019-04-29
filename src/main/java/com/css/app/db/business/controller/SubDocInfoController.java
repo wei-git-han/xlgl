@@ -138,13 +138,18 @@ public class SubDocInfoController {
 		for (SubDocInfo subDocInfo : subDocInfoList) {
 			//当前审核人
 			SubDocTracking latestRecord = subDocTrackingService.queryLatestRecord(subDocInfo.getId());
+			String recordId="";
+			String recordName="";
 			if(latestRecord != null) {
-				if(!StringUtils.equals(loginUserId, latestRecord.getReceiverId())) {
-					subDocInfo.setDealUserName(latestRecord.getReceiverName());
+				recordId =latestRecord.getReceiverId();
+				recordName = latestRecord.getReceiverName();
+				if(StringUtils.equals("1", subDocInfo.getFinishFlag()) && subDocInfo.getDocStatus()<10) {
+					recordId=subDocInfo.getUndertaker();
+					recordName = subDocInfo.getUndertakerName();
 				}
-			}
-			if(StringUtils.equals("1", subDocInfo.getFinishFlag()) && subDocInfo.getDocStatus()<10) {
-				subDocInfo.setDealUserName(subDocInfo.getUndertakerName());
+				if(!StringUtils.equals(loginUserId,recordId)) {
+					subDocInfo.setDealUserName(recordName);
+				}
 			}
 		}
 		GwPageUtils pageUtil = new GwPageUtils(subDocInfoList);
@@ -163,6 +168,7 @@ public class SubDocInfoController {
 		boolean isCheckUser=false;//是否是当前办理人
 		boolean isUndertaken=false;//是否已承办
 		boolean isUndertaker=false;//是否承办人
+		boolean finishFlag = false;//是处在审批完成
 		String loginUserId = CurrentUser.getUserId();
 		//当前登录人的角色
 		Map<String, Object> roleMap = new HashMap<>();
@@ -186,18 +192,22 @@ public class SubDocInfoController {
 						if(StringUtils.equals(loginUserId,subDocInfo.getUndertaker())) {
 							isCheckUser=true;
 						}
+						finishFlag=true;
+					}
+				}
+				//当前审核人
+				SubDocTracking latestRecord = subDocTrackingService.queryLatestRecord(subId);
+				if(latestRecord != null) {
+					String recordId=latestRecord.getReceiverId();
+					if(DbDocStatusDefined.BAN_LI_ZHONG==docStatus && StringUtils.equals("1", subDocInfo.getFinishFlag())) {
+						recordId=subDocInfo.getUndertaker();
+					}
+					if(StringUtils.equals(loginUserId,recordId )) {
+						isCheckUser=true;
 					}
 				}
 				
 			}
-			//当前审核人
-			SubDocTracking latestRecord = subDocTrackingService.queryLatestRecord(subId);
-			if(latestRecord != null) {
-				if(StringUtils.equals(loginUserId, latestRecord.getReceiverId())) {
-					isCheckUser=true;
-				}
-			}
-			
 		}
 		JSONObject json=new JSONObject();
 		json.put("docStatus", docStatus);

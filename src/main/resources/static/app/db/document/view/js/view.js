@@ -43,13 +43,10 @@ var pageModule = function(){
 					}else{
 						if(data.isCheckUser){//显示办结、常态落实,输入框
 							$(".right_zbjl").show();
-							$("#luoshi").show();
-							$("#banjie").show();
 							$(".blfk_bottom").show(); //意见框
 							$(".blfk_top").css({"bottom":"40%","height":"58%"});   //意见框上方元素样式控制
 							$("#save").show();
 							//$("#showfj").show();
-							
 							if(data.roleType=='3'){//是局长显示审批完成否则显示提交
 								$("#sptg").show();
 							}else{
@@ -60,6 +57,8 @@ var pageModule = function(){
 							}else{
 								$("#ifaddfj").show();
 								$("#showfj").show();
+								$("#luoshi").show();
+								$("#banjie").show();
 								isCbr = 1;
 							}
 						}
