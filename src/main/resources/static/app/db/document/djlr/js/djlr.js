@@ -5,7 +5,7 @@ var numsList={"url":"/app/db/documentinfo/numsList","dataType":"text"};//筛选�
 var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//部门树
 var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//人员树
 var chehuiDocUrl = {"url":"/app/db/document/djlr/data/success.json","dataType":"text"};//表格数据撤回
-
+var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var grid = null;
 var total=0;//列表中，数据的总条数
 var pageModule = function(){
@@ -28,7 +28,7 @@ var pageModule = function(){
    				  	 return '<div title="'+documentStatusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+documentStatusName+'</div>';
                  }},
                  {display:"办件标题",name:"",width:"15%",align:"left",render:function(rowdata){
-                	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="djlr_view.html?fileId='+rowdata.id+'&fileFrom=djlr" target="iframe1">'+rowdata.docTitle+'</a>'
+                	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+rowdata.docTitle+'</a>'
                  }},
                  {display:"紧急程度",name:"",width:"6%",align:"center",paixu:false,render:function(rowdata){
                 	 return rowdata.urgencyDegree;

@@ -24,17 +24,17 @@ var pageModule = function(){
 			data:{id:fileId},
 			success:function(data){
 				$(".ifShow").hide();
-				if(data.cuiBanBtn){
+				if(data.cuiBanBtn && ("blfk"==fileFrom)){
 					$(".right_zbjl").show();
 					$(".right_top_zbjl").css("bottom","60px");//按钮父元素上方元素样式控制
 					$("#cuiban").show();
 				}
-				if(data.quXiaoBtn){
+				if(data.quXiaoBtn && "blfk"==fileFrom){
 					$(".right_zbjl").show();
 					$(".right_top_zbjl").css("bottom","60px");//按钮父元素上方元素样式控制
 					$("#quxiaobanjie").show();
 				}
-				if(data.zhuanBanBtn){
+				if(data.zhuanBanBtn && ("blfk"==fileFrom ||"djlr"==fileFrom)){
 					$(".right_zbjl").show();
 					$(".right_top_zbjl").css("bottom","60px");//按钮父元素上方元素样式控制
 					$("#zhuanban").show();
@@ -491,6 +491,18 @@ var pageModule = function(){
 		$("#quxiao").click(function(){
 			$("#viewcont2").modal("hide");
 		})
+		//转办
+		$("#zhuanban").click(function(){
+			newbootbox.newdialog({
+				id:"zhuanbanDialog",
+				width:800,
+				height:600,
+				header:true,
+				title:"转办",
+				classed:"cjDialog",
+				url:"/app/db/document/blfk/html/zhuanbanDialog.html?fileIds="+fileId
+			})
+		});
 	}
 		
 	return{
