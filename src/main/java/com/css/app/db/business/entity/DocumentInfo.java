@@ -45,7 +45,7 @@ public class DocumentInfo implements Serializable {
 	private Date firstZbTime;
 	//已读首长ids
 	private String szReadIds;
-	//催办标识
+	//催办标识（催办中为1）
 	private String cuibanFlag = "0";
 	//文件类型id
 	private String docTypeId;
@@ -53,7 +53,7 @@ public class DocumentInfo implements Serializable {
 	private String docTypeName;
 	//创建时间
 	private Date createdTime;
-	//办理反馈状态
+	//办理状态(0:还未转办1：办理中；2：办结：3：常态落实)
 	private Integer status = 0; 
 	//完成时间
 	private Date finishTime;

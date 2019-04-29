@@ -320,8 +320,13 @@ ul{
 }
 .cbdw,.xiangy,.zbUser{
 	margin-top:10px;
+	color:#333;
+	font-size:16px;
+	font-weight:700;
 }
-
+.dateStyle{
+	color:#aaa;
+}
 
 
 /* 锟斤拷锟斤拷锟斤拷锟斤拷式 */

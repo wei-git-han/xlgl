@@ -8,12 +8,41 @@ var bjDataUrl = {"url":"/app/db/documentinfo/getBanJieList","dataType":"text"}; 
 var downLoadUrl= {"url":"/app/db/replyexplain/downLoad","dataType":"text"}; //下载办理反馈中的附件
 var allReplyListUrl = {"url":"/app/db/replyexplain/allReplyList","dataType":"text"}; //各局办理反馈list
 //var opinionUrl = {"url":"/app/db/replyexplain/getOpinion","dataType":"text"}; //各局办理反馈list
-var cbDataUrl = {"url":"/app/db/document/view/data/cbList.json","dataType":"text"}; //文件转办-催办记录list
+var cbDataUrl = {"url":"/app/db/documentinfo/getCuiBanlist","dataType":"text"}; //催办记录list
 var personReplyUrl = {"url":"/app/db/replyexplain/personReply","dataType":"text"}; //某个人的办理反馈
+
+var getButtonParamUrl = {"url":"/app/db/documentinfo/buttonParam","dataType":"json"}; //获取按钮显示控制参数
+
 var cuibanurl = {"url":"/app/db/documentszinfo/press","dataType":"text"};
 var fileId=getUrlParam("fileId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var pageModule = function(){
+	/* 按钮权限控制 */
+	var showButton = function(){
+		$ajax({
+			url:getButtonParamUrl,
+			data:{id:fileId},
+			success:function(data){
+				$(".ifShow").hide();
+				if(data.cuiBanBtn){
+					$(".right_zbjl").show();
+					$(".right_top_zbjl").css("bottom","60px");//按钮父元素上方元素样式控制
+					$("#cuiban").show();
+				}
+				if(data.quXiaoBtn){
+					$(".right_zbjl").show();
+					$(".right_top_zbjl").css("bottom","60px");//按钮父元素上方元素样式控制
+					$("#quxiaobanjie").show();
+				}
+				if(data.zhuanBanBtn){
+					$(".right_zbjl").show();
+					$(".right_top_zbjl").css("bottom","60px");//按钮父元素上方元素样式控制
+					$("#zhuanban").show();
+				}
+			}
+		});	
+	}
+	
 	//文件menu
 	var takeMenufn = function(){
 		$ajax({
@@ -365,19 +394,22 @@ var pageModule = function(){
 	var initcbfn = function(){
 		$ajax({
 			url:cbDataUrl,
-			data:{fileId:fileId},
+			data:{infoId:fileId},
 			success:function(data){
 				if(data&&data.length>0){
-					$("#cbrecord").html("");
+					var html1= "";
 					$.each(data,function(i,item){
-						$("#cbrecord").append(
-							'<div class="record">'+
-				            '	<label class="zbUser">转办人:</label>'+
-				            '	<div><span>'+item.zbUser+'</span><span class="zbDate">'+item.zbdate+'</span></div>'+
-				            '	<label class="cbdw">承办单位/人:</label>'+
-				            '	<div>'+item.unit+'</div>'+
-				            '</div>'
-			            )
+						html1= '<div class="record">'+
+					            '	<label class="zbUser">催办人:</label>'+
+					            '	<div><span>'+item.userName+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
+					            '	<label class="cbdw">催办留言:</label>'+
+					            '	<div>'+item.urgeContent+'</div>';
+								if(item.cbrName && !!item.cbrName){
+									html1+= '	<label class="cbdw">承办人响应:</label>';
+									html1+=	'	<div><span>'+item.cbrName+'</span><span class="dateStyle">'+item.cbTime+'</span><span>发布本次督办落实情况</span></div>';
+								}
+								html1+='</div>'
+			            $("#cbrecord").append(html1);
 					});
 				}
 			}
@@ -450,6 +482,7 @@ var pageModule = function(){
 					if(data.result=="success"){
 						$("#viewcont2").modal("hide");
 						newbootbox.alert("操作成功!");
+						showButton();
 						initcbfn();
 					}
 				}
@@ -463,6 +496,7 @@ var pageModule = function(){
 	return{
 		//加载页面处理程序
 		initControl:function(){
+			showButton();
 			takeMenufn();
 			initdata();
 			initblfkList();

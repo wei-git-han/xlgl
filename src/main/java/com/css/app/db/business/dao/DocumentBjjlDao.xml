@@ -8,7 +8,11 @@
 	</select>
 
 	<select id="queryList" resultType="com.css.app.db.business.entity.DocumentBjjl">
-		select * from DB_DOCUMENT_BJJL 
+		select * from DB_DOCUMENT_BJJL where 1=1
+		<if test="infoId != null and infoId != ''">
+			and INFO_ID= #{infoId}
+		</if>
+			order by CREATED_TIME
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
