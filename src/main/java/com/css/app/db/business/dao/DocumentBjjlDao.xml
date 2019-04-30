@@ -17,6 +17,9 @@
 			limit #{offset}, #{limit}
 		</if>
 	</select>
+	<select id="queryLatestBjjl" resultType="com.css.app.db.business.entity.DocumentBjjl">
+		select top 1 * from DB_DOCUMENT_BJJL where INFO_ID= #{infoId} order by CREATED_TIME desc;
+	</select>
 	
  	<select id="queryTotal" resultType="int">
 		select count(*) from DB_DOCUMENT_BJJL 
@@ -32,7 +35,8 @@
 			"DEPT_NAME", 
 			"CREATED_TIME", 
 			"CONTENT", 
-			"INFO_ID"
+			"INFO_ID",
+			"SUB_ID"
 		)
 		values
 		(
@@ -43,7 +47,9 @@
 			#{deptName}, 
 			#{createdTime}, 
 			#{content}, 
-			#{infoId}
+			#{infoId},
+			#{subId}
+			
 		)
 	</insert>
 	 
@@ -56,7 +62,8 @@
 			<if test="deptName != null">"DEPT_NAME" = #{deptName}, </if>
 			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
 			<if test="content != null">"CONTENT" = #{content}, </if>
-			<if test="infoId != null">"INFO_ID" = #{infoId}</if>
+			<if test="infoId != null">"INFO_ID" = #{infoId},</if>
+			<if test="subId != null">"SUB_ID" = #{subId}</if>
 		</set>
 		where ID = #{id}
 	</update>

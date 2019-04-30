@@ -25,4 +25,6 @@ public interface DocumentLsjlService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+	
+	DocumentLsjl queryLatestLsjl(String infoId);
 }

@@ -25,4 +25,6 @@ public interface DocumentBjjlService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+	
+	DocumentBjjl queryLatestBjjl(String infoId);
 }

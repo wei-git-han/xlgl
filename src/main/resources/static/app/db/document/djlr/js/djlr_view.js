@@ -10,8 +10,9 @@ var allReplyListUrl = {"url":"/app/db/replyexplain/allReplyList","dataType":"tex
 //var opinionUrl = {"url":"/app/db/replyexplain/getOpinion","dataType":"text"}; //各局办理反馈list
 var cbDataUrl = {"url":"/app/db/documentinfo/getCuiBanlist","dataType":"text"}; //催办记录list
 var personReplyUrl = {"url":"/app/db/replyexplain/personReply","dataType":"text"}; //某个人的办理反馈
-
+var latestCuiBanUrl = {"url":"/app/db/documentinfo/getLatestCuiBan","dataType":"text"}; //某个人的办理反馈
 var getButtonParamUrl = {"url":"/app/db/documentinfo/buttonParam","dataType":"json"}; //获取按钮显示控制参数
+var cancleOperationUrl = {"url":"/app/db/documentinfo/cancleOperation","dataType":"json"}; //取消办结操作
 
 var cuibanurl = {"url":"/app/db/documentszinfo/press","dataType":"text"};
 var fileId=getUrlParam("fileId")||""; //主文件id
@@ -171,7 +172,7 @@ var pageModule = function(){
 					id = o.teamId;
 					teamId = o.teamId;
 					cbrId = o.cbrId;
-					date = o.updateTime;
+					date = o.firstDate;
 					danwei = o.danwei||"某单位";
 					ld = o.cbrName;
 					content = o.content;
@@ -502,6 +503,20 @@ var pageModule = function(){
 				classed:"cjDialog",
 				url:"/app/db/document/blfk/html/zhuanbanDialog.html?fileIds="+fileId
 			})
+		});
+		
+		//取消办结
+		$("#quxiaobanjie").click(function(){
+			$ajax({
+				url:cancleOperationUrl,
+				data:{id:fileId},
+				success:function(data){
+					if(data.result=="success"){
+						newbootbox.alert("取消办结成功!");
+						showButton();
+					}
+				}
+			});
 		});
 	}
 		

@@ -46,5 +46,10 @@ public class DocumentLsjlServiceImpl implements DocumentLsjlService {
 	public void deleteBatch(String[] ids){
 		documentLsjlDao.deleteBatch(ids);
 	}
+
+	@Override
+	public DocumentLsjl queryLatestLsjl(String infoId) {
+		return documentLsjlDao.queryLatestLsjl(infoId);
+	}
 	
 }

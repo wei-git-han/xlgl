@@ -25,4 +25,6 @@ public interface DocumentCbjlService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+	
+	DocumentCbjl queryLatestCuiBan(String infoId);
 }

@@ -1,5 +1,6 @@
 package com.css.app.db.business.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,6 +68,16 @@ public class ReplyExplainController {
 					for (ReplyExplain replyExplain : dbReplyExplainList) {
 						JSONObject json=new JSONObject();
 						String teamId=replyExplain.getTeamId();
+						Date firstDate = null;
+						Map<String, Object> replyMap =new HashMap<>();
+						replyMap.put("subId", subId);
+						replyMap.put("teamId", teamId);
+						replyMap.put("sort", "asc");
+						List<ReplyExplain> list = replyExplainService.queryList(replyMap);
+						if(list !=null && list.size()>0) {
+							firstDate = list.get(0).getCreatedTime();
+						}
+						json.put("firstDate", firstDate);
 						json.put("cbrId", cbrId);
 						json.put("cbrName", subDocInfo.getUndertakerName());
 						json.put("teamId", teamId);
@@ -120,6 +131,16 @@ public class ReplyExplainController {
 					if(StringUtils.isNotBlank(cbrId)) {
 						JSONObject json=new JSONObject();
 						String teamId=replyExplain.getTeamId();
+						Date firstDate = null;
+						Map<String, Object> replyMap =new HashMap<>();
+						replyMap.put("subId", subId);
+						replyMap.put("teamId", teamId);
+						replyMap.put("sort", "asc");
+						List<ReplyExplain> list = replyExplainService.queryList(replyMap);
+						if(list !=null && list.size()>0) {
+							firstDate = list.get(0).getCreatedTime();
+						}
+						json.put("firstDate", firstDate);
 						json.put("cbrId", cbrId);
 						json.put("cbrName", subDocInfo.getUndertakerName());
 						json.put("subId", subId);

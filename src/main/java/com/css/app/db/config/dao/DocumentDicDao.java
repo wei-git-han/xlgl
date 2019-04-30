@@ -1,12 +1,10 @@
 package com.css.app.db.config.dao;
 
-import com.css.app.db.config.entity.DocumentDic;
-
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.css.app.db.config.entity.DocumentDic;
 import com.css.base.dao.BaseDao;
 
 /**

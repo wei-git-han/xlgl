@@ -25,15 +25,22 @@ import com.css.app.db.business.entity.DocumentBjjl;
 import com.css.app.db.business.entity.DocumentCbjl;
 import com.css.app.db.business.entity.DocumentFile;
 import com.css.app.db.business.entity.DocumentInfo;
+import com.css.app.db.business.entity.DocumentLsjl;
+import com.css.app.db.business.entity.SubDocInfo;
+import com.css.app.db.business.entity.SubDocTracking;
 import com.css.app.db.business.service.DocumentBjjlService;
 import com.css.app.db.business.service.DocumentCbjlService;
 import com.css.app.db.business.service.DocumentFileService;
 import com.css.app.db.business.service.DocumentInfoService;
+import com.css.app.db.business.service.DocumentLsjlService;
+import com.css.app.db.business.service.SubDocInfoService;
+import com.css.app.db.business.service.SubDocTrackingService;
 import com.css.app.db.config.entity.AdminSet;
 import com.css.app.db.config.entity.RoleSet;
 import com.css.app.db.config.service.AdminSetService;
 import com.css.app.db.config.service.RoleSetService;
 import com.css.app.db.util.DbDefined;
+import com.css.app.db.util.DbDocStatusDefined;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.GwPageUtils;
 import com.css.base.utils.Response;
@@ -69,7 +76,12 @@ public class DocumentInfoController {
 	private DocumentCbjlService documentCbjlService;
 	@Autowired
 	private DocumentBjjlService documentBjjlService;
-	
+	@Autowired
+	private DocumentLsjlService documentLsjlService;
+	@Autowired
+	private SubDocTrackingService subDocTrackingService;
+	@Autowired
+	private SubDocInfoService subDocInfoService;
 	
 	/**
 	 * 文件上传保存
@@ -310,6 +322,58 @@ public class DocumentInfoController {
 	}
 	
 	/**
+	 * 取消办结操作
+	 * @param id 主文件id
+	 */
+	@ResponseBody
+	@RequestMapping("/cancleOperation")
+	public void cancleOperation(String id){
+		JSONObject json= new JSONObject();
+		DocumentInfo info = documentInfoService.queryObject(id);
+		Integer status = info.getStatus();//2：办结：3：常态落实
+		Integer subStatus = DbDocStatusDefined.BAN_LI_ZHONG;
+		String subId ="";
+		if(status==2) {
+			//取最后一个办结的局
+			DocumentBjjl bjjl = documentBjjlService.queryLatestBjjl(id);
+			subId = bjjl.getSubId();
+			
+		}else if(status==3){
+			//取最后一个常态落实的局
+			DocumentLsjl  lsjl = documentLsjlService.queryLatestLsjl(id);
+			subId = lsjl.getSubId();
+		}
+		if(StringUtils.isNotBlank(subId)) {
+			////文件局内状态（1:待转办；3：退回修改；5：待落实；7：待审批；9：办理中；10：建议办结；11：办结；12：常态落实）
+			//获取最后一个局主文件
+			SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+			//取最后一条流转记录
+			SubDocTracking tracking = subDocTrackingService.queryLatestRecord(subId);
+			//trackingType（1：转办；2：审批流转；3：退回）
+			String trackingType = tracking.getTrackingType();
+			//如果最后一条流转为审批，接收人为承办人则文件为办理中，否则文件为待审批
+			if(StringUtils.equals("2",trackingType)) {
+				if(!StringUtils.equals(subDocInfo.getUndertaker(), tracking.getReceiverId())) {
+					subStatus = DbDocStatusDefined.DAI_SHEN_PI;
+				}
+			//如果最后一条流转为退回修改，则文件状态为退回修改
+			}else if(StringUtils.equals("3",trackingType)){
+				subStatus = DbDocStatusDefined.TUIHUI_XIUGAI;
+			}
+			//修改最后一个局的文件状态
+			subDocInfo.setDocStatus(subStatus);
+			subDocInfoService.update(subDocInfo);
+			//主文件变为办理中
+			info.setStatus(1);
+			documentInfoService.update(info);
+			json.put("result", "success");
+		}else {
+			json.put("result", "fail");
+		}
+		Response.json(json);
+	}
+	
+	/**
 	 * 删除文件
 	 * @param id 主文件id
 	 */
@@ -349,6 +413,21 @@ public class DocumentInfoController {
 		info.setCuibanFlag("1");
 		documentInfoService.update(info);
 		Response.json("result", "success");
+	}
+	
+	/**
+	 * 获取最新催办数据
+	 * @param infoId 主文件id
+	 */
+	@ResponseBody
+	@RequestMapping("/getLatestCuiBan")
+	public void getLatestCuiBan(String infoId){
+		DocumentCbjl cuiBan =null;
+		DocumentInfo info=documentInfoService.queryObject(infoId);
+		if(StringUtils.equals("1", info.getCuibanFlag())) {
+			cuiBan= documentCbjlService.queryLatestCuiBan(infoId);
+		}
+		Response.json(cuiBan);
 	}
 	
 	/**

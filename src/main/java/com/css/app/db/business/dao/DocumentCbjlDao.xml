@@ -21,6 +21,10 @@
 		</if>
 	</select>
 	
+	<select id="queryLatestCuiBan" resultType="com.css.app.db.business.entity.DocumentCbjl">
+		select top 1 * from DB_DOCUMENT_CBJL where INFO_ID= #{infoId} order by CREATED_TIME desc
+	</select>
+	
  	<select id="queryTotal" resultType="int">
 		select count(*) from DB_DOCUMENT_CBJL 
 	</select>
