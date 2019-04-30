@@ -292,14 +292,17 @@ public class DocumentInfoController {
 		if(documentInfo != null) {
 			Integer status = documentInfo.getStatus();
 			String cuibanFlag = documentInfo.getCuibanFlag();
-			if(StringUtils.equals("1", adminType)) {
+			String szids = documentInfo.getSzReadIds();
+			if(StringUtils.equals("1", adminType)&&!StringUtils.equals("1", roleType)) {
 				zhuanBanBtn=true;
 				if(status>1) {
 					quXiaoBtn=true;
 				}
 			}
-			if(!StringUtils.equals("1", cuibanFlag) && (StringUtils.equals("1", adminType) || StringUtils.equals("1", roleType))) {
+			if(!StringUtils.equals("1", cuibanFlag) && (StringUtils.equals("1", adminType))) {
 				cuiBanBtn=true;
+			}else if(status==1&&StringUtils.equals("1", roleType)&&szids.contains(loginUserId)){
+				cuiBanBtn=true;				
 			}
 		}
 		JSONObject json= new JSONObject();

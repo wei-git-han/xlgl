@@ -525,16 +525,30 @@ var pageModule = function(){
 
 
 //跳转返回事件
+//跳转返回事件
 function skip(){
-	if(fileFrom == "djlr"){//文件来源于登记录入
-		window.location.href="/app/db/document/djlr/html/djlr.html?searchType=djlr";
-	}else if(fileFrom == "grdb"){//文件来源于个人待办
-		window.location.href="/app/db/document/grdb/html/grdb.html?searchType=grdb";
-	}else if(fileFrom=="blfk"){  //文件来源于办理反馈
-		window.location="/app/db/document/blfk/html/blfk.html?searchType=blfk";
-	}else{ 
-		window.location.href="/app/db/document/grdb/html/grdb.html?searchType=grdb";
+	if(frompage==0){
+		window.location.href="/app/db/document/jcdb/html/main.html";
+	}else if(frompage==1){
+		var indexobject = window.top.indexobject;
+		
+		var ifmenu = indexobject.ifmenu;
+		var orgid = indexobject.orgid;
+		var month = indexobject.month;
+		var ytype = indexobject.ytype;
+		window.location.href = "/app/db/document/jcdb/html/table.html?ifmenu=false&orgid="+orgid+"&month="+month+"&ytype="+ytype;
+	}else{
+		if(fileFrom == "djlr"){//文件来源于登记录入
+			window.location.href="/app/db/document/djlr/html/djlr.html?searchType=djlr";
+		}else if(fileFrom == "grdb"){//文件来源于个人待办
+			window.location.href="/app/db/document/grdb/html/grdb.html?searchType=grdb";
+		}else if(fileFrom=="blfk"){  //文件来源于办理反馈
+			window.location="/app/db/document/blfk/html/blfk.html?searchType=blfk";
+		}else{ 
+			window.location.href="/app/db/document/grdb/html/grdb.html?searchType=grdb";
+		}
 	}
+
 }
 
 //批示详情

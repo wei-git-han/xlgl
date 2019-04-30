@@ -204,7 +204,7 @@ public class DocumentSzInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/homelist")
-	public void homelist(Integer page, Integer pagesize,String search,String id ,String state,String month,String year){
+	public void homelist(Integer page, Integer pagesize,String search,String id ,String state,String month,String year,String orgid){
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		SimpleDateFormat sdf2=new SimpleDateFormat("yyyy年MM月dd日");
 		SimpleDateFormat sdf3=new SimpleDateFormat("yyyy");
@@ -231,6 +231,7 @@ public class DocumentSzInfoController {
 				year+="-"+month;
 			}
 		}
+		map.put("orgid", orgid);
 		map.put("year", year);
 		//PageHelper.startPage(page, pagesize);
 		map.put("offset", ((page - 1) * pagesize));

@@ -87,7 +87,8 @@ var pageModule = function(){
                                 	 if(CuibanFlag==1){
                                 		 html = '<label class="table-label2">催办</label>';
                                 	 }
-                                    return html+'<font title="'+rowdata.title+'">'+rowdata.title+'</font>';                                     
+                                	 var fileid="'"+rowdata.id+"'";
+                                    return html+'<font style="cursor:pointer;" class="table-title" onclick="viewpage('+fileid+')" title="'+rowdata.title+'">'+rowdata.title+'</font>';                                     
                                  }},
                                  {display:"批示指示内容",name:"pszsmr",width:"200px",align:"center",paixu:false,render:function(rowdata){
                                     return rowdata.pszsmr;                                        
@@ -221,4 +222,7 @@ var cbrenid = "";
 var cbfn = function(ids){
 	cbrenid = ids;
 	$("#viewcont").modal("show");
+}
+var viewpage = function(fileId){
+	window.location.href = "../../djlr/html/djlr_view.html?fileId="+fileId+"&frompage=1";//frompage放在最后
 }

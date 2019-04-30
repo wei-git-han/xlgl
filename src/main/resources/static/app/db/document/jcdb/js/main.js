@@ -2,7 +2,7 @@ var url1 = {"url":"/app/db/documentszinfo/homelist","dataType":"text"};
 var url2 = {"url":"/app/db/documentszinfo/grouplist","dataType":"text"};
 var url3 = {"url":"/app/db/documentszinfo/read","dataType":"text"};
 var url4 = {"url":"/app/db/documentszinfo/press","dataType":"text"};
-
+var groupid=null;
 var grid = null;
 var pageModule = function(){
 	
@@ -17,6 +17,10 @@ var pageModule = function(){
 				$(".menu").html('');
 				$.each(data,function(i){
 					var id = this.id;
+					if(i==0){
+						groupid=id;
+						initgrid();
+					}
 					var name = this.name;
 					var count = this.count;
 					var count2 = "";
@@ -28,7 +32,7 @@ var pageModule = function(){
 						}
 					}
 					$(".menu").append(
-					`
+					`		
 							<li class="${i==0?'active':''}" id="${id}">
 								<a>
 									<i class="fa fa-chevron-right "></i>
@@ -236,7 +240,7 @@ var pageModule = function(){
                     height:"100%",
                     checkbox: false,
                     rownumberyon:false,
-                    paramobj:{month:'all'},
+                    paramobj:{month:'all',id:groupid},
                     overflowx:false,
                     rownumberwidth:"50px",
                     pagesize: 4,
@@ -268,9 +272,6 @@ var pageModule = function(){
 	
 	
 	var initother = function(){
-	
-	
-	
 		$("#fasong").click(function(){
 			var textarea = $("#textarea").val();
 			if($.trim(textarea)==""){
@@ -307,20 +308,14 @@ var pageModule = function(){
 			window.location.href = "index.html"
 		});
 		
-		
-		
 	}
-	
-	
-	
-	
 	
 	
 	return{
 		//加载页面处理程序
 		initControl:function(){
 			initmenu();
-			initgrid();
+			
 			initother();
 		}
 	}
@@ -354,5 +349,6 @@ var cbfn = function(ids){
 }
 
 var viewpage = function(fileId,subId,fileFrom){
-	window.location.href = "../../view2/html/view.html";
+
+	window.location.href = "../../djlr/html/djlr_view.html?fileId="+fileId+"&frompage=0";//frompage放在最后
 }
