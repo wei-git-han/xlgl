@@ -18,24 +18,32 @@ var pageModule = function(){
                	 	var bgColor="";
                	 	if(rowdata.status==1){
 	               	 	statusName="办理中";
-	               		bgColor="rgba(240, 96, 0, 1)";
+	               		bgColor="#2BAA81";
             	 	}else if(rowdata.status==2){
 	               	 	statusName="已办结";
-	               		bgColor="rgba(240, 96, 0, 1)";
+	               		bgColor="#BCBCBC";
                	 	}else if(rowdata.status==3){
 	               	 	statusName="常态落实";
-	               	 	bgColor="rgba(240, 96, 0, 1)";
+	               	 	bgColor="#BCBCBC";
                	 	}
-  				  	 return '<div title="'+statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+statusName+'</div>';
+  				  	return '<div title="'+statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+statusName+'</div>';
                  }},
                  {display:"办件标题",name:"",width:"15%",align:"left",render:function(rowdata){
-                	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'" target="iframe1">'+rowdata.docTitle+'</a>'
+                	 var cuiban="";
+                 	 if(rowdata.cuibanFlag=="1"){
+                 		 cuiban = '<label class="cuibanlabel">催办</label>';
+                	 }
+                	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
                  }},
                  {display:"批示指示内容",name:"",width:"20%",align:"left",paixu:false,title:true,render:function(rowdata){
                 	 return '';
                  }},
                  {display:"督办落实情况",name:"",width:"20%",align:"left",paixu:false,title:true,render:function(rowdata){
-                	 return '';
+                	 var duban="";
+                 	 if(rowdata.cuibanFlag=="0"){
+                 		duban = '<label class="cuibanlabel">已更新</label>';
+                	 }
+                	 return duban+'';
                  }},
                  {display:"承办单位/人",name:"",width:"11%",align:"left",paixu:false,title:true,render:function(rowdata){
                		return '';

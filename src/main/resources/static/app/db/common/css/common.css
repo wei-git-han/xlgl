@@ -945,3 +945,10 @@ div.radio, div.radio span, div.radio input {
     color: #fff!important;
     font-size: 14px;
 }
+
+.cuibanlabel{
+	background:#FF4F4F;
+	color:#fff;
+	padding:0px 3px;
+	margin-right:5px;
+}

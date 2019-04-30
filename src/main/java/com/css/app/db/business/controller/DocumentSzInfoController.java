@@ -271,7 +271,7 @@ public class DocumentSzInfoController {
 			String cont="";
 			String gengxin="0";
 			List<ReplyExplain> dbReplyExplainList = replyExplainService.queryList(danweimap);
-			for (ReplyExplain replyExplain : dbReplyExplainList) {
+			/*for (ReplyExplain replyExplain : dbReplyExplainList) {
 				yijianjo=new JSONObject();
 				cbdw=replyExplain.getSubDeptName();
 				cbry=replyExplain.getUserName();
@@ -285,13 +285,28 @@ public class DocumentSzInfoController {
 					gengxin="1";//已更新显示
 				}
 				break;
+			}*/
+			
+			
+			cbdw=documentInfo.getLatestSubDept();
+			cbry=documentInfo.getLatestUndertaker();
+			cont=documentInfo.getLatestReply();
+			if(StringUtils.isNotBlank(cbdw)&&(StringUtils.isEmpty(sz)||!(sz).contains(userid))) {
+				gengxin="1";//已更新显示
 			}
+			
 			jo.put("gengxin",gengxin);//已更新显示
 			jo.put("dblsqk",cont);
 			if("".equals(cbdw)) {
 				jo.put("cbdwry","");				
 			}else {
-				jo.put("cbdwry",cbdw+"/"+cbry);								
+				yijianjo.put("dw",cbdw);
+				yijianjo.put("ry", cbry);
+				yijianjo.put("cont", cont);
+				
+				yijianja.add(yijianjo);
+				jo.put("cbdwry",cbdw+"/"+cbry);	
+				
 			}
 			
 			

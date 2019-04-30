@@ -19,24 +19,28 @@ var pageModule = function(){
 	               		bgColor="rgba(240, 96, 0, 1)";
 	           	 		if(rowdata.dealUserName){
 	           	 			statusName="待"+rowdata.dealUserName+"修改";
+	           	 			bgColor="#FF8C40";
 	           	 		}
                	 	}else if(rowdata.docStatus==5){
 	               	 	statusName="待落实";
 	               	 	bgColor="rgba(240, 96, 0, 1)";
 	           	 		if(rowdata.dealUserName){
 	           	 			statusName="待"+rowdata.dealUserName+"落实";
+	           	 			bgColor="#FF8C40";
 	           	 		}
                	 	}else if(rowdata.docStatus==7){
 	               	 	statusName="待审批";
 	               	 	bgColor="rgba(60, 123, 255, 1)";
 	           	 		if(rowdata.dealUserName){
 	           	 			statusName="待"+rowdata.dealUserName+"审批";
+	           	 			bgColor="#6699FF";
 	           	 		}
                	 	}else if(rowdata.docStatus==9){
 	               	 	statusName="办理中";
 	               	 	bgColor="rgba(43, 170, 129, 1)";
 	           	 		if(rowdata.dealUserName){
 	           	 			statusName=rowdata.dealUserName+"办理中";
+	           	 			bgColor="#33CC99";
 	           	 		}
                	 	}else if(rowdata.docStatus==10){
 	               	 	statusName="建议办结";
@@ -48,7 +52,11 @@ var pageModule = function(){
   				  	return '<div title="'+statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+statusName+'</div>';
                 }},
                 {display:"办件标题",name:"docTitle",width:"13%",align:"left",render:function(rowdata){
-               	 	return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../view/html/view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&fileFrom=grdb" target="iframe1">'+rowdata.docTitle+'</a>'
+                	var cuiban="";
+                	if(rowdata.cuibanFlag=="1"){
+                		cuiban = '<label class="cuibanlabel">催办</label>';
+               	    }
+               	 	return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../view/html/view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&fileFrom=grdb" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
                 }},
                 {display:"紧急程度",name:"urgencyDegree",width:"7%",align:"center",paixu:false,render:function(rowdata){
                	 return rowdata.urgencyDegree;

@@ -18,11 +18,26 @@ var personReplyUrl = {"url":"/app/db/replyexplain/personReply","dataType":"text"
 //var allReplyListUrl = {"url":"/app/db/replyexplain/allReplyList","dataType":"text"}; //各局办理反馈list
 //var opinionUrl = {"url":"/app/db/replyexplain/getOpinion","dataType":"text"}; //各局办理反馈list
 var cbDataUrl = {"url":"/app/db/documentinfo/getCuiBanlist","dataType":"text"}; //催办记录list
+var latestCuiBanUrl = {"url":"/app/db/documentinfo/getLatestCuiBan","dataType":"text"}; //获取最新的催办
 var fileId=getUrlParam("fileId")||""; //主文件id
 var subId=getUrlParam("subId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var isCbr = 0;
 var pageModule = function(){
+	//判断是否催办
+	var ifcuibanfn = function(){
+		$ajax({
+			url:latestCuiBanUrl,
+			data:{infoId:fileId},
+			success:function(data){
+				if(data && !!data){
+					$(".blfkchangeH").attr("style","position:absolute;top:34px;left:0;bottom:0;width:100%;right:0;")
+					$("#ifcuibanContent").text(data.userName+"催办："+data.urgeContent).show();
+				}
+			}
+		})
+	}
+	
 	/* 按钮权限控制 */
 	var showButton = function(){
 		$ajax({
@@ -515,7 +530,7 @@ var pageModule = function(){
 			}
 			$ajax({
 				url:returnUrl,
-				data:{subId:subId,replyContent:replyContent},
+				data:{infoId:fileId,subId:subId,replyContent:replyContent},
 				type: "GET",
 				success:function(data){
 					if(data.result == "success"){
@@ -534,10 +549,11 @@ var pageModule = function(){
 			}
 			$ajax({
 				url:finishUrl,
-				data:{subId:subId,replyContent:replyContent},
+				data:{infoId:fileId,subId:subId,replyContent:replyContent},
 				type: "GET",
 				success:function(data){
 					if(data.result == "success"){
+						newbootbox.alert("审批完成！");
 						showButton();
 					}
 				}
@@ -663,6 +679,7 @@ var pageModule = function(){
 	return{
 		//加载页面处理程序
 		initControl:function(){
+			ifcuibanfn();
 			showButton();
 			takeMenufn();
 			initdata();

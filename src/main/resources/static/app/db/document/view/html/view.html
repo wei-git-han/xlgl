@@ -83,43 +83,49 @@
 					            		</ul>
 						            </div>
 						        </div>
-						        <div class="tab-pane" id="tab_15_2">
-						        	<div class="pr100">
-						        		<div class="blfk_top">
-						        			<div class="scroller"  style="padding: 0px 20px">
-						        				<div class="commonHtml">
-								            	</div>
-								            	<div class="line3"></div>
-								            	<div class="timelinesview">
-													<div class="pagemenu">
-													</div>
-			    								</div>
-						        			</div>
-						            	</div>
-						            	<div class="ifShow blfk_bottom">
-						            		<div class="pr100">
-						            			<form action="" class="pr100" id="commentForm" method="post" enctype="multipart/form-data">
-						            				<input type="hidden" id="editRecordId" name="editRecordId" /><!-- 编辑的附件id -->
-						            				<input type="hidden" id="editTeamId" name="editTeamId" /><!-- 编辑的反馈的teamId -->
-													<div class="sryj_title">输入意见/反馈：</div>
-								        			<div class="sryj_center">
-								        				<textarea class="opinionContent" id="replyContent" maxlength="500" placeholder="此处填写办理进度供部内审议" ></textarea>
-								        			</div>
-								        			<div class="sryj_footer">
-								        				<button type="button" class="ifShow" id="sptg">审批通过</button>
-								        				<button type="button" class="ifShow" id="fhxg">返回修改</button>
-								        				<button type="button" class="ifShow" id="tijiao">送审批</button>
-								        				<button type="button" class="ifShow" id="save">保存</button>
-								        				<button type="button" id="clear">清屏</button>
-								        				<div class="ifShow" id="ifaddfj" style="display:inline-block;vertical-align: top;margin-right: 20px;margin-top: 6px;float:right;">
-															<a class="filebutton addfjbtn" id="file1"><i class="fa fa-link"></i> 添加附件 </a>
-											                <div class="filelist"  name="file1">附件列表:</div>
-								        				</div>
-								        				<button type="button" class="ifShow showfj" id="showfj">附件</button>
-								        			</div>
-							        			</form>
-						            		</div>
-						            	</div>
+						        <div class="tab-pane" id="tab_15_2" style="position: relative;">
+						        	<!-- 判断是否有催办内容 -->
+						        	<div id="ifcuibanContent" class="ifcuibanContent">
+						        		
+						        	</div>
+						        	<div class="blfkchangeH" style="overflow:hidden;">
+							        	<div class="pr100">
+							        		<div class="blfk_top">
+							        			<div class="scroller"  style="padding: 0px 20px">
+							        				<div class="commonHtml">
+									            	</div>
+									            	<div class="line3"></div>
+									            	<div class="timelinesview">
+														<div class="pagemenu">
+														</div>
+				    								</div>
+							        			</div>
+							            	</div>
+							            	<div class="ifShow blfk_bottom">
+							            		<div class="pr100">
+							            			<form action="" class="pr100" id="commentForm" method="post" enctype="multipart/form-data">
+							            				<input type="hidden" id="editRecordId" name="editRecordId" /><!-- 编辑的附件id -->
+							            				<input type="hidden" id="editTeamId" name="editTeamId" /><!-- 编辑的反馈的teamId -->
+														<div class="sryj_title">输入意见/反馈：</div>
+									        			<div class="sryj_center">
+									        				<textarea class="opinionContent" id="replyContent" maxlength="500" placeholder="此处填写办理进度供部内审议" ></textarea>
+									        			</div>
+									        			<div class="sryj_footer">
+									        				<button type="button" class="ifShow" id="sptg">审批通过</button>
+									        				<button type="button" class="ifShow" id="fhxg">返回修改</button>
+									        				<button type="button" class="ifShow" id="tijiao">送审批</button>
+									        				<button type="button" class="ifShow" id="save">保存</button>
+									        				<button type="button" id="clear">清屏</button>
+									        				<div class="ifShow" id="ifaddfj" style="display:inline-block;vertical-align: top;margin-right: 20px;margin-top: 6px;float:right;">
+																<a class="filebutton addfjbtn" id="file1"><i class="fa fa-link"></i> 添加附件 </a>
+												                <div class="filelist"  name="file1">附件列表:</div>
+									        				</div>
+									        				<button type="button" class="ifShow showfj" id="showfj">附件</button>
+									        			</div>
+								        			</form>
+							            		</div>
+							            	</div>
+							        	</div>
 						        	</div>
 						        </div>
 						        <div class="tab-pane" id="tab_15_3">

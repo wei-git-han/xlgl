@@ -199,7 +199,8 @@
 			"FINISH_TIME",
 			"LATEST_REPLY",
 			"LATEST_SUB_DEPT",
-			"LATEST_UNDERTAKER"
+			"LATEST_UNDERTAKER",
+			"LATEST_REPLY_TIME"
 		)
 		values
 		(
@@ -227,7 +228,8 @@
 			#{finishTime},
 			#{latestReply},
 			#{latestSubDept},
-			#{latestUndertaker}
+			#{latestUndertaker},
+			#{latestReplyTime}
 		)
 	</insert>
 	 
@@ -257,7 +259,8 @@
 			<if test="finishTime != null">"FINISH_TIME" = #{finishTime}</if>
 			<if test="latestReply != null">"LATEST_REPLY" = #{latestReply},</if>
 			<if test="latestSubDept != null">"LATEST_SUB_DEPT" = #{latestSubDept},</if>
-			<if test="latestUndertaker != null">"LATEST_UNDERTAKER" = #{latestUndertaker}</if>
+			<if test="latestUndertaker != null">"LATEST_UNDERTAKER" = #{latestUndertaker},</if>
+			<if test="latestReplyTime != null">"LATEST_REPLY_TIME" = #{latestReplyTime}</if>
 		</set>
 		where ID = #{id}
 	</update>

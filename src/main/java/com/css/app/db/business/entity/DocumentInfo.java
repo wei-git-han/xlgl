@@ -65,6 +65,8 @@ public class DocumentInfo implements Serializable {
 	private String latestSubDept;
 	//最新反馈的承办人
 	private String latestUndertaker;
+	//最新反馈审批完成时间
+	private Date latestReplyTime;
 	/**
 	 * 设置：唯一标识
 	 */
@@ -334,6 +336,12 @@ public class DocumentInfo implements Serializable {
 	}
 	public void setLatestUndertaker(String latestUndertaker) {
 		this.latestUndertaker = latestUndertaker;
+	}
+	public Date getLatestReplyTime() {
+		return latestReplyTime;
+	}
+	public void setLatestReplyTime(Date latestReplyTime) {
+		this.latestReplyTime = latestReplyTime;
 	}
 	
 }

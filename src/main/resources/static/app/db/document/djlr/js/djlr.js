@@ -29,7 +29,11 @@ var pageModule = function(){
    				  	 return '<div title="'+documentStatusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+documentStatusName+'</div>';
                  }},
                  {display:"办件标题",name:"",width:"15%",align:"left",render:function(rowdata){
-                	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+rowdata.docTitle+'</a>'
+                	 var cuiban="";
+                 	 if(rowdata.cuibanFlag=="1"){
+                 		 cuiban = '<label class="cuibanlabel">催办</label>';
+                	 }
+                	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
                  }},
                  {display:"紧急程度",name:"",width:"6%",align:"center",paixu:false,render:function(rowdata){
                 	 return rowdata.urgencyDegree;

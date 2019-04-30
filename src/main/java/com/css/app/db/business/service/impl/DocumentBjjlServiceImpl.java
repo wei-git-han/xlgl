@@ -3,12 +3,15 @@ package com.css.app.db.business.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import com.css.app.db.business.dao.DocumentBjjlDao;
 import com.css.app.db.business.entity.DocumentBjjl;
 import com.css.app.db.business.service.DocumentBjjlService;
+import com.css.base.utils.CurrentUser;
+import com.css.base.utils.UUIDUtils;
 
 
 
@@ -28,8 +31,18 @@ public class DocumentBjjlServiceImpl implements DocumentBjjlService {
 	}
 	
 	@Override
-	public void save(DocumentBjjl dbDocumentBjjl){
-		documentBjjlDao.save(dbDocumentBjjl);
+	public void save(DocumentBjjl bjjl){
+		String loginUserDeptId=CurrentUser.getDepartmentId();
+		String loginUserId=CurrentUser.getUserId();
+		String loginUserName=CurrentUser.getUsername();
+		String loginUserDeptName=CurrentUser.getOrgName();
+		bjjl.setId(UUIDUtils.random());
+		bjjl.setUserId(loginUserId);
+		bjjl.setUserName(loginUserName);
+		bjjl.setDeptId(loginUserDeptId);
+		bjjl.setDeptName(loginUserDeptName);
+		bjjl.setCreatedTime(new Date());
+		documentBjjlDao.save(bjjl);
 	}
 	
 	@Override

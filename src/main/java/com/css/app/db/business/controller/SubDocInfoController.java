@@ -74,7 +74,7 @@ public class SubDocInfoController {
 	private DocumentCbjlService documentCbjlService;
 	@Autowired
 	private DocumentLsjlService documentLsjlService;
-	private List<ReplyExplain> querySubLatestReply;
+	
 	/**
 	 * 局内待办列表
 	 */
@@ -423,7 +423,7 @@ public class SubDocInfoController {
 		}
 		//催办完成
 		DocumentInfo info = documentInfoService.queryObject(infoId);
-		if(StringUtils.equals("1", info.getCuibanFlag())){
+		if(StringUtils.equals(info.getCuibanFlag(), "1")){
 			//催办记录添加响应承办人，并标识完成
 /*			Map<String, Object> repMap = new HashMap<>();
 			repMap.put("subId", subId);
@@ -458,6 +458,7 @@ public class SubDocInfoController {
 				documentCbjlService.update(cbjl);
 			}
 			//主记录不标识催办,添加最新的反馈
+			info.setSzReadIds("");
 			info.setCuibanFlag("0");
             //获取最新反馈(各组)
 			List<ReplyExplain> latestReplyList = replyExplainService.querySubLatestReply(infoId, subId);
@@ -465,6 +466,7 @@ public class SubDocInfoController {
 				info.setLatestReply(latestReplyList.get(0).getReplyContent());
 				info.setLatestSubDept(subDocInfo.getSubDeptName());
 				info.setLatestUndertaker(subDocInfo.getUndertakerName());
+				info.setLatestReplyTime(new Date());
 			}
 			documentInfoService.update(info);
 		}

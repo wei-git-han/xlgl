@@ -338,11 +338,22 @@ public class DocumentInfoController {
 			//取最后一个办结的局
 			DocumentBjjl bjjl = documentBjjlService.queryLatestBjjl(id);
 			subId = bjjl.getSubId();
+			DocumentBjjl newBjjl=new DocumentBjjl();
+			newBjjl.setContent("取消办结");
+			newBjjl.setInfoId(id);
+			newBjjl.setSubId(subId);
+			documentBjjlService.save(newBjjl);
 			
 		}else if(status==3){
 			//取最后一个常态落实的局
 			DocumentLsjl  lsjl = documentLsjlService.queryLatestLsjl(id);
 			subId = lsjl.getSubId();
+			//添加落实记录
+			DocumentLsjl newLsjl= new DocumentLsjl();
+			newLsjl.setContent("取消落实");
+			newLsjl.setInfoId(id);
+			newLsjl.setSubId(subId);
+			documentLsjlService.save(newLsjl);
 		}
 		if(StringUtils.isNotBlank(subId)) {
 			////文件局内状态（1:待转办；3：退回修改；5：待落实；7：待审批；9：办理中；10：建议办结；11：办结；12：常态落实）
@@ -367,13 +378,6 @@ public class DocumentInfoController {
 			//主文件变为办理中
 			info.setStatus(1);
 			documentInfoService.update(info);
-			//
-			DocumentLsjl lsjl= new DocumentLsjl();
-			//添加落实记录
-			lsjl.setContent("取消办结");
-			lsjl.setInfoId(id);
-			lsjl.setSubId(subId);
-			documentLsjlService.save(lsjl);
 			json.put("result", "success");
 		}else {
 			json.put("result", "fail");

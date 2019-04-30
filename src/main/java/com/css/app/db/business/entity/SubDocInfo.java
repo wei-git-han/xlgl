@@ -55,8 +55,6 @@ public class SubDocInfo implements Serializable {
 	private String latestReply;
 	//最新反馈单位
 	private String latestSubDept;
-	//最新反馈的承办人
-	private String latestUndertaker;
 	/*----------------------------列表接收值---------end---------------------------*/	
 	/**
 	 * 设置：唯一标识
@@ -213,12 +211,5 @@ public class SubDocInfo implements Serializable {
 	}
 	public void setLatestSubDept(String latestSubDept) {
 		this.latestSubDept = latestSubDept;
-	}
-	public String getLatestUndertaker() {
-		return latestUndertaker;
-	}
-	public void setLatestUndertaker(String latestUndertaker) {
-		this.latestUndertaker = latestUndertaker;
-	}
-	
+	}	
 }
