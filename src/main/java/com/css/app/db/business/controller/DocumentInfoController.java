@@ -264,6 +264,7 @@ public class DocumentInfoController {
 		} else {
 			uuid=UUIDUtils.random();
 			documentInfo.setId(uuid);
+			documentInfo.setStatus(0);
 			documentInfo.setCreatedTime(new Date());
 			documentInfoService.save(documentInfo);
 			jo.put("id",uuid);
@@ -304,17 +305,14 @@ public class DocumentInfoController {
 		if(documentInfo != null) {
 			Integer status = documentInfo.getStatus();
 			String cuibanFlag = documentInfo.getCuibanFlag();
-			String szids = documentInfo.getSzReadIds();
-			if(StringUtils.equals("1", adminType)&&!StringUtils.equals("1", roleType)) {
+			if(StringUtils.equals("1", adminType)) {
 				zhuanBanBtn=true;
 				if(status>1) {
 					quXiaoBtn=true;
 				}
 			}
-			if(!StringUtils.equals("1", cuibanFlag) && (StringUtils.equals("1", adminType))) {
+			if(!StringUtils.equals("1", cuibanFlag) && (StringUtils.equals("1", adminType) || StringUtils.equals("1", roleType))) {
 				cuiBanBtn=true;
-			}else if(status==1&&StringUtils.equals("1", roleType)&&szids.contains(loginUserId)){
-				cuiBanBtn=true;				
 			}
 		}
 		JSONObject json= new JSONObject();
@@ -369,11 +367,24 @@ public class DocumentInfoController {
 			//主文件变为办理中
 			info.setStatus(1);
 			documentInfoService.update(info);
+			//
+			DocumentLsjl lsjl= new DocumentLsjl();
+			//添加落实记录
+			lsjl.setContent("取消办结");
+			lsjl.setInfoId(id);
+			lsjl.setSubId(subId);
+			documentLsjlService.save(lsjl);
 			json.put("result", "success");
 		}else {
 			json.put("result", "fail");
 		}
 		Response.json(json);
+	}
+	
+	@ResponseBody
+	@RequestMapping("/cheHuiOperation")
+	public void cheHuiOperation(String id){
+		
 	}
 	
 	/**

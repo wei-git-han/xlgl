@@ -74,6 +74,7 @@ public class SubDocInfoController {
 	private DocumentCbjlService documentCbjlService;
 	@Autowired
 	private DocumentLsjlService documentLsjlService;
+	private List<ReplyExplain> querySubLatestReply;
 	/**
 	 * 局内待办列表
 	 */
@@ -241,9 +242,6 @@ public class SubDocInfoController {
 	@RequestMapping("/banJieOperation")
 	public void banJieOperation(String infoId,String subId){
 		String loginUserDeptId=CurrentUser.getDepartmentId();
-		String loginUserId=CurrentUser.getUserId();
-		String loginUserName=CurrentUser.getUsername();
-		String loginUserDeptName=CurrentUser.getOrgName();
 		JSONObject json= new JSONObject();
 		if(StringUtils.isNotBlank(infoId) && StringUtils.isNotBlank(subId) && StringUtils.isNotBlank(loginUserDeptId)) {
 			DocumentBjjl bjjl=new DocumentBjjl();
@@ -257,25 +255,21 @@ public class SubDocInfoController {
 				bjjl.setContent("建议办结");
 			}else {//如果最小状态值不小于建议办结的状态，且最大值小于建议落实，说明本分支机构状态全部为建议办结，主文件也标示为办结
 				if(maxDocStatus<DbDocStatusDefined.JIAN_YI_LUO_SHI) {
+					//主文件标示为办结
 					DocumentInfo info = documentInfoService.queryObject(infoId);
 					info.setStatus(2);
 					documentInfoService.update(info);
-					//各分支文件变为办结
-					subDocInfoService.updateDocStatus(DbDocStatusDefined.BAN_JIE, new Date() , infoId);
+					//当前分支文件变为办结
+					//subDocInfoService.updateDocStatus(DbDocStatusDefined.BAN_JIE, new Date() , infoId);
+					subInfo.setDocStatus(DbDocStatusDefined.BAN_JIE);
 					bjjl.setContent("自动办结");
 				}
 			}
 			subInfo.setUpdateTime(new Date());
 			subDocInfoService.update(subInfo);
 			//添加办结记录
-			bjjl.setId(UUIDUtils.random());
-			bjjl.setUserId(loginUserId);
-			bjjl.setUserName(loginUserName);
-			bjjl.setDeptId(loginUserDeptId);
-			bjjl.setDeptName(loginUserDeptName);
 			bjjl.setInfoId(infoId);
 			bjjl.setSubId(subId);
-			bjjl.setCreatedTime(new Date());
 			documentBjjlService.save(bjjl);
 			json.put("result", "success");
 		}else {
@@ -292,9 +286,6 @@ public class SubDocInfoController {
 	@RequestMapping("/luoShiOperation")
 	public void luoShiOperation(String infoId,String subId){
 		String loginUserDeptId=CurrentUser.getDepartmentId();
-		String loginUserId=CurrentUser.getUserId();
-		String loginUserName=CurrentUser.getUsername();
-		String loginUserDeptName=CurrentUser.getOrgName();
 		JSONObject json= new JSONObject();
 		if(StringUtils.isNotBlank(infoId)) {
 			int minDocStatus = subDocInfoService.queryMinDocStatus(infoId,loginUserDeptId);
@@ -312,21 +303,16 @@ public class SubDocInfoController {
 					info.setStatus(3);
 					documentInfoService.update(info);
 					//各分支文件变为常态落实
-					subDocInfoService.updateDocStatus(DbDocStatusDefined.CHANG_TAI_LUO_SHI, new Date() , infoId);
+					//subDocInfoService.updateDocStatus(DbDocStatusDefined.CHANG_TAI_LUO_SHI, new Date() , infoId);
+					subInfo.setDocStatus(DbDocStatusDefined.CHANG_TAI_LUO_SHI);
 					lsjl.setContent("自动常态落实");
 				}
 			}
 			subInfo.setUpdateTime(new Date());
 			subDocInfoService.update(subInfo);
 			//添加落实记录
-			lsjl.setId(UUIDUtils.random());
-			lsjl.setUserId(loginUserId);
-			lsjl.setUserName(loginUserName);
-			lsjl.setDeptId(loginUserDeptId);
-			lsjl.setDeptName(loginUserDeptName);
 			lsjl.setInfoId(infoId);
 			lsjl.setSubId(subId);
-			lsjl.setCreatedTime(new Date());
 			documentLsjlService.save(lsjl);
 			json.put("result", "success");
 		}else {
@@ -439,7 +425,7 @@ public class SubDocInfoController {
 		DocumentInfo info = documentInfoService.queryObject(infoId);
 		if(StringUtils.equals("1", info.getCuibanFlag())){
 			//催办记录添加响应承办人，并标识完成
-			Map<String, Object> repMap = new HashMap<>();
+/*			Map<String, Object> repMap = new HashMap<>();
 			repMap.put("subId", subId);
 			repMap.put("showFlag", "0");
 			repMap.put("sort", "asc");
@@ -458,9 +444,28 @@ public class SubDocInfoController {
 					cbjl.setFinishFlag(1);
 					documentCbjlService.update(cbjl);
 				}
+			}*/
+			Map<String, Object> cuiBanMap = new HashMap<>();
+			cuiBanMap.put("infoId", infoId);
+			cuiBanMap.put("finishFlag", 0);
+			List<DocumentCbjl> cuibanList = documentCbjlService.queryList(cuiBanMap);
+			if(cuibanList != null && cuibanList.size()>0) {
+				DocumentCbjl cbjl = cuibanList.get(0);
+				cbjl.setCbrId(subDocInfo.getUndertaker());
+				cbjl.setCbrName(subDocInfo.getUndertakerName());
+				cbjl.setCbTime(new Date());
+				cbjl.setFinishFlag(1);
+				documentCbjlService.update(cbjl);
 			}
-			//主记录不标识催办
+			//主记录不标识催办,添加最新的反馈
 			info.setCuibanFlag("0");
+            //获取最新反馈(各组)
+			List<ReplyExplain> latestReplyList = replyExplainService.querySubLatestReply(infoId, subId);
+			if(latestReplyList != null) {
+				info.setLatestReply(latestReplyList.get(0).getReplyContent());
+				info.setLatestSubDept(subDocInfo.getSubDeptName());
+				info.setLatestUndertaker(subDocInfo.getUndertakerName());
+			}
 			documentInfoService.update(info);
 		}
 		//反馈对他局和部可见(顺序必须放标识催办完成后边，因为showFlag的值作为参数进行了查询)

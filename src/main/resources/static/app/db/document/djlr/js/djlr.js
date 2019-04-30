@@ -1,10 +1,11 @@
 var tableList= {"url":"/app/db/documentinfo/list","dataType":"text"};//table数据
 var delDocUrl = {"url":"/app/db/documentinfo/delete","dataType":"text"};//表格数据删除
 var numsList={"url":"/app/db/documentinfo/numsList","dataType":"text"};//筛选状态数字统计
+var chehuiDocUrl = {"url":"/app/db/documentinfo/cheHuiOperation","dataType":"text"};//表格数据撤回
 
 var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//部门树
 var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//人员树
-var chehuiDocUrl = {"url":"/app/db/document/djlr/data/success.json","dataType":"text"};//表格数据撤回
+
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var grid = null;
 var total=0;//列表中，数据的总条数

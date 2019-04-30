@@ -196,7 +196,10 @@
 			"CREATED_TIME", 
 			"REMARK",
 			"STATUS",
-			"FINISH_TIME"
+			"FINISH_TIME",
+			"LATEST_REPLY",
+			"LATEST_SUB_DEPT",
+			"LATEST_UNDERTAKER"
 		)
 		values
 		(
@@ -221,7 +224,10 @@
 			#{createdTime},
 			#{remark},
 			#{status},
-			#{finishTime}
+			#{finishTime},
+			#{latestReply},
+			#{latestSubDept},
+			#{latestUndertaker}
 		)
 	</insert>
 	 
@@ -249,6 +255,9 @@
 			<if test="remark != null">"REMARK" = #{remark},</if>
 			<if test="status != null">"STATUS" = #{status},</if>
 			<if test="finishTime != null">"FINISH_TIME" = #{finishTime}</if>
+			<if test="latestReply != null">"LATEST_REPLY" = #{latestReply},</if>
+			<if test="latestSubDept != null">"LATEST_SUB_DEPT" = #{latestSubDept},</if>
+			<if test="latestUndertaker != null">"LATEST_UNDERTAKER" = #{latestUndertaker}</if>
 		</set>
 		where ID = #{id}
 	</update>

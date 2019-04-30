@@ -54,12 +54,17 @@ public class DocumentInfo implements Serializable {
 	//创建时间
 	private Date createdTime;
 	//办理状态(0:还未转办1：办理中；2：办结：3：常态落实)
-	private Integer status = 0; 
+	private Integer status; 
 	//完成时间
 	private Date finishTime;
 	//备注
 	private String remark;
-
+	//最新反馈
+	private String latestReply;
+	//最新反馈单位
+	private String latestSubDept;
+	//最新反馈的承办人
+	private String latestUndertaker;
 	/**
 	 * 设置：唯一标识
 	 */
@@ -311,6 +316,24 @@ public class DocumentInfo implements Serializable {
 	}
 	public void setFinishTime(Date finishTime) {
 		this.finishTime = finishTime;
+	}
+	public String getLatestReply() {
+		return latestReply;
+	}
+	public void setLatestReply(String latestReply) {
+		this.latestReply = latestReply;
+	}
+	public String getLatestSubDept() {
+		return latestSubDept;
+	}
+	public void setLatestSubDept(String latestSubDept) {
+		this.latestSubDept = latestSubDept;
+	}
+	public String getLatestUndertaker() {
+		return latestUndertaker;
+	}
+	public void setLatestUndertaker(String latestUndertaker) {
+		this.latestUndertaker = latestUndertaker;
 	}
 	
 }

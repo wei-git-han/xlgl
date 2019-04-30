@@ -51,6 +51,12 @@ public class SubDocInfo implements Serializable {
 	private String cuibanFlag;
 	//文件类型
 	private String docTypeName;
+	//最新反馈
+	private String latestReply;
+	//最新反馈单位
+	private String latestSubDept;
+	//最新反馈的承办人
+	private String latestUndertaker;
 	/*----------------------------列表接收值---------end---------------------------*/	
 	/**
 	 * 设置：唯一标识
@@ -196,4 +202,23 @@ public class SubDocInfo implements Serializable {
 	public void setFinishFlag(String finishFlag) {
 		this.finishFlag = finishFlag;
 	}
+	public String getLatestReply() {
+		return latestReply;
+	}
+	public void setLatestReply(String latestReply) {
+		this.latestReply = latestReply;
+	}
+	public String getLatestSubDept() {
+		return latestSubDept;
+	}
+	public void setLatestSubDept(String latestSubDept) {
+		this.latestSubDept = latestSubDept;
+	}
+	public String getLatestUndertaker() {
+		return latestUndertaker;
+	}
+	public void setLatestUndertaker(String latestUndertaker) {
+		this.latestUndertaker = latestUndertaker;
+	}
+	
 }
