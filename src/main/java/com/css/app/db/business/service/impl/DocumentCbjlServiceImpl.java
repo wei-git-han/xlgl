@@ -53,5 +53,10 @@ public class DocumentCbjlServiceImpl implements DocumentCbjlService {
 	public void deleteBatch(String[] ids){
 		documentCbjlDao.deleteBatch(ids);
 	}
+
+	@Override
+	public DocumentCbjl queryLatestCuiBan(String infoId) {
+		return documentCbjlDao.queryLatestCuiBan(infoId);
+	}
 	
 }

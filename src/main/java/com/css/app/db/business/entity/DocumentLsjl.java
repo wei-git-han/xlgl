@@ -31,6 +31,8 @@ public class DocumentLsjl implements Serializable {
 	private String content;
 	//主文件id
 	private String infoId;
+	//分支主文件id
+	private String subId;
 
 	/**
 	 * 设置：唯一标识
@@ -128,4 +130,11 @@ public class DocumentLsjl implements Serializable {
 	public String getInfoId() {
 		return infoId;
 	}
+	public String getSubId() {
+		return subId;
+	}
+	public void setSubId(String subId) {
+		this.subId = subId;
+	}
+	
 }

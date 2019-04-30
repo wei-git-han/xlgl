@@ -46,5 +46,10 @@ public class DocumentBjjlServiceImpl implements DocumentBjjlService {
 	public void deleteBatch(String[] ids){
 		documentBjjlDao.deleteBatch(ids);
 	}
+
+	@Override
+	public DocumentBjjl queryLatestBjjl(String infoId) {
+		return documentBjjlDao.queryLatestBjjl(infoId);
+	}
 	
 }

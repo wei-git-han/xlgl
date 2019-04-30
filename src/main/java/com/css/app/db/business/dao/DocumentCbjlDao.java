@@ -16,4 +16,6 @@ import com.css.base.dao.BaseDao;
 @Mapper
 public interface DocumentCbjlDao extends BaseDao<DocumentCbjl> {
 	
+	DocumentCbjl queryLatestCuiBan(String infoId);
+	
 }

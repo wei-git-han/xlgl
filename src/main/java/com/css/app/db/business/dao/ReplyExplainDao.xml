@@ -35,9 +35,6 @@
 			<when test="sort == 'asc'">ASC</when>
 			<otherwise>DESC</otherwise>
 		</choose>
-		<if test="sort != null and sort != ''">
-			and RE_VERSION= #{version}
-		</if>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>

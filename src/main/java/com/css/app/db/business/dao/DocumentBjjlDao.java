@@ -16,4 +16,5 @@ import com.css.base.dao.BaseDao;
 @Mapper
 public interface DocumentBjjlDao extends BaseDao<DocumentBjjl> {
 	
+	DocumentBjjl queryLatestBjjl(String infoId);
 }

@@ -16,4 +16,6 @@ import com.css.base.dao.BaseDao;
 @Mapper
 public interface DocumentLsjlDao extends BaseDao<DocumentLsjl> {
 	
+	DocumentLsjl queryLatestLsjl(String infoId);
+	
 }

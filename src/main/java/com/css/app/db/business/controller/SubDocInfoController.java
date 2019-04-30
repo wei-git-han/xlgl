@@ -274,6 +274,7 @@ public class SubDocInfoController {
 			bjjl.setDeptId(loginUserDeptId);
 			bjjl.setDeptName(loginUserDeptName);
 			bjjl.setInfoId(infoId);
+			bjjl.setSubId(subId);
 			bjjl.setCreatedTime(new Date());
 			documentBjjlService.save(bjjl);
 			json.put("result", "success");
@@ -324,6 +325,7 @@ public class SubDocInfoController {
 			lsjl.setDeptId(loginUserDeptId);
 			lsjl.setDeptName(loginUserDeptName);
 			lsjl.setInfoId(infoId);
+			lsjl.setSubId(subId);
 			lsjl.setCreatedTime(new Date());
 			documentLsjlService.save(lsjl);
 			json.put("result", "success");
