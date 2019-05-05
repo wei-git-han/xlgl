@@ -29,6 +29,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 	
 	@Override
 	public void save(DocumentInfo dbDocumentInfo){
+		dbDocumentInfo.setCuibanFlag("0");
 		documentInfoDao.save(dbDocumentInfo);
 	}
 	

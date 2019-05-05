@@ -33,8 +33,6 @@ public class SubDocInfo implements Serializable {
 	private Date updateTime;
 	//承办人
 	private String undertakerName;
-	//完成审批表示，用来控制多轮反馈
-	private String finishFlag ="0";
 /*----------------------------以下字段只用来列表接收值用--------------start----------------------*/	
 	private String dealUserName;
 	//文件标题
@@ -193,12 +191,6 @@ public class SubDocInfo implements Serializable {
 	}
 	public void setUndertakerName(String undertakerName) {
 		this.undertakerName = undertakerName;
-	}
-	public String getFinishFlag() {
-		return finishFlag;
-	}
-	public void setFinishFlag(String finishFlag) {
-		this.finishFlag = finishFlag;
 	}
 	public String getLatestReply() {
 		return latestReply;

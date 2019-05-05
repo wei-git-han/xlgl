@@ -104,9 +104,6 @@ public class SubDocInfoController {
 					subDocInfo.setDealUserName(latestRecord.getReceiverName());
 				}
 			}
-			if(StringUtils.equals("1", subDocInfo.getFinishFlag()) && subDocInfo.getDocStatus()<10) {
-				subDocInfo.setDealUserName(subDocInfo.getUndertakerName());
-			}
 		}
 		GwPageUtils pageUtil = new GwPageUtils(subDocInfoList);
 		Response.json(pageUtil);
@@ -139,17 +136,9 @@ public class SubDocInfoController {
 		for (SubDocInfo subDocInfo : subDocInfoList) {
 			//当前审核人
 			SubDocTracking latestRecord = subDocTrackingService.queryLatestRecord(subDocInfo.getId());
-			String recordId="";
-			String recordName="";
 			if(latestRecord != null) {
-				recordId =latestRecord.getReceiverId();
-				recordName = latestRecord.getReceiverName();
-				if(StringUtils.equals("1", subDocInfo.getFinishFlag()) && subDocInfo.getDocStatus()<10) {
-					recordId=subDocInfo.getUndertaker();
-					recordName = subDocInfo.getUndertakerName();
-				}
-				if(!StringUtils.equals(loginUserId,recordId)) {
-					subDocInfo.setDealUserName(recordName);
+				if(!StringUtils.equals(loginUserId,latestRecord.getReceiverId())) {
+					subDocInfo.setDealUserName(latestRecord.getReceiverName());
 				}
 			}
 		}
@@ -187,20 +176,11 @@ public class SubDocInfoController {
 					if(StringUtils.equals(loginUserId, subDocInfo.getUndertaker())) {
 						isUndertaker=true;
 					}
-					//审批完成以后，新一轮开启的审核人
-					if(DbDocStatusDefined.BAN_LI_ZHONG==docStatus && StringUtils.equals("1", subDocInfo.getFinishFlag())) {
-						if(StringUtils.equals(loginUserId,subDocInfo.getUndertaker())) {
-							isCheckUser=true;
-						}
-					}
 				}
 				//当前审核人
 				SubDocTracking latestRecord = subDocTrackingService.queryLatestRecord(subId);
 				if(latestRecord != null) {
 					String recordId=latestRecord.getReceiverId();
-					if(DbDocStatusDefined.BAN_LI_ZHONG==docStatus && StringUtils.equals("1", subDocInfo.getFinishFlag())) {
-						recordId=subDocInfo.getUndertaker();
-					}
 					if(StringUtils.equals(loginUserId,recordId )) {
 						isCheckUser=true;
 					}
@@ -331,11 +311,10 @@ public class SubDocInfoController {
 	@RequestMapping("/submitOperation")
 	public void submitOperation(String subId,String userName,String userId){
 		//流转到下一个人并将临时反馈变为发布
-		this.submitRelation(subId, userName, userId);
+		this.submitRelation(subId, userName, userId,"2");
 		//分支文件更新完成审批标识
 		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
 		if(subDocInfo != null) {
-			subDocInfo.setFinishFlag("0");
 			subDocInfo.setUpdateTime(new Date());
 			subDocInfoService.update(subDocInfo);
 		}
@@ -353,7 +332,7 @@ public class SubDocInfoController {
 	@RequestMapping("/sendOperation")
 	public void sendOperation(String subId,String userName,String userId,String replyContent){
 		//流转到下一个人并将临时反馈变为发布
-		this.submitRelation(subId, userName, userId);
+		this.submitRelation(subId, userName, userId,"2");
 		//保存审批意见
 		approvalOpinionService.saveOpinion(subId, replyContent, "1");
 		//保存最新更新时间
@@ -378,7 +357,7 @@ public class SubDocInfoController {
 		if(subDocInfo != null) {
 			if(StringUtils.isNotBlank(subDocInfo.getUndertaker())) {
 				//流转到下一个人并将临时反馈变为发布
-				this.submitRelation(subId, subDocInfo.getUndertakerName(),subDocInfo.getUndertaker());
+				this.submitRelation(subId, subDocInfo.getUndertakerName(),subDocInfo.getUndertaker(),"3");
 				//保存审批意见
 				approvalOpinionService.saveOpinion(subId, replyContent, "3");
 				//保存最新更新时间
@@ -401,23 +380,14 @@ public class SubDocInfoController {
 	@ResponseBody
 	@RequestMapping("/finishOperation")
 	public void finishOperation(String infoId,String subId,String replyContent){
-		//将临时反馈变为发布
-		Map<String, Object> map =new HashMap<>();
-		map.put("subId", subId);
-		map.put("userId", CurrentUser.getUserId());
-		map.put("showFlag", "0");
-		ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
-		if(tempReply!=null) {
-			tempReply.setReVersion("1");
-			replyExplainService.update(tempReply);
-		}
+		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+		//流转到下一个人并将临时反馈变为发布
+		this.submitRelation(subId, subDocInfo.getUndertakerName(),subDocInfo.getUndertaker(),"4");
 		//保存意见
 		approvalOpinionService.saveOpinion(subId, replyContent, "2");
 		//分支文件更新完成审批标识
-		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
 		if(subDocInfo != null) {
 			subDocInfo.setDocStatus(DbDocStatusDefined.BAN_LI_ZHONG);
-			subDocInfo.setFinishFlag("1");
 			subDocInfo.setUpdateTime(new Date());
 			subDocInfoService.update(subDocInfo);
 		}
@@ -425,26 +395,6 @@ public class SubDocInfoController {
 		DocumentInfo info = documentInfoService.queryObject(infoId);
 		if(StringUtils.equals(info.getCuibanFlag(), "1")){
 			//催办记录添加响应承办人，并标识完成
-/*			Map<String, Object> repMap = new HashMap<>();
-			repMap.put("subId", subId);
-			repMap.put("showFlag", "0");
-			repMap.put("sort", "asc");
-			List<ReplyExplain> list = replyExplainService.queryList(repMap);
-			if(list != null && list.size()>0) {
-				ReplyExplain explain = list.get(0);
-				Map<String, Object> cuiBanMap = new HashMap<>();
-				cuiBanMap.put("infoId", infoId);
-				cuiBanMap.put("finishFlag", 0);
-				List<DocumentCbjl> cuibanList = documentCbjlService.queryList(cuiBanMap);
-				if(cuibanList != null && cuibanList.size()>0) {
-					DocumentCbjl cbjl = cuibanList.get(0);
-					cbjl.setCbrId(explain.getUserId());
-					cbjl.setCbrName(explain.getUserName());
-					cbjl.setCbTime(new Date());
-					cbjl.setFinishFlag(1);
-					documentCbjlService.update(cbjl);
-				}
-			}*/
 			Map<String, Object> cuiBanMap = new HashMap<>();
 			cuiBanMap.put("infoId", infoId);
 			cuiBanMap.put("finishFlag", 0);
@@ -477,7 +427,7 @@ public class SubDocInfoController {
 		Response.json("result", "success");
 	}
 	
-	private void submitRelation(String subId,String userName,String userId) {
+	private void submitRelation(String subId,String userName,String userId,String trackingType) {
 		//获取当前登录人信息
 		String loginUserId=CurrentUser.getUserId();
 		String loginUserName=CurrentUser.getUsername();
@@ -505,7 +455,7 @@ public class SubDocInfoController {
 		tracking.setRecDeptId(deptId);
 		tracking.setRecDeptName(deptName);
 		tracking.setSubId(subId);
-		tracking.setTrackingType("2");
+		tracking.setTrackingType(trackingType);
 		tracking.setCreatedTime(new Date());
 		subDocTrackingService.save(tracking);
 		//将临时反馈变为发布

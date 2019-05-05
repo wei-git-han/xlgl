@@ -4,6 +4,7 @@ var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"
 var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//人员树
 var leftMenuUrl = {"url":"/app/db/document/blfk/data/leftMenu.json","dataType":"text"};//左侧菜单
 var leaderId=getUrlParam("menuid")||"";//代理领导
+var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var grid = null;
 var total=0;//列表中，数据的总条数
 var pageModule = function(){
@@ -33,7 +34,7 @@ var pageModule = function(){
                  	 if(rowdata.cuibanFlag=="1"){
                  		 cuiban = '<label class="cuibanlabel">催办</label>';
                 	 }
-                	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
+                	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
                  }},
                  {display:"批示指示内容",name:"",width:"20%",align:"left",paixu:false,title:true,render:function(rowdata){
                 	 return '';
@@ -52,7 +53,11 @@ var pageModule = function(){
                 	 return rowdata.firstZbTime.substring(0,16); 
                  }},
                  {display:"最新反馈时间",name:"",width:"10%",align:"center",paixu:false,render:function(rowdata){
-                	
+                	 var replyTime="";
+                	 if(rowdata.latestReplyTime){
+                		 replyTime=rowdata.latestReplyTime.substring(0,16);
+                	 }
+                	 return replyTime;
                  }}
             ],
             width:"100%",

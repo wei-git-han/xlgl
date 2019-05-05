@@ -19,10 +19,12 @@ import com.css.app.db.business.entity.ApprovalOpinion;
 import com.css.app.db.business.entity.ReplyAttac;
 import com.css.app.db.business.entity.ReplyExplain;
 import com.css.app.db.business.entity.SubDocInfo;
+import com.css.app.db.business.entity.SubDocTracking;
 import com.css.app.db.business.service.ApprovalOpinionService;
 import com.css.app.db.business.service.ReplyAttacService;
 import com.css.app.db.business.service.ReplyExplainService;
 import com.css.app.db.business.service.SubDocInfoService;
+import com.css.app.db.business.service.SubDocTrackingService;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.Response;
 import com.css.base.utils.UUIDUtils;
@@ -48,6 +50,8 @@ public class ReplyExplainController {
 	private SubDocInfoService subDocInfoService;
 	@Autowired
 	private ApprovalOpinionService approvalOpinionService;
+	@Autowired
+	private SubDocTrackingService subDocTrackingService;
 	
 	/**
 	 * 获取某个分支局反馈
@@ -61,6 +65,15 @@ public class ReplyExplainController {
 		if(StringUtils.isNotBlank(infoId) && StringUtils.isNotBlank(subId)) {
 			//承办人
 			SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+			//当前审核人
+			SubDocTracking latestRecord = subDocTrackingService.queryLatestRecord(subId);
+			boolean isCheckUser=false;
+			if(latestRecord != null) {
+				String recordId=latestRecord.getReceiverId();
+				if(StringUtils.equals(CurrentUser.getUserId(),recordId )) {
+					isCheckUser=true;
+				}
+			}
 			if(subDocInfo != null) {
 				String cbrId=subDocInfo.getUndertaker();
 				if(StringUtils.isNotBlank(cbrId)) {
@@ -83,6 +96,7 @@ public class ReplyExplainController {
 						json.put("teamId", teamId);
 						json.put("content",replyExplain.getReplyContent());
 						json.put("updateTime",replyExplain.getCreatedTime());
+						json.put("edit",isCheckUser);
 						//附件
 						Map<String, Object> map = new HashMap<>();
 						map.put("teamId", teamId);

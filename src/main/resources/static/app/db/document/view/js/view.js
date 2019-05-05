@@ -58,6 +58,7 @@ var pageModule = function(){
 						$("#zhuanban").show();
 					}else{
 						if(data.isCheckUser){//显示办结、常态落实,输入框
+							//$(".blfkchangeH").attr("style","position:absolute;top:34px;left:0;bottom:0;width:100%;right:0;");
 							$(".right_zbjl").show();
 							$(".blfk_bottom").show(); //意见框
 							$(".blfk_top").css({"bottom":"40%","height":"58%"});   //意见框上方元素样式控制
@@ -393,7 +394,6 @@ var pageModule = function(){
 			url:subReplyListUrl,
  			data:{infoId:fileId,subId:subId},
 			success:function(data){
-				console.log(data);
 				eachfn(data,$(".pagemenu"),1);
 				$(".newpanel-right-bottom .btn-link").unbind("click");
 				$(".newpanel-right-bottom .btn-link").click(function(){
@@ -534,6 +534,7 @@ var pageModule = function(){
 				type: "GET",
 				success:function(data){
 					if(data.result == "success"){
+					newbootbox.alert("已返回承办人！");
 						showButton();
 					}
 				}
@@ -735,6 +736,7 @@ function downloadfn(fileServerId){
 	});
 }
 function editfn(id,content,el){
+alert(content)
 	$(el).parents(".nrt-cont").find(".nrt-cont-file .remove").show();
 	$("#editTeamId").attr("id",id);
 	$("#replyContent").text(content);

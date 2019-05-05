@@ -36,8 +36,9 @@ public class ApprovalOpinionServiceImpl implements ApprovalOpinionService {
 	}
 	
 	@Override
-	public void save(ApprovalOpinion dbApprovalOpinion){
-		approvalOpinionDao.save(dbApprovalOpinion);
+	public void save(ApprovalOpinion approvalOpinion){
+		approvalOpinion.setShowFlag("0");
+		approvalOpinionDao.save(approvalOpinion);
 	}
 	
 	@Override
