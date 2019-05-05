@@ -38,9 +38,9 @@ public class MenuController {
 	@Autowired
 	private AdminSetService adminSetService;
 	
-	@Value("${csse.gwcl.appId}")
+	@Value("${csse.dccb.appId}")
 	private  String appId;	
-	@Value("${csse.gwcl.appSecret}")
+	@Value("${csse.dccb.appSecret}")
 	private  String clientSecret;
 	/**
 	 * 列表

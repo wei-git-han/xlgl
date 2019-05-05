@@ -86,6 +86,6 @@ public class AppConfig {
 	 * @return
 	 */
 	public String getAppId(){
-		return env.getProperty("csse.gwcl.appId");
+		return env.getProperty("csse.dccb.appId");
 	}
 }
