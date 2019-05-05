@@ -67,6 +67,14 @@ public class DocumentInfo implements Serializable {
 	private String latestUndertaker;
 	//最新反馈审批完成时间
 	private Date latestReplyTime;
+	/*------------------------------------*/
+	//最新的首长名字
+	private String leaderName;
+	//最新的首长批示
+	private String leaderContent;
+	//最新的首长批示时间
+	private Date leaderTime;
+	
 	/**
 	 * 设置：唯一标识
 	 */
@@ -342,6 +350,24 @@ public class DocumentInfo implements Serializable {
 	}
 	public void setLatestReplyTime(Date latestReplyTime) {
 		this.latestReplyTime = latestReplyTime;
+	}
+	public String getLeaderName() {
+		return leaderName;
+	}
+	public void setLeaderName(String leaderName) {
+		this.leaderName = leaderName;
+	}
+	public String getLeaderContent() {
+		return leaderContent;
+	}
+	public void setLeaderContent(String leaderContent) {
+		this.leaderContent = leaderContent;
+	}
+	public Date getLeaderTime() {
+		return leaderTime;
+	}
+	public void setLeaderTime(Date leaderTime) {
+		this.leaderTime = leaderTime;
 	}
 	
 }

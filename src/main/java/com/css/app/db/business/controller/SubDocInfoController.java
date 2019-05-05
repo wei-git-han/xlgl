@@ -96,15 +96,6 @@ public class SubDocInfoController {
 		//查询列表数据
 		PageHelper.startPage(page, pagesize);
 		List<SubDocInfo> subDocInfoList = subDocInfoService.queryList(map);
-		for (SubDocInfo subDocInfo : subDocInfoList) {
-			//当前审核人
-			SubDocTracking latestRecord = subDocTrackingService.queryLatestRecord(subDocInfo.getId());
-			if(latestRecord != null) {
-				if(!StringUtils.equals(loginUserId, latestRecord.getReceiverId())) {
-					subDocInfo.setDealUserName(latestRecord.getReceiverName());
-				}
-			}
-		}
 		GwPageUtils pageUtil = new GwPageUtils(subDocInfoList);
 		Response.json(pageUtil);
 	}
@@ -133,15 +124,6 @@ public class SubDocInfoController {
 		//查询列表数据
 		PageHelper.startPage(page, pagesize);
 		List<SubDocInfo> subDocInfoList = subDocInfoService.queryPersonList(map);
-		for (SubDocInfo subDocInfo : subDocInfoList) {
-			//当前审核人
-			SubDocTracking latestRecord = subDocTrackingService.queryLatestRecord(subDocInfo.getId());
-			if(latestRecord != null) {
-				if(!StringUtils.equals(loginUserId,latestRecord.getReceiverId())) {
-					subDocInfo.setDealUserName(latestRecord.getReceiverName());
-				}
-			}
-		}
 		GwPageUtils pageUtil = new GwPageUtils(subDocInfoList);
 		Response.json(pageUtil);
 	}
@@ -221,28 +203,38 @@ public class SubDocInfoController {
 	@ResponseBody
 	@RequestMapping("/banJieOperation")
 	public void banJieOperation(String infoId,String subId){
-		String loginUserDeptId=CurrentUser.getDepartmentId();
 		JSONObject json= new JSONObject();
-		if(StringUtils.isNotBlank(infoId) && StringUtils.isNotBlank(subId) && StringUtils.isNotBlank(loginUserDeptId)) {
+		if(StringUtils.isNotBlank(infoId) && StringUtils.isNotBlank(subId)) {
+			SubDocInfo subInfo = subDocInfoService.queryObject(subId);
 			DocumentBjjl bjjl=new DocumentBjjl();
 			//取除本分支机构外的其他机构的最小状态值
-			int minDocStatus = subDocInfoService.queryMinDocStatus(infoId,loginUserDeptId);
-			int maxDocStatus = subDocInfoService.queryMaxDocStatus(infoId, loginUserDeptId);
-			SubDocInfo subInfo = subDocInfoService.queryObject(subId);
-			//如果最小状态值小于建议办结的状态，则将本分支局状态标示为建议办结
-			if(minDocStatus< DbDocStatusDefined.JIAN_YI_BAN_JIE) {
-				subInfo.setDocStatus(DbDocStatusDefined.JIAN_YI_BAN_JIE);
-				bjjl.setContent("建议办结");
-			}else {//如果最小状态值不小于建议办结的状态，且最大值小于建议落实，说明本分支机构状态全部为建议办结，主文件也标示为办结
-				if(maxDocStatus<DbDocStatusDefined.JIAN_YI_LUO_SHI) {
-					//主文件标示为办结
-					DocumentInfo info = documentInfoService.queryObject(infoId);
-					info.setStatus(2);
-					documentInfoService.update(info);
-					//当前分支文件变为办结
-					//subDocInfoService.updateDocStatus(DbDocStatusDefined.BAN_JIE, new Date() , infoId);
-					subInfo.setDocStatus(DbDocStatusDefined.BAN_JIE);
-					bjjl.setContent("自动办结");
+			int minDocStatus = subDocInfoService.queryMinDocStatus(infoId,subInfo.getSubDeptId());
+			int maxDocStatus = subDocInfoService.queryMaxDocStatus(infoId, subInfo.getSubDeptId());
+			if(0==minDocStatus && 0==maxDocStatus) {
+				//主文件标示为办结
+				DocumentInfo info = documentInfoService.queryObject(infoId);
+				info.setStatus(2);
+				documentInfoService.update(info);
+				//当前分支文件变为办结
+				//subDocInfoService.updateDocStatus(DbDocStatusDefined.BAN_JIE, new Date() , infoId);
+				subInfo.setDocStatus(DbDocStatusDefined.BAN_JIE);
+				bjjl.setContent("办结");
+			}else {
+				//如果最小状态值小于建议办结的状态，则将本分支局状态标示为建议办结
+				if(minDocStatus< DbDocStatusDefined.JIAN_YI_BAN_JIE) {
+					subInfo.setDocStatus(DbDocStatusDefined.JIAN_YI_BAN_JIE);
+					bjjl.setContent("建议办结");
+				}else {//如果最小状态值不小于建议办结的状态，且最大值小于建议落实，说明本分支机构状态全部为建议办结，主文件也标示为办结
+					if(maxDocStatus<DbDocStatusDefined.JIAN_YI_LUO_SHI) {
+						//主文件标示为办结
+						DocumentInfo info = documentInfoService.queryObject(infoId);
+						info.setStatus(2);
+						documentInfoService.update(info);
+						//当前分支文件变为办结
+						//subDocInfoService.updateDocStatus(DbDocStatusDefined.BAN_JIE, new Date() , infoId);
+						subInfo.setDocStatus(DbDocStatusDefined.BAN_JIE);
+						bjjl.setContent("系统自动办结");
+					}
 				}
 			}
 			subInfo.setUpdateTime(new Date());
@@ -265,27 +257,35 @@ public class SubDocInfoController {
 	@ResponseBody
 	@RequestMapping("/luoShiOperation")
 	public void luoShiOperation(String infoId,String subId){
-		String loginUserDeptId=CurrentUser.getDepartmentId();
 		JSONObject json= new JSONObject();
 		if(StringUtils.isNotBlank(infoId)) {
-			int minDocStatus = subDocInfoService.queryMinDocStatus(infoId,loginUserDeptId);
-			int maxDocStatus = subDocInfoService.queryMaxDocStatus(infoId, loginUserDeptId);
 			SubDocInfo subInfo = subDocInfoService.queryObject(subId);
+			int minDocStatus = subDocInfoService.queryMinDocStatus(infoId,subInfo.getSubDeptId());
+			int maxDocStatus = subDocInfoService.queryMaxDocStatus(infoId, subInfo.getSubDeptId());
 			DocumentLsjl lsjl= new DocumentLsjl();
-			//如果最小状态值小于建议办结的状态，则将本分支局状态标示为建议落实
-			if(minDocStatus< DbDocStatusDefined.JIAN_YI_BAN_JIE) {
-				subInfo.setDocStatus(DbDocStatusDefined.JIAN_YI_LUO_SHI);
-				lsjl.setContent("建议落实");
-			}else {//如果最小状态值不小于建议办结的状态，且最大值大于等于建议办结，说明本分支机构至少有一个常态落实
-				if(maxDocStatus >= DbDocStatusDefined.JIAN_YI_BAN_JIE) {
-					//主文件状态变为常态落实
-					DocumentInfo info = documentInfoService.queryObject(infoId);
-					info.setStatus(3);
-					documentInfoService.update(info);
-					//各分支文件变为常态落实
-					//subDocInfoService.updateDocStatus(DbDocStatusDefined.CHANG_TAI_LUO_SHI, new Date() , infoId);
-					subInfo.setDocStatus(DbDocStatusDefined.CHANG_TAI_LUO_SHI);
-					lsjl.setContent("自动常态落实");
+			if(0==minDocStatus && 0==maxDocStatus) {
+				//主文件状态变为常态落实
+				DocumentInfo info = documentInfoService.queryObject(infoId);
+				info.setStatus(3);
+				documentInfoService.update(info);
+				subInfo.setDocStatus(DbDocStatusDefined.CHANG_TAI_LUO_SHI);
+				lsjl.setContent("常态落实");
+			}else {
+				//如果最小状态值小于建议办结的状态，则将本分支局状态标示为建议落实
+				if(minDocStatus< DbDocStatusDefined.JIAN_YI_BAN_JIE) {
+					subInfo.setDocStatus(DbDocStatusDefined.JIAN_YI_LUO_SHI);
+					lsjl.setContent("建议落实");
+				}else {//如果最小状态值不小于建议办结的状态，且最大值大于等于建议办结，说明本分支机构至少有一个常态落实
+					if(maxDocStatus >= DbDocStatusDefined.JIAN_YI_BAN_JIE) {
+						//主文件状态变为常态落实
+						DocumentInfo info = documentInfoService.queryObject(infoId);
+						info.setStatus(3);
+						documentInfoService.update(info);
+						//各分支文件变为常态落实
+						//subDocInfoService.updateDocStatus(DbDocStatusDefined.CHANG_TAI_LUO_SHI, new Date() , infoId);
+						subInfo.setDocStatus(DbDocStatusDefined.CHANG_TAI_LUO_SHI);
+						lsjl.setContent("系统自动常态落实");
+					}
 				}
 			}
 			subInfo.setUpdateTime(new Date());
@@ -315,6 +315,7 @@ public class SubDocInfoController {
 		//分支文件更新完成审批标识
 		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
 		if(subDocInfo != null) {
+			subDocInfo.setDocStatus(DbDocStatusDefined.DAI_SHEN_PI);
 			subDocInfo.setUpdateTime(new Date());
 			subDocInfoService.update(subDocInfo);
 		}
@@ -338,6 +339,7 @@ public class SubDocInfoController {
 		//保存最新更新时间
 		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
 		if(subDocInfo != null) {
+			subDocInfo.setDocStatus(DbDocStatusDefined.DAI_SHEN_PI);
 			subDocInfo.setUpdateTime(new Date());
 			subDocInfoService.update(subDocInfo);
 		}
@@ -361,6 +363,7 @@ public class SubDocInfoController {
 				//保存审批意见
 				approvalOpinionService.saveOpinion(subId, replyContent, "3");
 				//保存最新更新时间
+				subDocInfo.setDocStatus(DbDocStatusDefined.TUIHUI_XIUGAI);
 				subDocInfo.setUpdateTime(new Date());
 				subDocInfoService.update(subDocInfo);
 			}else {
@@ -412,7 +415,7 @@ public class SubDocInfoController {
 			info.setCuibanFlag("0");
             //获取最新反馈(各组)
 			List<ReplyExplain> latestReplyList = replyExplainService.querySubLatestReply(infoId, subId);
-			if(latestReplyList != null) {
+			if(latestReplyList != null && latestReplyList.size()>0) {
 				info.setLatestReply(latestReplyList.get(0).getReplyContent());
 				info.setLatestSubDept(subDocInfo.getSubDeptName());
 				info.setLatestUndertaker(subDocInfo.getUndertakerName());

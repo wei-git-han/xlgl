@@ -17,28 +17,28 @@ var pageModule = function(){
                	 	if(rowdata.docStatus==3){
 	               	 	statusName="退回修改";
 	               		bgColor="rgba(240, 96, 0, 1)";
-	           	 		if(rowdata.dealUserName){
+	           	 		if(1 != rowdata.receiverIsMe){
 	           	 			statusName="待"+rowdata.dealUserName+"修改";
 	           	 			bgColor="#FF8C40";
 	           	 		}
                	 	}else if(rowdata.docStatus==5){
 	               	 	statusName="待落实";
 	               	 	bgColor="rgba(240, 96, 0, 1)";
-	           	 		if(rowdata.dealUserName){
+	           	 		if(1 != rowdata.receiverIsMe){
 	           	 			statusName="待"+rowdata.dealUserName+"落实";
 	           	 			bgColor="#FF8C40";
 	           	 		}
                	 	}else if(rowdata.docStatus==7){
 	               	 	statusName="待审批";
 	               	 	bgColor="rgba(60, 123, 255, 1)";
-	           	 		if(rowdata.dealUserName){
+	           	 		if(1 != rowdata.receiverIsMe){
 	           	 			statusName="待"+rowdata.dealUserName+"审批";
 	           	 			bgColor="#6699FF";
 	           	 		}
                	 	}else if(rowdata.docStatus==9){
 	               	 	statusName="办理中";
 	               	 	bgColor="rgba(43, 170, 129, 1)";
-	           	 		if(rowdata.dealUserName){
+	           	 		if(1 != rowdata.receiverIsMe){
 	           	 			statusName=rowdata.dealUserName+"办理中";
 	           	 			bgColor="#33CC99";
 	           	 		}

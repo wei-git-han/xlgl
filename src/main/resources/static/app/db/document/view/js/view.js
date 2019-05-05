@@ -739,7 +739,7 @@ function editfn(id,content,el){
 alert(content)
 	$(el).parents(".nrt-cont").find(".nrt-cont-file .remove").show();
 	$("#editTeamId").attr("id",id);
-	$("#replyContent").text(content);
+	$("#replyContent").val(content);
 }
 
 function removefn(id,el){

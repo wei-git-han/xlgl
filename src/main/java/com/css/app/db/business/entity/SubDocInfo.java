@@ -53,6 +53,18 @@ public class SubDocInfo implements Serializable {
 	private String latestReply;
 	//最新反馈单位
 	private String latestSubDept;
+	//最新反馈的承办人
+	private String latestUndertaker;
+	//最新反馈审批完成时间
+	private Date latestReplyTime;
+	//最新的首长名字
+	private String leaderName;
+	//最新的首长批示
+	private String leaderContent;
+	//最新的首长批示时间
+	private Date leaderTime;
+	//我是不是当前处理人
+	private Integer receiverIsMe;
 	/*----------------------------列表接收值---------end---------------------------*/	
 	/**
 	 * 设置：唯一标识
@@ -203,5 +215,42 @@ public class SubDocInfo implements Serializable {
 	}
 	public void setLatestSubDept(String latestSubDept) {
 		this.latestSubDept = latestSubDept;
-	}	
+	}
+	public String getLatestUndertaker() {
+		return latestUndertaker;
+	}
+	public void setLatestUndertaker(String latestUndertaker) {
+		this.latestUndertaker = latestUndertaker;
+	}
+	public Date getLatestReplyTime() {
+		return latestReplyTime;
+	}
+	public void setLatestReplyTime(Date latestReplyTime) {
+		this.latestReplyTime = latestReplyTime;
+	}
+	public String getLeaderName() {
+		return leaderName;
+	}
+	public void setLeaderName(String leaderName) {
+		this.leaderName = leaderName;
+	}
+	public String getLeaderContent() {
+		return leaderContent;
+	}
+	public void setLeaderContent(String leaderContent) {
+		this.leaderContent = leaderContent;
+	}
+	public Date getLeaderTime() {
+		return leaderTime;
+	}
+	public void setLeaderTime(Date leaderTime) {
+		this.leaderTime = leaderTime;
+	}
+	public Integer getReceiverIsMe() {
+		return receiverIsMe;
+	}
+	public void setReceiverIsMe(Integer receiverIsMe) {
+		this.receiverIsMe = receiverIsMe;
+	}
+
 }
