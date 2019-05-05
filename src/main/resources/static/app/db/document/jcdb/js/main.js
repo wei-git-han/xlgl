@@ -127,13 +127,21 @@ var pageModule = function(){
                     				
                     				
                     				var html2 = "";
+                    				var width = "width:25%;";
+                    				if(array.length==1){
+                    					width = "width:100%;";
+                    				}else if(array.length==2){
+                    					width = "width:50%;";
+                    				}else if(array.length==3){
+                    					width = "width:33.3%;";
+                    				}
                     				$.each(array,function(i){
                     					var dw = this.dw;
                     					var ry = this.ry;
                     					var cont = this.cont;
                     					
                     					var innerhtml = `
-														<div class="nc-left-group-cont">
+														<div class="nc-left-group-cont" style="${width}">
 															<div class="nc-left-group-cont-top" >
 																<font>${dw}-${ry}:</font>
 															</div>

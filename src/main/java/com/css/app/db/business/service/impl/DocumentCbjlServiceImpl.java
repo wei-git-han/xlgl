@@ -35,6 +35,7 @@ public class DocumentCbjlServiceImpl implements DocumentCbjlService {
 		documentCbjl.setId(UUIDUtils.random());
 		documentCbjl.setUserId(CurrentUser.getUserId());
 		documentCbjl.setUserName(CurrentUser.getUsername());
+		documentCbjl.setFinishFlag(0);
 		documentCbjl.setCreatedTime(new Date());
 		documentCbjlDao.save(documentCbjl);
 	}

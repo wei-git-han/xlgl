@@ -30,7 +30,7 @@ public class ReplyExplain implements Serializable {
 	//分支主id
 	private String subId;
 	//是否发布(给别的局或部首长看)
-	private String showFlag ="0";
+	private String showFlag;
 	//分局id
 	private String subDeptId;
 	//分局名称

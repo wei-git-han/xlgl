@@ -28,7 +28,7 @@ public class DocumentCbjl implements Serializable {
 	//催办时间
 	private Date createdTime;
 	//是否结束（0：未结束；1：已结束）
-	private Integer finishFlag = 0;
+	private Integer finishFlag;
 	//承办人id
 	private String cbrId;
 	//响应的承办人

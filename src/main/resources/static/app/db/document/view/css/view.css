@@ -859,7 +859,7 @@ ul{
 .nrt-cont-bottom{}
 .nrt-cont-file{}
 .nrt-cont-file .remove{float:right;width:50px;display:none;}
-.nrt-cont-file a{line-height:30px;margin-right:10px;font-size:16px;display:block;}
+.nrt-cont-file a{line-height:30px;margin-right:10px;font-size:16px;display: inline-block;}
 .newpanel-right-cent2{display:none;}
 .newpanel-cont.active .newpanel-right-cent2{display:block;}
 .newpanel-right-bottom{text-align:right;}

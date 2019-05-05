@@ -28,7 +28,7 @@ public class ApprovalOpinion implements Serializable {
 	//分支主id
 	private String subId;
 	//是否发布(给别的局或部首长看)
-	private String showFlag ="0";
+	private String showFlag;
 	//流转类型（1：流转；2：审批完成；3：退回修改)
 	private String trackingType;
 	//办理反馈的teamId
