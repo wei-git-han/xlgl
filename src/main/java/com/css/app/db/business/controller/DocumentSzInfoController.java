@@ -288,9 +288,9 @@ public class DocumentSzInfoController {
 			}*/
 			
 			
-			cbdw=documentInfo.getLatestSubDept();
-			cbry=documentInfo.getLatestUndertaker();
-			cont=documentInfo.getLatestReply();
+			cbdw=documentInfo.getLatestSubDept()==null?"":documentInfo.getLatestSubDept();
+			cbry=documentInfo.getLatestUndertaker()==null?"":documentInfo.getLatestUndertaker();
+			cont=documentInfo.getLatestReply()==null?"":documentInfo.getLatestReply();
 			if(StringUtils.isNotBlank(cbdw)&&(StringUtils.isEmpty(sz)||!(sz).contains(userid))) {
 				gengxin="1";//已更新显示
 			}

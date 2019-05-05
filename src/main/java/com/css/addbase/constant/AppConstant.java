@@ -35,7 +35,7 @@ public class AppConstant {
 	 * 分发方案院领导组标识
 	 */
 	public final static String LEADER_PLAN = "leaderPlan";
-	
+	public final static String LEAD_TEAM = "leaderteam";
 	/**
 	 * @author mashuwen
 	 * @date 2017年12月03日

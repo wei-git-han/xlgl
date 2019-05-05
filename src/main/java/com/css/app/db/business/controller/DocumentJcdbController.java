@@ -15,8 +15,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.AppConfig;
+import com.css.addbase.appconfig.entity.BaseAppConfig;
+import com.css.addbase.appconfig.service.BaseAppConfigService;
 import com.css.addbase.apporgan.entity.BaseAppOrgan;
+import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
+import com.css.addbase.constant.AppConstant;
 import com.css.app.db.business.service.DocumentFileService;
 import com.css.app.db.business.service.DocumentInfoService;
 import com.css.app.db.config.entity.RoleSet;
@@ -25,6 +29,7 @@ import com.css.app.db.util.DbDefined;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.GwPageUtils;
 import com.css.base.utils.Response;
+import com.css.base.utils.StringUtils;
 
 import dm.jdbc.util.StringUtil;
 
@@ -50,6 +55,8 @@ public class DocumentJcdbController {
 	private RoleSetService roleSetService;
 	@Autowired
 	private BaseAppOrganService baseAppOrganService;
+	@Autowired
+	private BaseAppConfigService baseAppConfigService;
 	
 	
 	
@@ -143,6 +150,7 @@ public class DocumentJcdbController {
 				} 
 			}
 		}
+		String szorgid=getSzOrgid();
 		//blz= (int) map2.get("blz");
 		JSONArray ja=new JSONArray();
 		if (infoList!=null&&infoList.size()>0) {
@@ -171,8 +179,10 @@ public class DocumentJcdbController {
 					jo.put("type", "0");
 				}
 				//state
+				if(!StringUtils.equals(szorgid, danweiid)) {
+					ja.add(jo);
+				}
 				
-				ja.add(jo);
 			}
 		}
 		
@@ -242,6 +252,7 @@ public class DocumentJcdbController {
 				} 
 			}
 		}
+		String szorgid=getSzOrgid();
 		if (infoList!=null&&infoList.size()>0) {
 			for (Map<String, Object> map2 : infoList) {
 				String danweiid=(String) map2.get("ID");
@@ -264,13 +275,16 @@ public class DocumentJcdbController {
 					}
 					jo.put("type", "0");
 				}
-				jo3.put((String) map2.get("dwname"), jo);
-				//授权--------end
-				//otherdata.add(jo);
-				xdata.add((String) map2.get("dwname"));
-				blzdata.add((long) map2.get("blz"));
-				bjdata.add((long) map2.get("bj"));
-				ctlsdata.add((long) map2.get("ctls"));
+				if(!StringUtils.equals(szorgid, danweiid)) {
+					jo3.put((String) map2.get("dwname"), jo);
+					//授权--------end
+					//otherdata.add(jo);
+					xdata.add((String) map2.get("dwname"));
+					blzdata.add((long) map2.get("blz"));
+					bjdata.add((long) map2.get("bj"));
+					ctlsdata.add((long) map2.get("ctls"));
+				}
+				
 			}
 		}
 		legend.add("办理中");
@@ -396,5 +410,11 @@ public class DocumentJcdbController {
 		jo.put("orgid", orgid);
 		Response.json(jo);*/
 	}
-	
+	public String getSzOrgid() {
+		BaseAppConfig mapped = baseAppConfigService.queryObject(AppConstant.LEAD_TEAM);
+		if(mapped != null && StringUtils.isNotBlank(mapped.getValue())){
+			return mapped.getValue();
+		}
+		return "";
+	}
 }
