@@ -79,6 +79,7 @@ public class ReplyExplainController {
 				if(StringUtils.isNotBlank(cbrId)) {
 					List<ReplyExplain> dbReplyExplainList = replyExplainService.querySubLatestReply(infoId, subId);
 					for (ReplyExplain replyExplain : dbReplyExplainList) {
+						boolean editFlag=false;
 						JSONObject json=new JSONObject();
 						String teamId=replyExplain.getTeamId();
 						Date firstDate = null;
@@ -90,13 +91,17 @@ public class ReplyExplainController {
 						if(list !=null && list.size()>0) {
 							firstDate = list.get(0).getCreatedTime();
 						}
+						json.put("danwei", subDocInfo.getSubDeptName());
 						json.put("firstDate", firstDate);
 						json.put("cbrId", cbrId);
 						json.put("cbrName", subDocInfo.getUndertakerName());
 						json.put("teamId", teamId);
 						json.put("content",replyExplain.getReplyContent());
 						json.put("updateTime",replyExplain.getCreatedTime());
-						json.put("edit",isCheckUser);
+						if(!StringUtils.equals("1", replyExplain.getShowFlag()) && isCheckUser) {
+							editFlag=true;
+						}
+						json.put("edit",editFlag);
 						//附件
 						Map<String, Object> map = new HashMap<>();
 						map.put("teamId", teamId);
@@ -154,6 +159,7 @@ public class ReplyExplainController {
 						if(list !=null && list.size()>0) {
 							firstDate = list.get(0).getCreatedTime();
 						}
+						json.put("danwei", subDocInfo.getSubDeptName());
 						json.put("firstDate", firstDate);
 						json.put("cbrId", cbrId);
 						json.put("cbrName", subDocInfo.getUndertakerName());

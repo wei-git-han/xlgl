@@ -438,39 +438,34 @@ public class DocumentInfoController {
 		DocumentInfo info = documentInfoService.queryObject(id);
 		Integer status = info.getStatus();//2：办结：3：常态落实
 		Integer subStatus = DbDocStatusDefined.BAN_LI_ZHONG;
-		String subId ="";
-		if(status==2) {
-			//取最后一个办结的局
-			DocumentBjjl bjjl = documentBjjlService.queryLatestBjjl(id);
-			subId = bjjl.getSubId();
-			DocumentBjjl newBjjl=new DocumentBjjl();
-			newBjjl.setContent("取消办结");
-			newBjjl.setInfoId(id);
-			newBjjl.setSubId(subId);
-			documentBjjlService.save(newBjjl);
-			
-		}else if(status==3){
-			//取最后一个常态落实的局
-			DocumentLsjl  lsjl = documentLsjlService.queryLatestLsjl(id);
-			subId = lsjl.getSubId();
-			//添加落实记录
-			DocumentLsjl newLsjl= new DocumentLsjl();
-			newLsjl.setContent("取消落实");
-			newLsjl.setInfoId(id);
-			newLsjl.setSubId(subId);
-			documentLsjlService.save(newLsjl);
-		}
+		//取最后一个办结或落实的局的主文件
+		//文件局内状态（1:待转办；3：退回修改；5：待落实；7：待审批；9：办理中；10：建议办结；11：建议落实；12：办结；1:3：常态落实）
+		SubDocInfo lastEndSubInfo = subDocInfoService.queryLastEndSubInfo(id);
+		String subId =lastEndSubInfo.getId();
 		if(StringUtils.isNotBlank(subId)) {
-			////文件局内状态（1:待转办；3：退回修改；5：待落实；7：待审批；9：办理中；10：建议办结；11：办结；12：常态落实）
-			//获取最后一个局主文件
-			SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+			if(lastEndSubInfo.getDocStatus()==DbDocStatusDefined.BAN_JIE) {
+				//添加办结记录
+				DocumentBjjl newBjjl=new DocumentBjjl();
+				newBjjl.setContent("取消办结");
+				newBjjl.setInfoId(id);
+				newBjjl.setSubId(subId);
+				documentBjjlService.save(newBjjl);
+				
+			}else if(status==DbDocStatusDefined.CHANG_TAI_LUO_SHI){
+				//添加落实记录
+				DocumentLsjl newLsjl= new DocumentLsjl();
+				newLsjl.setContent("取消落实");
+				newLsjl.setInfoId(id);
+				newLsjl.setSubId(subId);
+				documentLsjlService.save(newLsjl);
+			}			
 			//取最后一条流转记录
 			SubDocTracking tracking = subDocTrackingService.queryLatestRecord(subId);
 			//trackingType（1：转办；2：审批流转；3：退回）
 			String trackingType = tracking.getTrackingType();
 			//如果最后一条流转为审批，接收人为承办人则文件为办理中，否则文件为待审批
 			if(StringUtils.equals("2",trackingType)) {
-				if(!StringUtils.equals(subDocInfo.getUndertaker(), tracking.getReceiverId())) {
+				if(!StringUtils.equals(lastEndSubInfo.getUndertaker(), tracking.getReceiverId())) {
 					subStatus = DbDocStatusDefined.DAI_SHEN_PI;
 				}
 			//如果最后一条流转为退回修改，则文件状态为退回修改
@@ -478,8 +473,8 @@ public class DocumentInfoController {
 				subStatus = DbDocStatusDefined.TUIHUI_XIUGAI;
 			}
 			//修改最后一个局的文件状态
-			subDocInfo.setDocStatus(subStatus);
-			subDocInfoService.update(subDocInfo);
+			lastEndSubInfo.setDocStatus(subStatus);
+			subDocInfoService.update(lastEndSubInfo);
 			//主文件变为办理中
 			info.setStatus(1);
 			documentInfoService.update(info);

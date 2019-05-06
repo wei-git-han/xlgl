@@ -334,6 +334,7 @@ public class SubDocInfoController {
 			//取除本分支机构外的其他机构的最小状态值
 			int minDocStatus = subDocInfoService.queryMinDocStatus(infoId,subInfo.getSubDeptId());
 			int maxDocStatus = subDocInfoService.queryMaxDocStatus(infoId, subInfo.getSubDeptId());
+			//说明只有当前一个局
 			if(0==minDocStatus && 0==maxDocStatus) {
 				//主文件标示为办结
 				DocumentInfo info = documentInfoService.queryObject(infoId);
@@ -358,6 +359,17 @@ public class SubDocInfoController {
 						//subDocInfoService.updateDocStatus(DbDocStatusDefined.BAN_JIE, new Date() , infoId);
 						subInfo.setDocStatus(DbDocStatusDefined.BAN_JIE);
 						bjjl.setContent("系统自动办结");
+					}
+					//如果最小状态值不小于建议办结的状态，且最大值等于建议落实，说明主文件分支机构有常态落实，主文件也标示为常态落实
+					if(maxDocStatus==DbDocStatusDefined.JIAN_YI_LUO_SHI) {
+						//主文件状态变为常态落实
+						DocumentInfo info = documentInfoService.queryObject(infoId);
+						info.setStatus(3);
+						documentInfoService.update(info);
+						//当前分支文件变为办结
+						//subDocInfoService.updateDocStatus(DbDocStatusDefined.BAN_JIE, new Date() , infoId);
+						subInfo.setDocStatus(DbDocStatusDefined.BAN_JIE);
+						bjjl.setContent("系统自动常态落实");
 					}
 				}
 			}
@@ -388,6 +400,7 @@ public class SubDocInfoController {
 			int minDocStatus = subDocInfoService.queryMinDocStatus(infoId,subInfo.getSubDeptId());
 			int maxDocStatus = subDocInfoService.queryMaxDocStatus(infoId, subInfo.getSubDeptId());
 			DocumentLsjl lsjl= new DocumentLsjl();
+			//说明只有当前一个局
 			if(0==minDocStatus && 0==maxDocStatus) {
 				//主文件状态变为常态落实
 				DocumentInfo info = documentInfoService.queryObject(infoId);

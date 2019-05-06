@@ -538,6 +538,7 @@ var pageModule = function(){
 					if(data.result == "success"){
 					newbootbox.alert("已返回承办人！");
 						showButton();
+						initblfkList();
 					}
 				}
 			});
@@ -558,6 +559,7 @@ var pageModule = function(){
 					if(data.result == "success"){
 						newbootbox.alert("审批完成！");
 						showButton();
+						initblfkList();
 					}
 				}
 			});

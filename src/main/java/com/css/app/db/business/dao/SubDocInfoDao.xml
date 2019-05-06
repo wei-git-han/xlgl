@@ -80,6 +80,9 @@
 	<select id="queryMaxDocStatus" resultType="int">
 		select nvl(max(DOC_STATUS),0) from DB_SUB_DOC_INFO where INFO_ID=#{0} and SUB_DEPT_ID !=#{1}
 	</select>
+	<select id="queryLastEndSubInfo" resultType="com.css.app.db.business.entity.SubDocInfo">
+		select * from (select * ,row_number() over (partition by INFO_ID order by DOC_STATUS desc) as num from DB_SUB_DOC_INFO where INFO_ID= #{infoId}) where num=1
+	</select>
  	<select id="queryTotal" resultType="int">
 		select count(*) from DB_SUB_DOC_INFO 
 	</select>

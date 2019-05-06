@@ -39,10 +39,18 @@ var pageModule = function(){
                 	 return rowdata.urgencyDegree;
                  }},
                  {display:"批示指示内容",name:"",width:"20%",align:"left",paixu:false,title:true,render:function(rowdata){
-                	 return '';
+                	 var szpsCont="";
+                	 if(rowdata.leaderName && rowdata.leaderContent && rowdata.leaderTime){
+                		 szpsCont=rowdata.leaderName+":"+rowdata.leaderContent+" "+rowdata.leaderTime.substring(0,16)
+                	 }
+                	 return szpsCont;
                  }},
                  {display:"承办单位/人",name:"",width:"20%",align:"left",paixu:false,title:true,render:function(rowdata){
-                	 return '';
+                	 var underDept="";
+                	 if(rowdata.latestSubDept){
+                		 underDept=rowdata.latestSubDept+"/"+rowdata.latestUndertaker
+                	 }
+                	 return underDept;
                  }},
                  {display:"办件分类",name:"",width:"15%",align:"left",paixu:false,title:true,render:function(rowdata){
                 	 return rowdata.docTypeName;

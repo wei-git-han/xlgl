@@ -73,5 +73,10 @@ public class SubDocInfoServiceImpl implements SubDocInfoService {
 		return subDocInfoDao.queryAllSubDeptIds(infoId);
 				
 	}
+
+	@Override
+	public SubDocInfo queryLastEndSubInfo(String infoId) {
+		return subDocInfoDao.queryLastEndSubInfo(infoId);
+	}
 	
 }
