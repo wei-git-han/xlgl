@@ -9,6 +9,8 @@ import java.util.Map;
 import com.css.app.db.business.dao.DocumentReadDao;
 import com.css.app.db.business.entity.DocumentRead;
 import com.css.app.db.business.service.DocumentReadService;
+import com.css.base.utils.CurrentUser;
+import com.css.base.utils.UUIDUtils;
 
 
 
@@ -28,8 +30,12 @@ public class DocumentReadServiceImpl implements DocumentReadService {
 	}
 	
 	@Override
-	public void save(DocumentRead dbDocumentRead){
-		documentReadDao.save(dbDocumentRead);
+	public void save(DocumentRead read){
+		read.setId(UUIDUtils.random());
+		read.setReadFlag(1);
+		read.setUserId(CurrentUser.getUserId());
+		read.setUserName(CurrentUser.getUsername());
+		documentReadDao.save(read);
 	}
 	
 	@Override

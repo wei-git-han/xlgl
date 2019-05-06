@@ -69,6 +69,8 @@ public class ReplyExplainServiceImpl implements ReplyExplainService {
 		reply.setTeamId(teamId);
 		reply.setSubDeptId(subDeptId);
 		reply.setSubDeptName(subDeptName);
+		reply.setShowFlag("0");
+		reply.setReVersion("0");
 		replyExplainDao.save(reply);
 	}
 

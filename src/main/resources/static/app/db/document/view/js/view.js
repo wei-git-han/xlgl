@@ -394,6 +394,7 @@ var pageModule = function(){
 			url:subReplyListUrl,
  			data:{infoId:fileId,subId:subId},
 			success:function(data){
+				$(".pagemenu").html("");
 				eachfn(data,$(".pagemenu"),1);
 				$(".newpanel-right-bottom .btn-link").unbind("click");
 				$(".newpanel-right-bottom .btn-link").click(function(){
@@ -736,9 +737,8 @@ function downloadfn(fileServerId){
 	});
 }
 function editfn(id,content,el){
-alert(content)
 	$(el).parents(".nrt-cont").find(".nrt-cont-file .remove").show();
-	$("#editTeamId").attr("id",id);
+	$("#editTeamId").val(id);
 	$("#replyContent").val(content);
 }
 

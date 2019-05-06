@@ -74,6 +74,8 @@ public class DocumentInfo implements Serializable {
 	private String leaderContent;
 	//最新的首长批示时间
 	private Date leaderTime;
+	//已更新标识
+	private String updateFlag;
 	
 	/**
 	 * 设置：唯一标识
@@ -368,6 +370,12 @@ public class DocumentInfo implements Serializable {
 	}
 	public void setLeaderTime(Date leaderTime) {
 		this.leaderTime = leaderTime;
+	}
+	public String getUpdateFlag() {
+		return updateFlag;
+	}
+	public void setUpdateFlag(String updateFlag) {
+		this.updateFlag = updateFlag;
 	}
 	
 }

@@ -22,6 +22,9 @@
 		</if>
 		<if test="docStatus != null and docStatus != ''">
 			and a.DOC_STATUS = #{docStatus}
+		</if>
+		<if test="cui != null and cui != ''">
+			and b.CUIBAN_FLAG ='1'
 		</if>		
 		 	and a.DOC_STATUS &lt; 12 order by a.DOC_STATUS,a.CREATED_TIME desc
 		<if test="offset != null and limit != null">
@@ -58,9 +61,12 @@
 		</if>
 		<if test="docStatus != null and docStatus != ''">
 			and a.DOC_STATUS = #{docStatus}
-		</if>		
-		 	and a.DOC_STATUS &lt; 12 and (dNum = 1 or dNum is null) 
-		 	order by e.receiver_is_me nulls last, a.DOC_STATUS, a.CREATED_TIME desc
+		</if>
+		<if test="cui != null and cui != ''">
+			and c.CUIBAN_FLAG ='1'
+		</if>			
+		 and a.DOC_STATUS &lt; 12 and (dNum = 1 or dNum is null) 
+		 order by e.receiver_is_me nulls last, a.DOC_STATUS, a.CREATED_TIME desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>

@@ -91,13 +91,76 @@ public class SubDocInfoController {
 			map.put("search", search);
 		}
 		if(StringUtils.isNotBlank(docStatus)) {
-			map.put("docStatus", docStatus);
+			if(StringUtils.equals("cui", docStatus)) {
+				map.put("cui", docStatus);
+			}else {
+				map.put("docStatus", docStatus);
+			}
 		}
 		//查询列表数据
 		PageHelper.startPage(page, pagesize);
 		List<SubDocInfo> subDocInfoList = subDocInfoService.queryList(map);
 		GwPageUtils pageUtil = new GwPageUtils(subDocInfoList);
 		Response.json(pageUtil);
+	}
+	
+	/**
+	 * 局内待办数量统计
+	 * @param search 搜索
+	 */
+	@ResponseBody
+	@RequestMapping("/numsList")
+	public void numsList(String search){
+		Map<String, Object> map = new HashMap<>();
+		String loginUserId=CurrentUser.getUserId();
+		String orgId = baseAppUserService.getBareauByUserId(loginUserId);
+		if(StringUtils.isNotBlank(orgId)) {
+			map.put("orgId", orgId);
+		}
+		if(StringUtils.isNotBlank(search)) {
+			map.put("search", search);
+		}
+		int[] arr= {0,0,0,0,0,0,0,0,0};
+		List<SubDocInfo> subDocInfoList = subDocInfoService.queryList(map);
+		if(subDocInfoList != null && subDocInfoList.size()>0) {
+			arr[0]=subDocInfoList.size();
+			for (SubDocInfo subDocInfo : subDocInfoList) {
+				Integer docStatus = subDocInfo.getDocStatus();
+				//待转办
+				if(1==docStatus) {
+					arr[1]+=1;
+				}
+				//待落实
+				if(5==docStatus) {
+					arr[2]+=1;
+				}
+				//办理中
+				if(9==docStatus) {
+					arr[3]+=1;
+				}
+				//待审批
+				if(7==docStatus) {
+					arr[4]+=1;
+				}
+				//退回修改
+				if(3==docStatus) {
+					arr[5]+=1;
+				}
+				//建议办结
+				if(10==docStatus) {
+					arr[6]+=1;
+				}
+				//常态落实
+				if(11==docStatus) {
+					arr[7]+=1;
+				}
+				//催办
+				if(StringUtils.equals("1", subDocInfo.getCuibanFlag())) {
+					arr[8]+=1;
+				}
+			}
+		}
+		Response.json(arr);
 	}
 	
 	/**
@@ -119,13 +182,71 @@ public class SubDocInfoController {
 			map.put("search", search);
 		}
 		if(StringUtils.isNotBlank(docStatus)) {
-			map.put("docStatus", docStatus);
+			if(StringUtils.equals("cui", docStatus)) {
+				map.put("cui", docStatus);
+			}else {
+				map.put("docStatus", docStatus);
+			}
 		}
 		//查询列表数据
 		PageHelper.startPage(page, pagesize);
 		List<SubDocInfo> subDocInfoList = subDocInfoService.queryPersonList(map);
 		GwPageUtils pageUtil = new GwPageUtils(subDocInfoList);
 		Response.json(pageUtil);
+	}
+	
+	/**
+	 * 个人待办数据统计
+	 * @param search 搜索
+	 */
+	@ResponseBody
+	@RequestMapping("/presonNumsList")
+	public void presonNumsList(String search){
+		Map<String, Object> map = new HashMap<>();
+		String loginUserId=CurrentUser.getUserId();
+		if(StringUtils.isNotBlank(loginUserId)) {
+			map.put("loginUserId", loginUserId);
+		}
+		if(StringUtils.isNotBlank(search)) {
+			map.put("search", search);
+		}
+		int[] arr= {0,0,0,0,0,0,0,0};
+		List<SubDocInfo> subDocInfoList = subDocInfoService.queryPersonList(map);
+		if(subDocInfoList != null && subDocInfoList.size()>0) {
+			arr[0]=subDocInfoList.size();
+			for (SubDocInfo subDocInfo : subDocInfoList) {
+				Integer docStatus = subDocInfo.getDocStatus();
+				//待落实
+				if(5==docStatus) {
+					arr[1]+=1;
+				}
+				//办理中
+				if(9==docStatus) {
+					arr[2]+=1;
+				}
+				//待审批
+				if(7==docStatus) {
+					arr[3]+=1;
+				}
+				//退回修改
+				if(3==docStatus) {
+					arr[4]+=1;
+				}
+				//建议办结
+				if(10==docStatus) {
+					arr[5]+=1;
+				}
+				//常态落实
+				if(11==docStatus) {
+					arr[6]+=1;
+				}
+				//催办
+				if(StringUtils.equals("1", subDocInfo.getCuibanFlag())) {
+					arr[7]+=1;
+				}
+			}
+		}
+		Response.json(arr);
 	}
 	
 	/**

@@ -249,7 +249,7 @@ public class ReplyExplainController {
 				if(tempReply != null) {
 					tempReply.setReplyContent(replyContent);
 					replyExplainService.update(tempReply);
-					if(files!=null){
+					if(files!=null && files.length>0){
 						replyAttacService.saveAttacs(files, subId, teamId);
 					}
 				}else {

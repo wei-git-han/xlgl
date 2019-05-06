@@ -8,12 +8,12 @@
 	</select>
 
 	<select id="queryList" resultType="com.css.app.db.business.entity.DocumentInfo">
-		select t.*,d.leader_name,d.leader_content,d.leader_time from DB_DOCUMENT_INFO t
+		select t.*,d.* from DB_DOCUMENT_INFO t
 			left join (select INFO_ID,USER_NAME as leader_name ,LEADER_COMMENT as leader_content,CREATED_TIME as leader_time,row_number() over(partition by info_id order by created_time desc) as dNum from DB_DOCUMENT_SZPS) d on t.id = d.info_id
 		<if test="orgid != null">
 			left join DB_SUB_DOC_INFO  dadi on t.id=dadi.INFO_ID
 		</if>
-		 where 1=1
+		 where (d.dNum = 1 or d.dNum is null) 
 		 <if test="orgid != null">
 			and dadi.SUB_DEPT_ID=#{orgid}
 		</if>
@@ -53,10 +53,10 @@
 		</if>)
 		where num =1)
 			
-		select t.*,d.leader_name,d.leader_content,d.leader_time from DB_DOCUMENT_INFO t
+		select t.*,d.* from DB_DOCUMENT_INFO t
 		left join DB_SUB_DOC_INFO  dadi on t.id=dadi.INFO_ID inner join V_RESULT a on dadi.id= a.sub_id
 		left join (select INFO_ID,USER_NAME as leader_name ,LEADER_COMMENT as leader_content,CREATED_TIME as leader_time,row_number() over(partition by info_id order by created_time desc) as dNum from DB_DOCUMENT_SZPS) d on t.id = d.info_id
-		 where 1=1
+		 where (d.dNum = 1 or d.dNum is null) 
 		<if test='docStatus == "1"'>
 			and t.STATUS=0
 		</if>

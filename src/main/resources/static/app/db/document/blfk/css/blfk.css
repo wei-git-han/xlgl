@@ -79,6 +79,7 @@ body {
 	margin:10px 0px;
 	cursor:pointer;
 	overflow:hidden;
+	font-size:14px;
 }
 .left-content ul li.active{
 	background:#EDF3FF;
