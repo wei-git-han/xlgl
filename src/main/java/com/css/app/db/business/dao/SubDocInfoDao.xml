@@ -83,7 +83,7 @@
  	<select id="queryTotal" resultType="int">
 		select count(*) from DB_SUB_DOC_INFO 
 	</select>
-	<update id="updateDocStatus" resultType="int"">
+	<update id="updateDocStatus">
 		update DB_SUB_DOC_INFO set DOC_STATUS=#{0},UPDATE_TIME = #{1} where INFO_ID=#{2}
 	</update>
 	<insert id="save" parameterType="com.css.app.db.business.entity.SubDocInfo">

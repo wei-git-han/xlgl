@@ -54,8 +54,8 @@ public class SubDocInfoServiceImpl implements SubDocInfoService {
 	}
 
 	@Override
-	public int updateDocStatus(Integer status,Date updateTime,String infoId) {
-		return subDocInfoDao.updateDocStatus(status, updateTime,infoId);
+	public void updateDocStatus(Integer status,Date updateTime,String infoId) {
+		subDocInfoDao.updateDocStatus(status, updateTime,infoId);
 	}
 
 	@Override
