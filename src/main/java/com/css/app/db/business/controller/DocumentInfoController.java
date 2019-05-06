@@ -224,10 +224,15 @@ public class DocumentInfoController {
 		List<DocumentInfo> infoList =null;
 		Map<String, Object> map = new HashMap<>();
 		map.put("docStatus", "2");
-		map.put("search", search);
 		map.put("type", typeId);
-		if(StringUtils.isNotBlank(status) && !StringUtils.equals("update", status)) {
-			map.put("state", status);
+		map.put("search", search);
+		if(StringUtils.isNotBlank(status)) {
+			if(StringUtils.equals("update", status)) {
+				map.put("loginUserId", loginUserId);
+				map.put("hasUpdate", status);
+			}else {
+				map.put("state", status);
+			}
 		}
 		if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType)
 				&& !StringUtils.equals("1", roleType) && !StringUtils.equals("3", roleType)) {

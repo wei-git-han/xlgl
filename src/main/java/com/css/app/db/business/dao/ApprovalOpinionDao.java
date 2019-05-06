@@ -16,6 +16,6 @@ import com.css.base.dao.BaseDao;
 @Mapper
 public interface ApprovalOpinionDao extends BaseDao<ApprovalOpinion> {
 	
-	int updateShowFlag(String subId);
+	void updateShowFlag(String subId);
 	
 }

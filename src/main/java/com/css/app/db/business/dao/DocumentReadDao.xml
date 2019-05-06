@@ -63,7 +63,9 @@
 	<delete id="delete">
 		delete from DB_DOCUMENT_READ where ID = #{value}
 	</delete>
-	
+	<delete id="deleteByInfoId">
+		delete from DB_DOCUMENT_READ where INFO_ID = #{value}
+	</delete>
 	<delete id="deleteBatch">
 		delete from DB_DOCUMENT_READ where ID in 
 		<foreach item="id" collection="array" open="(" separator="," close=")">

@@ -75,8 +75,8 @@ public class ReplyExplainServiceImpl implements ReplyExplainService {
 	}
 
 	@Override
-	public int updateShowFlag(String subId) {
-		return replyExplainDao.updateShowFlag(subId);
+	public void updateShowFlag(String subId) {
+		replyExplainDao.updateShowFlag(subId);
 	}
 
 	@Override

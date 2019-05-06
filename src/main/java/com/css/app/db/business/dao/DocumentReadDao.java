@@ -16,4 +16,6 @@ import com.css.base.dao.BaseDao;
 @Mapper
 public interface DocumentReadDao extends BaseDao<DocumentRead> {
 	
+	void deleteByInfoId(String infoId);
+	
 }

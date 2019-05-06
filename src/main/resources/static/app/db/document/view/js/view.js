@@ -431,19 +431,22 @@ var pageModule = function(){
 	var initcbfn = function(){
 		$ajax({
 			url:cbDataUrl,
-			data:{fileId:fileId},
+			data:{infoId:fileId},
 			success:function(data){
 				if(data&&data.length>0){
-					$("#cbrecord").html("");
+					var html1= "";
 					$.each(data,function(i,item){
-						$("#cbrecord").append(
-							'<div class="record">'+
-				            '	<label class="zbUser">催办人:</label>'+
-				            '	<div><span>'+item.zbUser+'</span><span class="zbDate">'+item.zbdate+'</span></div>'+
-				            '	<label class="cbdw">承办单位/人:</label>'+
-				            '	<div>'+item.unit+'</div>'+
-				            '</div>'
-			            )
+						html1= '<div class="record">'+
+					            '	<label class="zbUser">催办人:</label>'+
+					            '	<div><span>'+item.userName+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
+					            '	<label class="cbdw">催办留言:</label>'+
+					            '	<div>'+item.urgeContent+'</div>';
+								if(item.cbrName && !!item.cbrName){
+									html1+= '	<label class="cbdw">承办人响应:</label>';
+									html1+=	'	<div><span>'+item.cbrName+'</span><span class="dateStyle">'+item.cbTime+'</span><span>发布本次督办落实情况</span></div>';
+								}
+								html1+='</div>'
+			            $("#cbrecord").append(html1);
 					});
 				}
 			}
@@ -461,10 +464,8 @@ var pageModule = function(){
 					$.each(data,function(i,item){
 						$("#jybjrecord").append(
 							'<div class="record">'+
-				            '	<label class="zbUser">转办人:</label>'+
-				            '	<div><span>'+item.zbUser+'</span><span class="zbDate">'+item.zbdate+'</span></div>'+
-				            '	<label class="cbdw">承办单位/人:</label>'+
-				            '	<div>'+item.unit+'</div>'+
+				            '	<label class="zbUser">'+item.subDeptName+' '+ item.userName+'</label>'+
+				            '	<div><span>'+item.content+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
 				            '</div>'
 			            )
 					});

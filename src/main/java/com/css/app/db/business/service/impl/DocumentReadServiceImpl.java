@@ -52,5 +52,10 @@ public class DocumentReadServiceImpl implements DocumentReadService {
 	public void deleteBatch(String[] ids){
 		documentReadDao.deleteBatch(ids);
 	}
+
+	@Override
+	public void deleteByInfoId(String infoId) {
+		documentReadDao.deleteByInfoId(infoId);
+	}
 	
 }

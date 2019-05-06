@@ -27,6 +27,7 @@ import com.css.app.db.business.service.DocumentBjjlService;
 import com.css.app.db.business.service.DocumentCbjlService;
 import com.css.app.db.business.service.DocumentInfoService;
 import com.css.app.db.business.service.DocumentLsjlService;
+import com.css.app.db.business.service.DocumentReadService;
 import com.css.app.db.business.service.ReplyExplainService;
 import com.css.app.db.business.service.SubDocInfoService;
 import com.css.app.db.business.service.SubDocTrackingService;
@@ -74,6 +75,8 @@ public class SubDocInfoController {
 	private DocumentCbjlService documentCbjlService;
 	@Autowired
 	private DocumentLsjlService documentLsjlService;
+	@Autowired
+	private DocumentReadService documentReadService;
 	
 	/**
 	 * 局内待办列表
@@ -363,6 +366,7 @@ public class SubDocInfoController {
 			//添加办结记录
 			bjjl.setInfoId(infoId);
 			bjjl.setSubId(subId);
+			bjjl.setSubDeptName(subInfo.getSubDeptName());
 			documentBjjlService.save(bjjl);
 			json.put("result", "success");
 		}else {
@@ -414,6 +418,7 @@ public class SubDocInfoController {
 			//添加落实记录
 			lsjl.setInfoId(infoId);
 			lsjl.setSubId(subId);
+			lsjl.setSubDeptName(subInfo.getSubDeptName());
 			documentLsjlService.save(lsjl);
 			json.put("result", "success");
 		}else {
@@ -531,7 +536,7 @@ public class SubDocInfoController {
 				cbjl.setFinishFlag(1);
 				documentCbjlService.update(cbjl);
 			}
-			//主记录不标识催办,添加最新的反馈
+			//主记录不标识催办,清理本次首长已读
 			info.setSzReadIds("");
 			info.setCuibanFlag("0");
             //获取最新反馈(各组)
@@ -543,6 +548,8 @@ public class SubDocInfoController {
 				info.setLatestReplyTime(new Date());
 			}
 			documentInfoService.update(info);
+			//清理除首长外的本文件已读
+			documentReadService.deleteByInfoId(infoId);
 		}
 		//反馈对他局和部可见(顺序必须放标识催办完成后边，因为showFlag的值作为参数进行了查询)
 		replyExplainService.updateShowFlag(subId);
