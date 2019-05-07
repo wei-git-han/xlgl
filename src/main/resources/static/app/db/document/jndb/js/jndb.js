@@ -80,11 +80,7 @@ var pageModule = function(){
                 	 return '<div class="dblsqk" title="'+dbCont+'">'+dbCont+'</div>';
                  }},
                  {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,title:true,render:function(rowdata){
-                	 var underDept="";
-                	 if(rowdata.latestSubDept){
-                		 underDept=rowdata.latestSubDept+"/"+rowdata.latestUndertaker
-                	 }
-                	 return underDept;
+                	 return rowdata.underDepts||'';
                  }},
                  {display:"办件分类",name:"docTypeName",width:"5%",align:"left",paixu:false,render:function(rowdata){
                 	 return rowdata.docTypeName;

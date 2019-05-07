@@ -192,7 +192,18 @@ public class ReplyExplainController {
 	}
 	
 	/**
-	 * 获取某个反馈的审批意见
+	 * 获取所有局最新一条的已发布反馈
+	 * @param infoId
+	 */
+	@ResponseBody
+	@RequestMapping("/getAllLatestOneReply")
+	public void getAllLatestOneReply(String infoId) {
+		List<ReplyExplain> latestOneReply = replyExplainService.queryAllLatestOneReply(infoId);
+		Response.json(latestOneReply);
+	}
+	
+	/**
+	 * 获取某个反馈的审批意见----暂时没有用（本来想点击展开的时候单独获取用）
 	 * @param subId 分局主id
 	 * @param teamId 某个反馈
 	 */
@@ -207,7 +218,7 @@ public class ReplyExplainController {
 	}
 	
 	/**
-	 * 获取某个人的反馈
+	 * 获取某个人的反馈---------注：已经废弃不用了
 	 * @param subId 分支主文件id
 	 * @param teamId 某组反馈的id
 	 * @param userId 人的id
@@ -225,6 +236,21 @@ public class ReplyExplainController {
 			reply=queryList.get(0);
 		}
 		Response.json(reply);
+	}
+	
+	/**
+	 * 获取某组办理反馈
+	 * @param subId
+	 * @param teamId
+	 */
+	@ResponseBody
+	@RequestMapping("/personReply")
+	public void getReplyByTeamId(String subId,String teamId) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("subId", subId);
+		map.put("teamId", teamId);
+		List<ReplyExplain> queryList = replyExplainService.queryList(map);
+		Response.json(queryList);
 	}
 	
 	/**

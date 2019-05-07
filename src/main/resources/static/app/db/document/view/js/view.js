@@ -52,15 +52,17 @@ var pageModule = function(){
 				boolean isUndertaker=false;//是否承办人*/
 				if(data.docStatus<10){//文件为办理中
 					if(!data.isUndertaken && data.isCheckUser){//承办、转办按钮显示，输入框相关不显示
-						$(".blfk_bottom").show(); //意见外大框
+						$(".newbottom").show(); //所有按钮的容器
 						$("#chengban").show();
 						$("#zhuanban").show();
 					}else{
 						if(data.isCheckUser){//显示办结、常态落实,输入框
 							//$(".blfkchangeH").attr("style","position:absolute;top:34px;left:0;bottom:0;width:100%;right:0;");
 							$(".blfk_bottom").show(); //意见外大框
+							$(".newbottom").show(); //所有按钮的容器
 							$(".blfk_top").css({"bottom":"40%","height":"58%"});   //意见框上方元素样式控制
 							$("#save").show();
+							$("#clear").show();
 							//$("#showfj").show();
 							if(data.roleType=='3'){//是局长显示审批完成否则显示提交
 								$("#sptg").show();
@@ -253,7 +255,7 @@ var pageModule = function(){
 				var zkgb = '<br>';
 				if(typeof(child)!="undefined"&&child!=null&&$.trim(child)!=""){
 					if(child.length>0){
-						zkgb =  ' <button class="btn btn-link">'+
+						zkgb =  ' <button type="button" class="btn btn-link">'+
 								'	<font class="zhankai">展开<i class="fa fa-chevron-down"></i></font>'+
 								'	<font class="guanbi">关闭<i class="fa fa-chevron-up"></i></font>'+
 								'</button>';
@@ -276,7 +278,7 @@ var pageModule = function(){
 						color = "#CCCCCC";
 					}
 					
-					li ='<div class="newpanel-cont'+active+'" color="'+color+'">'+
+					li ='<div class="newpanel-cont '+active+'" color="'+color+'">'+
 					'	<div class="newpanel-inner">'+
 					'		<div class="newpanel-left">'+
 					'			<div class="wh100">'+
@@ -528,9 +530,9 @@ var pageModule = function(){
 				type: "GET",
 				success:function(data){
 					if(data.result == "success"){
-					newbootbox.alert("已返回承办人！");
-						showButton();
-						initblfkList();
+						newbootbox.alert("已返回承办人！").done(function(){
+							window.location.reload();
+						});
 					}
 				}
 			});
@@ -549,9 +551,9 @@ var pageModule = function(){
 				type: "GET",
 				success:function(data){
 					if(data.result == "success"){
-						newbootbox.alert("审批完成！");
-						showButton();
-						initblfkList();
+						newbootbox.alert("审批完成！").done(function(){
+							window.location.reload();
+						});
 					}
 				}
 			});
@@ -688,6 +690,9 @@ var pageModule = function(){
 			initother();
 			$(".scroller").css("height","100%");
 			$(".slimScrollDiv").css("height","100%");
+		},
+		initblfkList:function(){
+			initblfkList();
 		}
 	};
 }();
@@ -733,8 +738,17 @@ function downloadfn(fileServerId){
 }
 function editfn(id,content,el){
 	$(el).parents(".nrt-cont").find(".nrt-cont-file .remove").show();
-	$("#editTeamId").val(id);
-	$("#replyContent").val(content);
+	/*$("#editTeamId").val(id);
+	$("#replyContent").val(content);*/
+	newbootbox.newdialog({
+		id:"editDialog",
+		width:800,
+		height:600,
+		header:true,
+		title:"编辑",
+		classed:"cjDialog",
+		url:"/app/db/document/view/html/editDialog.html?fileId="+id+"&replyContent="+content+"&subId="+subId
+	})
 }
 
 function removefn(id,el){

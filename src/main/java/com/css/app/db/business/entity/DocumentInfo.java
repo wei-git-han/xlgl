@@ -76,6 +76,8 @@ public class DocumentInfo implements Serializable {
 	private Date leaderTime;
 	//已更新标识
 	private String updateFlag;
+	//承办单位/人
+	private String underDepts;
 	
 	/**
 	 * 设置：唯一标识
@@ -376,6 +378,12 @@ public class DocumentInfo implements Serializable {
 	}
 	public void setUpdateFlag(String updateFlag) {
 		this.updateFlag = updateFlag;
+	}
+	public String getUnderDepts() {
+		return underDepts;
+	}
+	public void setUnderDepts(String underDepts) {
+		this.underDepts = underDepts;
 	}
 	
 }

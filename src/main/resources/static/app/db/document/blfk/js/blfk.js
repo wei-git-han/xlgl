@@ -58,10 +58,10 @@ var pageModule = function(){
 	var initgrid = function(){
         grid = $("#gridcont").createGrid({
             columns:[
-            	{display:"军委办件号",name:"",width:"6%",align:"left",title:true,render:function(rowdata,n){
+            	{display:"军委办件号",name:"",width:"8%",align:"left",title:true,render:function(rowdata,n){
                	 	return rowdata.banjianNumber;
                 }},
-                {display:"办理状态",name:"",width:"6%",align:"center",render:function(rowdata,n){
+                {display:"办理状态",name:"",width:"8%",align:"center",render:function(rowdata,n){
                 	var statusName="";
                	 	var bgColor="";
                	 	if(rowdata.status==1){
@@ -83,12 +83,12 @@ var pageModule = function(){
                 	 }
                 	 return '<a title="'+rowdata.docTitle+'" class="table-title2" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
                  }},
-                 {display:"批示指示内容",name:"",width:"30%",align:"left",paixu:false,title:false,render:function(rowdata){
+                 {display:"批示指示内容",name:"",width:"26%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var szpsCont="";
                 	 if(rowdata.leaderName && rowdata.leaderContent && rowdata.leaderTime){
                 		 szpsCont=rowdata.leaderName+":"+rowdata.leaderContent+" "+rowdata.leaderTime.substring(0,16)
                 	 }
-                	 return '<div class="zspsnr" title="'+szpsCont+'">'+szpsCont+'</div>';
+                	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.id+'\')" title="'+szpsCont+'">'+szpsCont+'</div>';
                  }},
                  {display:"督办落实情况",name:"",width:"21%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var duban="";
@@ -102,11 +102,7 @@ var pageModule = function(){
                 	 return '<div class="dblsqk" title="'+dbCont+'">'+duban+dbCont+'</div>';
                  }},
                  {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,title:true,render:function(rowdata){
-                	 var underDept="";
-                	 if(rowdata.latestSubDept){
-                		 underDept=rowdata.latestSubDept+"/"+rowdata.latestUndertaker
-                	 }
-                	 return underDept;
+                	 return rowdata.underDepts||'';
                  }},
                  {display:"转办时间",name:"",width:"6%",align:"center",render:function(rowdata){
                 	 if(rowdata.firstZbTime && !!rowdata.firstZbTime){
@@ -132,14 +128,14 @@ var pageModule = function(){
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
-					var maxwidth = 60;
+					var maxwidth = 70;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
 					}
 				});
             	$(".dblsqk").each(function(){
-					var maxwidth = 72;
+					var maxwidth = 60;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
@@ -196,11 +192,7 @@ var pageModule = function(){
                 	 return '<div class="dblsqk" title="'+dbCont+'">'+duban+dbCont+'</div>';
                  }},
                  {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,title:true,render:function(rowdata){
-                	 var underDept="";
-                	 if(rowdata.latestSubDept){
-                		 underDept=rowdata.latestSubDept+"/"+rowdata.latestUndertaker
-                	 }
-                	 return underDept;
+                	 return rowdata.underDepts||'';
                  }},
                  {display:"转办时间",name:"",width:"6%",align:"center",render:function(rowdata){
                 	 if(rowdata.firstZbTime && !!rowdata.firstZbTime){
@@ -452,4 +444,18 @@ function refreshgrid1(){
 }
 function refreshgrid2(){
 	pageModule.initgrid2();
+}
+
+
+//批示指示内容弹出框
+function pszsnrAlert(id){
+	newbootbox.newdialog({
+		id:"psDialog",
+		width:800,
+		height:600,
+		header:true,
+		title:"批示详情",
+		classed:"cjDialog",
+		url:"/app/db/document/view/html/psDialog.html?fileId="+id
+	})
 }

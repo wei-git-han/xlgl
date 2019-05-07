@@ -49,7 +49,7 @@ var pageModule = function(){
 					$(".right_top_zbjl").css("bottom","60px");//按钮父元素上方元素样式控制
 					$("#quxiaobanjie").show();
 				}
-				if(data.zhuanBanBtn && ("blfk"==fileFrom ||"djlr"==fileFrom)){
+				if(data.zhuanBanBtn && ("blfk"==fileFrom)){
 					$(".right_zbjl").show();
 					$(".right_top_zbjl").css("bottom","60px");//按钮父元素上方元素样式控制
 					$("#zhuanban").show();

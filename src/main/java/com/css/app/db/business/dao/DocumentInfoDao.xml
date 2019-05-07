@@ -8,8 +8,9 @@
 	</select>
 
 	<select id="queryList" resultType="com.css.app.db.business.entity.DocumentInfo">
-		select t.*,d.* from DB_DOCUMENT_INFO t
+		select t.*,c.under_depts,d.* from DB_DOCUMENT_INFO t
 			left join (select INFO_ID,USER_NAME as leader_name ,LEADER_COMMENT as leader_content,CREATED_TIME as leader_time,row_number() over(partition by info_id order by created_time asc) as dNum from DB_DOCUMENT_SZPS) d on t.id = d.info_id
+			left join (select distinct info_id,listagg(sub_dept_name || nvl2(undertaker_name,'/' || undertaker_name,null), ',') within group(order by created_time desc) over(partition by info_id) under_depts from DB_SUB_DOC_INFO) c on t.id = c.info_id	
 		<if test="orgid != null">
 			left join DB_SUB_DOC_INFO  dadi on t.id=dadi.INFO_ID
 		</if>
@@ -59,13 +60,11 @@
 		</if>)
 		where num =1)
 			
-		select t.*,d.* from DB_DOCUMENT_INFO t
+		select t.*,c.under_depts,d.* from DB_DOCUMENT_INFO t
 		left join DB_SUB_DOC_INFO  dadi on t.id=dadi.INFO_ID inner join V_RESULT a on dadi.id= a.sub_id
 		left join (select INFO_ID,USER_NAME as leader_name ,LEADER_COMMENT as leader_content,CREATED_TIME as leader_time,row_number() over(partition by info_id order by created_time asc) as dNum from DB_DOCUMENT_SZPS) d on t.id = d.info_id
-		<if test="hasUpdate != null"> 
-			left join DB_DOCUMENT_CBJL b on t.ID=b.INFO_ID
-		</if>
-		 where (d.dNum = 1 or d.dNum is null) 
+		left join (select distinct info_id,listagg(sub_dept_name || nvl2(undertaker_name,'/' || undertaker_name,null), ',') within group(order by created_time desc) over(partition by info_id) under_depts from DB_SUB_DOC_INFO) c on t.id = c.info_id
+		where (d.dNum = 1 or d.dNum is null) 
 		<if test='docStatus == "1"'>
 			and t.STATUS=0
 		</if>
@@ -73,7 +72,7 @@
 			and t.STATUS &gt; 0
 		</if>
 		<if test="hasUpdate != null"> 
-			and t.CUIBAN_FLAG ='0' and b.FINISH_FLAG='1' and t.id not in(select INFO_ID from DB_DOCUMENT_READ where USER_ID=#{loginUserId})
+			and t.LATEST_REPLY !='' and t.LATEST_REPLY is not null and t.CUIBAN_FLAG ='0' and t.id not in(select INFO_ID from DB_DOCUMENT_READ where USER_ID=#{loginUserId})
 		</if>
 		<if test="search != null and search != ''">
 			and t.DOC_TITLE like '%'||#{search}||'%'

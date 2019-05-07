@@ -25,7 +25,6 @@ import com.css.app.db.business.entity.DocumentBjjl;
 import com.css.app.db.business.entity.DocumentCbjl;
 import com.css.app.db.business.entity.DocumentFile;
 import com.css.app.db.business.entity.DocumentInfo;
-import com.css.app.db.business.entity.DocumentLsjl;
 import com.css.app.db.business.entity.DocumentRead;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.entity.SubDocTracking;
@@ -33,7 +32,6 @@ import com.css.app.db.business.service.DocumentBjjlService;
 import com.css.app.db.business.service.DocumentCbjlService;
 import com.css.app.db.business.service.DocumentFileService;
 import com.css.app.db.business.service.DocumentInfoService;
-import com.css.app.db.business.service.DocumentLsjlService;
 import com.css.app.db.business.service.DocumentReadService;
 import com.css.app.db.business.service.SubDocInfoService;
 import com.css.app.db.business.service.SubDocTrackingService;
@@ -78,8 +76,6 @@ public class DocumentInfoController {
 	private DocumentCbjlService documentCbjlService;
 	@Autowired
 	private DocumentBjjlService documentBjjlService;
-	@Autowired
-	private DocumentLsjlService documentLsjlService;
 	@Autowired
 	private SubDocTrackingService subDocTrackingService;
 	@Autowired
@@ -256,13 +252,8 @@ public class DocumentInfoController {
 			readMap.put("infoId", info.getId());
 			List<DocumentRead> list = documentReadService.queryList(readMap);
 			
-			//是否有完成的催办
-			Map<String, Object> cuiBanMap = new HashMap<>();
-			cuiBanMap.put("infoId", info.getId());
-			cuiBanMap.put("finishFlag", 1);
-			List<DocumentCbjl> cuiBanList = documentCbjlService.queryList(cuiBanMap);
-			//催办为0，未读且有完成的催办，则标识为已更新
-			if(list.size()==0 && StringUtils.equals("0", info.getCuibanFlag()) && cuiBanList.size()>0) {
+			//催办为0，未读，最新反馈字段有值则标识为已更新
+			if(list.size()==0 && StringUtils.equals("0", info.getCuibanFlag()) && StringUtils.isNotBlank(info.getLatestReply())) {
 				info.setUpdateFlag("1");
 			}
 		}
@@ -420,6 +411,10 @@ public class DocumentInfoController {
 				cuiBanBtn=true;
 			}
 		}
+		if(quXiaoBtn) {
+			 cuiBanBtn =false;
+			 zhuanBanBtn =false;
+		}
 		JSONObject json= new JSONObject();
 		json.put("cuiBanBtn", cuiBanBtn);
 		json.put("quXiaoBtn", quXiaoBtn);
@@ -436,29 +431,18 @@ public class DocumentInfoController {
 	public void cancleOperation(String id){
 		JSONObject json= new JSONObject();
 		DocumentInfo info = documentInfoService.queryObject(id);
-		Integer status = info.getStatus();//2：办结：3：常态落实
 		Integer subStatus = DbDocStatusDefined.BAN_LI_ZHONG;
 		//取最后一个办结或落实的局的主文件
 		//文件局内状态（1:待转办；3：退回修改；5：待落实；7：待审批；9：办理中；10：建议办结；11：建议落实；12：办结；1:3：常态落实）
 		SubDocInfo lastEndSubInfo = subDocInfoService.queryLastEndSubInfo(id);
 		String subId =lastEndSubInfo.getId();
 		if(StringUtils.isNotBlank(subId)) {
-			if(lastEndSubInfo.getDocStatus()==DbDocStatusDefined.BAN_JIE) {
-				//添加办结记录
-				DocumentBjjl newBjjl=new DocumentBjjl();
-				newBjjl.setContent("取消办结");
-				newBjjl.setInfoId(id);
-				newBjjl.setSubId(subId);
-				documentBjjlService.save(newBjjl);
-				
-			}else if(status==DbDocStatusDefined.CHANG_TAI_LUO_SHI){
-				//添加落实记录
-				DocumentLsjl newLsjl= new DocumentLsjl();
-				newLsjl.setContent("取消落实");
-				newLsjl.setInfoId(id);
-				newLsjl.setSubId(subId);
-				documentLsjlService.save(newLsjl);
-			}			
+			//添加办结记录
+			DocumentBjjl newBjjl=new DocumentBjjl();
+			newBjjl.setContent("取消办结");
+			newBjjl.setInfoId(id);
+			newBjjl.setSubId(subId);
+			documentBjjlService.save(newBjjl);				
 			//取最后一条流转记录
 			SubDocTracking tracking = subDocTrackingService.queryLatestRecord(subId);
 			//trackingType（1：转办；2：审批流转；3：退回）

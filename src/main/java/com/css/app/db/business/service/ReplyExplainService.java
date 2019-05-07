@@ -35,4 +35,6 @@ public interface ReplyExplainService {
 	List<ReplyExplain> queryAllLatestReply(String infoId);
 	//查询某分支局的反馈
 	List<ReplyExplain> querySubLatestReply(String infoId,String subId);
+	//查询所有分支局的最新一条反馈
+	List<ReplyExplain> queryAllLatestOneReply(String infoId);
 }

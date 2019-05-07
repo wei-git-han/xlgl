@@ -13,7 +13,7 @@ var pageModule = function(){
 	var initgrid = function(){
         grid = $("#gridcont").createGrid({
             columns:[
-                 {display:"军委办件号",name:"",width:"6%",align:"left",title:true,render:function(rowdata,n){
+                 {display:"军委办件号",name:"",width:"7%",align:"left",title:true,render:function(rowdata,n){
                 	 return rowdata.banjianNumber;
                  }},
                  {display:"办理状态",name:"",width:"6%",align:"center",render:function(rowdata,n){
@@ -34,21 +34,17 @@ var pageModule = function(){
                  {display:"紧急程度",name:"",width:"5%",align:"center",paixu:false,render:function(rowdata){
                 	 return rowdata.urgencyDegree;
                  }},
-                 {display:"批示指示内容",name:"",width:"20%",align:"left",paixu:false,title:false,render:function(rowdata){
+                 {display:"批示指示内容",name:"",width:"25%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var szpsCont="";
                 	 if(rowdata.leaderName && rowdata.leaderContent && rowdata.leaderTime){
                 		 szpsCont=rowdata.leaderName+":"+rowdata.leaderContent+" "+rowdata.leaderTime.substring(0,16)
                 	 }
-                	 return '<div class="zspsnr" title="'+szpsCont+'">'+szpsCont+'</div>';
+                	 return '<div class="zspsnr"  onclick="pszsnrAlert(\''+rowdata.id+'\')" title="'+szpsCont+'">'+szpsCont+'</div>';
                  }},
                  {display:"承办单位/人",name:"",width:"20%",align:"left",paixu:false,title:true,render:function(rowdata){
-                	 var underDept="";
-                	 if(rowdata.latestSubDept){
-                		 underDept=rowdata.latestSubDept+"/"+rowdata.latestUndertaker
-                	 }
-                	 return underDept;
+                	 return rowdata.underDepts || '';
                  }},
-                 {display:"办件分类",name:"",width:"5%",align:"left",paixu:false,title:true,render:function(rowdata){
+                 {display:"办件分类",name:"",width:"10%",align:"left",paixu:false,title:true,render:function(rowdata){
                 	 return rowdata.docTypeName;
                  }},
                  {display:"创建时间",name:"",width:"6%",align:"center",title:true,render:function(rowdata){
@@ -280,4 +276,17 @@ function chehuiDoc(docId) {
 			});
 	    }
 	});
+}
+
+//批示指示内容弹出框
+function pszsnrAlert(id){
+	newbootbox.newdialog({
+		id:"psDialog",
+		width:800,
+		height:600,
+		header:true,
+		title:"批示详情",
+		classed:"cjDialog",
+		url:"/app/db/document/view/html/psDialog.html?fileId="+id
+	})
 }

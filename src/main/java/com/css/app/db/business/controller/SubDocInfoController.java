@@ -18,7 +18,7 @@ import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.db.business.entity.DocumentBjjl;
 import com.css.app.db.business.entity.DocumentCbjl;
 import com.css.app.db.business.entity.DocumentInfo;
-import com.css.app.db.business.entity.DocumentLsjl;
+import com.css.app.db.business.entity.DocumentRead;
 import com.css.app.db.business.entity.ReplyExplain;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.entity.SubDocTracking;
@@ -26,7 +26,6 @@ import com.css.app.db.business.service.ApprovalOpinionService;
 import com.css.app.db.business.service.DocumentBjjlService;
 import com.css.app.db.business.service.DocumentCbjlService;
 import com.css.app.db.business.service.DocumentInfoService;
-import com.css.app.db.business.service.DocumentLsjlService;
 import com.css.app.db.business.service.DocumentReadService;
 import com.css.app.db.business.service.ReplyExplainService;
 import com.css.app.db.business.service.SubDocInfoService;
@@ -39,7 +38,6 @@ import com.css.base.utils.CurrentUser;
 import com.css.base.utils.GwPageUtils;
 import com.css.base.utils.Response;
 import com.css.base.utils.StringUtils;
-import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 
 
@@ -74,8 +72,6 @@ public class SubDocInfoController {
 	@Autowired
 	private DocumentCbjlService documentCbjlService;
 	@Autowired
-	private DocumentLsjlService documentLsjlService;
-	@Autowired
 	private DocumentReadService documentReadService;
 	
 	/**
@@ -103,6 +99,16 @@ public class SubDocInfoController {
 		//查询列表数据
 		PageHelper.startPage(page, pagesize);
 		List<SubDocInfo> subDocInfoList = subDocInfoService.queryList(map);
+		for (SubDocInfo subDocInfo : subDocInfoList) {
+			//是否已读
+			Map<String, Object> readMap = new HashMap<>();
+			readMap.put("userId", loginUserId);
+			readMap.put("infoId", subDocInfo.getInfoId());
+			List<DocumentRead> list = documentReadService.queryList(readMap);
+			if(list.size()==0 && StringUtils.equals("0", subDocInfo.getCuibanFlag()) && StringUtils.isNotBlank(subDocInfo.getLatestReply())) {
+				subDocInfo.setUpdateFlag("1");
+			}
+		}
 		GwPageUtils pageUtil = new GwPageUtils(subDocInfoList);
 		Response.json(pageUtil);
 	}
@@ -194,6 +200,16 @@ public class SubDocInfoController {
 		//查询列表数据
 		PageHelper.startPage(page, pagesize);
 		List<SubDocInfo> subDocInfoList = subDocInfoService.queryPersonList(map);
+		for (SubDocInfo subDocInfo : subDocInfoList) {
+			//是否已读
+			Map<String, Object> readMap = new HashMap<>();
+			readMap.put("userId", loginUserId);
+			readMap.put("infoId", subDocInfo.getInfoId());
+			List<DocumentRead> list = documentReadService.queryList(readMap);
+			if(list.size()==0 && StringUtils.equals("0", subDocInfo.getCuibanFlag()) && StringUtils.isNotBlank(subDocInfo.getLatestReply())) {
+				subDocInfo.setUpdateFlag("1");
+			}
+		}
 		GwPageUtils pageUtil = new GwPageUtils(subDocInfoList);
 		Response.json(pageUtil);
 	}
@@ -399,7 +415,7 @@ public class SubDocInfoController {
 			SubDocInfo subInfo = subDocInfoService.queryObject(subId);
 			int minDocStatus = subDocInfoService.queryMinDocStatus(infoId,subInfo.getSubDeptId());
 			int maxDocStatus = subDocInfoService.queryMaxDocStatus(infoId, subInfo.getSubDeptId());
-			DocumentLsjl lsjl= new DocumentLsjl();
+			DocumentBjjl bjjl=new DocumentBjjl();
 			//说明只有当前一个局
 			if(0==minDocStatus && 0==maxDocStatus) {
 				//主文件状态变为常态落实
@@ -407,12 +423,12 @@ public class SubDocInfoController {
 				info.setStatus(3);
 				documentInfoService.update(info);
 				subInfo.setDocStatus(DbDocStatusDefined.CHANG_TAI_LUO_SHI);
-				lsjl.setContent("常态落实");
+				bjjl.setContent("常态落实");
 			}else {
 				//如果最小状态值小于建议办结的状态，则将本分支局状态标示为建议落实
 				if(minDocStatus< DbDocStatusDefined.JIAN_YI_BAN_JIE) {
 					subInfo.setDocStatus(DbDocStatusDefined.JIAN_YI_LUO_SHI);
-					lsjl.setContent("建议落实");
+					bjjl.setContent("建议常态落实");
 				}else {//如果最小状态值不小于建议办结的状态，且最大值大于等于建议办结，说明本分支机构至少有一个常态落实
 					if(maxDocStatus >= DbDocStatusDefined.JIAN_YI_BAN_JIE) {
 						//主文件状态变为常态落实
@@ -422,17 +438,17 @@ public class SubDocInfoController {
 						//各分支文件变为常态落实
 						//subDocInfoService.updateDocStatus(DbDocStatusDefined.CHANG_TAI_LUO_SHI, new Date() , infoId);
 						subInfo.setDocStatus(DbDocStatusDefined.CHANG_TAI_LUO_SHI);
-						lsjl.setContent("系统自动常态落实");
+						bjjl.setContent("系统自动常态落实");
 					}
 				}
 			}
 			subInfo.setUpdateTime(new Date());
 			subDocInfoService.update(subInfo);
-			//添加落实记录
-			lsjl.setInfoId(infoId);
-			lsjl.setSubId(subId);
-			lsjl.setSubDeptName(subInfo.getSubDeptName());
-			documentLsjlService.save(lsjl);
+			//办结落实记录
+			bjjl.setInfoId(infoId);
+			bjjl.setSubId(subId);
+			bjjl.setSubDeptName(subInfo.getSubDeptName());
+			documentBjjlService.save(bjjl);
 			json.put("result", "success");
 		}else {
 			json.put("result", "fail");
@@ -574,9 +590,6 @@ public class SubDocInfoController {
 	private void submitRelation(String subId,String userName,String userId,String trackingType) {
 		//获取当前登录人信息
 		String loginUserId=CurrentUser.getUserId();
-		String loginUserName=CurrentUser.getUsername();
-		String loginUserDeptId=CurrentUser.getDepartmentId();
-		String loginUserDeptName=CurrentUser.getOrgName();
 		String deptId = null;
 		String deptName = null;
 		List<BaseAppUser> list = baseAppUserService.findByUserId(userId);
@@ -589,18 +602,12 @@ public class SubDocInfoController {
 		}
 		//添加流转记录
 		SubDocTracking tracking = new SubDocTracking();
-		tracking.setId(UUIDUtils.random());
-		tracking.setSenderId(loginUserId);
-		tracking.setSenderName(loginUserName);
-		tracking.setSenDeptId(loginUserDeptId);
-		tracking.setSenDeptName(loginUserDeptName);
 		tracking.setReceiverId(userId);
 		tracking.setReceiverName(userName);
 		tracking.setRecDeptId(deptId);
 		tracking.setRecDeptName(deptName);
 		tracking.setSubId(subId);
 		tracking.setTrackingType(trackingType);
-		tracking.setCreatedTime(new Date());
 		subDocTrackingService.save(tracking);
 		//将临时反馈变为发布
 		Map<String, Object> map =new HashMap<>();
