@@ -163,7 +163,7 @@
 	
 	<select id="queryListByDicStu" resultType="map">
 	select  dic.TEXT as name,
-        isnull(sum(shu.bj +shu.bj), 0)          as bj  ,
+        isnull(sum(shu.bj +shu.ctls), 0)          as bj  ,
         isnull(sum(shu.blz+shu.bj+shu.ctls), 0) as total
 		 from DB_DOCUMENT_DIC dic
 		left join
