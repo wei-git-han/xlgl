@@ -36,7 +36,8 @@
 			"CREATED_TIME", 
 			"CONTENT", 
 			"INFO_ID",
-			"SUB_ID"
+			"SUB_ID",
+			"SUB_DEPT_NAME"
 		)
 		values
 		(
@@ -48,7 +49,8 @@
 			#{createdTime}, 
 			#{content}, 
 			#{infoId},
-			#{subId}
+			#{subId},
+			#{subDeptName}
 			
 		)
 	</insert>
@@ -63,7 +65,8 @@
 			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
 			<if test="content != null">"CONTENT" = #{content}, </if>
 			<if test="infoId != null">"INFO_ID" = #{infoId},</if>
-			<if test="subId != null">"SUB_ID" = #{subId}</if>
+			<if test="subId != null">"SUB_ID" = #{subId},</if>
+			<if test="subDeptName != null">"SUB_DEPT_NAME" = #{subDeptName} </if>
 		</set>
 		where ID = #{id}
 	</update>

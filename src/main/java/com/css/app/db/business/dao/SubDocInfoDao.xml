@@ -9,7 +9,11 @@
 
 	<select id="queryList" resultType="com.css.app.db.business.entity.SubDocInfo">
 		select * from DB_SUB_DOC_INFO a 
-		inner join DB_DOCUMENT_INFO b on a.INFO_ID=b.ID where 1=1 
+		inner join DB_DOCUMENT_INFO b on a.INFO_ID=b.ID
+		<!-- 当前处理人 -->
+		left join (select SUB_ID,RECEIVER_NAME as deal_user_name from (select SUB_ID,RECEIVER_NAME,row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num from DB_SUB_DOC_TRACKING) where num=1) f on a.id=f.sub_id
+		left join (select INFO_ID,USER_NAME as leader_name ,LEADER_COMMENT as leader_content,CREATED_TIME as leader_time,row_number() over(partition by info_id order by created_time desc) as num from DB_DOCUMENT_SZPS) c on a.info_id = c.info_id
+		where (num = 1 or num is null) 
 		<if test="orgId != null and orgId != ''">
 		   and a.SUB_DEPT_ID = #{orgId}
 		</if>
@@ -18,6 +22,9 @@
 		</if>
 		<if test="docStatus != null and docStatus != ''">
 			and a.DOC_STATUS = #{docStatus}
+		</if>
+		<if test="cui != null and cui != ''">
+			and b.CUIBAN_FLAG ='1'
 		</if>		
 		 	and a.DOC_STATUS &lt; 12 order by a.DOC_STATUS,a.CREATED_TIME desc
 		<if test="offset != null and limit != null">
@@ -26,6 +33,7 @@
 	</select>
 	
 	<select id="queryPersonList" resultType="com.css.app.db.business.entity.SubDocInfo">
+		<!-- 文在我这 -->
 		WITH V_RESULT as(select SUB_ID from 
 		(select SUB_ID, row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num
 		from DB_SUB_DOC_TRACKING where 1=1 
@@ -34,15 +42,31 @@
 		</if>)
 		where num =1)	
 		
-		select * from DB_SUB_DOC_INFO a inner join v_result b on a.ID = b.SUB_ID	
-		left join DB_DOCUMENT_INFO c on a.INFO_ID=c.ID  where 1=1	
+		select * from DB_SUB_DOC_INFO a inner join v_result b on a.ID = b.SUB_ID
+		<!-- 主文件要素 -->	
+		left join DB_DOCUMENT_INFO c on a.INFO_ID=c.ID
+		<!-- 当前处理人 -->
+		left join (select SUB_ID,RECEIVER_NAME as deal_user_name from (select SUB_ID,RECEIVER_NAME,row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num from DB_SUB_DOC_TRACKING) where num=1) f on a.id=f.sub_id
+		<!-- 最新一条首长批示 -->
+		left join (select INFO_ID,USER_NAME as leader_name ,LEADER_COMMENT as leader_content,CREATED_TIME as leader_time,row_number() over(partition by info_id order by created_time desc) as dNum from DB_DOCUMENT_SZPS) d on c.id = d.info_id
+		<!-- receiverIsMe：我为当前处理人，并且文件状态<10，字段置为1 --> 
+		left join (select SUB_ID,RECEIVER_NAME deal_user_name,1 as receiver_is_me from(select SUB_ID,RECEIVER_ID,RECEIVER_NAME,DOC_STATUS,row_number() over(partition by SUB_ID order by m.CREATED_TIME desc) as num from DB_SUB_DOC_TRACKING m left join DB_SUB_DOC_INFO n on m.SUB_ID = n.ID)
+			where 1=1 
+			<if test="loginUserId !=null and loginUserId !=''">
+				and RECEIVER_ID = #{loginUserId}
+			</if> and num = 1 and DOC_STATUS &lt; 10)as e on a.ID = e.SUB_ID
+		where 1=1	
 		<if test="search != null and search != ''">
 			and c.DOC_TITLE like '%'||#{search}||'%'
 		</if>
 		<if test="docStatus != null and docStatus != ''">
 			and a.DOC_STATUS = #{docStatus}
-		</if>		
-		 	and a.DOC_STATUS &lt; 12 order by a.DOC_STATUS, a.CREATED_TIME desc
+		</if>
+		<if test="cui != null and cui != ''">
+			and c.CUIBAN_FLAG ='1'
+		</if>			
+		 and a.DOC_STATUS &lt; 12 and (dNum = 1 or dNum is null) 
+		 order by e.receiver_is_me nulls last, a.DOC_STATUS, a.CREATED_TIME desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
@@ -51,15 +75,18 @@
 		select SUB_DEPT_ID from DB_SUB_DOC_INFO where INFO_ID = #{value}
 	</select>
 	<select id="queryMinDocStatus" resultType="int">
-		select min(DOC_STATUS) from DB_SUB_DOC_INFO where INFO_ID=#{0} and SUB_DEPT_ID !=#{1}
+		select nvl(min(DOC_STATUS),0) from DB_SUB_DOC_INFO where INFO_ID=#{0} and SUB_DEPT_ID !=#{1}
 	</select>
 	<select id="queryMaxDocStatus" resultType="int">
-		select max(DOC_STATUS) from DB_SUB_DOC_INFO where INFO_ID=#{0} and SUB_DEPT_ID !=#{1}
+		select nvl(max(DOC_STATUS),0) from DB_SUB_DOC_INFO where INFO_ID=#{0} and SUB_DEPT_ID !=#{1}
+	</select>
+	<select id="queryLastEndSubInfo" resultType="com.css.app.db.business.entity.SubDocInfo">
+		select * from (select * ,row_number() over (partition by INFO_ID order by DOC_STATUS desc) as num from DB_SUB_DOC_INFO where INFO_ID= #{infoId}) where num=1
 	</select>
  	<select id="queryTotal" resultType="int">
 		select count(*) from DB_SUB_DOC_INFO 
 	</select>
-	<update id="updateDocStatus" parameterType="com.css.app.db.business.entity.SubDocInfo">
+	<update id="updateDocStatus">
 		update DB_SUB_DOC_INFO set DOC_STATUS=#{0},UPDATE_TIME = #{1} where INFO_ID=#{2}
 	</update>
 	<insert id="save" parameterType="com.css.app.db.business.entity.SubDocInfo">

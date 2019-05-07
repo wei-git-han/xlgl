@@ -80,8 +80,8 @@ public class ApprovalOpinionServiceImpl implements ApprovalOpinionService {
 	}
 
 	@Override
-	public int updateShowFlag(String subId) {
-		return approvalOpinionDao.updateShowFlag(subId);
+	public void updateShowFlag(String subId) {
+		approvalOpinionDao.updateShowFlag(subId);
 	}
 	
 }

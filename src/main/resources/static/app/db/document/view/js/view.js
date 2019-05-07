@@ -394,6 +394,7 @@ var pageModule = function(){
 			url:subReplyListUrl,
  			data:{infoId:fileId,subId:subId},
 			success:function(data){
+				$(".pagemenu").html("");
 				eachfn(data,$(".pagemenu"),1);
 				$(".newpanel-right-bottom .btn-link").unbind("click");
 				$(".newpanel-right-bottom .btn-link").click(function(){
@@ -430,19 +431,22 @@ var pageModule = function(){
 	var initcbfn = function(){
 		$ajax({
 			url:cbDataUrl,
-			data:{fileId:fileId},
+			data:{infoId:fileId},
 			success:function(data){
 				if(data&&data.length>0){
-					$("#cbrecord").html("");
+					var html1= "";
 					$.each(data,function(i,item){
-						$("#cbrecord").append(
-							'<div class="record">'+
-				            '	<label class="zbUser">催办人:</label>'+
-				            '	<div><span>'+item.zbUser+'</span><span class="zbDate">'+item.zbdate+'</span></div>'+
-				            '	<label class="cbdw">承办单位/人:</label>'+
-				            '	<div>'+item.unit+'</div>'+
-				            '</div>'
-			            )
+						html1= '<div class="record">'+
+					            '	<label class="zbUser">催办人:</label>'+
+					            '	<div><span>'+item.userName+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
+					            '	<label class="cbdw">催办留言:</label>'+
+					            '	<div>'+item.urgeContent+'</div>';
+								if(item.cbrName && !!item.cbrName){
+									html1+= '	<label class="cbdw">承办人响应:</label>';
+									html1+=	'	<div><span>'+item.cbrName+'</span><span class="dateStyle">'+item.cbTime+'</span><span>发布本次督办落实情况</span></div>';
+								}
+								html1+='</div>'
+			            $("#cbrecord").append(html1);
 					});
 				}
 			}
@@ -460,10 +464,8 @@ var pageModule = function(){
 					$.each(data,function(i,item){
 						$("#jybjrecord").append(
 							'<div class="record">'+
-				            '	<label class="zbUser">转办人:</label>'+
-				            '	<div><span>'+item.zbUser+'</span><span class="zbDate">'+item.zbdate+'</span></div>'+
-				            '	<label class="cbdw">承办单位/人:</label>'+
-				            '	<div>'+item.unit+'</div>'+
+				            '	<label class="zbUser">'+item.subDeptName+' '+ item.userName+'</label>'+
+				            '	<div><span>'+item.content+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
 				            '</div>'
 			            )
 					});
@@ -536,6 +538,7 @@ var pageModule = function(){
 					if(data.result == "success"){
 					newbootbox.alert("已返回承办人！");
 						showButton();
+						initblfkList();
 					}
 				}
 			});
@@ -556,6 +559,7 @@ var pageModule = function(){
 					if(data.result == "success"){
 						newbootbox.alert("审批完成！");
 						showButton();
+						initblfkList();
 					}
 				}
 			});
@@ -736,10 +740,9 @@ function downloadfn(fileServerId){
 	});
 }
 function editfn(id,content,el){
-alert(content)
 	$(el).parents(".nrt-cont").find(".nrt-cont-file .remove").show();
-	$("#editTeamId").attr("id",id);
-	$("#replyContent").text(content);
+	$("#editTeamId").val(id);
+	$("#replyContent").val(content);
 }
 
 function removefn(id,el){

@@ -8,7 +8,16 @@
 	</select>
 
 	<select id="queryList" resultType="com.css.app.db.business.entity.DocumentRead">
-		select * from DB_DOCUMENT_READ 
+		select * from DB_DOCUMENT_READ where 1=1 
+		<if test="userId != null and userId != ''">
+			and USER_ID=#{userId}
+		</if>
+		<if test="infoId != null and infoId != ''">
+			and INFO_ID=#{infoId}
+		</if>
+		<if test="subId != null and subId != ''">
+			and SUB_ID=#{subId}
+		</if>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
@@ -54,7 +63,9 @@
 	<delete id="delete">
 		delete from DB_DOCUMENT_READ where ID = #{value}
 	</delete>
-	
+	<delete id="deleteByInfoId">
+		delete from DB_DOCUMENT_READ where INFO_ID = #{value}
+	</delete>
 	<delete id="deleteBatch">
 		delete from DB_DOCUMENT_READ where ID in 
 		<foreach item="id" collection="array" open="(" separator="," close=")">

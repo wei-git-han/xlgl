@@ -371,7 +371,6 @@ var pageModule = function(){
  			data:{infoId:fileId},
 			success:function(data){
 				if(data&&data.length>0){
-					console.log(data);
 					eachfn(data,$(".pagemenu"),1);
 					$(".newpanel-right-bottom .btn-link").unbind("click");
 					$(".newpanel-right-bottom .btn-link").click(function(){
@@ -442,10 +441,8 @@ var pageModule = function(){
 					$.each(data,function(i,item){
 						$("#jybjrecord").append(
 							'<div class="record">'+
-				            '	<label class="zbUser">转办人:</label>'+
-				            '	<div><span>'+item.zbUser+'</span><span class="zbDate">'+item.zbdate+'</span></div>'+
-				            '	<label class="cbdw">承办单位/人:</label>'+
-				            '	<div>'+item.unit+'</div>'+
+				            '	<label class="zbUser">'+item.subDeptName+' '+ item.userName+'</label>'+
+				            '	<div><span>'+item.content+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
 				            '</div>'
 			            )
 					});
@@ -609,7 +606,7 @@ function downloadfn(fileServerId){
 function editfn(id,content,el){
 	$(el).parents(".nrt-cont").find(".nrt-cont-file .remove").show();
 	$("#editTeamId").attr("id",id);
-	$("#replyContent").text(content);
+	$("#replyContent").val(content);
 }
 
 function removefn(id,el){

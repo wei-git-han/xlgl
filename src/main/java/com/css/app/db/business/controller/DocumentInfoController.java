@@ -26,6 +26,7 @@ import com.css.app.db.business.entity.DocumentCbjl;
 import com.css.app.db.business.entity.DocumentFile;
 import com.css.app.db.business.entity.DocumentInfo;
 import com.css.app.db.business.entity.DocumentLsjl;
+import com.css.app.db.business.entity.DocumentRead;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.entity.SubDocTracking;
 import com.css.app.db.business.service.DocumentBjjlService;
@@ -33,6 +34,7 @@ import com.css.app.db.business.service.DocumentCbjlService;
 import com.css.app.db.business.service.DocumentFileService;
 import com.css.app.db.business.service.DocumentInfoService;
 import com.css.app.db.business.service.DocumentLsjlService;
+import com.css.app.db.business.service.DocumentReadService;
 import com.css.app.db.business.service.SubDocInfoService;
 import com.css.app.db.business.service.SubDocTrackingService;
 import com.css.app.db.config.entity.AdminSet;
@@ -82,6 +84,9 @@ public class DocumentInfoController {
 	private SubDocTrackingService subDocTrackingService;
 	@Autowired
 	private SubDocInfoService subDocInfoService;
+	@Autowired
+	private DocumentReadService documentReadService;
+	
 	
 	/**
 	 * 文件上传保存
@@ -168,52 +173,6 @@ public class DocumentInfoController {
 		GwPageUtils pageUtil = new GwPageUtils(infoList);
 		Response.json(pageUtil);
 	}
-	/**
-	 * 办理反馈列表查询
-	 */
-	@ResponseBody
-	@RequestMapping("/replyList")
-	public void replyList(Integer page, Integer pagesize,String search,String status){
-		String loginUserId=CurrentUser.getUserId();
-		String adminType = null;//管理员类型（1：部管理员；2：局管理员）
-		String roleType = DbDefined.ROLE_6;//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
-		//当前登录人的管理员类型
-		Map<String, Object> adminMap = new HashMap<>();
-		adminMap.put("userId", loginUserId);
-		List<AdminSet> adminList = adminSetService.queryList(adminMap);
-		if(adminList != null && adminList.size()>0) {
-			adminType = adminList.get(0).getAdminType();
-		}
-		//当前登录人的角色
-		Map<String, Object> roleMap = new HashMap<>();
-		roleMap.put("userId", loginUserId);
-		List<RoleSet> roleList = roleSetService.queryList(roleMap);
-		if(roleList != null && roleList.size()>0) {
-			roleType = roleList.get(0).getRoleFlag();
-		}
-		List<DocumentInfo> infoList =null;
-		Map<String, Object> map = new HashMap<>();
-		map.put("docStatus", "2");
-		map.put("search", search);
-		map.put("state", status);
-		if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType)
-				&& !StringUtils.equals("1", roleType) && !StringUtils.equals("3", roleType)) {
-			map.put("loginUserId", loginUserId);
-			PageHelper.startPage(page, pagesize);
-			infoList = documentInfoService.queryPersonList(map);
-		} else {
-			if(StringUtils.equals("2", adminType)|| StringUtils.equals("3", roleType)) {
-				String orgId = baseAppUserService.getBareauByUserId(loginUserId);
-				if(StringUtils.isNotBlank(orgId)) {
-					map.put("orgid", orgId);
-				}
-			}
-			PageHelper.startPage(page, pagesize);
-			infoList = documentInfoService.queryList(map);
-		}
-		GwPageUtils pageUtil = new GwPageUtils(infoList);
-		Response.json(pageUtil);
-	}
 	
 	/**
 	 * 录入界面列表筛选数量统计
@@ -238,6 +197,152 @@ public class DocumentInfoController {
 		}
 		Response.json(arr);
 	}
+	
+	/**
+	 * 办理反馈列表查询
+	 */
+	@ResponseBody
+	@RequestMapping("/replyList")
+	public void replyList(Integer page, Integer pagesize,String search,String status,String typeId){
+		String loginUserId=CurrentUser.getUserId();
+		String adminType = null;//管理员类型（1：部管理员；2：局管理员）
+		String roleType = DbDefined.ROLE_6;//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
+		//当前登录人的管理员类型
+		Map<String, Object> adminMap = new HashMap<>();
+		adminMap.put("userId", loginUserId);
+		List<AdminSet> adminList = adminSetService.queryList(adminMap);
+		if(adminList != null && adminList.size()>0) {
+			adminType = adminList.get(0).getAdminType();
+		}
+		//当前登录人的角色
+		Map<String, Object> roleMap = new HashMap<>();
+		roleMap.put("userId", loginUserId);
+		List<RoleSet> roleList = roleSetService.queryList(roleMap);
+		if(roleList != null && roleList.size()>0) {
+			roleType = roleList.get(0).getRoleFlag();
+		}
+		List<DocumentInfo> infoList =null;
+		Map<String, Object> map = new HashMap<>();
+		map.put("docStatus", "2");
+		map.put("type", typeId);
+		map.put("search", search);
+		if(StringUtils.isNotBlank(status)) {
+			if(StringUtils.equals("update", status)) {
+				map.put("loginUserId", loginUserId);
+				map.put("hasUpdate", status);
+			}else {
+				map.put("state", status);
+			}
+		}
+		if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType)
+				&& !StringUtils.equals("1", roleType) && !StringUtils.equals("3", roleType)) {
+			map.put("loginUserId", loginUserId);
+			PageHelper.startPage(page, pagesize);
+			infoList = documentInfoService.queryPersonList(map);
+		} else {
+			if(StringUtils.equals("2", adminType)|| StringUtils.equals("3", roleType)) {
+				String orgId = baseAppUserService.getBareauByUserId(loginUserId);
+				if(StringUtils.isNotBlank(orgId)) {
+					map.put("orgid", orgId);
+				}
+			}
+			PageHelper.startPage(page, pagesize);
+			infoList = documentInfoService.queryList(map);
+		}
+		for (DocumentInfo info : infoList) {
+			//是否已读
+			Map<String, Object> readMap = new HashMap<>();
+			readMap.put("userId", loginUserId);
+			readMap.put("infoId", info.getId());
+			List<DocumentRead> list = documentReadService.queryList(readMap);
+			
+			//是否有完成的催办
+			Map<String, Object> cuiBanMap = new HashMap<>();
+			cuiBanMap.put("infoId", info.getId());
+			cuiBanMap.put("finishFlag", 1);
+			List<DocumentCbjl> cuiBanList = documentCbjlService.queryList(cuiBanMap);
+			//催办为0，未读且有完成的催办，则标识为已更新
+			if(list.size()==0 && StringUtils.equals("0", info.getCuibanFlag()) && cuiBanList.size()>0) {
+				info.setUpdateFlag("1");
+			}
+		}
+		GwPageUtils pageUtil = new GwPageUtils(infoList);
+		Response.json(pageUtil);
+	}
+	
+	/**
+	 * 办理反馈数量统计
+	 * @param search 搜索
+	 * @param typeId 文件类型
+	 */
+	@ResponseBody
+	@RequestMapping("/replyNums")
+	public void replyNums(String search,String typeId) {
+		int [] arr = {0,0,0,0,0};
+		String loginUserId=CurrentUser.getUserId();
+		String adminType = null;//管理员类型（1：部管理员；2：局管理员）
+		String roleType = DbDefined.ROLE_6;//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
+		//当前登录人的管理员类型
+		Map<String, Object> adminMap = new HashMap<>();
+		adminMap.put("userId", loginUserId);
+		List<AdminSet> adminList = adminSetService.queryList(adminMap);
+		if(adminList != null && adminList.size()>0) {
+			adminType = adminList.get(0).getAdminType();
+		}
+		//当前登录人的角色
+		Map<String, Object> roleMap = new HashMap<>();
+		roleMap.put("userId", loginUserId);
+		List<RoleSet> roleList = roleSetService.queryList(roleMap);
+		if(roleList != null && roleList.size()>0) {
+			roleType = roleList.get(0).getRoleFlag();
+		}
+		List<DocumentInfo> infoList =null;
+		Map<String, Object> map = new HashMap<>();
+		map.put("docStatus", "2");
+		map.put("search", search);
+		map.put("type", typeId);
+		if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType)
+				&& !StringUtils.equals("1", roleType) && !StringUtils.equals("3", roleType)) {
+			map.put("loginUserId", loginUserId);
+			infoList = documentInfoService.queryPersonList(map);
+		} else {
+			if(StringUtils.equals("2", adminType)|| StringUtils.equals("3", roleType)) {
+				String orgId = baseAppUserService.getBareauByUserId(loginUserId);
+				if(StringUtils.isNotBlank(orgId)) {
+					map.put("orgid", orgId);
+				}
+			}
+			infoList = documentInfoService.queryList(map);
+		}
+		arr[0]=infoList.size();
+		for (DocumentInfo info : infoList) {
+			Integer restatus = info.getStatus();
+			if(1==restatus) {
+				arr[1]+=1;
+			}
+			if(2==restatus){
+				arr[2]+=1;
+			}
+			if(3==restatus){
+				arr[3]+=1;
+			}
+			//是否已读
+			Map<String, Object> readMap = new HashMap<>();
+			readMap.put("userId", loginUserId);
+			readMap.put("infoId", info.getId());
+			List<DocumentRead> list = documentReadService.queryList(readMap);
+			
+			//是否有完成的催办
+			Map<String, Object> cuiBanMap = new HashMap<>();
+			cuiBanMap.put("infoId", info.getId());
+			cuiBanMap.put("finishFlag", 1);
+			List<DocumentCbjl> cuiBanList = documentCbjlService.queryList(cuiBanMap);
+			if(list.size()==0 && StringUtils.equals("0", info.getCuibanFlag()) && cuiBanList.size()>0) {
+				arr[4]+=1;
+			}
+		}
+		Response.json(arr);
+	}	
 	
 	/**
 	 * 获取文件信息
@@ -333,39 +438,34 @@ public class DocumentInfoController {
 		DocumentInfo info = documentInfoService.queryObject(id);
 		Integer status = info.getStatus();//2：办结：3：常态落实
 		Integer subStatus = DbDocStatusDefined.BAN_LI_ZHONG;
-		String subId ="";
-		if(status==2) {
-			//取最后一个办结的局
-			DocumentBjjl bjjl = documentBjjlService.queryLatestBjjl(id);
-			subId = bjjl.getSubId();
-			DocumentBjjl newBjjl=new DocumentBjjl();
-			newBjjl.setContent("取消办结");
-			newBjjl.setInfoId(id);
-			newBjjl.setSubId(subId);
-			documentBjjlService.save(newBjjl);
-			
-		}else if(status==3){
-			//取最后一个常态落实的局
-			DocumentLsjl  lsjl = documentLsjlService.queryLatestLsjl(id);
-			subId = lsjl.getSubId();
-			//添加落实记录
-			DocumentLsjl newLsjl= new DocumentLsjl();
-			newLsjl.setContent("取消落实");
-			newLsjl.setInfoId(id);
-			newLsjl.setSubId(subId);
-			documentLsjlService.save(newLsjl);
-		}
+		//取最后一个办结或落实的局的主文件
+		//文件局内状态（1:待转办；3：退回修改；5：待落实；7：待审批；9：办理中；10：建议办结；11：建议落实；12：办结；1:3：常态落实）
+		SubDocInfo lastEndSubInfo = subDocInfoService.queryLastEndSubInfo(id);
+		String subId =lastEndSubInfo.getId();
 		if(StringUtils.isNotBlank(subId)) {
-			////文件局内状态（1:待转办；3：退回修改；5：待落实；7：待审批；9：办理中；10：建议办结；11：办结；12：常态落实）
-			//获取最后一个局主文件
-			SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+			if(lastEndSubInfo.getDocStatus()==DbDocStatusDefined.BAN_JIE) {
+				//添加办结记录
+				DocumentBjjl newBjjl=new DocumentBjjl();
+				newBjjl.setContent("取消办结");
+				newBjjl.setInfoId(id);
+				newBjjl.setSubId(subId);
+				documentBjjlService.save(newBjjl);
+				
+			}else if(status==DbDocStatusDefined.CHANG_TAI_LUO_SHI){
+				//添加落实记录
+				DocumentLsjl newLsjl= new DocumentLsjl();
+				newLsjl.setContent("取消落实");
+				newLsjl.setInfoId(id);
+				newLsjl.setSubId(subId);
+				documentLsjlService.save(newLsjl);
+			}			
 			//取最后一条流转记录
 			SubDocTracking tracking = subDocTrackingService.queryLatestRecord(subId);
 			//trackingType（1：转办；2：审批流转；3：退回）
 			String trackingType = tracking.getTrackingType();
 			//如果最后一条流转为审批，接收人为承办人则文件为办理中，否则文件为待审批
 			if(StringUtils.equals("2",trackingType)) {
-				if(!StringUtils.equals(subDocInfo.getUndertaker(), tracking.getReceiverId())) {
+				if(!StringUtils.equals(lastEndSubInfo.getUndertaker(), tracking.getReceiverId())) {
 					subStatus = DbDocStatusDefined.DAI_SHEN_PI;
 				}
 			//如果最后一条流转为退回修改，则文件状态为退回修改
@@ -373,8 +473,8 @@ public class DocumentInfoController {
 				subStatus = DbDocStatusDefined.TUIHUI_XIUGAI;
 			}
 			//修改最后一个局的文件状态
-			subDocInfo.setDocStatus(subStatus);
-			subDocInfoService.update(subDocInfo);
+			lastEndSubInfo.setDocStatus(subStatus);
+			subDocInfoService.update(lastEndSubInfo);
 			//主文件变为办理中
 			info.setStatus(1);
 			documentInfoService.update(info);
@@ -389,6 +489,22 @@ public class DocumentInfoController {
 	@RequestMapping("/cheHuiOperation")
 	public void cheHuiOperation(String id){
 		
+	}
+	
+	/**
+	 * 批量已读
+	 * @param ids 主文件id
+	 */
+	@ResponseBody
+	@RequestMapping("/batchRead")
+	public void batchRead(String ids){
+		String[] idArry = ids.split(",");
+		for (String id : idArry) {
+			DocumentRead read=new DocumentRead();
+			read.setInfoId(id);
+			documentReadService.save(read);
+		}
+		Response.json("result", "success");
 	}
 	
 	/**

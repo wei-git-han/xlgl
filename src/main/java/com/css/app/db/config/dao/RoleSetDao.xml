@@ -63,7 +63,7 @@
 	</delete>
 	
 	<delete id="deleteByUserId">
-		delete from DB_ADMIN_SET where USER_ID = #{userId}
+		delete from DB_ROLE_SET where USER_ID = #{userId}
 	</delete>
 	
 	<delete id="deleteBatch">

@@ -29,11 +29,13 @@ public interface SubDocInfoService {
 	
 	List<SubDocInfo> queryPersonList(Map<String, Object> map);
 	
-	int updateDocStatus(Integer status,Date updateTime,String infoId);
+	void updateDocStatus(Integer status,Date updateTime,String infoId);
 	
 	int queryMinDocStatus(String infoId,String subDeptId);
 	
 	int queryMaxDocStatus(String infoId,String subDeptId);
 	
 	List<String> queryAllSubDeptIds(String infoId);
+	
+	SubDocInfo queryLastEndSubInfo(String infoId);
 }

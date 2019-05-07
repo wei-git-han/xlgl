@@ -38,7 +38,7 @@ public class ReplyExplain implements Serializable {
 	//反馈次数区别
 	private String teamId;
 	//临时反馈还是已发布
-	private String reVersion ="0";
+	private String reVersion;
 
 	/**
 	 * 设置：唯一标识

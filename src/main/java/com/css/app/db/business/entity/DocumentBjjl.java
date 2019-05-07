@@ -33,6 +33,8 @@ public class DocumentBjjl implements Serializable {
 	private String infoId;
 	//分支主文件id
 	private String subId;
+	//分局名称
+	private String subDeptName;
 
 	/**
 	 * 设置：唯一标识
@@ -135,6 +137,12 @@ public class DocumentBjjl implements Serializable {
 	}
 	public void setSubId(String subId) {
 		this.subId = subId;
+	}
+	public String getSubDeptName() {
+		return subDeptName;
+	}
+	public void setSubDeptName(String subDeptName) {
+		this.subDeptName = subDeptName;
 	}
 	
 }

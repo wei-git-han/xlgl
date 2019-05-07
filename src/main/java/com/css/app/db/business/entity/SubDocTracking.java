@@ -37,7 +37,7 @@ public class SubDocTracking implements Serializable {
 	private String recDeptId;
 	//接收人部门
 	private String recDeptName;
-	//流转类型标识（1：转办；2：审批流转；3：退回）
+	//流转类型标识（1：转办；2：审批流转；3：退回 ； 4：新一轮反馈流转到承办人）
 	private String trackingType;
 	//备用字段
 	private String remark;

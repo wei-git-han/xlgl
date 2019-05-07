@@ -1,5 +1,5 @@
 var tableList= {"url":"/app/db/subdocinfo/personList","dataType":"text"};//原table数据
-var numsList={"url":rootPath +"/documentFlow/numsList","dataType":"text"};//筛选状态数字统计
+var numsList={"url":"/app/db/subdocinfo/presonNumsList","dataType":"text"};//筛选状态数字统计
 var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//高级搜索--部门树
 var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//高级搜索--人员树
 var grid = null;
@@ -17,28 +17,28 @@ var pageModule = function(){
                	 	if(rowdata.docStatus==3){
 	               	 	statusName="退回修改";
 	               		bgColor="rgba(240, 96, 0, 1)";
-	           	 		if(rowdata.dealUserName){
+	           	 		if(1 != rowdata.receiverIsMe){
 	           	 			statusName="待"+rowdata.dealUserName+"修改";
 	           	 			bgColor="#FF8C40";
 	           	 		}
                	 	}else if(rowdata.docStatus==5){
 	               	 	statusName="待落实";
 	               	 	bgColor="rgba(240, 96, 0, 1)";
-	           	 		if(rowdata.dealUserName){
+	           	 		if(1 != rowdata.receiverIsMe){
 	           	 			statusName="待"+rowdata.dealUserName+"落实";
 	           	 			bgColor="#FF8C40";
 	           	 		}
                	 	}else if(rowdata.docStatus==7){
 	               	 	statusName="待审批";
 	               	 	bgColor="rgba(60, 123, 255, 1)";
-	           	 		if(rowdata.dealUserName){
+	           	 		if(1 != rowdata.receiverIsMe){
 	           	 			statusName="待"+rowdata.dealUserName+"审批";
 	           	 			bgColor="#6699FF";
 	           	 		}
                	 	}else if(rowdata.docStatus==9){
 	               	 	statusName="办理中";
 	               	 	bgColor="rgba(43, 170, 129, 1)";
-	           	 		if(rowdata.dealUserName){
+	           	 		if(1 != rowdata.receiverIsMe){
 	           	 			statusName=rowdata.dealUserName+"办理中";
 	           	 			bgColor="#33CC99";
 	           	 		}
@@ -62,13 +62,25 @@ var pageModule = function(){
                	 return rowdata.urgencyDegree;
                 }},
                 {display:"批示指示内容",name:"",width:"20%",align:"center",paixu:false,render:function(rowdata){
-               	 return "";
+                	 var szpsCont="";
+                	 if(rowdata.leaderName && rowdata.leaderContent && rowdata.leaderTime){
+                		 szpsCont=rowdata.leaderName+":"+rowdata.leaderContent+" "+rowdata.leaderTime.substring(0,16)
+                	 }
+                	 return szpsCont;
                 }},
                 {display:"督办落实情况",name:"",width:"20%",align:"left",paixu:false,render:function(rowdata){
-               	 return "";
+                	var dbCont="";
+                	if(rowdata.latestReply){
+                		dbCont=rowdata.latestReply;
+                	}	 
+                	 return dbCont;
                 }},
                 {display:"承办单位/人",name:"",width:"10%",align:"center",paixu:false,render:function(rowdata){
-               	 return "";
+                	var underDept="";
+               	 if(rowdata.latestSubDept){
+               		 underDept=rowdata.latestSubDept+"/"+rowdata.latestUndertaker
+               	 }
+               	 return underDept;
                 }},
                 {display:"办件分类",name:"docTypeName",width:"10%",align:"center",paixu:false,render:function(rowdata){
                	 return rowdata.docTypeName;
@@ -102,7 +114,7 @@ var pageModule = function(){
 	var numsListfn = function(){
 		$ajax({
 			url:numsList,
-			data:{},
+			data:{search:$("#searchVal").val()},
 			success:function(data){
 				$.each(data,function(i,item){
 					var id = "grdb"+i;
@@ -211,6 +223,6 @@ var pageModule = function(){
 
 function refreshgrid(){
 	var search = $("#searchVal").val();
-	grid.setparams({search:search,documentStatus:$("input[name='documentStatus']:checked").val()});
+	grid.setparams({search:search,docStatus:$("input[name='documentStatus']:checked").val()});
 	grid.loadtable();
 }

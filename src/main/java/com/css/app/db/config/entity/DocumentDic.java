@@ -31,6 +31,8 @@ public class DocumentDic implements Serializable {
 	private String creator;
 	//创建时间
 	private Date createdTime;
+	//表格分类
+	private Integer gridFlag;
 
 	/**
 	 * 设置：唯一标识
@@ -128,4 +130,11 @@ public class DocumentDic implements Serializable {
 	public Date getCreatedTime() {
 		return createdTime;
 	}
+	public Integer getGridFlag() {
+		return gridFlag;
+	}
+	public void setGridFlag(Integer gridFlag) {
+		this.gridFlag = gridFlag;
+	}
+	
 }

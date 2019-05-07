@@ -50,10 +50,10 @@ var pageModule = function(){
 					if(data.result=="success"){
 						newbootbox.alert("转办成功！").done(function(){
 							if(fileFrom == "jndb"){
-								$("#iframe1",window.top.document).attr("src","/app/db/document/jndb/html/jndb.html");
+								$("#iframe1",window.top.document).attr("src","/app/db/document/jndb/html/jndb.html?fileFrom="+fileFrom);
 							}
 							if(fileFrom == "grdb"){
-								$("#iframe1",window.top.document).attr("src","/app/db/document/grdb/html/grdb.html");
+								$("#iframe1",window.top.document).attr("src","/app/db/document/grdb/html/grdb.html?fileFrom="+fileFrom);
 							}
 						});
 					}else{
