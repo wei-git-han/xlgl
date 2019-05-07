@@ -560,7 +560,7 @@ function skip(){
 	if(frompage==0){
 		window.location.href="/app/db/document/jcdb/html/main.html";
 	}else if(frompage==1){
-		var indexobject = window.top.indexobject;
+		var indexobject = gettop2().indexobject;
 		
 		var ifmenu = indexobject.ifmenu;
 		var orgid = indexobject.orgid;

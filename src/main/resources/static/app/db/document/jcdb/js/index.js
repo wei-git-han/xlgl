@@ -439,7 +439,7 @@ var pageModule = function(){
 							    normal: {
 							    	label:{
 							    		show:true,
-							    		//formatter:"{c}%"
+							    		formatter:"{c}%"
 							    	},
 							    	color:"#76B1F3"
 							    }
@@ -485,14 +485,20 @@ var pageModule = function(){
 }();
 
 var topage = function(orgid,type,month,ytype){
+/*	alert(orgid);
+	alert(type);
+	alert(month);
+	alert(ytype);
+	if(null!=ytype&&typeof(ytype)!="undefined"&&""!=$.trim(ytype)){
+	};*/
 	if(type==1){
-		window.top.indexobject = {
+		gettop2().indexobject = {
 			ifmenu:"false",
 			orgid:orgid,
 			month:month,
 			ytype:ytype
 		}
-		window.location.href = "table.html?ifmenu=false&orgid="+orgid+"&month="+month+"&ytype="+ytype;
+		window.location.href = "/app/db/document/jcdb/html/table.html?ifmenu=false&orgid="+orgid+"&month="+month+"&ytype="+ytype;
 	}else{
 		window.location.href = "/app/db/document/blfk/html/blfk.html?fileFrom=blfk&ifmenu=false&orgid="+orgid+"&month="+month+"&ytype="+ytype;
 	}

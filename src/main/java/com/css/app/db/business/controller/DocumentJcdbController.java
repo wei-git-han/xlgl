@@ -373,7 +373,7 @@ public class DocumentJcdbController {
 				long total=(long) map2.get("total");
 				xdata.add(name);
 				if(total>0) {					
-					wcldata.add(bj*100/total);
+					wcldata.add((bj*100/total));
 				}else {					
 					wcldata.add(0);
 				}

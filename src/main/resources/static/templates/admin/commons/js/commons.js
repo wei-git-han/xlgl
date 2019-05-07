@@ -66,6 +66,23 @@ var css={
 		}
 };
 
+var np2 = 0;
+try{window.top.document}catch(e){
+	np2=1;
+	var str = e.message;
+	if(str.indexOf("Permission denied to")!=-1){
+		np2=1;
+	}
+}
+
+var gettop2 = function(){
+	if(np2==0){
+		return window.top;
+	}else{
+		return window.parent;
+	}
+}
+
 jQuery(document).ready(function() {    
     Metronic.init(); // init metronic core componets
     Layout.init(); // init layout
@@ -686,7 +703,7 @@ function getWebEquipmentOS(){
 var path = "/gwgl/";
 var newbootbox = {
 	confirm:function(obj){
-		window.top.bootbox.dialog({
+		gettop2().bootbox.dialog({
 	        title: obj.title,
 	        message: obj.message,
 	        buttons: {
@@ -709,7 +726,7 @@ var newbootbox = {
 	},
 	//插件的确认框
 	oconfirm:function(obj){
-		window.top.bootbox.dialog({
+		gettop2().bootbox.dialog({
 	        title: obj.title,
 	        message: obj.message,
             className:"cjDialog",
@@ -732,7 +749,7 @@ var newbootbox = {
 	    });
 	},
 	confirm100:function(obj){
-		window.top.bootbox.dialog({
+		gettop2().bootbox.dialog({
 	        title: obj.title,
 	        message: obj.message,
             className:"cjDialog",
@@ -764,15 +781,15 @@ var newbootbox = {
 	//插件的提示框
 	alert:function(text,shi){
 		var dtd=$.Deferred();
-        window.top.bootbox.dialog({
+        gettop2().bootbox.dialog({
 	            message: text,
 	            title: "提示",
 	            className:"cjDialog"
 	        });
-    	var $alert=window.top.$(".cjDialog");
+    	var $alert=gettop2().$(".cjDialog");
         var cancel=setTimeout(function(){
         	 if(shi || shi == null || typeof(shi)=="undefined"){
-        		 window.top.$(".newclose").click();
+        		 gettop2().$(".newclose").click();
         	 }
         	 dtd.resolve();
 		},2000);
@@ -785,15 +802,15 @@ var newbootbox = {
 	//非插件的提示框
 	alertInfo:function(text){
 		var dtd=$.Deferred();
-        window.top.bootbox.dialog({
+        gettop2().bootbox.dialog({
 	            message: text,
 	            title: "提示",
 	            className:"alertInfo"
 	        });
         
-        var $alert=window.top.$(".alertInfo");
+        var $alert=gettop2().$(".alertInfo");
         var cancel=setTimeout(function(){
-			window.top.$(".alertInfo").find(".newclose").click();
+			gettop2().$(".alertInfo").find(".newclose").click();
 			dtd.resolve();
 		},2000);
 		$alert.on("hidden.bs.modal",function(e){
@@ -810,7 +827,7 @@ var newbootbox = {
 		var header = obj.header;
 		var style = obj.style;
 		var url = obj.url;
-		$(window.top.document.body).find(".modal").remove();
+		$(gettop2().document.body).find(".modal").remove();
 		var html="";
 		var styleHtml="";
 		if(!header){
@@ -821,7 +838,7 @@ var newbootbox = {
 				styleHtml+=";"+key+":"+style[key]
 			}
 		};
-		$(window.top.document.body).append(
+		$(gettop2().document.body).append(
 			'<div class="modal fade in newmodal" id="'+obj.id+'" tabindex="-1" aria-hidden="true">'+
 			'    <div class="modal-dialog" style="width:'+width+'">'+
 			'        <div class="modal-content">'+
@@ -836,10 +853,10 @@ var newbootbox = {
 			'    </div>'+
 			'</div>'
 		);
-		window.top.show(obj.id);
+		gettop2().show(obj.id);
 	},
 	newdialogClose:function(obj){
-		window.top.hide(obj);
+		gettop2().hide(obj);
 	}
 }
 
