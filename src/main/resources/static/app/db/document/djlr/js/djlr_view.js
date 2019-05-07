@@ -371,6 +371,7 @@ var pageModule = function(){
  			data:{infoId:fileId},
 			success:function(data){
 				if(data&&data.length>0){
+					$(".pagemenu").html("");
 					eachfn(data,$(".pagemenu"),1);
 					$(".newpanel-right-bottom .btn-link").unbind("click");
 					$(".newpanel-right-bottom .btn-link").click(function(){

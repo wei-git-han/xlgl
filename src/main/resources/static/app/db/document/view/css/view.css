@@ -222,18 +222,6 @@ ul{
 	top: 0;
 	width: 100%;
 }
-
-.right_zbjl{
-	position:absolute;
-	bottom:0px;
-	left:0;
-	height:60px;
-	padding-top: 13px;
-	width:100%;
-	background:#DFE6F6;
-	text-align:center;
-	border-top:1px solid #D3E1FB;
-}
 .doBtns{
 	display:inline-block;
 	width:20%;

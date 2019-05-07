@@ -52,15 +52,13 @@ var pageModule = function(){
 				boolean isUndertaker=false;//是否承办人*/
 				if(data.docStatus<10){//文件为办理中
 					if(!data.isUndertaken && data.isCheckUser){//承办、转办按钮显示，输入框相关不显示
-						$(".right_top_zbjl").css("bottom","60px");//按钮父元素上方元素样式控制
-						$(".right_zbjl").show();//按钮父元素样式控制
+						$(".blfk_bottom").show(); //意见外大框
 						$("#chengban").show();
 						$("#zhuanban").show();
 					}else{
 						if(data.isCheckUser){//显示办结、常态落实,输入框
 							//$(".blfkchangeH").attr("style","position:absolute;top:34px;left:0;bottom:0;width:100%;right:0;");
-							$(".right_zbjl").show();
-							$(".blfk_bottom").show(); //意见框
+							$(".blfk_bottom").show(); //意见外大框
 							$(".blfk_top").css({"bottom":"40%","height":"58%"});   //意见框上方元素样式控制
 							$("#save").show();
 							//$("#showfj").show();
@@ -74,8 +72,7 @@ var pageModule = function(){
 							}else{
 								$("#ifaddfj").show();
 								$("#showfj").show();
-								$("#luoshi").show();
-								$("#banjie").show();
+								$("#bjandls").show(); //办结和常态落实合并为一个
 								isCbr = 1;
 							}
 						}
