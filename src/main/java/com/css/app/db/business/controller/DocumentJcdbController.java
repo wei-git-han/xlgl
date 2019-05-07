@@ -19,7 +19,9 @@ import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.app.db.business.service.DocumentFileService;
 import com.css.app.db.business.service.DocumentInfoService;
+import com.css.app.db.config.entity.AdminSet;
 import com.css.app.db.config.entity.RoleSet;
+import com.css.app.db.config.service.AdminSetService;
 import com.css.app.db.config.service.RoleSetService;
 import com.css.app.db.util.DbDefined;
 import com.css.base.utils.CurrentUser;
@@ -48,6 +50,8 @@ public class DocumentJcdbController {
 	private DocumentFileService documentFileService;
 	@Autowired
 	private RoleSetService roleSetService;
+	@Autowired
+	private AdminSetService adminSetService;
 	@Autowired
 	private BaseAppOrganService baseAppOrganService;
 	
@@ -383,6 +387,18 @@ public class DocumentJcdbController {
 		String orgid="";
 		if(roleList != null && roleList.size()>0) {
 			return roleType = roleList.get(0).getRoleFlag();
+		}else {
+			//当前登录人的管理员类型
+			String adminType = "0";//管理员类型（1：部管理员；2：局管理员）
+			Map<String, Object> adminMap = new HashMap<>();
+			adminMap.put("userId", userid);
+			List<AdminSet> adminList = adminSetService.queryList(adminMap);
+			if(adminList != null && adminList.size()>0) {
+				adminType = adminList.get(0).getAdminType();
+				if(adminType.equals("1")) {
+					return "2";//部管理员状态为2
+				}
+			}
 		}
 		return "";
 		/*BaseAppOrgan org = baseAppOrganService.queryObject(CurrentUser.getDepartmentId());
