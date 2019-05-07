@@ -191,21 +191,18 @@ var pageModule = function(){
 	
 	//办理反馈记录
 	var initblfkList = function(){
-		
 		var eachfn = function(array,el,n){
-			
 			$.each(array,function(i,o){
-				
-				var id = ``;
-				var cbrId = ``;
-				var date = ``;
-				var danwei = ``;
-				var ld = ``;
-				var content = ``;
-				var state = ``;
-				var file = ``;
-				var edit = ``;
-				var teamId = ``;
+				var id = '';
+				var cbrId = '';
+				var date = '';
+				var danwei = '';
+				var ld = '';
+				var content = '';
+				var state = '';
+				var file = '';
+				var edit = '';
+				var teamId = '';
 				if(n==1){
 					id = o.teamId;
 					teamId = o.teamId;
@@ -216,23 +213,24 @@ var pageModule = function(){
 					content = o.content;
 					edit = o.edit;
 					if(edit==true){
-						edit = `<div class="nrt-cont-top-btn">
-							<a class="" onclick="editfn('${id}','${content}',this)" >编辑</a>
-						</div>`;
-					}else{edit=``};
-					
+						edit =  '<div class="nrt-cont-top-btn">'+
+								'	<a class="" onclick="editfn(\''+id+'\',\''+content+'\',this)" >编辑</a>'+
+								'</div>';
+					}else{
+						edit=''
+					};
 					var attchList = o.attchList;
 					if(typeof(attchList)!="undefined"&&attchList!=null&&$.trim(attchList)!=""){
-						var remove = ``;
+						var remove = '';
 						$.each(attchList,function(){
 							var fileid = this.id;
 							var fileName = this.fileName;
 							var fileServerId = this.fileServerId;
 							var replyTeamId = this.replyTeamId;
 							if(isCbr==1){
-								remove = `<a class="remove" onclick="removefn('${fileid}',this)" >删除</a>`
+								remove = '<a class="remove" onclick="removefn(\''+fileid+'\',this)" >删除</a>'
 							}
-							file+=`<div class="">${remove}<a id="${fileid}" onclick="downloadfn('${fileServerId}')">${fileName}</a></div>`;
+							file+='<div class="">'+remove+'<a id="'+fileid+'" onclick="downloadfn(\''+fileServerId+'\')">'+fileName+'</a></div>';
 						})
 					}
 					
@@ -252,20 +250,18 @@ var pageModule = function(){
 					}
 				};
 				var child = o.opinionList;
-				var zkgb = `<br>`;
+				var zkgb = '<br>';
 				if(typeof(child)!="undefined"&&child!=null&&$.trim(child)!=""){
 					if(child.length>0){
-						zkgb = `
-									<button class="btn btn-link">
-										<font class="zhankai">展开<i class="fa fa-chevron-down" ></i></font>
-										<font class="guanbi">关闭<i class="fa fa-chevron-up" ></i></font>
-									</button>
-								`;
+						zkgb =  ' <button class="btn btn-link">'+
+								'	<font class="zhankai">展开<i class="fa fa-chevron-down"></i></font>'+
+								'	<font class="guanbi">关闭<i class="fa fa-chevron-up"></i></font>'+
+								'</button>';
 					}
 				}
 				
 				var pl = 20;
-				var li = ``;
+				var li = '';
 				
 				if(n==1){
 					var active = o.show;
@@ -280,100 +276,89 @@ var pageModule = function(){
 						color = "#CCCCCC";
 					}
 					
-					li = `
-						<div class="newpanel-cont ${active}" color="${color}" >
-							<div class="newpanel-inner">
-								<div class="newpanel-left">
-									<div class="wh100">
-										<i class="fa fa-circle-o"></i>
-										<div class="newoanel-left-line"></div>
-									</div>
-								</div>
-								<div class="newpanel-right">
-									<div class="newpanel-right-top">
-										<div class="nrt-date">
-											<font>${date}</font>
-										</div>
-									</div>
-									
-									<div class="newpanel-right-cent" id="${id}">
-										<div class="nrt-cont" style="border-color:${color}">
-											<div class="nrt-cont-top">
-												<div class="nrt-cont-top-left">
-													<div class="nrt-cont-top-title" onclick="viewcont('${cbrId}','${teamId}','${subId}')">
-														<i class="fa fa-user"></i>
-														<font>${danwei}-${ld}</font>
-													</div>
-												</div>
-												<div class="nrt-cont-top-left">
-													<div class="nrt-cont-top-title2">
-														<font>${date}</font>
-													</div>
-												</div>
-												<div class="nrt-cont-top-right">
-													${edit}
-												</div>
-											</div>
-											<div class="nrt-cont-cent">
-												<div class="wh100 scroller">
-													<font class="nrt-cont-cent-font" >${content}</font>
-												</div>
-											</div>
-											<div class="nrt-cont-bottom">
-												<div class="nrt-cont-file">
-													${file}
-												</div>
-											</div>
-										</div>
-									</div>
-									
-									<div class="newpanel-right-cent2" style="padding-left:${pl*n}px;">
-										
-									</div>
-									
-									<div class="newpanel-right-bottom">
-										${zkgb}
-									</div>
-								</div>
-							</div>
-						</div>
-					`;
+					li ='<div class="newpanel-cont'+active+'" color="'+color+'">'+
+					'	<div class="newpanel-inner">'+
+					'		<div class="newpanel-left">'+
+					'			<div class="wh100">'+
+					'				<i class="fa fa-circle-o"></i>'+
+					'				<div class="newoanel-left-line"></div>'+
+					'			</div>'+
+					'		</div>'+
+					'		<div class="newpanel-right">'+
+					'			<div class="newpanel-right-top">'+
+					'				<div class="nrt-date">'+
+					'					<font>'+date+'</font>'+
+					'				</div>'+
+					'			</div>'+
+					'			<div class="newpanel-right-cent" id="'+id+'">'+
+					'				<div class="nrt-cont" style="border-color:'+color+'">'+
+					'					<div class="nrt-cont-top">'+
+					'						<div class="nrt-cont-top-left">'+
+					'							<div class="nrt-cont-top-title" onclick="viewcont(\''+cbrId+'\',\''+teamId+'\',\''+subId+'\')">'+
+					'								<i class="fa fa-user"></i>'+
+					'								<font>'+danwei+'-'+ld+'</font>'+
+					'							</div>'+
+					'						</div>'+
+					'						<div class="nrt-cont-top-left">'+
+					'							<div class="nrt-cont-top-title2">'+
+					'								<font>'+date+'</font>'+
+					'							</div>'+
+					'						</div>'+
+					'						<div class="nrt-cont-top-right">'+
+												edit+
+					'						</div>'+
+					'					</div>'+
+					'					<div class="nrt-cont-cent">'+
+					'						<div class="wh100 scroller">'+
+					'							<font class="nrt-cont-cent-font" >'+content+'</font>'+
+					'						</div>'+
+					'					</div>'+
+					'					<div class="nrt-cont-bottom">'+
+					'						<div class="nrt-cont-file">'+
+												file+
+					'						</div>'+
+					'					</div>'+
+					'				</div>'+
+					'			</div>'+
+					'			<div class="newpanel-right-cent2" style="padding-left:${pl*n}px;">'+
+					'			</div>'+
+					'			<div class="newpanel-right-bottom">'+
+									zkgb+
+					'			</div>'+
+					'		</div>'+
+					'	</div>'+
+					'</div>';
 				}else{
 					var color = el.parents(".newpanel-cont").attr("color");
-					
-					li = `
-									<div class="newpanel-right-cent" id="${id}">
-										<div class="nrt-cont" style="border-color:${color}">
-											<div class="nrt-cont-top">
-												<div class="nrt-cont-top-left">
-													<div class="nrt-cont-top-title" onclick="viewcont('${cbrId}','${teamId}','${subId}')">
-														<i class="fa fa-user"></i>
-														<font>${danwei}-${ld}</font>
-													</div>
-												</div>
-												<div class="nrt-cont-top-left">
-													<div class="nrt-cont-top-state">
-														<font>${state}</font>
-													</div>
-												</div>
-												<div class="nrt-cont-top-left">
-													<div class="nrt-cont-top-title2">
-														<font>${date}</font>
-													</div>
-												</div>
-											</div>
-											<div class="nrt-cont-cent">
-												<div class="wh100 scroller">
-													<font class="nrt-cont-cent-font" >${content}</font>
-												</div>
-											</div>
-										</div>
-									</div>
-									
-									<div class="newpanel-right-cent2" style="padding-left:${pl*n}px;">
-										
-									</div>
-					`;
+					li ='<div class="newpanel-right-cent" id="'+id+'">'+
+					'	<div class="nrt-cont" style="border-color:'+color+'">'+
+					'		<div class="nrt-cont-top">'+
+					'			<div class="nrt-cont-top-left">'+
+					'				<div class="nrt-cont-top-title" onclick="viewcont(\''+cbrId+'\',\''+teamId+'\',\''+subId+'\')">'+
+					'					<i class="fa fa-user"></i>'+
+					'					<font>'+danwei+'-'+ld+'</font>'+
+					'				</div>'+
+					'			</div>'+
+					'			<div class="nrt-cont-top-left">'+
+					'				<div class="nrt-cont-top-state">'+
+					'					<font>'+state+'</font>'+
+					'				</div>'+
+					'			</div>'+
+					'			<div class="nrt-cont-top-left">'+
+					'				<div class="nrt-cont-top-title2">'+
+					'					<font>'+date+'</font>'+
+					'				</div>'+
+					'			</div>'+
+					'		</div>'+
+					'		<div class="nrt-cont-cent">'+
+					'			<div class="wh100 scroller">'+
+					'				<font class="nrt-cont-cent-font" >'+content+'</font>'+
+					'			</div>'+
+					'		</div>'+
+					'	</div>'+
+					'</div>'+
+					'<div class="newpanel-right-cent2" style="padding-left:${pl*n}px;">'+
+					'</div>';
 				}
 				li = $(li);
 				el.append(li);
@@ -391,12 +376,16 @@ var pageModule = function(){
 			url:subReplyListUrl,
  			data:{infoId:fileId,subId:subId},
 			success:function(data){
-				$(".pagemenu").html("");
-				eachfn(data,$(".pagemenu"),1);
-				$(".newpanel-right-bottom .btn-link").unbind("click");
-				$(".newpanel-right-bottom .btn-link").click(function(){
-					$(this).parents(".newpanel-cont").toggleClass("active");
-				})
+				if(data&&data.length>0){
+					$(".pagemenu").html("");
+					eachfn(data,$(".pagemenu"),1);
+					$(".newpanel-right-bottom .btn-link").unbind("click");
+					$(".newpanel-right-bottom .btn-link").click(function(){
+						$(this).parents(".newpanel-cont").toggleClass("active");
+					})
+				}else{
+					$(".pagemenu").html("<span style='margin-left:20px;'>暂无内容！</span>");
+				}
 			}
 		})
 	}
@@ -419,6 +408,8 @@ var pageModule = function(){
 				            '</div>'
 			            )
 					});
+				}else{
+					$("#zbrecord").html('<div style="margin-top:20px;font-size: 14px;">暂无转办记录！</div>');
 				}
 			}
 		});	
@@ -445,6 +436,8 @@ var pageModule = function(){
 								html1+='</div>'
 			            $("#cbrecord").append(html1);
 					});
+				}else{
+					$("#cbrecord").html('<div style="margin-top:20px;font-size: 14px;">暂无催办记录！</div>');
 				}
 			}
 		});	
@@ -466,6 +459,8 @@ var pageModule = function(){
 				            '</div>'
 			            )
 					});
+				}else{
+					$("#jybjrecord").html('<div style="margin-top:20px;font-size: 14px;">暂无办结记录！</div>');
 				}
 			}
 		});	
