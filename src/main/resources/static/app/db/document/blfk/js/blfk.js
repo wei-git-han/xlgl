@@ -58,7 +58,7 @@ var pageModule = function(){
 	var initgrid = function(){
         grid = $("#gridcont").createGrid({
             columns:[
-            	{display:"军委办件号",name:"",width:"8%",align:"left",title:false,render:function(rowdata,n){
+            	{display:"军委办件号",name:"",width:"6%",align:"left",title:true,render:function(rowdata,n){
                	 	return rowdata.banjianNumber;
                 }},
                 {display:"办理状态",name:"",width:"6%",align:"center",render:function(rowdata,n){
@@ -81,16 +81,16 @@ var pageModule = function(){
                  	 if(rowdata.cuibanFlag=="1"){
                  		 cuiban = '<label class="cuibanlabel">催办</label>';
                 	 }
-                	 return '<a title="'+rowdata.docTitle+'" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
+                	 return '<a title="'+rowdata.docTitle+'" class="table-title2" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
                  }},
-                 {display:"批示指示内容",name:"",width:"20%",align:"left",paixu:false,title:false,render:function(rowdata){
+                 {display:"批示指示内容",name:"",width:"30%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var szpsCont="";
                 	 if(rowdata.leaderName && rowdata.leaderContent && rowdata.leaderTime){
                 		 szpsCont=rowdata.leaderName+":"+rowdata.leaderContent+" "+rowdata.leaderTime.substring(0,16)
                 	 }
-                	 return szpsCont;
+                	 return '<div class="zspsnr" title="'+szpsCont+'">'+szpsCont+'</div>';
                  }},
-                 {display:"督办落实情况",name:"",width:"20%",align:"left",paixu:false,title:false,render:function(rowdata){
+                 {display:"督办落实情况",name:"",width:"21%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var duban="";
                  	 if(rowdata.updateFlag=="1"){
                  		duban = '<label class="cuibanlabel">已更新</label>';
@@ -98,23 +98,23 @@ var pageModule = function(){
                 	 var dbCont="";
                 	 if(rowdata.latestReply){
                 		dbCont=rowdata.latestReply;
-                	 }	 
-                	 return duban+dbCont;
+                	 }
+                	 return '<div class="dblsqk" title="'+dbCont+'">'+duban+dbCont+'</div>';
                  }},
-                 {display:"承办单位/人",name:"",width:"11%",align:"left",paixu:false,title:false,render:function(rowdata){
+                 {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,title:true,render:function(rowdata){
                 	 var underDept="";
                 	 if(rowdata.latestSubDept){
                 		 underDept=rowdata.latestSubDept+"/"+rowdata.latestUndertaker
                 	 }
                 	 return underDept;
                  }},
-                 {display:"转办时间",name:"",width:"10%",align:"center",render:function(rowdata){
+                 {display:"转办时间",name:"",width:"6%",align:"center",render:function(rowdata){
                 	 if(rowdata.firstZbTime && !!rowdata.firstZbTime){
                 		 return rowdata.firstZbTime.substring(0,16);
                 	 }
                 	 return '';
                  }},
-                 {display:"最新反馈时间",name:"",width:"10%",align:"center",paixu:false,render:function(rowdata){
+                 {display:"反馈时间",name:"",width:"6%",align:"center",paixu:false,render:function(rowdata){
                 	 if(rowdata.latestReplyTime && !!rowdata.latestReplyTime){
                 		 return rowdata.latestReplyTime.substring(0,16);
                 	 }
@@ -126,11 +126,25 @@ var pageModule = function(){
             checkbox: true,
             rownumberyon:true,
             overflowx:false,
-            pagesize: 15,
+            pagesize: 10,
             pageyno:true,
             paramobj:{search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value")},
             loadafter:function(data){
             	total=data.total;
+            	$(".zspsnr").each(function(){
+					var maxwidth = 60;
+					if($(this).text().length > maxwidth){
+						$(this).text($(this).text().substring(0,maxwidth));
+						$(this).html($(this).html()+'...');
+					}
+				});
+            	$(".dblsqk").each(function(){
+					var maxwidth = 72;
+					if($(this).text().length > maxwidth){
+						$(this).text($(this).text().substring(0,maxwidth));
+						$(this).html($(this).html()+'...');
+					}
+				});
             },
             url: tableList
        });
@@ -139,7 +153,7 @@ var pageModule = function(){
 	var initgrid2 = function(){
         grid2 = $("#gridcont2").createGrid({
             columns:[
-            	{display:"印发时间",name:"",width:"10%",align:"center",paixu:false,render:function(rowdata){
+            	{display:"印发时间",name:"",width:"6%",align:"center",paixu:false,render:function(rowdata){
             		if(rowdata.printDate && !!rowdata.printDate){
             			return rowdata.printDate.substring(0,16);
 	               	}
@@ -167,10 +181,10 @@ var pageModule = function(){
                 	 }
                 	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
                  }},
-                 {display:"工作分工内容",name:"",width:"20%",align:"left",paixu:false,title:true,render:function(rowdata){
+                 {display:"工作分工内容",name:"",width:"21%",align:"left",paixu:false,title:true,render:function(rowdata){
                 	 return rowdata.jobContent || '';
                  }},
-                 {display:"督办落实情况",name:"",width:"20%",align:"left",paixu:false,title:false,render:function(rowdata){
+                 {display:"督办落实情况",name:"",width:"30%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var duban="";
                  	 if(rowdata.updateFlag=="1"){
                  		duban = '<label class="cuibanlabel">已更新</label>';
@@ -179,22 +193,22 @@ var pageModule = function(){
                 	 if(rowdata.latestReply){
                 		dbCont=rowdata.latestReply;
                 	 }	 
-                	 return duban+dbCont;
+                	 return '<div class="dblsqk" title="'+dbCont+'">'+duban+dbCont+'</div>';
                  }},
-                 {display:"承办单位/人",name:"",width:"11%",align:"left",paixu:false,title:true,render:function(rowdata){
+                 {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,title:true,render:function(rowdata){
                 	 var underDept="";
                 	 if(rowdata.latestSubDept){
                 		 underDept=rowdata.latestSubDept+"/"+rowdata.latestUndertaker
                 	 }
                 	 return underDept;
                  }},
-                 {display:"转办时间",name:"",width:"10%",align:"center",render:function(rowdata){
+                 {display:"转办时间",name:"",width:"6%",align:"center",render:function(rowdata){
                 	 if(rowdata.firstZbTime && !!rowdata.firstZbTime){
                 		 return rowdata.firstZbTime.substring(0,16);
                 	 }
                 	 return '';
                  }},
-                 {display:"最新反馈时间",name:"",width:"10%",align:"center",paixu:false,render:function(rowdata){
+                 {display:"反馈时间",name:"",width:"6%",align:"center",paixu:false,render:function(rowdata){
                 	 if(rowdata.latestReplyTime && !!rowdata.latestReplyTime){
                 		 return rowdata.latestReplyTime.substring(0,16);
                 	 }
@@ -205,12 +219,19 @@ var pageModule = function(){
             height:"100%",
             checkbox: true,
             rownumberyon:true,
-            overflowx:true,
-            pagesize: 15,
+            overflowx:false,
+            pagesize: 10,
             pageyno:true,
             paramobj:{search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value")},
             loadafter:function(data){
             	total=data.total;
+            	$(".dblsqk").each(function(){
+					var maxwidth = 57;
+					if($(this).text().length > maxwidth){
+						$(this).text($(this).text().substring(0,maxwidth));
+						$(this).html($(this).html()+'...');
+					}
+				});
             },
             url: tableList
        });
@@ -357,7 +378,11 @@ var pageModule = function(){
 				$(this).parent().css("left","0px");
 				$("#right_content").css("left","0px");
 			}
-			pageModule.initgrid2();
+			if($("#gridcont2").is(":hidden")){
+				pageModule.initgrid();
+			}else{
+				pageModule.initgrid2();
+			}
 		});
 		
 	}

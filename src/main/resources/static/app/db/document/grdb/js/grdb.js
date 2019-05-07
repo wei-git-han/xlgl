@@ -8,10 +8,10 @@ var pageModule = function(){
 	var initgrid = function(){
         grid = $("#gridcont").createGrid({
             columns:[
-            	{display:"军委办件号",name:"banjianNumber",width:"10%",align:"center",render:function(rowdata,n){
+            	{display:"军委办件号",name:"banjianNumber",width:"6%",align:"left",render:function(rowdata,n){
                	 return rowdata.banjianNumber;
                 }},
-                {display:"局内状态",name:"statusName",width:"10%",align:"center",render:function(rowdata,n){
+                {display:"局内状态",name:"statusName",width:"6%",align:"center",render:function(rowdata,n){
                 	var statusName="";
                	 	var bgColor="#FF6600";
                	 	if(rowdata.docStatus==3){
@@ -58,37 +58,37 @@ var pageModule = function(){
                	    }
                	 	return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../view/html/view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&fileFrom=grdb" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
                 }},
-                {display:"紧急程度",name:"urgencyDegree",width:"7%",align:"center",paixu:false,render:function(rowdata){
+                {display:"紧急程度",name:"urgencyDegree",width:"5%",align:"center",paixu:false,render:function(rowdata){
                	 return rowdata.urgencyDegree;
                 }},
-                {display:"批示指示内容",name:"",width:"20%",align:"center",paixu:false,render:function(rowdata){
+                {display:"批示指示内容",name:"",width:"23%",align:"left",paixu:false,render:function(rowdata){
                 	 var szpsCont="";
                 	 if(rowdata.leaderName && rowdata.leaderContent && rowdata.leaderTime){
                 		 szpsCont=rowdata.leaderName+":"+rowdata.leaderContent+" "+rowdata.leaderTime.substring(0,16)
                 	 }
-                	 return szpsCont;
+                	 return '<div class="zspsnr" title="'+szpsCont+'">'+szpsCont+'</div>';
                 }},
                 {display:"督办落实情况",name:"",width:"20%",align:"left",paixu:false,render:function(rowdata){
                 	var dbCont="";
                 	if(rowdata.latestReply){
                 		dbCont=rowdata.latestReply;
                 	}	 
-                	 return dbCont;
+                	return '<div class="dblsqk" title="'+dbCont+'">'+dbCont+'</div>';
                 }},
-                {display:"承办单位/人",name:"",width:"10%",align:"center",paixu:false,render:function(rowdata){
+                {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,render:function(rowdata){
                 	var underDept="";
                	 if(rowdata.latestSubDept){
                		 underDept=rowdata.latestSubDept+"/"+rowdata.latestUndertaker
                	 }
                	 return underDept;
                 }},
-                {display:"办件分类",name:"docTypeName",width:"10%",align:"center",paixu:false,render:function(rowdata){
+                {display:"办件分类",name:"docTypeName",width:"5%",align:"center",paixu:false,render:function(rowdata){
                	 return rowdata.docTypeName;
                 }},
-                {display:"转办时间",name:"createdTime",width:"10%",align:"center",render:function(rowdata){
+                {display:"转办时间",name:"createdTime",width:"6%",align:"center",render:function(rowdata){
                	 return rowdata.createdTime.substring(0,16);
                 }},
-                 {display:"更新时间",name:"",width:"10%",align:"center",paixu:false,render:function(rowdata){
+                 {display:"更新时间",name:"",width:"6%",align:"center",paixu:false,render:function(rowdata){
                 	 var updateTime="";
                 	 if(rowdata.updateTime){
                 		 updateTime = rowdata.updateTime.substring(0,16);
@@ -100,12 +100,26 @@ var pageModule = function(){
             height:"100%",
             checkbox: true,
             rownumberyon:true,
-            overflowx:true,
-            pagesize: 15,
+            overflowx:false,
+            pagesize: 10,
             pageyno:true,
             paramobj:{search:$("#searchVal").val(),docStatus:$("input[name='documentStatus']:checked").val()},
             loadafter:function(data){
             	total=data.total;
+            	$(".zspsnr").each(function(){
+					var maxwidth = 88;
+					if($(this).text().length > maxwidth){
+						$(this).text($(this).text().substring(0,maxwidth));
+						$(this).html($(this).html()+'...');
+					}
+				});
+            	$(".dblsqk").each(function(){
+					var maxwidth = 83;
+					if($(this).text().length > maxwidth){
+						$(this).text($(this).text().substring(0,maxwidth));
+						$(this).html($(this).html()+'...');
+					}
+				});
             },
             url: tableList
        });

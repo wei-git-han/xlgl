@@ -954,8 +954,33 @@ div.radio, div.radio span, div.radio input {
 	font-size:12px;
 }
 
+/*
+	2019-05-07新增
+*/
+
+#gridcont_content{
+	width:100%;
+	height:100%;
+}
+.table-title2{
+	color: #0063dc;
+}
 
 .table-advance tr td {
-	box-sizing:border-box;text-overflow: ellipsis;overflow: hidden; white-space: nowrap;
     vertical-align: middle!important;
+    color:#000;
+}
+.table-advance tr td:first-child {
+    border-left-width: 1px !important;
+    vertical-align: middle!important;
+}
+.table-advance tbody tr {
+	height:70px;
+	overflow:hidden;
+} 
+
+.table-advance tbody tr td{
+	font-size: 12px!important;
+	box-sizing:border-box;text-overflow: ellipsis;overflow: hidden; white-space: normal;
+	color:#000;
 }

@@ -871,6 +871,14 @@ ul{
 .newpanel-cont.active .btn-link .zhankai{display:none;}
 .newpanel-cont.active .btn-link .guanbi{display:inline-block;}
 .viewcontent{line-height:30px;font-size:18px;}
+.modal.in .modal-dialog {
+    transform: inherit!important;
+}
+
+.modal .form-group label{padding-left:20px;font-size:18px;margin-bottom:10px;}
+.modal-body form{padding-top:10px;padding-bottom:10px;}
+.modal .form-actions{text-align:center;}
+.form-button{border-radius:5px!important;background:#6699FF;min-width:100px;}
 
 
 .ifcuibanContent{
