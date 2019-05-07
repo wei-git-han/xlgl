@@ -328,11 +328,7 @@ function createtable(obj){
 						tdobj.css({
 							"text-align":tddata.align,
 							width:getcolwidth(tddata.width),
-							"box-sizing":"border-box",
-							"text-overflow":"ellipsis",
-							"overflow":"hidden",
-							"white-space":"nowrap"
-							
+							"box-sizing":"border-box"
 						});
 						if(title==true){
 							tdobj.attr({
@@ -342,7 +338,7 @@ function createtable(obj){
 						
 						trobj.append(tdobj)
 					})
-					trobj.append('<td style="box-sizing:border-box;text-overflow: ellipsis;overflow: hidden; white-space: nowrap;"></td>');
+					trobj.append('<td style="box-sizing:border-box;"></td>');
 					conttable.append(trobj);
 				});
 				

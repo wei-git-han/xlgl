@@ -12,6 +12,9 @@
 		<if test="userId != null and userId != null">
 			and USER_ID = #{userId}
 		</if>
+		<if test="roleFlag != null and roleFlag != null">
+			and ROLE_FLAG = #{roleFlag}
+		</if>
 		order by ROLE_FLAG
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}

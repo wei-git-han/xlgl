@@ -951,4 +951,11 @@ div.radio, div.radio span, div.radio input {
 	color:#fff;
 	padding:0px 3px;
 	margin-right:5px;
+	font-size:12px;
+}
+
+
+.table-advance tr td {
+	box-sizing:border-box;text-overflow: ellipsis;overflow: hidden; white-space: nowrap;
+    vertical-align: middle!important;
 }

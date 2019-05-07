@@ -99,6 +99,12 @@ var pageModule = function(){
 	}
 
 	var initother = function(){
+		/*//文件类别change事件
+		$("#docTypeId").change(function(){
+			
+		});
+		*/
+		
 		//扫描设置
 		$("#scanSet").click(function(){
 			$(".smczcont").toggle();

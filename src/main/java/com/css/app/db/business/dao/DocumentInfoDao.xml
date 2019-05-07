@@ -9,7 +9,7 @@
 
 	<select id="queryList" resultType="com.css.app.db.business.entity.DocumentInfo">
 		select t.*,d.* from DB_DOCUMENT_INFO t
-			left join (select INFO_ID,USER_NAME as leader_name ,LEADER_COMMENT as leader_content,CREATED_TIME as leader_time,row_number() over(partition by info_id order by created_time desc) as dNum from DB_DOCUMENT_SZPS) d on t.id = d.info_id
+			left join (select INFO_ID,USER_NAME as leader_name ,LEADER_COMMENT as leader_content,CREATED_TIME as leader_time,row_number() over(partition by info_id order by created_time asc) as dNum from DB_DOCUMENT_SZPS) d on t.id = d.info_id
 		<if test="orgid != null">
 			left join DB_SUB_DOC_INFO  dadi on t.id=dadi.INFO_ID
 		</if>
@@ -44,7 +44,7 @@
 		<if test="isnotuserid != null">
 			and (t.sz_read_ids not like '%'||#{isnotuserid}||'%' or t.sz_read_ids is null)
 		</if>
-		order by t.STATUS asc,t.FIRST_ZB_TIME,t.CREATED_TIME desc
+		order by t.STATUS asc,t.CREATED_TIME desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
@@ -61,7 +61,7 @@
 			
 		select t.*,d.* from DB_DOCUMENT_INFO t
 		left join DB_SUB_DOC_INFO  dadi on t.id=dadi.INFO_ID inner join V_RESULT a on dadi.id= a.sub_id
-		left join (select INFO_ID,USER_NAME as leader_name ,LEADER_COMMENT as leader_content,CREATED_TIME as leader_time,row_number() over(partition by info_id order by created_time desc) as dNum from DB_DOCUMENT_SZPS) d on t.id = d.info_id
+		left join (select INFO_ID,USER_NAME as leader_name ,LEADER_COMMENT as leader_content,CREATED_TIME as leader_time,row_number() over(partition by info_id order by created_time asc) as dNum from DB_DOCUMENT_SZPS) d on t.id = d.info_id
 		<if test="hasUpdate != null"> 
 			left join DB_DOCUMENT_CBJL b on t.ID=b.INFO_ID
 		</if>

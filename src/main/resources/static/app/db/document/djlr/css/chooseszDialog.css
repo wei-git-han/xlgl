@@ -27,7 +27,7 @@ body {
 .newstyle4{
 	width:100%;
 	height:100%;
-	padding-top:30px;
+	padding-top:10px;
 }
 .newstyle4 textarea{
 	width:100%;height:100%;resize:none;
@@ -44,3 +44,16 @@ body {
 	padding-top: 14px;
 }
 
+.peoples label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+.radio-list > label.radio-inline:first-child {
+    padding-left: 0;
+    margin-left:0px;
+}
+.checkbox-inline + .checkbox-inline, .radio-inline + .radio-inline {
+    margin-top: 0;
+    margin-left: 0px;
+}

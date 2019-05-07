@@ -1,6 +1,8 @@
 package com.css.app.db.config.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.db.config.entity.RoleSet;
 import com.css.app.db.config.service.RoleSetService;
+import com.css.app.db.util.DbDefined;
 import com.css.base.utils.GwPageUtils;
 import com.css.base.utils.Response;
 import com.css.base.utils.UUIDUtils;
@@ -49,6 +52,17 @@ public class RoleSetController {
 		Response.json(pageUtil);
 	}
 	
+	/**
+	 * 登记录入获取首长
+	 */
+	@ResponseBody
+	@RequestMapping("/querySzList")
+	public void querySzList(){
+		Map<String, Object> map = new HashMap<>();
+		map.put("roleFlag", DbDefined.ROLE_1);
+		List<RoleSet> roleSetList = roleSetService.queryList(map);
+		Response.json(roleSetList);
+	}
 	
 	/**
 	 * 信息

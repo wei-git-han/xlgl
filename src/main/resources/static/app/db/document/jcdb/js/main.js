@@ -129,7 +129,7 @@ var pageModule = function(){
                     				var html2 = "";
                     				var width = "width:25%;";
                     				if(array.length==1){
-                    					width = "width:100%;";
+                    					width = "width:110%;";
                     				}else if(array.length==2){
                     					width = "width:50%;";
                     				}else if(array.length==3){
@@ -138,12 +138,13 @@ var pageModule = function(){
                     				$.each(array,function(i){
                     					var dw = this.dw;
                     					var ry = this.ry;
+                    					var dwry = this.dwry;
                     					var cont = this.cont;
                     					
                     					var innerhtml = `
 														<div class="nc-left-group-cont" style="${width}">
 															<div class="nc-left-group-cont-top" >
-																<font>${dw}-${ry}:</font>
+																<font>${dwry}</font>
 															</div>
 															<div class="nc-left-group-cont-cont scroller">
 																${cont}
@@ -200,8 +201,8 @@ var pageModule = function(){
 															<td style="text-align:center;">${n}</td>
 															<td style="text-align:center;">${button1}</td>
 															<td>${jwbjh}</td>
-															<td>${title}</td>
-															<td>${pszsmr}</td>
+															<td >${title}</td>
+															<td title="${pszsmr}">${pszsmr}</td>
 															<td>${cbdwry}</td>
 															<td>${update}</td>
 															<td>${zbdate}</td>
@@ -248,7 +249,7 @@ var pageModule = function(){
                     height:"100%",
                     checkbox: false,
                     rownumberyon:false,
-                    paramobj:{month:'all',id:groupid},
+                    paramobj:{month:'all',id:groupid,isMain:'1'},
                     overflowx:false,
                     rownumberwidth:"50px",
                     pagesize: 4,

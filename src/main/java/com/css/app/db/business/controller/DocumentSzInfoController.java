@@ -204,7 +204,7 @@ public class DocumentSzInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/homelist")
-	public void homelist(Integer page, Integer pagesize,String search,String id ,String state,String month,String year,String orgid){
+	public void homelist(Integer page, Integer pagesize,String search,String id ,String state,String month,String year,String orgid,String isMain){
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		SimpleDateFormat sdf2=new SimpleDateFormat("yyyy年MM月dd日");
 		SimpleDateFormat sdf3=new SimpleDateFormat("yyyy");
@@ -222,7 +222,7 @@ public class DocumentSzInfoController {
 				map.put("state", state);
 			}
 		}
-		if(StringUtil.isEmpty(year)) {
+		if(StringUtil.isEmpty(isMain)&&StringUtil.isEmpty(year)) {
 			int mon=Calendar.MONTH+1;
 			year=sdf3.format(new Date());
 			if(StringUtil.isEmpty(month)) {				
@@ -240,7 +240,6 @@ public class DocumentSzInfoController {
 		map.remove("offset");
 		map.remove("limit");
 		JSONObject jo=new JSONObject();
-		JSONObject yijianjo=new JSONObject();
 		JSONArray ja=new JSONArray();
 		Map<String, Object> danweimap = new HashMap<>();
 		for (DocumentInfo documentInfo : infoList) {
@@ -249,22 +248,39 @@ public class DocumentSzInfoController {
 			jo.put("blzt", documentInfo.getStatus());
 			jo.put("jwbjh", documentInfo.getBanjianNumber());
 			jo.put("title", documentInfo.getDocTitle());
-			jo.put("pszsmr",documentInfo.getJobContent() );
+			String sz=documentInfo.getLeaderName();
+			if(StringUtils.isNotBlank(documentInfo.getLeaderName())) {
+				jo.put("pszsmr", documentInfo.getLeaderName()+":" +documentInfo.getLeaderContent() +" " +(documentInfo.getLeaderTime()==null?"":sdf.format(documentInfo.getLeaderTime())));
+				//jo.put("pszsmr", "");				
+			}else {
+				jo.put("pszsmr", "");				
+			}
+			//szpsCont=rowdata.leaderName+":"+rowdata.leaderContent+" "+rowdata.leaderTime.substring(0,16)
 			
-			jo.put("update",sdf.format(documentInfo.getCreatedTime()) );
-			jo.put("zbdate",sdf.format(documentInfo.getCreatedTime()) );
-			String sz=documentInfo.getSzReadIds();
-			if(StringUtils.isEmpty(sz)||!(sz).contains(userid)) {
+			if(documentInfo.getFirstZbTime()!=null) {				
+				jo.put("update",sdf.format(documentInfo.getFirstZbTime()) );
+			}else {
+				jo.put("update","");				
+			}
+			if(documentInfo.getLatestReplyTime()!=null) {				
+				jo.put("zbdate",sdf.format(documentInfo.getLatestReplyTime()) );
+			}else {
+				jo.put("zbdate","");								
+			}
+			
+			/*if(StringUtils.isEmpty(sz)||!(sz).contains(userid)) {
 				jo.put("other","0");//确认已读按钮显示
 			}else {				
 				jo.put("other","1");
-			}
+			}*/
+			jo.put("other","1");
 			String CuibanFlag=documentInfo.getCuibanFlag();
 			jo.put("CuibanFlag",CuibanFlag );//是否催办    1显示      0不显示
 			//单位意见
 			danweimap = new HashMap<>();
 			danweimap.put("infoId",documentInfo.getId());
 			JSONArray yijianja=new JSONArray();
+			JSONObject yijianjo=new JSONObject();
 			//查询列表数据
 			String cbdw="";
 			String cbry="";
@@ -291,7 +307,11 @@ public class DocumentSzInfoController {
 			cbdw=documentInfo.getLatestSubDept()==null?"":documentInfo.getLatestSubDept();
 			cbry=documentInfo.getLatestUndertaker()==null?"":documentInfo.getLatestUndertaker();
 			cont=documentInfo.getLatestReply()==null?"":documentInfo.getLatestReply();
-			if(StringUtils.isNotBlank(cbdw)&&(StringUtils.isEmpty(sz)||!(sz).contains(userid))) {
+			//if(StringUtils.isNotBlank(cbdw)&&(StringUtils.isEmpty(sz)||!(sz).contains(userid))) {
+			cbdw=documentInfo.getLatestSubDept();
+			cbry=documentInfo.getLatestUndertaker();
+			cont=documentInfo.getLatestReply();
+			if(StringUtils.isEmpty(sz)||!(sz).contains(userid)) {
 				gengxin="1";//已更新显示
 			}
 			
@@ -300,12 +320,15 @@ public class DocumentSzInfoController {
 			if("".equals(cbdw)) {
 				jo.put("cbdwry","");				
 			}else {
+				//${dw}-${ry}
+				cbdw=StringUtils.isBlank(cbdw)?"":cbdw;
+				cbry=StringUtils.isBlank(cbry)?"":cbry;
 				yijianjo.put("dw",cbdw);
 				yijianjo.put("ry", cbry);
-				yijianjo.put("cont", cont);
-				
+				yijianjo.put("cont", StringUtils.isBlank(cont)?"":cont);
+				yijianjo.put("dwry", StringUtils.isBlank(cbdw)?"":cbdw+"-"+cbry+":");
 				yijianja.add(yijianjo);
-				jo.put("cbdwry",cbdw+"/"+cbry);	
+				jo.put("cbdwry",StringUtils.isBlank(cbdw)?"":(cbdw+"/"+cbry));	
 				
 			}
 			
