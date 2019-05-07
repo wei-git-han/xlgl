@@ -155,6 +155,9 @@
 			<if test="search != null and search != ''">
 				and DOC_TITLE like '%'||#{search}||'%'
 			</if>
+			<if test="isnotuserid != null">
+			and (sz_read_ids not like '%'||#{isnotuserid}||'%' or sz_read_ids is null)
+			</if>
 			GROUP by DOC_TYPE_ID
 	)shu on dic.value=shu.DOC_TYPE_ID where dic.DIC_TYPE='document_type' order by dic.SORT asc
 	</select>
@@ -178,6 +181,18 @@
 			group by ddi.DOC_TYPE_ID,ddi.STATUS
 			
 	)shu on dic.value=shu.DOC_TYPE_ID where dic.DIC_TYPE='document_type' group by dic.DIC_TYPE,dic.text  
+	</select>
+	
+	<select id="queryListByDicStutas" resultType="map">
+	select ddi.DOC_TYPE_ID,
+	        (case when ddi.STATUS='1' then count(ddi.STATUS) else 0 end ) as blz,
+	        (case when ddi.STATUS='2' then count(ddi.STATUS) else 0 end ) as bj,
+	        (case when ddi.STATUS='3' then count(ddi.STATUS) else 0 end ) as ctls
+	         
+	        
+	        from ZF_MINISTRY_APP_DB.DB_DOCUMENT_INFO  ddi where  ddi.FIRST_ZB_TIME is not null
+	        and ddi.DOC_TYPE_ID=#{type}
+			group by ddi.DOC_TYPE_ID,ddi.STATUS 
 	</select>
 	
 	

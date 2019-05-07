@@ -72,5 +72,11 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 	public List<DocumentInfo> queryPersonList(Map<String, Object> map) {
 		return documentInfoDao.queryPersonList(map);
 	}
+
+	@Override
+	public List<Map<String, Object>> queryListByDicStutas(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return documentInfoDao.queryListByDicStutas(map);
+	}
 	
 }

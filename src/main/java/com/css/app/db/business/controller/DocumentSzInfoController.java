@@ -72,6 +72,7 @@ public class DocumentSzInfoController {
 	@ResponseBody
 	@RequestMapping("/grouplist")
 	public void grouplist(String search){
+		String userid=CurrentUser.getUserId();
 		JSONObject jo2=new JSONObject();
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy");
 		Map<String, Object> map = new HashMap<>();
@@ -79,6 +80,7 @@ public class DocumentSzInfoController {
 			year=sdf.format(new Date());
 		}*/
 		map.put("search", search);
+		map.put("isnotuserid", userid);
 		List<Map<String, Object>> infoList = documentInfoService.queryListByDicType(map);
 		JSONArray valdata=new JSONArray();
 		if (infoList!=null&&infoList.size()>0) {
@@ -237,6 +239,37 @@ public class DocumentSzInfoController {
 		map.put("offset", ((page - 1) * pagesize));
 		map.put("limit", pagesize);
 		List<DocumentInfo> infoList = documentInfoService.queryList(map);
+		JSONObject numjo=new JSONObject();
+		if(StringUtils.isNotBlank(id)) {
+			
+			map = new HashMap<>();
+			map.put("type", id);
+			map.put("isnotuserid", userid);
+			List<Map<String, Object>> infoMap = documentInfoService.queryListByDicStutas(map);
+			if (infoMap!=null&&infoMap.size()>0) {
+				for (Map<String, Object> map2 : infoMap) {
+					
+					numjo.put("blz", (long) map2.get("blz"));
+					numjo.put("bj", (long) map2.get("bj"));
+					numjo.put("ctls", (long) map2.get("ctls"));
+					
+					
+					
+				}
+			}
+			map.put("search", search);
+			map.put("isnotuserid", userid);
+			List<Map<String, Object>> genxinList = documentInfoService.queryListByDicType(map);
+			JSONArray valdata=new JSONArray();
+			if (infoList!=null&&infoList.size()>0) {
+				for (Map<String, Object> map2 : genxinList) {
+					numjo.put("count", (long) map2.get("num"));
+					
+				}
+			}
+		}
+		
+		
 		map.remove("offset");
 		map.remove("limit");
 		JSONObject jo=new JSONObject();
@@ -248,7 +281,7 @@ public class DocumentSzInfoController {
 			jo.put("blzt", documentInfo.getStatus());
 			jo.put("jwbjh", documentInfo.getBanjianNumber());
 			jo.put("title", documentInfo.getDocTitle());
-			String sz=documentInfo.getLeaderName();
+			String sz=documentInfo.getSzReadIds();
 			if(StringUtils.isNotBlank(documentInfo.getLeaderName())) {
 				jo.put("pszsmr", documentInfo.getLeaderName()+":" +documentInfo.getLeaderContent() +" " +(documentInfo.getLeaderTime()==null?"":sdf.format(documentInfo.getLeaderTime())));
 				//jo.put("pszsmr", "");				
@@ -268,12 +301,12 @@ public class DocumentSzInfoController {
 				jo.put("zbdate","");								
 			}
 			
-			/*if(StringUtils.isEmpty(sz)||!(sz).contains(userid)) {
+			if(StringUtils.isEmpty(sz)||!(sz).contains(userid)) {
 				jo.put("other","0");//确认已读按钮显示
 			}else {				
 				jo.put("other","1");
-			}*/
-			jo.put("other","1");
+			}
+			//jo.put("other","1");
 			String CuibanFlag=documentInfo.getCuibanFlag();
 			jo.put("CuibanFlag",CuibanFlag );//是否催办    1显示      0不显示
 			//单位意见
@@ -344,6 +377,7 @@ public class DocumentSzInfoController {
 		jo2.put("total",infoList==null?0:infoList.size());
 		jo2.put("page",page);
 		jo2.put("rows",ja);
+		jo2.put("num",numjo);
 		//GwPageUtils pageUtil = new GwPageUtils(infoList);
 		//Response.json(pageUtil);
 		Response.json(jo2);

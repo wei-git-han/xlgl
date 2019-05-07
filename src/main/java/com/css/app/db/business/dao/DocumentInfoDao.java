@@ -28,5 +28,7 @@ public interface DocumentInfoDao extends BaseDao<DocumentInfo> {
 	List<Map<String, Object>> queryListByDicStu(Map<String, Object> map);
 	
 	List<DocumentInfo> queryPersonList(Map<String, Object> map);
+
+	List<Map<String, Object>> queryListByDicStutas(Map<String, Object> map);
 	
 }
