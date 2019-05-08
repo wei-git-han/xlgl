@@ -49,7 +49,7 @@ var pageModule = function(){
 					$(".right_top_zbjl").css("bottom","60px");//按钮父元素上方元素样式控制
 					$("#quxiaobanjie").show();
 				}
-				if(data.zhuanBanBtn && ("blfk"==fileFrom ||"djlr"==fileFrom)){
+				if(data.zhuanBanBtn && ("blfk"==fileFrom)){
 					$(".right_zbjl").show();
 					$(".right_top_zbjl").css("bottom","60px");//按钮父元素上方元素样式控制
 					$("#zhuanban").show();
@@ -372,12 +372,15 @@ var pageModule = function(){
  			data:{infoId:fileId},
 			success:function(data){
 				if(data&&data.length>0){
+					$(".pagemenu").html("");
 					eachfn(data,$(".pagemenu"),1);
 					Metronic.initSlimScroll('.scroller');
 					$(".newpanel-right-bottom .btn-link").unbind("click");
 					$(".newpanel-right-bottom .btn-link").click(function(){
 						$(this).parents(".newpanel-cont").toggleClass("active");
 					});
+				}else{
+					$(".pagemenu").html("<span style='margin-left:20px;'>暂无内容！</span>");
 				}
 			}
 		})
@@ -401,6 +404,8 @@ var pageModule = function(){
 				            '</div>'
 			            )
 					});
+				}else{
+					$("#zbrecord").html('<div style="margin-top:20px;font-size: 14px;">暂无转办记录！</div>');
 				}
 			}
 		});	
@@ -427,6 +432,8 @@ var pageModule = function(){
 								html1+='</div>'
 			            $("#cbrecord").append(html1);
 					});
+				}else{
+					$("#cbrecord").html('<div style="margin-top:20px;font-size: 14px;">暂无催办记录！</div>');
 				}
 			}
 		});	
@@ -448,6 +455,8 @@ var pageModule = function(){
 				            '</div>'
 			            )
 					});
+				}else{
+					$("#jybjrecord").html('<div style="margin-top:20px;font-size: 14px;">暂无办结记录！</div>');
 				}
 			}
 		});	

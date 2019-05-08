@@ -9,6 +9,8 @@ import java.util.Map;
 import com.css.app.db.business.dao.DocumentZbjlDao;
 import com.css.app.db.business.entity.DocumentZbjl;
 import com.css.app.db.business.service.DocumentZbjlService;
+import com.css.base.utils.CurrentUser;
+import com.css.base.utils.UUIDUtils;
 
 
 
@@ -28,8 +30,17 @@ public class DocumentZbjlServiceImpl implements DocumentZbjlService {
 	}
 	
 	@Override
-	public void save(DocumentZbjl dbDocumentZbjl){
-		documentZbjlDao.save(dbDocumentZbjl);
+	public void save(DocumentZbjl zbjl){
+		String loginUserId=CurrentUser.getUserId();
+		String loginUserName=CurrentUser.getUsername();
+		String loginUserDeptId=CurrentUser.getDepartmentId();
+		String loginUserDeptName=CurrentUser.getOrgName();
+		zbjl.setId(UUIDUtils.random());
+		zbjl.setUserId(loginUserId);
+		zbjl.setUserName(loginUserName);
+		zbjl.setDeptId(loginUserDeptId);
+		zbjl.setDeptName(loginUserDeptName);
+		documentZbjlDao.save(zbjl);
 	}
 	
 	@Override

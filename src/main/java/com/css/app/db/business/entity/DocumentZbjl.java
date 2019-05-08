@@ -37,6 +37,8 @@ public class DocumentZbjl implements Serializable {
 	private String receiverDeptName;
 	//转办时间
 	private Date createdTime;
+	//转办单位
+	private String orgName;
 
 	/**
 	 * 设置：唯一标识
@@ -170,4 +172,11 @@ public class DocumentZbjl implements Serializable {
 	public Date getCreatedTime() {
 		return createdTime;
 	}
+	public String getOrgName() {
+		return orgName;
+	}
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+	
 }

@@ -13,7 +13,7 @@ var pageModule = function(){
 	var initgrid = function(){
         grid = $("#gridcont").createGrid({
             columns:[
-                 {display:"军委办件号",name:"",width:"8%",align:"left",title:true,render:function(rowdata,n){
+                 {display:"军委办件号",name:"",width:"7%",align:"left",title:true,render:function(rowdata,n){
                 	 return rowdata.banjianNumber;
                  }},
                  {display:"办理状态",name:"",width:"6%",align:"center",render:function(rowdata,n){
@@ -31,30 +31,26 @@ var pageModule = function(){
                  {display:"办件标题",name:"",width:"15%",align:"left",render:function(rowdata){
                 	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+rowdata.docTitle+'</a>'
                  }},
-                 {display:"紧急程度",name:"",width:"6%",align:"center",paixu:false,render:function(rowdata){
+                 {display:"紧急程度",name:"",width:"5%",align:"center",paixu:false,render:function(rowdata){
                 	 return rowdata.urgencyDegree;
                  }},
-                 {display:"批示指示内容",name:"",width:"20%",align:"left",paixu:false,title:true,render:function(rowdata){
+                 {display:"批示指示内容",name:"",width:"25%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var szpsCont="";
                 	 if(rowdata.leaderName && rowdata.leaderContent && rowdata.leaderTime){
                 		 szpsCont=rowdata.leaderName+":"+rowdata.leaderContent+" "+rowdata.leaderTime.substring(0,16)
                 	 }
-                	 return szpsCont;
+                	 return '<div class="zspsnr"  onclick="pszsnrAlert(\''+rowdata.id+'\')" title="'+szpsCont+'">'+szpsCont+'</div>';
                  }},
                  {display:"承办单位/人",name:"",width:"20%",align:"left",paixu:false,title:true,render:function(rowdata){
-                	 var underDept="";
-                	 if(rowdata.latestSubDept){
-                		 underDept=rowdata.latestSubDept+"/"+rowdata.latestUndertaker
-                	 }
-                	 return underDept;
+                	 return rowdata.underDepts || '';
                  }},
-                 {display:"办件分类",name:"",width:"15%",align:"left",paixu:false,title:true,render:function(rowdata){
+                 {display:"办件分类",name:"",width:"10%",align:"left",paixu:false,title:true,render:function(rowdata){
                 	 return rowdata.docTypeName;
                  }},
-                 {display:"创建时间",name:"",width:"10%",align:"center",title:true,render:function(rowdata){
+                 {display:"创建时间",name:"",width:"6%",align:"center",title:true,render:function(rowdata){
                 	 return rowdata.createdTime.substring(0,16);
                  }},
-                 {display:"操作",name:"do",width:"8%",align:"center",render:function(rowdata){
+                 {display:"操作",name:"do",width:"6%",align:"center",render:function(rowdata){
                 	 var caozuo = '';
                 	 caozuo +='<a title="撤回" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="chehuiDoc(\''+rowdata.id+'\')"><i class="fa fa-mail-reply"></i></a>';
                 	 if(rowdata.status==0){
@@ -67,12 +63,19 @@ var pageModule = function(){
             height:"100%",
             checkbox: true,
             rownumberyon:true,
-            overflowx:true,
-            pagesize: 15,
+            overflowx:false,
+            pagesize: 10,
             pageyno:true,
             paramobj:{search:$("#searchVal").val(),documentStatus:$("input[name='documentStatus']:checked").val()},
             loadafter:function(data){
             	total=data.total;
+            	$(".zspsnr").each(function(){
+					var maxwidth = 60;
+					if($(this).text().length > maxwidth){
+						$(this).text($(this).text().substring(0,maxwidth));
+						$(this).html($(this).html()+'...');
+					}
+				});
             },
             url: tableList
        });
@@ -273,4 +276,17 @@ function chehuiDoc(docId) {
 			});
 	    }
 	});
+}
+
+//批示指示内容弹出框
+function pszsnrAlert(id){
+	newbootbox.newdialog({
+		id:"psDialog",
+		width:800,
+		height:600,
+		header:true,
+		title:"批示详情",
+		classed:"cjDialog",
+		url:"/app/db/document/view/html/psDialog.html?fileId="+id
+	})
 }

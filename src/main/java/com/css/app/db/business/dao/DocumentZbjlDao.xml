@@ -35,7 +35,8 @@
 			"RECEIVER_NAMES", 
 			"RECEIVER_DEPT_ID", 
 			"RECEIVER_DEPT_NAME", 
-			"CREATED_TIME"
+			"CREATED_TIME",
+			"ORG_NAME"
 		)
 		values
 		(
@@ -49,7 +50,8 @@
 			#{receiverNames}, 
 			#{receiverDeptId}, 
 			#{receiverDeptName}, 
-			#{createdTime}
+			#{createdTime},
+			#{orgName}
 		)
 	</insert>
 	 
@@ -65,7 +67,8 @@
 			<if test="receiverNames != null">"RECEIVER_NAMES" = #{receiverNames}, </if>
 			<if test="receiverDeptId != null">"RECEIVER_DEPT_ID" = #{receiverDeptId}, </if>
 			<if test="receiverDeptName != null">"RECEIVER_DEPT_NAME" = #{receiverDeptName}, </if>
-			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}</if>
+			<if test="createdTime != null">"CREATED_TIME" = #{createdTime},</if>
+			<if test="orgName != null">"ORG_NAME" = #{orgName}</if>
 		</set>
 		where ID = #{id}
 	</update>

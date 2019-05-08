@@ -88,5 +88,10 @@ public class ReplyExplainServiceImpl implements ReplyExplainService {
 	public List<ReplyExplain> querySubLatestReply(String infoId, String subId) {
 		return replyExplainDao.querySubLatestReply(infoId, subId);
 	}
+
+	@Override
+	public List<ReplyExplain> queryAllLatestOneReply(String infoId) {
+		return replyExplainDao.queryAllLatestOneReply(infoId);
+	}
 	
 }

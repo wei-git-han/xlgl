@@ -65,6 +65,10 @@ public class SubDocInfo implements Serializable {
 	private Date leaderTime;
 	//我是不是当前处理人
 	private Integer receiverIsMe;
+	//承办单位/人
+	private String underDepts;
+	//已更新标识
+	private String updateFlag;
 	/*----------------------------列表接收值---------end---------------------------*/	
 	/**
 	 * 设置：唯一标识
@@ -252,5 +256,18 @@ public class SubDocInfo implements Serializable {
 	public void setReceiverIsMe(Integer receiverIsMe) {
 		this.receiverIsMe = receiverIsMe;
 	}
+	public String getUnderDepts() {
+		return underDepts;
+	}
+	public void setUnderDepts(String underDepts) {
+		this.underDepts = underDepts;
+	}
+	public String getUpdateFlag() {
+		return updateFlag;
+	}
+	public void setUpdateFlag(String updateFlag) {
+		this.updateFlag = updateFlag;
+	}
+	
 
 }
