@@ -69,11 +69,16 @@ var pageModule = function(){
                 	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.id+'\')"  title="'+szpsCont+'">'+szpsCont+'</div>';
                 }},
                 {display:"督办落实情况",name:"",width:"20%",align:"left",paixu:false,render:function(rowdata){
+                	 var duban="";
+                 	 if(rowdata.updateFlag=="1"){
+                 		duban = '<label class="cuibanlabel">已更新</label>';
+                	 }
+                 	 
                 	var dbCont="";
                 	if(rowdata.latestReply){
                 		dbCont=rowdata.latestReply;
                 	}	 
-                	return '<div class="dblsqk" onclick="dblsqkAlert(\''+rowdata.id+'\')"  title="'+dbCont+'">'+dbCont+'</div>';
+                	return '<div class="dblsqk" onclick="dblsqkAlert(\''+rowdata.infoId+'\')"  title="'+dbCont+'">'+duban+dbCont+'</div>';
                 }},
                 {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,title:true,render:function(rowdata){
                	 	return rowdata.underDepts||'';

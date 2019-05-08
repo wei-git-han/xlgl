@@ -9,7 +9,7 @@ var downLoadUrl= {"url":"/app/db/replyexplain/downLoad","dataType":"text"}; //�
 var allReplyListUrl = {"url":"/app/db/replyexplain/allReplyList","dataType":"text"}; //各局办理反馈list
 //var opinionUrl = {"url":"/app/db/replyexplain/getOpinion","dataType":"text"}; //各局办理反馈list
 var cbDataUrl = {"url":"/app/db/documentinfo/getCuiBanlist","dataType":"text"}; //催办记录list
-var personReplyUrl = {"url":"/app/db/replyexplain/personReply","dataType":"text"}; //某个人的办理反馈
+var replyByTeamIdUrl = {"url":"/app/db/replyexplain/getReplyByTeamId","dataType":"text"}; //获取某组办理反馈
 var latestCuiBanUrl = {"url":"/app/db/documentinfo/getLatestCuiBan","dataType":"text"}; //获取最新的催办
 var getButtonParamUrl = {"url":"/app/db/documentinfo/buttonParam","dataType":"json"}; //获取按钮显示控制参数
 var cancleOperationUrl = {"url":"/app/db/documentinfo/cancleOperation","dataType":"json"}; //取消办结操作
@@ -40,18 +40,15 @@ var pageModule = function(){
 			success:function(data){
 				$(".ifShow").hide();
 				if(data.cuiBanBtn && ("blfk"==fileFrom)){
-					$(".right_zbjl").show();
-					$(".right_top_zbjl").css("bottom","60px");//按钮父元素上方元素样式控制
+					$(".newbottom").show();
 					$("#cuiban").show();
 				}
 				if(data.quXiaoBtn && "blfk"==fileFrom){
-					$(".right_zbjl").show();
-					$(".right_top_zbjl").css("bottom","60px");//按钮父元素上方元素样式控制
+					$(".newbottom").show();
 					$("#quxiaobanjie").show();
 				}
 				if(data.zhuanBanBtn && ("blfk"==fileFrom)){
-					$(".right_zbjl").show();
-					$(".right_top_zbjl").css("bottom","60px");//按钮父元素上方元素样式控制
+					$(".newbottom").show();
 					$("#zhuanban").show();
 				}
 			}
@@ -279,7 +276,7 @@ var pageModule = function(){
 										<div class="nrt-cont" style="border-color:${color}">
 											<div class="nrt-cont-top">
 												<div class="nrt-cont-top-left">
-													<div class="nrt-cont-top-title" onclick="viewcont('${cbrId}','${teamId}','${subId}')">
+													<div class="nrt-cont-top-title" onclick="viewcont('${teamId}','${subId}')">
 														<i class="fa fa-user"></i>
 														<font>${danwei}-${ld}</font>
 													</div>
@@ -325,9 +322,9 @@ var pageModule = function(){
 										<div class="nrt-cont" style="border-color:${color}">
 											<div class="nrt-cont-top">
 												<div class="nrt-cont-top-left">
-													<div class="nrt-cont-top-title" onclick="viewcont('${cbrId}','${teamId}','${subId}')">
+													<div class="nrt-cont-top-title">
 														<i class="fa fa-user"></i>
-														<font>${danwei}-${ld}</font>
+														<font>${ld}</font>
 													</div>
 												</div>
 												<div class="nrt-cont-top-left">
@@ -489,7 +486,7 @@ var pageModule = function(){
 		});
 		
 		$("#cuiban").click(function(){
-			$("#viewcont2").modal("show")
+			$("#viewcont2").modal("show");
 		})
 		
 		$("#fasong").click(function(){
@@ -504,9 +501,9 @@ var pageModule = function(){
 				success:function(data){
 					if(data.result=="success"){
 						$("#viewcont2").modal("hide");
-						newbootbox.alert("操作成功!");
-						showButton();
-						initcbfn();
+						newbootbox.alert("操作成功!").done(function(){
+							window.location.reload();
+						});
 					}
 				}
 			});
@@ -539,6 +536,10 @@ var pageModule = function(){
 					}
 				}
 			});
+		});
+		
+		$("#closeviewcont").click(function(){
+			$("#viewcont").modal("hide");
 		});
 	}
 		
@@ -633,16 +634,23 @@ function removefn(id,el){
 	});
 }
 
-function viewcont(userId,teamId,subId){
+function viewcont(teamId,subId){
+	$("#viewcont").modal("show");
 	$ajax({
-		url:personReplyUrl,
-		data:{subId:subId,teamId:teamId,userId:userId},
+		url:replyByTeamIdUrl,
+		data:{subId:subId,teamId:teamId},
 	    success:function(data){
-	    	if(data){
-	    		$(".viewcontent").text(data.replyContent);
-	    		$("#viewcont").modal("show");
+	    	if(data && data.length>0){
+	    		$(".viewcontent").html("");
+				$.each(data,function(i,item){
+					$(".viewcontent").append(
+						'<div class="record">'+
+			            '	<div class="record_line1"><span>'+item.userName+'&nbsp;&nbsp;'+item.createdTime+'&nbsp;&nbsp;落实情况：</span></div>'+
+			            '	<div class="record_line2">'+item.replyContent+'</div>'+
+			            '</div>'
+		            )
+				});
 	    	}
 	    }
 	});
-	
 }

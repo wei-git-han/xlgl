@@ -327,7 +327,7 @@ var pageModule = function(){
 			psszId = "";
 		});
 		
-		//转办
+		/*//转办
 		$("#zhuanban").click(function(){
 			newbootbox.newdialog({
 				id:"zhuanbanDialog",
@@ -336,9 +336,9 @@ var pageModule = function(){
 				header:true,
 				title:"转办",
 				classed:"cjDialog",
-				url:"/app/db/document/blfk/html/zhuanbanDialog.html?fileId="+fileId
+				url:"/app/db/document/blfk/html/zhuanbanDialog.html?fileIds="+fileId
 			})
-		});
+		});*/
 		
 		
 		//删除附件

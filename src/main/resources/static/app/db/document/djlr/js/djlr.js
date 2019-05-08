@@ -13,13 +13,13 @@ var pageModule = function(){
 	var initgrid = function(){
         grid = $("#gridcont").createGrid({
             columns:[
-                 {display:"军委办件号",name:"",width:"7%",align:"left",title:true,render:function(rowdata,n){
+                 {display:"军委办件号",name:"",width:"8%",align:"left",title:true,render:function(rowdata,n){
                 	 return rowdata.banjianNumber;
                  }},
                  {display:"办理状态",name:"",width:"6%",align:"center",render:function(rowdata,n){
                  	 var bgColor="#FF6600";
                  	 var documentStatusName = "";
-             		 if(rowdata.firstZbTime == "" || rowdata.firstZbTime == null || rowdata.firstZbTime=="undefined"){
+             		 if(rowdata.status<1){
              			 documentStatusName="待处理";
              			 bgColor="#FF6600";
     				 }else{
@@ -31,7 +31,7 @@ var pageModule = function(){
                  {display:"办件标题",name:"",width:"15%",align:"left",render:function(rowdata){
                 	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+rowdata.docTitle+'</a>'
                  }},
-                 {display:"紧急程度",name:"",width:"5%",align:"center",paixu:false,render:function(rowdata){
+                 {display:"紧急程度",name:"",width:"4%",align:"center",paixu:false,render:function(rowdata){
                 	 return rowdata.urgencyDegree;
                  }},
                  {display:"批示指示内容",name:"",width:"25%",align:"left",paixu:false,title:false,render:function(rowdata){
@@ -47,12 +47,14 @@ var pageModule = function(){
                  {display:"办件分类",name:"",width:"10%",align:"left",paixu:false,title:true,render:function(rowdata){
                 	 return rowdata.docTypeName;
                  }},
-                 {display:"创建时间",name:"",width:"6%",align:"center",title:true,render:function(rowdata){
+                 {display:"创建时间",name:"",width:"9%",align:"center",title:true,render:function(rowdata){
                 	 return rowdata.createdTime.substring(0,16);
                  }},
-                 {display:"操作",name:"do",width:"6%",align:"center",render:function(rowdata){
+                 {display:"操作",name:"do",width:"3%",align:"center",render:function(rowdata){
                 	 var caozuo = '';
-                	 caozuo +='<a title="撤回" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="chehuiDoc(\''+rowdata.id+'\')"><i class="fa fa-mail-reply"></i></a>';
+                	 if(rowdata.status==1){
+                		 caozuo +='<a title="撤回" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="chehuiDoc(\''+rowdata.id+'\')"><i class="fa fa-mail-reply"></i></a>';
+                	 }
                 	 if(rowdata.status==0){
                      	 caozuo +='<a title="删除" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="deleteDoc(\''+rowdata.id+'\')"><i class="fa fa-trash-o"></i></a>';
     				 }

@@ -88,25 +88,34 @@
 						            </div>
 						        </div>
 						        <div class="tab-pane active" id="tab_15_2" style="position: relative;">
-						        	<!-- 判断是否有催办内容 -->
-						        	<div id="ifcuibanContent" class="ifcuibanContent">
-						        		
-						        	</div>
-						        	<div class="blfkchangeH" style="overflow:hidden;height: 100%;">
-							        	<div class="pr100">
-							        		<div class="blfk_top">
-							        			<div class="scroller"  style="padding: 0px 20px">
-							        				<div class="commonHtml">
+						        	<div class="pr100">
+						        		<div class="newtop" style="position:absolute;bottom:50px;left:0;width:100%;top:0;right:0;">
+						        			<!-- 判断是否有催办内容 -->
+						        			<div id="ifcuibanContent" class="ifcuibanContent">
+								        	</div>
+								        	<div class="blfkchangeH" style="overflow:hidden;height: 100%;">
+									        	<div class="pr100">
+									        		<div class="blfk_top">
+									        			<div class="scroller"  style="padding: 0px 20px">
+									        				<div class="commonHtml">
+											            	</div>
+											            	<div class="line3"></div>
+											            	<div class="timelinesview">
+											            		<div class="pagemenu">
+																</div>
+						    								</div>
+									        			</div>
 									            	</div>
-									            	<div class="line3"></div>
-									            	<div class="timelinesview">
-									            		<div class="pagemenu">
-														</div>
-				    								</div>
-							        			</div>
-							            	</div>
-							        	</div>
-							        </div>
+									        	</div>
+									      
+									        </div>
+						        		</div>
+						        		<div class="ifShow newbottom">
+						        			<button class="ifShow" type="button" id="zhuanban">转办</button>
+							            	<button class="ifShow" type="button" id="cuiban">催办</button>
+							            	<button class="ifShow" type="button" id="quxiaobanjie">取消办结</button>
+						        		</div>
+						        	</div>
 						        </div>
 						        <div class="tab-pane" id="tab_15_3">
 						        	<div class="pr100">
@@ -155,11 +164,6 @@
 												</div>
 											</div>
 							            </div>
-							            <div class="ifShow right_zbjl">
-							            	<button class="ifShow doBtns" type="button" id="zhuanban">转办</button>
-							            	<button class="ifShow doBtns" type="button" id="cuiban">催办</button>
-							            	<button class="ifShow doBtns" type="button" id="quxiaobanjie">取消办结</button>
-							            </div>
 							        </div>
 						        </div>
 					        </div>
@@ -171,17 +175,20 @@
 	</div>
 	
 	<div class="modal fade in newmodal cjDialog" id="viewcont" tabindex="-1" aria-hidden="true">
-	    <div class="modal-dialog" style="width:600px;">
+	    <div class="modal-dialog" style="width:800px;">
 	        <div class="modal-content">
 	            <div class="modal-header">
 	                <div class="newclose" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></div>
 	                <h4 class="modal-title">内容</h4>
 	            </div>
-	            <div class="modal-body" style="height:300px;">
+	            <div class="modal-body" style="height:600px;">
 					<div style="height:100%;" class="scroller">
 						<div class="viewcontent">
 						</div>
 					</div>
+	            </div>
+	            <div class="modal-footer">
+					<button  class="btn btn-default"  id="closeviewcont"> 关闭</button>
 	            </div>
 	        </div>
 	    </div>

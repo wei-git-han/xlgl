@@ -1,23 +1,24 @@
-var psList = {"url":rootPath +"/documentszps/queryList","dataType":"text"}; //批示列表
+var lsList = {"url":"/app/db/replyexplain/getAllLatestOneReply","dataType":"text"}; //督办落实列表
 var fileId=getUrlParam("fileId")||""; //主文件id
 var pageModule = function(){
-	var initps = function(){
+	var initls = function(){
 		$ajax({
-			url:psList,
+			url:lsList,
 			data:{infoId:fileId},
 			success:function(data){
-				$("#psContent").html("");
+				$("#lsContent").html("");
 				$.each(data,function(i,item){
-					$("#psContent").append(
+					$("#lsContent").append(
 						'<div class="record">'+
-			            '	<div class="line1"><span>'+item.userName+'&nbsp;&nbsp;'+item.createdTime+'&nbsp;&nbsp;批示：</span></div>'+
-			            '	<div class="line2">'+item.leaderComment+'</div>'+
+			            '	<div class="line1"><span>'+item.userName+'&nbsp;&nbsp;'+item.createdTime+'&nbsp;&nbsp;落实情况：</span></div>'+
+			            '	<div class="line2">'+item.replyContent+'</div>'+
 			            '</div>'
 		            )
 				});
 			}
 		});
 	}
+	
 	var initother = function(){
 		//关闭
 		$("#close").click(function(){
@@ -27,7 +28,7 @@ var pageModule = function(){
 	return{
 		//加载页面处理程序
 		initControl:function(){
-			initps();
+			initls();
 			initother();
 		}
 	};
