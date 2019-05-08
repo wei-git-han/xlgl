@@ -360,8 +360,6 @@ public class DocumentInfoController {
 		} else {
 			uuid=UUIDUtils.random();
 			documentInfo.setId(uuid);
-			documentInfo.setStatus(0);
-			documentInfo.setCreatedTime(new Date());
 			documentInfoService.save(documentInfo);
 			jo.put("id",uuid);
 		}

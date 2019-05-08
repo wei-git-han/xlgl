@@ -1,19 +1,18 @@
 package com.css.app.db.business.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.css.app.db.business.dao.ApprovalOpinionDao;
 import com.css.app.db.business.dao.DocumentBjjlDao;
 import com.css.app.db.business.dao.DocumentCbjlDao;
-import com.css.app.db.business.dao.DocumentFileDao;
 import com.css.app.db.business.dao.DocumentInfoDao;
 import com.css.app.db.business.dao.DocumentReadDao;
-import com.css.app.db.business.dao.DocumentSzpsDao;
 import com.css.app.db.business.dao.DocumentZbjlDao;
 import com.css.app.db.business.dao.ReplyAttacDao;
 import com.css.app.db.business.dao.ReplyExplainDao;
@@ -36,11 +35,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 	@Autowired
 	private DocumentCbjlDao documentCbjlDao;
 	@Autowired
-	private DocumentFileDao documentFileDao;
-	@Autowired
 	private DocumentReadDao documentReadDao;
-	@Autowired
-	private DocumentSzpsDao documentSzpsDao;
 	@Autowired
 	private DocumentZbjlDao documentZbjlDao;
 	@Autowired
@@ -63,9 +58,11 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 	}
 	
 	@Override
-	public void save(DocumentInfo dbDocumentInfo){
-		dbDocumentInfo.setCuibanFlag("0");
-		documentInfoDao.save(dbDocumentInfo);
+	public void save(DocumentInfo documentInfo){
+		documentInfo.setCuibanFlag("0");
+		documentInfo.setStatus(0);
+		documentInfo.setCreatedTime(new Date());
+		documentInfoDao.save(documentInfo);
 	}
 	
 	@Override
@@ -136,11 +133,15 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 		documentReadDao.deleteByInfoId(id);
 		//删除转办记录
 		documentZbjlDao.deleteByInfoId(id);
-		//删除首长批示
-		documentSzpsDao.deleteByInfoId(id);
-		//删除相关文件
-		documentFileDao.deleteByInfoId(id);
-		//删除主文件
-		documentInfoDao.delete(id);
+		//更新主文件状态
+		DocumentInfo info = documentInfoDao.queryObject(id);
+		info.setStatus(0);
+		info.setCuibanFlag("0");
+		info.setFinishTime(null);
+		info.setLatestReply("");
+		info.setLatestReplyTime(null);
+		info.setLatestSubDept("");
+		info.setLatestUndertaker("");
+		documentInfoDao.update(info);
 	}
 }
