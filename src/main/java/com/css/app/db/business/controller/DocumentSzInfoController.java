@@ -355,7 +355,7 @@ public class DocumentSzInfoController {
 			}
 			
 			jo.put("gengxin",gengxin);//已更新显示
-			jo.put("dblsqk",cont);
+			jo.put("dblsqk",StringUtils.isBlank(cont)?"":cont);
 			if("".equals(cbdw)) {
 				jo.put("cbdwry","");				
 			}else {
