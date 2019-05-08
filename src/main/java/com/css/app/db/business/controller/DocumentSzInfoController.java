@@ -241,6 +241,11 @@ public class DocumentSzInfoController {
 		map.put("offset", ((page - 1) * pagesize));
 		map.put("limit", pagesize);
 		List<DocumentInfo> infoList = documentInfoService.queryList(map);
+		
+		
+		map.remove("offset");
+		map.remove("limit");
+		List<DocumentInfo> infoallList = documentInfoService.queryList(map);
 		JSONObject numjo=new JSONObject();
 		if(StringUtils.isNotBlank(id)) {
 			
@@ -272,8 +277,7 @@ public class DocumentSzInfoController {
 		}
 		
 		
-		map.remove("offset");
-		map.remove("limit");
+	
 		JSONObject jo=new JSONObject();
 		JSONArray ja=new JSONArray();
 		Map<String, Object> danweimap = new HashMap<>();
@@ -374,9 +378,9 @@ public class DocumentSzInfoController {
 			jo.put("tbrq",sdf.format(documentInfo.getFirstZbTime()));
 			ja.add(jo);
 		}
-		infoList = documentInfoService.queryList(map);
 		
-		jo2.put("total",infoList==null?0:infoList.size());
+		
+		jo2.put("total",infoallList==null?0:infoallList.size());
 		jo2.put("page",page);
 		jo2.put("rows",ja);
 		jo2.put("num",numjo);

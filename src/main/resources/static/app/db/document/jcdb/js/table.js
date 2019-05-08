@@ -4,6 +4,7 @@ var url1 = {"url":"/app/db/documentszinfo/homelist","dataType":"text"};
 var url2 = {"url":"/app/db/documentszinfo/grouplist","dataType":"text"};
 var url3 = {"url":"/app/db/documentszinfo/read","dataType":"text"};
 var url4 = {"url":"/app/db/documentszinfo/press","dataType":"text"};
+var url5 = {"url":"","dataType":"text"};
 
 var ifmenu=getUrlParam("ifmenu")||"";
 var orgid=getUrlParam("orgid")||"";
@@ -174,6 +175,43 @@ var pageModule = function(){
 			grid.setparams({state:value});
 			grid.loadtable();
 		})
+		
+		
+		$("#plyd").click(function(){
+			var datas=grid.getcheckrow();
+			var ids=[];
+			if(datas.length>0){
+				$(datas).each(function(i){
+					ids[i]=this.id;
+				});
+				newbootbox.confirm({
+				    title: "提示",
+				    message: "是否批量已读操作？",
+				    callback1:function(){
+				    	$ajax({
+				    		url:url3,
+				    		data:{ids:ids.toString()},
+				    		success:function(data){
+				    			if(data.result=="success"){
+				    				newbootbox.alertInfo("确认已读!");
+				    				grid.refresh();
+				    			}
+				    		}
+				    	});
+				    	
+				    }
+				});
+			}else{
+				newbootbox.alertInfo("请选择要操作的数据！");
+			}
+			
+			
+
+			
+			
+		})
+		
+		
 	}
 	
 	
