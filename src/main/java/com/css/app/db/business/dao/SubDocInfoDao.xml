@@ -74,6 +74,9 @@
 			limit #{offset}, #{limit}
 		</if>
 	</select>
+	<select id="queryAllSubByInfoId" resultType="com.css.app.db.business.entity.SubDocInfo">
+	   select * from DB_SUB_DOC_INFO where INFO_ID = #{value}
+	</select>
 	<select id="queryAllSubDeptIds"  resultType="String">
 		select SUB_DEPT_ID from DB_SUB_DOC_INFO where INFO_ID = #{value}
 	</select>

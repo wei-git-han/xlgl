@@ -38,4 +38,6 @@ public interface SubDocInfoService {
 	List<String> queryAllSubDeptIds(String infoId);
 	
 	SubDocInfo queryLastEndSubInfo(String infoId);
+	
+	List<SubDocInfo> queryAllSubByInfoId(String infoId);
 }
