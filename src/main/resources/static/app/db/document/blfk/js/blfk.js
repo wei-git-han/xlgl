@@ -177,8 +177,8 @@ var pageModule = function(){
                 	 }
                 	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
                  }},
-                 {display:"工作分工内容",name:"",width:"21%",align:"left",paixu:false,title:true,render:function(rowdata){
-                	 return rowdata.jobContent || '';
+                 {display:"工作分工内容",name:"",width:"21%",align:"left",paixu:false,title:false,render:function(rowdata){
+                	 return '<div class="gzfgnr" title="'+rowdata.jobContent+'">'+rowdata.jobContent+'</div>';
                  }},
                  {display:"督办落实情况",name:"",width:"30%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var duban="";
@@ -218,6 +218,13 @@ var pageModule = function(){
             loadafter:function(data){
             	total=data.total;
             	$(".dblsqk").each(function(){
+					var maxwidth = 57;
+					if($(this).text().length > maxwidth){
+						$(this).text($(this).text().substring(0,maxwidth));
+						$(this).html($(this).html()+'...');
+					}
+				});
+            	$(".gzfgnr").each(function(){
 					var maxwidth = 57;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));

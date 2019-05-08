@@ -738,17 +738,21 @@ function downloadfn(fileServerId){
 }
 function editfn(id,content,el){
 	$(el).parents(".nrt-cont").find(".nrt-cont-file .remove").show();
-	/*$("#editTeamId").val(id);
-	$("#replyContent").val(content);*/
-	newbootbox.newdialog({
-		id:"editDialog",
-		width:800,
-		height:600,
-		header:true,
-		title:"编辑",
-		classed:"cjDialog",
-		url:"/app/db/document/view/html/editDialog.html?fileId="+id+"&replyContent="+content+"&subId="+subId
-	})
+	if(isCbr==1){
+		$("#editTeamId").val(id);
+		$("#replyContent").val(content);
+		return;
+	}else{
+		newbootbox.newdialog({
+			id:"editDialog",
+			width:800,
+			height:600,
+			header:true,
+			title:"编辑",
+			classed:"cjDialog",
+			url:"/app/db/document/view/html/editDialog.html?fileId="+id+"&replyContent="+content+"&subId="+subId
+		})
+	}
 }
 
 function removefn(id,el){
