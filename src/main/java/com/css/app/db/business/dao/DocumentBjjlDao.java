@@ -17,4 +17,5 @@ import com.css.base.dao.BaseDao;
 public interface DocumentBjjlDao extends BaseDao<DocumentBjjl> {
 	
 	DocumentBjjl queryLatestBjjl(String infoId);
+	void deleteByInfoId(String infoId);
 }

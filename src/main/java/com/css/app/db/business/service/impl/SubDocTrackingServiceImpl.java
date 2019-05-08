@@ -64,5 +64,10 @@ public class SubDocTrackingServiceImpl implements SubDocTrackingService {
 	public SubDocTracking queryLatestRecord(String subId) {
 		return subDocTrackingDao.queryLatestRecord(subId);
 	}
+
+	@Override
+	public void deleteBySubId(String subId) {
+		subDocTrackingDao.deleteBySubId(subId);
+	}
 	
 }

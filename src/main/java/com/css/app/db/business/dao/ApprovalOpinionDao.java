@@ -17,5 +17,6 @@ import com.css.base.dao.BaseDao;
 public interface ApprovalOpinionDao extends BaseDao<ApprovalOpinion> {
 	
 	void updateShowFlag(String subId);
+	void deleteBySubId(String subId);
 	
 }

@@ -43,6 +43,15 @@ var pageModule = function(){
 			data:{id:fileId},
 			success:function(data){
 				setformdata(data);
+				if(data.docTypeId == "1" || data.docTypeId == "2" || data.docTypeId == "4"){
+					$("#jobContent").attr("disabled",true);
+					$("#banjianNumber").attr("disabled",true);
+					$("#chaoqing").show();
+				}else{
+					$("#chaoqing").hide();
+					$("#jobContent").removeAttr("disabled");
+					$("#banjianNumber").removeAttr("disabled");
+				}
 			}
 		});
 	}
@@ -149,6 +158,19 @@ var pageModule = function(){
 	}
 
 	var initother = function(){
+		//文件类别change事件
+		$("#docTypeId").change(function(){
+			if($(this).val() == "1" || $(this).val() == "2" || $(this).val() == "4"){
+				$("#jobContent").attr("disabled",true);
+				$("#banjianNumber").attr("disabled",true);
+				$("#chaoqing").show();
+			}else{
+				$("#chaoqing").hide();
+				$("#jobContent").removeAttr("disabled");
+				$("#banjianNumber").removeAttr("disabled");
+			}
+		});
+		
 		//扫描设置
 		$("#scanSet").click(function(){
 			$(".smczcont").toggle();

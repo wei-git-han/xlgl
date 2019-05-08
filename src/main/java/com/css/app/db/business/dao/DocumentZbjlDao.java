@@ -16,4 +16,6 @@ import com.css.base.dao.BaseDao;
 @Mapper
 public interface DocumentZbjlDao extends BaseDao<DocumentZbjl> {
 	
+	void deleteByInfoId(String infoId);
+	
 }

@@ -25,4 +25,6 @@ public interface DocumentSzpsService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+	
+	void deleteByInfoId(String infoId);
 }

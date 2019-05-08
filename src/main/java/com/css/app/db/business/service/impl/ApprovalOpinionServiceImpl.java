@@ -83,5 +83,11 @@ public class ApprovalOpinionServiceImpl implements ApprovalOpinionService {
 	public void updateShowFlag(String subId) {
 		approvalOpinionDao.updateShowFlag(subId);
 	}
+
+	@Override
+	public void deleteBySubId(String subId) {
+		approvalOpinionDao.deleteBySubId(subId);
+		
+	}
 	
 }

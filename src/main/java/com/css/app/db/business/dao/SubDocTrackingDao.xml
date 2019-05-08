@@ -78,6 +78,10 @@
 	<delete id="delete">
 		delete from DB_SUB_DOC_TRACKING where ID = #{value}
 	</delete>
+	<delete id="deleteBySubId">
+		delete from DB_SUB_DOC_TRACKING where SUB_ID = #{subId}
+	</delete>
+	
 	
 	<delete id="deleteBatch">
 		delete from DB_SUB_DOC_TRACKING where ID in 

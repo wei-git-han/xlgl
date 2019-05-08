@@ -46,5 +46,11 @@ public class DocumentSzpsServiceImpl implements DocumentSzpsService {
 	public void deleteBatch(String[] ids){
 		documentSzpsDao.deleteBatch(ids);
 	}
+
+	@Override
+	public void deleteByInfoId(String infoId) {
+		documentSzpsDao.deleteByInfoId(infoId);
+		
+	}
 	
 }

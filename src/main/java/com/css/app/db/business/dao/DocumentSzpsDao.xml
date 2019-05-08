@@ -59,6 +59,10 @@
 		delete from DB_DOCUMENT_SZPS where ID = #{value}
 	</delete>
 	
+	<delete id="deleteByInfoId">
+		delete from DB_DOCUMENT_SZPS where INFO_ID =#{infoId}	
+	</delete>
+	
 	<delete id="deleteBatch">
 		delete from DB_DOCUMENT_SZPS where ID in 
 		<foreach item="id" collection="array" open="(" separator="," close=")">

@@ -99,11 +99,18 @@ var pageModule = function(){
 	}
 
 	var initother = function(){
-		/*//文件类别change事件
+		//文件类别change事件
 		$("#docTypeId").change(function(){
-			
+			if($(this).val() == "1" || $(this).val() == "2" || $(this).val() == "4"){
+				$("#jobContent").attr("disabled",true);
+				$("#banjianNumber").attr("disabled",true);
+				$("#chaoqing").show();
+			}else{
+				$("#chaoqing").hide();
+				$("#jobContent").removeAttr("disabled");
+				$("#banjianNumber").removeAttr("disabled");
+			}
 		});
-		*/
 		
 		//扫描设置
 		$("#scanSet").click(function(){
@@ -357,12 +364,33 @@ var pageModule = function(){
 						$("#dialogzz").hide();
 						if(data.result == "success"){
 							newbootbox.alert('上传成功！').done(function(){
-								$("#showupload").modal("hide");
 				        		$(".fileinput-filename").text("");
 				    			$("#pdf").val("");
 				    			$("#scanId").val(data.smjId);
-			        			psLoad('', data.smjFilePath);
-			        			initfilefn();
+				    			psLoad('', data.smjFilePath);
+				    			initfilefn();
+				    			
+				    			
+				    			/*if(type=="1"){ //板式
+				    				if($("#FireFoxOFDDIV").is(":hidden")){
+				    					$("#FireFoxOFDDIV").show();
+				    				};
+				    				psLoad('', data.smjFilePath);
+				    			}else{  //流式
+				    				if($("#cssOffice").is(":hidden")){
+				    					$("#cssOffice").show();
+				    				};
+				    				if(!$("#cssOffice").is(":hidden")){
+			    						cssOffice = new CssOffice();
+			    						if(cssOffice!=null){
+			    							cssOffice.init("cssOffice", "100%", "100%");
+			    						}
+			    					};
+			    					openOFDFile(fileUrl, "suwell",$("#suwell").width(),$("#suwell").height(), "showTablet");
+				    			};*/
+				    			
+				    			
+			        			
 		    				});
 						}else{
 							newbootbox.alert("上传失败！"); 
@@ -468,3 +496,5 @@ var psLoad = function(psFileId, psPath){
 		}
 	}
 }
+
+

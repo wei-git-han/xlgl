@@ -17,4 +17,5 @@ import com.css.base.dao.BaseDao;
 public interface SubDocTrackingDao extends BaseDao<SubDocTracking> {
 	
 	SubDocTracking  queryLatestRecord(String subId);
+	void deleteBySubId(String subId);
 }

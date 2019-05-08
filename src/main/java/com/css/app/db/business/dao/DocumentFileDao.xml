@@ -65,6 +65,9 @@
 	<delete id="delete">
 		delete from DB_DOCUMENT_FILE where ID = #{value}
 	</delete>
+	<delete id="deleteByInfoId">
+		delete from DB_DOCUMENT_FILE where DOC_INFO_ID =#{infoId}	
+	</delete>
 	
 	<delete id="deleteBatch">
 		delete from DB_DOCUMENT_FILE where ID in 
