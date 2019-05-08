@@ -565,21 +565,21 @@ public class SubDocInfoController {
 				cbjl.setFinishFlag(1);
 				documentCbjlService.update(cbjl);
 			}
-			//主记录不标识催办,清理本次首长已读
-			info.setSzReadIds("");
 			info.setCuibanFlag("0");
-            //获取最新反馈(各组)
-			List<ReplyExplain> latestReplyList = replyExplainService.querySubLatestReply(infoId, subId);
-			if(latestReplyList != null && latestReplyList.size()>0) {
-				info.setLatestReply(latestReplyList.get(0).getReplyContent());
-				info.setLatestSubDept(subDocInfo.getSubDeptName());
-				info.setLatestUndertaker(subDocInfo.getUndertakerName());
-				info.setLatestReplyTime(new Date());
-			}
-			documentInfoService.update(info);
-			//清理除首长外的本文件已读
-			documentReadService.deleteByInfoId(infoId);
 		}
+		//主记录不标识催办,清理本次首长已读
+		info.setSzReadIds("");
+        //获取最新反馈(各组)
+		List<ReplyExplain> latestReplyList = replyExplainService.querySubLatestReply(infoId, subId);
+		if(latestReplyList != null && latestReplyList.size()>0) {
+			info.setLatestReply(latestReplyList.get(0).getReplyContent());
+			info.setLatestSubDept(subDocInfo.getSubDeptName());
+			info.setLatestUndertaker(subDocInfo.getUndertakerName());
+			info.setLatestReplyTime(new Date());
+		}
+		documentInfoService.update(info);
+		//清理除首长外的本文件已读
+		documentReadService.deleteByInfoId(infoId);
 		//反馈对他局和部可见(顺序必须放标识催办完成后边，因为showFlag的值作为参数进行了查询)
 		replyExplainService.updateShowFlag(subId);
 		//意见对他局和部可见

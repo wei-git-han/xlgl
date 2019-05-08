@@ -189,8 +189,7 @@ ul{
 	width:100%;
 	font-weight:700;
 	font-size:14px;
-	height:40px;
-	line-height:40px;
+	height:1px;
 	border-bottom:1px solid #bcbcbc;
 }
 .line4{
@@ -878,4 +877,18 @@ ul{
 	border-radius: 4px !important;
 	padding: 4px 18px;
 	font-size: 14px;
+}
+
+
+.record{
+	overflow:hidden;
+	padding:5px 10px;
+	border-bottom:1px dashed #ccc;
+	margin-bottom: 12px;
+}
+.record div{
+	line-height:22px;
+}
+.record_line1{
+	color:#999;
 }

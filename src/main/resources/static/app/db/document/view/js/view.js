@@ -14,9 +14,7 @@ var bjDataUrl = {"url":"/app/db/documentinfo/getBanJieList","dataType":"text"}; 
 var delfjUrl = {"url":"/app/db/replyexplain/deleteAttch","dataType":"text"}; //删除办理反馈中的附件
 var downLoadUrl= {"url":"/app/db/replyexplain/downLoad","dataType":"text"}; //下载办理反馈中的附件
 var subReplyListUrl = {"url":"/app/db/replyexplain/subReplyList","dataType":"text"}; //局内办理反馈list
-var personReplyUrl = {"url":"/app/db/replyexplain/personReply","dataType":"text"}; //某个人的办理反馈
-//var allReplyListUrl = {"url":"/app/db/replyexplain/allReplyList","dataType":"text"}; //各局办理反馈list
-//var opinionUrl = {"url":"/app/db/replyexplain/getOpinion","dataType":"text"}; //各局办理反馈list
+var replyByTeamIdUrl = {"url":"/app/db/replyexplain/getReplyByTeamId","dataType":"text"}; //获取某组办理反馈
 var cbDataUrl = {"url":"/app/db/documentinfo/getCuiBanlist","dataType":"text"}; //催办记录list
 var latestCuiBanUrl = {"url":"/app/db/documentinfo/getLatestCuiBan","dataType":"text"}; //获取最新的催办
 var fileId=getUrlParam("fileId")||""; //主文件id
@@ -58,6 +56,10 @@ var pageModule = function(){
 						$("#chengban").show();
 						$("#zhuanban").show();
 					}else{
+						if(data.isUndertaker){
+							$(".newbottom").show(); //所有按钮的容器
+							$("#bjandls").show(); //办结和常态落实合并为一个
+						}
 						if(data.isCheckUser){//显示办结、常态落实,输入框
 							//$(".blfkchangeH").attr("style","position:absolute;top:34px;left:0;bottom:0;width:100%;right:0;");
 							$(".blfk_bottom").show(); //意见外大框
@@ -76,7 +78,6 @@ var pageModule = function(){
 								$("#save").show();
 								$("#ifaddfj").show();
 								$("#showfj").show();
-								$("#bjandls").show(); //办结和常态落实合并为一个
 								isCbr = 1;
 							}
 						}
@@ -298,7 +299,7 @@ var pageModule = function(){
 					'				<div class="nrt-cont" style="border-color:'+color+'">'+
 					'					<div class="nrt-cont-top">'+
 					'						<div class="nrt-cont-top-left">'+
-					'							<div class="nrt-cont-top-title" onclick="viewcont(\''+cbrId+'\',\''+teamId+'\',\''+subId+'\')">'+
+					'							<div class="nrt-cont-top-title" onclick="viewcont(\''+teamId+'\',\''+subId+'\')">'+
 					'								<i class="fa fa-user"></i>'+
 					'								<font>'+danwei+'-'+ld+'</font>'+
 					'							</div>'+
@@ -324,7 +325,7 @@ var pageModule = function(){
 					'					</div>'+
 					'				</div>'+
 					'			</div>'+
-					'			<div class="newpanel-right-cent2" style="padding-left:${pl*n}px;">'+
+					'			<div class="newpanel-right-cent2" style="padding-left:'+pl*n+'px">'+
 					'			</div>'+
 					'			<div class="newpanel-right-bottom">'+
 									zkgb+
@@ -338,9 +339,9 @@ var pageModule = function(){
 					'	<div class="nrt-cont" style="border-color:'+color+'">'+
 					'		<div class="nrt-cont-top">'+
 					'			<div class="nrt-cont-top-left">'+
-					'				<div class="nrt-cont-top-title" onclick="viewcont(\''+cbrId+'\',\''+teamId+'\',\''+subId+'\')">'+
+					'				<div class="nrt-cont-top-title">'+
 					'					<i class="fa fa-user"></i>'+
-					'					<font>'+danwei+'-'+ld+'</font>'+
+					'					<font>'+ld+'</font>'+
 					'				</div>'+
 					'			</div>'+
 					'			<div class="nrt-cont-top-left">'+
@@ -361,7 +362,7 @@ var pageModule = function(){
 					'		</div>'+
 					'	</div>'+
 					'</div>'+
-					'<div class="newpanel-right-cent2" style="padding-left:${pl*n}px;">'+
+					'<div class="newpanel-right-cent2" style="padding-left:'+pl*n+'px">'+
 					'</div>';
 				}
 				li = $(li);
@@ -578,7 +579,7 @@ var pageModule = function(){
 	 					type: "GET",
 	 					success:function(data){
 	 						if(data.result == "success"){
-	 							showButton();
+	 							window.location.reload();
 	 						}
 	 					}
 	 				});
@@ -598,7 +599,7 @@ var pageModule = function(){
 	 					type: "GET",
 	 					success:function(data){
 	 						if(data.result == "success"){
-	 							showButton();
+	 							window.location.reload();
 	 						}
 	 					}
 	 				});
@@ -632,10 +633,14 @@ var pageModule = function(){
 								newbootbox.alert("保存成功！").done(function(){
 									$("#replyContent").val("");
 									initblfkList();
+									$(".filename").text("");
+									$(".filelist").text("附件列表:");
 								}); 
 							}else{
 								$("#replyContent").val("");
 								initblfkList();
+								$(".filename").text("");
+								$(".filelist").text("附件列表:");
 							}
 						} else {
 							newbootbox.alert("提交失败，请稍后重试！"); 
@@ -674,6 +679,10 @@ var pageModule = function(){
 				return;
 			};
 			$(".filelist").hide();
+		});
+		
+		$("#closeviewcont").click(function(){
+			$("#viewcont").modal("hide");
 		});
 	}
 		
@@ -770,16 +779,23 @@ function removefn(id,el){
 	});
 }
 
-function viewcont(userId,teamId,subId){
+function viewcont(teamId,subId){
+	$("#viewcont").modal("show");
 	$ajax({
-		url:personReplyUrl,
-		data:{subId:subId,teamId:teamId,userId:userId},
+		url:replyByTeamIdUrl,
+		data:{subId:subId,teamId:teamId},
 	    success:function(data){
-	    	if(data){
-	    		$(".viewcontent").text(data.replyContent);
-	    		$("#viewcont").modal("show");
+	    	if(data && data.length>0){
+	    		$(".viewcontent").html("");
+				$.each(data,function(i,item){
+					$(".viewcontent").append(
+						'<div class="record">'+
+			            '	<div class="record_line1"><span>'+item.userName+'&nbsp;&nbsp;'+item.createdTime+'&nbsp;&nbsp;落实情况：</span></div>'+
+			            '	<div class="record_line2">'+item.replyContent+'</div>'+
+			            '</div>'
+		            )
+				});
 	    	}
 	    }
 	});
-	
 }
