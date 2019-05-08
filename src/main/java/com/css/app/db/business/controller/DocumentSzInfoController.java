@@ -80,6 +80,7 @@ public class DocumentSzInfoController {
 			year=sdf.format(new Date());
 		}*/
 		map.put("search", search);
+		map.put("status", "1");
 		map.put("isnotuserid", userid);
 		List<Map<String, Object>> infoList = documentInfoService.queryListByDicType(map);
 		JSONArray valdata=new JSONArray();
@@ -211,6 +212,7 @@ public class DocumentSzInfoController {
 		SimpleDateFormat sdf2=new SimpleDateFormat("yyyy年MM月dd日");
 		SimpleDateFormat sdf3=new SimpleDateFormat("yyyy");
 		String userid=CurrentUser.getUserId();
+		JSONObject jo2=new JSONObject();
 		Map<String, Object> map = new HashMap<>();
 		map.put("search", search);
 		map.put("docStatus", "2");
@@ -244,14 +246,13 @@ public class DocumentSzInfoController {
 			
 			map = new HashMap<>();
 			map.put("type", id);
-			map.put("isnotuserid", userid);
 			List<Map<String, Object>> infoMap = documentInfoService.queryListByDicStutas(map);
 			if (infoMap!=null&&infoMap.size()>0) {
 				for (Map<String, Object> map2 : infoMap) {
 					
-					numjo.put("blz", (long) map2.get("blz"));
-					numjo.put("bj", (long) map2.get("bj"));
-					numjo.put("ctls", (long) map2.get("ctls"));
+					jo2.put("count2", (long) map2.get("blz"));
+					jo2.put("count3", (long) map2.get("bj"));
+					jo2.put("count4", (long) map2.get("ctls"));
 					
 					
 					
@@ -259,11 +260,12 @@ public class DocumentSzInfoController {
 			}
 			map.put("search", search);
 			map.put("isnotuserid", userid);
+			map.put("status", "1");
 			List<Map<String, Object>> genxinList = documentInfoService.queryListByDicType(map);
 			JSONArray valdata=new JSONArray();
-			if (infoList!=null&&infoList.size()>0) {
+			if (genxinList!=null&&genxinList.size()>0) {
 				for (Map<String, Object> map2 : genxinList) {
-					numjo.put("count", (long) map2.get("num"));
+					jo2.put("count5", (long) map2.get("num"));
 					
 				}
 			}
@@ -373,7 +375,7 @@ public class DocumentSzInfoController {
 			ja.add(jo);
 		}
 		infoList = documentInfoService.queryList(map);
-		JSONObject jo2=new JSONObject();
+		
 		jo2.put("total",infoList==null?0:infoList.size());
 		jo2.put("page",page);
 		jo2.put("rows",ja);
@@ -404,7 +406,35 @@ public class DocumentSzInfoController {
 		
 		Response.json("result", "success");
 	}
-	
+	/**
+	 * 首长已读按钮
+	 */
+	@ResponseBody
+	@RequestMapping("/AllreadByType")
+	public void AllreadByType(String menuid){
+		String userid=CurrentUser.getUserId();
+		if(StringUtils.isNotBlank(menuid)) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("state", "1");
+			map.put("type", menuid);
+			map.put("isnotuserid", userid);
+			//PageHelper.startPage(page, pagesize);
+			List<DocumentInfo> infoList = documentInfoService.queryList(map);
+			for (DocumentInfo info : infoList) {
+				String szreadids=info.getSzReadIds();
+				if(StringUtils.isBlank(szreadids)) {
+					info.setSzReadIds(userid);
+				}else if(!szreadids.contains(userid)){
+					info.setSzReadIds(szreadids+","+userid);				
+				}
+				documentInfoService.update(info);
+			}
+			
+			
+			
+		}
+		Response.json("result", "success");
+	}
 	
 	/**
 	 * 首长催办按钮
@@ -412,8 +442,17 @@ public class DocumentSzInfoController {
 	@ResponseBody
 	@RequestMapping("/press")
 	public void press(String id,String textarea){
+		String userid=CurrentUser.getUserId();
 		DocumentInfo info=documentInfoService.queryObject(id);
 		info.setCuibanFlag("1");//首长催办
+		String szreadids=info.getSzReadIds();
+		if(StringUtils.isBlank(szreadids)) {
+			info.setSzReadIds(userid);
+		}else if(!szreadids.contains(userid)){
+			info.setSzReadIds(szreadids+","+userid);				
+		}
+		
+		
 		documentInfoService.update(info);
 		//保存催办历史
 		DocumentCbjl cb=new DocumentCbjl();

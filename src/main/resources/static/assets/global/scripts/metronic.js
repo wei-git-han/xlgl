@@ -670,7 +670,7 @@ var Metronic = function() {
             }, 'slow');
         },
 
-        initSlimScroll: function(el) {
+        initSlimScroll: function(el,n) {
             $(el).each(function() {
                 if ($(this).attr("data-initialized")) {
                     return; // exit

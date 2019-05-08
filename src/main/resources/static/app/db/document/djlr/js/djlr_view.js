@@ -365,6 +365,7 @@ var pageModule = function(){
 			})
 		}
 		
+		 
 		
 		$ajax({
 			url:allReplyListUrl,
@@ -372,6 +373,7 @@ var pageModule = function(){
 			success:function(data){
 				if(data&&data.length>0){
 					eachfn(data,$(".pagemenu"),1);
+					Metronic.initSlimScroll('.scroller');
 					$(".newpanel-right-bottom .btn-link").unbind("click");
 					$(".newpanel-right-bottom .btn-link").click(function(){
 						$(this).parents(".newpanel-cont").toggleClass("active");

@@ -62,7 +62,7 @@ ul{
 }
 
 
-/* tab页签 */
+/* tab椤电 */
 .left_menu .nav-tabs {
     border: none;
 }
@@ -245,7 +245,7 @@ ul{
 	border-radius:4px!important;
 }
 
-/* 转锟斤拷锟铰硷拷碌锟絫ab页签 */
+/* 杞敓鏂ゆ嫹閿熼摪纭锋嫹纰岄敓绲玜b椤电 */
 .right_top_zbjl .tabbable-line > .nav-tabs > li > a {
     border: 0;
     margin-right: 0;
@@ -329,7 +329,7 @@ ul{
 }
 
 
-/* 锟斤拷锟斤拷锟斤拷锟斤拷式 */
+/* 閿熸枻鎷烽敓鏂ゆ嫹閿熸枻鎷烽敓鏂ゆ嫹寮� */
 .timelinesview{
 	margin-top:10px;
 	background:#fff;
@@ -614,7 +614,7 @@ ul{
 }
 
 
-/* 锟斤拷锟斤拷锟斤拷锟� */
+/* 閿熸枻鎷烽敓鏂ゆ嫹閿熸枻鎷烽敓锟� */
 .sryj_title{
 	position:absolute;
 	top:0;
@@ -693,7 +693,7 @@ ul{
 }
 
 
-/* 新页签样式 */
+/* 鏂伴〉绛炬牱寮� */
 .tabs li.tabs-selected a.tabs-inner {
     background: #6699FF!important;
 	border: none;
@@ -772,7 +772,7 @@ ul{
 	vertical-align: middle;
 }
 
-/* 按钮权限控制 */
+/* 鎸夐挳鏉冮檺鎺у埗 */
 .ifShow{
 	/* display:none; */
 }
@@ -858,8 +858,8 @@ ul{
 .nrt-cont-top-title2{padding-top:2px;font-size:16px;color:#eee;color:rgb(153, 153, 153);}
 .nrt-cont-top-right{float:right;margin-left:10px;}
 .nrt-cont-top-btn{font-size:14px;color:#00CCFF;}
-.nrt-cont-cent{padding-left:50px;padding-left:0;padding-right:10px;font-size:16px;color:#fff;color:#333;font-weight:bold;}
-.nrt-cont-cent>.wh100{max-height:100px;min-height:30px;}
+.nrt-cont-cent{height:90px;padding-left:50px;padding-left:0;padding-right:10px;font-size:16px;color:#fff;color:#333;font-weight:bold;}
+.nrt-cont-cent>.wh100{height:100%;min-height:30px;}
 .nrt-cont-bottom{}
 .nrt-cont-file{}
 .nrt-cont-file .remove{float:right;width:50px;display:none;}

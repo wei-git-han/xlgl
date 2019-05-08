@@ -30,7 +30,7 @@
 			and t.CUIBAN_FLAG ='0' and a.FINISH_FLAG='1' and t.id not in(select INFO_ID from DB_DOCUMENT_READ where USER_ID=#{loginUserId})
 		</if>
 		<if test="search != null and search != ''">
-			and t.DOC_TITLE like '%'||#{search}||'%'
+			and (t.DOC_TITLE like '%'||#{search}||'%' or t.BANJIAN_NUMBER  like '%'||#{search}||'%')
 		</if>
 		<if test="year != null">
 			and to_char(t.FIRST_ZB_TIME) like '%'||#{year}||'%'
@@ -76,7 +76,7 @@
 			and t.CUIBAN_FLAG ='0' and b.FINISH_FLAG='1' and t.id not in(select INFO_ID from DB_DOCUMENT_READ where USER_ID=#{loginUserId})
 		</if>
 		<if test="search != null and search != ''">
-			and t.DOC_TITLE like '%'||#{search}||'%'
+			and (t.DOC_TITLE like '%'||#{search}||'%' or t.BANJIAN_NUMBER  like '%'||#{search}||'%')
 		</if>
 		<if test="year != null">
 			and to_char(t.FIRST_ZB_TIME) like '%'||#{year}||'%'
@@ -153,13 +153,20 @@
 	        from DB_DOCUMENT_INFO  
 			where 1=1 and FIRST_ZB_TIME is not null
 			<if test="search != null and search != ''">
-				and DOC_TITLE like '%'||#{search}||'%'
+				and (DOC_TITLE like '%'||#{search}||'%' or BANJIAN_NUMBER  like '%'||#{search}||'%')
+			</if>
+			<if test="status != null and status != ''">
+				and STATUS=#{status}
 			</if>
 			<if test="isnotuserid != null">
 			and (sz_read_ids not like '%'||#{isnotuserid}||'%' or sz_read_ids is null)
 			</if>
 			GROUP by DOC_TYPE_ID
-	)shu on dic.value=shu.DOC_TYPE_ID where dic.DIC_TYPE='document_type' order by dic.SORT asc
+	)shu on dic.value=shu.DOC_TYPE_ID where dic.DIC_TYPE='document_type' 
+	<if test="type != null and type != ''">
+				and dic.VALUE=#{type}
+			</if>
+	order by dic.SORT asc
 	</select>
 	
 	
@@ -178,6 +185,9 @@
 	        (case when ddi.STATUS='3' then count(ddi.STATUS) else 0 end ) as ctls
 	        
 	        from DB_DOCUMENT_INFO  ddi where  ddi.FIRST_ZB_TIME is not null
+	        <if test="search != null and search != ''">
+			and (ddi.DOC_TITLE like '%'||#{search}||'%' or ddi.BANJIAN_NUMBER  like '%'||#{search}||'%')
+			</if>
 			group by ddi.DOC_TYPE_ID,ddi.STATUS
 			
 	)shu on dic.value=shu.DOC_TYPE_ID where dic.DIC_TYPE='document_type' group by dic.DIC_TYPE,dic.text  

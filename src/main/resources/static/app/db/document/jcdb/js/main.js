@@ -2,6 +2,7 @@ var url1 = {"url":"/app/db/documentszinfo/homelist","dataType":"text"};
 var url2 = {"url":"/app/db/documentszinfo/grouplist","dataType":"text"};
 var url3 = {"url":"/app/db/documentszinfo/read","dataType":"text"};
 var url4 = {"url":"/app/db/documentszinfo/press","dataType":"text"};
+var url5 = {"url":"/app/db/documentszinfo/AllreadByType","dataType":"text"};
 var groupid=null;
 var grid = null;
 var pageModule = function(){
@@ -10,16 +11,27 @@ var pageModule = function(){
 	
 	
 	
-	var initmenu = function(){
+	var initmenu = function(menuid){
 		$ajax({
 			url:url2,
 			success:function(data){
 				$(".menu").html('');
 				$.each(data,function(i){
 					var id = this.id;
-					if(i==0){
-						groupid=id;
-						initgrid();
+					var active = "";
+					if(typeof(menuid)!="undefined"){
+						if(id==menuid){
+							active = "active"
+							groupid=id;
+							initgrid();
+						}
+					}else{
+						if(i==0){
+							active = "active"
+							groupid=id;
+							initgrid();
+							
+						}
 					}
 					var name = this.name;
 					var count = this.count;
@@ -33,7 +45,7 @@ var pageModule = function(){
 					}
 					$(".menu").append(
 					`		
-							<li class="${i==0?'active':''}" id="${id}">
+							<li class="${active}" id="${id}">
 								<a>
 									<i class="fa fa-chevron-right "></i>
 									<font title="${name}" >${name}</font>
@@ -200,7 +212,7 @@ var pageModule = function(){
 														<tr>
 															<td style="text-align:center;">${n}</td>
 															<td style="text-align:center;">${button1}</td>
-															<td>${jwbjh}</td>
+															<td style="text-align:center;">${jwbjh}</td>
 															<td >${title}</td>
 															<td title="${pszsmr}">${pszsmr}</td>
 															<td>${cbdwry}</td>
@@ -255,16 +267,16 @@ var pageModule = function(){
                     pagesize: 4,
                     url: url1,
                     loadafter:function(data){
-                    	var count1 = data.count1;
                     	var count2 = data.count2;
                     	var count3 = data.count3;
                     	var count4 = data.count4;
                     	var count5 = data.count5;
-                    	if(count1>0){count1="("+count1+")"}else{count1=""};
-                    	if(count2>0){count2="("+count2+")"}else{count2=""};
-                    	if(count3>0){count3="("+count3+")"}else{count3=""};
-                    	if(count4>0){count4="("+count4+")"}else{count4=""};
-                    	if(count5>0){count5="("+count5+")"}else{count5=""};
+                    	var count1 = count2+count3+count4;
+                    	if(count1>0){count1="("+count1+")"}else{count1="(0)"};
+                    	if(count2>0){count2="("+count2+")"}else{count2="(0)"};
+                    	if(count3>0){count3="("+count3+")"}else{count3="(0)"};
+                    	if(count4>0){count4="("+count4+")"}else{count4="(0)"};
+                    	if(count5>0){count5="("+count5+")"}else{count5="(0)"};
                     	$("#count1").html(count1);
                     	$("#count2").html(count2);
                     	$("#count3").html(count3);
@@ -312,10 +324,67 @@ var pageModule = function(){
 			grid.loadtable();
 		})
 		
+		$(".fa-search").click(function(){
+			var value = $(".top-right-search input").val();
+			grid.setparams({search:value});
+			grid.loadtable();
+		})
 		
 		$("#chartbutton").click(function(){
 			window.location.href = "index.html"
 		});
+		
+		$(".right-left-button .btn").click(function(){
+			
+			var o = $(this).find(".fa-chevron-right").is(":hidden");
+			if(o){
+				$(".cent-left").hide();
+				$(".cent-right").css("left","0");
+			}else{
+				$(".cent-left").show();
+				$(".cent-right").css("left","280px");
+			}
+			initgrid();
+			$(this).find(".fa-chevron-right").toggle();
+			$(this).find(".fa-chevron-left").toggle();
+		})
+		
+		$("#qbqr").click(function(){
+			//var datas=grid.getcheckrow();
+			//var ids=[];
+			//if(datas.length==1){
+				//$(datas).each(function(i){
+				//	ids[i]=this.id;
+				//});
+				//ydfn(ids.join(","));
+			//}else{
+			//	newbootbox.alertInfo("请选择要操作的数据！");
+			//}
+			
+			
+			var menuid = $(".menu li.active").attr("id");
+			var name = $(".menu li.active font").eq(0).text();
+			
+			newbootbox.confirm({
+			    title: "提示",
+			    message: "["+name+"]是否全部已读操作？",
+			    callback1:function(){
+			    	$ajax({
+			    		url:url5,
+			    		data:{menuid:menuid},
+			    		success:function(data){
+			    			if(data.result=="success"){
+			    				//newbootbox.alertInfo("确认已读!");
+			    				pageModule.initmenu(menuid);
+			    			}
+			    		}
+			    	});
+			    	
+			    }
+			});
+			
+			
+		})
 		
 	}
 	
@@ -324,8 +393,10 @@ var pageModule = function(){
 		//加载页面处理程序
 		initControl:function(){
 			initmenu();
-			
 			initother();
+		},
+		initmenu:function(menuid){
+			initmenu(menuid);
 		}
 	}
 	
@@ -338,7 +409,8 @@ var ydfn = function(ids){
 		success:function(data){
 			if(data.result=="success"){
 				newbootbox.alertInfo("确认已读!");
-				grid.refresh();
+				var menuid = $(".menu li.active").attr("id");
+				pageModule.initmenu(menuid);
 			}
 		}
 	});

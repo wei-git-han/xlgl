@@ -28,6 +28,15 @@ function createtable(obj){
 	//行号列宽度
 	var numberwidth = 70;
 	//此处是对默认属性值的设置
+	var c1 = {};
+	$(window).resize(function(){
+		clearTimeout(c1);
+		c1 = setTimeout(function(){
+			create();
+		},500)
+	});
+	
+	
 	var getvalue = function(value,str){
 		if(value==null||typeof(value)=="undefined"){ 
 

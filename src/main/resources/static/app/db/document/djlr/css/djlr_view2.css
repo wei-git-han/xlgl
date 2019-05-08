@@ -14,7 +14,7 @@ body{background: #3F5C9A;}
 .wjlb_title{color:#fff;}
 .line4 li > a.fjactive {color: #fff;}
 .line4 li > a {color: #fff;}
-.timelinesview {background: rgba(255,255,255,0.1);}
+.timelinesview {background: transparent;}
 .timeline-user>span{color:#fff!important;}
 .timelinesview > .timelinesheys .timeline-content {border:none;background:#6F7B97;border-left: 5px solid #00CCCC;}
 .listUser{color:#fff;}
@@ -32,7 +32,7 @@ body{background: #3F5C9A;}
 .zbDate, .xycontent, .cbDate, .bjDate {color: #fff;margin-left: 20px;}
 
 .wh100{width:100%;height:100%;position:relative;}
-.newpanel-cont{padding-top:20px;background-color:rgba(255,255,255,0.2);margin-bottom:10px;}
+.newpanel-cont{padding-top:20px;background-color:rgba(255,255,255,0.2);margin-bottom:10px;border-radius:10px!important;}
 .newpanel-inner{width:100%;position:relative;}
 .newpanel-left{;width:50px;height:100%;position:absolute;top:0;left:0;bottom:0;}
 .newpanel-left .fa-circle-o{position:absolute;top:10px;left:15px;color:#6699FF;font-size:20px;}
@@ -41,7 +41,7 @@ body{background: #3F5C9A;}
 .nrt-date{font-size:14px;color:#fff;line-height:30px;}
 .newpanel-right-top{}
 .newpanel-right-cent{}
-.nrt-cont{border-left:6px solid #00CCCC;padding:10px;margin-bottom:10px;background-color:rgba(255,255,255,0.3);}
+.nrt-cont{border-left:6px solid #00CCCC;padding:10px;margin-bottom:10px;background-color:rgba(255,255,255,0.2);}
 .nrt-cont-top{min-height:30px;}
 .nrt-cont-top-left{float:left;margin-right:10px;}
 .nrt-cont-top-title{font-size:16px;color:#fff;font-weight:bold;cursor:pointer;}
@@ -50,8 +50,8 @@ body{background: #3F5C9A;}
 .nrt-cont-top-title2{padding-top:2px;font-size:16px;color:#eee;}
 .nrt-cont-top-right{float:right;margin-left:10px;}
 .nrt-cont-top-btn{font-size:14px;color:#00CCFF;}
-.nrt-cont-cent{padding-left:50px;padding-left:0;padding-right:10px;font-size:16px;color:#fff;font-weight:bold;}
-.nrt-cont-cent>.wh100{max-height:100px;min-height:30px;}
+.nrt-cont-cent{height:90px;padding-left:50px;padding-left:0;padding-right:10px;font-size:16px;color:#fff;font-weight:bold;}
+.nrt-cont-cent>.wh100{height:100%;min-height:30px;}
 .nrt-cont-bottom{}
 .nrt-cont-file{}
 .nrt-cont-file .remove{float:right;width:50px;display:none;}
