@@ -21,7 +21,7 @@ var pageModule = function(){
 	var initother = function(){
 		//关闭
 		$("#close").click(function(){
-			newbootbox.newdialogClose("psDialog");
+			newbootbox.newdialogClose("dblsqkDialog");
 		})
 	}
 	return{

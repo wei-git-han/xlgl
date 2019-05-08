@@ -66,16 +66,16 @@ var pageModule = function(){
                 	 if(rowdata.leaderName && rowdata.leaderContent && rowdata.leaderTime){
                 		 szpsCont=rowdata.leaderName+":"+rowdata.leaderContent+" "+rowdata.leaderTime.substring(0,16)
                 	 }
-                	 return '<div class="zspsnr" title="'+szpsCont+'">'+szpsCont+'</div>';
+                	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.id+'\')"  title="'+szpsCont+'">'+szpsCont+'</div>';
                 }},
                 {display:"督办落实情况",name:"",width:"20%",align:"left",paixu:false,render:function(rowdata){
                 	var dbCont="";
                 	if(rowdata.latestReply){
                 		dbCont=rowdata.latestReply;
                 	}	 
-                	return '<div class="dblsqk" title="'+dbCont+'">'+dbCont+'</div>';
+                	return '<div class="dblsqk" onclick="dblsqkAlert(\''+rowdata.id+'\')"  title="'+dbCont+'">'+dbCont+'</div>';
                 }},
-                {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,render:function(rowdata){
+                {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,title:true,render:function(rowdata){
                	 	return rowdata.underDepts||'';
                 }},
                 {display:"办件分类",name:"docTypeName",width:"5%",align:"center",paixu:false,render:function(rowdata){
@@ -235,4 +235,30 @@ function refreshgrid(){
 	var search = $("#searchVal").val();
 	grid.setparams({search:search,docStatus:$("input[name='documentStatus']:checked").val()});
 	grid.loadtable();
+}
+
+//批示指示内容弹出框
+function pszsnrAlert(id){
+	newbootbox.newdialog({
+		id:"psDialog",
+		width:800,
+		height:600,
+		header:true,
+		title:"批示详情",
+		classed:"cjDialog",
+		url:"/app/db/document/view/html/psDialog.html?fileId="+id
+	})
+}
+
+//督办落实情况弹出框
+function dblsqkAlert(id){
+	newbootbox.newdialog({
+		id:"dblsqkDialog",
+		width:800,
+		height:600,
+		header:true,
+		title:"督办详情",
+		classed:"cjDialog",
+		url:"/app/db/document/view/html/dblsqk.html?fileId="+id
+	})
 }

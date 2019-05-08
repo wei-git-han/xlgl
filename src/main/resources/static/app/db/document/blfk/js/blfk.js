@@ -99,7 +99,7 @@ var pageModule = function(){
                 	 if(rowdata.latestReply){
                 		dbCont=rowdata.latestReply;
                 	 }
-                	 return '<div class="dblsqk" title="'+dbCont+'">'+duban+dbCont+'</div>';
+                	 return '<div class="dblsqk" onclick="dblsqkAlert(\''+rowdata.id+'\')" title="'+dbCont+'">'+duban+dbCont+'</div>';
                  }},
                  {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,title:true,render:function(rowdata){
                 	 return rowdata.underDepts||'';
@@ -189,7 +189,7 @@ var pageModule = function(){
                 	 if(rowdata.latestReply){
                 		dbCont=rowdata.latestReply;
                 	 }	 
-                	 return '<div class="dblsqk" title="'+dbCont+'">'+duban+dbCont+'</div>';
+                	 return '<div class="dblsqk"  onclick="dblsqkAlert(\''+rowdata.id+'\')" title="'+dbCont+'">'+duban+dbCont+'</div>';
                  }},
                  {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,title:true,render:function(rowdata){
                 	 return rowdata.underDepts||'';
@@ -464,5 +464,18 @@ function pszsnrAlert(id){
 		title:"批示详情",
 		classed:"cjDialog",
 		url:"/app/db/document/view/html/psDialog.html?fileId="+id
+	})
+}
+
+//督办落实情况弹出框
+function dblsqkAlert(id){
+	newbootbox.newdialog({
+		id:"dblsqkDialog",
+		width:800,
+		height:600,
+		header:true,
+		title:"督办详情",
+		classed:"cjDialog",
+		url:"/app/db/document/view/html/dblsqk.html?fileId="+id
 	})
 }

@@ -1,7 +1,7 @@
 var psList = {"url":rootPath +"/documentszps/queryList","dataType":"text"}; //批示列表
 var fileId=getUrlParam("fileId")||""; //主文件id
 var pageModule = function(){
-	var initps = function(){
+	var initls = function(){
 		$ajax({
 			url:psList,
 			data:{infoId:fileId},
@@ -27,7 +27,7 @@ var pageModule = function(){
 	return{
 		//加载页面处理程序
 		initControl:function(){
-			initps();
+			initls();
 			initother();
 		}
 	};

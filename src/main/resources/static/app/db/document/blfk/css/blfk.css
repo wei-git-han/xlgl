@@ -154,3 +154,7 @@ body {
     border-radius:4px!important;
 }
 
+.table-advance tbody tr {
+	height:70px;
+	overflow:hidden;
+} 
