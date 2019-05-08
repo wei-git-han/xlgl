@@ -23,7 +23,7 @@
 	</select>
 	
 	<select id="queryDicByType" resultType="com.css.app.db.config.entity.DocumentDic">
-		select * from DB_DOCUMENT_DIC where DIC_TYPE = #{docType}
+		select * from DB_DOCUMENT_DIC where DIC_TYPE = #{docType} order by VALUE
 	</select>
 	
  	<select id="queryTotal" resultType="int">
