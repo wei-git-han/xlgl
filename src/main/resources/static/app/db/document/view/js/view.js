@@ -22,7 +22,9 @@ var latestCuiBanUrl = {"url":"/app/db/documentinfo/getLatestCuiBan","dataType":"
 var fileId=getUrlParam("fileId")||""; //主文件id
 var subId=getUrlParam("subId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
-var isCbr = 0;
+var isCbr = 0;//承办人标识
+var isSave = 0;//保存成功提示标识
+
 var pageModule = function(){
 	//判断是否催办
 	var ifcuibanfn = function(){
@@ -61,7 +63,6 @@ var pageModule = function(){
 							$(".blfk_bottom").show(); //意见外大框
 							$(".newbottom").show(); //所有按钮的容器
 							$(".blfk_top").css({"bottom":"40%","height":"58%"});   //意见框上方元素样式控制
-							$("#save").show();
 							$("#clear").show();
 							//$("#showfj").show();
 							if(data.roleType=='3'){//是局长显示审批完成否则显示提交
@@ -72,6 +73,7 @@ var pageModule = function(){
 							if(!data.isUndertaker){//当前处理人是承办人则不显示返回修改
 								$("#fhxg").show();
 							}else{
+								$("#save").show();
 								$("#ifaddfj").show();
 								$("#showfj").show();
 								$("#bjandls").show(); //办结和常态落实合并为一个
@@ -216,7 +218,7 @@ var pageModule = function(){
 					edit = o.edit;
 					if(edit==true){
 						edit =  '<div class="nrt-cont-top-btn">'+
-								'	<a class="" onclick="editfn(\''+id+'\',\''+content+'\',this)" >编辑</a>'+
+								'	<a class="isEditbtn" data="'+id+'" onclick="editfn(\''+id+'\',\''+content+'\',this)" >编辑</a>'+
 								'</div>';
 					}else{
 						edit=''
@@ -485,10 +487,10 @@ var pageModule = function(){
 			if(isCbr && isCbr == 1){
 				cbrFlag="1";
 			}
-			if(isCbr != 1){
-				if($("#replyContent").val() == "" || $("#replyContent").val() == null || $("#replyContent").val() == "undefined"){
-					newbootbox.alert("意见不能为空！");
-					return;
+			if(isCbr == 1){
+				if($("#replyContent").val() !="" && !!$("#replyContent").val()){
+					isSave=1;
+					$("#save").click();
 				}
 			}
 			newbootbox.newdialog({
@@ -520,10 +522,6 @@ var pageModule = function(){
 		//返回修改
 		$("#fhxg").click(function(){
 			var replyContent = $("#replyContent").val();
-			if(replyContent == "" || replyContent== null || replyContent == "undefined"){
-				newbootbox.alert("意见不能为空！");
-				return;
-			}
 			$ajax({
 				url:returnUrl,
 				data:{infoId:fileId,subId:subId,replyContent:replyContent},
@@ -541,10 +539,6 @@ var pageModule = function(){
 		//审批通过
 		$("#sptg").click(function(){
 			var replyContent = $("#replyContent").val();
-			if(replyContent == "" || replyContent== null || replyContent == "undefined"){
-				newbootbox.alert("意见不能为空！");
-				return;
-			}
 			$ajax({
 				url:finishUrl,
 				data:{infoId:fileId,subId:subId,replyContent:replyContent},
@@ -626,15 +620,23 @@ var pageModule = function(){
 		//表单
 		$("#commentForm").validate({
 		    submitHandler: function() {
+		    	if(isSave && isSave==1){
+		    		$("#editTeamId").val($(".isEditbtn").attr("data"));
+				}
 		    	var ajax_option = {
 					url : saveUrl.url,// 默认是form action
 					data:{subId:subId,infoId:fileId,teamId:$("#editTeamId").val(),replyContent:$("#replyContent").val()},
 					success : function(data) {
 						if (data.result == "success") {
-							newbootbox.alert("保存成功！").done(function(){
+							if(isSave && isSave!=1){
+								newbootbox.alert("保存成功！").done(function(){
+									$("#replyContent").val("");
+									initblfkList();
+								}); 
+							}else{
 								$("#replyContent").val("");
 								initblfkList();
-							}); 
+							}
 						} else {
 							newbootbox.alert("提交失败，请稍后重试！"); 
 						}
@@ -750,7 +752,7 @@ function editfn(id,content,el){
 			header:true,
 			title:"编辑",
 			classed:"cjDialog",
-			url:"/app/db/document/view/html/editDialog.html?fileId="+id+"&replyContent="+content+"&subId="+subId
+			url:"/app/db/document/view/html/editDialog.html?fileId="+fileId+"&replyContent="+content+"&subId="+subId+"&teamId="+id
 		})
 	}
 }
