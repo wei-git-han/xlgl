@@ -244,7 +244,7 @@ public class ReplyExplainController {
 	 * @param teamId
 	 */
 	@ResponseBody
-	@RequestMapping("/personReply")
+	@RequestMapping("/getReplyByTeamId")
 	public void getReplyByTeamId(String subId,String teamId) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("subId", subId);
