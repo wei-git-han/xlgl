@@ -59,5 +59,11 @@ public class DocumentCbjlServiceImpl implements DocumentCbjlService {
 	public DocumentCbjl queryLatestCuiBan(String infoId) {
 		return documentCbjlDao.queryLatestCuiBan(infoId);
 	}
+
+	@Override
+	public void deleteByInfoId(String infoId) {
+		documentCbjlDao.deleteByInfoId(infoId);
+		
+	}
 	
 }

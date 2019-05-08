@@ -18,4 +18,6 @@ public interface DocumentCbjlDao extends BaseDao<DocumentCbjl> {
 	
 	DocumentCbjl queryLatestCuiBan(String infoId);
 	
+	void deleteByInfoId(String infoId);
+	
 }

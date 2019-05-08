@@ -29,4 +29,6 @@ public interface ApprovalOpinionService {
 	void saveOpinion(String subId,String replyContent,String trackingType);
 	
 	void updateShowFlag(String subId);
+	
+	void deleteBySubId(String subId);
 }

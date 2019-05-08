@@ -137,6 +137,10 @@
 		delete from DB_REPLY_EXPLAIN where ID = #{value}
 	</delete>
 	
+	<delete id="deleteBySubId">
+		delete from DB_REPLY_EXPLAIN where SUB_ID = #{subId}
+	</delete>
+	
 	<delete id="deleteBatch">
 		delete from DB_REPLY_EXPLAIN where ID in 
 		<foreach item="id" collection="array" open="(" separator="," close=")">

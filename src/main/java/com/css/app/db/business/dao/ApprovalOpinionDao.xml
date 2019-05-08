@@ -12,9 +12,6 @@
 		<if test="userId != null and userId != ''">
 			and USER_ID= #{userId}
 		</if>
-		<if test="noUser != null and noUser != ''">
-			and USER_ID != #{noUser}
-		</if>
 		<if test="subId != null and subId != ''">
 			and SUB_ID= #{subId}
 		</if>
@@ -80,6 +77,10 @@
 	
 	<delete id="delete">
 		delete from DB_APPROVAL_OPINION where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBySubId">
+		delete from DB_APPROVAL_OPINION where SUB_ID =#{subId}	
 	</delete>
 	
 	<delete id="deleteBatch">

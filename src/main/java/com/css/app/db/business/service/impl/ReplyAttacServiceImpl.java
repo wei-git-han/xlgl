@@ -65,5 +65,11 @@ public class ReplyAttacServiceImpl implements ReplyAttacService {
 			replyAttacDao.save(attach);
 		}
 	}
+
+	@Override
+	public void deleteBySubId(String subId) {
+		replyAttacDao.deleteBySubId(subId);
+		
+	}
 	
 }

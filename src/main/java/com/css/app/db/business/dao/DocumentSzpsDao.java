@@ -16,4 +16,6 @@ import com.css.base.dao.BaseDao;
 @Mapper
 public interface DocumentSzpsDao extends BaseDao<DocumentSzps> {
 	
+	void deleteByInfoId(String infoId);
+	
 }

@@ -27,4 +27,6 @@ public interface DocumentFileService {
 	void deleteBatch(String[] ids);
 	//获取可编最小号
 	int queryMinSort(String docInfoId);
+	
+	void deleteByInfoId(String infoId);
 }

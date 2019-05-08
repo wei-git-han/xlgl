@@ -15,5 +15,6 @@ import com.css.base.dao.BaseDao;
  */
 @Mapper
 public interface ReplyAttacDao extends BaseDao<ReplyAttac> {
+	void deleteBySubId(String subId);
 	
 }

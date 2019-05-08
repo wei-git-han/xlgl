@@ -57,5 +57,11 @@ public class DocumentZbjlServiceImpl implements DocumentZbjlService {
 	public void deleteBatch(String[] ids){
 		documentZbjlDao.deleteBatch(ids);
 	}
+
+	@Override
+	public void deleteByInfoId(String infoId) {
+		documentZbjlDao.deleteByInfoId(infoId);
+		
+	}
 	
 }

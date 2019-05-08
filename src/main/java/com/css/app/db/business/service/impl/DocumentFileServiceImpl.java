@@ -51,5 +51,11 @@ public class DocumentFileServiceImpl implements DocumentFileService {
 	public int queryMinSort(String docInfoId) {
 		return documentFileDao.queryMinSort(docInfoId);
 	}
+
+	@Override
+	public void deleteByInfoId(String infoId) {
+		documentFileDao.deleteByInfoId(infoId);
+		
+	}
 	
 }

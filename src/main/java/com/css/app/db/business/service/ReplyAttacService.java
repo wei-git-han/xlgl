@@ -29,4 +29,6 @@ public interface ReplyAttacService {
 	void deleteBatch(String[] ids);
 	
 	void saveAttacs(MultipartFile[] files,String subId,String teamId);
+	
+	void deleteBySubId(String subId);
 }

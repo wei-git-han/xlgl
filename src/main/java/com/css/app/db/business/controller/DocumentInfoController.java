@@ -91,7 +91,7 @@ public class DocumentInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/uploadFile")
-	public void savePDF(String idpdf,@RequestParam(value = "pdf", required = false) MultipartFile pdf){
+	public void savePDF(String idpdf,@RequestParam(required = false) MultipartFile pdf){
 			String formatDownPath = "";//版式文件下载路径
 			String streamId = null;//流式文件id
 			String formatId  = null;//版式文件id
@@ -469,10 +469,15 @@ public class DocumentInfoController {
 		Response.json(json);
 	}
 	
+	/**
+	 * 撤回操作
+	 * @param id
+	 */
 	@ResponseBody
 	@RequestMapping("/cheHuiOperation")
 	public void cheHuiOperation(String id){
-		
+		documentInfoService.deleteByCheHui(id);
+		Response.json("result", "success");
 	}
 	
 	/**

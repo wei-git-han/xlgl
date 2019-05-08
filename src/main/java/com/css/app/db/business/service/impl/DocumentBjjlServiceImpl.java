@@ -64,5 +64,11 @@ public class DocumentBjjlServiceImpl implements DocumentBjjlService {
 	public DocumentBjjl queryLatestBjjl(String infoId) {
 		return documentBjjlDao.queryLatestBjjl(infoId);
 	}
+
+	@Override
+	public void deleteByInfoId(String infoId) {
+		documentBjjlDao.deleteByInfoId(infoId);
+		
+	}
 	
 }

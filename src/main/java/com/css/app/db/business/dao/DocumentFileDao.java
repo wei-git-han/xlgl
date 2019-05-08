@@ -18,4 +18,6 @@ public interface DocumentFileDao extends BaseDao<DocumentFile> {
 	
 	int queryMinSort(String docInfoId);
 	
+	void deleteByInfoId(String infoId);
+	
 }

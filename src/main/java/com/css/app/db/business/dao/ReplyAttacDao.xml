@@ -61,7 +61,9 @@
 	<delete id="delete">
 		delete from DB_REPLY_ATTAC where ID = #{value}
 	</delete>
-	
+	<delete id="deleteBySubId">
+		delete from DB_REPLY_ATTAC where KEY_ID =#{subId}	
+	</delete>
 	<delete id="deleteBatch">
 		delete from DB_REPLY_ATTAC where ID in 
 		<foreach item="id" collection="array" open="(" separator="," close=")">

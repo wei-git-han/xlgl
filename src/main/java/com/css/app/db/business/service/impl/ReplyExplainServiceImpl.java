@@ -93,5 +93,11 @@ public class ReplyExplainServiceImpl implements ReplyExplainService {
 	public List<ReplyExplain> queryAllLatestOneReply(String infoId) {
 		return replyExplainDao.queryAllLatestOneReply(infoId);
 	}
+
+	@Override
+	public void deleteBySubId(String subId) {
+		replyExplainDao.deleteBySubId(subId);
+		
+	}
 	
 }
