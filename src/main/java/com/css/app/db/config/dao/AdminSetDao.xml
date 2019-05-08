@@ -12,6 +12,9 @@
 		<if test="userId != null and userId != null">
 			and USER_ID = #{userId}
 		</if>
+		<if test="adminType != null and adminType != '' ">
+			and ADMIN_TYPE = #{adminType}
+		</if>
 		order by ADMIN_TYPE
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}

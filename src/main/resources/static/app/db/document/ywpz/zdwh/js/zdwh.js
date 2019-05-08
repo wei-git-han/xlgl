@@ -28,7 +28,7 @@ var pageModule = function() {
 			height: "100%",
 			checkbox: true,
 			rownumberyon: true,
-			//paramobj:{id:id},
+//			paramobj:{dicType:'all'},
 			overflowx: false,
             pageyno:false,
             loadafter:function(data){
@@ -50,7 +50,7 @@ var pageModule = function() {
 	function getValue(rowdata) {
 		var content = "";
 		$.each(rowdata.children, function(i, item) {
-			content += '<span style="cursor:pointer;" class="check"><input type="checkbox"  value=' + rowdata.type + '&' + item.id + '>&nbsp;<span>' + item.dictionaryValue + '</span></span>&nbsp;&nbsp;&nbsp;&nbsp;';
+			content += '<span style="cursor:pointer;" class="check"><input type="checkbox"  valueNum =' + item.value + '  value=' + item.dicType + '&' + item.id + '>&nbsp;<span>' + item.text + '</span></span>&nbsp;&nbsp;&nbsp;&nbsp;';
 		});
 		return content;
 	}
@@ -65,7 +65,7 @@ var pageModule = function() {
 			} else {
 				for(var i = 0; i < datas.length; i++) {
 					var dataname = datas[i].name;
-					var datatype = datas[i].type;
+					var datatype = datas[i].dicType;
 					var datachildren = datas[i].children;
 					var childrenValue=[];
 					for(var y=0;y<datachildren.length;y++){
@@ -85,7 +85,7 @@ var pageModule = function() {
 				var r = $("#gridcont_content input[type=checkbox]:checked");
 				var rs = [];
 				$.each(r, function(i) {
-					rs.push(r[i].defaultValue);
+					rs.push(r[i].defaultValue.split("&")[1]);
 				});
 				if(r.length < 1) {
 					newbootbox.alertInfo("请选中字典值再进行删除操作！");
@@ -99,7 +99,7 @@ var pageModule = function() {
 								type: "GET",
 								data: {"ids": rs.toString()},
 								success: function(data) {
-									if(data.result == "success") {
+									if(data.msg == "success") {
 										newbootbox.alertInfo('删除成功！').done(function(){
 											grid.refresh();
 										});
@@ -139,7 +139,9 @@ var editfn = function(){
 			selectValue.push($(selectcheckboxSpan[i]).text());
 		}
 		var selectcheckboxid = selectcheckbox.split("&")[1];
-		window.location.href="zdwh_edit.html?id=" + selectcheckboxid+"&value="+encodeURI(encodeURI(r.next().text()));
+		var type = selectcheckbox.split("&")[0];
+		var valueNum = r.attr('valueNum');
+		window.location.href="zdwh_edit.html?id=" + selectcheckboxid+"&value="+encodeURI(encodeURI(r.next().text()))+"&type="+type+"&valueNum="+valueNum;
 	} else {
 		newbootbox.alertInfo("请选择一个字典项进行编辑！");
 	}

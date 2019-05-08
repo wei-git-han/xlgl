@@ -8,7 +8,15 @@
 	</select>
 
 	<select id="queryList" resultType="com.css.app.db.config.entity.DocumentDic">
-		select * from DB_DOCUMENT_DIC 
+		select * from DB_DOCUMENT_DIC where 1=1
+		<if test="value != null"> AND VALUE = #{value} </if>
+		<if test="text != null"> AND TEXT = #{text} </if>
+		<if test="dicType != null"> AND DIC_TYPE = #{dicType} </if>
+		<if test="sort != null"> AND SORT = #{sort} </if>
+		<if test="creatorId != null"> AND CREATOR_ID = #{creatorId} </if>
+		<if test="creator != null"> AND CREATOR = #{creator} </if>
+		<if test="createdTime != null"> AND CREATED_TIME = #{createdTime}</if>
+		<if test="gridFlag != null"> AND GRID_FLAG = #{gridFlag}</if>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
