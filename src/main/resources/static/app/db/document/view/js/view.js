@@ -407,7 +407,7 @@ var pageModule = function(){
 						$("#zbrecord").append(
 							'<div class="record">'+
 				            '	<label class="zbUser">转办人:</label>'+
-				            '	<div><span>'+item.userName+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
+				            '	<div><span>'+item.orgName+'&nbsp;&nbsp;'+item.userName+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
 				            '	<label class="cbdw">承办单位/人:</label>'+
 				            '	<div>'+item.receiverNames+'</div>'+
 				            '</div>'
