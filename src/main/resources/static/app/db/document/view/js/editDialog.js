@@ -1,6 +1,7 @@
-var sureUrl = {"url":"/app/db/replyexplain/save","dataType":"text"}; //保存
+var sureUrl = {"url":"/app/db/replyexplain/edit","dataType":"text"}; //保存
 var subId=getUrlParam("subId")||""; //子分支主id
 var fileId=getUrlParam("fileId")||""; 
+var teamId=getUrlParam("teamId")||""; 
 var replyContent=getUrlParam2("replyContent")||""; //文件来源
 
 var pageModule = function(){
@@ -10,7 +11,7 @@ var pageModule = function(){
 		$("#sure").click(function(){
 			$ajax({
 				url:sureUrl,
-				data:{subId:subId,teamId:fileId,replyContent:replyContent},
+				data:{subId:subId,infoId:fileId,teamId:teamId,replyContent:$("#replyContent").val()},
 				success:function(data){
 					newbootbox.newdialogClose("editDialog");
 					if(data.result=="success"){
