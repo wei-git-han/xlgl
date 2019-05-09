@@ -312,9 +312,17 @@ public class DocumentSzInfoController {
 			}else {				
 				jo.put("other","1");
 			}
+			
 			//jo.put("other","1");
 			String CuibanFlag=documentInfo.getCuibanFlag();
 			jo.put("CuibanFlag",CuibanFlag );//是否催办    1显示      0不显示
+			
+			if(documentInfo.getStatus()>1) {
+				jo.put("other","1" );//是否催办    1显示      0不显示
+				jo.put("CuibanFlag","0" );//是否催办    1显示      0不显示
+			}
+			
+			
 			//单位意见
 			danweimap = new HashMap<>();
 			danweimap.put("infoId",documentInfo.getId());
