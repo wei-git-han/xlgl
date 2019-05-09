@@ -142,7 +142,7 @@ public class DocumentDic implements Serializable {
 		return tempValue;
 	}
 	public void setTempValue(int tempValue) {
-		this.tempValue = this.tempValue;
+		this.tempValue = tempValue;
 	}
 	
 }
