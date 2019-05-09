@@ -61,14 +61,15 @@ var pageModule = function(){
 							$("#bjandls").show(); //办结和常态落实合并为一个
 						}
 						if(data.isCheckUser){//显示办结、常态落实,输入框
-							//$(".blfkchangeH").attr("style","position:absolute;top:34px;left:0;bottom:0;width:100%;right:0;");
 							$(".blfk_bottom").show(); //意见外大框
 							$(".newbottom").show(); //所有按钮的容器
 							$(".blfk_top").css({"bottom":"40%","height":"58%"});   //意见框上方元素样式控制
 							$("#clear").show();
-							//$("#showfj").show();
 							if(data.roleType=='3'){//是局长显示审批完成否则显示提交
 								$("#sptg").show();
+								if(!data.isUndertaker){
+									$("#changewrite").show();
+								}
 							}else{
 								$("#tijiao").show();
 							}
@@ -357,7 +358,17 @@ var pageModule = function(){
 					'		</div>'+
 					'		<div class="nrt-cont-cent">'+
 					'			<div class="wh100 scroller">'+
-					'				<font class="nrt-cont-cent-font" >'+content+'</font>'+
+					'				<font class="nrt-cont-cent-font" >';
+										if(o.yjType == "1"){
+											li +='<div class="" title="" style="width:100%;">'+
+												 '	<img src="'+content+'" style="max-height: 100px;"/>'+
+												 '</div>';
+										}else{
+											li +='<div class="" title="">'+
+												 '	<span class="message">'+content+'</span>'+
+												 '</div>';
+										}
+					li +=   '				</font>'+
 					'			</div>'+
 					'		</div>'+
 					'	</div>'+
@@ -479,7 +490,11 @@ var pageModule = function(){
 		
 		//办理反馈清屏
 		$("#clear").click(function(){
-			$("#replyContent").val("");
+			if($("span.css3").attr("data") =="1"){
+            	clearsign();
+        	}else{
+            	$("#replyContent").val("");
+        	}
 		});
 		
 		//送审
@@ -521,7 +536,7 @@ var pageModule = function(){
 		
 		
 		//返回修改
-		$("#fhxg").click(function(){
+		/*$("#fhxg").click(function(){
 			var replyContent = $("#replyContent").val();
 			$ajax({
 				url:returnUrl,
@@ -535,9 +550,100 @@ var pageModule = function(){
 					}
 				}
 			});
+		});*/
+		
+		
+		//返回修改
+		$("#fhxg").click(function(){
+			var replyContent = $("#replyContent").val();
+			var imgFileId="";
+			if($("span.css3").attr("data") =="1"){
+				if(checkIsModified()){
+					$.ajax({
+						url : "/app/base/user/getToken",
+						type : "GET",
+						async : false,
+						success : function(data) {//插件读取文件
+							end();	//签批确定
+							var surl = location.protocol+ "//"+ location.host+ "/servlet/suwell/savePictureYj?access_token="+data.result;
+						    document.getElementById("signtool").SetUploadURL(surl);
+							var result = document.getElementById("signtool").UploadImageStream();
+							imgFileId = result.replace(/^\"|\"$/g,'');
+						}
+					})
+				}else{
+					newbootbox.alert('保存失败！请填写您的意见！')
+				}
+			}
+			var saveFlag="0"; //文字
+			if(replyContent && !!replyContent){
+				saveFlag="0";
+			}else{
+				replyContent = imgFileId;
+				saveFlag="1"; //图片
+			}
+			$ajax({
+				url:returnUrl,
+				data:{infoId:fileId,subId:subId,replyContent:replyContent,saveFlag:saveFlag},
+				type: "GET",
+				success:function(data){
+					if(data.result == "success"){
+						newbootbox.alert("已返回承办人！").done(function(){
+							window.location.reload();
+						});
+					}
+				}
+			});
 		});
 		
+		
+		
 		//审批通过
+		$("#sptg").click(function(){
+			var replyContent = $("#replyContent").val();
+			var imgFileId="";
+			if($("span.css3").attr("data") =="1"){
+				if(checkIsModified()){
+					$.ajax({
+						url : "/app/base/user/getToken",
+						type : "GET",
+						async : false,
+						success : function(data) {//插件读取文件
+							end();	//签批确定
+							var surl = location.protocol+ "//"+ location.host+ "/servlet/suwell/savePictureYj?access_token="+data.result;
+						    document.getElementById("signtool").SetUploadURL(surl);
+							var result = document.getElementById("signtool").UploadImageStream();
+							imgFileId = result.replace(/^\"|\"$/g,'');
+						}
+					})
+				}else{
+					newbootbox.alert('保存失败！请填写您的意见！')
+				}
+			}
+			var saveFlag="0"; //文字
+			if(replyContent && !!replyContent){
+				saveFlag="0";
+			}else{
+				replyContent = imgFileId;
+				saveFlag="1"; //图片
+			}
+			
+			$ajax({
+				url:finishUrl,
+				data:{infoId:fileId,subId:subId,replyContent:replyContent,saveFlag:saveFlag},
+				type: "GET",
+				success:function(data){
+					if(data.result == "success"){
+						newbootbox.alert("审批完成！").done(function(){
+							window.location.reload();
+						});
+					}
+				}
+			});
+		});
+		
+		
+		/*//审批通过
 		$("#sptg").click(function(){
 			var replyContent = $("#replyContent").val();
 			$ajax({
@@ -552,7 +658,7 @@ var pageModule = function(){
 					}
 				}
 			});
-		});
+		});*/
 		
 		//转办
 		$("#zhuanban").click(function(){
@@ -684,6 +790,95 @@ var pageModule = function(){
 		$("#closeviewcont").click(function(){
 			$("#viewcont").modal("hide");
 		});
+		
+		
+		//切换签批方式
+		$("#changewrite").unbind("click"); //手写
+        $("#changewrite").click(function(){ //手写
+        	$(this).hide();
+        	$("#changejianpan").show();
+	        $(".css3").attr("data","1");
+        	var penNum = $("#penNum").text();
+    		if($.trim(penNum) == "0.5"){
+    			penNum="signpen_05mm";
+    		}else if($.trim(penNum) == "1"){
+    			penNum="signpen_1mm";
+    		}else if($.trim(penNum) == "2"){
+    			penNum="softpen_2mm";
+    		}
+    		else if($.trim(penNum) == "3"){
+    			penNum="softpen_3mm";
+    		}else{
+    			penNum="signpen_05mm";
+    		}	
+    		
+    		$("#replyContent").hide();
+    		$("#write").show();
+    		$(".setpen").show();
+    		/*try{*/
+    			tablet();
+            	document.getElementById("signtool").SetPenColor("#000");//设置笔的颜色
+            	/*$ajax({
+    				url:myHabitUrl,
+    				data:{tempIndex:"2",penWidth:penNum},
+    				type: "GET",
+    				async:false,
+    				success:function(data){
+    					initmemory();
+    				}
+    			});*/
+    		/*}catch(e){
+    			newbootbox.alert("请安装插件!");
+    		}*/
+        });
+        
+        $("#changejianpan").unbind("click");
+        $("#changejianpan").click(function(){ //键盘
+        	$(this).hide();
+        	$("#changewrite").show();
+    		$("#write").hide();
+    		$("#replyContent").show();
+    		$("#replyContent").val("");
+    		$(".setpen").hide();
+    		$(".css3").attr("data","0");
+    		/*$ajax({
+				url:myHabitUrl,
+				data:{tempIndex:"1",penWidth:''},
+				type: "GET",
+				async:false,
+				success:function(data){
+					initmemory();
+				}
+			});*/
+        });
+        
+        //设置笔粗
+    	$("body").delegate(".setpen","click",function(){
+			$("#setpenchoose").toggle();
+		});
+		$(document).click(function(e){
+			if($(e.target).hasClass("setpen")){
+				return;
+			}else if($(e.target).parents().hasClass("setpen")){
+				return;
+			}
+			$("#setpenchoose").hide();
+		});
+
+        
+        $("#setpenchoose li").click(function(){
+        	$("#penNum").text($(this).find("font").text());
+        	var value = $(this).attr("data");
+            document.getElementById("signtool").SetPenWidth(value);
+            var penwidth = document.getElementById("signtool").GetPenWidth();
+            $ajax({
+				url:myHabitUrl,
+				data:{penWidth:value,tempIndex:"2"},
+				type: "GET",
+				success:function(data){
+				}
+			});
+        });
 	}
 		
 	return{

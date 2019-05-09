@@ -57,7 +57,7 @@ public class ApprovalOpinionServiceImpl implements ApprovalOpinionService {
 	}
 
 	@Override
-	public void saveOpinion(String subId, String replyContent,String trackingType) {
+	public void saveOpinion(String subId, String replyContent,String trackingType,String saveFlag) {
 		//保存审批意见
 		String replyTeamId=null;
 		Map<String, Object> replyMap =new HashMap<>();
@@ -76,6 +76,7 @@ public class ApprovalOpinionServiceImpl implements ApprovalOpinionService {
 		opinion.setUserId(CurrentUser.getUserId());
 		opinion.setUserName(CurrentUser.getUsername());
 		opinion.setCreatedTime(new Date());
+		opinion.setYjType(saveFlag);
 		approvalOpinionDao.save(opinion);
 	}
 

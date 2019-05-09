@@ -33,6 +33,7 @@ import com.css.app.db.business.service.DocumentCbjlService;
 import com.css.app.db.business.service.DocumentFileService;
 import com.css.app.db.business.service.DocumentInfoService;
 import com.css.app.db.business.service.DocumentReadService;
+import com.css.app.db.business.service.DocumentSzpsService;
 import com.css.app.db.business.service.SubDocInfoService;
 import com.css.app.db.business.service.SubDocTrackingService;
 import com.css.app.db.config.entity.AdminSet;
@@ -82,6 +83,8 @@ public class DocumentInfoController {
 	private SubDocInfoService subDocInfoService;
 	@Autowired
 	private DocumentReadService documentReadService;
+	@Autowired
+	private DocumentSzpsService documentSzpsService;
 	
 	
 	/**
@@ -501,6 +504,8 @@ public class DocumentInfoController {
 	@ResponseBody
 	@RequestMapping("/delete")
 	public void delete(String id){
+		documentSzpsService.deleteByInfoId(id);
+		documentFileService.deleteByInfoId(id);
 		documentInfoService.delete(id);
 		Response.json("result", "success");
 	}

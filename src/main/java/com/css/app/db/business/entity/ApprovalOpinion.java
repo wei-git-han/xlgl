@@ -33,6 +33,8 @@ public class ApprovalOpinion implements Serializable {
 	private String trackingType;
 	//办理反馈的teamId
 	private String replyTeamId;
+	//手写签批标识
+	private String yjType;
 	/**
 	 * 设置：唯一标识
 	 */
@@ -129,6 +131,10 @@ public class ApprovalOpinion implements Serializable {
 	public void setReplyTeamId(String replyTeamId) {
 		this.replyTeamId = replyTeamId;
 	}
-	
-	
+	public String getYjType() {
+		return yjType;
+	}
+	public void setYjType(String yjType) {
+		this.yjType = yjType;
+	}	
 }

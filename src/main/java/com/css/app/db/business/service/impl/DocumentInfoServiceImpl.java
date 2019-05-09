@@ -1,7 +1,6 @@
 package com.css.app.db.business.service.impl;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -112,9 +111,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 	}
 	@Override
 	public void deleteByCheHui(String id) {
-		Map<String, Object> map= new HashMap<>();
-		map.put("infoId", id);
-		List<SubDocInfo> list = subDocInfoDao.queryList(map);
+		List<SubDocInfo> list = subDocInfoDao.queryAllSubByInfoId(id);
 		if(list !=null && list.size()>0) {
 			for (SubDocInfo subInfo : list) {
 				String subId = subInfo.getId();

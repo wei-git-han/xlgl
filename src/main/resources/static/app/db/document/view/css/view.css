@@ -614,15 +614,13 @@ ul{
 	height:100%;
 	padding-top:40px;
 }
-
-
 .opinionContent{
-	border:1px dashed #ccc;
+	border:none;
 	width:100%;
 	height:100%;
 	resize:none;
 	padding:8px;
-	font-size: 14px;
+	font-size: 16px;
 }
 
 .listicon{
@@ -891,4 +889,56 @@ ul{
 }
 .record_line1{
 	color:#999;
+}
+
+
+
+/* 签批 */
+.css3{
+	display:inline-block;
+	height:40px;
+	line-height:40px;
+	font-size:16px;
+	font-weight:700;
+	float:left;
+	color:#666666;
+}
+
+.setpen{
+	font-size:16px;
+	float:right;
+	cursor:pointer;
+	margin-right:20px;
+	color:#3399FF;
+	display:none;
+}
+#setpenchoose{
+	position:absolute;
+	right:155px;
+	top:0px;
+	width:80px;
+	border:1px solid #3399FF;
+	z-index: 999;
+	background: #fff;
+	display:none;
+}
+#setpenchoose li{
+	list-style:none;
+	padding:8px 10px;
+	cursor:pointer;
+}
+#setpenchoose li:hover,#setpenchoose li:active,#setpenchoose li:link,#setpenchoose li:visited{
+	background:#eee;
+}
+#setpenchoose li img{
+	margin-right:10px;
+}
+.changeStatus{
+	font-size:16px;
+	text-decoration: none;
+	float:right;
+	color:#3399FF
+}
+.changeStatus:hover{
+	text-decoration: none;
 }
