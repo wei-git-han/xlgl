@@ -1,9 +1,12 @@
 package com.css.app.db.config.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -73,17 +76,20 @@ public class DocumentDicController {
 		}
 		
 		List<Map<String, Object>> dictionaryTypeList = new ArrayList<Map<String, Object>>();
-		
+		List<DocumentDic> dicList = documentDicService.queryDicByType(DbDefined.URGENCY_DEGREE);
+		dicList.sort(Comparator.comparing(DocumentDic::getTempValue));
 		Map<String, Object> tep1 = new HashMap<String, Object>();
 		tep1.put("dicType", DbDefined.URGENCY_DEGREE);
 		tep1.put("name", "紧急程度");
-		tep1.put("children", documentDicService.queryDicByType(DbDefined.URGENCY_DEGREE));
+		tep1.put("children", dicList);
 		dictionaryTypeList.add(tep1);
 		
+		dicList = documentDicService.queryDicByType(DbDefined.SECURITY_CLASSIFICATION);
+		dicList.sort(Comparator.comparing(DocumentDic::getTempValue));
 		Map<String, Object> tep2 = new HashMap<String, Object>();
 		tep2.put("dicType", DbDefined.SECURITY_CLASSIFICATION);
 		tep2.put("name", "密级");
-		tep2.put("children", documentDicService.queryDicByType(DbDefined.SECURITY_CLASSIFICATION));
+		tep2.put("children", dicList);
 		dictionaryTypeList.add(tep2);
 		
 		GwPageUtils pageUtil = new GwPageUtils(dictionaryTypeList);

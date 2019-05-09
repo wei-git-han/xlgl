@@ -33,7 +33,8 @@ public class DocumentDic implements Serializable {
 	private Date createdTime;
 	//表格分类
 	private Integer gridFlag;
-
+	//排序
+	private int tempValue;
 	/**
 	 * 设置：唯一标识
 	 */
@@ -50,6 +51,7 @@ public class DocumentDic implements Serializable {
 	 * 设置：键值
 	 */
 	public void setValue(String value) {
+		this.tempValue = Integer.parseInt(value);
 		this.value = value;
 	}
 	/**
@@ -135,6 +137,12 @@ public class DocumentDic implements Serializable {
 	}
 	public void setGridFlag(Integer gridFlag) {
 		this.gridFlag = gridFlag;
+	}
+	public int getTempValue() {
+		return tempValue;
+	}
+	public void setTempValue(int tempValue) {
+		this.tempValue = this.tempValue;
 	}
 	
 }
