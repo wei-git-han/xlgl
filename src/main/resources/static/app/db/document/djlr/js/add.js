@@ -79,12 +79,18 @@ var pageModule = function(){
 			data:{infoId:$("#id").val()},
 			success:function(data){
 				$("#file_all").html("");
-				$.each(data,function(i,item){
-					$("#file_all").append(
-						'<li><input type="checkbox" name="fjcheckbox" data="'+item.id+'" /> <a data="'+item.id+'">'+item.fileName+'</a></li>'
-		            )
-				});
+				if(data&&data.length>0){
+					$.each(data,function(i,item){
+						$("#file_all").append(
+							'<li><input type="checkbox" name="fjcheckbox" data="'+item.id+'" /> <a data="'+item.id+'">'+item.fileName+'</a></li>'
+			            )
+					});
+				}else{
+					//psLoad('','');
+					$("#embedwrap").hide();
+				}
 				$("#file_all>li>a").click(function(){
+					$("#embedwrap").show();
 					var scanId = $(this).attr("data");
 					$ajax({
 						url:getFormatFileUrl,
@@ -367,9 +373,9 @@ var pageModule = function(){
 				        		$(".fileinput-filename").text("");
 				    			$("#pdf").val("");
 				    			$("#scanId").val(data.smjId);
+				    			$("#embedwrap").show();
 				    			psLoad('', data.smjFilePath);
 				    			initfilefn();
-				    			
 				    			
 				    			/*if(type=="1"){ //板式
 				    				if($("#FireFoxOFDDIV").is(":hidden")){
@@ -434,6 +440,7 @@ var pageModule = function(){
 					success : function(data) {
 						if (data.result == "success") {
 							newbootbox.alert("保存成功！").done(function(){
+								$("#embedwrap").show();
 								psLoad(data.scanId, data.scanFilePath);
 							});
 						} 

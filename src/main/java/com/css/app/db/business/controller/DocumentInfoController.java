@@ -94,60 +94,66 @@ public class DocumentInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/uploadFile")
-	public void savePDF(String idpdf,@RequestParam(required = false) MultipartFile pdf){
+	public void savePDF(String idpdf,@RequestParam(required = false) MultipartFile[] pdf){
 			String formatDownPath = "";//版式文件下载路径
+			String retFormatId = null;//返回的版式文件id
 			String streamId = null;//流式文件id
 			String formatId  = null;//版式文件id
 			JSONObject json = new JSONObject();
 			if(StringUtils.isNotBlank(idpdf)) {				
-				if (pdf != null && pdf.getSize() > 0) {
-					String fileName=pdf.getOriginalFilename();
-					//获取文件后缀
-					String fileType =fileName.substring(fileName.lastIndexOf(".")+1);
-					//如果文件是流式则流式转换为版式
-					if(!StringUtils.equals("ofd", fileType)){
-						streamId = FileBaseUtil.fileServiceUpload(pdf);
-						HTTPFile hf = new HTTPFile(streamId);
-						try {
-							String path = appConfig.getLocalFilePath() + UUIDUtils.random() + "." + hf.getSuffix();
+				if (pdf != null && pdf.length > 0) {
+					for (int i = 0; i < pdf.length; i++) {
+						String fileName=pdf[i].getOriginalFilename();
+						//获取文件后缀
+						String fileType =fileName.substring(fileName.lastIndexOf(".")+1);
+						//如果文件是流式则流式转换为版式
+						if(!StringUtils.equals("ofd", fileType)){
+							streamId = FileBaseUtil.fileServiceUpload(pdf[i]);
+							HTTPFile hf = new HTTPFile(streamId);
 							try {
-								FileUtils.moveFile(new File(hf.getFilePath()) , new File(path));
-							} catch (IOException e) {
+								String path = appConfig.getLocalFilePath() + UUIDUtils.random() + "." + hf.getSuffix();
+								try {
+									FileUtils.moveFile(new File(hf.getFilePath()) , new File(path));
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+								if(StringUtils.isNotBlank(path)){
+									formatId = OfdTransferUtil.convertLocalFileToOFD(path);
+								}
+								//删除本地的临时流式文件
+								if(new File(path).exists()){
+									new File(path).delete();
+								}
+							} catch (Exception e) {
 								e.printStackTrace();
 							}
-							if(StringUtils.isNotBlank(path)){
-								formatId = OfdTransferUtil.convertLocalFileToOFD(path);
+						}else{
+							formatId=FileBaseUtil.fileServiceUpload(pdf[i]);	
+						}
+						if(StringUtils.isNotBlank(formatId)) {
+							if(i==0) {
+								retFormatId=formatId;
+								//获取版式文件的下载路径
+								HTTPFile httpFiles = new HTTPFile(formatId);
+								if(httpFiles!=null) {
+									formatDownPath = httpFiles.getAssginDownloadURL(true);
+								}
 							}
-							//删除本地的临时流式文件
-							if(new File(path).exists()){
-								new File(path).delete();
+							//保存文件相关数据
+							DocumentFile file=new DocumentFile();
+							file.setId(UUIDUtils.random());
+							file.setDocInfoId(idpdf);
+							file.setSort(documentFileService.queryMinSort(idpdf));
+							file.setFileName(fileName);
+							file.setCreatedTime(new Date());
+							if(StringUtils.isNotBlank(streamId)) {
+								file.setFileServerStreamId(streamId);
 							}
-						} catch (Exception e) {
-							e.printStackTrace();
+							file.setFileServerFormatId(formatId);
+							documentFileService.save(file);
 						}
-					}else{
-						formatId=FileBaseUtil.fileServiceUpload(pdf);	
 					}
-					if(StringUtils.isNotBlank(formatId)) {
-						//获取版式文件的下载路径
-						HTTPFile httpFiles = new HTTPFile(formatId);
-						if(httpFiles!=null) {
-							formatDownPath = httpFiles.getAssginDownloadURL(true);
-						}
-						//保存文件相关数据
-						DocumentFile file=new DocumentFile();
-						file.setId(UUIDUtils.random());
-						file.setDocInfoId(idpdf);
-						file.setSort(documentFileService.queryMinSort(idpdf));
-						file.setFileName(fileName);
-						file.setCreatedTime(new Date());
-						if(StringUtils.isNotBlank(streamId)) {
-							file.setFileServerStreamId(streamId);
-						}
-						file.setFileServerFormatId(formatId);
-						documentFileService.save(file);
-					}
-					json.put("smjId", formatId);
+					json.put("smjId", retFormatId);
 					json.put("smjFilePath", formatDownPath);
 					json.put("result", "success");
 				}

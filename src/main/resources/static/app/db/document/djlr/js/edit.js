@@ -126,14 +126,17 @@ var pageModule = function(){
 			success:function(data){
 				$("#file_all").html("");
 				var scanId ="";
-				$.each(data,function(i,item){
-					if(i==0){
-						scanId = item.id;
-					}
-					$("#file_all").append(
-						'<li><input type="checkbox" name="fjcheckbox" data="'+item.id+'" /> <a data="'+item.id+'">'+item.fileName+'</a></li>'
-		            )
-				});
+				if(data&&data.length>0){
+					$.each(data,function(i,item){
+						if(i==0){
+							scanId = item.id;
+						}
+						$("#file_all").append(
+							'<li><input type="checkbox" name="fjcheckbox" data="'+item.id+'" /> <a data="'+item.id+'">'+item.fileName+'</a></li>'
+			            )
+					});
+				}
+				
 				$ajax({
 					url:getFormatFileUrl,
 					data:{id:scanId},
@@ -413,7 +416,6 @@ var pageModule = function(){
 						$("#dialogzz").hide();
 						if(data.result == "success"){
 							newbootbox.alert('上传成功！').done(function(){
-								$("#showupload").modal("hide");
 				        		$(".fileinput-filename").text("");
 				    			$("#pdf").val("");
 				    			$("#scanId").val(data.smjId);
@@ -438,21 +440,14 @@ var pageModule = function(){
 			$("#pdf").unbind("change");
 			$("#pdf").click();
 			$("#pdf").change(function(){
-				/*var fileNameArry = $(this).val().split("\\");
+				var fileNameArry = $(this).val().split("\\");
 				var fileName;
 				if(fileNameArry.length==1){
 					fileName=fileNameArry[0];
 				}else{
 					fileName=fileNameArry[fileNameArry.length-1];
 				}
-				$(".fileinput-filename").text(fileName);*/
-				var uploadfiles = document.querySelector("#pdf").files;
-				var filesName = [];
-				$.each(uploadfiles,function(i,item){
-					filesName.push(item.name);
-				});
-				$(".fileinput-filename").text(filesName.toString());
-				
+				$(".fileinput-filename").text(fileName);
 				var id=$("#id").val();
 				$("#idpdf").val(id);
 				$("#form3").submit();
@@ -499,6 +494,11 @@ var pageModule = function(){
 }();
 
 var psLoad = function(psFileId, psPath){
+	if(psPath == "" || psPath == null || psPath=="undefined"){
+		$("#embedwrap").hide();
+	}else{
+		$("#embedwrap").show();
+	}
 	var embedWidth = "100%";
 	var embedHeight = "100%";
 	var id=$("#scanId").val();
