@@ -490,7 +490,7 @@ public class SubDocInfoController {
 		//流转到下一个人并将临时反馈变为发布
 		this.submitRelation(subId, userName, userId,"2");
 		//保存审批意见
-		approvalOpinionService.saveOpinion(subId, replyContent, "1");
+		approvalOpinionService.saveOpinion(subId, replyContent, "1",null);
 		//保存最新更新时间
 		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
 		if(subDocInfo != null) {
@@ -508,7 +508,7 @@ public class SubDocInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/returnOperation")
-	public void returnOperation(String subId,String replyContent){
+	public void returnOperation(String subId,String replyContent,String saveFlag){
 		JSONObject json=new JSONObject();
 		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
 		if(subDocInfo != null) {
@@ -516,7 +516,7 @@ public class SubDocInfoController {
 				//流转到下一个人并将临时反馈变为发布
 				this.submitRelation(subId, subDocInfo.getUndertakerName(),subDocInfo.getUndertaker(),"3");
 				//保存审批意见
-				approvalOpinionService.saveOpinion(subId, replyContent, "3");
+				approvalOpinionService.saveOpinion(subId, replyContent, "3",saveFlag);
 				//保存最新更新时间
 				subDocInfo.setDocStatus(DbDocStatusDefined.TUIHUI_XIUGAI);
 				subDocInfo.setUpdateTime(new Date());
@@ -537,12 +537,12 @@ public class SubDocInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/finishOperation")
-	public void finishOperation(String infoId,String subId,String replyContent){
+	public void finishOperation(String infoId,String subId,String replyContent,String saveFlag){
 		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
 		//流转到下一个人并将临时反馈变为发布
 		this.submitRelation(subId, subDocInfo.getUndertakerName(),subDocInfo.getUndertaker(),"4");
 		//保存意见
-		approvalOpinionService.saveOpinion(subId, replyContent, "2");
+		approvalOpinionService.saveOpinion(subId, replyContent, "2",saveFlag);
 		//分支文件更新完成审批标识
 		if(subDocInfo != null) {
 			subDocInfo.setDocStatus(DbDocStatusDefined.BAN_LI_ZHONG);

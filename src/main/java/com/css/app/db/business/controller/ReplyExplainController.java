@@ -114,6 +114,12 @@ public class ReplyExplainController {
 						List<ApprovalOpinion> opinionList = approvalOpinionService.queryList(map);
 						if(opinionList != null && opinionList.size()>0) {
 							json.put("cuowei","1");
+							for(ApprovalOpinion opinion : opinionList) {
+								if(StringUtils.equals("1", opinion.getYjType())) {
+									HTTPFile httpFile = new HTTPFile(opinion.getOpinionContent());
+									opinion.setOpinionContent(httpFile.getAssginDownloadURL());
+								}
+							}
 							json.put("opinionList",opinionList);
 						}else {
 							json.put("cuowei","0");
@@ -179,6 +185,12 @@ public class ReplyExplainController {
 						List<ApprovalOpinion> opinionList = approvalOpinionService.queryList(map);
 						if(opinionList != null && opinionList.size()>0) {
 							json.put("cuowei","1");
+							for(ApprovalOpinion opinion : opinionList) {
+								if(StringUtils.equals("1", opinion.getYjType())) {
+									HTTPFile httpFile = new HTTPFile(opinion.getOpinionContent());
+									opinion.setOpinionContent(httpFile.getAssginDownloadURL());
+								}
+							}
 							json.put("opinionList",opinionList);
 						}else {
 							json.put("cuowei","0");

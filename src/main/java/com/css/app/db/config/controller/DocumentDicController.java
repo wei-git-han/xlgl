@@ -1,12 +1,10 @@
 package com.css.app.db.config.controller;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
-import com.css.app.db.business.entity.DocumentInfo;
 import com.css.app.db.config.entity.DocumentDic;
 import com.css.app.db.config.service.DocumentDicService;
 import com.css.app.db.util.DbDefined;
@@ -27,7 +24,6 @@ import com.css.base.utils.PageUtils;
 import com.css.base.utils.Response;
 import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
-import com.thoughtworks.xstream.mapper.Mapper.Null;
 
 
 /**

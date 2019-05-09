@@ -358,7 +358,17 @@ var pageModule = function(){
 					'		</div>'+
 					'		<div class="nrt-cont-cent">'+
 					'			<div class="wh100 scroller">'+
-					'				<font class="nrt-cont-cent-font" >'+content+'</font>'+
+					'				<font class="nrt-cont-cent-font" >';
+										if(o.yjType == "1"){
+											li +='<div class="" title="" style="width:100%;">'+
+												 '	<img src="'+content+'" style="max-height: 100px;"/>'+
+												 '</div>';
+										}else{
+											li +='<div class="" title="">'+
+												 '	<span class="message">'+content+'</span>'+
+												 '</div>';
+										}
+					li +=   '				</font>'+
 					'			</div>'+
 					'		</div>'+
 					'	</div>'+
