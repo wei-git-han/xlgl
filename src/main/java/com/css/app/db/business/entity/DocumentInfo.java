@@ -73,7 +73,7 @@ public class DocumentInfo implements Serializable {
 	//最新的首长批示
 	private String leaderContent;
 	//最新的首长批示时间
-	private Date leaderTime;
+	private String leaderTime;
 	//已更新标识
 	private String updateFlag;
 	//承办单位/人
@@ -367,10 +367,10 @@ public class DocumentInfo implements Serializable {
 	public void setLeaderContent(String leaderContent) {
 		this.leaderContent = leaderContent;
 	}
-	public Date getLeaderTime() {
+	public String getLeaderTime() {
 		return leaderTime;
 	}
-	public void setLeaderTime(Date leaderTime) {
+	public void setLeaderTime(String leaderTime) {
 		this.leaderTime = leaderTime;
 	}
 	public String getUpdateFlag() {

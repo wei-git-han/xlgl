@@ -165,7 +165,7 @@ html, body {
 	font-weight: bold;
 }
 
-/* �Ҳ�tabҳǩ */
+/* �Ҳ�tabҳǩ */
  .tabbable-line > .nav-tabs > li > a {
     border: 0;
     margin-right: 0;
@@ -227,7 +227,7 @@ html, body {
 	border:none;
 	resize:none;
 	height:150px!important;
-	font-size:16px;
+	font-size:14px;
 	margin-top:10px;
 }
 .tableBtns1{
@@ -244,7 +244,7 @@ html, body {
 }
 .cqline{
 	padding:10px 0px;
-	font-size:16px;
+	font-size:14px;
 	border-bottom:1px solid #D7D7D7;
 }
 .showcq>.cqline:last-child{
@@ -322,4 +322,7 @@ html, body {
 }
 .addfj:hover,.addfj:actived,.addfj:link,.addfj:visited{
 	color:#fff;
+}
+.cqrq{
+	margin-left:10px;
 }

@@ -578,13 +578,13 @@ function skip(){
 		window.location.href = "/app/db/document/jcdb/html/table.html?ifmenu=false&orgid="+orgid+"&month="+month+"&ytype="+ytype;
 	}else{
 		if(fileFrom == "djlr"){//文件来源于登记录入
-			window.location.href="/app/db/document/djlr/html/djlr.html?searchType=djlr";
+			window.location.href="/app/db/document/djlr/html/djlr.html?fileFrom=djlr";
 		}else if(fileFrom == "grdb"){//文件来源于个人待办
-			window.location.href="/app/db/document/grdb/html/grdb.html?searchType=grdb";
+			window.location.href="/app/db/document/grdb/html/grdb.html?fileFrom=grdb";
 		}else if(fileFrom=="blfk"){  //文件来源于办理反馈
-			window.location="/app/db/document/blfk/html/blfk.html?searchType=blfk";
+			window.location="/app/db/document/blfk/html/blfk.html?fileFrom=blfk";
 		}else{ 
-			window.location.href="/app/db/document/grdb/html/grdb.html?searchType=grdb";
+			window.location.href="/app/db/document/grdb/html/grdb.html?fileFrom=grdb";
 		}
 	}
 
