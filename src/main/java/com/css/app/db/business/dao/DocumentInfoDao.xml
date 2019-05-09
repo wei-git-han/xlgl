@@ -14,9 +14,6 @@
 		<if test="orgid != null">
 			left join DB_SUB_DOC_INFO  dadi on t.id=dadi.INFO_ID
 		</if>
-		<if test="hasUpdate != null"> 
-			left join DB_DOCUMENT_CBJL a on t.ID=a.INFO_ID
-		</if>
 		 where (d.dNum = 1 or d.dNum is null) 
 		 <if test="orgid != null">
 			and dadi.SUB_DEPT_ID=#{orgid}
@@ -28,7 +25,7 @@
 			and t.STATUS &gt; 0
 		</if>
 		<if test="hasUpdate != null"> 
-			and t.CUIBAN_FLAG ='0' and a.FINISH_FLAG='1' and t.id not in(select INFO_ID from DB_DOCUMENT_READ where USER_ID=#{loginUserId})
+			and t.LATEST_REPLY !='' and t.LATEST_REPLY is not null and t.id not in(select INFO_ID from DB_DOCUMENT_READ where USER_ID=#{loginUserId})
 		</if>
 		<if test="search != null and search != ''">
 			and (t.DOC_TITLE like '%'||#{search}||'%' or t.BANJIAN_NUMBER  like '%'||#{search}||'%')
@@ -72,7 +69,7 @@
 			and t.STATUS &gt; 0
 		</if>
 		<if test="hasUpdate != null"> 
-			and t.LATEST_REPLY !='' and t.LATEST_REPLY is not null and t.CUIBAN_FLAG ='0' and t.id not in(select INFO_ID from DB_DOCUMENT_READ where USER_ID=#{loginUserId})
+			and t.LATEST_REPLY !='' and t.LATEST_REPLY is not null and t.id not in(select INFO_ID from DB_DOCUMENT_READ where USER_ID=#{loginUserId})
 		</if>
 		<if test="search != null and search != ''">
 			and (t.DOC_TITLE like '%'||#{search}||'%' or t.BANJIAN_NUMBER  like '%'||#{search}||'%')

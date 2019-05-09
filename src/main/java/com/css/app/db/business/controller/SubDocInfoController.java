@@ -105,7 +105,7 @@ public class SubDocInfoController {
 			readMap.put("userId", loginUserId);
 			readMap.put("infoId", subDocInfo.getInfoId());
 			List<DocumentRead> list = documentReadService.queryList(readMap);
-			if(list.size()==0 && StringUtils.equals("0", subDocInfo.getCuibanFlag()) && StringUtils.isNotBlank(subDocInfo.getLatestReply())) {
+			if(list.size()==0 && StringUtils.isNotBlank(subDocInfo.getLatestReply())) {
 				subDocInfo.setUpdateFlag("1");
 			}
 		}
@@ -206,7 +206,7 @@ public class SubDocInfoController {
 			readMap.put("userId", loginUserId);
 			readMap.put("infoId", subDocInfo.getInfoId());
 			List<DocumentRead> list = documentReadService.queryList(readMap);
-			if(list.size()==0 && StringUtils.equals("0", subDocInfo.getCuibanFlag()) && StringUtils.isNotBlank(subDocInfo.getLatestReply())) {
+			if(list.size()==0 && StringUtils.isNotBlank(subDocInfo.getLatestReply())) {
 				subDocInfo.setUpdateFlag("1");
 			}
 		}
