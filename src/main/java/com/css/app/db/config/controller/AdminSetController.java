@@ -1,6 +1,8 @@
 package com.css.app.db.config.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.db.config.entity.AdminSet;
 import com.css.app.db.config.service.AdminSetService;
+import com.css.app.db.util.DbDefined;
+import com.css.base.utils.CurrentUser;
 import com.css.base.utils.GwPageUtils;
 import com.css.base.utils.Response;
 import com.css.base.utils.UUIDUtils;
@@ -42,13 +46,28 @@ public class AdminSetController {
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	public void list(Integer page, Integer pagesize){
+	public void list(Integer page, Integer pagesize ,String adminType){
 		PageHelper.startPage(page, pagesize);
-		List<AdminSet> adminSetList = adminSetService.queryList(null);
+		Map<String, Object > map = new HashMap<>();
+		map.put("adminType", adminType);
+		List<AdminSet> adminSetList = adminSetService.queryList(map);
 		GwPageUtils pageUtil = new GwPageUtils(adminSetList);
 		Response.json(pageUtil);
 	}
 	
+	@ResponseBody
+	@RequestMapping("/getAuthor")
+	public void getAuthor(){
+		String adminType = null;//管理员类型（1：部管理员；2：局管理员）
+		//当前登录人的管理员类型
+		Map<String, Object> adminMap = new HashMap<>();
+		adminMap.put("userId", CurrentUser.getUserId());
+		List<AdminSet> adminList = adminSetService.queryList(adminMap);
+		if(adminList != null && adminList.size()>0) {
+			adminType = adminList.get(0).getAdminType();
+		}
+		Response.json(adminType);
+	}
 	
 	/**
 	 * 信息

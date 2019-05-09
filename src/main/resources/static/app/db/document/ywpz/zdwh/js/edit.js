@@ -18,15 +18,21 @@ var pageModule = function(){
 		$("#commentForm").validate({
 		    submitHandler: function() {
 		    	var content=$("#content").val();
-				var dname=$("#dname").val();
+				var sortType=$("#sortType").val();
 				$ajax({
 					url:saveUrl,
-					data:{dname:dname,values:encodeURI(content),id:type},
+					data:{text:encodeURI(content),value:sortType,dicType:type,id:''},
 					type: "GET",
 					success:function(data){
-						newbootbox.alertInfo('保存成功！').done(function(){
-							window.location.href = "/app/gwcl/document/ywpz/zdwh/html/zdwh.html"
-						});
+						if(data.code == 0){
+							newbootbox.alertInfo('保存成功！').done(function(){
+								window.location.href = "zdwh.html"
+							});
+						}else if(data.code == 1){
+							newbootbox.alertInfo(data.result);
+						}else {
+							newbootbox.alertInfo('返回出错！');
+						}
 					}
 				});
 		    }

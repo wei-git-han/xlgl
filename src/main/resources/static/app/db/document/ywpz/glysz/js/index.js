@@ -1,8 +1,14 @@
 var grid = null;
 var tableUrl = {"url":rootPath +"/adminset/list","dataType":"text"}; 
-var delUrl = {"url":rootPath +"/adminset/delete","dataType":"text"};  
+var delUrl = {"url":rootPath +"/adminset/delete","dataType":"text"}; 
+var departType = getUrlParam2("departType");
+
 var pageModule = function() {
 	var initgrid = function() {
+		if(departType != '1'){
+			departType = '2';
+		}
+
 		grid = $("#gridcont").createGrid({
 			columns: [
 				  {display: "部门",name:"deptName",width: "40%",align: "left",render: function(rowdata,n){
@@ -27,7 +33,7 @@ var pageModule = function() {
 			height: "100%",
 			checkbox: true,
 			rownumberyon: true,
-			paramobj:{type:'3'},
+			paramobj:{type:'3',adminType:departType},
 			overflowx: false,
             pagesize: 15,
 			url: tableUrl
@@ -37,7 +43,7 @@ var pageModule = function() {
 
 	var initother = function() {
 		$("#add").click(function() {
-			window.location.href="edit.html";
+			window.location.href="edit.html?departType="+departType;
 		});
 		
 		$("#edit").click(function() {
@@ -49,7 +55,7 @@ var pageModule = function() {
 				$(datas).each(function(i){
 					ids[i]=this.id;
 				});
-				window.location.href="edit.html?id="+ids[0];
+				window.location.href="edit.html?id="+ids[0]+"&departType="+departType;
 			}
 			
 		});
@@ -100,5 +106,5 @@ var pageModule = function() {
 
 //编辑
 var editfn = function(id){
-	window.location.href="edit.html?id="+id;
+	window.location.href="edit.html?id="+id+"&departType="+departType;
 }

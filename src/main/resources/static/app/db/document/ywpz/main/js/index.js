@@ -1,6 +1,18 @@
 var checkauth = {"url":rootPath + "/documentclerkset/checkauth","dataType":"text"};
+var getUserAdminTypeUrl = {"url":rootPath +"/adminset/getAuthor","dataType":"text"};
+
 var pageModule = function(){
 	var initother = function(){
+		$ajax({
+			url: getUserAdminTypeUrl,
+			type: "GET",
+//			data: {"ids": ids.toString()},
+			success: function(data) {
+				if(data == '2'){
+					$('#departAdmin').css("display","none");
+				}
+			}
+		});
 		$(".newpage8").click(function(){
 			$(".newpage8").removeClass("active");
 			$(this).addClass("active");
