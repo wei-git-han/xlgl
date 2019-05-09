@@ -216,6 +216,7 @@ public class DocumentSzInfoController {
 		Map<String, Object> map = new HashMap<>();
 		map.put("search", search);
 		map.put("docStatus", "2");
+		map.put("jz", "1");
 		map.put("type", id);
 		if(StringUtils.isNotBlank(state)) {
 			if("0".equals(state)) {
@@ -358,7 +359,8 @@ public class DocumentSzInfoController {
 			cbdw=documentInfo.getLatestSubDept();
 			cbry=documentInfo.getLatestUndertaker();
 			cont=documentInfo.getLatestReply();
-			if(StringUtils.isEmpty(sz)||!(sz).contains(userid)) {
+			//LATEST_REPLY
+			if((StringUtils.isEmpty(sz)||!(sz).contains(userid))&&StringUtils.isNotBlank(documentInfo.getLatestReply())) {
 				gengxin="1";//已更新显示
 			}
 			

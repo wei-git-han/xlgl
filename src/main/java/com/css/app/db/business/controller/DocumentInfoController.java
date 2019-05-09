@@ -346,9 +346,31 @@ public class DocumentInfoController {
 	@RequestMapping("/info")
 	public void info(String id){
 		DocumentInfo documentInfo = documentInfoService.queryObject(id);
+		String roleid=getRoleType();
+		if(!"".equals(roleid)&&StringUtils.equals("1", roleid)) {//首长
+			String szreadids=documentInfo.getSzReadIds();
+			if(StringUtils.isBlank(szreadids)) {
+				documentInfo.setSzReadIds(CurrentUser.getUserId());
+			}else if(!szreadids.contains(CurrentUser.getUserId())){
+				documentInfo.setSzReadIds(szreadids+","+CurrentUser.getUserId());				
+			}
+			documentInfoService.update(documentInfo);
+		}
 		Response.json(documentInfo);
 	}
-	
+	public String getRoleType() {
+		//当前登录人的角色
+		//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
+		JSONObject jo=new JSONObject();
+		Map<String, Object> roleMap = new HashMap<>();
+		String userid=CurrentUser.getUserId();
+		roleMap.put("userId",userid);
+		List<RoleSet> roleList = roleSetService.queryList(roleMap);
+		if(roleList != null && roleList.size()>0) {
+			return roleList.get(0).getRoleFlag();
+		}
+		return "";
+	}	
 	/**
 	 * 新增或修改
 	 */
