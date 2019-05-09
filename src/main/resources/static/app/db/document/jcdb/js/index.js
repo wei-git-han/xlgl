@@ -2,9 +2,10 @@ var url1 = {"url":"/app/db/documentjcdb/list","dataType":"text"};
 //var url2 = {"url":"../data/json2.json","dataType":"text"};
 var url2 = {"url":"/app/db/documentjcdb/orglist","dataType":"text"};
 var url3 = {"url":"/app/db/documentjcdb/orglist2","dataType":"text"};
+//var url3 = {"url":"../data/json3.json","dataType":"text"};
 var url4 = {"url":"/app/db/documentjcdb/orglist3","dataType":"text"};
 var url5 = {"url":"/app/db/documentjcdb/orglist4","dataType":"text"};
-
+//var url5 = {"url":"../data/json5.json","dataType":"text"};
 var pageModule = function(){
 	
 	var inittopfn = function(){
@@ -137,6 +138,7 @@ var pageModule = function(){
 			    		x:50,
 			    		y:30,
 			    		x2:30,
+			    		y2:80,
 			    		borderWidth:0
 			    	},
 				    tooltip : {
@@ -158,6 +160,7 @@ var pageModule = function(){
 				        		lineStyle:{color: '#C8D3FF', width: 1} 
 				        	},
 				        	axisLabel:{
+				        		rotate:40,
 				        		textStyle:{color: '#C8D3FF'}
 				        	},
 				            type : 'category',
@@ -396,13 +399,16 @@ var pageModule = function(){
 			    myChart.setOption({
 			    	grid:{
 			    		x:70,
-			    		y:20,
+			    		y:30,
 			    		x2:30,
 			    		y2:90,
 			    		borderWidth:0
 			    	},
 				    tooltip : {
-				        trigger: 'axis'
+				        trigger: 'axis',
+				        formatter: function(array){
+		        			return array[0][1]+":"+array[0][2]+"%"
+		        		}
 				    },
 				    xAxis : [
 				        {
@@ -422,9 +428,9 @@ var pageModule = function(){
 				        	axisLine:false,
 				        	axisLabel:{
 				        		textStyle:{color: '#C8D3FF'},
-				        		//formatter:function(val){
-				        		//	return val+"%"
-				        		//}
+				        		formatter:function(val){
+				        			return val+"%"
+				        		}
 				        	},
 				        	splitLine:{
 				        		lineStyle:{color: ['#223172'], width: 1, type: 'solid'}

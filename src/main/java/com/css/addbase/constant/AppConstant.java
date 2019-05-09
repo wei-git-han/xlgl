@@ -36,6 +36,7 @@ public class AppConstant {
 	 */
 	public final static String LEADER_PLAN = "leaderPlan";
 	public final static String LEAD_TEAM = "leaderteam";
+	public final static String NOTDUBANTJ = "notdubantj";
 	/**
 	 * @author mashuwen
 	 * @date 2017年12月03日

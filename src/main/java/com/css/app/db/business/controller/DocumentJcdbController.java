@@ -93,10 +93,13 @@ public class DocumentJcdbController {
 		// sum(blz+bj+ctls) as total,sum(blz) as blz,sum(bj) as bj,sum(ctls) as ctls 
 		if (infoList!=null&&infoList.size()>0) {
 			Map<String, Object> map2=infoList.get(0);
-			blz= (long) map2.get("blz");
-			bj= (long) map2.get("bj");
-			ctls= (long) map2.get("ctls");
-			total= (long) map2.get("total");
+			if(map2!=null) {
+				blz= (long) map2.get("blz");
+				bj= (long) map2.get("bj");
+				ctls= (long) map2.get("ctls");
+				total= (long) map2.get("total");
+			}
+			
 		}
 		
 		jo.put("blz", blz);
@@ -183,7 +186,7 @@ public class DocumentJcdbController {
 					jo.put("type", "0");
 				}
 				//state
-				if(!StringUtils.equals(szorgid, danweiid)) {
+				if(!szorgid.contains(danweiid)) {
 					ja.add(jo);
 				}
 				
@@ -279,7 +282,7 @@ public class DocumentJcdbController {
 					}
 					jo.put("type", "0");
 				}
-				if(!StringUtils.equals(szorgid, danweiid)) {
+				if(!szorgid.contains(danweiid)) {
 					jo3.put((String) map2.get("dwname"), jo);
 					//授权--------end
 					//otherdata.add(jo);
@@ -428,9 +431,14 @@ public class DocumentJcdbController {
 	}
 	public String getSzOrgid() {
 		BaseAppConfig mapped = baseAppConfigService.queryObject(AppConstant.LEAD_TEAM);
+		BaseAppConfig mapped2 = baseAppConfigService.queryObject(AppConstant.NOTDUBANTJ);
+		String szids="";
 		if(mapped != null && StringUtils.isNotBlank(mapped.getValue())){
-			return mapped.getValue();
+			szids= mapped.getValue();
 		}
-		return "";
+		if(mapped2 != null && StringUtils.isNotBlank(mapped2.getValue())){
+			szids+=","+ mapped2.getValue();
+		}
+		return szids;
 	}
 }
