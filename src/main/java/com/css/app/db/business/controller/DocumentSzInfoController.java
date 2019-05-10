@@ -81,6 +81,7 @@ public class DocumentSzInfoController {
 		}*/
 		map.put("search", search);
 		map.put("status2", "0");
+		map.put("latestreply", "0");
 		map.put("isnotuserid", userid);
 		List<Map<String, Object>> infoList = documentInfoService.queryListByDicType(map);
 		JSONArray valdata=new JSONArray();
@@ -221,7 +222,7 @@ public class DocumentSzInfoController {
 		if(StringUtils.isNotBlank(state)) {
 			if("0".equals(state)) {
 				
-				map.put("state", "1");//办理中
+				map.put("state2", "0");//办理中
 				map.put("isnotuserid", userid);
 			}else {
 				map.put("state", state);
@@ -253,20 +254,24 @@ public class DocumentSzInfoController {
 			map = new HashMap<>();
 			map.put("type", id);
 			List<Map<String, Object>> infoMap = documentInfoService.queryListByDicStutas(map);
+			long blz=0;
+			long bj=0;
+			long ctls=0;
 			if (infoMap!=null&&infoMap.size()>0) {
 				for (Map<String, Object> map2 : infoMap) {
-					
-					jo2.put("count2", (long) map2.get("blz"));
-					jo2.put("count3", (long) map2.get("bj"));
-					jo2.put("count4", (long) map2.get("ctls"));
-					
-					
+					blz+=(long) map2.get("blz");
+					bj+=(long) map2.get("bj");
+					ctls+=(long) map2.get("ctls");
 					
 				}
+				jo2.put("count2", blz);
+				jo2.put("count3", bj);
+				jo2.put("count4", ctls);
 			}
 			map.put("search", search);
 			map.put("isnotuserid", userid);
 			map.put("status2", "0");
+			map.put("latestreply", "0");
 			List<Map<String, Object>> genxinList = documentInfoService.queryListByDicType(map);
 			JSONArray valdata=new JSONArray();
 			if (genxinList!=null&&genxinList.size()>0) {
