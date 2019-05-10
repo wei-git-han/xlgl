@@ -505,7 +505,7 @@ var topage = function(orgid,type,month,ytype){
 		}
 		window.location.href = "/app/db/document/jcdb/html/table.html?ifmenu=false&orgid="+orgid+"&month="+month+"&ytype="+ytype;
 	}else{
-		window.location.href = "/app/db/document/blfk/html/blfk.html?fileFrom=blfk&ifmenu=false&orgid="+orgid+"&month="+month+"&ytype="+ytype;
+		window.location.href = "/app/db/document/blfk/html/blfk.html?fileFrom=jcdb&ifmenu=false&orgid="+orgid+"&month="+month+"&ytype="+ytype;
 	}
 	
 }

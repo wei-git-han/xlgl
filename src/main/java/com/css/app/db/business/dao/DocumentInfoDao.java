@@ -1,6 +1,7 @@
 package com.css.app.db.business.dao;
 
 import com.css.app.db.business.entity.DocumentInfo;
+import com.css.app.db.config.entity.DocumentDic;
 
 import java.util.List;
 import java.util.Map;
@@ -30,5 +31,7 @@ public interface DocumentInfoDao extends BaseDao<DocumentInfo> {
 	List<DocumentInfo> queryPersonList(Map<String, Object> map);
 
 	List<Map<String, Object>> queryListByDicStutas(Map<String, Object> map);
+
+	List<DocumentDic> queryDicByType(String dicType);
 	
 }

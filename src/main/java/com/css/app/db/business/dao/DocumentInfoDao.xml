@@ -15,7 +15,7 @@
 			left join DB_SUB_DOC_INFO  dadi on t.id=dadi.INFO_ID
 		</if>
 		 where (d.dNum = 1 or d.dNum is null) 
-		 <if test="orgid != null">
+		 <if test="orgid != null and orgid != '' ">
 			and dadi.SUB_DEPT_ID=#{orgid}
 		</if>
 		<if test='docStatus == "1"'>
@@ -90,6 +90,15 @@
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
+	</select>
+	<select id="queryDicByType" resultType="com.css.app.db.config.entity.DocumentDic">
+	select dic.*,nvl(s.num,0) hasUpdateNum from DB_DOCUMENT_DIC dic 
+	left join(select DOC_TYPE_ID, count(1) as num 
+	from "DB_DOCUMENT_INFO" t left join  DB_DOCUMENT_CBJL a on t.ID=a.INFO_ID 
+	where t.LATEST_REPLY !='' and t.LATEST_REPLY is not null 
+	and t.id not in ( select INFO_ID from DB_DOCUMENT_READ where USER_ID=#{loginUserId}) group by t.DOC_TYPE_ID )s 
+	on dic.value = s.DOC_TYPE_ID
+	where dic.DIC_TYPE = #{docType} order by value asc
 	</select>
 	<!--根据年度获取每个状态的数量   CREATED_TIME暂为年度时间-->
 	<select id="queryListByYear" resultType="map">

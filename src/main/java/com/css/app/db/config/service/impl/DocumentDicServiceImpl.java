@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
+import com.css.app.db.business.dao.DocumentInfoDao;
 import com.css.app.db.config.dao.DocumentDicDao;
 import com.css.app.db.config.entity.DocumentDic;
 import com.css.app.db.config.service.DocumentDicService;
@@ -16,6 +17,8 @@ import com.css.app.db.config.service.DocumentDicService;
 public class DocumentDicServiceImpl implements DocumentDicService {
 	@Autowired
 	private DocumentDicDao documentDicDao;
+	@Autowired
+	private DocumentInfoDao documentInfoDao;
 	
 	@Override
 	public DocumentDic queryObject(String id){
@@ -49,7 +52,8 @@ public class DocumentDicServiceImpl implements DocumentDicService {
 
 	@Override
 	public List<DocumentDic> queryDicByType(String dicType) {
-		return documentDicDao.queryDicByType(dicType);
+		return documentInfoDao.queryDicByType(dicType);
+//		return documentDicDao.queryDicByType(dicType);
 	}
 	
 }

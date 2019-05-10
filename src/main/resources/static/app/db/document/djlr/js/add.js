@@ -135,12 +135,12 @@ var pageModule = function(){
 		$("#docTypeId").change(function(){
 			if($(this).val() == "1" || $(this).val() == "2" || $(this).val() == "4"){
 				$("#jobContent").attr("disabled",true);
-				$("#banjianNumber").attr("disabled",true);
+				$("#banjianNumber").removeAttr("disabled");
 				$("#chaoqing").show();
 			}else{
 				$("#chaoqing").hide();
 				$("#jobContent").removeAttr("disabled");
-				$("#banjianNumber").removeAttr("disabled");
+				$("#banjianNumber").attr("disabled",true);
 			}
 		});
 		

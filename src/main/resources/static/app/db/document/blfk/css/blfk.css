@@ -158,3 +158,14 @@ body {
 	height:70px;
 	overflow:hidden;
 } 
+
+.dot{
+	display: inline-block;
+	position: relative;
+	top: -9px;
+	left: 2px;
+	width: 8px;
+	height: 8px;
+	background-color: #ff0000;
+	border-radius: 5px !important;
+}

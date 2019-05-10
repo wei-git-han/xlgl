@@ -46,12 +46,12 @@ var pageModule = function(){
 				setformdata(data);
 				if(data.docTypeId == "1" || data.docTypeId == "2" || data.docTypeId == "4"){
 					$("#jobContent").attr("disabled",true);
-					$("#banjianNumber").attr("disabled",true);
+					$("#banjianNumber").removeAttr("disabled");
 					$("#chaoqing").show();
 				}else{
 					$("#chaoqing").hide();
 					$("#jobContent").removeAttr("disabled");
-					$("#banjianNumber").removeAttr("disabled");
+					$("#banjianNumber").attr("disabled",true);
 				}
 			}
 		});
@@ -223,8 +223,8 @@ var pageModule = function(){
 		});
 		
 
-		var newdate = (new Date()).format("yyyy-MM-dd");
-		$("#applyTime").val(newdate);
+/*		var newdate = (new Date()).format("yyyy-MM-dd");
+		$("#applyTime").val(newdate);*/
 		
 		$("#commentForm").validate({
 			ignore:'',

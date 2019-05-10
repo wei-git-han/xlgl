@@ -35,6 +35,8 @@ public class DocumentDic implements Serializable {
 	private Integer gridFlag;
 	//排序
 	private int tempValue;
+	//更新数量
+	private int hasUpdateNum;
 	/**
 	 * 设置：唯一标识
 	 */
@@ -143,6 +145,12 @@ public class DocumentDic implements Serializable {
 	}
 	public void setTempValue(int tempValue) {
 		this.tempValue = tempValue;
+	}
+	public int getHasUpdateNum() {
+		return hasUpdateNum;
+	}
+	public void setHasUpdateNum(int hasUpdateNum) {
+		this.hasUpdateNum = hasUpdateNum;
 	}
 	
 }
