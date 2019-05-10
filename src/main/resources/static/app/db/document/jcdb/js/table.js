@@ -82,7 +82,7 @@ var pageModule = function(){
                                  {display:"军委办件号",name:"jwbjh",width:"200px",align:"center",paixu:true,render:function(rowdata,n){
                                     return rowdata.jwbjh;                                         
                                  }},
-                                 {display:"文件标题",name:"title",width:"200px",align:"center",paixu:false,render:function(rowdata){
+                                 {display:"文件标题",name:"title",width:"200px",align:"left",paixu:false,render:function(rowdata){
                                 	 var html = '';
                                 	 var CuibanFlag = rowdata.CuibanFlag;
                                 	 if(CuibanFlag==1){
@@ -91,10 +91,10 @@ var pageModule = function(){
                                 	 var fileid="'"+rowdata.id+"'";
                                     return html+'<font style="cursor:pointer;" class="table-title" onclick="viewpage('+fileid+')" title="'+rowdata.title+'">'+rowdata.title+'</font>';                                     
                                  }},
-                                 {display:"批示指示内容",name:"pszsmr",width:"200px",align:"center",paixu:false,render:function(rowdata){
+                                 {display:"批示指示内容",name:"pszsmr",width:"200px",align:"left",paixu:false,render:function(rowdata){
                                     return rowdata.pszsmr;                                        
                                  }},
-                                 {display:"督办落实情况",name:"dblsqk",width:"200px",align:"center",paixu:false,render:function(rowdata){
+                                 {display:"督办落实情况",name:"dblsqk",width:"200px",align:"left",paixu:false,render:function(rowdata){
                                 	
                                 	var gengxin = rowdata.gengxin;
                                 	var html = '';

@@ -76,16 +76,15 @@ var pageModule = function(){
 					var state = this.state;
 					var type = this.type;
 					var month_ = month;
-					var html = ` style="cursor:pointer" onclick="topage('${id}','${type}','${month_}')" `;
 					if(state==0){html=""}
 					$("#tbody").append(
 						`
-							<tr id="${id}" ${html}>
+							<tr id="${id}">
 								<td>${i+1}</td>
-								<td title="${dwname}">${dwname}</td>
-								<td>${blz}</td>
-								<td>${bj}</td>
-								<td>${ctls}</td>
+								<td title="${dwname}" ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','')">${dwname}</font></td>
+								<td ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','1')">${blz}</font></td>
+								<td ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','2')">${bj}</font></td>
+								<td ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','3')">${ctls}</font></td>
 							</tr>
 						`
 					);
