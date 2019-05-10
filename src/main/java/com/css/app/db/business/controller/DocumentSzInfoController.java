@@ -437,7 +437,7 @@ public class DocumentSzInfoController {
 		String userid=CurrentUser.getUserId();
 		if(StringUtils.isNotBlank(menuid)) {
 			Map<String, Object> map = new HashMap<>();
-			map.put("state", "1");
+			map.put("docStatus", "2");
 			map.put("type", menuid);
 			map.put("isnotuserid", userid);
 			//PageHelper.startPage(page, pagesize);
