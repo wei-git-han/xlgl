@@ -23,11 +23,11 @@ var pageModule = function() {
 						  }
 /*						  if('4'==rowdata.roleFlag){
 							  return "局秘书"
-						  }
+						  }*/
 						  if('5'==rowdata.roleFlag){
 							  return "处长"
 						  }
-						  if('6'==rowdata.roleFlag){
+/*						  if('6'==rowdata.roleFlag){
 							  return "参谋"
 						  }*/
 						  

@@ -42,6 +42,7 @@ import com.css.app.db.business.service.DocumentSzpsService;
 import com.css.app.db.business.service.SubDocInfoService;
 import com.css.app.db.business.service.SubDocTrackingService;
 import com.css.app.db.config.entity.AdminSet;
+import com.css.app.db.config.entity.DocumentDic;
 import com.css.app.db.config.entity.RoleSet;
 import com.css.app.db.config.service.AdminSetService;
 import com.css.app.db.config.service.RoleSetService;
@@ -257,8 +258,12 @@ public class DocumentInfoController {
 			}
 		}
 		if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType)
-				&& !StringUtils.equals("1", roleType) && !StringUtils.equals("3", roleType)) {
-			map.put("loginUserId", loginUserId);
+				&& !StringUtils.equals(DbDefined.ROLE_1, roleType) && !StringUtils.equals(DbDefined.ROLE_3, roleType)) {
+			if(StringUtils.equals(DbDefined.ROLE_5, roleType)) {
+				map.put("deptId", CurrentUser.getDepartmentId());
+			}else {
+				map.put("loginUserId", loginUserId);
+			}
 			PageHelper.startPage(page, pagesize);
 			infoList = documentInfoService.queryPersonList(map);
 		} else {
@@ -279,7 +284,7 @@ public class DocumentInfoController {
 			List<DocumentRead> list = documentReadService.queryList(readMap);
 			
 			//催办为0，未读，最新反馈字段有值则标识为已更新
-			if(list.size()==0 && StringUtils.equals("0", info.getCuibanFlag()) && StringUtils.isNotBlank(info.getLatestReply())) {
+			if(list.size()==0 && StringUtils.isNotBlank(info.getLatestReply())) {
 				info.setUpdateFlag("1");
 			}
 		}
@@ -389,7 +394,6 @@ public class DocumentInfoController {
 		String depid=CurrentUser.getDepartmentId();
 		//当前登录人的角色
 		//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
-		JSONObject jo=new JSONObject();
 		Map<String, Object> roleMap = new HashMap<>();
 		String userid=CurrentUser.getUserId();
 		roleMap.put("userId",userid);
@@ -642,5 +646,50 @@ public class DocumentInfoController {
 			bjjlList = documentBjjlService.queryList(map);
 		}
 		Response.json(bjjlList);
+	}
+	
+	/**
+	 * 获取办理反馈左侧菜单及更新数量
+	 */
+	@ResponseBody
+	@RequestMapping("/getDicByTypet")
+	public void getDicByTypet(){
+		String loginUserId=CurrentUser.getUserId();
+		String adminType = null;//管理员类型（1：部管理员；2：局管理员）
+		String roleType = DbDefined.ROLE_6;//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
+		//当前登录人的管理员类型
+		Map<String, Object> adminMap = new HashMap<>();
+		adminMap.put("userId", loginUserId);
+		List<AdminSet> adminList = adminSetService.queryList(adminMap);
+		if(adminList != null && adminList.size()>0) {
+			adminType = adminList.get(0).getAdminType();
+		}
+		//当前登录人的角色
+		Map<String, Object> roleMap = new HashMap<>();
+		roleMap.put("userId", loginUserId);
+		List<RoleSet> roleList = roleSetService.queryList(roleMap);
+		if(roleList != null && roleList.size()>0) {
+			roleType = roleList.get(0).getRoleFlag();
+		}
+		Map<String, Object> map = new HashMap<>();
+		map.put("userId", loginUserId);
+		map.put("docType", DbDefined.DOCUMENT_TYPE);
+		if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType)
+				&& !StringUtils.equals(DbDefined.ROLE_1, roleType) && !StringUtils.equals(DbDefined.ROLE_3, roleType)) {
+			if(StringUtils.equals(DbDefined.ROLE_5, roleType)) {
+				map.put("deptId", CurrentUser.getDepartmentId());
+			}else {
+				map.put("loginUserId", loginUserId);
+			}
+		}else {
+			if(StringUtils.equals("2", adminType)|| StringUtils.equals("3", roleType)) {
+				String orgId = baseAppUserService.getBareauByUserId(loginUserId);
+				if(StringUtils.isNotBlank(orgId)) {
+					map.put("orgId", orgId);
+				}
+			}
+		}
+		List<DocumentDic> dicByType = documentInfoService.queryDicByType(map);
+		Response.json(DbDefined.DOCUMENT_TYPE,dicByType );
 	}
 }

@@ -32,7 +32,7 @@ var pageModule = function(){
 			success:function(data){
 				if(data && !!data){
 					$(".blfkchangeH").attr("style","position:absolute;top:34px;left:0;bottom:0;width:100%;right:0;")
-					$("#ifcuibanContent").text(data.userName+"催办："+data.urgeContent).show();
+					$("#ifcuibanContent").text(data.userName+"催办："+data.urgeContent).attr("title",data.userName+"催办："+data.urgeContent).show();
 				}
 			}
 		})
@@ -166,7 +166,7 @@ var pageModule = function(){
 			data:{infoId:fileId},
 			success:function(data){
 				var psxqBtn="";
-				if(data.length>1){
+				if(data.length>0){
 					psxqBtn='<a href="javascript:;" class="psxqBtn" onclick="showXQ(\''+fileId+'\')">详情</a>'
 				}
 				if(data&&data.length>0){
@@ -733,6 +733,7 @@ var pageModule = function(){
 		    	var ajax_option = {
 					url : saveUrl.url,// 默认是form action
 					data:{subId:subId,infoId:fileId,teamId:$("#editTeamId").val(),replyContent:$("#replyContent").val()},
+					type:'post',
 					success : function(data) {
 						if (data.result == "success") {
 							if(isSave && isSave!=1){

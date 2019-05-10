@@ -11,7 +11,7 @@
 		select t.*,c.under_depts,d.* from DB_DOCUMENT_INFO t
 			left join (select INFO_ID,USER_NAME as leader_name ,LEADER_COMMENT as leader_content,CREATED_TIME as leader_time,row_number() over(partition by info_id order by created_time asc) as dNum from DB_DOCUMENT_SZPS) d on t.id = d.info_id
 			left join (select distinct info_id,listagg(sub_dept_name || nvl2(undertaker_name,'/' || undertaker_name,null), ',') within group(order by created_time desc) over(partition by info_id) under_depts from DB_SUB_DOC_INFO) c on t.id = c.info_id	
-		<if test="orgid != null">
+		<if test="orgid != null and orgid != ''" >
 			left join DB_SUB_DOC_INFO  dadi on t.id=dadi.INFO_ID
 		</if>
 		 where (d.dNum = 1 or d.dNum is null) 
@@ -55,6 +55,9 @@
 		WITH V_RESULT as(select SUB_ID from 
 		(select SUB_ID, row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num
 		from DB_SUB_DOC_TRACKING where 1=1 
+		<if test="deptId !=null and deptId !=''">
+			and REC_DEPT_ID = #{deptId}
+		</if>
 		<if test="loginUserId !=null and loginUserId !=''">
 			and RECEIVER_ID = #{loginUserId}
 		</if>)
@@ -95,11 +98,27 @@
 		</if>
 	</select>
 	<select id="queryDicByType" resultType="com.css.app.db.config.entity.DocumentDic">
-	select dic.*,nvl(s.num,0) hasUpdateNum from DB_DOCUMENT_DIC dic 
-	left join(select DOC_TYPE_ID, count(1) as num 
-	from "DB_DOCUMENT_INFO" t left join  DB_DOCUMENT_CBJL a on t.ID=a.INFO_ID 
-	where t.LATEST_REPLY !='' and t.LATEST_REPLY is not null 
-	and t.id not in ( select INFO_ID from DB_DOCUMENT_READ where USER_ID=#{loginUserId}) group by t.DOC_TYPE_ID )s 
+		WITH V_RESULT as(select SUB_ID from 
+		(select SUB_ID, row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num
+		from DB_SUB_DOC_TRACKING where 1=1 
+		<if test="deptId !=null and deptId !=''">
+			and REC_DEPT_ID = #{deptId}
+		</if>
+		<if test="loginUserId !=null and loginUserId !=''">
+			and RECEIVER_ID = #{loginUserId}
+		</if>
+	)
+	where num =1)
+	select dic.*,nvl(s.num,0) hasUpdateNum from DB_DOCUMENT_DIC dic	
+	left join(select DOC_TYPE_ID, count(1) as num
+	from DB_SUB_DOC_INFO a inner join v_result b on a.ID = b.SUB_ID
+	left join "DB_DOCUMENT_INFO" t on a.INFO_ID=t.ID
+	where t.LATEST_REPLY !=''
+	and t.LATEST_REPLY is not null
+	<if test="orgId != null and orgId != '' ">
+		and a.SUB_DEPT_ID=#{orgId}
+	</if>
+	and t.id not in ( select INFO_ID from DB_DOCUMENT_READ where USER_ID=#{userId}) group by t.DOC_TYPE_ID )s	
 	on dic.value = s.DOC_TYPE_ID
 	where dic.DIC_TYPE = #{docType} order by value asc
 	</select>

@@ -12,7 +12,7 @@ var getData ={"url":"/app/db/documentinfo/info","dataType":"json"}; /*编辑返�
 var getPdfPath = {"url":rootPath +"/fileinfo/getFormaFileUrl","dataType":"text"};
 var UserTreeUrl = {"url":"/app/base/user/treeByPost","dataType":"text"}; //登记人树
 var deleteSzcqUrl = {"url":"/app/db/documentszps/delete","dataType":"text"};//删除首长批示
-
+var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var fileId=getUrlParam("fileId")||""; //主文件id
 $("#id").val(fileId);
 var scanFilePath = "";//扫描件路径
@@ -222,10 +222,6 @@ var pageModule = function(){
 		    pickerPosition: (Metronic.isRTL() ? "bottom-right" : "bottom-left")
 		});
 		
-
-/*		var newdate = (new Date()).format("yyyy-MM-dd");
-		$("#applyTime").val(newdate);*/
-		
 		$("#commentForm").validate({
 			ignore:'',
 		    submitHandler: function() {
@@ -237,15 +233,16 @@ var pageModule = function(){
 				var paramdata = getformdata(elementarry);
 				paramdata.id = fileId;
 				//newbootbox.alert('正在保存，请稍候...',false);
-				$ajax({
-					url:updateUrl,
+				$.ajax({
+					url:updateUrl.url,
 					data:paramdata,
+					type:"post",
 					success:function(data){
 						window.top.$(".newclose").click();
 						if(addFlag){
 							window.location.href="/app/db/document/djlr/html/add.html";
 						}else if(returnSave){
-							window.location.href = "/app/db/document/djlr/html/djlr.html";
+							window.location.href = "/app/db/document/djlr/html/djlr.html?fileFrom=djlr";
 						}else{
 							setTimeout(function(){
 								newbootbox.alert("保存成功！").done(function(){
@@ -284,7 +281,7 @@ var pageModule = function(){
 			    	$("#commentForm").submit();
 			    },
 			    callback2:function(){
-			    	window.location.href = "/app/db/document/djlr/html/djlr.html";
+			    	window.location.href = "/app/db/document/djlr/html/djlr.html?fileFrom=djlr";
 			    }
 			});
 		})
@@ -299,7 +296,7 @@ var pageModule = function(){
 			    	$("#commentForm").submit();
 			    },
 			    callback2:function(){
-			    	window.location.href = "/app/dzbms/document/wjgl/html/wjgllb.html";
+			    	window.location.href = "/app/db/document/djlr/html/djlr.html?fileFrom=djlr";
 			    }
 			});
 		});

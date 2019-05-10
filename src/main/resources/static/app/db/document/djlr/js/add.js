@@ -10,6 +10,7 @@ var getFormatFileUrl = {"url":"/app/db/documentfile/getFile","dataType":"text"};
 var getPdfPath = {"url":rootPath +"/fileinfo/getFormaFileUrl","dataType":"text"};
 var UserTreeUrl = {"url":"/app/base/user/treeByPost","dataType":"text"}; //登记人树
 var deleteSzcqUrl = {"url":"/app/db/documentszps/delete","dataType":"text"};//删除首长批示
+var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var scanFilePath = "";//扫描件路径
 //带入批示首长信息
 var psszName = "";
@@ -179,16 +180,17 @@ var pageModule = function(){
 				var paramdata = getformdata(elementarry);
 				paramdata.id = $("#id").val();
 				//newbootbox.alert('正在保存，请稍候...',false);
-				$ajax({
-					url:updateUrl,
+				$.ajax({
+					url:updateUrl.url,
 					data:paramdata,
+					type:"post",
 					success:function(data){
 						$("#id").val(data.id);
 						window.top.$(".newclose").click();
 						if(addFlag){
 							window.location.href="/app/db/document/djlr/html/add.html";
 						}else if(returnSave){
-							window.location.href = "/app/db/document/djlr/html/djlr.html";
+							window.location.href = "/app/db/document/djlr/html/djlr.html?fileFrom=djlr";
 						}else{
 							setTimeout(function(){
 								newbootbox.alert("保存成功！").done(function(){
@@ -227,7 +229,7 @@ var pageModule = function(){
 			    	$("#commentForm").submit();
 			    },
 			    callback2:function(){
-			    	window.location.href = "/app/db/document/djlr/html/djlr.html";
+			    	window.location.href = "/app/db/document/djlr/html/djlr.html?fileFrom=djlr";
 			    }
 			});
 		})
@@ -242,7 +244,7 @@ var pageModule = function(){
 			    	$("#commentForm").submit();
 			    },
 			    callback2:function(){
-			    	window.location.href = "/app/db/document/djlr/html/djlr.html";
+			    	window.location.href = "/app/db/document/djlr/html/djlr.html?fileFrom=djlr";
 			    }
 			});
 		});

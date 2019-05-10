@@ -78,7 +78,7 @@ var pageModule = function(){
                 	if(rowdata.latestReply){
                 		dbCont=rowdata.latestReply;
                 	}	 
-                	return '<div class="dblsqk" onclick="dblsqkAlert(\''+rowdata.infoId+'\')"  title="'+dbCont+'">'+duban+dbCont+'</div>';
+                	return '<div class="dblsqk" onclick="dblsqkAlert(\''+rowdata.infoId+'\')"  title="'+dbCont+'">'+duban+'<span>'+dbCont+'</span></div>';
                 }},
                 {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,title:true,render:function(rowdata){
                	 	return rowdata.underDepts||'';
@@ -114,7 +114,7 @@ var pageModule = function(){
 						$(this).html($(this).html()+'...');
 					}
 				});
-            	$(".dblsqk").each(function(){
+            	$(".dblsqk span").each(function(){
 					var maxwidth = 83;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));

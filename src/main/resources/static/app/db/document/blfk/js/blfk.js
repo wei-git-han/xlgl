@@ -2,7 +2,7 @@ var tableList= {"url":"/app/db/documentinfo/replyList","dataType":"text"};//原t
 var numsList={"url":"/app/db/documentinfo/replyNums","dataType":"text"};//筛选状态数字统计
 var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//部门树
 var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//人员树
-var leftMenuUrl = {"url":rootPath +"/documentdic/getDicByTypet","dataType":"text"};//左侧菜单
+var leftMenuUrl = {"url":"/app/db//documentinfo/getDicByTypet","dataType":"text"};//左侧菜单
 var batchReadUrl = {"url":"/app/db/documentinfo/batchRead","dataType":"text"};//批量已读
 var leftMenuNums = {"url":"","dataType":"text"};//左侧菜单数字统计
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
@@ -20,7 +20,6 @@ var pageModule = function(){
 	var leftMenufn = function(){
 		$ajax({
 			url:leftMenuUrl,
-			data:{dicType:"document_type"},
 			async:false,
 			success:function(data){
 				$("#classType").html("");
@@ -106,7 +105,7 @@ var pageModule = function(){
                 	 if(rowdata.latestReply){
                 		dbCont=rowdata.latestReply;
                 	 }
-                	 return '<div class="dblsqk" onclick="dblsqkAlert(\''+rowdata.id+'\')" title="'+dbCont+'">'+duban+dbCont+'</div>';
+                	 return '<div class="dblsqk" onclick="dblsqkAlert(\''+rowdata.id+'\')" title="'+dbCont+'">'+duban+'<span>'+dbCont+'</span></div>';
                  }},
                  {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,title:true,render:function(rowdata){
                 	 return rowdata.underDepts||'';
@@ -141,7 +140,7 @@ var pageModule = function(){
 						$(this).html($(this).html()+'...');
 					}
 				});
-            	$(".dblsqk").each(function(){
+            	$(".dblsqk span").each(function(){
 					var maxwidth = 60;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
@@ -196,7 +195,7 @@ var pageModule = function(){
                 	 if(rowdata.latestReply){
                 		dbCont=rowdata.latestReply;
                 	 }	 
-                	 return '<div class="dblsqk"  onclick="dblsqkAlert(\''+rowdata.id+'\')" title="'+dbCont+'">'+duban+dbCont+'</div>';
+                	 return '<div class="dblsqk"  onclick="dblsqkAlert(\''+rowdata.id+'\')" title="'+dbCont+'">'+duban+'<span>'+dbCont+'</span></div>';
                  }},
                  {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,title:true,render:function(rowdata){
                 	 return rowdata.underDepts||'';
@@ -224,7 +223,7 @@ var pageModule = function(){
             paramobj:{search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month},
             loadafter:function(data){
             	total=data.total;
-            	$(".dblsqk").each(function(){
+            	$(".dblsqk span").each(function(){
 					var maxwidth = 57;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
@@ -331,6 +330,7 @@ var pageModule = function(){
 							success:function(data){
 								if(data.result == "success"){
 									newbootbox.alertInfo("已读成功！").done(function(){
+										leftMenufn();
 										if($("#gridcont2").is(":hidden")){
 											pageModule.initgrid();
 										}else{
