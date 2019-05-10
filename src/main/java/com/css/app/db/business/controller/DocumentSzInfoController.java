@@ -290,7 +290,7 @@ public class DocumentSzInfoController {
 			jo.put("title", documentInfo.getDocTitle());
 			String sz=documentInfo.getSzReadIds();
 			if(StringUtils.isNotBlank(documentInfo.getLeaderName())) {
-				jo.put("pszsmr", documentInfo.getLeaderName()+":" +documentInfo.getLeaderContent() +" " +(documentInfo.getLeaderTime()==null?"":sdf.format(documentInfo.getLeaderTime())));
+				jo.put("pszsmr", documentInfo.getLeaderName()+":" +documentInfo.getLeaderContent() +" " +(documentInfo.getLeaderTime()==null?"":documentInfo.getLeaderTime()));
 				//jo.put("pszsmr", "");				
 			}else {
 				jo.put("pszsmr", "");				
@@ -362,7 +362,10 @@ public class DocumentSzInfoController {
 			//LATEST_REPLY
 			if((StringUtils.isEmpty(sz)||!(sz).contains(userid))&&StringUtils.isNotBlank(documentInfo.getLatestReply())) {
 				gengxin="1";//已更新显示
+			}if(documentInfo.getStatus()==1) {
+				jo.put("CuibanFlag","1" );//是否催办    1显示      0不显示
 			}
+			
 			
 			jo.put("gengxin",gengxin);//已更新显示
 			jo.put("dblsqk",StringUtils.isBlank(cont)?"":cont);

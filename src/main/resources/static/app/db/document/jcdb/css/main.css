@@ -88,7 +88,7 @@ html,body{background:#2E4A83;height:100%;}
 .nc-left-top-title{padding:10px 0;font-size:16px;}
 .nc-left-cent{}
 .nc-left-group{display:table;width:100%;padding:10px 0;}
-.nc-left-group-cont{float:left;width:25%;padding-right:20px;margin-bottom:20px;}
+.nc-left-group-cont{float:left;width:25%;padding-right:20px;margin-bottom:10px;}
 .nc-left-group-cont-top{font-size:16px;color:#C7CCD9;padding-bottom:10px;}
 .nc-left-group-cont-cont{font-size:14px;color:#fff;max-height:100px;white-space: initial;}
 .right-search{color:#fff;padding-top:10px;}

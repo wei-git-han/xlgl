@@ -158,7 +158,7 @@ var pageModule = function(){
 															<div class="nc-left-group-cont-top" >
 																<font>${dwry}</font>
 															</div>
-															<div class="nc-left-group-cont-cont scroller">
+															<div class="nc-left-group-cont-cont scroller" style="height:40px;">
 																${cont}
 															</div>
 														</div>

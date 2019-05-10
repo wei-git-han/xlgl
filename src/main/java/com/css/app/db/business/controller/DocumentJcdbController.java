@@ -395,16 +395,23 @@ public class DocumentJcdbController {
 	public String getRoleType() {
 		//当前登录人的角色
 		//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
+		BaseAppConfig mapped = baseAppConfigService.queryObject(AppConstant.LEAD_TEAM);//首长单位id
+		
 		JSONObject jo=new JSONObject();
 		Map<String, Object> roleMap = new HashMap<>();
 		String userid=CurrentUser.getUserId();
+		String depid=CurrentUser.getDepartmentId();
 		roleMap.put("userId",userid);
 		List<RoleSet> roleList = roleSetService.queryList(roleMap);
 		String roleType="";
 		String orgid="";
 		if(roleList != null && roleList.size()>0) {
 			return roleType = roleList.get(0).getRoleFlag();
-		}else {
+		}else if(mapped!=null){
+			if(depid.equals(mapped.getValue())) {
+				return "1";//首长单位下的人(默认为首长)
+			}
+		}else{
 			//当前登录人的管理员类型
 			String adminType = "0";//管理员类型（1：部管理员；2：局管理员）
 			Map<String, Object> adminMap = new HashMap<>();
