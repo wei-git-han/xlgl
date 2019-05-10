@@ -39,6 +39,9 @@
 		<if test="type != null">
 			and t.DOC_TYPE_ID=#{type}
 		</if>
+		<if test="latestreply != null and latestreply != ''">
+				and t.LATEST_REPLY !=''  
+			</if>
 		<if test="isnotuserid != null">
 			and (t.sz_read_ids not like '%'||#{isnotuserid}||'%' or t.sz_read_ids is null)
 		</if>

@@ -153,43 +153,21 @@ var pageModule = function(){
                     					var dwry = this.dwry;
                     					var cont = this.cont;
                     					
-                    					var innerhtml = `
-														<div class="nc-left-group-cont" style="${width}">
-															<div class="nc-left-group-cont-top" >
-																<font>${dwry}</font>
-															</div>
-															<div class="nc-left-group-cont-cont scroller" style="height:40px;">
-																${cont}
+                    					html2 = `
+	                    								<div class="nc-left-group">
+															<div class="nc-left-group-cont" style="${width}">
+																<div class="nc-left-group-cont-top" >
+																	<font>${dwry}</font>
+																</div>
+																<div class="nc-left-group-cont-cont scroller" style="height:40px;">
+																	${cont}
+																</div>
 															</div>
 														</div>
-                    									`
-                    					
-                    					if(i==0){
-                    						html2+=`
-                    							<div class="nc-left-group">
-													${innerhtml}
-                    						`
-                    					}else if(i!=(array.length-1)){
-	                    					if(i%4==0){
-	                    						html2+=`
-	                    							</div>
-	                    							<div class="nc-left-group">
-														${innerhtml}
-	                    						`
-	                    					}else{
-	                    						html2+=`
-														${innerhtml}
-	                    						`
-	                    					}
-                    					}else if(i==(array.length-1)){
-	                    					html2+=`
-														${innerhtml}
-													</div>
-	                    						`
-                    					}
+                    									`;
 										
                     				});
-                    				
+                    				if(n==4){console.log(array)}
                     				var html = `
 										<div class="newpanel" id="${id}">
 											<div class="newpanel-cent">

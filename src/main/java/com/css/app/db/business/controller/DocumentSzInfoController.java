@@ -222,7 +222,8 @@ public class DocumentSzInfoController {
 		if(StringUtils.isNotBlank(state)) {
 			if("0".equals(state)) {
 				
-				map.put("state2", "0");//办理中
+				map.put("state2", "0");
+				map.put("latestreply", "0");
 				map.put("isnotuserid", userid);
 			}else {
 				map.put("state", state);
@@ -321,7 +322,7 @@ public class DocumentSzInfoController {
 				jo.put("other","2");//不显示催办和是否已读按钮
 				//jo.put("other","1" );//是否催办    1显示      0不显示
 				jo.put("CuibanFlag","0" );//是否催办    1显示      0不显示
-			}else if(StringUtils.isBlank(documentInfo.getLatestReply())){//无局长意见
+			}else if(StringUtils.isBlank(documentInfo.getLatestReply())&&StringUtils.equals("0", documentInfo.getCuibanFlag())){//无局长意见
 				jo.put("other","1");//显示催办按钮
 			}else {//办理中   有局长意见
 				if(StringUtils.isEmpty(sz)||!(sz).contains(userid)) {
@@ -378,7 +379,12 @@ public class DocumentSzInfoController {
 			jo.put("gengxin",gengxin);//已更新显示
 			jo.put("dblsqk",StringUtils.isBlank(cont)?"":cont);
 			if("".equals(cbdw)) {
-				jo.put("cbdwry","");				
+				jo.put("cbdwry","");
+				yijianjo.put("dw","");
+				yijianjo.put("ry", "");
+				yijianjo.put("cont", "");
+				yijianjo.put("dwry", "");
+				yijianja.add(yijianjo);
 			}else {
 				//${dw}-${ry}
 				cbdw=StringUtils.isBlank(cbdw)?"":cbdw;
