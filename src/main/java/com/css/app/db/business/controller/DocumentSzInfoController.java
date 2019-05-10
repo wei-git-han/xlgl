@@ -328,6 +328,8 @@ public class DocumentSzInfoController {
 				}
 				//jo.put("other","1" );//是否催办    1显示      0不显示
 				jo.put("CuibanFlag","0" );//是否催办    1显示      0不显示
+			}else if(StringUtils.isBlank(documentInfo.getLatestReply())){//无局长意见
+				jo.put("other","1");
 			}
 			
 			
