@@ -20,6 +20,7 @@ import com.css.app.db.business.dao.SubDocTrackingDao;
 import com.css.app.db.business.entity.DocumentInfo;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.service.DocumentInfoService;
+import com.css.app.db.config.entity.DocumentDic;
 
 
 
@@ -145,5 +146,10 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 		info.setLatestSubDept("");
 		info.setLatestUndertaker("");
 		documentInfoDao.update(info);
+	}
+
+	@Override
+	public List<DocumentDic> queryDicByType(Map<String, Object> map) {
+		return documentInfoDao.queryDicByType(map);
 	}
 }

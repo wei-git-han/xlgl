@@ -9,9 +9,10 @@ var pageModule = function(){
 		$("#replyContent").val(replyContent);
 		//确定
 		$("#sure").click(function(){
-			$ajax({
-				url:sureUrl,
+			$.ajax({
+				url:sureUrl.url,
 				data:{subId:subId,infoId:fileId,teamId:teamId,replyContent:$("#replyContent").val()},
+				type:'post',
 				success:function(data){
 					newbootbox.newdialogClose("editDialog");
 					if(data.result=="success"){

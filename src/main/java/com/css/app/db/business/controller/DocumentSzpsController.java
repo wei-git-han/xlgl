@@ -52,7 +52,6 @@ public class DocumentSzpsController {
 	@RequestMapping("/save")
 	public void save(DocumentSzps documentSzps){
 		JSONObject json=new JSONObject();
-		String infoId=documentSzps.getInfoId();
 		if(StringUtils.isBlank(documentSzps.getId())) {
 			documentSzps.setId(UUIDUtils.random());
 			documentSzpsService.save(documentSzps);

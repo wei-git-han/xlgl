@@ -1,6 +1,7 @@
 package com.css.app.db.business.service;
 
 import com.css.app.db.business.entity.DocumentInfo;
+import com.css.app.db.config.entity.DocumentDic;
 
 import java.util.List;
 import java.util.Map;
@@ -37,4 +38,5 @@ public interface DocumentInfoService {
 	List<DocumentInfo> queryPersonList(Map<String, Object> map);
 	List<Map<String, Object>> queryListByDicStutas(Map<String, Object> map);
 	void deleteByCheHui(String id);
+	List<DocumentDic> queryDicByType(Map<String, Object> map);
 }

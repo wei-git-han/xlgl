@@ -26,7 +26,7 @@ var pageModule = function(){
 			success:function(data){
 				if(data && !!data){
 					$(".blfkchangeH").attr("style","position:absolute;top:34px;left:0;bottom:0;width:100%;right:0;")
-					$("#ifcuibanContent").text(data.userName+"催办："+data.urgeContent).show();
+					$("#ifcuibanContent").text(data.userName+"催办："+data.urgeContent).attr("title",data.userName+"催办："+data.urgeContent).show();
 				}
 			}
 		})
@@ -132,7 +132,7 @@ var pageModule = function(){
 			data:{infoId:fileId},
 			success:function(data){
 				var psxqBtn="";
-				if(data.length>1){
+				if(data.length>0){
 					psxqBtn='<a href="javascript:;" class="psxqBtn" onclick="showXQ(\''+fileId+'\')">详情</a>'
 				}
 				if(data&&data.length>0){
@@ -317,6 +317,17 @@ var pageModule = function(){
 				}else{
 					var color = el.parents(".newpanel-cont").attr("color");
 					subId = el.parents(".newpanel-cont").attr("subId");
+					var newText = '				<font class="nrt-cont-cent-font" >';
+					if(o.yjType == "1"){
+						newText +='<div class="" title="" style="width:100%;">'+
+							 '	<img src="'+content+'" style="max-height: 100px;"/>'+
+							 '</div>';
+					}else{
+						newText +='<div class="" title="">'+
+							 '	<span class="message">'+content+'</span>'+
+							 '</div>';
+					}
+					newText+='				</font>';
 					li = `
 									<div class="newpanel-right-cent" id="${id}">
 										<div class="nrt-cont" style="border-color:${color}">
@@ -340,7 +351,7 @@ var pageModule = function(){
 											</div>
 											<div class="nrt-cont-cent">
 												<div class="wh100 scroller">
-													<font class="nrt-cont-cent-font" >${content}</font>
+													<font class="nrt-cont-cent-font" >${newText}</font>
 												</div>
 											</div>
 										</div>

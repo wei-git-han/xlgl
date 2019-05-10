@@ -116,8 +116,12 @@ public class ReplyExplainController {
 							json.put("cuowei","1");
 							for(ApprovalOpinion opinion : opinionList) {
 								if(StringUtils.equals("1", opinion.getYjType())) {
-									HTTPFile httpFile = new HTTPFile(opinion.getOpinionContent());
-									opinion.setOpinionContent(httpFile.getAssginDownloadURL());
+									if(StringUtils.isNotBlank(opinion.getOpinionContent())) {
+										HTTPFile httpFile = new HTTPFile(opinion.getOpinionContent());
+										opinion.setOpinionContent(httpFile.getAssginDownloadURL());
+									}else {
+										System.out.print("局长手写签批没有保存上");
+									}
 								}
 							}
 							json.put("opinionList",opinionList);
