@@ -308,28 +308,24 @@ public class DocumentSzInfoController {
 				jo.put("zbdate","");								
 			}
 			
-			if(StringUtils.isEmpty(sz)||!(sz).contains(userid)) {
-				jo.put("other","0");//确认已读按钮显示
-			}else if(StringUtils.equals("0", documentInfo.getCuibanFlag())){//显示催办按钮				
-				jo.put("other","1");
-			}else {
-				jo.put("other","2");				
-			}
-			
 			//jo.put("other","1");
 			String CuibanFlag=documentInfo.getCuibanFlag();
 			jo.put("CuibanFlag",CuibanFlag );//是否催办    1显示      0不显示
 			
 			if(documentInfo.getStatus()>1) {
-				if(StringUtils.equals("0", documentInfo.getCuibanFlag())){//显示催办按钮					
+				jo.put("other","2");//不显示催办和是否已读按钮
+				//jo.put("other","1" );//是否催办    1显示      0不显示
+				jo.put("CuibanFlag","0" );//是否催办    1显示      0不显示
+			}else if(StringUtils.isBlank(documentInfo.getLatestReply())){//无局长意见
+				jo.put("other","1");//显示催办按钮
+			}else {//办理中   有局长意见
+				if(StringUtils.isEmpty(sz)||!(sz).contains(userid)) {
+					jo.put("other","0");//确认已读按钮显示
+				}else if(StringUtils.equals("0", documentInfo.getCuibanFlag())){//显示催办按钮				
 					jo.put("other","1");
 				}else {
 					jo.put("other","2");				
 				}
-				//jo.put("other","1" );//是否催办    1显示      0不显示
-				jo.put("CuibanFlag","0" );//是否催办    1显示      0不显示
-			}else if(StringUtils.isBlank(documentInfo.getLatestReply())){//无局长意见
-				jo.put("other","1");
 			}
 			
 			
