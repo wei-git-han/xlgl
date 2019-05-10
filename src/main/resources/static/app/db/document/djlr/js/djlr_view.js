@@ -583,6 +583,8 @@ function skip(){
 			window.location.href="/app/db/document/grdb/html/grdb.html?fileFrom=grdb";
 		}else if(fileFrom=="blfk"){  //文件来源于办理反馈
 			window.location="/app/db/document/blfk/html/blfk.html?fileFrom=blfk";
+		}else if(fileFrom=="jndb"){ 
+			window.location.href="/app/db/document/jndb/html/jndb.html?fileFrom=jndb";
 		}else{ 
 			window.location.href="/app/db/document/grdb/html/grdb.html?fileFrom=grdb";
 		}

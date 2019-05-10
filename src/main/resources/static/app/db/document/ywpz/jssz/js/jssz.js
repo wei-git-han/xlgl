@@ -15,13 +15,13 @@ var pageModule = function() {
 						  if('1'==rowdata.roleFlag){
 							  return "首长"
 						  }
-						  if('2'==rowdata.roleFlag){
+/*						  if('2'==rowdata.roleFlag){
 							  return "首长秘书"
-						  }
+						  }*/
 						  if('3'==rowdata.roleFlag){
 							  return "局长"
 						  }
-						  if('4'==rowdata.roleFlag){
+/*						  if('4'==rowdata.roleFlag){
 							  return "局秘书"
 						  }
 						  if('5'==rowdata.roleFlag){
@@ -29,7 +29,7 @@ var pageModule = function() {
 						  }
 						  if('6'==rowdata.roleFlag){
 							  return "参谋"
-						  }
+						  }*/
 						  
 					  }}, 
 					  {display: "操作",name: "do",width: "10%",align: "center",render: function(rowdata,n){

@@ -22,7 +22,11 @@ var pageModule = function(){
 			success:function(data){
 				$("#classType").html("");
 				$.each(data.document_type,function(i,item){
-					$("#classType").append('<li class="'+(i==0?"active":"")+'" data_flag="'+item.gridFlag+'" value="'+item.value+'"><span>'+item.text+'</span><font id="Menu_num'+i+'"></font><i class="fa fa-angle-right"></i></li>');
+					var dot ='';
+					if(item.hasUpdateNum!=0){
+						dot = '<span class="dot"></span>'
+					}
+					$("#classType").append('<li class="'+(i==0?"active":"")+'" data_flag="'+item.gridFlag+'" value="'+item.value+'"><span>'+item.text+dot+'</span><font id="Menu_num'+i+'"></font><i class="fa fa-angle-right"></i></li>');
 				});
 				
 				$("#classType li").unbind("click");
