@@ -11,6 +11,7 @@ var getFormatFileUrl = {"url":"/app/db/documentfile/getFile","dataType":"text"};
 var getData ={"url":"/app/db/documentinfo/info","dataType":"json"}; /*编辑返回的数据*/
 var getPdfPath = {"url":rootPath +"/fileinfo/getFormaFileUrl","dataType":"text"};
 var UserTreeUrl = {"url":"/app/base/user/treeByPost","dataType":"text"}; //登记人树
+var deleteSzcqUrl = {"url":"/app/db/documentszps/delete","dataType":"text"};//删除首长批示
 
 var fileId=getUrlParam("fileId")||""; //主文件id
 $("#id").val(fileId);
@@ -83,13 +84,40 @@ var pageModule = function(){
 			data:{infoId:fileId},
 			success:function(data){
 				$("#showcq").html("");
+				$("#cqcontent").val("");
+				$("#editcqId").val("");
 				$.each(data,function(i,item){
-					$("#showcq").prepend(
+					$("#showcq").append(
 						'<div class="cqline">'+
-						'	<div><span>'+item.userName+'</span><span>'+item.createdTime+'</span></div>'+
+						'	<div dataId="'+item.id+'" dataName="'+item.leaderComment+'" dataUser="'+item.userName+'" dataDate="'+item.createdTime+'"><span>'+item.userName+'</span><span class="cqrq">'+item.createdTime+'</span><span class="pull-right"><a style="margin-right:10px" class="editcq">编辑</a><a class="delcq">删除</a></span></div>'+
 						'	<div>'+item.leaderComment+'</div>'+
 						'</div>'
 					);
+				});
+				
+				
+				$(".editcq").click(function(){//编辑抄清
+					$("#cqcontent").val($(this).parent().parent().attr("dataName"));
+					$("#editcqId").val($(this).parent().parent().attr("dataId"));
+					
+					psszName = $(this).parent().parent().attr("dataUser");
+					$("#cqDate").val($(this).parent().parent().attr("dataDate"));
+				});
+				
+				$(".delcq").click(function(){
+					$ajax({
+						url:deleteSzcqUrl,//删除抄清
+						data:{id:$(this).parent().parent().attr("dataId")},
+						success:function(data){
+							if(data.result == "success"){
+								newbootbox.alert("删除成功！").done(function(){
+									initCqfn();
+								});
+							}else{
+								newbootbox.alert(data.result+"！");
+							}
+						}
+			    	});
 				});
 			}
 		});
@@ -126,14 +154,17 @@ var pageModule = function(){
 			success:function(data){
 				$("#file_all").html("");
 				var scanId ="";
-				$.each(data,function(i,item){
-					if(i==0){
-						scanId = item.id;
-					}
-					$("#file_all").append(
-						'<li><input type="checkbox" name="fjcheckbox" data="'+item.id+'" /> <a data="'+item.id+'">'+item.fileName+'</a></li>'
-		            )
-				});
+				if(data&&data.length>0){
+					$.each(data,function(i,item){
+						if(i==0){
+							scanId = item.id;
+						}
+						$("#file_all").append(
+							'<li><input type="checkbox" name="fjcheckbox" data="'+item.id+'" /> <a data="'+item.id+'">'+item.fileName+'</a></li>'
+			            )
+					});
+				}
+				
 				$ajax({
 					url:getFormatFileUrl,
 					data:{id:scanId},
@@ -311,7 +342,7 @@ var pageModule = function(){
 			}
 			$ajax({
 				url:saveSzpsUrl,
-				data:{infoId:$("#id").val(),userId:psszId,userName:psszName,leaderComment:leaderComment,createdTime:createdTime},
+				data:{infoId:$("#id").val(),userId:psszId,userName:psszName,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
 				success:function(data){
 					if(data.result == "success"){
 						newbootbox.alert("保存成功！").done(function(){
@@ -413,7 +444,6 @@ var pageModule = function(){
 						$("#dialogzz").hide();
 						if(data.result == "success"){
 							newbootbox.alert('上传成功！').done(function(){
-								$("#showupload").modal("hide");
 				        		$(".fileinput-filename").text("");
 				    			$("#pdf").val("");
 				    			$("#scanId").val(data.smjId);
@@ -438,21 +468,14 @@ var pageModule = function(){
 			$("#pdf").unbind("change");
 			$("#pdf").click();
 			$("#pdf").change(function(){
-				/*var fileNameArry = $(this).val().split("\\");
+				var fileNameArry = $(this).val().split("\\");
 				var fileName;
 				if(fileNameArry.length==1){
 					fileName=fileNameArry[0];
 				}else{
 					fileName=fileNameArry[fileNameArry.length-1];
 				}
-				$(".fileinput-filename").text(fileName);*/
-				var uploadfiles = document.querySelector("#pdf").files;
-				var filesName = [];
-				$.each(uploadfiles,function(i,item){
-					filesName.push(item.name);
-				});
-				$(".fileinput-filename").text(filesName.toString());
-				
+				$(".fileinput-filename").text(fileName);
 				var id=$("#id").val();
 				$("#idpdf").val(id);
 				$("#form3").submit();
@@ -499,6 +522,11 @@ var pageModule = function(){
 }();
 
 var psLoad = function(psFileId, psPath){
+	if(psPath == "" || psPath == null || psPath=="undefined"){
+		$("#embedwrap").hide();
+	}else{
+		$("#embedwrap").show();
+	}
 	var embedWidth = "100%";
 	var embedHeight = "100%";
 	var id=$("#scanId").val();

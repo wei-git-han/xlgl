@@ -32,7 +32,7 @@ var pageModule = function(){
 		});
 		
 		$("#quxiao,#fanhui").click(function(){
-			window.location.href="/app/db/document/ywpz/glysz/html/index.html";
+			window.location.href="/app/db/document/ywpz/glysz/html/index.html?departType="+departType;
 		})
 		
 		$("#save").click(function(){
@@ -55,7 +55,7 @@ var pageModule = function(){
 				success:function(data){
 					if(data.result == "success") {
 						newbootbox.alertInfo('保存成功！').done(function(){
-							window.location.href = "/app/db/document/ywpz/glysz/html/index.html"
+							window.location.href = "/app/db/document/ywpz/glysz/html/index.html?departType="+departType;
 						});
 					}else{
 						newbootbox.alertInfo("保存失败！");

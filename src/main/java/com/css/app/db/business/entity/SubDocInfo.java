@@ -62,7 +62,7 @@ public class SubDocInfo implements Serializable {
 	//最新的首长批示
 	private String leaderContent;
 	//最新的首长批示时间
-	private Date leaderTime;
+	private String leaderTime;
 	//我是不是当前处理人
 	private Integer receiverIsMe;
 	//承办单位/人
@@ -244,10 +244,10 @@ public class SubDocInfo implements Serializable {
 	public void setLeaderContent(String leaderContent) {
 		this.leaderContent = leaderContent;
 	}
-	public Date getLeaderTime() {
+	public String getLeaderTime() {
 		return leaderTime;
 	}
-	public void setLeaderTime(Date leaderTime) {
+	public void setLeaderTime(String leaderTime) {
 		this.leaderTime = leaderTime;
 	}
 	public Integer getReceiverIsMe() {
