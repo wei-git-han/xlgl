@@ -15,7 +15,7 @@
 			left join DB_SUB_DOC_INFO  dadi on t.id=dadi.INFO_ID
 		</if>
 		 where (d.dNum = 1 or d.dNum is null) 
-		 <if test="orgid != null">
+		 <if test="orgid != null and orgid != '' ">
 			and dadi.SUB_DEPT_ID=#{orgid}
 		</if>
 		<if test='docStatus == "1"'>

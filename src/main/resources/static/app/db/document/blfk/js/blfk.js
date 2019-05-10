@@ -9,6 +9,9 @@ var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var orgid=getUrlParam("orgid")||""; //统计图传过来的机构
 var month=getUrlParam("month")||""; //统计图传过来的月份
 var ytype=getUrlParam("ytype")||""; //统计图传过来的办理状态
+if(fileFrom && fileFrom == "jcdb"){
+	$("input[value="+ytype+"]").attr("checked",true);
+}
 var grid = null;
 var grid2 = null;
 var total=0;//列表中，数据的总条数
@@ -128,7 +131,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 10,
             pageyno:true,
-            paramobj:{search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value")},
+            paramobj:{search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month},
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
@@ -218,7 +221,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 10,
             pageyno:true,
-            paramobj:{search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value")},
+            paramobj:{search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month},
             loadafter:function(data){
             	total=data.total;
             	$(".dblsqk").each(function(){

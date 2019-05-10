@@ -2,6 +2,8 @@ package com.css.app.db.business.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +51,7 @@ import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 
 import cn.com.css.filestore.impl.HTTPFile;
+import dm.jdbc.util.StringUtil;
 
 
 /**
@@ -208,8 +211,15 @@ public class DocumentInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/replyList")
-	public void replyList(Integer page, Integer pagesize,String search,String status,String typeId){
+	public void replyList(Integer page, Integer pagesize,String search
+			,String status,String typeId,String orgid,String month){
 		String loginUserId=CurrentUser.getUserId();
+		String dateStr = null;
+		if(!StringUtils.isEmpty(month) && StringUtil.equals("all", month)) {
+			dateStr = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE).substring(0,4);
+		}else if(!StringUtils.isEmpty(month)) {
+			dateStr = LocalDate.now().withMonth(Integer.parseInt(month)).format(DateTimeFormatter.ISO_LOCAL_DATE).substring(0,7);
+		}
 		String adminType = null;//管理员类型（1：部管理员；2：局管理员）
 		String roleType = DbDefined.ROLE_6;//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
 		//当前登录人的管理员类型
@@ -231,6 +241,8 @@ public class DocumentInfoController {
 		map.put("docStatus", "2");
 		map.put("type", typeId);
 		map.put("search", search);
+		map.put("orgid", orgid);
+		map.put("year", dateStr);
 		if(StringUtils.isNotBlank(status)) {
 			if(StringUtils.equals("update", status)) {
 				map.put("loginUserId", loginUserId);
