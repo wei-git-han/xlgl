@@ -354,6 +354,7 @@ public class SubDocInfoController {
 			if(0==minDocStatus && 0==maxDocStatus) {
 				//主文件标示为办结
 				DocumentInfo info = documentInfoService.queryObject(infoId);
+				info.setSzReadIds("");
 				info.setStatus(2);
 				documentInfoService.update(info);
 				//当前分支文件变为办结
@@ -369,6 +370,7 @@ public class SubDocInfoController {
 					if(maxDocStatus<DbDocStatusDefined.JIAN_YI_LUO_SHI) {
 						//主文件标示为办结
 						DocumentInfo info = documentInfoService.queryObject(infoId);
+						info.setSzReadIds("");
 						info.setStatus(2);
 						documentInfoService.update(info);
 						//当前分支文件变为办结
@@ -380,6 +382,7 @@ public class SubDocInfoController {
 					if(maxDocStatus==DbDocStatusDefined.JIAN_YI_LUO_SHI) {
 						//主文件状态变为常态落实
 						DocumentInfo info = documentInfoService.queryObject(infoId);
+						info.setSzReadIds("");
 						info.setStatus(3);
 						documentInfoService.update(info);
 						//当前分支文件变为办结
@@ -420,6 +423,7 @@ public class SubDocInfoController {
 			if(0==minDocStatus && 0==maxDocStatus) {
 				//主文件状态变为常态落实
 				DocumentInfo info = documentInfoService.queryObject(infoId);
+				info.setSzReadIds("");
 				info.setStatus(3);
 				documentInfoService.update(info);
 				subInfo.setDocStatus(DbDocStatusDefined.CHANG_TAI_LUO_SHI);
@@ -433,6 +437,7 @@ public class SubDocInfoController {
 					if(maxDocStatus >= DbDocStatusDefined.JIAN_YI_BAN_JIE) {
 						//主文件状态变为常态落实
 						DocumentInfo info = documentInfoService.queryObject(infoId);
+						info.setSzReadIds("");
 						info.setStatus(3);
 						documentInfoService.update(info);
 						//各分支文件变为常态落实

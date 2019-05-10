@@ -426,6 +426,7 @@ var ydfn = function(ids){
 var cbrenid = "";
 var cbfn = function(ids){
 	cbrenid = ids;
+	$("#textarea").val("");
 	$("#viewcont").modal("show");
 }
 

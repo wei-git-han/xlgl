@@ -19,7 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.AppConfig;
 import com.css.addbase.FileBaseUtil;
+import com.css.addbase.appconfig.entity.BaseAppConfig;
+import com.css.addbase.appconfig.service.BaseAppConfigService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
+import com.css.addbase.constant.AppConstant;
 import com.css.addbase.suwell.OfdTransferUtil;
 import com.css.app.db.business.entity.DocumentBjjl;
 import com.css.app.db.business.entity.DocumentCbjl;
@@ -85,6 +88,8 @@ public class DocumentInfoController {
 	private DocumentReadService documentReadService;
 	@Autowired
 	private DocumentSzpsService documentSzpsService;
+	@Autowired
+	private BaseAppConfigService baseAppConfigService;
 	
 	
 	/**
@@ -354,17 +359,22 @@ public class DocumentInfoController {
 		DocumentInfo documentInfo = documentInfoService.queryObject(id);
 		String roleid=getRoleType();
 		if(!"".equals(roleid)&&StringUtils.equals("1", roleid)) {//首长
-			String szreadids=documentInfo.getSzReadIds();
-			if(StringUtils.isBlank(szreadids)) {
-				documentInfo.setSzReadIds(CurrentUser.getUserId());
-			}else if(!szreadids.contains(CurrentUser.getUserId())){
-				documentInfo.setSzReadIds(szreadids+","+CurrentUser.getUserId());				
+			if(StringUtils.isNotBlank(documentInfo.getLatestReply())) {//局长意见有更新并且待办件
+				String szreadids=documentInfo.getSzReadIds();
+				if(StringUtils.isBlank(szreadids)) {
+					documentInfo.setSzReadIds(CurrentUser.getUserId());
+				}else if(!szreadids.contains(CurrentUser.getUserId())){
+					documentInfo.setSzReadIds(szreadids+","+CurrentUser.getUserId());				
+				}
+				documentInfoService.update(documentInfo);
 			}
-			documentInfoService.update(documentInfo);
+			
 		}
 		Response.json(documentInfo);
 	}
 	public String getRoleType() {
+		BaseAppConfig mapped = baseAppConfigService.queryObject(AppConstant.LEAD_TEAM);//首长单位id
+		String depid=CurrentUser.getDepartmentId();
 		//当前登录人的角色
 		//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
 		JSONObject jo=new JSONObject();
@@ -374,6 +384,10 @@ public class DocumentInfoController {
 		List<RoleSet> roleList = roleSetService.queryList(roleMap);
 		if(roleList != null && roleList.size()>0) {
 			return roleList.get(0).getRoleFlag();
+		}else if(mapped!=null){
+			if(depid.equals(mapped.getValue())) {
+				return "1";//首长单位下的人(默认为首长)
+			}
 		}
 		return "";
 	}	

@@ -80,7 +80,7 @@ public class DocumentSzInfoController {
 			year=sdf.format(new Date());
 		}*/
 		map.put("search", search);
-		map.put("status", "1");
+		map.put("status2", "0");
 		map.put("isnotuserid", userid);
 		List<Map<String, Object>> infoList = documentInfoService.queryListByDicType(map);
 		JSONArray valdata=new JSONArray();
@@ -266,7 +266,7 @@ public class DocumentSzInfoController {
 			}
 			map.put("search", search);
 			map.put("isnotuserid", userid);
-			map.put("status", "1");
+			map.put("status2", "0");
 			List<Map<String, Object>> genxinList = documentInfoService.queryListByDicType(map);
 			JSONArray valdata=new JSONArray();
 			if (genxinList!=null&&genxinList.size()>0) {

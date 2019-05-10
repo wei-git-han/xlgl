@@ -154,6 +154,9 @@
 			<if test="status != null and status != ''">
 				and STATUS=#{status}
 			</if>
+			<if test="status2 != null and status2 != ''">
+				and STATUS > #{status2}
+			</if>
 			<if test="isnotuserid != null">
 			and (sz_read_ids not like '%'||#{isnotuserid}||'%' or sz_read_ids is null)
 			</if>
