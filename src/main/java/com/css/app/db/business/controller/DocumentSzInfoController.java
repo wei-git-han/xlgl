@@ -310,8 +310,10 @@ public class DocumentSzInfoController {
 			
 			if(StringUtils.isEmpty(sz)||!(sz).contains(userid)) {
 				jo.put("other","0");//确认已读按钮显示
-			}else {				
+			}else if(StringUtils.equals("0", documentInfo.getCuibanFlag())){//显示催办按钮				
 				jo.put("other","1");
+			}else {
+				jo.put("other","2");				
 			}
 			
 			//jo.put("other","1");
@@ -319,7 +321,12 @@ public class DocumentSzInfoController {
 			jo.put("CuibanFlag",CuibanFlag );//是否催办    1显示      0不显示
 			
 			if(documentInfo.getStatus()>1) {
-				jo.put("other","1" );//是否催办    1显示      0不显示
+				if(StringUtils.equals("0", documentInfo.getCuibanFlag())){//显示催办按钮					
+					jo.put("other","1");
+				}else {
+					jo.put("other","2");				
+				}
+				//jo.put("other","1" );//是否催办    1显示      0不显示
 				jo.put("CuibanFlag","0" );//是否催办    1显示      0不显示
 			}
 			
@@ -362,8 +369,6 @@ public class DocumentSzInfoController {
 			//LATEST_REPLY
 			if((StringUtils.isEmpty(sz)||!(sz).contains(userid))&&StringUtils.isNotBlank(documentInfo.getLatestReply())) {
 				gengxin="1";//已更新显示
-			}if(documentInfo.getStatus()==1) {
-				jo.put("CuibanFlag","1" );//是否催办    1显示      0不显示
 			}
 			
 			
