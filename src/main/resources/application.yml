@@ -1,4 +1,4 @@
-﻿server:
+﻿﻿server:
 
   port: 11101
 app:
@@ -128,8 +128,8 @@ csse.dmdba.url: 172.16.4.3:5236
 
 #文件服务----------------------------------start
 #文件服务的clientId,与公文处理应用进行共用；
-csse.dccb.appId: legacycpk.csse.yjfk
-csse.dccb.appSecret: D384CF78-BB67-4ecf-9ACF-6634E9581361
+csse.dccb.appId: legacycpk.csse.zbfzbbgt_zyyy_app1a_gwcl
+csse.dccb.appSecret: 2C0DB8B2-C752-4f63-AA9E-919BE5B8233A
 #文件服务所在的服务器ip或域名
 csse.fileservice.domain: 172.16.4.3
 #文件服务端口
