@@ -502,11 +502,12 @@ var pageModule = function(){
 			var cbrFlag="";
 			if(isCbr && isCbr == 1){
 				cbrFlag="1";
-			}
-			if(isCbr == 1){
 				if($("#replyContent").val() !="" && !!$("#replyContent").val()){
 					isSave=1;
 					$("#save").click();
+				}else{
+					newbootbox.alert("反馈不能为空！");
+					return;
 				}
 			}
 			newbootbox.newdialog({
@@ -600,45 +601,46 @@ var pageModule = function(){
 		
 		//审批通过
 		$("#sptg").click(function(){
-			var replyContent = $("#replyContent").val();
-			var imgFileId="";
-			if($("span.css3").attr("data") =="1"){
-				if(checkIsModified()){
-					$.ajax({
-						url : "/app/base/user/getToken",
-						type : "GET",
-						async : false,
-						success : function(data) {//插件读取文件
-							end();	//签批确定
-							var surl = location.protocol+ "//"+ location.host+ "/servlet/suwell/savePictureYj?access_token="+data.result;
-						    document.getElementById("signtool").SetUploadURL(surl);
-							var result = document.getElementById("signtool").UploadImageStream();
-							imgFileId = result.replace(/^\"|\"$/g,'');
+			newbootbox.oconfirm({
+			 	title:"提示",
+			 	message: "审批完成，确认后将正式发布此办件落实情况？",
+			 	callback1:function(){
+			 		var replyContent = $("#replyContent").val();
+					var imgFileId="";
+					var saveFlag="0"; //文字
+					if($("span.css3").attr("data") =="1"){
+						if(checkIsModified()){
+							saveFlag="1"; //图片
+							$.ajax({
+								url : "/app/base/user/getToken",
+								type : "GET",
+								async : false,
+								success : function(data) {//插件读取文件
+									end();	//签批确定
+									var surl = location.protocol+ "//"+ location.host+ "/servlet/suwell/savePictureYj?access_token="+data.result;
+								    document.getElementById("signtool").SetUploadURL(surl);
+									var result = document.getElementById("signtool").UploadImageStream();
+									imgFileId = result.replace(/^\"|\"$/g,'');
+									replyContent = imgFileId;
+								}
+							})
+						}else{
+							newbootbox.alert('保存失败！请填写您的意见！')
 						}
-					})
-				}else{
-					newbootbox.alert('保存失败！请填写您的意见！')
-				}
-			}
-			var saveFlag="0"; //文字
-			if(replyContent && !!replyContent){
-				saveFlag="0";
-			}else{
-				replyContent = imgFileId;
-				saveFlag="1"; //图片
-			}
-			
-			$ajax({
-				url:finishUrl,
-				data:{infoId:fileId,subId:subId,replyContent:replyContent,saveFlag:saveFlag},
-				type: "GET",
-				success:function(data){
-					if(data.result == "success"){
-						newbootbox.alert("审批完成！").done(function(){
-							window.location.reload();
-						});
-					}
-				}
+					}			
+					$ajax({
+						url:finishUrl,
+						data:{infoId:fileId,subId:subId,replyContent:replyContent,saveFlag:saveFlag},
+						type: "GET",
+						success:function(data){
+							if(data.result == "success"){
+								newbootbox.alert("审批完成！").done(function(){
+									window.location.reload();
+								});
+							}
+						}
+					});
+			 	}
 			});
 		});
 		
@@ -727,6 +729,11 @@ var pageModule = function(){
 		//表单
 		$("#commentForm").validate({
 		    submitHandler: function() {
+		    	var replyContent=$("#replyContent").val();
+		    	if(replyContent == "" || replyContent== null || replyContent == "undefined"){
+					newbootbox.alert("反馈不能为空！");
+					return;
+				}
 		    	if(isSave && isSave==1){
 		    		$("#editTeamId").val($(".isEditbtn").attr("data"));
 				}
