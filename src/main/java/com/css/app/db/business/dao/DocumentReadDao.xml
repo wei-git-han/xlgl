@@ -18,6 +18,9 @@
 		<if test="subId != null and subId != ''">
 			and SUB_ID=#{subId}
 		</if>
+		<if test="readFlag != null and readFlag != ''">
+			and READ_FLAG=#{readFlag}
+		</if>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>

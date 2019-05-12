@@ -7,17 +7,25 @@ var bjDataUrl = {"url":"/app/db/documentinfo/getBanJieList","dataType":"text"}; 
 //var delfjUrl = {"url":"/app/db/replyexplain/deleteAttch","dataType":"text"}; //删除办理反馈中的附件
 var downLoadUrl= {"url":"/app/db/replyexplain/downLoad","dataType":"text"}; //下载办理反馈中的附件
 var allReplyListUrl = {"url":"/app/db/replyexplain/allReplyList","dataType":"text"}; //各局办理反馈list
-//var opinionUrl = {"url":"/app/db/replyexplain/getOpinion","dataType":"text"}; //各局办理反馈list
 var cbDataUrl = {"url":"/app/db/documentinfo/getCuiBanlist","dataType":"text"}; //催办记录list
 var replyByTeamIdUrl = {"url":"/app/db/replyexplain/getReplyByTeamId","dataType":"text"}; //获取某组办理反馈
 var latestCuiBanUrl = {"url":"/app/db/documentinfo/getLatestCuiBan","dataType":"text"}; //获取最新的催办
 var getButtonParamUrl = {"url":"/app/db/documentinfo/buttonParam","dataType":"json"}; //获取按钮显示控制参数
 var cancleOperationUrl = {"url":"/app/db/documentinfo/cancleOperation","dataType":"json"}; //取消办结操作
-
+var batchReadUrl = {"url":"/app/db/documentinfo/batchRead","dataType":"text"};//标识已读
 var cuibanurl = {"url":"/app/db/documentszinfo/press","dataType":"text"};
 var fileId=getUrlParam("fileId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var pageModule = function(){
+	//打开页面标识已读
+	var initReadfn = function(){
+		$ajax({
+			url:batchReadUrl,
+			data:{ids:fileId},
+			success:function(data){
+			}
+		});	
+	}
 	//判断是否催办
 	var ifcuibanfn = function(){
 		$ajax({
@@ -557,6 +565,7 @@ var pageModule = function(){
 	return{
 		//加载页面处理程序
 		initControl:function(){
+			initReadfn();
 			ifcuibanfn();
 			showButton();
 			takeMenufn();

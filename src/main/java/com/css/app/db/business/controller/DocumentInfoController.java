@@ -267,7 +267,7 @@ public class DocumentInfoController {
 			PageHelper.startPage(page, pagesize);
 			infoList = documentInfoService.queryPersonList(map);
 		} else {
-			if(StringUtils.equals("2", adminType)|| StringUtils.equals("3", roleType)) {
+			if(StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType)) {
 				String orgId = baseAppUserService.getBareauByUserId(loginUserId);
 				if(StringUtils.isNotBlank(orgId)) {
 					map.put("orgid", orgId);
@@ -324,11 +324,15 @@ public class DocumentInfoController {
 		map.put("search", search);
 		map.put("type", typeId);
 		if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType)
-				&& !StringUtils.equals("1", roleType) && !StringUtils.equals("3", roleType)) {
-			map.put("loginUserId", loginUserId);
+				&& !StringUtils.equals(DbDefined.ROLE_1, roleType) && !StringUtils.equals(DbDefined.ROLE_3, roleType)) {
+			if(StringUtils.equals(DbDefined.ROLE_5, roleType)) {
+				map.put("deptId", CurrentUser.getDepartmentId());
+			}else {
+				map.put("loginUserId", loginUserId);
+			}
 			infoList = documentInfoService.queryPersonList(map);
 		} else {
-			if(StringUtils.equals("2", adminType)|| StringUtils.equals("3", roleType)) {
+			if(StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType)) {
 				String orgId = baseAppUserService.getBareauByUserId(loginUserId);
 				if(StringUtils.isNotBlank(orgId)) {
 					map.put("orgid", orgId);
@@ -353,13 +357,7 @@ public class DocumentInfoController {
 			readMap.put("userId", loginUserId);
 			readMap.put("infoId", info.getId());
 			List<DocumentRead> list = documentReadService.queryList(readMap);
-			
-			//是否有完成的催办
-			Map<String, Object> cuiBanMap = new HashMap<>();
-			cuiBanMap.put("infoId", info.getId());
-			cuiBanMap.put("finishFlag", 1);
-			List<DocumentCbjl> cuiBanList = documentCbjlService.queryList(cuiBanMap);
-			if(list.size()==0 && StringUtils.equals("0", info.getCuibanFlag()) && cuiBanList.size()>0) {
+			if(list.size()==0 && StringUtils.isNotBlank(info.getLatestReply())) {
 				arr[4]+=1;
 			}
 		}
@@ -466,7 +464,7 @@ public class DocumentInfoController {
 					quXiaoBtn=true;
 				}
 			}
-			if(!StringUtils.equals("1", cuibanFlag) && (StringUtils.equals("1", adminType) || StringUtils.equals("1", roleType))) {
+			if(!StringUtils.equals("1", cuibanFlag) && (StringUtils.equals("1", adminType) || StringUtils.equals(DbDefined.ROLE_1, roleType))) {
 				cuiBanBtn=true;
 			}
 		}
@@ -548,9 +546,16 @@ public class DocumentInfoController {
 	public void batchRead(String ids){
 		String[] idArry = ids.split(",");
 		for (String id : idArry) {
-			DocumentRead read=new DocumentRead();
-			read.setInfoId(id);
-			documentReadService.save(read);
+			Map<String, Object> map=new HashMap<>();
+			map.put("userId", CurrentUser.getUserId());
+			map.put("infoId", id);
+			map.put("readFlag", "1");
+			List<DocumentRead> list = documentReadService.queryList(map);
+			if(list.size()==0 || list ==null) {
+				DocumentRead read=new DocumentRead();
+				read.setInfoId(id);
+				documentReadService.save(read);
+			}
 		}
 		Response.json("result", "success");
 	}
@@ -682,7 +687,7 @@ public class DocumentInfoController {
 				map.put("loginUserId", loginUserId);
 			}
 		}else {
-			if(StringUtils.equals("2", adminType)|| StringUtils.equals("3", roleType)) {
+			if(StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType)) {
 				String orgId = baseAppUserService.getBareauByUserId(loginUserId);
 				if(StringUtils.isNotBlank(orgId)) {
 					map.put("orgId", orgId);
