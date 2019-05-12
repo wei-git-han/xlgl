@@ -10,7 +10,9 @@ var orgid=getUrlParam("orgid")||""; //统计图传过来的机构
 var month=getUrlParam("month")||""; //统计图传过来的月份
 var ytype=getUrlParam("ytype")||""; //统计图传过来的办理状态
 if(fileFrom && fileFrom == "jcdb"){
-	$("input[value="+ytype+"]").attr("checked",true);
+	if(ytype){
+		$("input[value="+ytype+"]").attr("checked",true);
+	}
 }
 var grid = null;
 var grid2 = null;
