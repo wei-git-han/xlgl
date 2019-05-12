@@ -107,7 +107,7 @@ var pageModule = function(){
                     				
                     				//fileId,subId,fileFrom
                     				title=`
-                    					${cuiban} <font title="${title}" onclick="viewpage('${id}','${id}','${id}')" style="cursor:pointer;" >${title}</font>
+                    					${cuiban} <font title="${title}" onclick="viewpage('${id}','${id}','${id}')" style="cursor:pointer;text-decoration: underline;" >${title}</font>
                     				`
                     				
                     				var button1 = "";

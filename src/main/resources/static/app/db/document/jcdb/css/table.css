@@ -60,3 +60,9 @@ html,body{background:#2E4A83;height:100%;}
 .modal-body form{padding-top:30px;padding-bottom:30px;}
 .modal .form-actions{text-align:center;}
 .form-button{border-radius:5px!important;background:#6699FF;min-width:100px;}
+
+
+.table-advance tbody tr {
+	height:70px;
+	overflow:hidden;
+} 

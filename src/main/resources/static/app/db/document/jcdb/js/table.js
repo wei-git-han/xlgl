@@ -89,19 +89,18 @@ var pageModule = function(){
                                 		 html = '<label class="table-label2">催办</label>';
                                 	 }
                                 	 var fileid="'"+rowdata.id+"'";
-                                    return html+'<font style="cursor:pointer;" class="table-title" onclick="viewpage('+fileid+')" title="'+rowdata.title+'">'+rowdata.title+'</font>';                                     
+                                    return html+'<font class="file_title" style="cursor:pointer;text-decoration: underline;" class="table-title" onclick="viewpage('+fileid+')" title="'+rowdata.title+'">'+rowdata.title+'</font>';                                     
                                  }},
                                  {display:"批示指示内容",name:"pszsmr",width:"200px",align:"left",paixu:false,render:function(rowdata){
-                                    return rowdata.pszsmr;                                        
+                                    return '<div class="zspsnr" title="'+rowdata.pszsmr+'">'+rowdata.pszsmr+'</div>';
                                  }},
                                  {display:"督办落实情况",name:"dblsqk",width:"200px",align:"left",paixu:false,render:function(rowdata){
-                                	
                                 	var gengxin = rowdata.gengxin;
                                 	var html = '';
                                 	if(gengxin==1){
                                 		html ='<label class="table-label">已更新</label>';
                                 	}
-                                    return html+rowdata.dblsqk;                                        
+                                    return '<div class="dblsqk"  title="'+rowdata.dblsqk+'">'+html+'<span>'+rowdata.dblsqk+'</span></div>';
                                  }},
                                  {display:"承办单位/人员 ",name:"cbdwry",width:"200px",align:"center",paixu:false,render:function(rowdata){
                                     return rowdata.cbdwry;                                      
@@ -131,10 +130,34 @@ var pageModule = function(){
                     checkbox: true,
                     rownumberyon:true,
                     paramobj:{orgid:orgid,menuid:menuid,month:month,state:ytype},
-                    overflowx:true,
+                    overflowx:false,
                     rownumberwidth:"50px",
                     pagesize: 12,
-                    url: url1
+                    url: url1,
+                    loadafter:function(data){
+                    	$(".zspsnr").each(function(){
+        					var maxwidth = 45;
+        					if($(this).text().length > maxwidth){
+        						$(this).text($(this).text().substring(0,maxwidth));
+        						$(this).html($(this).html()+'...');
+        					}
+        				});
+                    	$(".file_title").each(function(){
+        					var maxwidth = 45;
+        					if($(this).text().length > maxwidth){
+        						$(this).text($(this).text().substring(0,maxwidth));
+        						$(this).html($(this).html()+'...');
+        					}
+        				});
+                    	
+                    	$(".dblsqk span").each(function(){
+        					var maxwidth =38;
+        					if($(this).text().length > maxwidth){
+        						$(this).text($(this).text().substring(0,maxwidth));
+        						$(this).html($(this).html()+'...');
+        					}
+        				});
+                    }
                });
 		
 		
