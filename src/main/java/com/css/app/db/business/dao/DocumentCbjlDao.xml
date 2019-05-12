@@ -12,7 +12,7 @@
 		<if test="infoId != null and infoId != ''">
 			and INFO_ID= #{infoId}
 		</if>
-		<if test="finishFlag != null and finishFlag != ''">
+		<if test="finishFlag != null">
 			and FINISH_FLAG= #{finishFlag}
 		</if>
 			order by CREATED_TIME

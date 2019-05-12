@@ -1,6 +1,7 @@
 var deptTreeUrl = {"url":"/app/base/dept/tree_onlyroot","dataType":"text"}; //部门树
 var sureUrl = {"url":"/app/db/documentzbjl/save","dataType":"text"}; //保存
 var infoIds=getUrlParam("fileIds")||""; //主文件id
+var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var pageModule = function(){
 	var initTree = function(){
 		$ajax({
@@ -48,7 +49,13 @@ var pageModule = function(){
 					newbootbox.newdialogClose("zhuanbanDialog");
 					if(data.result=="success"){
 						newbootbox.alert("转办成功！").done(function(){
-							$("#iframe1",window.top.document).attr("src","/app/db/document/djlr/html/djlr.html");
+							if(fileFrom == "djlr"){//文件来源于登记录入
+								$("#iframe1",window.top.document).attr("src","/app/db/document/djlr/html/djlr.html?fileFrom=djlr");
+							}else if(fileFrom=="blfk"){  //文件来源于办理反馈
+								$("#iframe1",window.top.document).attr("src","/app/db/document/djlr/html/djlr.html?fileFrom=blfk");
+							}else{ 
+								$("#iframe1",window.top.document).attr("src","/app/db/document/djlr/html/djlr.html?fileFrom=djlr");
+							}
 						});
 					}else{
 						newbootbox.alert("转办失败！");

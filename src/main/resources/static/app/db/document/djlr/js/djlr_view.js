@@ -539,7 +539,7 @@ var pageModule = function(){
 				header:true,
 				title:"转办",
 				classed:"cjDialog",
-				url:"/app/db/document/blfk/html/zhuanbanDialog.html?fileIds="+fileId
+				url:"/app/db/document/blfk/html/zhuanbanDialog.html?fileIds="+fileId+"&fileFrom="+fileFrom
 			})
 		});
 		

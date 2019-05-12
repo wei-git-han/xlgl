@@ -505,9 +505,6 @@ var pageModule = function(){
 				if($("#replyContent").val() !="" && !!$("#replyContent").val()){
 					isSave=1;
 					$("#save").click();
-				}else{
-					newbootbox.alert("反馈不能为空！");
-					return;
 				}
 			}
 			newbootbox.newdialog({

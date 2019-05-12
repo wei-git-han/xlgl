@@ -63,6 +63,7 @@ var pageModule = function(){
 				$ajax({
 					url:sendUrl,
 					data:{subId:subId,userName:userName,userId:userId,replyContent:replyContent},
+					type:'post',
 					success:function(data){
 						newbootbox.newdialogClose("tijiaoDialog");
 						if(data.result=="success"){
