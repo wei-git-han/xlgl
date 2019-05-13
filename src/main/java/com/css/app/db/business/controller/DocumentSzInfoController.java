@@ -317,20 +317,22 @@ public class DocumentSzInfoController {
 			//jo.put("other","1");
 			String CuibanFlag=documentInfo.getCuibanFlag();
 			jo.put("CuibanFlag",CuibanFlag );//是否催办    1显示      0不显示
-			
-			if(documentInfo.getStatus()>1) {
+			//other为0时显示确认已读按钮;1时显示催办按钮,2时都不显示
+			if(documentInfo.getStatus()>1) {//已办结,或落实常态(已经结束)
 				jo.put("other","2");//不显示催办和是否已读按钮
 				//jo.put("other","1" );//是否催办    1显示      0不显示
 				jo.put("CuibanFlag","0" );//是否催办    1显示      0不显示
-			}else if(StringUtils.isBlank(documentInfo.getLatestReply())&&StringUtils.equals("0", documentInfo.getCuibanFlag())){//无局长意见
+			}else if(StringUtils.isBlank(documentInfo.getLatestReply())&&StringUtils.equals("0", documentInfo.getCuibanFlag())){//无局长意见也无催办操作时,显示催办按钮
 				jo.put("other","1");//显示催办按钮
+			}else if(StringUtils.isBlank(documentInfo.getLatestReply())&&StringUtils.equals("1", documentInfo.getCuibanFlag())){//无局长意见有催办操作时,显示催办按钮
+				jo.put("other","2");//不显示催办和确认按钮
 			}else {//办理中   有局长意见
 				if(StringUtils.isEmpty(sz)||!(sz).contains(userid)) {
 					jo.put("other","0");//确认已读按钮显示
 				}else if(StringUtils.equals("0", documentInfo.getCuibanFlag())){//显示催办按钮				
 					jo.put("other","1");
 				}else {
-					jo.put("other","2");				
+					jo.put("other","2");//被催办,并且已读(不显示催办和确认按钮)				
 				}
 			}
 			
@@ -341,37 +343,13 @@ public class DocumentSzInfoController {
 			JSONArray yijianja=new JSONArray();
 			JSONObject yijianjo=new JSONObject();
 			//查询列表数据
-			String cbdw="";
-			String cbry="";
-			String cont="";
 			String gengxin="0";
-			List<ReplyExplain> dbReplyExplainList = replyExplainService.queryList(danweimap);
-			/*for (ReplyExplain replyExplain : dbReplyExplainList) {
-				yijianjo=new JSONObject();
-				cbdw=replyExplain.getSubDeptName();
-				cbry=replyExplain.getUserName();
-				cont=replyExplain.getReplyContent();
-				yijianjo.put("dw",cbdw);
-				yijianjo.put("ry", cbry);
-				yijianjo.put("cont", cont);
-				
-				yijianja.add(yijianjo);
-				if(StringUtils.isEmpty(sz)||!(sz).contains(userid)) {
-					gengxin="1";//已更新显示
-				}
-				break;
-			}*/
+			String cbdw=documentInfo.getLatestSubDept()==null?"":documentInfo.getLatestSubDept();
+			String cbry=documentInfo.getLatestUndertaker()==null?"":documentInfo.getLatestUndertaker();
+			String cont=documentInfo.getLatestReply()==null?"":documentInfo.getLatestReply();
 			
-			
-			cbdw=documentInfo.getLatestSubDept()==null?"":documentInfo.getLatestSubDept();
-			cbry=documentInfo.getLatestUndertaker()==null?"":documentInfo.getLatestUndertaker();
-			cont=documentInfo.getLatestReply()==null?"":documentInfo.getLatestReply();
-			//if(StringUtils.isNotBlank(cbdw)&&(StringUtils.isEmpty(sz)||!(sz).contains(userid))) {
-			cbdw=documentInfo.getLatestSubDept();
-			cbry=documentInfo.getLatestUndertaker();
-			cont=documentInfo.getLatestReply();
 			//LATEST_REPLY
-			if((StringUtils.isEmpty(sz)||!(sz).contains(userid))&&StringUtils.isNotBlank(documentInfo.getLatestReply())) {
+			if((StringUtils.isEmpty(sz)||!(sz).contains(userid))&&StringUtils.isNotBlank(cont)) {//有局长审批意见,但sz不包含该首长userid,显示已更新
 				gengxin="1";//已更新显示
 			}
 			
@@ -482,7 +460,6 @@ public class DocumentSzInfoController {
 		}else if(!szreadids.contains(userid)){
 			info.setSzReadIds(szreadids+","+userid);				
 		}
-		
 		
 		documentInfoService.update(info);
 		//保存催办历史
