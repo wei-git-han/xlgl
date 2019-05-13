@@ -60,10 +60,10 @@ var pageModule = function(){
 					}
 				})
 			}else{
-				$ajax({
-					url:sendUrl,
+				$.ajax({
+					url:sendUrl.url,
 					data:{subId:subId,userName:userName,userId:userId,replyContent:replyContent},
-					type:'post',
+					type:'POST',
 					success:function(data){
 						newbootbox.newdialogClose("tijiaoDialog");
 						if(data.result=="success"){

@@ -22,6 +22,7 @@ var subId=getUrlParam("subId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var isCbr = 0;//承办人标识
 var isSave = 0;//保存成功提示标识
+var ifShowEditBtn="0";//是否有编辑按钮
 
 var pageModule = function(){
 	//判断是否催办
@@ -219,6 +220,7 @@ var pageModule = function(){
 					content = o.content;
 					edit = o.edit;
 					if(edit==true){
+						ifShowEditBtn="1";
 						edit =  '<div class="nrt-cont-top-btn">'+
 								'	<a class="isEditbtn" data="'+id+'" onclick="editfn(\''+id+'\',\''+content+'\',this)" >编辑</a>'+
 								'</div>';
@@ -505,8 +507,14 @@ var pageModule = function(){
 				if($("#replyContent").val() !="" && !!$("#replyContent").val()){
 					isSave=1;
 					$("#save").click();
+				}else{
+					if(ifShowEditBtn&&ifShowEditBtn=="0"){
+						newbootbox.alert("反馈不能为空！");
+						return;
+					}
 				}
 			}
+			
 			newbootbox.newdialog({
 				id:"tijiaoDialog",
 				width:800,
