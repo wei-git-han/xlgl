@@ -86,10 +86,10 @@ public class DocumentJcdbController {
 		}
 		map.put("year", year);
 		List<Map<String, Object>> infoList = documentInfoService.queryListByYear(map);
-		long  blz=0;
-		long  bj=0;
-		long  ctls=0;
-		long  total=0;
+		double  blz=0;
+		double  bj=0;
+		double  ctls=0;
+		double  total=0;
 		// sum(blz+bj+ctls) as total,sum(blz) as blz,sum(bj) as bj,sum(ctls) as ctls 
 		if (infoList!=null&&infoList.size()>0) {
 			Map<String, Object> map2=infoList.get(0);
@@ -108,7 +108,7 @@ public class DocumentJcdbController {
 		jo.put("total", total);
 		jo.put("year", year);
 		if(total>0) {
-			jo.put("wcl", (bj+ctls)*100/total+"%");
+			jo.put("wcl", (bj+ctls)*100/total);
 		}else {
 			jo.put("wcl", "0%");
 		}
@@ -376,8 +376,9 @@ public class DocumentJcdbController {
 			for (Map<String, Object> map2 : infoList) {
 				JSONObject jo=new JSONObject();
 				String name=(String) map2.get("name");
-				long bj=(long) map2.get("bj");
-				long total=(long) map2.get("total");
+				double bj=(long) map2.get("bj");
+				//double hh=bj;
+				double total=(long) map2.get("total");
 				xdata.add(name);
 				if(total>0) {					
 					wcldata.add((bj*100/total));
