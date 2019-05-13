@@ -52,7 +52,7 @@ var pageModule = function(){
 							if(fileFrom == "djlr"){//文件来源于登记录入
 								$("#iframe1",window.top.document).attr("src","/app/db/document/djlr/html/djlr.html?fileFrom=djlr");
 							}else if(fileFrom=="blfk"){  //文件来源于办理反馈
-								$("#iframe1",window.top.document).attr("src","/app/db/document/djlr/html/djlr.html?fileFrom=blfk");
+								$("#iframe1",window.top.document).attr("src","/app/db/document/blfk/html/blfk.html?fileFrom=blfk");
 							}else{ 
 								$("#iframe1",window.top.document).attr("src","/app/db/document/djlr/html/djlr.html?fileFrom=djlr");
 							}

@@ -1,4 +1,4 @@
-var listUrl = {"url":rootPath +"/roleset/list","dataType":"text"}; 
+var listUrl = {"url":rootPath +"/roleset//queryLeaderList","dataType":"text"}; 
 var delUrl = {"url":rootPath +"/roleset/delete","dataType":"text"};  
 var grid = null;
 var pageModule = function() {

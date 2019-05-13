@@ -46,12 +46,13 @@ public class RoleSetController {
 	@ResponseBody
 	@RequestMapping("/list")
 	public void list(Integer page, Integer pagesize){
+		Map<String, Object> map = new HashMap<>();
+		map.put("roleParam", "roleParam");
 		PageHelper.startPage(page, pagesize);
-		List<RoleSet> roleSetList = roleSetService.queryList(null);
+		List<RoleSet> roleSetList = roleSetService.queryList(map);
 		GwPageUtils pageUtil = new GwPageUtils(roleSetList);
 		Response.json(pageUtil);
 	}
-	
 	/**
 	 * 登记录入获取首长
 	 */
@@ -62,6 +63,19 @@ public class RoleSetController {
 		map.put("roleFlag", DbDefined.ROLE_1);
 		List<RoleSet> roleSetList = roleSetService.queryList(map);
 		Response.json(roleSetList);
+	}
+	/**
+	 * 登记录入获取首长
+	 */
+	@ResponseBody
+	@RequestMapping("/queryLeaderList")
+	public void queryLeaderList(Integer page, Integer pagesize){
+		Map<String, Object> map = new HashMap<>();
+		map.put("roleFlag", DbDefined.ROLE_1);
+		PageHelper.startPage(page, pagesize);
+		List<RoleSet> roleSetList = roleSetService.queryList(map);
+		GwPageUtils pageUtil = new GwPageUtils(roleSetList);
+		Response.json(pageUtil);
 	}
 	
 	/**
@@ -94,14 +108,18 @@ public class RoleSetController {
 			}
 		}
 		if(StringUtils.isNotBlank(dbRoleSet.getId())) {
-			dbRoleSet.setDeptId(orgId);
-			dbRoleSet.setDeptName(orgName);
+			if(!StringUtils.equals( DbDefined.ROLE_1, dbRoleSet.getRoleFlag())) {
+				dbRoleSet.setDeptId(orgId);		
+				dbRoleSet.setDeptName(orgName);
+			}
 			roleSetService.update(dbRoleSet);
 		}else {
 			roleSetService.deleteByUserId(userId);
 			dbRoleSet.setId(UUIDUtils.random());
-			dbRoleSet.setDeptId(orgId);
-			dbRoleSet.setDeptName(orgName);
+			if(!StringUtils.equals( DbDefined.ROLE_1, dbRoleSet.getRoleFlag())) {
+				dbRoleSet.setDeptId(orgId);		
+				dbRoleSet.setDeptName(orgName);
+			}
 			roleSetService.save(dbRoleSet);
 		}
 		Response.json("result", "success");

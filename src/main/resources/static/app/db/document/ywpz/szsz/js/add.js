@@ -11,6 +11,7 @@ var pageModule = function(){
 				type: "GET",
 				success:function(data){
 					setformdata(data);
+					$("#roleFlag").val("首长");
 				}
 			});
 		}
@@ -25,13 +26,14 @@ var pageModule = function(){
 		$("#commentForm").validate({
 		    submitHandler: function() {
 		    	var adminName = $("#userName").val();
+		    	var deptName = $("#deptName").val();
 				if(adminName == null || adminName == ''){
 					newbootbox.alert("请输入姓名！");
 					return ;
 				}
 				$ajax({
 					url:saveUrl,
-					data:{id:id,userName:adminName,roleFlag:"1"},
+					data:{id:id,userName:adminName,roleFlag:"1",deptName:deptName},
 					type:'GET',
 					success:function(data){
 						if(data.result=="success"){

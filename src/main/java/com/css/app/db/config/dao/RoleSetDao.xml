@@ -15,6 +15,9 @@
 		<if test="roleFlag != null and roleFlag != null">
 			and ROLE_FLAG = #{roleFlag}
 		</if>
+		<if test="roleParam != null and roleParam != null">
+			and ROLE_FLAG &gt; 1
+		</if>
 		order by ROLE_FLAG
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}

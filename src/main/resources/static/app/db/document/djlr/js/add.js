@@ -14,7 +14,6 @@ var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var scanFilePath = "";//扫描件路径
 //带入批示首长信息
 var psszName = "";
-var psszId = "";
 var pageModule = function(){
 	 /*带入录入人*/
 	var makeLoginUser = function(){
@@ -291,7 +290,7 @@ var pageModule = function(){
 			}
 			$ajax({
 				url:saveSzpsUrl,
-				data:{infoId:$("#id").val(),userId:psszId,userName:psszName,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
+				data:{infoId:$("#id").val(),userName:psszName,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
 				success:function(data){
 					if(data.result == "success"){
 						newbootbox.alert("保存成功！").done(function(){
@@ -304,7 +303,6 @@ var pageModule = function(){
 			$("#cqDate").val("");
 			$("#cqcontent").val("");
 			psszName="";
-			psszId = "";
 		});
 		
 		//转办
@@ -490,9 +488,8 @@ var pageModule = function(){
 			initother();
 			initPdf();
 		},
-		getUserData:function(message1,message2){
+		getUserData:function(message1){
 			psszName=message1;
-			psszId=message2;
 		}
 	}
 	
