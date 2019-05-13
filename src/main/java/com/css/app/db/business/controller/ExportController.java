@@ -25,11 +25,18 @@ import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.service.DocumentInfoService;
 import com.css.app.db.business.service.DocumentSzpsService;
 import com.css.app.db.business.service.ExportService;
+import com.css.app.db.business.service.ExportWPSservice;
 import com.css.app.db.business.service.ReplyExplainService;
 import com.css.app.db.business.service.SubDocInfoService;
-import com.css.base.entity.SSOUser;
+import com.css.app.db.business.service.impl.ExportBLDServiceImpl;
+import com.css.app.db.business.service.impl.ExportBNZYGZServiceImpl;
+import com.css.app.db.business.service.impl.ExportInvoke;
+import com.css.app.db.business.service.impl.ExportJWSZServiceImpl;
+import com.css.app.db.business.service.impl.ExportJWZYServiceImpl;
+import com.css.app.db.business.service.impl.ExportQTServiceImpl;
+import com.css.app.db.business.service.impl.ExportWPSserviceImpl;
+import com.css.app.db.business.service.impl.ExportZYJCServiceImpl;
 import com.css.base.utils.CrossDomainUtil;
-import com.css.base.utils.CurrentUser;
 import com.css.base.utils.Response;
 
 /**
@@ -49,11 +56,11 @@ public class ExportController{
     @Autowired
     SubDocInfoService subDocInfoService;
     @Autowired
-    ExportService exportService;
-    @Autowired
     BaseAppOrgMappedService baseAppOrgMappedService;
-    @Value("filePath")
-	String filePath;
+    @Autowired
+    ExportInvoke exportInvoke;
+	@Value("${filePath}")
+	private String filePath;
 
 	
 	@RequestMapping("/exportDocx")
@@ -61,6 +68,7 @@ public class ExportController{
 		String[] ids = stringIds.split(",");
 		String statusName = "";
 		String exportFileName = "";
+		File tempFile = null;
 		DocumentInfo documentInfo = null;
 		List<Map<String, String>> exportDataLis = new ArrayList<Map<String, String>>();
 		for (String id : ids) {
@@ -129,39 +137,63 @@ public class ExportController{
 			exportDataMap.put("subInfoComment", subInfoBuilder.toString());// 承办单位人员
 			exportDataLis.add(exportDataMap);
 		}
-		String docTypeId = documentInfo.getDocTypeId();
-		switch (docTypeId) {
-		case "1":
-			exportFileName="军委主席批示指示督办落实情况表.docx";
-			break;
-		case "2":
-			exportFileName="军委首长批示指示督办落实情况表.docx";
-			break;
-		case "3":
-			exportFileName="党中央、中央军委、国务院重要决策部署分工落实情况表.docx";
-			break;
-		case "4":
-			exportFileName="装备发展部领导批示指示督办落实情况表.docx";
-			break;
-		case "5":
-			exportFileName="装备发展部重要工作分工落实情况表.docx";
-			break;
-		case "6":
-			exportFileName="其他重要工作落实情况表.docx";
-			break;
-		}
+		
 		
 		// 本地文件路径（应用中下载操作的默认文件保存路径）
 		InputStream is = null;
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		File tempFile = new File(filePath, exportFileName);
-		if (tempFile.exists()) {
-			tempFile.delete();
-		} else {
-			tempFile.getParentFile().mkdirs();
-		}
 		try {
-			is = exportService.exportWPSdoc(exportDataLis, tempFile.getAbsolutePath(), documentInfo.getDocTypeId());
+			String docTypeId = documentInfo.getDocTypeId();
+			switch (docTypeId) {
+			case "1":
+				exportFileName="军委主席批示指示督办落实情况表.docx";
+				tempFile = creatFile(exportFileName);				
+				ExportService exportSer=new ExportJWZYServiceImpl();
+				ExportWPSservice exportWPSservice = new ExportWPSserviceImpl(exportSer,exportDataLis, tempFile.getAbsolutePath());				
+				exportInvoke.setExportWPSservice(exportWPSservice);
+				is = exportInvoke.export();
+				break;
+			case "2":
+				exportFileName="军委首长批示指示督办落实情况表.docx";
+				tempFile = creatFile(exportFileName);				
+				ExportService exportJWSZServiceImpl=new ExportJWSZServiceImpl();
+				ExportWPSservice exportWPSserviceJWSZ = new ExportWPSserviceImpl(exportJWSZServiceImpl,exportDataLis, tempFile.getAbsolutePath());				
+				exportInvoke.setExportWPSservice(exportWPSserviceJWSZ);
+				is = exportInvoke.export();
+				break;
+			case "3":
+				exportFileName="党中央、中央军委、国务院重要决策部署分工落实情况表.docx";
+				tempFile = creatFile(exportFileName);
+				ExportService exportZYJCServiceImpl=new ExportZYJCServiceImpl();
+				ExportWPSservice exportWPSserviceZYJC = new ExportWPSserviceImpl(exportZYJCServiceImpl,exportDataLis, tempFile.getAbsolutePath());				
+				exportInvoke.setExportWPSservice(exportWPSserviceZYJC);
+				is = exportInvoke.export();
+				break;
+			case "4":
+				exportFileName="装备发展部领导批示指示督办落实情况表.docx";
+				tempFile = creatFile(exportFileName);				
+				ExportService exportBLDServiceImpl=new ExportBLDServiceImpl();
+				ExportWPSservice exportWPSserviceBLD = new ExportWPSserviceImpl(exportBLDServiceImpl,exportDataLis, tempFile.getAbsolutePath());				
+				exportInvoke.setExportWPSservice(exportWPSserviceBLD);
+				is = exportInvoke.export();
+				break;
+			case "5":
+				exportFileName="装备发展部重要工作分工落实情况表.docx";
+				tempFile = creatFile(exportFileName);				
+				ExportService exportBNZYGZServiceImpl=new ExportBNZYGZServiceImpl();
+				ExportWPSservice exportWPSserviceBNZYGZ = new ExportWPSserviceImpl(exportBNZYGZServiceImpl,exportDataLis, tempFile.getAbsolutePath());				
+				exportInvoke.setExportWPSservice(exportWPSserviceBNZYGZ);
+				is = exportInvoke.export();
+				break;
+			case "6":
+				exportFileName="其他重要工作落实情况表.docx";
+				tempFile = creatFile(exportFileName);
+				ExportService exportQTServiceImpl=new ExportQTServiceImpl();
+				ExportWPSservice exportWPSserviceQT= new ExportWPSserviceImpl(exportQTServiceImpl,exportDataLis, tempFile.getAbsolutePath());				
+				exportInvoke.setExportWPSservice(exportWPSserviceQT);
+				is = exportInvoke.export();
+				break;
+			}						
 			resultMap.put("fileUrl", tempFile.getAbsoluteFile());
 			resultMap.put("fileName", tempFile.getName());
 			resultMap.put("result", "success");
@@ -170,6 +202,22 @@ public class ExportController{
 		}
 		Response.download(exportFileName, is);
 
+	}
+
+   /**
+    * 创建file
+    * @param exportFileName
+    * @return
+    */
+	private File creatFile(String exportFileName) {
+		File tempFile;
+		tempFile = new File(filePath, exportFileName);
+		if (tempFile.exists()) {
+			tempFile.delete();
+		} else {
+			tempFile.getParentFile().mkdirs();
+		}
+		return tempFile;
 	}
 
 }

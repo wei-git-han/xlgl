@@ -10,7 +10,7 @@ import java.util.Map;
  * @author n
  *
  */
-public interface ExportService {
+public interface ExportService2 {
 
-	FileInputStream exportWPSdoc(List<Map<String, String>> list,String fileName) throws IOException;
+	FileInputStream exportWPSdoc(List<Map<String, String>> list,String fileName,String docTypeId) throws IOException;
 }
