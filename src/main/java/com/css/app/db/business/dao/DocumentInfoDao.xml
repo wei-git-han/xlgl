@@ -124,6 +124,9 @@
 	<if test="orgId != null and orgId != '' ">
 		and a.SUB_DEPT_ID=#{orgId}
 	</if>
+	<if test="year != null">
+		and to_char(t.FIRST_ZB_TIME) like '%'||#{year}||'%'
+	</if>
 	and t.id not in ( select INFO_ID from DB_DOCUMENT_READ where USER_ID=#{userId}) group by t.DOC_TYPE_ID )s	
 	on dic.value = s.DOC_TYPE_ID
 	where dic.DIC_TYPE = #{docType} order by value asc

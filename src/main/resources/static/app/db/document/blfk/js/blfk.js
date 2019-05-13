@@ -1,3 +1,4 @@
+//注：修改列表查询的参数一定要对应的修改红点显示leftMenuUrl和统计数numsList
 var tableList= {"url":"/app/db/documentinfo/replyList","dataType":"text"};//原table数据
 var numsList={"url":"/app/db/documentinfo/replyNums","dataType":"text"};//筛选状态数字统计
 var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//部门树
@@ -22,6 +23,7 @@ var pageModule = function(){
 	var leftMenufn = function(){
 		$ajax({
 			url:leftMenuUrl,
+			data:{orgid:orgid,month:month},
 			async:false,
 			success:function(data){
 				$("#classType").html("");
@@ -247,7 +249,7 @@ var pageModule = function(){
 	var numsListfn = function(){
 		$ajax({
 			url:numsList,
-			data:{search:$("#searchVal").val(),typeId:$("#classType li.active").attr("value")},
+			data:{search:$("#searchVal").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month},
 			success:function(data){
 				$.each(data,function(i,item){
 					var id = "grdb"+i;
@@ -369,6 +371,7 @@ var pageModule = function(){
 			     	title:"提示",
 			     	message: "将导出"+t_count+"条数据！",
 			     	callback1:function(){
+			     		console.log(111)
 			     		window.location.href='/app/db/export/exportDocx?stringIds='+ids;
 			     	}
 			    });
