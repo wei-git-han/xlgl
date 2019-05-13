@@ -1,15 +1,17 @@
 var id = getUrlParam2("id");
-var userTree = {"url":"/app/base/user/allTree","dataType":"text"}; //人员选择树
 var saveUrl = {"url":rootPath +"/adminset/saveOrUpdate","dataType":"text"};  //保存
 var editInfo = {"url":rootPath +"/adminset/info","dataType":"text"}; //编辑数据
 var getUserAdminTypeUrl = {"url":rootPath +"/adminset/getAuthor","dataType":"text"};//那当前用户的类型1：部管理员，2：局管理员
 var departType = getUrlParam2("departType");
+var userTree;
 var pageModule = function(){
 	var initdatafn = function(){
 		if(departType == '1'){
 			$('#roleType').val("部管理员");
+			userTree = {"url":"/app/base/user/allTree","dataType":"text"}; //人员选择树
 		} else {
 			$('#roleType').val("局管理员");
+			userTree =  {"url":"/app/base/user/tree","dataType":"text"}; //部门树
 		}
 		$ajax({
 			url:editInfo,

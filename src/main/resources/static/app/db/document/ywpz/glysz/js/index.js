@@ -14,6 +14,9 @@ var pageModule = function() {
 				  {display: "部门",name:"deptName",width: "40%",align: "left",render: function(rowdata,n){
 					  return rowdata.deptName;   
 				  }}, 
+				  /*{display: "分局名称",name:"deptName",width: "40%",align: "left",render: function(rowdata,n){
+					  return rowdata.deptName;   
+				  }},*/
 				  {display: "姓名",name: "userName",width: "40%",align: "center",render: function(rowdata,n){
 					  return rowdata.userName;   
 				  }}, 
@@ -26,6 +29,8 @@ var pageModule = function() {
 					  }
 				  }}, 
 				  {display: "操作",name: "do",width: "10%",align: "center",render: function(rowdata,n){
+					  
+					  
 					  return '<i class="fa fa fa-pencil" style="cursor:pointer;background:#5498EB;padding:4px 5px;color:#fff;" onclick="editfn(\''+rowdata.id+'\')" title="编辑"></i>';
 				  }}
 				 ],
