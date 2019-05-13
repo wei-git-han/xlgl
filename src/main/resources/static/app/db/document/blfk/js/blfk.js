@@ -323,6 +323,7 @@ var pageModule = function(){
 					ids[i]=this.id;
 				});
 			}
+			console.log(datas)
 			if(datas.length>0){
 				newbootbox.confirm({
 				    title: "提示",
