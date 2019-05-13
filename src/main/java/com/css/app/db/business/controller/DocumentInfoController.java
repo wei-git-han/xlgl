@@ -214,6 +214,7 @@ public class DocumentInfoController {
 	
 	/**
 	 * 办理反馈列表查询
+	 * 注：修改列表查询的参数一定要对应的修改红点显示/getDicByTypet和统计数/replyNums
 	 */
 	@ResponseBody
 	@RequestMapping("/replyList")
@@ -299,7 +300,13 @@ public class DocumentInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/replyNums")
-	public void replyNums(String search,String typeId) {
+	public void replyNums(String search,String typeId,String orgid,String month) {
+		String dateStr = null;
+		if(!StringUtils.isEmpty(month) && StringUtil.equals("all", month)) {
+			dateStr = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE).substring(0,4);
+		}else if(!StringUtils.isEmpty(month)) {
+			dateStr = LocalDate.now().withMonth(Integer.parseInt(month)).format(DateTimeFormatter.ISO_LOCAL_DATE).substring(0,7);
+		}
 		int [] arr = {0,0,0,0,0};
 		String loginUserId=CurrentUser.getUserId();
 		String adminType = null;//管理员类型（1：部管理员；2：局管理员）
@@ -323,6 +330,8 @@ public class DocumentInfoController {
 		map.put("docStatus", "2");
 		map.put("search", search);
 		map.put("type", typeId);
+		map.put("orgid", orgid);
+		map.put("year", dateStr);
 		if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType)
 				&& !StringUtils.equals(DbDefined.ROLE_1, roleType) && !StringUtils.equals(DbDefined.ROLE_3, roleType)) {
 			if(StringUtils.equals(DbDefined.ROLE_5, roleType)) {
@@ -658,7 +667,13 @@ public class DocumentInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getDicByTypet")
-	public void getDicByTypet(){
+	public void getDicByTypet(String orgid,String month){
+		String dateStr = null;
+		if(!StringUtils.isEmpty(month) && StringUtil.equals("all", month)) {
+			dateStr = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE).substring(0,4);
+		}else if(!StringUtils.isEmpty(month)) {
+			dateStr = LocalDate.now().withMonth(Integer.parseInt(month)).format(DateTimeFormatter.ISO_LOCAL_DATE).substring(0,7);
+		}
 		String loginUserId=CurrentUser.getUserId();
 		String adminType = null;//管理员类型（1：部管理员；2：局管理员）
 		String roleType = DbDefined.ROLE_6;//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
@@ -679,6 +694,8 @@ public class DocumentInfoController {
 		Map<String, Object> map = new HashMap<>();
 		map.put("userId", loginUserId);
 		map.put("docType", DbDefined.DOCUMENT_TYPE);
+		map.put("orgId", orgid);
+		map.put("year", dateStr);
 		if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType)
 				&& !StringUtils.equals(DbDefined.ROLE_1, roleType) && !StringUtils.equals(DbDefined.ROLE_3, roleType)) {
 			if(StringUtils.equals(DbDefined.ROLE_5, roleType)) {
