@@ -152,9 +152,9 @@ public class ExportController{
 				exportFileName = "军委主席批示指示督办落实情况表.docx";
 				tempFile = creatFile(exportFileName);
 				ExportService exportJWZYServiceImpl = new ExportJWZYServiceImpl();
-				ExportWPSservice exportWPSservice = new ExportWPSserviceImpl(exportJWZYServiceImpl, exportDataLis,
+				ExportWPSservice exportWPSserviceJWZY = new ExportWPSserviceImpl(exportJWZYServiceImpl, exportDataLis,
 						tempFile.getAbsolutePath());
-				exportInvoke.setExportWPSservice(exportWPSservice);
+				exportInvoke.setExportWPSservice(exportWPSserviceJWZY);
 				is = exportInvoke.export();
 				break;
 			case "2":
