@@ -696,6 +696,14 @@ public class DocumentInfoController {
 		map.put("docType", DbDefined.DOCUMENT_TYPE);
 		map.put("orgId", orgid);
 		map.put("year", dateStr);
+		/*if(StringUtils.isNotBlank(status)) {
+			if(StringUtils.equals("update", status)) {
+				map.put("loginUserId", loginUserId);
+				map.put("hasUpdate", status);
+			}else {
+				map.put("state", status);
+			}
+		}*/
 		if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType)
 				&& !StringUtils.equals(DbDefined.ROLE_1, roleType) && !StringUtils.equals(DbDefined.ROLE_3, roleType)) {
 			if(StringUtils.equals(DbDefined.ROLE_5, roleType)) {
