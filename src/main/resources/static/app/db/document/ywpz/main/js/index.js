@@ -9,6 +9,7 @@ var pageModule = function(){
 //			data: {"ids": ids.toString()},
 			success: function(data) {
 				if(!data){ //局
+					$("#jssz").show();
 					$("#szsz").hide();
 					$("#zdwh").hide();
 					$('#departAdmin').css("display","none");
