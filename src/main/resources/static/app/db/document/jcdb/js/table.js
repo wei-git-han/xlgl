@@ -67,7 +67,7 @@ var pageModule = function(){
 	var initgrid = function(menuid){
         grid = $("#gridcont").createGrid({
                     columns:[	
-                    			{display:"办理状态",name:"blzt",width:"100px",align:"center",paixu:false,render:function(rowdata,n){
+                    			{display:"办理状态",name:"blzt",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
                     				var blzt = rowdata.blzt;
                     				var html = '';
                     				if(blzt==1){
@@ -79,10 +79,10 @@ var pageModule = function(){
                     				}
                                     return html;
                                  }},
-                                 {display:"军委办件号",name:"jwbjh",width:"200px",align:"center",paixu:true,render:function(rowdata,n){
+                                 {display:"军委办件号",name:"jwbjh",width:"10%",align:"center",paixu:true,render:function(rowdata,n){
                                     return rowdata.jwbjh;                                         
                                  }},
-                                 {display:"文件标题",name:"title",width:"200px",align:"left",paixu:false,render:function(rowdata){
+                                 {display:"文件标题",name:"title",width:"15%",align:"left",paixu:false,render:function(rowdata){
                                 	 var html = '';
                                 	 var CuibanFlag = rowdata.CuibanFlag;
                                 	 if(CuibanFlag==1){
@@ -91,27 +91,27 @@ var pageModule = function(){
                                 	 var fileid="'"+rowdata.id+"'";
                                     return html+'<font class="file_title" style="cursor:pointer;text-decoration: underline;" class="table-title" onclick="viewpage('+fileid+')" title="'+rowdata.title+'">'+rowdata.title+'</font>';                                     
                                  }},
-                                 {display:"批示指示内容",name:"pszsmr",width:"200px",align:"left",paixu:false,render:function(rowdata){
-                                    return '<div class="zspsnr" title="'+rowdata.pszsmr+'">'+rowdata.pszsmr+'</div>';
+                                 {display:"批示指示内容",name:"pszsmr",width:"16%",align:"left",paixu:false,render:function(rowdata){
+                                    return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.id+'\')"  title="'+rowdata.pszsmr+'">'+rowdata.pszsmr+'</div>';
                                  }},
-                                 {display:"督办落实情况",name:"dblsqk",width:"200px",align:"left",paixu:false,render:function(rowdata){
+                                 {display:"督办落实情况",name:"dblsqk",width:"16%",align:"left",paixu:false,render:function(rowdata){
                                 	var gengxin = rowdata.gengxin;
                                 	var html = '';
                                 	if(gengxin==1){
                                 		html ='<label class="table-label">已更新</label>';
                                 	}
-                                    return '<div class="dblsqk"  title="'+rowdata.dblsqk+'">'+html+'<span>'+rowdata.dblsqk+'</span></div>';
+                                    return '<div class="dblsqk"  onclick="dblsqkAlert(\''+rowdata.id+'\')"  title="'+rowdata.dblsqk+'">'+html+'<span>'+rowdata.dblsqk+'</span></div>';
                                  }},
-                                 {display:"承办单位/人员 ",name:"cbdwry",width:"200px",align:"center",paixu:false,render:function(rowdata){
+                                 {display:"承办单位/人员 ",name:"cbdwry",width:"10%",align:"left",paixu:false,render:function(rowdata){
                                     return rowdata.cbdwry;                                      
                                  }},
-                                 {display:"更新时间",name:"update",width:"200px",align:"center",paixu:false,render:function(rowdata){
+                                 {display:"更新时间",name:"update",width:"6%",align:"center",paixu:false,render:function(rowdata){
                                     return rowdata.update;                                      
                                  }},
-                                 {display:"转办时间",name:"zbdate",width:"200px",align:"center",paixu:false,render:function(rowdata){
+                                 {display:"转办时间",name:"zbdate",width:"6%",align:"center",paixu:false,render:function(rowdata){
                                     return rowdata.zbdate;                                      
                                  }},
-                                 {display:"操作",name:"",width:"200px",align:"center",paixu:false,render:function(rowdata){
+                                 {display:"操作",name:"",width:"8%",align:"center",paixu:false,render:function(rowdata){
                                 	var blzt = rowdata.blzt;
                                  	var other = rowdata.other
                     				var html = '';
@@ -286,4 +286,31 @@ var cbfn = function(ids){
 }
 var viewpage = function(fileId){
 	window.location.href = "../../djlr/html/djlr_view.html?fileId="+fileId+"&frompage=1";//frompage放在最后
+}
+
+
+//批示指示内容弹出框
+function pszsnrAlert(id){
+	newbootbox.newdialog({
+		id:"psDialog",
+		width:800,
+		height:600,
+		header:true,
+		title:"批示详情",
+		classed:"cjDialog",
+		url:"/app/db/document/view/html/psDialog.html?fileId="+id
+	})
+}
+
+//督办落实情况弹出框
+function dblsqkAlert(id){
+	newbootbox.newdialog({
+		id:"dblsqkDialog",
+		width:800,
+		height:600,
+		header:true,
+		title:"督办详情",
+		classed:"cjDialog",
+		url:"/app/db/document/view/html/dblsqk.html?fileId="+id
+	})
 }

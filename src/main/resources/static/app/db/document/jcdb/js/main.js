@@ -9,8 +9,6 @@ var pageModule = function(){
 	
 	
 	
-	
-	
 	var initmenu = function(menuid){
 		$ajax({
 			url:url2,
@@ -192,7 +190,7 @@ var pageModule = function(){
 															<td style="text-align:center;">${button1}</td>
 															<td style="text-align:center;">${jwbjh}</td>
 															<td >${title}</td>
-															<td title="${pszsmr}">${pszsmr}</td>
+															<td title="${pszsmr}"><font style="cursor:pointer" onclick="pszsnrAlert('${id}')" >${pszsmr}</font></td>
 															<td>${cbdwry}</td>
 															<td>${update}</td>
 															<td>${zbdate}</td>
@@ -409,6 +407,18 @@ var cbfn = function(ids){
 }
 
 var viewpage = function(fileId,subId,fileFrom){
-
 	window.location.href = "../../djlr/html/djlr_view.html?fileId="+fileId+"&frompage=0";//frompage放在最后
+}
+
+//批示指示内容弹出框
+function pszsnrAlert(id){
+	newbootbox.newdialog({
+		id:"psDialog",
+		width:800,
+		height:600,
+		header:true,
+		title:"批示详情",
+		classed:"cjDialog",
+		url:"/app/db/document/view/html/psDialog.html?fileId="+id
+	})
 }
