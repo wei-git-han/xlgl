@@ -157,7 +157,7 @@ public class ExportZYJCServiceImpl implements ExportService{
 				bodyCell.setText(dataMap.get("printDate"));//印发时间
 				bodyCell = comTableRowTwo.getCell(2);
 				cellCentre(bodyCell);
-				bodyCell.setText(dataMap.get("banjianNumber"));//办件号
+				bodyCell.setText(dataMap.get("docCode"));//办件号
 				bodyCell = comTableRowTwo.getCell(3);
 				cellCentre(bodyCell);
 				bodyCell.setText(dataMap.get("docTitle"));//文件标题
