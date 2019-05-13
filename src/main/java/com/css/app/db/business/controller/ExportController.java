@@ -115,7 +115,6 @@ public class ExportController{
 					if (jsonData != null && jsonData.get("txlOrgtel") != null) {
 						Map<String, Object> txlOrgtel = (Map<String, Object>) jsonData.get("txlOrgtel");
 						telephone = txlOrgtel.get("telephone").toString();
-//						result.put("telephone", telephone);
 					}
 				}
 				subInfoBuilder.append(deptName+ "        " + subInfoName+ "         "+telephone);
