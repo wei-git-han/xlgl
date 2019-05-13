@@ -113,11 +113,17 @@
 		<if test="loginUserId !=null and loginUserId !=''">
 			and RECEIVER_ID = #{loginUserId}
 		</if>
-	)
-	where num =1)
+		)
+		where num =1)
 	select dic.*,nvl(s.num,0) hasUpdateNum from DB_DOCUMENT_DIC dic	
 	left join(select DOC_TYPE_ID, count(1) as num
-	from DB_SUB_DOC_INFO a inner join v_result b on a.ID = b.SUB_ID
+	from DB_SUB_DOC_INFO a 
+	<if test="deptId !=null and deptId !=''">
+		inner join v_result b on a.ID = b.SUB_ID
+	</if>
+	<if test="loginUserId !=null and loginUserId !=''">
+		inner join v_result b on a.ID = b.SUB_ID
+	</if>
 	left join "DB_DOCUMENT_INFO" t on a.INFO_ID=t.ID
 	where t.LATEST_REPLY !=''
 	and t.LATEST_REPLY is not null
