@@ -7,15 +7,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.apporgmapped.constant.AppType;
 import com.css.addbase.apporgmapped.entity.BaseAppOrgMapped;
@@ -132,8 +128,9 @@ public class ExportController{
 				subInfoBuilder.append(deptName + "        " + subInfoName + "         " + telephone);
 			}
 			exportDataMap.put("banjianNumber", documentInfo.getBanjianNumber());// 军 委办件号：
+			exportDataMap.put("docCode", documentInfo.getDocCode());//文件号：
 			exportDataMap.put("docTitle", documentInfo.getDocTitle());// 文件标题
-			exportDataMap.put("printDate", documentInfo.getPrintDate());// 文件标题
+			exportDataMap.put("printDate", documentInfo.getPrintDate());// 印发时间
 			exportDataMap.put("jobContent", documentInfo.getJobContent());// 工作分工内容
 			exportDataMap.put("status", statusName);// 办理状态 (0:还未转办1：办理中；2：办结：3：常态落实）
 			exportDataMap.put("leaderComment", commentBuilder.toString());// 批示指示内容
