@@ -714,4 +714,55 @@ public class DocumentInfoController {
 		List<DocumentDic> dicByType = documentInfoService.queryDicByType(map);
 		Response.json(DbDefined.DOCUMENT_TYPE,dicByType );
 	}
+	
+/*	*//**
+	 * 电子保密室，将扫描筛选后的图片，保存成PDF文件
+	 * @param smwj 文件
+	 * @param yjId 公文ID
+	 * @throws Exception
+	 *//*
+	@ResponseBody
+	@RequestMapping("/saveSmjPsFile")
+	public void saveSmjToFile(@RequestParam(value = "smwj", required = false) String smwj,
+			@RequestParam(value = "yjId", required = true) String yjId)
+			throws Exception {
+		FileInfo fileInfo = fileInfoService.queryObject(yjId);
+		if(fileInfo != null) {
+			getFilePath(smwj, fileInfo, CurrentUser.getUsername());
+			// 获得批示首页文件的绝对路径
+			String scanFilePath = "";
+			if(StringUtils.isNotBlank(fileInfo.getScanId())) {
+				HTTPFile httpFile = new HTTPFile(fileInfo.getScanId());
+				scanFilePath = httpFile.getAssginDownloadURL(true);
+			}
+			JSONObject result = new JSONObject();
+			result.put("result", "success");
+			result.put("scanId", StringUtils.isNotBlank(fileInfo.getScanId()) ? fileInfo.getScanId() :"");
+			result.put("scanFilePath", scanFilePath);
+			Response.json(result);
+		}
+	}
+	
+	private void getFilePath(String smwj, FileInfo model, String loginUserName){
+		String fileId = "";
+		// 将扫描件上传到电子数据中心
+		if (StringUtils.isNotBlank(smwj)) {
+			fileId = OfdTransferUtil.createdOFDFile(smwj, model.getId());
+			if (StringUtils.isNotBlank(fileId)) {
+				model.setScanId(fileId);
+				DocumentFile file=new DocumentFile();
+				file.setId(UUIDUtils.random());
+				file.setDocInfoId(idpdf);
+				file.setSort(documentFileService.queryMinSort(idpdf));
+				file.setFileName(fileName);
+				file.setCreatedTime(new Date());
+				if(StringUtils.isNotBlank(streamId)) {
+					file.setFileServerStreamId(streamId);
+				}
+				file.setFileServerFormatId(formatId);
+				documentFileService.save(file);
+				fileInfoService.update(model);
+			}
+		}
+	}*/
 }
