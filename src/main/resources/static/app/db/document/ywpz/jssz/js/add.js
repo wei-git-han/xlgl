@@ -1,6 +1,6 @@
 var saveUrl = {"url":rootPath +"/roleset/saveOrUpdate","dataType":"text"};  //保存
 var editInfo = {"url":rootPath +"/roleset/info","dataType":"text"}; //编辑数据
-var treeurl = {"url":"/app/base/user/allTree","dataType":"text"}; //人员树
+var treeurl = {"url":"/app/base/user/tree","dataType":"text"}; //人员树
 var id = getUrlParam("id");
 var pageModule = function(){
 	var initdatafn = function(){

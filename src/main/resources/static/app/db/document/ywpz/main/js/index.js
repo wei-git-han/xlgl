@@ -12,6 +12,7 @@ var pageModule = function(){
 				if(!data){
 =======
 				if(!data){ //局
+					$("#jssz").show();
 					$("#szsz").hide();
 					$("#zdwh").hide();
 >>>>>>> refs/remotes/origin/2019051302_wei
