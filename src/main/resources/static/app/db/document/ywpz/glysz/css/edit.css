@@ -70,6 +70,10 @@ body {
 .newpage20:nth-of-type(2n) {
     background-color: #f9f9f9;
 }
+
+.control-label {
+    margin-top: 8px!important;
+}
 .newpage21{
 	display:table-cell;width:120px;text-align:left;padding-left:10px;vertical-align:middle;
 }

@@ -739,9 +739,7 @@ var pageModule = function(){
 					newbootbox.alert("反馈不能为空！");
 					return;
 				}
-		    	if(isSave && isSave==1){
-		    		$("#editTeamId").val($(".isEditbtn").attr("data"));
-				}
+		    	$("#editTeamId").val($(".isEditbtn").attr("data"));
 		    	var ajax_option = {
 					url : saveUrl.url,// 默认是form action
 					data:{subId:subId,infoId:fileId,teamId:$("#editTeamId").val(),replyContent:$("#replyContent").val()},

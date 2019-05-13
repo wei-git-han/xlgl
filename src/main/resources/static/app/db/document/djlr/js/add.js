@@ -402,27 +402,6 @@ var pageModule = function(){
 				    			$("#embedwrap").show();
 				    			psLoad('', data.smjFilePath);
 				    			initfilefn();
-				    			
-				    			/*if(type=="1"){ //板式
-				    				if($("#FireFoxOFDDIV").is(":hidden")){
-				    					$("#FireFoxOFDDIV").show();
-				    				};
-				    				psLoad('', data.smjFilePath);
-				    			}else{  //流式
-				    				if($("#cssOffice").is(":hidden")){
-				    					$("#cssOffice").show();
-				    				};
-				    				if(!$("#cssOffice").is(":hidden")){
-			    						cssOffice = new CssOffice();
-			    						if(cssOffice!=null){
-			    							cssOffice.init("cssOffice", "100%", "100%");
-			    						}
-			    					};
-			    					openOFDFile(fileUrl, "suwell",$("#suwell").width(),$("#suwell").height(), "showTablet");
-				    			};*/
-				    			
-				    			
-			        			
 		    				});
 						}else{
 							newbootbox.alert("上传失败！"); 

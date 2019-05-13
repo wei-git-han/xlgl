@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -37,9 +38,12 @@ public class AdminSetController {
 	private AdminSetService adminSetService;
 	@Autowired
 	private BaseAppOrganService baseAppOrganService;
-	
 	@Autowired
 	private BaseAppUserService baseAppUserService;
+	@Value("${csse.dccb.appId}")
+	private  String appId;	
+	@Value("${csse.dccb.appSecret}")
+	private  String clientSecret;
 	/**
 	 * 列表
 	 */
@@ -57,15 +61,23 @@ public class AdminSetController {
 	@ResponseBody
 	@RequestMapping("/getAuthor")
 	public void getAuthor(){
-		String adminType = null;//管理员类型（1：部管理员；2：局管理员）
+		boolean adminFlag = false;//管理员类型（1：部管理员；2：局管理员）
+		boolean admin = CurrentUser.getIsManager(appId, clientSecret);
+		if(admin) {
+			adminFlag=true;
+		}
 		//当前登录人的管理员类型
 		Map<String, Object> adminMap = new HashMap<>();
 		adminMap.put("userId", CurrentUser.getUserId());
 		List<AdminSet> adminList = adminSetService.queryList(adminMap);
 		if(adminList != null && adminList.size()>0) {
-			adminType = adminList.get(0).getAdminType();
+			String adminType = adminList.get(0).getAdminType();
+			if(StringUtils.equals("1", adminType)) {
+				adminFlag=true;
+			}
+			
 		}
-		Response.json(adminType);
+		Response.json(adminFlag);
 	}
 	
 	/**
