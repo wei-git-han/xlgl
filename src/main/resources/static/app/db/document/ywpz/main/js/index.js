@@ -8,7 +8,7 @@ var pageModule = function(){
 			type: "GET",
 //			data: {"ids": ids.toString()},
 			success: function(data) {
-				if(data == '2'){
+				if(!data){
 					$('#departAdmin').css("display","none");
 				}
 			}
