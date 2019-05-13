@@ -248,7 +248,7 @@
 	        (case when ddi.STATUS='3' then count(ddi.STATUS) else 0 end ) as ctls
 	         
 	        
-	        from ZF_MINISTRY_APP_DB.DB_DOCUMENT_INFO  ddi where  ddi.FIRST_ZB_TIME is not null
+	        from DB_DOCUMENT_INFO  ddi where  ddi.FIRST_ZB_TIME is not null
 	        and ddi.DOC_TYPE_ID=#{type}
 			group by ddi.DOC_TYPE_ID,ddi.STATUS 
 	</select>
