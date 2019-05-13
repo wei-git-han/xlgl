@@ -351,7 +351,12 @@ var pageModule = function(){
 		
 		//导出
 		$("#export").click(function(){
-			var datas=grid.getcheckrow();
+			var datas;
+			if($("#gridcont2").is(":hidden")){
+				datas=grid.getcheckrow();
+			}else{
+				datas=grid2.getcheckrow();
+			}
 			var ids='';
 			var t_count=0;
 			$(datas).each(function(i){
@@ -364,7 +369,7 @@ var pageModule = function(){
 			     	title:"提示",
 			     	message: "将导出"+t_count+"条数据！",
 			     	callback1:function(){
-			     		/*window.location.href=后台地址+'?ids='+ids;*/
+			     		window.location.href='/app/db/export/exportDocx?stringIds='+ids;
 			     	}
 			    });
 			}else{
