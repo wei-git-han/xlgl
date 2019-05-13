@@ -39,13 +39,19 @@
 		<if test="type != null">
 			and t.DOC_TYPE_ID=#{type}
 		</if>
+		
 		<if test="latestreply != null and latestreply != ''">
 				and t.LATEST_REPLY !=''  
 			</if>
 		<if test="isnotuserid != null">
 			and (t.sz_read_ids not like '%'||#{isnotuserid}||'%' or t.sz_read_ids is null)
 		</if>
-		order by t.STATUS asc,t.CREATED_TIME desc
+		<choose>
+			<when test="sort == 'desc'">order by t.BANJIAN_NUMBER desc</when>
+			<when test="sort == 'asc'"> order by t.BANJIAN_NUMBER ASC</when>
+			<otherwise>order by t.STATUS asc,t.CREATED_TIME desc</otherwise>
+		</choose>
+		
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>

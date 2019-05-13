@@ -407,10 +407,8 @@ public class DocumentJcdbController {
 		String orgid="";
 		if(roleList != null && roleList.size()>0) {
 			return roleType = roleList.get(0).getRoleFlag();
-		}else if(mapped!=null){
-			if(depid.equals(mapped.getValue())) {
+		}else if(mapped!=null&&depid.equals(mapped.getValue())){
 				return "1";//首长单位下的人(默认为首长)
-			}
 		}else{
 			//当前登录人的管理员类型
 			String adminType = "0";//管理员类型（1：部管理员；2：局管理员）

@@ -5,7 +5,17 @@ jQuery.fn.extend({
 		return gridobj;
 	}
 });
-var remeberTableTermGrid = window.top.remeberTableTerm;
+
+var remeberTableTermGrid = {};
+
+try{window.top.document}catch(e){
+	var str = e.message;
+	if(str.indexOf("Permission denied to")!=-1){
+		remeberTableTermGrid = window.parent.remeberTableTerm;
+	}else{
+		remeberTableTermGrid = window.top.remeberTableTerm;
+	}
+}
 var checkedarr = [];
 //创建表格
 function createtable(obj){
