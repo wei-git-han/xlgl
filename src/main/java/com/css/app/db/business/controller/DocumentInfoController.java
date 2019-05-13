@@ -443,7 +443,6 @@ public class DocumentInfoController {
 	public void buttonParam(String id){
 		String loginUserId=CurrentUser.getUserId();
 		String adminType = "0";//管理员类型（1：部管理员；2：局管理员）
-		String roleType = DbDefined.ROLE_6;//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
 		boolean cuiBanBtn =false;
 		boolean zhuanBanBtn =false;
 		boolean quXiaoBtn =false;
@@ -454,13 +453,6 @@ public class DocumentInfoController {
 		List<AdminSet> adminList = adminSetService.queryList(adminMap);
 		if(adminList != null && adminList.size()>0) {
 			adminType = adminList.get(0).getAdminType();
-		}
-		//当前登录人的角色
-		Map<String, Object> roleMap = new HashMap<>();
-		roleMap.put("userId", loginUserId);
-		List<RoleSet> roleList = roleSetService.queryList(roleMap);
-		if(roleList != null && roleList.size()>0) {
-			roleType = roleList.get(0).getRoleFlag();
 		}
 		//获取文件信息
 		DocumentInfo documentInfo = documentInfoService.queryObject(id);
@@ -473,7 +465,7 @@ public class DocumentInfoController {
 					quXiaoBtn=true;
 				}
 			}
-			if(!StringUtils.equals("1", cuibanFlag) && (StringUtils.equals("1", adminType) || StringUtils.equals(DbDefined.ROLE_1, roleType))) {
+			if(!StringUtils.equals("1", cuibanFlag) && StringUtils.equals("1", adminType)) {
 				cuiBanBtn=true;
 			}
 		}
