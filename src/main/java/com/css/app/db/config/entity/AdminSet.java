@@ -28,6 +28,12 @@ public class AdminSet implements Serializable {
 	private String adminType;
 	//备注
 	private String remark;
+	//单位id
+	private String orgId;
+	//单位名称
+	private String orgName;
+	
+	private String editFlag;
 
 	/**
 	 * 设置：唯一标识
@@ -113,4 +119,23 @@ public class AdminSet implements Serializable {
 	public String getRemark() {
 		return remark;
 	}
+	public String getOrgId() {
+		return orgId;
+	}
+	public void setOrgId(String orgId) {
+		this.orgId = orgId;
+	}
+	public String getOrgName() {
+		return orgName;
+	}
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+	public String getEditFlag() {
+		return editFlag;
+	}
+	public void setEditFlag(String editFlag) {
+		this.editFlag = editFlag;
+	}
+	
 }

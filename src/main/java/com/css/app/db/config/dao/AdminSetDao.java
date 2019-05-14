@@ -2,6 +2,8 @@ package com.css.app.db.config.dao;
 
 import com.css.app.db.config.entity.AdminSet;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.css.base.dao.BaseDao;
@@ -17,4 +19,6 @@ import com.css.base.dao.BaseDao;
 public interface AdminSetDao extends BaseDao<AdminSet> {
 	
 	int deleteByUserId(String userId);
+	
+	List<AdminSet> queryJuAdminList(String userId);
 }
