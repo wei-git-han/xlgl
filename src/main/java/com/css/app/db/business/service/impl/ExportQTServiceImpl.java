@@ -82,7 +82,14 @@ public class ExportQTServiceImpl implements ExportService{
 			
 			//基本信息表格
 			XWPFTable infoTable = document.createTable(1,3);
-			setTableWith(infoTable,"11000");
+			setTableWith(infoTable,"12000");
+			CTTbl infoCtTbl = infoTable.getCTTbl();
+			CTTblGrid infoNewTblGrid = infoCtTbl.addNewTblGrid();
+			String[] infoColWidths=new String[]{"5000","2000","5000"};
+			for(String colWidth:infoColWidths) {
+				CTTblGridCol infoNewGridCol = infoNewTblGrid.addNewGridCol();
+				infoNewGridCol.setW(new BigInteger(colWidth));
+			}
 			//去表格边框
 			infoTable.getCTTbl().getTblPr().unsetTblBorders();	
 			XWPFTableRow infoTableRowOne = infoTable.getRow(0);
@@ -96,7 +103,7 @@ public class ExportQTServiceImpl implements ExportService{
 			createRun.setText("0");
 			//工作经历表格
 			XWPFTable ComTable = document.createTable();
-			setTableWith(ComTable,"1100");
+			setTableWith(infoTable,"12000");
 			CTTbl ctTbl = ComTable.getCTTbl();
 			CTTblGrid addNewTblGrid = ctTbl.addNewTblGrid();
 			String[] colWidths=new String[]{"400","1100","1000","1500","3800","2100","1100","1000"};

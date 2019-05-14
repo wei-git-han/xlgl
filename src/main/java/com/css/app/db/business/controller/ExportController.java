@@ -113,8 +113,7 @@ public class ExportController{
 				String deptName = subInfo.getSubDeptName() == null ? "" : subInfo.getSubDeptName();
 				String subInfoName = subInfo.getUndertakerName() == null ? "" : subInfo.getUndertakerName();
 				// 查询承办单位/人电话情况
-				BaseAppOrgMapped orgMapped = (BaseAppOrgMapped) baseAppOrgMappedService.orgMapped("", "",
-						AppType.APP_TXL);
+				BaseAppOrgMapped orgMapped = (BaseAppOrgMapped) baseAppOrgMappedService.orgMapped("", "",AppType.APP_TXL);
 				if (orgMapped != null) {
 					LinkedMultiValueMap<String, Object> paraMap = new LinkedMultiValueMap<String, Object>();
 					paraMap.add("id", subInfo.getUndertaker());
