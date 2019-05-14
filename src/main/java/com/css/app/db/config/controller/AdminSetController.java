@@ -96,14 +96,15 @@ public class AdminSetController {
 		boolean admin = CurrentUser.getIsManager(appId, clientSecret);
 		if(admin) {
 			adminFlag="0";
-		}
-		//当前登录人的管理员类型
-		Map<String, Object> adminMap = new HashMap<>();
-		adminMap.put("userId",userId);
-		List<AdminSet> adminList = adminSetService.queryList(adminMap);
-		if(adminList != null && adminList.size()>0) {
-			String adminType = adminList.get(0).getAdminType();
-			adminFlag=adminType;
+		}else {
+			//当前登录人的管理员类型
+			Map<String, Object> adminMap = new HashMap<>();
+			adminMap.put("userId",userId);
+			List<AdminSet> adminList = adminSetService.queryList(adminMap);
+			if(adminList != null && adminList.size()>0) {
+				String adminType = adminList.get(0).getAdminType();
+				adminFlag=adminType;
+			}
 		}
 		return adminFlag;
 	}
