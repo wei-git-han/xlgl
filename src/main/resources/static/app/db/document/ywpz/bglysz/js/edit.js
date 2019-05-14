@@ -2,7 +2,7 @@ var id = getUrlParam2("id");
 var saveUrl = {"url":rootPath +"/adminset/saveOrUpdate","dataType":"text"};  //保存
 var editInfo = {"url":rootPath +"/adminset/info","dataType":"text"}; //编辑数据
 var getUserAdminTypeUrl = {"url":rootPath +"/adminset/getAuthor","dataType":"text"};//那当前用户的类型1：部管理员，2：局管理员
-var userTree = {"url":"/app/base/user/tree","dataType":"text"}; //部门树
+var userTree ={"url":"/app/base/user/allTree","dataType":"text"}; //人员选择树
 var pageModule = function(){
 	var initdatafn = function(){
 		$ajax({
@@ -26,7 +26,7 @@ var pageModule = function(){
 		});
 		
 		$("#quxiao,#fanhui").click(function(){
-			window.location.href="/app/db/document/ywpz/glysz/html/index.html";
+			window.location.href="/app/db/document/ywpz/bglysz/html/index.html";
 		})
 		
 		$("#save").click(function(){
@@ -38,12 +38,12 @@ var pageModule = function(){
 			}
 			$ajax({
 				url:saveUrl,
-				data:{id:id,userName:userName,userId:userId,adminType:"2"},
+				data:{id:id,userName:userName,userId:userId,adminType:"1"},
 				type: "GET",
 				success:function(data){
 					if(data.result == "success") {
 						newbootbox.alertInfo('保存成功！').done(function(){
-							window.location.href = "/app/db/document/ywpz/glysz/html/index.html";
+							window.location.href = "/app/db/document/ywpz/bglysz/html/index.html";
 						});
 					}else{
 						newbootbox.alertInfo("保存失败！");

@@ -1,6 +1,8 @@
 var grid = null;
 var tableUrl = {"url":rootPath +"/adminset/list","dataType":"text"}; 
 var delUrl = {"url":rootPath +"/adminset/delete","dataType":"text"}; 
+var departType = getUrlParam2("departType");
+
 var pageModule = function() {
 	var initgrid = function() {
 		grid = $("#gridcont").createGrid({
@@ -15,7 +17,7 @@ var pageModule = function() {
 					  return rowdata.userName;   
 				  }}, 
 				  {display: "管理员类型",name: "adminType",width: "10%",align: "center",render: function(rowdata,n){
-					  return "局管理员"
+					  return "部管理员"
 				  }}, 
 				  {display: "操作",name: "do",width: "10%",align: "center",render: function(rowdata,n){
 					  return '<i class="fa fa fa-pencil" style="cursor:pointer;background:#5498EB;padding:4px 5px;color:#fff;" onclick="editfn(\''+rowdata.id+'\')" title="编辑"></i>';
@@ -25,7 +27,7 @@ var pageModule = function() {
 			height: "100%",
 			checkbox: true,
 			rownumberyon: true,
-			paramobj:{type:'3',adminType:"2"},
+			paramobj:{type:'3',adminType:"1"},
 			overflowx: false,
             pagesize: 15,
 			url: tableUrl
