@@ -10,6 +10,7 @@ var pageModule = function(){
 			data:{id:id},
 			success:function(data){
 				setformdata(data);
+				$("#roleType").val("部管理员");
 			}
 		})
 	}
