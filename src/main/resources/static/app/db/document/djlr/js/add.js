@@ -439,9 +439,10 @@ var pageModule = function(){
 		//扫描件表单提交
 		$("#smjForm").validate({
 			submitHandler : function() {
+				$("#infoId").val($("#id").val());
 				var ajax_option = {
 					type: "post",
-					url : "/app/dzbms/fileinfo/saveSmjPsFile",
+					url : "/app/db/documentinfo/saveSmjPsFile",
 					success : function(data) {
 						if (data.result == "success") {
 							newbootbox.alert("保存成功！").done(function(){

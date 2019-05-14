@@ -715,54 +715,52 @@ public class DocumentInfoController {
 		Response.json(DbDefined.DOCUMENT_TYPE,dicByType );
 	}
 	
-/*	*//**
-	 * 电子保密室，将扫描筛选后的图片，保存成PDF文件
+	/**
+	 * 将扫描筛选后的图片，保存成PDF文件
 	 * @param smwj 文件
-	 * @param yjId 公文ID
+	 * @param infoId 公文ID
 	 * @throws Exception
-	 *//*
+	 */
 	@ResponseBody
 	@RequestMapping("/saveSmjPsFile")
-	public void saveSmjToFile(@RequestParam(value = "smwj", required = false) String smwj,
-			@RequestParam(value = "yjId", required = true) String yjId)
+	public void saveSmjToFile(@RequestParam(value = "smwj", required = false) String smwj,@RequestParam(value = "infoId", required = true) String infoId)
 			throws Exception {
-		FileInfo fileInfo = fileInfoService.queryObject(yjId);
+		DocumentInfo fileInfo = documentInfoService.queryObject(infoId);
 		if(fileInfo != null) {
-			getFilePath(smwj, fileInfo, CurrentUser.getUsername());
+			//将扫描件上传到电子数据中心
+			String fileId = getFilePath(smwj, fileInfo, CurrentUser.getUsername());
 			// 获得批示首页文件的绝对路径
 			String scanFilePath = "";
-			if(StringUtils.isNotBlank(fileInfo.getScanId())) {
-				HTTPFile httpFile = new HTTPFile(fileInfo.getScanId());
+			if(StringUtils.isNotBlank(fileId)) {
+				HTTPFile httpFile = new HTTPFile(fileId);
 				scanFilePath = httpFile.getAssginDownloadURL(true);
 			}
 			JSONObject result = new JSONObject();
 			result.put("result", "success");
-			result.put("scanId", StringUtils.isNotBlank(fileInfo.getScanId()) ? fileInfo.getScanId() :"");
+			result.put("scanId", StringUtils.isNotBlank(fileId) ? fileId :"");
 			result.put("scanFilePath", scanFilePath);
 			Response.json(result);
 		}
 	}
 	
-	private void getFilePath(String smwj, FileInfo model, String loginUserName){
+	private String getFilePath(String smwj, DocumentInfo model, String loginUserName){
 		String fileId = "";
 		// 将扫描件上传到电子数据中心
 		if (StringUtils.isNotBlank(smwj)) {
 			fileId = OfdTransferUtil.createdOFDFile(smwj, model.getId());
 			if (StringUtils.isNotBlank(fileId)) {
-				model.setScanId(fileId);
+				//保存文件相关数据
 				DocumentFile file=new DocumentFile();
 				file.setId(UUIDUtils.random());
-				file.setDocInfoId(idpdf);
-				file.setSort(documentFileService.queryMinSort(idpdf));
-				file.setFileName(fileName);
+				file.setDocInfoId(model.getId());
+				file.setSort(documentFileService.queryMinSort(model.getId()));
+				HTTPFile httpFile = new HTTPFile(fileId);
+				file.setFileName(httpFile.getFileName());
 				file.setCreatedTime(new Date());
-				if(StringUtils.isNotBlank(streamId)) {
-					file.setFileServerStreamId(streamId);
-				}
-				file.setFileServerFormatId(formatId);
+				file.setFileServerFormatId(fileId);
 				documentFileService.save(file);
-				fileInfoService.update(model);
 			}
 		}
-	}*/
+		return fileId;
+	}
 }
