@@ -29,7 +29,7 @@ var pageModule = function(){
    				  	 return '<div title="'+documentStatusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+documentStatusName+'</div>';
                  }},
                  {display:"办件标题",name:"",width:"15%",align:"left",render:function(rowdata){
-                	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+rowdata.docTitle+'</a>'
+                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle" href="djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+rowdata.docTitle+'</a>'
                  }},
                  {display:"紧急程度",name:"",width:"4%",align:"center",paixu:false,render:function(rowdata){
                 	 return rowdata.urgencyDegree;
@@ -41,8 +41,8 @@ var pageModule = function(){
                 	 }
                 	 return '<div class="zspsnr"  onclick="pszsnrAlert(\''+rowdata.id+'\')" title="'+szpsCont+'">'+szpsCont+'</div>';
                  }},
-                 {display:"承办单位/人",name:"",width:"20%",align:"left",paixu:false,title:true,render:function(rowdata){
-                	 return rowdata.underDepts || '';
+                 {display:"承办单位/人",name:"",width:"20%",align:"left",paixu:false,title:false,render:function(rowdata){
+                	 return '<div class="cbdw" title="'+rowdata.underDepts+'">'+rowdata.underDepts+'</div>'
                  }},
                  {display:"办件分类",name:"",width:"10%",align:"left",paixu:false,title:true,render:function(rowdata){
                 	 return rowdata.docTypeName;
@@ -72,6 +72,20 @@ var pageModule = function(){
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
+					var maxwidth = 60;
+					if($(this).text().length > maxwidth){
+						$(this).text($(this).text().substring(0,maxwidth));
+						$(this).html($(this).html()+'...');
+					}
+				});
+            	$(".tabletitle").each(function(){
+					var maxwidth = 55;
+					if($(this).text().length > maxwidth){
+						$(this).text($(this).text().substring(0,maxwidth));
+						$(this).html($(this).html()+'...');
+					}
+				});
+            	$(".cbdw").each(function(){
 					var maxwidth = 60;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));

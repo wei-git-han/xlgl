@@ -60,7 +60,7 @@ var pageModule = function(){
                  	 if(rowdata.cuibanFlag=="1"){
                  		 cuiban = '<label class="cuibanlabel">催办</label>';
                 	 }
-                	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
+                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle" href="../../djlr/html/djlr_view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
                  }},
                  {display:"紧急程度",name:"urgencyDegree",width:"5%",align:"center",paixu:false,render:function(rowdata){
                 	 return rowdata.urgencyDegree;
@@ -83,8 +83,8 @@ var pageModule = function(){
                 	 }	 
                 	 return '<div class="dblsqk" onclick="dblsqkAlert(\''+rowdata.infoId+'\')" title="'+dbCont+'">'+duban+'<span>'+dbCont+'</span></div>';
                  }},
-                 {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,title:true,render:function(rowdata){
-                	 return rowdata.underDepts||'';
+                 {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,title:false,render:function(rowdata){
+                	 return '<div class="cbdw" title="'+rowdata.underDepts+'">'+rowdata.underDepts+'</div>'
                  }},
                  {display:"办件分类",name:"docTypeName",width:"5%",align:"left",paixu:false,render:function(rowdata){
                 	 return rowdata.docTypeName;
@@ -112,7 +112,7 @@ var pageModule = function(){
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
-					var maxwidth = 60;
+					var maxwidth = 78;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
@@ -120,7 +120,21 @@ var pageModule = function(){
 				});
             	
             	$(".dblsqk span").each(function(){
-					var maxwidth = 57;
+					var maxwidth = 72;
+					if($(this).text().length > maxwidth){
+						$(this).text($(this).text().substring(0,maxwidth));
+						$(this).html($(this).html()+'...');
+					}
+				});
+            	$(".tabletitle").each(function(){
+					var maxwidth = 55;
+					if($(this).text().length > maxwidth){
+						$(this).text($(this).text().substring(0,maxwidth));
+						$(this).html($(this).html()+'...');
+					}
+				});
+            	$(".cbdw").each(function(){
+					var maxwidth = 60;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
