@@ -402,7 +402,7 @@ var pageModule = function(){
 						$(this).parents(".newpanel-cont").toggleClass("active");
 					})
 				}else{
-					$(".pagemenu").html("<span style='margin-left:20px;'>暂无内容！</span>");
+					$(".pagemenu").html("<span style='margin-left:20px;font-size: 14px;'>暂无内容！</span>");
 				}
 			}
 		})
