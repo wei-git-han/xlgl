@@ -228,19 +228,31 @@ License: You must have a valid license purchased only from themeforest(the above
 															<td colspan="3">
 																<div class="cqwrap">
 																	<div style="padding:10px;overflow: hidden;width: 100%;">
-																		<div>
-																			<span class="pull-left">增加抄清</span>
-																			<div class="pull-right">
-																				<a class="cqbtn" style="float:left;margin-right:10px;" id="choosesz">选择首长</a>
-																				<div style="display:inline-block" class="input-group date date-picker" data-date-format="yyyy-mm-dd">
-																				    <input type="hidden" class="form-control" id="cqDate" name="cqDate" />
-																				    <span class="input-group-btn">
-																				    	<button class="btn default setdis cqbtn"  type="button">选择日期</button>
-																				    </span>
-																				</div>
-																			</div>
+																		<div style="overflow: hidden;">
+																			<span class="pull-left">新增/编辑抄清</span>
 																		</div>
 																		<input type="hidden" class="form-control" id="editcqId" name="editcqId" />
+																		<div class="cqnr">
+																			<label>
+														                    	选择首长
+																			</label>
+																			<div>
+															                     <div style="display:inline-block" >
+																				    <input class="form-control" type="text" id="psszName" name="psszName" readonly="readonly"/>
+																				</div>
+																			 </div>
+																			 <label style="margin-left:30px;">
+														                    	选择日期
+																			 </label>
+																			 <div>
+																                <div style="display:inline-block" class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+																				    <input type="text" class="form-control datee" id="cqDate" name="cqDate" />
+																				    <span class="input-group-btn">
+																				    	<button class="btn default setdis cqbtn"  type="button"></button>
+																				    </span>
+																				</div>
+																			 </div>
+																		</div>
 																		<textarea class="form-control cqcontent" id="cqcontent" placeholder="输入抄清内容..." maxlength="500"></textarea>
 																		<button type="button" class="btn tableBtns1" id="addcq">保存</button>
 																	</div>
