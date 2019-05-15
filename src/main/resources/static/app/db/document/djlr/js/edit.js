@@ -336,6 +336,10 @@ var pageModule = function(){
 				newbootbox.alert('请输入抄清内容！');
 				return;
 			}
+			if($.trim(psszName) == "" || $.trim(psszName) == null){
+				newbootbox.alert('请选择首长！');
+				return;
+			}
 			$ajax({
 				url:saveSzpsUrl,
 				data:{infoId:$("#id").val(),userName:psszName,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},

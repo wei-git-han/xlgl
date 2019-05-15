@@ -67,8 +67,12 @@ var pageModule = function(){
                  }},
                  {display:"批示指示内容",name:"",width:"20%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var szpsCont="";
-                	 if(rowdata.leaderName && rowdata.leaderContent && rowdata.leaderTime){
-                		 szpsCont=rowdata.leaderName+":"+rowdata.leaderContent+" "+rowdata.leaderTime.substring(0,16)
+                	 var leaderTime1="";
+                	 if(rowdata.leaderTime!="" && rowdata.leaderTime!=null){
+                		 leaderTime1= rowdata.leaderTime.substring(0,16);
+                	 }
+                	 if(rowdata.leaderName && rowdata.leaderContent){
+                		 szpsCont=rowdata.leaderName+":"+rowdata.leaderContent+" "+leaderTime1
                 	 }
                 	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.infoId+'\')" title="'+szpsCont+'">'+szpsCont+'</div>';
                  }},

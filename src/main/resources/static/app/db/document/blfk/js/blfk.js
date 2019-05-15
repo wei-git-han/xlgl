@@ -95,8 +95,12 @@ var pageModule = function(){
                  }},
                  {display:"批示指示内容",name:"",width:"26%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var szpsCont="";
-                	 if(rowdata.leaderName && rowdata.leaderContent && rowdata.leaderTime){
-                		 szpsCont=rowdata.leaderName+":"+rowdata.leaderContent+" "+rowdata.leaderTime.substring(0,16)
+                	 var leaderTime1="";
+                	 if(rowdata.leaderTime!="" && rowdata.leaderTime!=null){
+                		 leaderTime1= rowdata.leaderTime.substring(0,16);
+                	 }
+                	 if(rowdata.leaderName && rowdata.leaderContent){
+                		 szpsCont=rowdata.leaderName+":"+rowdata.leaderContent+" "+leaderTime1
                 	 }
                 	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.id+'\')" title="'+szpsCont+'">'+szpsCont+'</div>';
                  }},
@@ -138,14 +142,14 @@ var pageModule = function(){
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
-					var maxwidth = 70;
+					var maxwidth = 85;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
 					}
 				});
             	$(".dblsqk span").each(function(){
-					var maxwidth = 60;
+					var maxwidth = 64;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
@@ -242,14 +246,14 @@ var pageModule = function(){
             loadafter:function(data){
             	total=data.total;
             	$(".dblsqk span").each(function(){
-					var maxwidth = 57;
+					var maxwidth = 80;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
 					}
 				});
             	$(".gzfgnr").each(function(){
-					var maxwidth = 57;
+					var maxwidth = 65;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');

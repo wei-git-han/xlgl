@@ -11,7 +11,7 @@ var pageModule = function(){
             	{display:"军委办件号",name:"banjianNumber",width:"6%",align:"left",render:function(rowdata,n){
                	 return rowdata.banjianNumber;
                 }},
-                {display:"局内状态",name:"statusName",width:"6%",align:"center",render:function(rowdata,n){
+                {display:"局内状态",name:"statusName",width:"7%",align:"center",render:function(rowdata,n){
                 	var statusName="";
                	 	var bgColor="#FF6600";
                	 	if(rowdata.docStatus==3){
@@ -51,7 +51,7 @@ var pageModule = function(){
                	 	}
   				  	return '<div title="'+statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+statusName+'</div>';
                 }},
-                {display:"办件标题",name:"docTitle",width:"13%",align:"left",render:function(rowdata){
+                {display:"办件标题",name:"docTitle",width:"15%",align:"left",render:function(rowdata){
                 	var cuiban="";
                 	if(rowdata.cuibanFlag=="1"){
                 		cuiban = '<label class="cuibanlabel">催办</label>';
@@ -61,10 +61,14 @@ var pageModule = function(){
                 {display:"紧急程度",name:"urgencyDegree",width:"5%",align:"center",paixu:false,render:function(rowdata){
                	 return rowdata.urgencyDegree;
                 }},
-                {display:"批示指示内容",name:"",width:"23%",align:"left",paixu:false,render:function(rowdata){
+                {display:"批示指示内容",name:"",width:"20%",align:"left",paixu:false,render:function(rowdata){
                 	 var szpsCont="";
-                	 if(rowdata.leaderName && rowdata.leaderContent && rowdata.leaderTime){
-                		 szpsCont=rowdata.leaderName+":"+rowdata.leaderContent+" "+rowdata.leaderTime.substring(0,16)
+                	 var leaderTime1="";
+                	 if(rowdata.leaderTime!="" && rowdata.leaderTime!=null){
+                		 leaderTime1= rowdata.leaderTime.substring(0,16);
+                	 }
+                	 if(rowdata.leaderName && rowdata.leaderContent){
+                		 szpsCont=rowdata.leaderName+":"+rowdata.leaderContent+" "+leaderTime1
                 	 }
                 	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.infoId+'\')"  title="'+szpsCont+'">'+szpsCont+'</div>';
                 }},
@@ -108,7 +112,7 @@ var pageModule = function(){
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
-					var maxwidth = 85;
+					var maxwidth = 79;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
@@ -122,14 +126,14 @@ var pageModule = function(){
 					}
 				});
             	$(".tabletitle").each(function(){
-					var maxwidth = 48;
+					var maxwidth = 57;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
 					}
 				});
             	$(".cbdw").each(function(){
-					var maxwidth = 60;
+					var maxwidth = 32;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');

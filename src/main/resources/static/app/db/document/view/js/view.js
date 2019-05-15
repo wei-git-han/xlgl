@@ -563,7 +563,9 @@ var pageModule = function(){
 		$("#fhxg").click(function(){
 			var replyContent = $("#replyContent").val();
 			var imgFileId="";
+			var saveFlag="0"; //文字
 			if($("span.css3").attr("data") =="1"){
+				saveFlag="1"; //图片
 				if(checkIsModified()){
 					$.ajax({
 						url : "/app/base/user/getToken",
@@ -575,18 +577,12 @@ var pageModule = function(){
 						    document.getElementById("signtool").SetUploadURL(surl);
 							var result = document.getElementById("signtool").UploadImageStream();
 							imgFileId = result.replace(/^\"|\"$/g,'');
+							replyContent = imgFileId;
 						}
 					})
 				}else{
 					newbootbox.alert('保存失败！请填写您的意见！')
 				}
-			}
-			var saveFlag="0"; //文字
-			if(replyContent && !!replyContent){
-				saveFlag="0";
-			}else{
-				replyContent = imgFileId;
-				saveFlag="1"; //图片
 			}
 			$ajax({
 				url:returnUrl,

@@ -985,3 +985,7 @@ div.radio, div.radio span, div.radio input {
 .zspsnr,.dblsqk{
 	cursor:pointer;
 }
+.dblsqk span,.zspsnr,.tabletitle,.cbdw,.nrt-cont-cent-font{
+	word-break: break-all;
+	word-wrap: break-word;
+}
