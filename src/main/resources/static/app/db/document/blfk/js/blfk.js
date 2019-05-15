@@ -138,14 +138,14 @@ var pageModule = function(){
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
-					var maxwidth = 70;
+					var maxwidth = 85;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
 					}
 				});
             	$(".dblsqk span").each(function(){
-					var maxwidth = 60;
+					var maxwidth = 64;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
@@ -242,14 +242,14 @@ var pageModule = function(){
             loadafter:function(data){
             	total=data.total;
             	$(".dblsqk span").each(function(){
-					var maxwidth = 57;
+					var maxwidth = 80;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
 					}
 				});
             	$(".gzfgnr").each(function(){
-					var maxwidth = 57;
+					var maxwidth = 65;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
