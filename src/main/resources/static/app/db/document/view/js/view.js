@@ -52,12 +52,12 @@ var pageModule = function(){
 				boolean isUndertaken=false;//是否已承办
 				boolean isUndertaker=false;//是否承办人*/
 				if(data.docStatus<10){//文件为办理中
-					if(!data.isUndertaken && data.isCheckUser){//承办、转办按钮显示，输入框相关不显示
+					if(data.docStatus==5 && data.isCheckUser){//承办、转办按钮显示，输入框相关不显示
 						$(".newbottom").show(); //所有按钮的容器
 						$("#chengban").show();
 						$("#zhuanban").show();
 					}else{
-						if(data.isUndertaker){
+						if(data.isUndertaker && data.docStatus!=5){
 							$(".newbottom").show(); //所有按钮的容器
 							$("#bjandls").show(); //办结和常态落实合并为一个
 						}
@@ -80,6 +80,7 @@ var pageModule = function(){
 								$("#save").show();
 								$("#ifaddfj").show();
 								$("#showfj").show();
+								$("#zhuanban").show();
 								isCbr = 1;
 							}
 						}
@@ -535,6 +536,7 @@ var pageModule = function(){
 				success:function(data){
 					if(data.result == "success"){
 						showButton();
+						initblfkList();
 					}
 				}
 			});

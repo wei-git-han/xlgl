@@ -90,15 +90,18 @@ public class ReplyExplainController {
 						List<ReplyExplain> list = replyExplainService.queryList(replyMap);
 						if(list !=null && list.size()>0) {
 							firstDate = list.get(0).getCreatedTime();
+							//承办后再转办如实记录承办人
+							json.put("cbrId", list.get(0).getUserId());
+							json.put("cbrName", list.get(0).getUserName());
 						}
 						json.put("danwei", subDocInfo.getSubDeptName());
 						json.put("firstDate", firstDate);
-						json.put("cbrId", cbrId);
-						json.put("cbrName", subDocInfo.getUndertakerName());
+						/*json.put("cbrId", cbrId);
+						json.put("cbrName", subDocInfo.getUndertakerName());*/
 						json.put("teamId", teamId);
 						json.put("content",replyExplain.getReplyContent());
 						json.put("updateTime",replyExplain.getCreatedTime());
-						if(!StringUtils.equals("1", replyExplain.getShowFlag()) && isCheckUser) {
+						if(!StringUtils.equals("1", replyExplain.getShowFlag()) && isCheckUser && subDocInfo.getDocStatus()!=5) {
 							editFlag=true;
 						}
 						json.put("edit",editFlag);
@@ -120,7 +123,7 @@ public class ReplyExplainController {
 										HTTPFile httpFile = new HTTPFile(opinion.getOpinionContent());
 										opinion.setOpinionContent(httpFile.getAssginDownloadURL());
 									}else {
-										System.out.print("局长手写签批没有保存上");
+										System.out.print("局长手写签批获取不到");
 									}
 								}
 							}
@@ -301,13 +304,24 @@ public class ReplyExplainController {
 				if(tempReply != null) {
 					tempReply.setReplyContent(replyContent);
 					replyExplainService.update(tempReply);
-					if(files!=null && files.length>0){
-						replyAttacService.saveAttacs(files, subId, teamId);
-					}
+					
 				}else {
+					Map<String, Object> cbrMap =new HashMap<>();
+					cbrMap.put("subId", subId);
+					cbrMap.put("teamId", teamId);
+					cbrMap.put("showFlag", "0");
+					ReplyExplain zbTempReply = replyExplainService.queryLastestTempReply(cbrMap);
+					if(zbTempReply != null) {
+						zbTempReply.setReVersion("1");
+						replyExplainService.update(zbTempReply);
+					}
 					replyExplainService.saveReply(subId, infoId, loginUserId, loginUserName, teamId, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName());
 				}
+				if(files!=null && files.length>0){
+					replyAttacService.saveAttacs(files, subId, teamId);
+				}
 			}
+			
 			json.put("result", "success");
 		}else {
 			json.put("result", "fail");

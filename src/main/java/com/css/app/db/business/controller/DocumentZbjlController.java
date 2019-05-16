@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -16,12 +17,18 @@ import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.addbase.apporgmapped.service.BaseAppOrgMappedService;
+import com.css.addbase.msg.MSGTipDefined;
+import com.css.addbase.msg.MsgTipUtil;
+import com.css.addbase.msg.entity.MsgTip;
+import com.css.addbase.msg.service.MsgTipService;
 import com.css.app.db.business.entity.DocumentInfo;
 import com.css.app.db.business.entity.DocumentZbjl;
+import com.css.app.db.business.entity.ReplyExplain;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.entity.SubDocTracking;
 import com.css.app.db.business.service.DocumentInfoService;
 import com.css.app.db.business.service.DocumentZbjlService;
+import com.css.app.db.business.service.ReplyExplainService;
 import com.css.app.db.business.service.SubDocInfoService;
 import com.css.app.db.business.service.SubDocTrackingService;
 import com.css.app.db.util.DbDocStatusDefined;
@@ -55,7 +62,16 @@ public class DocumentZbjlController {
 	private SubDocTrackingService subDocTrackingService;
 	@Autowired
 	private BaseAppOrgMappedService baseAppOrgMappedService;
-	
+	@Autowired
+	private ReplyExplainService replyExplainService;
+	@Autowired
+	private MsgTipService msgService;
+	@Autowired
+	private MsgTipUtil msgUtil;
+	@Value("${csse.dccb.appId}")
+	private  String appId;	
+	@Value("${csse.dccb.appSecret}")
+	private  String clientSecret;
 	
 	/**
 	 * 转办记录
@@ -128,6 +144,24 @@ public class DocumentZbjlController {
 					subDocInfoService.save(subInfo);
 				}
 			}
+
+			/*// 发送消息提醒
+			MsgTip msg = msgService.queryObject(MSGTipDefined.GWCL_SH_MSG_TITLE);
+			if (msg != null) {
+				String gwclAppId = "";
+				String gwclAppSecret = "";
+				Map<String, Object> appMap = baseAppOrgMappedService.getAppIdAndSecret(AppConstant.APP_GWCL);
+				if (appMap != null && appMap.size() > 0) {
+					gwclAppId = (String) appMap.get("appId");
+					gwclAppSecret = (String) appMap.get("appSecret");
+				}
+				String msgUrl = null;
+				if(uIds.length == 1){
+					String smsg = "您于"+DateUtil.getDateTime()+ "收到"+CurrentUser.getUsername()+"送审的公文。";
+					msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, StringUtils.join(uIds, ","), gwclAppId,
+							gwclAppSecret, msg.getGroupName(), msg.getGroupRedirect(), smsg,"true");
+				}				
+			}*/
 			json.put("result", "success");
 		}else {
 			json.put("result", "fail");
@@ -148,6 +182,16 @@ public class DocumentZbjlController {
 		JSONObject json=new JSONObject();
 		if(StringUtils.isNotBlank(infoId) && StringUtils.isNotBlank(subId)) {
 			SubDocInfo subInfo = subDocInfoService.queryObject(subId);
+		/*	//将临时反馈变为发布
+			Map<String, Object> map =new HashMap<>();
+			map.put("subId", subId);
+			map.put("userId", CurrentUser.getUserId());
+			map.put("showFlag", "0");
+			ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
+			if(tempReply!=null) {
+				tempReply.setReVersion("1");
+				replyExplainService.update(tempReply);
+			}*/
 			//添加转办记录
 			String deptId = null;
 			String deptName = null;
@@ -181,6 +225,14 @@ public class DocumentZbjlController {
 			if(subInfo != null) {
 				subInfo.setDocStatus(DbDocStatusDefined.DAI_LUO_SHI);
 				subDocInfoService.update(subInfo);
+			}
+			// 发送消息提醒
+			MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_JU_ZHUANBAN_MSG_TITLE);
+			if (msg != null) {
+				String msgUrl = msg.getMsgRedirect()+"&fileId="+infoId+"&subId="+subId;
+				if(StringUtils.isNotBlank(userId)){
+					msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId, appId,clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "","true");
+				}				
 			}
 			json.put("result", "success");
 		}else {

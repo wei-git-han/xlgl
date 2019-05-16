@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,6 +16,10 @@ import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
+import com.css.addbase.msg.MSGTipDefined;
+import com.css.addbase.msg.MsgTipUtil;
+import com.css.addbase.msg.entity.MsgTip;
+import com.css.addbase.msg.service.MsgTipService;
 import com.css.app.db.business.entity.DocumentBjjl;
 import com.css.app.db.business.entity.DocumentCbjl;
 import com.css.app.db.business.entity.DocumentInfo;
@@ -73,7 +78,14 @@ public class SubDocInfoController {
 	private DocumentCbjlService documentCbjlService;
 	@Autowired
 	private DocumentReadService documentReadService;
-	
+	@Autowired
+	private MsgTipService msgService;
+	@Autowired
+	private MsgTipUtil msgUtil;
+	@Value("${csse.dccb.appId}")
+	private  String appId;	
+	@Value("${csse.dccb.appSecret}")
+	private  String clientSecret;
 	/**
 	 * 局内待办列表
 	 */
@@ -469,7 +481,7 @@ public class SubDocInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/submitOperation")
-	public void submitOperation(String subId,String userName,String userId){
+	public void submitOperation(String infoId,String subId,String userName,String userId){
 		//流转到下一个人并将临时反馈变为发布
 		this.submitRelation(subId, userName, userId,"2");
 		//分支文件更新完成审批标识
@@ -478,6 +490,14 @@ public class SubDocInfoController {
 			subDocInfo.setDocStatus(DbDocStatusDefined.DAI_SHEN_PI);
 			subDocInfo.setUpdateTime(new Date());
 			subDocInfoService.update(subDocInfo);
+		}
+		// 发送消息提醒
+		MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_SONGSHEN_MSG_TITLE);
+		if (msg != null) {
+			String msgUrl = msg.getMsgRedirect()+"&fileId="+infoId+"&subId="+subId;
+			if(StringUtils.isNotBlank(userId)){
+				msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId, appId,clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "","true");
+			}				
 		}
 		Response.json("result", "success");
 	}
@@ -513,26 +533,34 @@ public class SubDocInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/returnOperation")
-	public void returnOperation(String subId,String replyContent,String saveFlag){
+	public void returnOperation(String infoId,String subId,String replyContent,String saveFlag){
 		JSONObject json=new JSONObject();
 		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
 		if(subDocInfo != null) {
 			if(StringUtils.isNotBlank(subDocInfo.getUndertaker())) {
+				String userId=subDocInfo.getUndertaker();
 				//流转到下一个人并将临时反馈变为发布
-				this.submitRelation(subId, subDocInfo.getUndertakerName(),subDocInfo.getUndertaker(),"3");
+				this.submitRelation(subId, subDocInfo.getUndertakerName(),userId,"3");
 				//保存审批意见
 				approvalOpinionService.saveOpinion(subId, replyContent, "3",saveFlag);
 				//保存最新更新时间
 				subDocInfo.setDocStatus(DbDocStatusDefined.TUIHUI_XIUGAI);
 				subDocInfo.setUpdateTime(new Date());
 				subDocInfoService.update(subDocInfo);
+				// 发送消息提醒
+				MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_TUIHUI_MSG_TITLE);
+				if (msg != null) {
+					String msgUrl = msg.getMsgRedirect()+"&fileId="+infoId+"&subId="+subId;
+					msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId, appId,clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "","true");
+				}
+				json.put("result", "success");
 			}else {
 				json.put("result", "fail");
 			}
 		}else {
 			json.put("result", "fail");
 		}
-		Response.json("result", "success");
+		Response.json(json);
 	}
 	
 	/**

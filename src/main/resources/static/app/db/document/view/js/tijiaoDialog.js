@@ -4,6 +4,7 @@ var sendUrl = {"url":"/app/db/subdocinfo/sendOperation","dataType":"text"}; //�
 var subId=getUrlParam("subId")||""; //子分支主id
 var replyContent=getUrlParam2("replyContent")||""; //文件来源
 var cbrFlag=getUrlParam("cbrFlag")||""; //是否是承办人
+var infoId=getUrlParam("infoId")||""; //子分支主id
 var userId;
 var userName;
 
@@ -47,7 +48,7 @@ var pageModule = function(){
 			if(cbrFlag && cbrFlag == 1){
 				$ajax({
 					url:sureUrl,
-					data:{subId:subId,userName:userName,userId:userId},
+					data:{infoId:infoId,subId:subId,userName:userName,userId:userId},
 					success:function(data){
 						newbootbox.newdialogClose("tijiaoDialog");
 						if(data.result=="success"){
