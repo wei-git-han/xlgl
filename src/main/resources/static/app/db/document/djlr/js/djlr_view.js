@@ -482,6 +482,10 @@ var pageModule = function(){
 	}
 
 	var initother = function(){
+		if(fromMsg){
+			$("#goback").hide();
+		}
+		
 		//返回
 		$("#goback").click(function(){
 			skip();
@@ -586,7 +590,6 @@ var pageModule = function(){
 }();
 
 
-//跳转返回事件
 //跳转返回事件
 function skip(){
 	if(frompage==0){

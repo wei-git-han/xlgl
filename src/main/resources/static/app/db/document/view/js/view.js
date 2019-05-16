@@ -489,6 +489,10 @@ var pageModule = function(){
 	}
 
 	var initother = function(){
+		if(fromMsg){
+			$("#goback").hide();
+		}
+		
 		//返回
 		$("#goback").click(function(){
 			skip();
@@ -544,25 +548,6 @@ var pageModule = function(){
 				}
 			});
 		});
-		
-		
-		//返回修改
-		/*$("#fhxg").click(function(){
-			var replyContent = $("#replyContent").val();
-			$ajax({
-				url:returnUrl,
-				data:{infoId:fileId,subId:subId,replyContent:replyContent},
-				type: "GET",
-				success:function(data){
-					if(data.result == "success"){
-						newbootbox.alert("已返回承办人！").done(function(){
-							window.location.reload();
-						});
-					}
-				}
-			});
-		});*/
-		
 		
 		//返回修改
 		$("#fhxg").click(function(){
@@ -649,24 +634,6 @@ var pageModule = function(){
 			 	}
 			});
 		});
-		
-		
-		/*//审批通过
-		$("#sptg").click(function(){
-			var replyContent = $("#replyContent").val();
-			$ajax({
-				url:finishUrl,
-				data:{infoId:fileId,subId:subId,replyContent:replyContent},
-				type: "GET",
-				success:function(data){
-					if(data.result == "success"){
-						newbootbox.alert("审批完成！").done(function(){
-							window.location.reload();
-						});
-					}
-				}
-			});
-		});*/
 		
 		//转办
 		$("#zhuanban").click(function(){
@@ -918,14 +885,18 @@ var pageModule = function(){
 
 //跳转返回事件
 function skip(){
-	if(fileFrom == "djlr"){//文件来源于登记录入
-		window.location.href="/app/db/document/djlr/html/djlr.html?fileFrom=djlr";
-	}else if(fileFrom == "grdb"){//文件来源于个人待办
-		window.location.href="/app/db/document/grdb/html/grdb.html?fileFrom=grdb";
-	}else if(fileFrom=="blfk"){  //文件来源于办理反馈
-		window.location="/app/db/document/blfk/html/blfk.html?fileFrom=blfk";
-	}else{ 
-		window.location.href="/app/db/document/grdb/html/grdb.html?fileFrom=grdb";
+	if(fromMsg){
+		windowClose();
+	}else{
+		if(fileFrom == "djlr"){//文件来源于登记录入
+			window.location.href="/app/db/document/djlr/html/djlr.html?fileFrom=djlr";
+		}else if(fileFrom == "grdb"){//文件来源于个人待办
+			window.location.href="/app/db/document/grdb/html/grdb.html?fileFrom=grdb";
+		}else if(fileFrom=="blfk"){  //文件来源于办理反馈
+			window.location="/app/db/document/blfk/html/blfk.html?fileFrom=blfk";
+		}else{ 
+			window.location.href="/app/db/document/grdb/html/grdb.html?fileFrom=grdb";
+		}
 	}
 }
 
