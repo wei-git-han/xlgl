@@ -20,6 +20,7 @@ var latestCuiBanUrl = {"url":"/app/db/documentinfo/getLatestCuiBan","dataType":"
 var fileId=getUrlParam("fileId")||""; //主文件id
 var subId=getUrlParam("subId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
+var fromMsg=getUrlParam("fromMsg")||false; //是否为消息进入
 var isCbr = 0;//承办人标识
 var isSave = 0;//保存成功提示标识
 var ifShowEditBtn="0";//是否有编辑按钮
@@ -216,6 +217,7 @@ var pageModule = function(){
 					teamId = o.teamId;
 					cbrId = o.cbrId;
 					date = o.updateTime;
+					firstDate = o.firstDate;
 					danwei = o.danwei||"某单位";
 					ld = o.cbrName;
 					content = o.content;
@@ -248,6 +250,7 @@ var pageModule = function(){
 					teamId = o.replyTeamId;
 					cbrId = o.userId;
 					date = o.createdTime;
+					firstDate = o.firstDate;
 					danwei = o.danwei||"某单位";
 					ld = o.userName;
 					content = o.opinionContent;
@@ -296,7 +299,7 @@ var pageModule = function(){
 					'		<div class="newpanel-right">'+
 					'			<div class="newpanel-right-top">'+
 					'				<div class="nrt-date">'+
-					'					<font>'+date+'</font>'+
+					'					<font>'+firstDate+'</font>'+
 					'				</div>'+
 					'			</div>'+
 					'			<div class="newpanel-right-cent" id="'+id+'">'+

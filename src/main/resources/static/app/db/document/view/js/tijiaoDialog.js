@@ -63,7 +63,7 @@ var pageModule = function(){
 			}else{
 				$.ajax({
 					url:sendUrl.url,
-					data:{subId:subId,userName:userName,userId:userId,replyContent:replyContent},
+					data:{infoId:infoId,subId:subId,userName:userName,userId:userId,replyContent:replyContent},
 					type:'POST',
 					success:function(data){
 						newbootbox.newdialogClose("tijiaoDialog");

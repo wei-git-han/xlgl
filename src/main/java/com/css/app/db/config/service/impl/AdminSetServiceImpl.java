@@ -56,5 +56,10 @@ public class AdminSetServiceImpl implements AdminSetService {
 	public List<AdminSet> queryJuAdminList(String userId) {
 		return adminSetDao.queryJuAdminList(userId);
 	}
+
+	@Override
+	public List<String> queryUserIdByOrgId(String orgId) {
+		return adminSetDao.queryUserIdByOrgId(orgId);
+	}
 	
 }

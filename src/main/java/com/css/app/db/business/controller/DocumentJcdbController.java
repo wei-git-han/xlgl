@@ -14,22 +14,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.css.addbase.AppConfig;
 import com.css.addbase.appconfig.entity.BaseAppConfig;
 import com.css.addbase.appconfig.service.BaseAppConfigService;
 import com.css.addbase.apporgan.entity.BaseAppOrgan;
-import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.constant.AppConstant;
-import com.css.app.db.business.service.DocumentFileService;
 import com.css.app.db.business.service.DocumentInfoService;
 import com.css.app.db.config.entity.AdminSet;
 import com.css.app.db.config.entity.RoleSet;
 import com.css.app.db.config.service.AdminSetService;
 import com.css.app.db.config.service.RoleSetService;
-import com.css.app.db.util.DbDefined;
 import com.css.base.utils.CurrentUser;
-import com.css.base.utils.GwPageUtils;
 import com.css.base.utils.Response;
 import com.css.base.utils.StringUtils;
 
@@ -48,11 +43,7 @@ import dm.jdbc.util.StringUtil;
 @RequestMapping("/app/db/documentjcdb")
 public class DocumentJcdbController {
 	@Autowired
-	private AppConfig appConfig;
-	@Autowired
 	private DocumentInfoService documentInfoService;
-	@Autowired
-	private DocumentFileService documentFileService;
 	@Autowired
 	private RoleSetService roleSetService;
 	@Autowired

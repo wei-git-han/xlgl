@@ -21,4 +21,6 @@ public interface AdminSetDao extends BaseDao<AdminSet> {
 	int deleteByUserId(String userId);
 	
 	List<AdminSet> queryJuAdminList(String userId);
+	
+	List<String> queryUserIdByOrgId(String orgId);
 }

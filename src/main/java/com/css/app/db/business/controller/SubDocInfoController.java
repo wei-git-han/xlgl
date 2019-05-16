@@ -511,7 +511,7 @@ public class SubDocInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/sendOperation")
-	public void sendOperation(String subId,String userName,String userId,String replyContent){
+	public void sendOperation(String infoId,String subId,String userName,String userId,String replyContent){
 		//流转到下一个人并将临时反馈变为发布
 		this.submitRelation(subId, userName, userId,"2");
 		//保存审批意见
@@ -522,6 +522,14 @@ public class SubDocInfoController {
 			subDocInfo.setDocStatus(DbDocStatusDefined.DAI_SHEN_PI);
 			subDocInfo.setUpdateTime(new Date());
 			subDocInfoService.update(subDocInfo);
+		}
+		// 发送消息提醒
+		MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_SONGSHEN_MSG_TITLE);
+		if (msg != null) {
+			String msgUrl = msg.getMsgRedirect()+"&fileId="+infoId+"&subId="+subId;
+			if(StringUtils.isNotBlank(userId)){
+				msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId, appId,clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "","true");
+			}				
 		}
 		Response.json("result", "success");
 	}

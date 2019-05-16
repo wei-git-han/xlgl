@@ -39,7 +39,7 @@ public class MSGTipDefined {
 	//督查催办APP的
 	public static String DCCB_BU_ZHUANBAN_MSG_TITLE = "dccb_buzhuanban";//部转办
 	public static String DCCB_JU_ZHUANBAN_MSG_TITLE = "dccb_juzhuanban";//局转办
-	public static String DCCB_SONGSHEN_MSG_TITLE = "dccb_songshen";//承办人送审
-	public static String DCCB_TUIHUI_MSG_TITLE = "dccb_tuihui";//退回修改
+	public static String DCCB_SONGSHEN_MSG_TITLE = "dccb_songshen";//送审
+	public static String DCCB_TUIHUI_MSG_TITLE = "dccb_tuihui";//返回修改
 	public static String DCCB_CUIBAN_MSG_TITLE = "dccb_cuiban";//催办
 }

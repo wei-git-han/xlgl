@@ -16,6 +16,7 @@ var batchReadUrl = {"url":"/app/db/documentinfo/batchRead","dataType":"text"};//
 var cuibanurl = {"url":"/app/db/documentszinfo/press","dataType":"text"};
 var fileId=getUrlParam("fileId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
+var fromMsg=getUrlParam("fromMsg")||false; //是否为消息进入
 var pageModule = function(){
 	//打开页面标识已读
 	var initReadfn = function(){
@@ -191,7 +192,8 @@ var pageModule = function(){
 					id = o.teamId;
 					teamId = o.teamId;
 					cbrId = o.cbrId;
-					date = o.firstDate;
+					date = o.createdTime;
+					firstDate = o.firstDate;
 					danwei = o.danwei||"某单位";
 					ld = o.cbrName;
 					content = o.content;
@@ -223,6 +225,7 @@ var pageModule = function(){
 					teamId = o.replyTeamId;
 					cbrId = o.userId;
 					date = o.createdTime;
+					firstDate = o.firstDate;
 					danwei = o.danwei||"某单位";
 					ld = o.userName;
 					content = o.opinionContent;
@@ -276,7 +279,7 @@ var pageModule = function(){
 								<div class="newpanel-right">
 									<div class="newpanel-right-top">
 										<div class="nrt-date">
-											<font>${date}</font>
+											<font>${firstDate}</font>
 										</div>
 									</div>
 									

@@ -33,4 +33,6 @@ public interface SubDocInfoDao extends BaseDao<SubDocInfo> {
 	
 	List<SubDocInfo> queryAllSubByInfoId(String infoId);
 	
+	List<SubDocInfo> queryAllSubInfo(Map<String, Object> map);
+	
 }
