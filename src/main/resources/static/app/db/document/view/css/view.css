@@ -950,3 +950,13 @@ ul{
 .changeStatus:hover{
 	text-decoration: none;
 }
+.zwCss{
+	margin-top:20px;
+	font-size: 14px;
+}
+.zwCss2{
+	display:inline-block;
+	padding-top:20px;
+	margin-left:20px;
+	font-size: 14px;
+}

@@ -341,10 +341,12 @@ html, body {
 }
 .cqnr label{
 	font-size:14px;
-	color:#5b9bd1;
-	text-decoration:underline;
 	float:left;
 	margin-right:10px;
 	line-height: 32px;
 	margin-bottom:0px!important;
+}
+
+.form-control[readonly].psszName{
+	cursor:pointer!important;
 }
