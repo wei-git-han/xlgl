@@ -15,7 +15,10 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-public class testImport {	private static final String EXCEL_XLS = "xls";  
+
+import com.css.app.db.business.service.ImportExcleService;
+public class ImportExcleServiceImpl implements ImportExcleService{	
+private static final String EXCEL_XLS = "xls";  
 private static final String EXCEL_XLSX = "xlsx";  
 
 /** 
@@ -25,7 +28,7 @@ private static final String EXCEL_XLSX = "xlsx";
  * @return 
  * @throws IOException 
  */  
-public static Workbook getWorkbok(InputStream in,File file) throws IOException{  
+public  Workbook getWorkbok(InputStream in,File file) throws IOException{  
     Workbook wb = null;  
     if(file.getName().endsWith(EXCEL_XLS)){  //Excel 2003  
         wb = new HSSFWorkbook(in);  
@@ -39,7 +42,7 @@ public static Workbook getWorkbok(InputStream in,File file) throws IOException{
  * 判断文件是否是excel 
  * @throws Exception  
  */  
-public static void checkExcelVaild(File file) throws Exception{  
+public  void checkExcelVaild(File file) throws Exception{  
     if(!file.exists()){  
         throw new Exception("文件不存在");  
     }  
@@ -52,11 +55,8 @@ public static void checkExcelVaild(File file) throws Exception{
  * 读取Excel
  * @throws Exception  
  */  
-public static void main(String[] args) throws Exception {  
-    List<Object> excleDate = getExcleDate();
-}
-
-private static List<Object> getExcleDate() {
+@Override
+public List<Object> getExcleDate() {
 	List<Object> dataLis=new ArrayList<Object>(15);//用于存储插入数据库
     String docTypeId="";
     try {  
@@ -200,7 +200,7 @@ private static List<Object> getExcleDate() {
     return dataLis;
 }
 
-private static Object getValue(Cell cell) {
+private  Object getValue(Cell cell) {
 	Object obj = null;
 	switch (cell.getCellTypeEnum()) {
         case BOOLEAN:
