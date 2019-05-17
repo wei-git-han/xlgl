@@ -62,7 +62,7 @@ ul{
 }
 
 
-/* tab椤电 */
+/* tab妞ょ數顒� */
 .left_menu .nav-tabs {
     border: none;
 }
@@ -185,7 +185,7 @@ ul{
 	text-align: center;
 }
 .wjlb_title{
-	margin-top:10px;
+	margin-top:20px;
 	width:100%;
 	font-weight:700;
 	font-size:16px;
@@ -194,7 +194,7 @@ ul{
 	border-bottom:1px solid #bcbcbc;
 }
 .line4{
-	margin-top:10px;
+	margin-top:0px;
 }
 .line4 li>a{
 	color:#333;
@@ -245,7 +245,7 @@ ul{
 	border-radius:4px!important;
 }
 
-/* 杞敓鏂ゆ嫹閿熼摪纭锋嫹纰岄敓绲玜b椤电 */
+/* 鏉烆剟鏁撻弬銈嗗闁跨喖鎽涵閿嬪绾板矂鏁撶徊鐜渂妞ょ數顒� */
 .right_top_zbjl .tabbable-line > .nav-tabs > li > a {
     border: 0;
     margin-right: 0;
@@ -303,7 +303,7 @@ ul{
 	width:100%;
 }
 .record{
-	margin:10px 0px;
+	margin:0px;
 	border-bottom:1px dashed #ddd;
 	font-size:16px;
 	padding-bottom: 10px;
@@ -329,11 +329,12 @@ ul{
 }
 
 
-/* 閿熸枻鎷烽敓鏂ゆ嫹閿熸枻鎷烽敓鏂ゆ嫹寮� */
+/* 闁跨喐鏋婚幏鐑芥晸閺傘倖瀚归柨鐔告灮閹风兘鏁撻弬銈嗗瀵拷 */
 .timelinesview{
 	margin-top:10px;
 	background:#fff;
 	padding:20px 10px;
+	padding-top:0px;
 	border-radius:4px!important;
 }
 .timelines{
@@ -614,7 +615,7 @@ ul{
 }
 
 
-/* 閿熸枻鎷烽敓鏂ゆ嫹閿熸枻鎷烽敓锟� */
+/* 闁跨喐鏋婚幏鐑芥晸閺傘倖瀚归柨鐔告灮閹风兘鏁撻敓锟� */
 .sryj_title{
 	position:absolute;
 	top:0;
@@ -693,7 +694,7 @@ ul{
 }
 
 
-/* 鏂伴〉绛炬牱寮� */
+/* 閺備即銆夌粵鐐壉瀵拷 */
 .tabs li.tabs-selected a.tabs-inner {
     background: #6699FF!important;
 	border: none;
@@ -772,7 +773,7 @@ ul{
 	vertical-align: middle;
 }
 
-/* 鎸夐挳鏉冮檺鎺у埗 */
+/* 閹稿鎸抽弶鍐閹貉冨煑 */
 .ifShow{
 	/* display:none; */
 }

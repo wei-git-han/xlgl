@@ -399,7 +399,7 @@ var pageModule = function(){
 						$(this).parents(".newpanel-cont").toggleClass("active");
 					});
 				}else{
-					$(".pagemenu").html("<span class='szqf' style='margin-left:20px;font-size: 14px;'>暂无内容！</span>");
+					$(".pagemenu").html("<span class='szqf zwCss2'>暂无内容！</span>");
 				}
 			}
 		})
@@ -424,7 +424,7 @@ var pageModule = function(){
 			            )
 					});
 				}else{
-					$("#zbrecord").html('<div class="szqf" style="margin-top:20px;font-size: 14px;">暂无转办记录！</div>');
+					$("#zbrecord").html('<div class="szqf zwCss">暂无转办记录！</div>');
 				}
 			}
 		});	
@@ -452,7 +452,7 @@ var pageModule = function(){
 			            $("#cbrecord").append(html1);
 					});
 				}else{
-					$("#cbrecord").html('<div class="szqf" style="margin-top:20px;font-size: 14px;">暂无催办记录！</div>');
+					$("#cbrecord").html('<div class="szqf zwCss">暂无催办记录！</div>');
 				}
 			}
 		});	
@@ -475,7 +475,7 @@ var pageModule = function(){
 			            )
 					});
 				}else{
-					$("#jybjrecord").html('<div class="szqf" style="margin-top:20px;font-size: 14px;">暂无办结记录！</div>');
+					$("#jybjrecord").html('<div class="szqf zwCss">暂无办结记录！</div>');
 				}
 			}
 		});	
