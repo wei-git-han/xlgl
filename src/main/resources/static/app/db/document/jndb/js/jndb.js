@@ -12,7 +12,7 @@ var pageModule = function(){
                  {display:"军委办件号",name:"banjianNumber",width:"6%",align:"left",title:true,render:function(rowdata,n){
                 	 return rowdata.banjianNumber;
                  }},
-                 {display:"局内状态",name:"statusName",width:"10%",align:"center",render:function(rowdata,n){
+                 {display:"局内状态",name:"statusName",width:"8%",align:"center",render:function(rowdata,n){
                  	var statusName="";
                	 	var bgColor="";
                	 	if(rowdata.docStatus==1){
@@ -90,7 +90,7 @@ var pageModule = function(){
                  {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 return '<div class="cbdw" title="'+rowdata.underDepts+'">'+rowdata.underDepts+'</div>'
                  }},
-                 {display:"办件分类",name:"docTypeName",width:"5%",align:"left",paixu:false,render:function(rowdata){
+                 {display:"办件分类",name:"docTypeName",width:"7%",align:"left",paixu:false,render:function(rowdata){
                 	 return rowdata.docTypeName;
                  }},
                  {display:"转办时间",name:"createdTime",width:"5%",align:"center",render:function(rowdata){
