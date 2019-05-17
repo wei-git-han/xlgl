@@ -1,0 +1,63 @@
+
+var pageModule = function(){
+	var initother = function(){
+		$("#uploadFile").click(function(){
+			$("#file").click();
+			$("#file").change(function(){
+				var fileNameArry = $(this).val().split("\\");
+				var fileName;
+				if(fileNameArry.length==1){
+					fileName=fileNameArry[0];
+				}else{
+					fileName=fileNameArry[fileNameArry.length-1];
+				}
+				$(".fileinput-filename").text(fileName);
+			})
+		})
+		
+		$("#shangchuan2").click(function(){
+			var val = $("#file").val();
+			var array = val.split("\\");
+			var filename = "";
+			if(array.length==1){
+				filename = array[0];
+			}else{
+				filename = array[array.length-1];
+			}
+			var filetype = filename.split(".")[filename.split(".").length-1];
+			if(filetype != 'xls' && filetype != 'xlsx'){
+				newbootbox.alertInfo("请上传正确格式的文件！");
+				return;
+			}
+			
+			var ajax_option ={
+					type: "post",
+					url:"/app/db/import/importExcle",//默认是form action
+					success:function(data){
+						if(data.url == ""){
+							newbootbox.alertInfo('保存失败！');
+						}else{
+							newbootbox.close();
+							$(".newclose",window.top.document).click();
+							$("#iframe1",window.top.document).attr("src","/app/db/document/blfk/html/blfk.html?fileFrom=blfk");
+						}
+				}
+			}
+			$('#form2').ajaxSubmit(ajax_option);
+			
+		})
+		
+		$("#close").click(function(){
+			newbootbox.newdialogClose("fileDr");
+		})
+		
+	}
+
+	return{
+		//加载页面处理程序
+		initControl:function(){
+			initother();
+		}
+	};
+	
+}();
