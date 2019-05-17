@@ -112,7 +112,7 @@ var pageModule = function(){
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
-					var maxwidth = 79;
+					var maxwidth = 75;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
