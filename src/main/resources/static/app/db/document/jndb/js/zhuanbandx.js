@@ -1,5 +1,6 @@
 var deptTreeUrl = {"url":"/app/base/user/tree","dataType":"text"}; //部门树
 var sureUrl = {"url":"/app/db/documentzbjl/subZbSave","dataType":"text"}; //保存
+var fromMsg=getUrlParam("fromMsg")||false; //是否为消息进入
 var subId=getUrlParam("subId")||""; //子分支主id
 var infoId=getUrlParam("infoId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
@@ -49,11 +50,17 @@ var pageModule = function(){
 					newbootbox.newdialogClose("zhuanbanDialog");
 					if(data.result=="success"){
 						newbootbox.alert("转办成功！").done(function(){
-							if(fileFrom == "jndb"){
-								$("#iframe1",window.top.document).attr("src","/app/db/document/jndb/html/jndb.html?fileFrom="+fileFrom);
-							}
-							if(fileFrom == "grdb"){
-								$("#iframe1",window.top.document).attr("src","/app/db/document/grdb/html/grdb.html?fileFrom="+fileFrom);
+							if(fromMsg){
+								windowClose();
+							}else{
+								if(fileFrom == "jndb"){
+									window.top.jndbfn();
+									$("#iframe1",window.top.document).attr("src","/app/db/document/jndb/html/jndb.html?fileFrom="+fileFrom);
+								}
+								if(fileFrom == "grdb"){
+									window.top.grdbfn();
+									$("#iframe1",window.top.document).attr("src","/app/db/document/grdb/html/grdb.html?fileFrom="+fileFrom);
+								}
 							}
 						});
 					}else{

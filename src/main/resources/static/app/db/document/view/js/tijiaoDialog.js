@@ -5,6 +5,7 @@ var subId=getUrlParam("subId")||""; //子分支主id
 var replyContent=getUrlParam2("replyContent")||""; //文件来源
 var cbrFlag=getUrlParam("cbrFlag")||""; //是否是承办人
 var infoId=getUrlParam("infoId")||""; //子分支主id
+var fromMsg=getUrlParam("fromMsg")||false; //是否为消息进入
 var userId;
 var userName;
 
@@ -53,7 +54,12 @@ var pageModule = function(){
 						newbootbox.newdialogClose("tijiaoDialog");
 						if(data.result=="success"){
 							newbootbox.alert("提交成功！").done(function(){
-								$("#iframe1",window.top.document).attr("src","/app/db/document/grdb/html/grdb.html");
+								if(fromMsg){
+									windowClose();
+								}else{
+									window.top.grdbfn();
+									$("#iframe1",window.top.document).attr("src","/app/db/document/grdb/html/grdb.html");
+								}
 							});
 						}else{
 							newbootbox.alert("提交失败！");

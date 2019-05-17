@@ -495,6 +495,9 @@ var pageModule = function(){
 		
 		//返回
 		$("#goback").click(function(){
+			if(!fromMsg){
+				window.top.grdbfn();
+			}
 			skip();
 		});
 		
@@ -530,7 +533,7 @@ var pageModule = function(){
 				header:true,
 				title:"提交",
 				classed:"cjDialog",
-				url:"/app/db/document/view/html/tijiaoDialog.html?subId="+subId+"&infoId="+fileId+"&replyContent="+$("#replyContent").val()+"&cbrFlag="+cbrFlag
+				url:"/app/db/document/view/html/tijiaoDialog.html?subId="+subId+"&infoId="+fileId+"&replyContent="+$("#replyContent").val()+"&cbrFlag="+cbrFlag+"&fromMsg="+fromMsg
 			})
 		});
 		
@@ -581,6 +584,9 @@ var pageModule = function(){
 				success:function(data){
 					if(data.result == "success"){
 						newbootbox.alert("已返回承办人！").done(function(){
+							if(!fromMsg){
+								window.top.grdbfn();
+							}
 							window.location.reload();
 						});
 					}
@@ -627,6 +633,9 @@ var pageModule = function(){
 							if(data.result == "success"){
 								newbootbox.alert("审批完成！").done(function(){
 									window.location.reload();
+									if(!fromMsg){
+										window.top.grdbfn();
+									}
 								});
 							}
 						}
@@ -644,7 +653,7 @@ var pageModule = function(){
 				header:true,
 				title:"转办",
 				classed:"cjDialog",
-				url:"/app/db/document/jndb/html/zhuanbandx.html?subId="+subId+"&infoId="+fileId+"&fileFrom="+fileFrom
+				url:"/app/db/document/jndb/html/zhuanbandx.html?subId="+subId+"&infoId="+fileId+"&fileFrom="+fileFrom+"&fromMsg="+fromMsg
 			})
 		});
 		
@@ -660,6 +669,9 @@ var pageModule = function(){
 	 					type: "GET",
 	 					success:function(data){
 	 						if(data.result == "success"){
+	 							if(!fromMsg){
+									window.top.grdbfn();
+								}
 	 							window.location.reload();
 	 						}
 	 					}
@@ -680,6 +692,9 @@ var pageModule = function(){
 	 					type: "GET",
 	 					success:function(data){
 	 						if(data.result == "success"){
+	 							if(!fromMsg){
+									window.top.grdbfn();
+								}
 	 							window.location.reload();
 	 						}
 	 					}
@@ -750,7 +765,7 @@ var pageModule = function(){
 				header:true,
 				title:"催办",
 				classed:"cjDialog",
-				url:"/app/db/document/view/html/cuibanDialog.html?fileId="+fileId,
+				url:"/app/db/document/view/html/cuibanDialog.html?fileId="+fileId+"&fromMsg="+fromMsg
 			})
 		});
 		

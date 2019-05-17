@@ -104,39 +104,39 @@
 		</if>
 	</select>
 	<select id="queryDicByType" resultType="com.css.app.db.config.entity.DocumentDic">
-		WITH V_RESULT as(select SUB_ID from 
-		(select SUB_ID, row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num
-		from DB_SUB_DOC_TRACKING where 1=1 
+		select dic.*,nvl(s.num,0) hasUpdateNum from DB_DOCUMENT_DIC dic	
+		left join(select DOC_TYPE_ID, count(1) as num
+		from "DB_DOCUMENT_INFO" t
+		<if test="orgId != null and orgId != '' ">
+			left join DB_SUB_DOC_INFO a on t.ID=a.INFO_ID
+		</if>
 		<if test="deptId !=null and deptId !=''">
-			and REC_DEPT_ID = #{deptId}
+			left join DB_SUB_DOC_INFO a on t.ID=a.INFO_ID
+			inner join (select SUB_ID from 
+			(select SUB_ID, row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num
+			from DB_SUB_DOC_TRACKING where REC_DEPT_ID = #{deptId})
+			where num =1) b on a.ID = b.SUB_ID
 		</if>
 		<if test="loginUserId !=null and loginUserId !=''">
-			and RECEIVER_ID = #{loginUserId}
+			left join DB_SUB_DOC_INFO a on t.ID=a.INFO_ID
+			inner join (select SUB_ID from 
+			(select SUB_ID, row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num
+			from DB_SUB_DOC_TRACKING where RECEIVER_ID = #{loginUserId})
+			where num =1) b on a.ID = b.SUB_ID
 		</if>
-		)
-		where num =1)
-	select dic.*,nvl(s.num,0) hasUpdateNum from DB_DOCUMENT_DIC dic	
-	left join(select DOC_TYPE_ID, count(1) as num
-	from DB_SUB_DOC_INFO a 
-	<if test="deptId !=null and deptId !=''">
-		inner join v_result b on a.ID = b.SUB_ID
-	</if>
-	<if test="loginUserId !=null and loginUserId !=''">
-		inner join v_result b on a.ID = b.SUB_ID
-	</if>
-	left join "DB_DOCUMENT_INFO" t on a.INFO_ID=t.ID
-	where t.LATEST_REPLY !=''
-	and t.LATEST_REPLY is not null
-	<if test="orgId != null and orgId != '' ">
-		and a.SUB_DEPT_ID=#{orgId}
-	</if>
-	<if test="year != null">
-		and to_char(t.FIRST_ZB_TIME) like '%'||#{year}||'%'
-	</if>
-	and t.id not in ( select INFO_ID from DB_DOCUMENT_READ where USER_ID=#{userId}) group by t.DOC_TYPE_ID )s	
-	on dic.value = s.DOC_TYPE_ID
-	where dic.DIC_TYPE = #{docType} order by value asc
+		where t.LATEST_REPLY !=''
+		and t.LATEST_REPLY is not null
+		<if test="orgId != null and orgId != '' ">
+			and a.SUB_DEPT_ID=#{orgId}
+		</if>
+		<if test="year != null">
+			and to_char(t.FIRST_ZB_TIME) like '%'||#{year}||'%'
+		</if>
+		and t.id not in ( select INFO_ID from DB_DOCUMENT_READ where USER_ID=#{userId}) group by t.DOC_TYPE_ID )s	
+		on dic.value = s.DOC_TYPE_ID
+		where dic.DIC_TYPE = #{docType} order by value asc
 	</select>
+
 	<!--根据年度获取每个状态的数量   CREATED_TIME暂为年度时间-->
 	<select id="queryListByYear" resultType="map">
 	select sum(blz+bj+ctls) as total,sum(blz) as blz,sum(bj) as bj,sum(ctls) as ctls from (

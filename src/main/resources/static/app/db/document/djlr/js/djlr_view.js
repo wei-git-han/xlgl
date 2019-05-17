@@ -488,6 +488,9 @@ var pageModule = function(){
 		
 		//返回
 		$("#goback").click(function(){
+			if(!fromMsg){
+				window.top.blfkfn();
+			}
 			skip();
 		});
 		//办理反馈-添加附件
@@ -529,6 +532,9 @@ var pageModule = function(){
 						$("#viewcont2").modal("hide");
 						newbootbox.alert("操作成功!").done(function(){
 							window.location.reload();
+							if(!fromMsg){
+								window.top.blfkfn();
+							}
 						});
 					}
 				}
@@ -546,7 +552,7 @@ var pageModule = function(){
 				header:true,
 				title:"转办",
 				classed:"cjDialog",
-				url:"/app/db/document/blfk/html/zhuanbanDialog.html?fileIds="+fileId+"&fileFrom="+fileFrom
+				url:"/app/db/document/blfk/html/zhuanbanDialog.html?fileIds="+fileId+"&fileFrom="+fileFrom+"&fromMsg="+fromMsg
 			})
 		});
 		
@@ -557,8 +563,12 @@ var pageModule = function(){
 				data:{id:fileId},
 				success:function(data){
 					if(data.result=="success"){
-						newbootbox.alert("取消办结成功!");
-						showButton();
+						newbootbox.alert("取消办结成功!").done(function(){
+							showButton();
+							if(!fromMsg){
+								window.top.blfkfn();
+							}
+						});
 					}
 				}
 			});

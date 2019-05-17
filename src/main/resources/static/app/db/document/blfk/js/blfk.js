@@ -373,6 +373,7 @@ var pageModule = function(){
 										}else{
 											pageModule.initgrid2();
 										}
+										window.top.blfkfn();
 									});
 								}
 							}
