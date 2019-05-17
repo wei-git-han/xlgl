@@ -74,6 +74,9 @@
 		</if>
 		<if test="cui != null and cui != ''">
 			and c.CUIBAN_FLAG ='1'
+		</if>
+		<if test="receiver!= null and receiver != ''">
+		   and e.receiver_is_me = 1
 		</if>			
 		 and c.STATUS=1 and (dNum = 1 or dNum is null) 
 		 order by e.receiver_is_me nulls last, a.DOC_STATUS, a.CREATED_TIME desc

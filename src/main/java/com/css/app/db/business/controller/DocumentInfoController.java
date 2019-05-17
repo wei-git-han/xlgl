@@ -659,7 +659,7 @@ public class DocumentInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getDicByTypet")
-	public void getDicByTypet(String orgid,String month){
+	public void getDicByTypet(String orgid,String month,boolean menuFlag){
 		String dateStr = null;
 		if(!StringUtils.isEmpty(month) && StringUtil.equals("all", month)) {
 			dateStr = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE).substring(0,4);
@@ -712,7 +712,15 @@ public class DocumentInfoController {
 			}
 		}
 		List<DocumentDic> dicByType = documentInfoService.queryDicByType(map);
-		Response.json(DbDefined.DOCUMENT_TYPE,dicByType );
+		int blfkNum=0;
+		if(menuFlag) {
+			for (DocumentDic dic : dicByType) {
+				blfkNum +=dic.getHasUpdateNum();
+			}
+			Response.json("blfkNum",blfkNum);
+			return;
+		}
+		Response.json(DbDefined.DOCUMENT_TYPE, dicByType);
 	}
 	
 	/**

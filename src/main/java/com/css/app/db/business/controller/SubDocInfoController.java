@@ -661,4 +661,52 @@ public class SubDocInfoController {
 			replyExplainService.update(tempReply);
 		}
 	}
+	/**
+	 * @description:个人待办菜单气泡数（都是我正在处理的文：需要落实的，送给自己审核的、退回自己修改的）
+	 * @author:zhangyw
+	 * @date:2019年5月17日
+	 * @Version v1.0
+	 */
+	@ResponseBody
+	@RequestMapping("/grdbMenuNums")
+	public void grdbMenuNums() {
+		int grdbNum=0;
+		Map<String, Object> map = new HashMap<>();
+		String loginUserId=CurrentUser.getUserId();
+		if(StringUtils.isNotBlank(loginUserId)) {
+			map.put("loginUserId", loginUserId);
+		}
+		map.put("receiver", "receiver");
+		List<SubDocInfo> subDocInfoList = subDocInfoService.queryPersonList(map);
+		if(subDocInfoList !=null && subDocInfoList.size()>0) {
+			grdbNum=subDocInfoList.size();
+		}
+		Response.json("grdbNum",grdbNum);
+	}
+	
+	/**
+	 * @description:局内待办菜单气泡数（部转办到局的数据即指状态为待转办的数据）
+	 * @author:zhangyw
+	 * @date:2019年5月16日
+	 * @Version v1.0
+	 */
+	@ResponseBody
+	@RequestMapping("/jndbMenuNums")
+	public void jndbMenuNums() {
+		int jndbNum=0;
+		Map<String, Object> map = new HashMap<>();
+		String loginUserId=CurrentUser.getUserId();
+		String orgId = baseAppUserService.getBareauByUserId(loginUserId);
+		if(StringUtils.isNotBlank(orgId)) {
+			map.put("orgId", orgId);
+		}
+		map.put("docStatus", DbDocStatusDefined.DAI_ZHUAN_BAN);
+		//查询列表数据
+		List<SubDocInfo> subDocInfoList = subDocInfoService.queryList(map);
+		if(subDocInfoList !=null && subDocInfoList.size()>0) {
+			jndbNum=subDocInfoList.size();
+		}
+		Response.json("jndbNum",jndbNum);
+	}
+	
 }
