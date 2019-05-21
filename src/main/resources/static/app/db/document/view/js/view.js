@@ -558,8 +558,8 @@ var pageModule = function(){
 			var imgFileId="";
 			var saveFlag="0"; //文字
 			if($("span.css3").attr("data") =="1"){
-				saveFlag="1"; //图片
 				if(checkIsModified()){
+					saveFlag="1"; //图片
 					$.ajax({
 						url : "/app/base/user/getToken",
 						type : "GET",
