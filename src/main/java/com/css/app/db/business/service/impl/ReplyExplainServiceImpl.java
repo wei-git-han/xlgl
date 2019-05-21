@@ -57,7 +57,7 @@ public class ReplyExplainServiceImpl implements ReplyExplainService {
 
 	@Override
 	public void saveReply(String subId, String infoId, String userId, String userName, String teamId,
-			String replyContent, String subDeptId, String subDeptName) {
+			String replyContent, String subDeptId, String subDeptName,String cbrFlag) {
 		ReplyExplain reply=new ReplyExplain();
 		reply.setId(UUIDUtils.random());
 		reply.setSubId(subId);
@@ -71,6 +71,7 @@ public class ReplyExplainServiceImpl implements ReplyExplainService {
 		reply.setSubDeptName(subDeptName);
 		reply.setShowFlag("0");
 		reply.setReVersion("0");
+		reply.setCbrFlag(cbrFlag);
 		replyExplainDao.save(reply);
 	}
 

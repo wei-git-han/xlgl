@@ -86,13 +86,21 @@ public class ReplyExplainController {
 						Map<String, Object> replyMap =new HashMap<>();
 						replyMap.put("subId", subId);
 						replyMap.put("teamId", teamId);
+						replyMap.put("cbrFlag", "1");
 						replyMap.put("sort", "asc");
 						List<ReplyExplain> list = replyExplainService.queryList(replyMap);
 						if(list !=null && list.size()>0) {
 							firstDate = list.get(0).getCreatedTime();
-							//承办后再转办如实记录承办人
-							json.put("cbrId", list.get(0).getUserId());
-							json.put("cbrName", list.get(0).getUserName());
+							String showFlag = list.get(0).getShowFlag();
+							//未正式发布的,显示当前承办人（因为可能会存在转办但下一个承办人承办了但还没做任何反馈的修改的时候）
+							if(StringUtils.equals("1", showFlag)) {
+								json.put("cbrId", list.get(0).getUserId());
+								json.put("cbrName", list.get(0).getUserName());
+							}else {
+								//承办后再转办如实记录承办人
+								json.put("cbrId", cbrId);
+								json.put("cbrName", subDocInfo.getUndertakerName());
+							}
 						}
 						json.put("danwei", subDocInfo.getSubDeptName());
 						json.put("firstDate", firstDate);
@@ -167,15 +175,16 @@ public class ReplyExplainController {
 						Map<String, Object> replyMap =new HashMap<>();
 						replyMap.put("subId", subId);
 						replyMap.put("teamId", teamId);
+						replyMap.put("cbrFlag", "1");
 						replyMap.put("sort", "asc");
 						List<ReplyExplain> list = replyExplainService.queryList(replyMap);
 						if(list !=null && list.size()>0) {
 							firstDate = list.get(0).getCreatedTime();
+							json.put("cbrId", list.get(0).getUserId());
+							json.put("cbrName", list.get(0).getUserName());
 						}
 						json.put("danwei", subDocInfo.getSubDeptName());
 						json.put("firstDate", firstDate);
-						json.put("cbrId", cbrId);
-						json.put("cbrName", subDocInfo.getUndertakerName());
 						json.put("subId", subId);
 						json.put("teamId", teamId);
 						json.put("content",replyExplain.getReplyContent());
@@ -284,13 +293,17 @@ public class ReplyExplainController {
 	public void save(String subId,String infoId,String teamId,String replyContent,@RequestParam(value = "file", required = false) MultipartFile[] files){
 		String loginUserId=CurrentUser.getUserId();
 		String loginUserName=CurrentUser.getUsername();
+		String cbrFlag="0";
 		JSONObject json=new JSONObject();
 		if(StringUtils.isNotBlank(infoId) && StringUtils.isNotBlank(subId)) {
 			SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+			if(StringUtils.equals(loginUserId, subDocInfo.getUndertaker())) {
+				cbrFlag="1";
+			}
 			if(StringUtils.isBlank(teamId)) {
 				String uuid=UUIDUtils.random();
 				//新增反馈及附件
-				replyExplainService.saveReply(subId, infoId, loginUserId, loginUserName, uuid, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName());
+				replyExplainService.saveReply(subId, infoId, loginUserId, loginUserName, uuid, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName(),cbrFlag);
 				if(files!=null){
 					replyAttacService.saveAttacs(files, subId, uuid);
 				}
@@ -312,10 +325,13 @@ public class ReplyExplainController {
 					cbrMap.put("showFlag", "0");
 					ReplyExplain zbTempReply = replyExplainService.queryLastestTempReply(cbrMap);
 					if(zbTempReply != null) {
+						if(StringUtils.equals("1", zbTempReply.getCbrFlag()) && StringUtils.equals("1", cbrFlag)) {
+							zbTempReply.setCbrFlag("0");
+						}
 						zbTempReply.setReVersion("1");
 						replyExplainService.update(zbTempReply);
 					}
-					replyExplainService.saveReply(subId, infoId, loginUserId, loginUserName, teamId, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName());
+					replyExplainService.saveReply(subId, infoId, loginUserId, loginUserName, teamId, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName(),cbrFlag);
 				}
 				if(files!=null && files.length>0){
 					replyAttacService.saveAttacs(files, subId, teamId);
@@ -337,13 +353,17 @@ public class ReplyExplainController {
 	public void edit(String subId,String infoId,String teamId,String replyContent){
 		String loginUserId=CurrentUser.getUserId();
 		String loginUserName=CurrentUser.getUsername();
+		String cbrFlag="0";
 		JSONObject json=new JSONObject();
 		if(StringUtils.isNotBlank(infoId) && StringUtils.isNotBlank(subId)) {
 			SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+			if(StringUtils.equals(loginUserId, subDocInfo.getUndertaker())) {
+				cbrFlag="1";
+			}
 			if(StringUtils.isBlank(teamId)) {
 				String uuid=UUIDUtils.random();
 				//新增反馈及附件
-				replyExplainService.saveReply(subId, infoId, loginUserId, loginUserName, uuid, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName());
+				replyExplainService.saveReply(subId, infoId, loginUserId, loginUserName, uuid, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName(),cbrFlag);
 			}else {
 				Map<String, Object> map =new HashMap<>();
 				map.put("subId", subId);
@@ -355,7 +375,7 @@ public class ReplyExplainController {
 					tempReply.setReplyContent(replyContent);
 					replyExplainService.update(tempReply);
 				}else {
-					replyExplainService.saveReply(subId, infoId, loginUserId, loginUserName, teamId, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName());
+					replyExplainService.saveReply(subId, infoId, loginUserId, loginUserName, teamId, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName(),cbrFlag);
 				}
 			}
 			json.put("result", "success");

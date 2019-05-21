@@ -39,6 +39,8 @@ public class ReplyExplain implements Serializable {
 	private String teamId;
 	//临时反馈还是已发布
 	private String reVersion;
+	//1为承办人
+	private String cbrFlag;
 
 	/**
 	 * 设置：唯一标识
@@ -159,6 +161,12 @@ public class ReplyExplain implements Serializable {
 	}
 	public void setReVersion(String reVersion) {
 		this.reVersion = reVersion;
+	}
+	public String getCbrFlag() {
+		return cbrFlag;
+	}
+	public void setCbrFlag(String cbrFlag) {
+		this.cbrFlag = cbrFlag;
 	}
 	
 	
