@@ -128,17 +128,21 @@ var pageModule = function(){
 			url:zbjlDataUrl,
 			data:{infoId:fileId},
 			success:function(data){
-				$("#zbrecord").html("");
-				$.each(data,function(i,item){
-					$("#zbrecord").append(
-						'<div class="record">'+
-			            '	<label class="zbUser">转办人:</label>'+
-			            '	<div><span>'+item.userName+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
-			            '	<label class="cbdw">承办单位/人:</label>'+
-			            '	<div>'+item.receiverNames+'</div>'+
-			            '</div>'
-		            )
-				});
+				if(data&&data.length>0){
+					$("#zbrecord").html("");
+					$.each(data,function(i,item){
+						$("#zbrecord").append(
+							'<div class="record">'+
+				            '	<label class="zbUser">转办人:</label>'+
+				            '	<div><span>'+item.userName+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
+				            '	<label class="cbdw">承办单位/人:</label>'+
+				            '	<div>'+item.receiverNames+'</div>'+
+				            '</div>'
+			            )
+					});
+				}else{
+					$("#zbrecord").html('<div class="szqf zwCss">暂无转办记录！</div>');
+				}
 			}
 		});	
 	}
@@ -172,6 +176,8 @@ var pageModule = function(){
 				
 				//相关文件点击事件
 				$("#file_all>li>a").click(function(){
+					$(this).addClass("liactive");
+					$(this).parent().siblings().find("a").removeClass("liactive");
 					var scanId = $(this).attr("data");
 					$ajax({
 						url:getFormatFileUrl,

@@ -114,6 +114,8 @@ var pageModule = function(){
 					$("#embedwrap").hide();
 				}
 				$("#file_all>li>a").click(function(){
+					$(this).addClass("liactive");
+					$(this).parent().siblings().find("a").removeClass("liactive");
 					$("#embedwrap").show();
 					var scanId = $(this).attr("data");
 					$ajax({
