@@ -350,3 +350,12 @@ html, body {
 .form-control[readonly].psszName{
 	cursor:pointer!important;
 }
+
+.file_all li > a.liactive{
+	color:#6699FF;
+}
+
+.zwCss{
+	margin-top:20px;
+	font-size: 14px;
+}
