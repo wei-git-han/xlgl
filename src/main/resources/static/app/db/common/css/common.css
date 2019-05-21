@@ -989,3 +989,6 @@ div.radio, div.radio span, div.radio input {
 	word-break: break-all;
 	word-wrap: break-word;
 }
+.bg{
+	background:#F5F5F5 url(../images/bg.png) no-repeat center center;
+}

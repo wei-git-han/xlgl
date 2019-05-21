@@ -489,7 +489,7 @@ var pageModule = function(){
 	}
 
 	var initother = function(){
-		if(fromMsg){
+		if(fromMsg && fromMsg == true){
 			$("#goback").hide();
 		}
 		
@@ -900,7 +900,7 @@ var pageModule = function(){
 
 //跳转返回事件
 function skip(){
-	if(fromMsg){
+	if(fromMsg && fromMsg == true){
 		windowClose();
 	}else{
 		if(fileFrom == "djlr"){//文件来源于登记录入

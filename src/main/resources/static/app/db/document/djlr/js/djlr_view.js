@@ -482,7 +482,7 @@ var pageModule = function(){
 	}
 
 	var initother = function(){
-		if(fromMsg){
+		if(fromMsg && fromMsg == true){
 			$("#goback").hide();
 		}
 		

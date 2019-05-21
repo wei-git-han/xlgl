@@ -42,6 +42,7 @@ var pageModule = function(){
 	
 	var initother = function(){
 		//确定
+		
 		$("#sure").click(function(){
 			$ajax({
 				url:sureUrl,
@@ -50,7 +51,7 @@ var pageModule = function(){
 					newbootbox.newdialogClose("zhuanbanDialog");
 					if(data.result=="success"){
 						newbootbox.alert("转办成功！").done(function(){
-							if(fromMsg){
+							if(fromMsg && fromMsg == true){
 								windowClose();
 							}else{
 								if(fileFrom == "jndb"){

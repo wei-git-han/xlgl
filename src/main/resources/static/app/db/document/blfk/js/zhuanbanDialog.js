@@ -50,7 +50,7 @@ var pageModule = function(){
 					newbootbox.newdialogClose("zhuanbanDialog");
 					if(data.result=="success"){
 						newbootbox.alert("转办成功！").done(function(){
-							if(fromMsg){
+							if(fromMsg && fromMsg == true){
 								windowClose();
 							}else{
 								if(fileFrom == "djlr"){//文件来源于登记录入

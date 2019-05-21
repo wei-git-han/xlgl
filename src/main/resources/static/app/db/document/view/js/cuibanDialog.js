@@ -13,7 +13,7 @@ var pageModule = function(){
 					newbootbox.newdialogClose("cuibanDialog");
 					if(data.result=="success"){
 						newbootbox.alert("已成功催办！").done(function(){
-							if(fromMsg){
+							if(fromMsg && fromMsg == true){
 								windowClose();
 							}else{
 								window.top.grdbfn();
