@@ -519,7 +519,7 @@ var pageModule = function(){
 					isSave=1;
 					$("#save").click();
 				}else{
-					if(ifShowEditBtn&&ifShowEditBtn=="0"){
+					if(ifShowEditBtn&&ifShowEditBtn=="0"){//如果没有编辑按钮：说明没有任何反馈，则必须填写反馈
 						newbootbox.alert("反馈不能为空！");
 						return;
 					}
