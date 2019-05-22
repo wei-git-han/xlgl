@@ -82,6 +82,8 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 	void clearUser();
 
 	List<BaseAppUser> queryListBySet(Map<String, Object> map);
+
+	List<BaseAppUser> queryUserByName(String name);
 	
 
 	

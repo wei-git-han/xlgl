@@ -86,4 +86,10 @@ public interface BaseAppUserService {
 	void clearUser();
 
 	List<BaseAppUser> queryListBySet(Map<String, Object> map);
+	/**
+	 * 根据用户name查询
+	 * @param map
+	 * @return
+	 */
+	List<BaseAppUser> queryUserByName(String name);
 }

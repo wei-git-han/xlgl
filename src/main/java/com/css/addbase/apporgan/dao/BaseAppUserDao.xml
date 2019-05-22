@@ -43,6 +43,10 @@
 		</foreach>
 	</select>
 	
+	<select id="queryUserByName" parameterType="java.lang.String" resultType="com.css.addbase.apporgan.entity.BaseAppUser" >
+		select  *  from BASE_APP_USER where TRUENAME=#{name} 		
+	</select>
+	
 	<select id="queryObjectByDeptIds" resultType="com.css.addbase.apporgan.entity.BaseAppUser" >
 		select  *  from BASE_APP_USER where ORGANID in 
 		<foreach item="deptIds" collection="array" open="(" separator="," close=")">

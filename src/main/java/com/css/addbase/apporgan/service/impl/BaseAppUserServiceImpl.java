@@ -121,5 +121,10 @@ public class BaseAppUserServiceImpl implements BaseAppUserService {
 		// TODO Auto-generated method stub
 		return baseAppUserDao.queryListBySet(map);
 	}
+
+	@Override
+	public List<BaseAppUser> queryUserByName(String name) {
+		return baseAppUserDao.queryUserByName(name);
+	}
 	
 }
