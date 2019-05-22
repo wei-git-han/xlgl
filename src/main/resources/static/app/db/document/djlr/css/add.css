@@ -226,9 +226,11 @@ html, body {
 	padding:10px;
 	border:none;
 	resize:none;
-	height:150px!important;
+	height:100px!important;
 	font-size:14px;
 	margin-top:10px;
+	word-break: break-all;
+	word-wrap: break-word;
 }
 .tableBtns1{
 	border:1px solid #6699FF;
@@ -325,4 +327,35 @@ html, body {
 }
 .cqrq{
 	margin-left:10px;
+}
+.cqnr {
+	overflow:hidden;
+	padding:10px 20px;
+	vertical-align:middle;
+	background:#fff;
+	margin-top:10px;
+}
+.cqnr div{
+	display:inline-block;
+	float:left;
+}
+.cqnr label{
+	font-size:14px;
+	float:left;
+	margin-right:10px;
+	line-height: 32px;
+	margin-bottom:0px!important;
+}
+
+.form-control[readonly].psszName{
+	cursor:pointer!important;
+}
+
+.file_all li > a.liactive{
+	color:#6699FF;
+}
+
+.zwCss{
+	margin-top:20px;
+	font-size: 14px;
 }

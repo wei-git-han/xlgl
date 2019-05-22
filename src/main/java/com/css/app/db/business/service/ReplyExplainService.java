@@ -28,7 +28,7 @@ public interface ReplyExplainService {
 	
 	ReplyExplain queryLastestTempReply(Map<String, Object> map);
 	
-	void saveReply(String subId,String infoId,String userId,String userName,String teamId,String replyContent,String subDeptId,String subDeptName);
+	void saveReply(String subId,String infoId,String userId,String userName,String teamId,String replyContent,String subDeptId,String subDeptName,String cbrFlag);
 	
 	void updateShowFlag(String subId);
 	//查询所有分支局的反馈

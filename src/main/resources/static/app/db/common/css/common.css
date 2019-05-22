@@ -57,7 +57,7 @@ div.checker input {
 	position:relative;
 }
 
-/*闁跨喐鏋婚幏鐑芥晸閺傘倖瀚归柨鐔荤窛鏉堢偓瀚归柨鐔惰寧閹插瀚归柨鐔告灮閹凤拷*/
+/*闂佽法鍠愰弸濠氬箯閻戣姤鏅搁柡鍌樺�栫�氬綊鏌ㄩ悢鑽ょ獩閺夊牏鍋撶�氬綊鏌ㄩ悢鎯板闁规彃顑嗙�氬綊鏌ㄩ悢鍛婄伄闁瑰嚖鎷�*/
 .hideword {
 	display: block;
 	width: 100%;
@@ -65,7 +65,7 @@ div.checker input {
 	overflow: hidden;
 	white-space: nowrap;
 }
-/*闁跨喐鏋婚幏鐑芥晸閺傘倖瀚归柨鐔虹摂閿涳拷*闁跨喐鏋婚幏锟�*/
+/*闂佽法鍠愰弸濠氬箯閻戣姤鏅搁柡鍌樺�栫�氬綊鏌ㄩ悢铏规憘闁挎冻鎷�*闂佽法鍠愰弸濠氬箯閿燂拷*/
 span.required,.error{
 	color: #f00;
 }
@@ -108,7 +108,7 @@ span.required,.error{
 	padding: 5px 5px 5px 10px;
 	border-radius: 5px !important
 }
-/*闁跨喐鏋婚幏鐑芥晸閺傘倖瀚归柨鐔告灮閹烽澧撮柨鐔告灮閹凤拷*/
+/*闂佽法鍠愰弸濠氬箯閻戣姤鏅搁柡鍌樺�栫�氬綊鏌ㄩ悢鍛婄伄闁圭兘顥撴晶鎾煥閻斿憡鐏柟鍑ゆ嫹*/
 .modal-dialog {
 	width: 400px;
 }
@@ -164,21 +164,21 @@ span.required,.error{
 	border-top: none;
 }
 
-/*闁跨喐鏋婚幏鐑芥晸閺傘倖瀚归柨鐔告灮閹烽閮撮柨鐔告灮閹凤拷**/
+/*闂佽法鍠愰弸濠氬箯閻戣姤鏅搁柡鍌樺�栫�氬綊鏌ㄩ悢鍛婄伄闁圭兘顥撻柈鎾煥閻斿憡鐏柟鍑ゆ嫹**/
 .appuser .ap_page41 > div{
 	font-size:14px;
 }
 .appuser .ap_page41 > div:first-child{
 	font-size:18px;
 }
-/*閸忋劑鏁撻弬銈嗗闁跨喐鏋婚幏椋庨兇闁跨喐鏋婚幏锟�**/
+/*闁稿繈鍔戦弫鎾诲棘閵堝棗顏堕梺璺ㄥ枑閺嬪骞忔搴ㄥ厙闂佽法鍠愰弸濠氬箯閿燂拷**/
 .tree-demo{
 	/* height:100%; */
 	/* overflow:auto; */
 	font-size:16px!important
 }
 
-/*闁跨喐鏋婚幏鐑芥晸閺傘倖瀚归柨鐔告灮閹疯渹绔存い锟�**/
+/*闂佽法鍠愰弸濠氬箯閻戣姤鏅搁柡鍌樺�栫�氬綊鏌ㄩ悢鍛婄伄闁圭柉娓圭粩瀛樸亜閿燂拷**/
 #returnbtn font{
 	font-size:20px
 }
@@ -188,8 +188,8 @@ span.required,.error{
 	font-size:20px
 }
 
-/********闁跨喐鏋婚幏鐑芥晸閺傘倖瀚筩ss*******************************/
-/*妞ょ敻鏁撻弬銈嗗婢舵挳鏁撻弬銈嗗*/
+/********闂佽法鍠愰弸濠氬箯閻戣姤鏅搁柡鍌樺�栫�氱ss*******************************/
+/*濡炪倗鏁婚弫鎾诲棘閵堝棗顏跺鑸垫尦閺佹捇寮妶鍡楊伓*/
 .contenthead {
 	position: absolute;
 	left: 0;
@@ -250,7 +250,7 @@ span.required,.error{
 	padding-left: 40px;
 	padding-right: 10px
 }
-/*缁涙盯锟斤拷*/
+/*缂佹稒鐩敓鏂ゆ嫹*/
 .tiaojian {
 	min-width: 250px;
 	height: 36px;
@@ -294,7 +294,7 @@ p.tiaoj{
 	cursor: pointer;
 	outline:none;
 }
-/*闁跨喐鏋婚幏鐑芥晸閺傘倖瀚归柨鐔告灮閹烽攱浼�--闁跨喎褰ㄩ幉瀣闁跨喎褰ㄦ导娆愬闁跨喐鏋婚幏鐑芥晸閺傘倖瀚归弮鍫曟晸閺傘倖瀚归柨鐔告灮閹风兘鏁撻弬銈嗗*/
+/*闂佽法鍠愰弸濠氬箯閻戣姤鏅搁柡鍌樺�栫�氬綊鏌ㄩ悢鍛婄伄闁圭兘鏀辨导锟�--闂佽法鍠庤ぐ銊╁箟鐎ｎ偄顏堕梺璺ㄥ枎瑜般劍瀵煎▎鎰伓闂佽法鍠愰弸濠氬箯閻戣姤鏅搁柡鍌樺�栫�氬綊寮崼鏇熸櫢闁哄倶鍊栫�氬綊鏌ㄩ悢鍛婄伄闁归鍏橀弫鎾诲棘閵堝棗顏�*/
 .assist_set {
 	float: right;
 	height: 100%;
@@ -307,7 +307,7 @@ p.tiaoj{
 .assist_set>i,.assist_set>span>i,.assist_set>span>a>i{
 	font-size:14px!important;
 }
-/*闁跨喐鏋婚幏椋庡闁跨喐鏋婚幏鐑芥晸閸欘偅鍞婚幏鐑芥晸鏉堝啫鍤栭幏鐑芥晸娓氥儲鍞婚幏鐑芥晸閺傘倖瀚�*/
+/*闂佽法鍠愰弸濠氬箯妞嬪骸顣婚梺璺ㄥ枑閺嬪骞忛悜鑺ユ櫢闁告瑯鍋呴崬濠氬箯閻戣姤鏅搁弶鍫濆暙閸ゆ牠骞忛悜鑺ユ櫢濞撴哎鍎查崬濠氬箯閻戣姤鏅搁柡鍌樺�栫�氾拷*/
 .tableTitle{
 	width:100%;
 	height:40px;
@@ -342,7 +342,7 @@ p.tiaoj{
 .tableBtn:active {
 	background: #3268AA;
 }
-/*闁跨喐鏋婚幏椋庮�呯紙閬嶆晸閻欌槅鍓ㄩ幏鐑芥晸閺傘倖瀚归柨鐔告灮閹风柉骞愰悧鐔兼晸閺傘倖瀚归柨鐔告灮閹风兘鏁撻懘姘炬嫹*/
+/*闂佽法鍠愰弸濠氬箯妞嬪寒锟藉懐绱欓柆宥嗘櫢闁绘瑢妲呴崜銊╁箯閻戣姤鏅搁柡鍌樺�栫�氬綊鏌ㄩ悢鍛婄伄闁归鏌夐獮鎰版偋閻斿吋鏅搁柡鍌樺�栫�氬綊鏌ㄩ悢鍛婄伄闁归鍏橀弫鎾绘嚇濮樼偓瀚�*/
 [class^="fa-"]:not(.fa-stack), 
 [class^="glyphicon-"], 
 [class^="icon-"], 
@@ -388,7 +388,7 @@ p.tiaoj{
 .new_button3:hover .fa,.new_button3:active .fa{
 	color:#333
 }
-/*闁跨喐鏋婚幏椋庡*/
+/*闂佽法鍠愰弸濠氬箯妞嬪骸顣�*/
 .cart_cont_bg {
 	float: left;
 	margin-right: 9px;
@@ -625,7 +625,7 @@ p.tiaoj{
 	text-decoration: underline;
 }
 
-/*闁跨喐鏋婚幏鐑芥晸閿燂拷*/
+/*闂佽法鍠愰弸濠氬箯閻戣姤鏅搁柨鐕傛嫹*/
 .table-title {
 	/* display:inline-block; */
 	color: #0063dc;
@@ -634,7 +634,9 @@ p.tiaoj{
 	text-overflow:ellipsis;
 	overflow:hidden
 }
-
+.tabletitle {
+	color: #0063dc;
+}
 .table-advance {
 	margin-bottom: 0px !important;
 }
@@ -684,7 +686,7 @@ p.tiaoj{
 	padding:5px 12px;
 }
 
-/*娑撴岸鏁撻弬銈嗗闁跨喐鏋婚幏鐑芥晸閺傘倖瀚归柨鐔兼應閹插瀚归柨鐔诲Г閵嗕線鏁撻弬銈嗗闁跨喓鐓粵澶婂簻閹风兘鎸�*/
+/*濞戞挻宀搁弫鎾诲棘閵堝棗顏堕梺璺ㄥ枑閺嬪骞忛悜鑺ユ櫢闁哄倶鍊栫�氬綊鏌ㄩ悢鍏兼噳闁规彃顑嗙�氬綊鏌ㄩ悢璇残撻柕鍡曠窔閺佹捇寮妶鍡楊伓闂佽法鍠撻悡顐ょ驳婢跺﹤绨婚柟椋庡厴閹革拷*/
 .btn-button1 {
 	background-color: #3399FF;
 	border-radius: 4px !important;
@@ -695,7 +697,7 @@ p.tiaoj{
 	border-radius: 4px !important;
 	-moz-border-radius: 4px !important;
 }
-/*娑撴岸鏁撻弬銈嗗闁跨喐鏋婚幏鐑芥晸閺傘倖瀚归柨鐔兼應闂堚晜瀚归柨鐔告灮閹风兘鏁撻弬銈嗗闁跨喐鏋婚幏鐑芥晸閺傘倖瀚箃ab妞ょ數顒�*/
+/*濞戞挻宀搁弫鎾诲棘閵堝棗顏堕梺璺ㄥ枑閺嬪骞忛悜鑺ユ櫢闁哄倶鍊栫�氬綊鏌ㄩ悢鍏兼噳闂傚牃鏅滅�氬綊鏌ㄩ悢鍛婄伄闁归鍏橀弫鎾诲棘閵堝棗顏堕梺璺ㄥ枑閺嬪骞忛悜鑺ユ櫢闁哄倶鍊栫�氱畠ab濡炪倗鏁搁锟�*/
 .setModelTab{
 	margin-top:11px;
 	height:50px;
@@ -767,7 +769,7 @@ p.tiaoj{
 	border:none;
 	background-color:#5498EB;
 }
-/*OFD閹垫挸绱戦弮鍓佹畱闁喚鍍甸崣宥夘洯*/
+/*OFD闁瑰灚鎸哥槐鎴﹀籍閸撲焦鐣遍梺顒夊枤閸嶇敻宕ｅ澶樻疮*/
 .suwellCover{ 
 	background: #FBFBFB;
 	background-image: url("../images/loading_gif.gif");
@@ -899,7 +901,7 @@ p.tiaoj{
 	background-color:#fffce8!important;
 }
 
-/* 鏉′欢鏌ヨ绛涢�夋鏍峰紡 */
+/* 閺夆�叉閺屻儴顕楃粵娑拷澶嬵攱閺嶅嘲绱� */
 .tiaojian .checkbox input[type="checkbox"],.tiaojian .checkbox-inline input[type="checkbox"],.tiaojian .radio input[type="radio"],.tiaojian .radio-inline input[type="radio"] {
     position: absolute;
     margin-top: 4px\9;
@@ -936,7 +938,7 @@ div.radio, div.radio span, div.radio input {
 	background:#527ACC;
 }
 
-/* 列表状态样式 */
+/* 鍒楄〃鐘舵�佹牱寮� */
 .btn-color {
     display: block;
     max-width: 100%;
@@ -955,7 +957,7 @@ div.radio, div.radio span, div.radio input {
 }
 
 /*
-	2019-05-07新增
+	2019-05-07鏂板
 */
 
 #gridcont_content{
@@ -982,4 +984,11 @@ div.radio, div.radio span, div.radio input {
 
 .zspsnr,.dblsqk{
 	cursor:pointer;
+}
+.dblsqk span,.zspsnr,.tabletitle,.cbdw,.nrt-cont-cent-font,.dblsqk{
+	word-break: break-all;
+	word-wrap: break-word;
+}
+.bg{
+	background:#F5F5F5 url(../images/bg.png) no-repeat center center;
 }

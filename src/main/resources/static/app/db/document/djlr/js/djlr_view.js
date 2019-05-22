@@ -16,6 +16,7 @@ var batchReadUrl = {"url":"/app/db/documentinfo/batchRead","dataType":"text"};//
 var cuibanurl = {"url":"/app/db/documentszinfo/press","dataType":"text"};
 var fileId=getUrlParam("fileId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
+var fromMsg=getUrlParam("fromMsg")||false; //是否为消息进入
 var pageModule = function(){
 	//打开页面标识已读
 	var initReadfn = function(){
@@ -191,7 +192,8 @@ var pageModule = function(){
 					id = o.teamId;
 					teamId = o.teamId;
 					cbrId = o.cbrId;
-					date = o.firstDate;
+					date = o.updateTime;
+					firstDate = o.firstDate;
 					danwei = o.danwei||"某单位";
 					ld = o.cbrName;
 					content = o.content;
@@ -223,6 +225,7 @@ var pageModule = function(){
 					teamId = o.replyTeamId;
 					cbrId = o.userId;
 					date = o.createdTime;
+					firstDate = o.firstDate;
 					danwei = o.danwei||"某单位";
 					ld = o.userName;
 					content = o.opinionContent;
@@ -276,7 +279,7 @@ var pageModule = function(){
 								<div class="newpanel-right">
 									<div class="newpanel-right-top">
 										<div class="nrt-date">
-											<font>${date}</font>
+											<font>${firstDate}</font>
 										</div>
 									</div>
 									
@@ -396,7 +399,7 @@ var pageModule = function(){
 						$(this).parents(".newpanel-cont").toggleClass("active");
 					});
 				}else{
-					$(".pagemenu").html("<span style='margin-left:20px;'>暂无内容！</span>");
+					$(".pagemenu").html("<span class='szqf zwCss2'>暂无内容！</span>");
 				}
 			}
 		})
@@ -421,7 +424,7 @@ var pageModule = function(){
 			            )
 					});
 				}else{
-					$("#zbrecord").html('<div style="margin-top:20px;font-size: 14px;">暂无转办记录！</div>');
+					$("#zbrecord").html('<div class="szqf zwCss">暂无转办记录！</div>');
 				}
 			}
 		});	
@@ -449,7 +452,7 @@ var pageModule = function(){
 			            $("#cbrecord").append(html1);
 					});
 				}else{
-					$("#cbrecord").html('<div style="margin-top:20px;font-size: 14px;">暂无催办记录！</div>');
+					$("#cbrecord").html('<div class="szqf zwCss">暂无催办记录！</div>');
 				}
 			}
 		});	
@@ -472,15 +475,22 @@ var pageModule = function(){
 			            )
 					});
 				}else{
-					$("#jybjrecord").html('<div style="margin-top:20px;font-size: 14px;">暂无办结记录！</div>');
+					$("#jybjrecord").html('<div class="szqf zwCss">暂无办结记录！</div>');
 				}
 			}
 		});	
 	}
 
 	var initother = function(){
+		if(fromMsg && fromMsg == true){
+			$("#goback").hide();
+		}
+		
 		//返回
 		$("#goback").click(function(){
+			if(!fromMsg){
+				window.top.blfkfn();
+			}
 			skip();
 		});
 		//办理反馈-添加附件
@@ -522,6 +532,9 @@ var pageModule = function(){
 						$("#viewcont2").modal("hide");
 						newbootbox.alert("操作成功!").done(function(){
 							window.location.reload();
+							if(!fromMsg){
+								window.top.blfkfn();
+							}
 						});
 					}
 				}
@@ -539,7 +552,7 @@ var pageModule = function(){
 				header:true,
 				title:"转办",
 				classed:"cjDialog",
-				url:"/app/db/document/blfk/html/zhuanbanDialog.html?fileIds="+fileId+"&fileFrom="+fileFrom
+				url:"/app/db/document/blfk/html/zhuanbanDialog.html?fileIds="+fileId+"&fileFrom="+fileFrom+"&fromMsg="+fromMsg
 			})
 		});
 		
@@ -550,8 +563,12 @@ var pageModule = function(){
 				data:{id:fileId},
 				success:function(data){
 					if(data.result=="success"){
-						newbootbox.alert("取消办结成功!");
-						showButton();
+						newbootbox.alert("取消办结成功!").done(function(){
+							showButton();
+							if(!fromMsg){
+								window.top.blfkfn();
+							}
+						});
 					}
 				}
 			});
@@ -583,7 +600,6 @@ var pageModule = function(){
 }();
 
 
-//跳转返回事件
 //跳转返回事件
 function skip(){
 	if(frompage==0){

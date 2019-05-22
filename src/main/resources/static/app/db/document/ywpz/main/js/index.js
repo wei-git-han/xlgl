@@ -6,10 +6,21 @@ var pageModule = function(){
 		$ajax({
 			url: getUserAdminTypeUrl,
 			type: "GET",
-//			data: {"ids": ids.toString()},
 			success: function(data) {
-				if(!data){
-					$('#departAdmin').css("display","none");
+				if(data=="0"){//超级管理员
+					$("#jssz").show();
+					$("#szsz").show();
+					$("#zdwh").show();
+					$('#departAdmin').show();
+					$('#juAdmin').show();
+				}else if(data=="1"){//部管理员
+					$('#departAdmin').show();
+					$('#juAdmin').show();
+					$("#szsz").show();
+					$("#zdwh").show();
+				}else{ //局管理员
+					$('#juAdmin').show();
+					$("#jssz").show();
 				}
 			}
 		});

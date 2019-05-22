@@ -27,4 +27,8 @@ public interface AdminSetService {
 	void deleteBatch(String[] ids);
 	
 	int deleteByUserId(String userId);
+	
+	List<AdminSet> queryJuAdminList(String userId);
+	
+	List<String> queryUserIdByOrgId(String orgId);
 }

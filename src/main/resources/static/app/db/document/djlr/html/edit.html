@@ -90,7 +90,7 @@ License: You must have a valid license purchased only from themeforest(the above
 							           		<div id="showPsAreaDiv" class="filecontent pr100">
 							           			<!--批示首页数据ID-->
 												<input type="hidden" id="scanId" name="scanId"/>
-												<input type="hidden" name="yjId" id="yjId" />
+												<input type="hidden" name="infoId" id="infoId" />
 												<input type="hidden" id="smwj" name="smwj" /> 
 												<input type="hidden" id="smwjNum" name="smwjNum" value="0" />
 							           			<div id="FireFoxOFDDIV" style="width:100%;height:100%;"></div>
@@ -213,7 +213,7 @@ License: You must have a valid license purchased only from themeforest(the above
 																制文日期
 															</td>
 															<td colspan="3">
-															 	<div class="input-group  date date-picker" data-date-format="yyyy-mm-dd" data-date-start-date="+0d">
+															 	<div class="input-group  date date-picker" data-date-format="yyyy-mm-dd" >
 																    <input type="text" class="form-control datee seteee" id="printDate" name="printDate" onfocus="blur()"  />
 																    <span class="input-group-btn">
 																    	<button class="btn default setdis"  type="button"><i class="fa fa-calendar"></i></button>
@@ -228,20 +228,32 @@ License: You must have a valid license purchased only from themeforest(the above
 															<td colspan="3">
 																<div class="cqwrap">
 																	<div style="padding:10px;overflow: hidden;width: 100%;">
-																		<div>
-																			<span class="pull-left">增加抄清</span>
-																			<div class="pull-right">
-																				<a class="cqbtn" style="float:left;margin-right:10px;" id="choosesz">选择首长</a>
-																				<div style="display:inline-block" class="input-group date date-picker" data-date-format="yyyy-mm-dd" data-date-start-date="+0d">
-																				    <input type="hidden" class="form-control" id="cqDate" name="cqDate" />
-																				    <span class="input-group-btn">
-																				    	<button class="btn default setdis cqbtn"  type="button">选择日期</button>
-																				    </span>
-																				</div>
-																			</div>
+																		<div style="overflow: hidden;">
+																			<span class="pull-left">新增/编辑抄清</span>
 																		</div>
 																		<input type="hidden" class="form-control" id="editcqId" name="editcqId" />
-																		<textarea class="form-control cqcontent" id="cqcontent" placeholder="输入抄清内容..." maxlen="500"></textarea>
+																		<div class="cqnr">
+																			<label>
+														                    	选择首长
+																			</label>
+																			<div>
+															                     <div style="display:inline-block" >
+																				    <input class="form-control psszName" type="text" id="psszName" name="psszName" readonly="readonly"/>
+																				</div>
+																			 </div>
+																			 <label style="margin-left:30px;">
+														                    	选择日期
+																			 </label>
+																			 <div>
+																                <div style="display:inline-block" class="input-group date date-picker" data-date-format="yyyy-mm-dd">
+																				    <input type="text" class="form-control datee" id="cqDate" name="cqDate" />
+																				    <span class="input-group-btn">
+																				    	<button class="btn default setdis cqbtn"  type="button"></button>
+																				    </span>
+																				</div>
+																			 </div>
+																		</div>
+																		<textarea class="form-control cqcontent" id="cqcontent" placeholder="输入抄清内容..." maxlength="500"></textarea>
 																		<button type="button" class="btn tableBtns1" id="addcq">保存</button>
 																	</div>
 																	<div class="showcq" id="showcq">
@@ -273,7 +285,7 @@ License: You must have a valid license purchased only from themeforest(the above
 											           		<div class="btn-group">
 															    <div class="btn-group">
 															        <button type="button" class="btn dropdown-toggle tableBtns" data-toggle="dropdown">
-															        	新增附件  <i class="fa fa-angle-down"></i>
+															        	新增文件  <i class="fa fa-angle-down"></i>
 															        </button>
 															        <ul class="dropdown-menu">
 															            <li>

@@ -1,6 +1,6 @@
 ﻿﻿server:
 
-  port: 11101
+  port: 11008
 app:
   ConnectTimeout: 100
   ReadTimeout: 5000

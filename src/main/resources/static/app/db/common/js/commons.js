@@ -1822,6 +1822,7 @@ jQuery.fn.extend({ //成员函数
 		var view = obj.view;
 		var cssStyle = obj.cssStyle;
 		var delbtn = obj.delbtn;
+		var type = obj.type;
 		if(obj.initdata){
 			var filelist = obj.initdata;
 			$.each(filelist,function(i,o){
@@ -1855,13 +1856,13 @@ jQuery.fn.extend({ //成员函数
 			if(view=="view1"){
 				$(".filelist[name="+targetid+"]").append(
 					'<div style="display:block;position:relative;display:none;text-align: left;margin-right:20px;margin-bottom:10px;" id="filecont_'+targetid+'_'+filen+'">'+
-					'	<input type="file" name="'+name+'" style="display:none;" id="file_'+targetid+'_'+filen+'"/>'+
+					'	<input type="file" accept=".pdf,.ofd,.doc,.docx,.wps" name="'+name+'" style="display:none;" id="file_'+targetid+'_'+filen+'"/>'+
 					'</div>'
 				);
 			}else if(view=="view2"){
 				$(".filelist[name="+targetid+"]").append(
 					'<div style="display:inline-block;'+cssStyle+';position:relative;display:none;float:left;margin-right:20px;margin-bottom:10px;" id="filecont_'+targetid+'_'+filen+'">'+
-					'	<input type="file" name="'+name+'" style="display:none;" id="file_'+targetid+'_'+filen+'"/>'+
+					'	<input type="file"  name="'+name+'" style="display:none;" id="file_'+targetid+'_'+filen+'"/>'+
 					'</div>'
 				);
 			}

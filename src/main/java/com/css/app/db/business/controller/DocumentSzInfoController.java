@@ -9,29 +9,29 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.css.addbase.AppConfig;
 import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
+import com.css.addbase.msg.MSGTipDefined;
+import com.css.addbase.msg.MsgTipUtil;
+import com.css.addbase.msg.entity.MsgTip;
+import com.css.addbase.msg.service.MsgTipService;
 import com.css.app.db.business.entity.DocumentCbjl;
 import com.css.app.db.business.entity.DocumentInfo;
-import com.css.app.db.business.entity.ReplyExplain;
+import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.service.DocumentCbjlService;
-import com.css.app.db.business.service.DocumentFileService;
 import com.css.app.db.business.service.DocumentInfoService;
-import com.css.app.db.business.service.ReplyExplainService;
+import com.css.app.db.business.service.SubDocInfoService;
 import com.css.app.db.config.entity.RoleSet;
 import com.css.app.db.config.service.RoleSetService;
 import com.css.base.utils.CurrentUser;
-import com.css.base.utils.GwPageUtils;
 import com.css.base.utils.Response;
-import com.css.base.utils.UUIDUtils;
-import com.github.pagehelper.PageHelper;
 
 import dm.jdbc.util.StringUtil;
 
@@ -46,20 +46,23 @@ import dm.jdbc.util.StringUtil;
 @RequestMapping("/app/db/documentszinfo")
 public class DocumentSzInfoController {
 	@Autowired
-	private AppConfig appConfig;
-	@Autowired
 	private DocumentInfoService documentInfoService;
 	@Autowired
-	private DocumentFileService documentFileService;
-	@Autowired
 	private DocumentCbjlService documentCbjlService;
-	@Autowired
-	private ReplyExplainService replyExplainService;
 	@Autowired
 	private RoleSetService roleSetService;
 	@Autowired
 	private BaseAppOrganService baseAppOrganService;
-	
+	@Autowired
+	private SubDocInfoService subDocInfoService;
+	@Autowired
+	private MsgTipService msgService;
+	@Autowired
+	private MsgTipUtil msgUtil;
+	@Value("${csse.dccb.appId}")
+	private  String appId;	
+	@Value("${csse.dccb.appSecret}")
+	private  String clientSecret;
 	/**
 	 * 首长左侧类型分组
 	 * [
@@ -73,12 +76,7 @@ public class DocumentSzInfoController {
 	@RequestMapping("/grouplist")
 	public void grouplist(String search){
 		String userid=CurrentUser.getUserId();
-		JSONObject jo2=new JSONObject();
-		SimpleDateFormat sdf=new SimpleDateFormat("yyyy");
 		Map<String, Object> map = new HashMap<>();
-		/*if(StringUtil.isEmpty(year)) {
-			year=sdf.format(new Date());
-		}*/
 		map.put("search", search);
 		map.put("status2", "0");
 		map.put("latestreply", "0");
@@ -210,7 +208,7 @@ public class DocumentSzInfoController {
 	@RequestMapping("/homelist")
 	public void homelist(Integer page, Integer pagesize,String search,String id ,String state,String month,String year,String orgid,String isMain,String sorttype){
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		SimpleDateFormat sdf2=new SimpleDateFormat("yyyy年MM月dd日");
+		//SimpleDateFormat sdf2=new SimpleDateFormat("yyyy年MM月dd日");
 		SimpleDateFormat sdf3=new SimpleDateFormat("yyyy");
 		String userid=CurrentUser.getUserId();
 		JSONObject jo2=new JSONObject();
@@ -275,7 +273,6 @@ public class DocumentSzInfoController {
 			map.put("status2", "0");
 			map.put("latestreply", "0");
 			List<Map<String, Object>> genxinList = documentInfoService.queryListByDicType(map);
-			JSONArray valdata=new JSONArray();
 			if (genxinList!=null&&genxinList.size()>0) {
 				for (Map<String, Object> map2 : genxinList) {
 					jo2.put("count5", (long) map2.get("num"));
@@ -468,33 +465,23 @@ public class DocumentSzInfoController {
 		cb.setUrgeContent(textarea);
 		cb.setInfoId(id);
 		documentCbjlService.save(cb);
-		Response.json("result", "success");
-	}
-	
-	/**
-	 * 首长催办按钮
-	 */
-	@ResponseBody
-	@RequestMapping("/listpress")
-	public void listpress(String id){
-		
-		Map<String, Object> map = new HashMap<>();
+		// 发送消息提醒
+		Map<String, Object> map=new HashMap<>();
 		map.put("infoId", id);
-		List<DocumentCbjl> list=documentCbjlService.queryList(map);
-		for (DocumentCbjl documentCbjl : list) {
-			
+		List<SubDocInfo> subInfos = subDocInfoService.queryAllSubInfo(map);
+		if(subInfos!=null && subInfos.size()>0) {
+			for (SubDocInfo subDocInfo : subInfos) {
+				String userId=subDocInfo.getUndertaker();
+				if(StringUtils.isNotBlank(userId)) {
+					MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_CUIBAN_MSG_TITLE);
+					if (msg != null) {
+						String msgUrl = msg.getMsgRedirect()+"&fileId="+id+"&subId="+subDocInfo.getId();
+						msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId, appId,clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "","true");
+					}
+				}
+			}
 		}
-		
-		/*DocumentInfo info=documentInfoService.queryObject(id);
-		info.setCuibanFlag("1");//首长催办
-		documentInfoService.update(info);
-		//保存催办历史
-		DocumentCbjl cb=new DocumentCbjl();
-		cb.setUrgeContent(textarea);
-		cb.setFinishFlag(0);
-		cb.setInfoId(id);
-		documentCbjlService.save(cb);
-		Response.json("result", "success");*/
+		Response.json("result", "success");
 	}
 	
 	/**

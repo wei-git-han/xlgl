@@ -30,6 +30,9 @@
 		<if test="version != null and version != ''">
 			and RE_VERSION= #{version}
 		</if>
+		<if test="cbrFlag != null and cbrFlag != ''">
+			and CBR_FLAG= #{cbrFlag}
+		</if>
 			order by CREATED_TIME
 		<choose>
 			<when test="sort == 'asc'">ASC</when>
@@ -94,7 +97,8 @@
 			"SUB_DEPT_ID", 
 			"SUB_DEPT_NAME",
 			"TEAM_ID",
-			"RE_VERSION"
+			"RE_VERSION",
+			"CBR_FLAG"
 		)
 		values
 		(
@@ -109,7 +113,8 @@
 			#{subDeptId}, 
 			#{subDeptName},
 			#{teamId}, 
-			#{reVersion}
+			#{reVersion},
+			#{cbrFlag}
 		)
 	</insert>
 	<update id="updateShowFlag">
@@ -128,7 +133,8 @@
 			<if test="subDeptId != null">"SUB_DEPT_ID" = #{subDeptId}, </if>
 			<if test="subDeptName != null">"SUB_DEPT_NAME" = #{subDeptName}, </if>
 			<if test="teamId != null">"TEAM_ID" = #{teamId}, </if>
-			<if test="reVersion != null">"RE_VERSION" = #{reVersion} </if>
+			<if test="reVersion != null">"RE_VERSION" = #{reVersion} ,</if>
+			<if test="cbrFlag != null">"CBR_FLAG" = #{cbrFlag} </if>
 		</set>
 		where ID = #{id}
 	</update>

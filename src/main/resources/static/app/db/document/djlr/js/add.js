@@ -12,8 +12,6 @@ var UserTreeUrl = {"url":"/app/base/user/treeByPost","dataType":"text"}; //登�
 var deleteSzcqUrl = {"url":"/app/db/documentszps/delete","dataType":"text"};//删除首长批示
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var scanFilePath = "";//扫描件路径
-//带入批示首长信息
-var psszName = "";
 var pageModule = function(){
 	 /*带入录入人*/
 	var makeLoginUser = function(){
@@ -75,7 +73,7 @@ var pageModule = function(){
 					$("#cqcontent").val($(this).parent().parent().attr("dataName"));
 					$("#editcqId").val($(this).parent().parent().attr("dataId"));
 					
-					psszName = $(this).parent().parent().attr("dataUser");
+					$("#psszName").val($(this).parent().parent().attr("dataUser"));
 					$("#cqDate").val($(this).parent().parent().attr("dataDate"));
 				});
 				
@@ -116,6 +114,8 @@ var pageModule = function(){
 					$("#embedwrap").hide();
 				}
 				$("#file_all>li>a").click(function(){
+					$(this).addClass("liactive");
+					$(this).parent().siblings().find("a").removeClass("liactive");
 					$("#embedwrap").show();
 					var scanId = $(this).attr("data");
 					$ajax({
@@ -264,7 +264,7 @@ var pageModule = function(){
 		
 		
 		//选择首长
-		$("#choosesz").click(function(){
+		$("#psszName").click(function(){
 			newbootbox.newdialog({
 				id:"chooseszDialog",
 				width:800,
@@ -278,6 +278,7 @@ var pageModule = function(){
 		
 		//增加批示
 		$("#addcq").click(function(){
+			var psszName = $("#psszName").val();
 			if($("#id").val() == "" || $("#id").val() == null || typeof($("#id").val()) == undefined){
 				newbootbox.alertInfo("请先保存要素信息再增加批示！"); 
 				return  false;
@@ -286,6 +287,10 @@ var pageModule = function(){
 			var createdTime=$("#cqDate").val();
 			if($.trim(leaderComment) == "" || $.trim(leaderComment) == null){
 				newbootbox.alert('请输入抄清内容！');
+				return;
+			}
+			if($.trim(psszName) == "" || $.trim(psszName) == null){
+				newbootbox.alert('请选择首长！');
 				return;
 			}
 			$ajax({
@@ -302,7 +307,7 @@ var pageModule = function(){
 			//清空之前选中和复制的参数
 			$("#cqDate").val("");
 			$("#cqcontent").val("");
-			psszName="";
+			$("#psszName").val("");
 		});
 		
 		//转办
@@ -402,27 +407,6 @@ var pageModule = function(){
 				    			$("#embedwrap").show();
 				    			psLoad('', data.smjFilePath);
 				    			initfilefn();
-				    			
-				    			/*if(type=="1"){ //板式
-				    				if($("#FireFoxOFDDIV").is(":hidden")){
-				    					$("#FireFoxOFDDIV").show();
-				    				};
-				    				psLoad('', data.smjFilePath);
-				    			}else{  //流式
-				    				if($("#cssOffice").is(":hidden")){
-				    					$("#cssOffice").show();
-				    				};
-				    				if(!$("#cssOffice").is(":hidden")){
-			    						cssOffice = new CssOffice();
-			    						if(cssOffice!=null){
-			    							cssOffice.init("cssOffice", "100%", "100%");
-			    						}
-			    					};
-			    					openOFDFile(fileUrl, "suwell",$("#suwell").width(),$("#suwell").height(), "showTablet");
-				    			};*/
-				    			
-				    			
-			        			
 		    				});
 						}else{
 							newbootbox.alert("上传失败！"); 
@@ -460,9 +444,10 @@ var pageModule = function(){
 		//扫描件表单提交
 		$("#smjForm").validate({
 			submitHandler : function() {
+				$("#infoId").val($("#id").val());
 				var ajax_option = {
 					type: "post",
-					url : "/app/dzbms/fileinfo/saveSmjPsFile",
+					url : "/app/db/documentinfo/saveSmjPsFile",
 					success : function(data) {
 						if (data.result == "success") {
 							newbootbox.alert("保存成功！").done(function(){
@@ -489,7 +474,7 @@ var pageModule = function(){
 			initPdf();
 		},
 		getUserData:function(message1){
-			psszName=message1;
+			$("#psszName").val(message1);
 		}
 	}
 	

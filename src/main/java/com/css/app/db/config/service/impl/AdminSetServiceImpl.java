@@ -51,5 +51,15 @@ public class AdminSetServiceImpl implements AdminSetService {
 	public int deleteByUserId(String userId) {
 		return adminSetDao.deleteByUserId(userId);
 	}
+
+	@Override
+	public List<AdminSet> queryJuAdminList(String userId) {
+		return adminSetDao.queryJuAdminList(userId);
+	}
+
+	@Override
+	public List<String> queryUserIdByOrgId(String orgId) {
+		return adminSetDao.queryUserIdByOrgId(orgId);
+	}
 	
 }

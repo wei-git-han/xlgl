@@ -1,5 +1,6 @@
 var deptTreeUrl = {"url":"/app/base/dept/tree_onlyroot","dataType":"text"}; //部门树
 var sureUrl = {"url":"/app/db/documentzbjl/save","dataType":"text"}; //保存
+var fromMsg=getUrlParam("fromMsg")||false; //是否为消息进入
 var infoIds=getUrlParam("fileIds")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var pageModule = function(){
@@ -49,12 +50,17 @@ var pageModule = function(){
 					newbootbox.newdialogClose("zhuanbanDialog");
 					if(data.result=="success"){
 						newbootbox.alert("转办成功！").done(function(){
-							if(fileFrom == "djlr"){//文件来源于登记录入
-								$("#iframe1",window.top.document).attr("src","/app/db/document/djlr/html/djlr.html?fileFrom=djlr");
-							}else if(fileFrom=="blfk"){  //文件来源于办理反馈
-								$("#iframe1",window.top.document).attr("src","/app/db/document/blfk/html/blfk.html?fileFrom=blfk");
-							}else{ 
-								$("#iframe1",window.top.document).attr("src","/app/db/document/djlr/html/djlr.html?fileFrom=djlr");
+							if(fromMsg && fromMsg == true){
+								windowClose();
+							}else{
+								if(fileFrom == "djlr"){//文件来源于登记录入
+									$("#iframe1",window.top.document).attr("src","/app/db/document/djlr/html/djlr.html?fileFrom=djlr");
+								}else if(fileFrom=="blfk"){  //文件来源于办理反馈
+									$("#iframe1",window.top.document).attr("src","/app/db/document/blfk/html/blfk.html?fileFrom=blfk");
+									window.top.blfkfn();
+								}else{ 
+									$("#iframe1",window.top.document).attr("src","/app/db/document/djlr/html/djlr.html?fileFrom=djlr");
+								}
 							}
 						});
 					}else{

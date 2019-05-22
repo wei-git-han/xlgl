@@ -36,4 +36,10 @@ public class MSGTipDefined {
 	public static String GWCL_GWZBJYBJ_MSG_TITLE = "gwzb_jianyibanjie";
 	public static String DZBMS_JYBJ_MSG_TITLE = "dzbms_bjgl_jianyibanjie";
 	public static String GWCL_YZ_MSG_TITLE = "gwcl_csyz";
+	//督查催办APP的
+	public static String DCCB_BU_ZHUANBAN_MSG_TITLE = "dccb_buzhuanban";//部转办
+	public static String DCCB_JU_ZHUANBAN_MSG_TITLE = "dccb_juzhuanban";//局转办
+	public static String DCCB_SONGSHEN_MSG_TITLE = "dccb_songshen";//送审
+	public static String DCCB_TUIHUI_MSG_TITLE = "dccb_tuihui";//返回修改
+	public static String DCCB_CUIBAN_MSG_TITLE = "dccb_cuiban";//催办
 }

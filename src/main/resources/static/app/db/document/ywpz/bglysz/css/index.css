@@ -42,9 +42,3 @@ td span{
 .table-advance thead tr th {
     background-color: transparent;
 }
-.btns{
-	margin:0px 3px;
-	cursor:pointer;
-	background:#5498EB;
-	padding:4px 5px;color:#fff;
-}

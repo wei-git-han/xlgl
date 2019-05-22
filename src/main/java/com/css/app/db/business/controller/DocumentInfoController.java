@@ -659,7 +659,7 @@ public class DocumentInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getDicByTypet")
-	public void getDicByTypet(String orgid,String month){
+	public void getDicByTypet(String orgid,String month,boolean menuFlag){
 		String dateStr = null;
 		if(!StringUtils.isEmpty(month) && StringUtil.equals("all", month)) {
 			dateStr = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE).substring(0,4);
@@ -712,6 +712,63 @@ public class DocumentInfoController {
 			}
 		}
 		List<DocumentDic> dicByType = documentInfoService.queryDicByType(map);
-		Response.json(DbDefined.DOCUMENT_TYPE,dicByType );
+		int blfkNum=0;
+		if(menuFlag) {
+			for (DocumentDic dic : dicByType) {
+				blfkNum +=dic.getHasUpdateNum();
+			}
+			Response.json("blfkNum",blfkNum);
+			return;
+		}
+		Response.json(DbDefined.DOCUMENT_TYPE, dicByType);
+	}
+	
+	/**
+	 * 将扫描筛选后的图片，保存成PDF文件
+	 * @param smwj 文件
+	 * @param infoId 公文ID
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping("/saveSmjPsFile")
+	public void saveSmjToFile(@RequestParam(value = "smwj", required = false) String smwj,@RequestParam(value = "infoId", required = true) String infoId)
+			throws Exception {
+		DocumentInfo fileInfo = documentInfoService.queryObject(infoId);
+		if(fileInfo != null) {
+			//将扫描件上传到电子数据中心
+			String fileId = getFilePath(smwj, fileInfo, CurrentUser.getUsername());
+			// 获得批示首页文件的绝对路径
+			String scanFilePath = "";
+			if(StringUtils.isNotBlank(fileId)) {
+				HTTPFile httpFile = new HTTPFile(fileId);
+				scanFilePath = httpFile.getAssginDownloadURL(true);
+			}
+			JSONObject result = new JSONObject();
+			result.put("result", "success");
+			result.put("scanId", StringUtils.isNotBlank(fileId) ? fileId :"");
+			result.put("scanFilePath", scanFilePath);
+			Response.json(result);
+		}
+	}
+	
+	private String getFilePath(String smwj, DocumentInfo model, String loginUserName){
+		String fileId = "";
+		// 将扫描件上传到电子数据中心
+		if (StringUtils.isNotBlank(smwj)) {
+			fileId = OfdTransferUtil.createdOFDFile(smwj, model.getId());
+			if (StringUtils.isNotBlank(fileId)) {
+				//保存文件相关数据
+				DocumentFile file=new DocumentFile();
+				file.setId(UUIDUtils.random());
+				file.setDocInfoId(model.getId());
+				file.setSort(documentFileService.queryMinSort(model.getId()));
+				HTTPFile httpFile = new HTTPFile(fileId);
+				file.setFileName(httpFile.getFileName());
+				file.setCreatedTime(new Date());
+				file.setFileServerFormatId(fileId);
+				documentFileService.save(file);
+			}
+		}
+		return fileId;
 	}
 }

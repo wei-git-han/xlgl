@@ -20,7 +20,7 @@ var pageModule = function(){
 				var bj = data.bj;
 				var ctls = data.ctls;
 				var wcl = data.wcl;
-				wcl=wcl.toFixed(1,10)+"%";
+				wcl=wcl.toFixed(2,10)+"%";
 				$("#year").html(year);
 				
 				$("#total").attr("title",total);
@@ -389,7 +389,7 @@ var pageModule = function(){
 							];
 				var array2 = []
 				$.each(wcldata,function(i,val){
-					var obj = {value:val.toFixed(1,10),itemStyle:array1[i].itemStyle}
+					var obj = {value:val.toFixed(2,10),itemStyle:array1[i].itemStyle}
 					array2.push(obj)
 				})
 				wcldata = array2;

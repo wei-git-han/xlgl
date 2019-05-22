@@ -4,8 +4,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -16,6 +18,10 @@ import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.addbase.apporgmapped.service.BaseAppOrgMappedService;
+import com.css.addbase.msg.MSGTipDefined;
+import com.css.addbase.msg.MsgTipUtil;
+import com.css.addbase.msg.entity.MsgTip;
+import com.css.addbase.msg.service.MsgTipService;
 import com.css.app.db.business.entity.DocumentInfo;
 import com.css.app.db.business.entity.DocumentZbjl;
 import com.css.app.db.business.entity.SubDocInfo;
@@ -24,6 +30,7 @@ import com.css.app.db.business.service.DocumentInfoService;
 import com.css.app.db.business.service.DocumentZbjlService;
 import com.css.app.db.business.service.SubDocInfoService;
 import com.css.app.db.business.service.SubDocTrackingService;
+import com.css.app.db.config.service.AdminSetService;
 import com.css.app.db.util.DbDocStatusDefined;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.Response;
@@ -55,7 +62,16 @@ public class DocumentZbjlController {
 	private SubDocTrackingService subDocTrackingService;
 	@Autowired
 	private BaseAppOrgMappedService baseAppOrgMappedService;
-	
+	@Autowired
+	private AdminSetService adminSetService;
+	@Autowired
+	private MsgTipService msgService;
+	@Autowired
+	private MsgTipUtil msgUtil;
+	@Value("${csse.dccb.appId}")
+	private  String appId;	
+	@Value("${csse.dccb.appSecret}")
+	private  String clientSecret;
 	
 	/**
 	 * 转办记录
@@ -126,6 +142,20 @@ public class DocumentZbjlController {
 					subInfo.setDocStatus(DbDocStatusDefined.DAI_ZHUAN_BAN);
 					subInfo.setCreatedTime(date);
 					subDocInfoService.save(subInfo);
+					//获取局管理员id
+					String juAdminIds="";
+					List<String> userIds = adminSetService.queryUserIdByOrgId(deptId);
+					if(userIds !=null && userIds.size()>0) {
+						juAdminIds=userIds.stream().collect(Collectors.joining(","));
+					}
+					// 发送消息提醒
+					MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_BU_ZHUANBAN_MSG_TITLE);
+					if (msg != null) {
+						String msgUrl = msg.getMsgRedirect()+"&fileId="+infoId+"&subId="+subInfo.getId();
+						if(StringUtils.isNotBlank(juAdminIds)){
+							msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, juAdminIds, appId,clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "","true");
+						}				
+					}
 				}
 			}
 			json.put("result", "success");
@@ -181,6 +211,14 @@ public class DocumentZbjlController {
 			if(subInfo != null) {
 				subInfo.setDocStatus(DbDocStatusDefined.DAI_LUO_SHI);
 				subDocInfoService.update(subInfo);
+			}
+			// 发送消息提醒
+			MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_JU_ZHUANBAN_MSG_TITLE);
+			if (msg != null) {
+				String msgUrl = msg.getMsgRedirect()+"&fileId="+infoId+"&subId="+subId;
+				if(StringUtils.isNotBlank(userId)){
+					msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId, appId,clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "","true");
+				}				
 			}
 			json.put("result", "success");
 		}else {

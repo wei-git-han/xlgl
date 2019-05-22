@@ -143,7 +143,7 @@ public class MsgTipUtil {
 			System.out.println("==================将桌面消息放入任务队列结束==========================");
 		String[] ids = StringUtils.split(userIds,",");
 		String phone="";
-		for(String id : ids){
+	/*	for(String id : ids){
 			//判断短信开关表中是否有该人信息    判断开关是否打开 判断短信内容是否为空
 			if(getSet(id).equals("1") && smsg!=""){
 				System.out.println("==================个人短信开关已打开==========================");
@@ -156,7 +156,7 @@ public class MsgTipUtil {
 			}else {
 				System.out.println("====================个人短信开关已关闭=========================");
 			}
-		}
+		}*/
 		return "success";
 	}
 	/**

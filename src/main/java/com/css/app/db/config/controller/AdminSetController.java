@@ -58,25 +58,55 @@ public class AdminSetController {
 		Response.json(pageUtil);
 	}
 	
+	/**
+	 * 局管理员列表
+	 */
+	@ResponseBody
+	@RequestMapping("/juList")
+	public void juList(Integer page, Integer pagesize ,String adminType){
+		List<AdminSet> adminSetList=null;
+		String adminFlag = getAdminTypeByUserId(CurrentUser.getUserId());
+		PageHelper.startPage(page, pagesize);
+		if(StringUtils.equals("2", adminFlag)) {
+			adminSetList=adminSetService.queryJuAdminList(CurrentUser.getUserId());
+		}else {
+			Map<String, Object > map = new HashMap<>();
+			map.put("adminType", adminType);
+			adminSetList = adminSetService.queryList(map);
+			for (AdminSet adminSet : adminSetList) {
+				adminSet.setEditFlag("1");
+			}
+		}
+		GwPageUtils pageUtil = new GwPageUtils(adminSetList);
+		Response.json(pageUtil);
+	}
+	
+	/**
+	 * 管理员类型
+	 */
 	@ResponseBody
 	@RequestMapping("/getAuthor")
 	public void getAuthor(){
-		boolean adminFlag = false;//管理员类型（1：部管理员；2：局管理员）
+		String adminFlag = getAdminTypeByUserId(CurrentUser.getUserId());
+		Response.json(adminFlag);
+	}
+	
+	private String getAdminTypeByUserId(String userId) {
+		String adminFlag = "";//管理员类型（0:超级管理员 ;1：部管理员；2：局管理员）
 		boolean admin = CurrentUser.getIsManager(appId, clientSecret);
 		if(admin) {
-			adminFlag=true;
+			adminFlag="0";
+		}else {
+			//当前登录人的管理员类型
+			Map<String, Object> adminMap = new HashMap<>();
+			adminMap.put("userId",userId);
+			List<AdminSet> adminList = adminSetService.queryList(adminMap);
+			if(adminList != null && adminList.size()>0) {
+				String adminType = adminList.get(0).getAdminType();
+				adminFlag=adminType;
+			}
 		}
-		//当前登录人的管理员类型
-		Map<String, Object> adminMap = new HashMap<>();
-		adminMap.put("userId", CurrentUser.getUserId());
-		List<AdminSet> adminList = adminSetService.queryList(adminMap);
-		if(adminList != null && adminList.size()>0) {
-			String adminType = adminList.get(0).getAdminType();
-			if(StringUtils.equals("1", adminType)) {
-				adminFlag=true;
-			}			
-		}
-		Response.json(adminFlag);
+		return adminFlag;
 	}
 	
 	/**
@@ -95,28 +125,41 @@ public class AdminSetController {
 	@ResponseBody
 	@RequestMapping("/saveOrUpdate")
 	public void save(AdminSet adminSet){
-		String orgId="";
+		String deptId="";
+		String deptName="";
 		String orgName="";
+		String orgId="";
 		String userId = adminSet.getUserId();
 		if(StringUtils.isNotBlank(userId)) {
-			List<BaseAppUser> users = baseAppUserService.findByUserId(userId);
-			if(users != null) {
-				orgId = users.get(0).getOrganid();
+			orgId = baseAppUserService.getBareauByUserId(userId);
+			if(StringUtils.isNotBlank(orgId)) {
 				BaseAppOrgan organ = baseAppOrganService.queryObject(orgId);
 				if(organ != null) {
 					orgName=organ.getName();
 				}
 			}
+			List<BaseAppUser> users = baseAppUserService.findByUserId(userId);
+			if(users != null) {
+				deptId = users.get(0).getOrganid();
+				BaseAppOrgan dept = baseAppOrganService.queryObject(deptId);
+				if(dept != null) {
+					deptName=dept.getName();
+				}
+			}
 		}
 		if(StringUtils.isNotBlank(adminSet.getId())) {
-			adminSet.setDeptId(orgId);
-			adminSet.setDeptName(orgName);
+			adminSet.setDeptId(deptId);
+			adminSet.setDeptName(deptName);
+			adminSet.setOrgId(orgId);
+			adminSet.setOrgName(orgName);
 			adminSetService.update(adminSet);
 		}else {
 			adminSetService.deleteByUserId(userId);
 			adminSet.setId(UUIDUtils.random());
-			adminSet.setDeptId(orgId);
-			adminSet.setDeptName(orgName);
+			adminSet.setDeptId(deptId);
+			adminSet.setDeptName(deptName);
+			adminSet.setOrgId(orgId);
+			adminSet.setOrgName(orgName);
 			adminSetService.save(adminSet);
 		}
 		Response.json("result", "success");
