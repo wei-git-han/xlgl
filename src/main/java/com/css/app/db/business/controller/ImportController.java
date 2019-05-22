@@ -46,8 +46,6 @@ public class ImportController{
     ImportExcleService importExcleService;    
     @Autowired
     BaseAppUserService baseAppUserService;    
-	@Value("${filePath}")
-	private String filePath;
 
 	/**
 	 * 导入
