@@ -389,7 +389,7 @@ var pageModule = function(){
 			      "padding": "1px"
 			    },
 			    width: 800,
-			    height: 600,
+			    height: 200,
 			    url: rootPath + "/document/blfk/html/filepage.html"
 			  });
 		});
