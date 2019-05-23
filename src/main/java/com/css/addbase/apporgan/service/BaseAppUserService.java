@@ -92,4 +92,11 @@ public interface BaseAppUserService {
 	 * @return
 	 */
 	List<BaseAppUser> queryUserByName(String name);
+	/**
+	 * @description:获取同一unitId下名字为name的人员
+	 * @author:zhangyw
+	 * @date:2019年5月23日
+	 * @Version v1.0
+	 */
+	List<BaseAppUser> selectUserByNameAndUnitId(String name,String unitId);
 }

@@ -428,6 +428,7 @@ public class DocumentInfoController {
 		} else {
 			uuid=UUIDUtils.random();
 			documentInfo.setId(uuid);
+			documentInfo.setStatus(0);
 			documentInfoService.save(documentInfo);
 			jo.put("id",uuid);
 		}
@@ -503,7 +504,7 @@ public class DocumentInfoController {
 			documentBjjlService.save(newBjjl);				
 			//取最后一条流转记录
 			SubDocTracking tracking = subDocTrackingService.queryLatestRecord(subId);
-			//trackingType（1：转办；2：审批流转；3：退回）
+			//trackingType（1：转办；2：审批流转；3：退回;4:新一轮反馈的开始，即承办人的办理）
 			String trackingType = tracking.getTrackingType();
 			//如果最后一条流转为审批，接收人为承办人则文件为办理中，否则文件为待审批
 			if(StringUtils.equals("2",trackingType)) {

@@ -85,6 +85,13 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 
 	List<BaseAppUser> queryUserByName(String name);
 	
+	/**
+	 * @description:获取同一单位下名字为XX的人员
+	 * @author:zhangyw
+	 * @date:2019年5月23日
+	 * @Version v1.0
+	 */
+	List<BaseAppUser> selectUserByNameAndUnitId(String name,String unitId);
 
 	
 }

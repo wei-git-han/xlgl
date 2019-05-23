@@ -17,6 +17,10 @@
 		</if>
 		order by sort
 	</select>
+	<select id="selectUserByNameAndUnitId" resultType="com.css.addbase.apporgan.entity.BaseAppUser">
+		select * from BASE_APP_USER where truename=#{0} and organid in (
+		select ID from BASE_APP_ORGAN start with  id=#{1} connect by prior id=parent_Id)
+	</select>
 	<select id="queryListBySet" resultType="com.css.addbase.apporgan.entity.BaseAppUser">
 		select u.* from BASE_APP_USER u inner join DOCUMENT_BANJIAN_TREE_SET s
 		on u.user_id=s.user_id where 1=1 

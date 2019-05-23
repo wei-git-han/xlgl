@@ -60,7 +60,6 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 	@Override
 	public void save(DocumentInfo documentInfo){
 		documentInfo.setCuibanFlag("0");
-		documentInfo.setStatus(0);
 		documentInfo.setCreatedTime(new Date());
 		documentInfoDao.save(documentInfo);
 	}

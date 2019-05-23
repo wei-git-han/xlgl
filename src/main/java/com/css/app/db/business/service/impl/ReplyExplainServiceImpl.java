@@ -31,7 +31,6 @@ public class ReplyExplainServiceImpl implements ReplyExplainService {
 	
 	@Override
 	public void save(ReplyExplain replyExplain){
-		replyExplain.setShowFlag("0");
 		replyExplainDao.save(replyExplain);
 	}
 	

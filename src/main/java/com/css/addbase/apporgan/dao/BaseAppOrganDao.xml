@@ -9,7 +9,11 @@
 	</select>
 
 	<select id="queryList" resultType="com.css.addbase.apporgan.entity.BaseAppOrgan">
-		select * from BASE_APP_ORGAN  order by SORT asc
+		select * from BASE_APP_ORGAN where 1=1
+		<if test="name != null and name != ''">
+			and NAME=#{name}
+		</if>
+		order by SORT asc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
