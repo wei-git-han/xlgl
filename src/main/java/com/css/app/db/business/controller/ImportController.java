@@ -149,7 +149,7 @@ public class ImportController{
 					}
 					if(StringUtils.isNotBlank(cbdw)) {
 						if(StringUtils.isNotBlank(cbrName)) {
-							//承办人名称和承办人id(要查某个局下的名字为cbrName的人)
+							//承办人名称和承办人id(要查某个局下的人)
 							List<BaseAppUser> users = baseAppUserService.selectUserByNameAndUnitId(cbrName, subDeptId);
 							String userId = "";
 							if (users != null && users.size() > 0) {
