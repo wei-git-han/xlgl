@@ -13,7 +13,9 @@ var latestCuiBanUrl = {"url":"/app/db/documentinfo/getLatestCuiBan","dataType":"
 var getButtonParamUrl = {"url":"/app/db/documentinfo/buttonParam","dataType":"json"}; //获取按钮显示控制参数
 var cancleOperationUrl = {"url":"/app/db/documentinfo/cancleOperation","dataType":"json"}; //取消办结操作
 var batchReadUrl = {"url":"/app/db/documentinfo/batchRead","dataType":"text"};//标识已读
-var cuibanurl = {"url":"/app/db/documentszinfo/press","dataType":"text"};
+var cuibanurl = {"url":"/app/db/documentszinfo/press","dataType":"text"};//催办操作
+var luoShiUrl = {"url":"/app/db/documentinfo/luoShiOperation","dataType":"text"}; //部管理员强制常态落实操作
+var banjieUrl = {"url":"/app/db/documentinfo/banJieOperation","dataType":"text"}; //部管理员强制办结操作
 var fileId=getUrlParam("fileId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var fromMsg=getUrlParam("fromMsg")||false; //是否为消息进入
@@ -48,15 +50,22 @@ var pageModule = function(){
 			data:{id:fileId},
 			success:function(data){
 				$(".ifShow").hide();
-				if(data.cuiBanBtn && ("blfk"==fileFrom)){
-					$(".newbottom").show();
-					$("#cuiban").show();
+				if("blfk"==fileFrom){
+					if(data.cuiBanBtn){
+						$(".newbottom").show();
+						$("#cuiban").show();
+					}
+					if(data.quXiaoBtn){
+						$(".newbottom").show();
+						$("#quxiaobanjie").show();
+					}
+					if(data.banjieBtn){
+						$(".newbottom").show();
+						$("#bjandls").show(); //办结和常态落实合并为一个
+					}
 				}
-				if(data.quXiaoBtn && "blfk"==fileFrom){
-					$(".newbottom").show();
-					$("#quxiaobanjie").show();
-				}
-				if(data.zhuanBanBtn && ("blfk"==fileFrom)){
+				
+				if(data.zhuanBanBtn && ("blfk"==fileFrom||"djlr"==fileFrom)){
 					$(".newbottom").show();
 					$("#zhuanban").show();
 				}
@@ -576,6 +585,53 @@ var pageModule = function(){
 		
 		$("#closeviewcont").click(function(){
 			$("#viewcont").modal("hide");
+		});
+		
+		
+		//办结
+		$("#banjie").click(function(){
+			newbootbox.oconfirm({
+			 	title:"提示",
+			 	message: "是否确认要进行文件办结操作？",
+			 	callback1:function(){
+	 				$ajax({
+	 					url:banjieUrl,
+	 					data:{infoId:fileId,subId:subId},
+	 					type: "GET",
+	 					success:function(data){
+	 						if(data.result == "success"){
+	 							if(!fromMsg){
+									window.top.grdbfn();
+								}
+	 							window.location.reload();
+	 						}
+	 					}
+	 				});
+			 	}
+			});
+		});
+		
+		//常态落实
+		$("#luoshi").click(function(){
+			newbootbox.oconfirm({
+			 	title:"提示",
+			 	message: "是否确认要进行文件常态落实操作？",
+			 	callback1:function(){
+	 				$ajax({
+	 					url:luoShiUrl,
+	 					data:{infoId:fileId,subId:subId},
+	 					type: "GET",
+	 					success:function(data){
+	 						if(data.result == "success"){
+	 							if(!fromMsg){
+									window.top.grdbfn();
+								}
+	 							window.location.reload();
+	 						}
+	 					}
+	 				});
+			 	}
+			});
 		});
 	}
 		
