@@ -1,6 +1,6 @@
 var id = getUrlParam2("id");
-var saveUrl = {"url":"","dataType":"text"};  //保存
-var editInfo = {"url":"","dataType":"text"}; //编辑数据
+var saveUrl = {"url":rootPath +"/dbexpdeedbackset/save","dataType":"text"};  //保存
+var editInfo = {"url":rootPath +"/dbexpdeedbackset/info","dataType":"text"}; //编辑数据
 
 var pageModule = function(){
 	var initdatafn = function(){
@@ -19,12 +19,12 @@ var pageModule = function(){
 			newbootbox.newdialogClose("addDialog");
 		});
 		$("#save").click(function(){
-			var flName = $("#flName").val();
+			var flName = $("#expName").val();
 			var flId = $("#flId").val();
-			var flcontent = $("#flcontent").val();
+			var flcontent = $("#expContent").val();
 			$ajax({
 				url:saveUrl,
-				data:{id:id,flName:flName,flId:flId,flcontent:flcontent},
+				data:{id:id,expName:flName,expId:flId,expContent:flcontent},
 				type: "GET",
 				success:function(data){
 					newbootbox.newdialogClose("addDialog");

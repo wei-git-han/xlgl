@@ -1,15 +1,15 @@
 var grid = null;
-var tableUrl = {"url":"","dataType":"text"}; //表格list
-var delUrl = {"url":"","dataType":"text"}; //删除---待完善
+var tableUrl = {"url":rootPath +"/dbexpdeedbackset/list","dataType":"text"}; //表格list
+var delUrl = {"url":rootPath +"/dbexpdeedbackset/delete","dataType":"text"}; //删除---待完善
 var pageModule = function() {
 	var initgrid = function() {
 		grid = $("#gridcont").createGrid({
 			columns: [
 				  {display: "范例名称",name:"orgName",width: "15%",align: "left",render: function(rowdata,n){
-					  return rowdata.name;   
+					  return rowdata.expName;   
 				  }},
 				  {display: "范例内容",name:"deptName",width: "75%",align: "left",render: function(rowdata,n){
-					  return rowdata.content;   
+					  return rowdata.expContent;   
 				  }}, 
 				  {display: "操作",name: "do",width: "10%",align: "center",render: function(rowdata,n){
 					  var btns="";
