@@ -208,6 +208,7 @@ public class ImportExcleServiceImpl implements ImportExcleService {
 			String val = String.valueOf(getValue(cell));
 			resultLis.add(val);
 		}
+		dataLis.add(0, "");
 		dataLis.add(1, resultLis.get(0));// 文件标题
 		// ---------------------批示指示内容
 		String comments = resultLis.get(1);
@@ -297,7 +298,7 @@ public class ImportExcleServiceImpl implements ImportExcleService {
 	 */
 	private void packDatasForZYJC(String docTypeId, List<List<Object>> totalLis, Sheet sheet) {
 		for (Row row : sheet) {
-			List<Object> dataLis = new ArrayList<Object>();// 用于存储插入数据库
+			List<Object> dataLis = new ArrayList<Object>(10);// 用于存储插入数据库
 			List<String> resultLis = new ArrayList<String>();// 用户存储读取excle数据
 			int rowNum = row.getRowNum();
 			if (rowNum == 0 || rowNum == 1) {
@@ -312,13 +313,9 @@ public class ImportExcleServiceImpl implements ImportExcleService {
 				String val = String.valueOf(getValue(cell));
 				resultLis.add(val);
 			}
-			dataLis.add(7, resultLis.get(0));// 印发时间
-			dataLis.add(8, resultLis.get(1));// 文件号
+			dataLis.add(0, "");// 印发时间
 			dataLis.add(1, resultLis.get(2));// 文件标题
-			// ---------------------工作分工内容
-			String comments = resultLis.get(3);
-			String[] tcolSplits = comments.split("\\#");
-			dataLis.add(9, tcolSplits);// 工作分工内容
+			dataLis.add(2, "");// 文件标题
 			// -------------------督办落实情况
 			String conditions = resultLis.get(4);
 			String[] conditionArray = conditions.split("\\#");
@@ -369,27 +366,34 @@ public class ImportExcleServiceImpl implements ImportExcleService {
 			}
 			dataLis.add(5, undertakeLis);// 督办落实情况
 			dataLis.add(6, docTypeId);// docTypeId
+			dataLis.add(7, resultLis.get(0));// 印发时间
+			dataLis.add(8, resultLis.get(1));// 文件号
+			// ---------------------工作分工内容
+			String comments = resultLis.get(3);
+			dataLis.add(9, comments);// 工作分工内容
 			totalLis.add(dataLis);
 		}
 	}
 	
 	private Object getValue(Cell cell) {
 		Object obj = null;
-		switch (cell.getCellTypeEnum()) {
-		case BOOLEAN:
-			obj = cell.getBooleanCellValue();
-			break;
-		case ERROR:
-			obj = cell.getErrorCellValue();
-			break;
-		case NUMERIC:
-			obj = cell.getNumericCellValue();
-			break;
-		case STRING:
-			obj = cell.getStringCellValue();
-			break;
-		default:
-			break;
+		if(cell != null) {
+			switch (cell.getCellTypeEnum()) {
+			case BOOLEAN:
+				obj = cell.getBooleanCellValue();
+				break;
+			case ERROR:
+				obj = cell.getErrorCellValue();
+				break;
+			case NUMERIC:
+				obj = cell.getNumericCellValue();
+				break;
+			case STRING:
+				obj = cell.getStringCellValue();
+				break;
+			default:
+				break;
+			}
 		}
 		return obj;
 	}

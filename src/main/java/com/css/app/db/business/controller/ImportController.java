@@ -95,7 +95,9 @@ public class ImportController{
 				if(StringUtils.equals("3", docTypeId)||StringUtils.equals("5", docTypeId)||StringUtils.equals("6", docTypeId)) {
 					docInfo.setPrintDate(String.valueOf(excleDate.get(7)));
 					docInfo.setDocCode(String.valueOf(excleDate.get(8)));
-					docInfo.setJobContent(String.valueOf(excleDate.get(9)));
+					Object object = excleDate.get(9);
+					String valueOf = String.valueOf(object);
+					docInfo.setJobContent(valueOf);
 				}
 				docInfo.setDocTypeId(docTypeId);
 				Map<String, Object> dicMap= new HashMap<>();
@@ -107,17 +109,19 @@ public class ImportController{
 				}
 				docInfo.setFinishTime(new Date());
 				// 为主文件创建批示指示内容
-				List<Map<String, String>> pszsnrList = (List<Map<String, String>>) excleDate.get(2);// 批示指示内容
-				for (Map<String, String> pszsnrMap : pszsnrList) {
-					DocumentSzps docSzps = new DocumentSzps();
-					String pszssj = pszsnrMap.get("pszssj");
-					String pizsnr = pszsnrMap.get("pizsnr");
-					docSzps.setId(UUIDUtils.random());
-					docSzps.setInfoId(infoId);
-					docSzps.setUserName(pszsnrMap.get("szxm"));
-					docSzps.setCreatedTime(pszssj);
-					docSzps.setLeaderComment(pizsnr);
-					documentSzpsService.save(docSzps);
+				if(StringUtils.equals("1", docTypeId)||StringUtils.equals("2", docTypeId)||StringUtils.equals("4", docTypeId)) {
+					List<Map<String, String>> pszsnrList = (List<Map<String, String>>) excleDate.get(2);// 批示指示内容
+					for (Map<String, String> pszsnrMap : pszsnrList) {
+						DocumentSzps docSzps = new DocumentSzps();
+						String pszssj = pszsnrMap.get("pszssj");
+						String pizsnr = pszsnrMap.get("pizsnr");
+						docSzps.setId(UUIDUtils.random());
+						docSzps.setInfoId(infoId);
+						docSzps.setUserName(pszsnrMap.get("szxm"));
+						docSzps.setCreatedTime(pszssj);
+						docSzps.setLeaderComment(pizsnr);
+						documentSzpsService.save(docSzps);
+					}
 				}
 				//创建分支局主文件记录
 				List<Map<String, String>> undertakeLis = (List<Map<String, String>>) excleDate.get(5);// 承办单位和人员

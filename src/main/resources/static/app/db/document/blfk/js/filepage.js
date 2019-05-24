@@ -34,10 +34,13 @@ var pageModule = function(){
 					type: "post",
 					url:"/app/db/import/importExcle",//默认是form action
 					success:function(data){
-						if(data.msg == "success"){
-							newbootbox.alertInfo('导入成功！');
+						if(data.result == "success"){
+							if(data.msg){
+								newbootbox.alertInfo(data.msg);
+							}else{
+								newbootbox.alertInfo('导入成功！');
+							}
 							newbootbox.newdialogClose("fileDr");
-							$(".newclose",window.top.document).click();
 							$("#iframe1",window.top.document).attr("src","/app/db/document/blfk/html/blfk.html?fileFrom=blfk");
 							
 						}else{

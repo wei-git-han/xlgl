@@ -178,7 +178,7 @@ var pageModule = function(){
         grid2 = $("#gridcont2").createGrid({
             columns:[
             	{display:"印发时间",name:"",width:"6%",align:"center",paixu:false,render:function(rowdata){
-            		if(rowdata.printDate && !!rowdata.printDate){
+            		if(rowdata.printDate && rowdata.printDate!="" && rowdata.printDate!="null" && rowdata.printDate!=null){
             			return rowdata.printDate.substring(0,16);
 	               	}
 	               	return '';
