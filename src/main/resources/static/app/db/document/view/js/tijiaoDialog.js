@@ -6,6 +6,8 @@ var replyContent=getUrlParam2("replyContent")||""; //文件来源
 var cbrFlag=getUrlParam("cbrFlag")||""; //是否是承办人
 var infoId=getUrlParam("infoId")||""; //子分支主id
 var fromMsg=getUrlParam("fromMsg")||false; //是否为消息进入
+var dbStatus=getUrlParam("dbStatus")||""; //承办人选中的状态
+
 var userId;
 var userName;
 

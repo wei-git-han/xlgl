@@ -513,7 +513,7 @@ var pageModule = function(){
 		//送审
 		$("#tijiao").click(function(){
 			var cbrFlag="";
-			if(isCbr && isCbr == 1){
+			if(isCbr && isCbr == 1){ //承办人
 				cbrFlag="1";
 				if($("#replyContent").val() !="" && !!$("#replyContent").val()){
 					isSave=1;
@@ -524,17 +524,27 @@ var pageModule = function(){
 						return;
 					}
 				}
+				
+				newbootbox.newdialog({
+					id:"statusDialog",
+					width:800,
+					height:600,
+					header:true,
+					title:"选择办件状态",
+					classed:"cjDialog",
+					url:"/app/db/document/view/html/statusDialog.html?subId="+subId+"&infoId="+fileId+"&replyContent="+$("#replyContent").val()+"&cbrFlag="+cbrFlag+"&fromMsg="+fromMsg
+				});
+			}else{
+				newbootbox.newdialog({
+					id:"tijiaoDialog",
+					width:800,
+					height:600,
+					header:true,
+					title:"提交",
+					classed:"cjDialog",
+					url:"/app/db/document/view/html/tijiaoDialog.html?subId="+subId+"&infoId="+fileId+"&replyContent="+$("#replyContent").val()+"&cbrFlag="+cbrFlag+"&fromMsg="+fromMsg
+				})
 			}
-			
-			newbootbox.newdialog({
-				id:"tijiaoDialog",
-				width:800,
-				height:600,
-				header:true,
-				title:"提交",
-				classed:"cjDialog",
-				url:"/app/db/document/view/html/tijiaoDialog.html?subId="+subId+"&infoId="+fileId+"&replyContent="+$("#replyContent").val()+"&cbrFlag="+cbrFlag+"&fromMsg="+fromMsg
-			})
 		});
 		
 		//承办
