@@ -15,11 +15,13 @@ import org.springframework.stereotype.Controller;
 
 import com.css.base.entity.SSOUser;
 import com.css.base.utils.CurrentUser;
+import com.css.base.utils.GwPageUtils;
 import com.css.base.utils.PageUtils;
 import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 import com.css.base.utils.Response;
 import com.css.base.utils.StringUtils;
+import com.alibaba.fastjson.JSONObject;
 import com.css.app.db.config.entity.DbExpDeedbackSet;
 import com.css.app.db.config.service.DbExpDeedbackSetService;
 
@@ -32,7 +34,7 @@ import com.css.app.db.config.service.DbExpDeedbackSetService;
  * @date 2019-05-24 15:06:41
  */
 @Controller
-@RequestMapping("/dbexpdeedbackset")
+@RequestMapping("/app/db/dbexpdeedbackset")
 public class DbExpDeedbackSetController {
 	@Autowired
 	private DbExpDeedbackSetService dbExpDeedbackSetService;
@@ -42,16 +44,14 @@ public class DbExpDeedbackSetController {
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	@RequiresPermissions("dbexpdeedbackset:list")
-	public void list(Integer page, Integer limit){
+	public void list(Integer page, Integer pagesize){
 		Map<String, Object> map = new HashMap<>();
-		PageHelper.startPage(page, limit);
-		
+		PageHelper.startPage(page, pagesize);
 		//查询列表数据
 		List<DbExpDeedbackSet> dbExpDeedbackSetList = dbExpDeedbackSetService.queryList(map);
 		
-		PageUtils pageUtil = new PageUtils(dbExpDeedbackSetList);
-		Response.json("page",pageUtil);
+		GwPageUtils pageUtil = new GwPageUtils(dbExpDeedbackSetList);
+		Response.json(pageUtil);
 	}
 	
 	
@@ -61,8 +61,15 @@ public class DbExpDeedbackSetController {
 	@ResponseBody
 	@RequestMapping("/info")
 	public void info(String id){
-		DbExpDeedbackSet dbExpDeedbackSet = dbExpDeedbackSetService.queryObject(id);
-		Response.json("dbExpDeedbackSet", dbExpDeedbackSet);
+		DbExpDeedbackSet dbExpDeedbackSet = null;
+		if(!StringUtils.equals("", id)) {
+			dbExpDeedbackSet = dbExpDeedbackSetService.queryObject(id);
+		}
+		JSONObject json = new JSONObject();
+		json.put("expName", dbExpDeedbackSet.getExpName());// securityClassification
+		json.put("expContent", dbExpDeedbackSet.getExpContent());
+		json.put("flId", dbExpDeedbackSet.getId());
+		Response.json(json);
 	}
 	
 	/**
@@ -73,7 +80,7 @@ public class DbExpDeedbackSetController {
 	public void save(DbExpDeedbackSet dbExpDeedbackSet,String expId){
 		String userName = CurrentUser.getUsername();
 		String userId = CurrentUser.getUserId();
-		if(!StringUtils.equals("", expId)) {
+		if(StringUtils.equals("", expId)) {
 			dbExpDeedbackSet.setId(UUIDUtils.random());
 			dbExpDeedbackSet.setCreatedUser(userName);
 			dbExpDeedbackSet.setCreatedUserId(userId);

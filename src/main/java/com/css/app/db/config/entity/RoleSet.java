@@ -28,6 +28,8 @@ public class RoleSet implements Serializable {
 	private String roleFlag;
 	//备注
 	private String remark;
+	//排序
+	private Integer sort;
 
 	/**
 	 * 设置：唯一标识
@@ -113,4 +115,11 @@ public class RoleSet implements Serializable {
 	public String getRemark() {
 		return remark;
 	}
+	public Integer getSort() {
+		return sort;
+	}
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
+	
 }

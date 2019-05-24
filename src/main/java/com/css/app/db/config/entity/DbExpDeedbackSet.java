@@ -35,6 +35,8 @@ public class DbExpDeedbackSet implements Serializable {
 	private String remark;
 	//备注（冗余字段2）
 	private String flag;
+	//范例内容
+	private String expContent;
 
 	/**
 	 * 设置：主键
@@ -156,4 +158,11 @@ public class DbExpDeedbackSet implements Serializable {
 	public String getFlag() {
 		return flag;
 	}
+	public String getExpContent() {
+		return expContent;
+	}
+	public void setExpContent(String expContent) {
+		this.expContent = expContent;
+	}
+	
 }
