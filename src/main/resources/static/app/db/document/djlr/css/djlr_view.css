@@ -841,7 +841,7 @@ ul{
 }
 
 .wh100{width:100%;height:100%;position:relative;}
-.newpanel-cont{padding-top:20px;background-color:rgba(255,255,255,0.2);background-color:#fff;margin-bottom:10px;}
+.newpanel-cont{padding-top:10px;background-color:rgba(255,255,255,0.2);background-color:#fff;margin-bottom:10px;}
 .newpanel-inner{width:100%;position:relative;}
 .newpanel-left{;width:50px;height:100%;position:absolute;top:0;left:0;bottom:0;}
 .newpanel-left .fa-circle-o{position:absolute;top:10px;left:15px;color:#6699FF;font-size:20px;}

@@ -657,6 +657,19 @@ var pageModule = function(){
 			})
 		});
 		
+		//范例
+		$("#fanli").click(function(){
+			newbootbox.newdialog({
+				id:"fanliDialog",
+				width:800,
+				height:600,
+				header:true,
+				title:"反馈范例",
+				classed:"cjDialog",
+				url:"/app/db/document/view/html/fanli.html?subId="+subId+"&infoId="+fileId+"&fileFrom="+fileFrom+"&fromMsg="+fromMsg
+			})
+		});
+		
 		//办结
 		$("#banjie").click(function(){
 			newbootbox.oconfirm({
