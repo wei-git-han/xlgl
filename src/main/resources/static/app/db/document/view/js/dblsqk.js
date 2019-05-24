@@ -10,7 +10,7 @@ var pageModule = function(){
 				$.each(data,function(i,item){
 					$("#lsContent").append(
 						'<div class="record">'+
-			            '	<div class="line1"><span>'+item.userName+'&nbsp;&nbsp;'+item.createdTime+'&nbsp;&nbsp;落实情况：</span></div>'+
+			            '	<div class="line1"><span class="juName">'+item.subDeptName+'</span><span>'+item.userName+'&nbsp;&nbsp;'+item.createdTime+'&nbsp;&nbsp;落实情况：</span></div>'+
 			            '	<div class="line2">'+item.replyContent+'</div>'+
 			            '</div>'
 		            )
