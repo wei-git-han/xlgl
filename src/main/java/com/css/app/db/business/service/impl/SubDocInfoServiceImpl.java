@@ -75,7 +75,7 @@ public class SubDocInfoServiceImpl implements SubDocInfoService {
 	}
 
 	@Override
-	public SubDocInfo queryLastEndSubInfo(String infoId) {
+	public List<SubDocInfo> queryLastEndSubInfo(String infoId) {
 		return subDocInfoDao.queryLastEndSubInfo(infoId);
 	}
 

@@ -596,12 +596,12 @@ var pageModule = function(){
 			 	callback1:function(){
 	 				$ajax({
 	 					url:banjieUrl,
-	 					data:{infoId:fileId,subId:subId},
+	 					data:{infoId:fileId},
 	 					type: "GET",
 	 					success:function(data){
 	 						if(data.result == "success"){
 	 							if(!fromMsg){
-									window.top.grdbfn();
+									window.top.blfkfn();
 								}
 	 							window.location.reload();
 	 						}
@@ -619,12 +619,12 @@ var pageModule = function(){
 			 	callback1:function(){
 	 				$ajax({
 	 					url:luoShiUrl,
-	 					data:{infoId:fileId,subId:subId},
+	 					data:{infoId:fileId},
 	 					type: "GET",
 	 					success:function(data){
 	 						if(data.result == "success"){
 	 							if(!fromMsg){
-									window.top.grdbfn();
+									window.top.blfkfn();
 								}
 	 							window.location.reload();
 	 						}

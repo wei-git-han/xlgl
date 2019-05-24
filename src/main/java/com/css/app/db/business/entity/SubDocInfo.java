@@ -33,6 +33,8 @@ public class SubDocInfo implements Serializable {
 	private Date updateTime;
 	//承办人
 	private String undertakerName;
+	//承办人电话
+	private String undertakerPhone;
 /*----------------------------以下字段只用来列表接收值用--------------start----------------------*/	
 	private String dealUserName;
 	//文件标题
@@ -267,6 +269,12 @@ public class SubDocInfo implements Serializable {
 	}
 	public void setUpdateFlag(String updateFlag) {
 		this.updateFlag = updateFlag;
+	}
+	public String getUndertakerPhone() {
+		return undertakerPhone;
+	}
+	public void setUndertakerPhone(String undertakerPhone) {
+		this.undertakerPhone = undertakerPhone;
 	}
 	
 

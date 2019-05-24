@@ -532,7 +532,7 @@ var pageModule = function(){
 					header:true,
 					title:"选择办件状态",
 					classed:"cjDialog",
-					url:"/app/db/document/view/html/statusDialog.html?subId="+subId+"&infoId="+fileId+"&replyContent="+$("#replyContent").val()+"&cbrFlag="+cbrFlag+"&fromMsg="+fromMsg
+					url:"/app/db/document/view/html/statusDialog.html?subId="+subId+"&infoId="+fileId+"&cbrFlag="+cbrFlag+"&fromMsg="+fromMsg
 				});
 			}else{
 				newbootbox.newdialog({

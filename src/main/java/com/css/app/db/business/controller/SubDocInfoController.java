@@ -342,6 +342,10 @@ public class SubDocInfoController {
 		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
 		subDocInfo.setUndertaker(CurrentUser.getUserId());
 		subDocInfo.setUndertakerName(CurrentUser.getUsername());
+		BaseAppUser appUser = baseAppUserService.queryObject(CurrentUser.getUserId());
+		if(appUser !=null) {
+			subDocInfo.setUndertakerPhone(appUser.getTelephone());
+		}
 		subDocInfo.setDocStatus(DbDocStatusDefined.BAN_LI_ZHONG);
 		subDocInfoService.update(subDocInfo);
 		Response.json("result", "success");

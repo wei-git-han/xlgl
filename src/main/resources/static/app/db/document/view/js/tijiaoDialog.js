@@ -51,7 +51,7 @@ var pageModule = function(){
 			if(cbrFlag && cbrFlag == 1){
 				$ajax({
 					url:sureUrl,
-					data:{infoId:infoId,subId:subId,userName:userName,userId:userId},
+					data:{infoId:infoId,subId:subId,userName:userName,userId:userId,dbStatus:dbStatus},
 					success:function(data){
 						newbootbox.newdialogClose("tijiaoDialog");
 						if(data.result=="success"){
