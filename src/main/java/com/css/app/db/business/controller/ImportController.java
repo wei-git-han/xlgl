@@ -71,10 +71,9 @@ public class ImportController{
 
 	/**
 	 * 导入
-	 * 0：军委办件号；1：文件标题；2、承办人姓名；3、批示指示时间；4、发表批示内容
-	 * 5、督办落实情况人员姓名；6、督办落实情况时间；7、督办落实情况内容
-	 * 8、办理状态名字； 9、承办单位；10、承办人员姓名；11承办人员电话
-	 * 12、印发时间；13、文件号；14、工作分工内容
+	 * 创建list来存储读取wps键值对对应情况
+	 *  0：军委办件号；1：文件标题；2、批示指示内容；3、督办落实情况；4、办理状态
+	 *  5、承办单位/人员；6、docTypeId；7、印发时间；8、文件号； 9、工作分工内容；
 	 */
 	@Transactional
 	@RequestMapping("/importExcle")
@@ -109,7 +108,7 @@ public class ImportController{
 				}
 				docInfo.setFinishTime(new Date());
 				// 为主文件创建批示指示内容
-				if(StringUtils.equals("1", docTypeId)||StringUtils.equals("2", docTypeId)||StringUtils.equals("4", docTypeId)) {
+				if((StringUtils.equals("1", docTypeId)||StringUtils.equals("2", docTypeId)||StringUtils.equals("4", docTypeId))&&!"".equals(excleDate.get(2))) {
 					List<Map<String, String>> pszsnrList = (List<Map<String, String>>) excleDate.get(2);// 批示指示内容
 					for (Map<String, String> pszsnrMap : pszsnrList) {
 						DocumentSzps docSzps = new DocumentSzps();
@@ -167,6 +166,7 @@ public class ImportController{
 							}
 							subDocInfo.setUndertaker(userId);
 							subDocInfo.setUndertakerName(cbrName);
+							if(!"".equals(excleDate.get(3))) {
 							//添加主分支的落实情况
 							List<Map<String, String>> dblsqkLis = (List<Map<String, String>>) excleDate.get(3);//督办落实情况
 							for (int i = 0; i < dblsqkLis.size(); i++) {
@@ -223,6 +223,7 @@ public class ImportController{
 									docInfo.setLatestReplyTime(new SimpleDateFormat("yyyy-MM-dd").parse(dblsqkLis.get(i).get("dblsqksj")));
 								}
 							}
+						}
 						}else {
 							subDocInfo.setDocStatus(DbDocStatusDefined.DAI_ZHUAN_BAN);
 						}
