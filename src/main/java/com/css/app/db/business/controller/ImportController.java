@@ -106,6 +106,7 @@ public class ImportController{
 				if(dicList != null && dicList.size()>0) {
 					docInfo.setDocTypeName(dicList.get(0).getText());
 				}
+				docInfo.setFirstZbTime(new Date());
 				docInfo.setFinishTime(new Date());
 				// 为主文件创建批示指示内容
 				if((StringUtils.equals("1", docTypeId)||StringUtils.equals("2", docTypeId)||StringUtils.equals("4", docTypeId))&&!"".equals(excleDate.get(2))) {
@@ -141,7 +142,7 @@ public class ImportController{
 					}
 					subDocInfo.setSubDeptId(subDeptId);
 					subDocInfo.setSubDeptName(cbdw);
-					subDocInfo.setCreatedTime(new Date());					
+					subDocInfo.setCreatedTime(new Date());
 					//文件状态（多局情况需求要求各局状态一样，但对于办结和常态落实的文件取消办结会有问题：因为取消办结会回滚到最后一个局的状态，但状态都一样无法辨别最后一个局，故会随便回滚到一个局）
 					if(1 == status) {
 						subDocInfo.setDocStatus(DbDocStatusDefined.BAN_LI_ZHONG);
