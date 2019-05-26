@@ -356,9 +356,7 @@ public class SubDocInfoController {
 	 * @param infoId 主文件id
 	 * @param subId 分支主id
 	 */
-	@ResponseBody
-	@RequestMapping("/banJieOperation")
-	public void banJieOperation(String infoId,String subId){
+	public JSONObject banJieOperation(String infoId,String subId){
 		JSONObject json= new JSONObject();
 		if(StringUtils.isNotBlank(infoId) && StringUtils.isNotBlank(subId)) {
 			SubDocInfo subInfo = subDocInfoService.queryObject(subId);
@@ -419,16 +417,14 @@ public class SubDocInfoController {
 		}else {
 			json.put("result", "fail");
 		}
-		Response.json(json);
+		return json;
 	}
 	/**
 	 * 常态落实操作：所有分支局必须都处在建议办结或建议落实的状态下，且至少有一个为常态落实
 	 * @param infoId 主文件id
 	 * @param subId 分支主id
 	 */
-	@ResponseBody
-	@RequestMapping("/luoShiOperation")
-	public void luoShiOperation(String infoId,String subId){
+	public JSONObject luoShiOperation(String infoId,String subId){
 		JSONObject json= new JSONObject();
 		if(StringUtils.isNotBlank(infoId)) {
 			SubDocInfo subInfo = subDocInfoService.queryObject(subId);
@@ -474,7 +470,7 @@ public class SubDocInfoController {
 		}else {
 			json.put("result", "fail");
 		}
-		Response.json(json);
+		return json;
 	}
 	
 	/**
@@ -485,12 +481,13 @@ public class SubDocInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/submitOperation")
-	public void submitOperation(String infoId,String subId,String userName,String userId){
+	public void submitOperation(String infoId,String subId,String userName,String userId,String dbStatus){
 		//流转到下一个人并将临时反馈变为发布
 		this.submitRelation(subId, userName, userId,"2");
-		//分支文件更新完成审批标识
+		//分支文件保存最新更新时间及选择状态
 		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
 		if(subDocInfo != null) {
+			subDocInfo.setChooseStatus(dbStatus);
 			subDocInfo.setDocStatus(DbDocStatusDefined.DAI_SHEN_PI);
 			subDocInfo.setUpdateTime(new Date());
 			subDocInfoService.update(subDocInfo);
@@ -584,52 +581,61 @@ public class SubDocInfoController {
 	@RequestMapping("/finishOperation")
 	public void finishOperation(String infoId,String subId,String replyContent,String saveFlag){
 		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
-		//流转到下一个人并将临时反馈变为发布
-		this.submitRelation(subId, subDocInfo.getUndertakerName(),subDocInfo.getUndertaker(),"4");
-		//保存意见
-		approvalOpinionService.saveOpinion(subId, replyContent, "2",saveFlag);
-		//分支文件更新完成审批标识
-		if(subDocInfo != null) {
-			subDocInfo.setDocStatus(DbDocStatusDefined.BAN_LI_ZHONG);
-			subDocInfo.setUpdateTime(new Date());
-			subDocInfoService.update(subDocInfo);
-		}
-		//催办完成
-		DocumentInfo info = documentInfoService.queryObject(infoId);
-		if(StringUtils.equals(info.getCuibanFlag(), "1")){
-			//催办记录添加响应承办人，并标识完成
-			Map<String, Object> cuiBanMap = new HashMap<>();
-			cuiBanMap.put("infoId", infoId);
-			cuiBanMap.put("finishFlag", 0);
-			List<DocumentCbjl> cuibanList = documentCbjlService.queryList(cuiBanMap);
-			if(cuibanList != null && cuibanList.size()>0) {
-				DocumentCbjl cbjl = cuibanList.get(0);
-				cbjl.setCbrId(subDocInfo.getUndertaker());
-				cbjl.setCbrName(subDocInfo.getUndertakerName());
-				cbjl.setCbTime(new Date());
-				cbjl.setFinishFlag(1);
-				documentCbjlService.update(cbjl);
+		String chooseStatus = subDocInfo.getChooseStatus();
+		JSONObject json= new JSONObject();
+		if(StringUtils.equals("1", chooseStatus)) {//承办人提交选择办理中
+			//流转到下一个人并将临时反馈变为发布
+			this.submitRelation(subId, subDocInfo.getUndertakerName(),subDocInfo.getUndertaker(),"4");
+			//保存意见
+			approvalOpinionService.saveOpinion(subId, replyContent, "2",saveFlag);
+			//分支文件更新完成审批标识
+			if(subDocInfo != null) {
+				subDocInfo.setDocStatus(DbDocStatusDefined.BAN_LI_ZHONG);
+				subDocInfo.setUpdateTime(new Date());
+				subDocInfoService.update(subDocInfo);
 			}
-			info.setCuibanFlag("0");
+			//催办完成
+			DocumentInfo info = documentInfoService.queryObject(infoId);
+			if(StringUtils.equals(info.getCuibanFlag(), "1")){
+				//催办记录添加响应承办人，并标识完成
+				Map<String, Object> cuiBanMap = new HashMap<>();
+				cuiBanMap.put("infoId", infoId);
+				cuiBanMap.put("finishFlag", 0);
+				List<DocumentCbjl> cuibanList = documentCbjlService.queryList(cuiBanMap);
+				if(cuibanList != null && cuibanList.size()>0) {
+					DocumentCbjl cbjl = cuibanList.get(0);
+					cbjl.setCbrId(subDocInfo.getUndertaker());
+					cbjl.setCbrName(subDocInfo.getUndertakerName());
+					cbjl.setCbTime(new Date());
+					cbjl.setFinishFlag(1);
+					documentCbjlService.update(cbjl);
+				}
+				info.setCuibanFlag("0");
+			}
+			//主记录不标识催办,清理本次首长已读
+			info.setSzReadIds("");
+			//获取最新反馈(各组)
+			List<ReplyExplain> latestReplyList = replyExplainService.querySubLatestReply(infoId, subId);
+			if(latestReplyList != null && latestReplyList.size()>0) {
+				info.setLatestReply(latestReplyList.get(0).getReplyContent());
+				info.setLatestSubDept(subDocInfo.getSubDeptName());
+				info.setLatestUndertaker(subDocInfo.getUndertakerName());
+				info.setLatestReplyTime(new Date());
+			}
+			documentInfoService.update(info);
+			//清理除首长外的本文件已读
+			documentReadService.deleteByInfoId(infoId);
+			//反馈对他局和部可见(顺序必须放标识催办完成后边，因为showFlag的值作为参数进行了查询)
+			replyExplainService.updateShowFlag(subId);
+			//意见对他局和部可见
+			approvalOpinionService.updateShowFlag(subId);
+			json.put("result", "success");
+		}else if(StringUtils.equals("2", chooseStatus)){//承办人提交选择办结
+			json = this.banJieOperation(infoId, subId);
+		}else if(StringUtils.equals("3", chooseStatus)) {//承办人提交选择常态落实
+			json=this.luoShiOperation(infoId, subId);
 		}
-		//主记录不标识催办,清理本次首长已读
-		info.setSzReadIds("");
-        //获取最新反馈(各组)
-		List<ReplyExplain> latestReplyList = replyExplainService.querySubLatestReply(infoId, subId);
-		if(latestReplyList != null && latestReplyList.size()>0) {
-			info.setLatestReply(latestReplyList.get(0).getReplyContent());
-			info.setLatestSubDept(subDocInfo.getSubDeptName());
-			info.setLatestUndertaker(subDocInfo.getUndertakerName());
-			info.setLatestReplyTime(new Date());
-		}
-		documentInfoService.update(info);
-		//清理除首长外的本文件已读
-		documentReadService.deleteByInfoId(infoId);
-		//反馈对他局和部可见(顺序必须放标识催办完成后边，因为showFlag的值作为参数进行了查询)
-		replyExplainService.updateShowFlag(subId);
-		//意见对他局和部可见
-		approvalOpinionService.updateShowFlag(subId);
-		Response.json("result", "success");
+		Response.json(json);
 	}
 	
 	private void submitRelation(String subId,String userName,String userId,String trackingType) {

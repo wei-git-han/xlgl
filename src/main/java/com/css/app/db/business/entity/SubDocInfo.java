@@ -35,6 +35,8 @@ public class SubDocInfo implements Serializable {
 	private String undertakerName;
 	//承办人电话
 	private String undertakerPhone;
+	//承办人提交选择的状态
+	private String chooseStatus;
 /*----------------------------以下字段只用来列表接收值用--------------start----------------------*/	
 	private String dealUserName;
 	//文件标题
@@ -276,6 +278,10 @@ public class SubDocInfo implements Serializable {
 	public void setUndertakerPhone(String undertakerPhone) {
 		this.undertakerPhone = undertakerPhone;
 	}
-	
-
+	public String getChooseStatus() {
+		return chooseStatus;
+	}
+	public void setChooseStatus(String chooseStatus) {
+		this.chooseStatus = chooseStatus;
+	}
 }

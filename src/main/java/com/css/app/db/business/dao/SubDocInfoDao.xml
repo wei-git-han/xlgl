@@ -19,7 +19,11 @@
 		inner join DB_DOCUMENT_INFO b on a.INFO_ID=b.ID
 		<!-- 当前处理人 -->
 		left join (select SUB_ID,RECEIVER_NAME as deal_user_name from (select SUB_ID,RECEIVER_NAME,row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num from DB_SUB_DOC_TRACKING) where num=1) f on a.id=f.sub_id
-		left join (select INFO_ID,USER_NAME as leader_name ,LEADER_COMMENT as leader_content,CREATED_TIME as leader_time,row_number() over(partition by info_id order by created_time asc) as num from DB_DOCUMENT_SZPS) c on a.info_id = c.info_id
+		left join (
+		<!-- select INFO_ID,USER_NAME as leader_name ,LEADER_COMMENT as leader_content,CREATED_TIME as leader_time,row_number() over(partition by info_id order by created_time asc) as num from DB_DOCUMENT_SZPS -->
+		select s.INFO_ID,s.USER_NAME as leader_name,s.LEADER_COMMENT as leader_content,s.CREATED_TIME as leader_time,
+        row_number() over(partition by s.info_id order by d.sort asc) as num from DB_DOCUMENT_SZPS s left join DB_ROLE_SET d on s.USER_NAME=d.USER_NAME order by d.sort asc
+		) c on a.info_id = c.info_id
 		left join (select distinct info_id,listagg(sub_dept_name || nvl2(undertaker_name,'/' || undertaker_name || nvl2(undertaker_phone,'('||undertaker_phone||')',null),null), ',') within group(order by created_time desc) over(partition by info_id) under_depts from DB_SUB_DOC_INFO) e on a.INFO_ID = e.info_id
 		where (num = 1 or num is null) 
 		<if test="orgId != null and orgId != ''">
@@ -56,7 +60,11 @@
 		<!-- 当前处理人 -->
 		left join (select SUB_ID,RECEIVER_NAME as deal_user_name from (select SUB_ID,RECEIVER_NAME,row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num from DB_SUB_DOC_TRACKING) where num=1) f on a.id=f.sub_id
 		<!-- 最新一条首长批示 -->
-		left join (select INFO_ID,USER_NAME as leader_name ,LEADER_COMMENT as leader_content,CREATED_TIME as leader_time,row_number() over(partition by info_id order by created_time asc) as dNum from DB_DOCUMENT_SZPS) d on c.id = d.info_id
+		left join (
+		<!-- select INFO_ID,USER_NAME as leader_name ,LEADER_COMMENT as leader_content,CREATED_TIME as leader_time,row_number() over(partition by info_id order by created_time asc) as dNum from DB_DOCUMENT_SZPS -->
+		select s.INFO_ID,s.USER_NAME as leader_name,s.LEADER_COMMENT as leader_content,s.CREATED_TIME as leader_time,
+        row_number() over(partition by s.info_id order by g.sort asc) as dNum from DB_DOCUMENT_SZPS s left join DB_ROLE_SET g on s.USER_NAME=g.USER_NAME order by g.sort asc
+		) d on c.id = d.info_id
 	    <!--  承办单位/人 -->
 		left join (select distinct info_id,listagg(sub_dept_name || nvl2(undertaker_name,'/' || undertaker_name || nvl2(undertaker_phone,'('||undertaker_phone||')',null),null), ',') within group(order by created_time desc) over(partition by info_id) under_depts from DB_SUB_DOC_INFO) h on a.INFO_ID = h.info_id
 		<!-- receiverIsMe：我为当前处理人，并且文件状态<10，字段置为1 --> 
@@ -117,7 +125,8 @@
 			"UNDERTAKER",
 			"UPDATE_TIME",
 			"UNDERTAKER_NAME",
-			"UNDERTAKER_PHONE"
+			"UNDERTAKER_PHONE",
+			"CHOOSE_STATUS"
 		)
 		values
 		(
@@ -130,7 +139,8 @@
 			#{undertaker},
 			#{updateTime},
 			#{undertakerName},
-			#{undertakerPhone}
+			#{undertakerPhone},
+			#{chooseStatus}
 		)
 	</insert>
 	 
@@ -144,8 +154,9 @@
 			<if test="docStatus != null">"DOC_STATUS" = #{docStatus}, </if>
 			<if test="undertaker != null">"UNDERTAKER" = #{undertaker},</if>
 			<if test="updateTime != null">"UPDATE_TIME" = #{updateTime},</if>
-			<if test="undertakerName != null">"UNDERTAKER_NAME" = #{undertakerName}</if>
-			<if test="undertakerPhone != null">"UNDERTAKER_PHONE" = #{undertakerPhone}</if>
+			<if test="undertakerName != null">"UNDERTAKER_NAME" = #{undertakerName},</if>
+			<if test="undertakerPhone != null">"UNDERTAKER_PHONE" = #{undertakerPhone},</if>
+			<if test="chooseStatus != null">"CHOOSE_STATUS" = #{chooseStatus}</if>
 		</set>
 		where ID = #{id}
 	</update>
