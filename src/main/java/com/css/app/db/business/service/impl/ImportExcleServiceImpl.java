@@ -186,18 +186,16 @@ public class ImportExcleServiceImpl implements ImportExcleService {
 					String[] detailUndertakes = undertake.split("\\|");
 					if (detailUndertakes != null && detailUndertakes.length > 0) {
 						undertakeMap.put("cbdw", detailUndertakes[0]);// 承办单位；
-						undertakeMap.put("cbr", detailUndertakes[1]);// 承办人；
-						undertakeMap.put("cbrdh", detailUndertakes[2]);// 承办人电话
-						/*if (StringUtils.equals("*", detailUndertakes[1])) {
+						if (StringUtils.equals("\\*", detailUndertakes[1])) {
 							undertakeMap.put("cbr", "");// 承办人；
 						} else {
 							undertakeMap.put("cbr", detailUndertakes[1]);// 承办人；
 						}
-						if (StringUtils.equals("*", detailUndertakes[2])) {
+						if (StringUtils.equals("\\*", detailUndertakes[2])) {
 							undertakeMap.put("cbrdh", "");// 承办人；
 						} else {
 							undertakeMap.put("cbrdh", detailUndertakes[2]);// 承办人电话
-						}*/
+						}
 						undertakeLis.add(undertakeMap);
 					}
 				}
@@ -295,18 +293,16 @@ public class ImportExcleServiceImpl implements ImportExcleService {
 					String[] detailUndertakes = undertake.split("\\|");
 					if (detailUndertakes != null && detailUndertakes.length > 0) {
 						undertakeMap.put("cbdw", detailUndertakes[0]);// 承办单位；
-						undertakeMap.put("cbr", detailUndertakes[1]);// 承办人；
-						undertakeMap.put("cbrdh", detailUndertakes[2]);// 承办人电话
-						/*if (StringUtils.equals("*", detailUndertakes[1])) {
+						if (StringUtils.equals("\\*", detailUndertakes[1])) {
 							undertakeMap.put("cbr", "");// 承办人；
 						} else {
 							undertakeMap.put("cbr", detailUndertakes[1]);// 承办人；
 						}
-						if (StringUtils.equals("*", detailUndertakes[2])) {
+						if (StringUtils.equals("\\*", detailUndertakes[2])) {
 							undertakeMap.put("cbrdh", "");// 承办人；
 						} else {
 							undertakeMap.put("cbrdh", detailUndertakes[2]);// 承办人电话
-						}*/
+						}
 						undertakeLis.add(undertakeMap);
 					}
 				}
@@ -394,8 +390,16 @@ public class ImportExcleServiceImpl implements ImportExcleService {
 					String[] detailUndertakes = undertake.split("\\|");
 					if (detailUndertakes != null && detailUndertakes.length > 0) {
 						undertakeMap.put("cbdw", detailUndertakes[0]);// 承办单位；
-						undertakeMap.put("cbr", detailUndertakes[1]);// 承办人；
-						undertakeMap.put("cbrdh", detailUndertakes[2]);// 承办人电话
+						if (StringUtils.equals("\\*", detailUndertakes[1])) {
+							undertakeMap.put("cbr", "");// 承办人；
+						} else {
+							undertakeMap.put("cbr", detailUndertakes[1]);// 承办人；
+						}
+						if (StringUtils.equals("\\*", detailUndertakes[2])) {
+							undertakeMap.put("cbrdh", "");// 承办人；
+						} else {
+							undertakeMap.put("cbrdh", detailUndertakes[2]);// 承办人电话
+						}
 						undertakeLis.add(undertakeMap);
 					}
 
