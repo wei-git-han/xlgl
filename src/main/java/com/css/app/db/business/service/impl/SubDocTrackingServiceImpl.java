@@ -1,16 +1,15 @@
 package com.css.app.db.business.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.css.app.db.business.dao.SubDocTrackingDao;
 import com.css.app.db.business.entity.SubDocTracking;
 import com.css.app.db.business.service.SubDocTrackingService;
-import com.css.base.utils.CurrentUser;
 import com.css.base.utils.UUIDUtils;
 
 
@@ -32,15 +31,7 @@ public class SubDocTrackingServiceImpl implements SubDocTrackingService {
 	
 	@Override
 	public void save(SubDocTracking tracking){
-		String loginUserId=CurrentUser.getUserId();
-		String loginUserName=CurrentUser.getUsername();
-		String loginUserDeptId=CurrentUser.getDepartmentId();
-		String loginUserDeptName=CurrentUser.getOrgName();
 		tracking.setId(UUIDUtils.random());
-		tracking.setSenderId(loginUserId);
-		tracking.setSenderName(loginUserName);
-		tracking.setSenDeptId(loginUserDeptId);
-		tracking.setSenDeptName(loginUserDeptName);
 		tracking.setCreatedTime(new Date());
 		subDocTrackingDao.save(tracking);
 	}

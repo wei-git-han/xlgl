@@ -23,6 +23,9 @@ import com.css.addbase.AppConfig;
 import com.css.addbase.FileBaseUtil;
 import com.css.addbase.appconfig.entity.BaseAppConfig;
 import com.css.addbase.appconfig.service.BaseAppConfigService;
+import com.css.addbase.apporgan.entity.BaseAppOrgan;
+import com.css.addbase.apporgan.entity.BaseAppUser;
+import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.addbase.constant.AppConstant;
 import com.css.addbase.suwell.OfdTransferUtil;
@@ -94,7 +97,8 @@ public class DocumentInfoController {
 	private DocumentSzpsService documentSzpsService;
 	@Autowired
 	private BaseAppConfigService baseAppConfigService;
-	
+	@Autowired
+	private BaseAppOrganService baseAppOrganService;
 	
 	/**
 	 * 文件上传保存
@@ -550,10 +554,12 @@ public class DocumentInfoController {
 		//文件局内状态（1:待转办；3：退回修改；5：待落实；7：待审批；9：办理中；10：建议办结；11：建议落实；12：办结；1:3：常态落实）
 		List<SubDocInfo> lastEndSubInfos = subDocInfoService.queryLastEndSubInfo(id);
 		if(lastEndSubInfos !=null && lastEndSubInfos.size()>0) {
-			//lastEndSubInfos存在说明是承办人办结的文或导入的已办结的文
+			//lastEndSubInfos存在说明是承办人选择办结的文或导入的已办结的文
 			for (SubDocInfo lastEndSubInfo : lastEndSubInfos) {
 				String subId =lastEndSubInfo.getId();
 				if(StringUtils.isNotBlank(subId)) {
+					String undertaker = lastEndSubInfo.getUndertaker();
+					String undertakerName = lastEndSubInfo.getUndertakerName();
 					Integer subStatus = DbDocStatusDefined.BAN_LI_ZHONG;
 					//添加办结记录
 					DocumentBjjl newBjjl=new DocumentBjjl();
@@ -562,18 +568,44 @@ public class DocumentInfoController {
 					newBjjl.setSubId(subId);
 					documentBjjlService.save(newBjjl);				
 					//取最后一条流转记录
-					SubDocTracking tracking = subDocTrackingService.queryLatestRecord(subId);
+					SubDocTracking lastTracking = subDocTrackingService.queryLatestRecord(subId);
 					//trackingType（1：转办；2：审批流转；3：退回;4:新一轮反馈的开始，即承办人的办理）
-					String trackingType = tracking.getTrackingType();
+					/*String trackingType = lastTracking.getTrackingType();
 					//如果最后一条流转为审批，接收人为承办人则文件为办理中，否则文件为待审批
 					if(StringUtils.equals("2",trackingType)) {
-						if(!StringUtils.equals(lastEndSubInfo.getUndertaker(), tracking.getReceiverId())) {
+						if(!StringUtils.equals(lastEndSubInfo.getUndertaker(), lastTracking.getReceiverId())) {
 							subStatus = DbDocStatusDefined.DAI_SHEN_PI;
 						}
 						//如果最后一条流转为退回修改，则文件状态为退回修改
 					}else if(StringUtils.equals("3",trackingType)){
 						subStatus = DbDocStatusDefined.TUIHUI_XIUGAI;
+					}*/
+					//获取当前登录人信息
+					String deptId = null;
+					String deptName = null;
+					if(StringUtils.isNotBlank(undertaker)) {
+						List<BaseAppUser> list = baseAppUserService.findByUserId(undertaker);
+						if(list !=null && list.size()>0) {
+							deptId = list.get(0).getOrganid();
+							if(StringUtils.isNotBlank(deptId)) {
+								BaseAppOrgan organ = baseAppOrganService.queryObject(deptId);
+								deptName=organ.getName();
+							}
+						}
 					}
+					//添加流转记录
+					SubDocTracking tracking = new SubDocTracking();
+					tracking.setSenderId(lastTracking.getReceiverId());
+					tracking.setSenderName(lastTracking.getReceiverName());
+					tracking.setSenDeptId(lastTracking.getRecDeptId());
+					tracking.setSenDeptName(lastTracking.getRecDeptName());
+					tracking.setReceiverId(undertaker);
+					tracking.setReceiverName(undertakerName);
+					tracking.setRecDeptId(deptId);
+					tracking.setRecDeptName(deptName);
+					tracking.setSubId(subId);
+					tracking.setTrackingType("4");
+					subDocTrackingService.save(tracking);
 					//修改最后一个局的文件状态
 					lastEndSubInfo.setDocStatus(subStatus);
 					subDocInfoService.update(lastEndSubInfo);

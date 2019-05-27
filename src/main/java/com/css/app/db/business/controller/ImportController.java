@@ -34,6 +34,7 @@ import com.css.app.db.config.entity.DocumentDic;
 import com.css.app.db.config.service.DocumentDicService;
 import com.css.app.db.util.DbDefined;
 import com.css.app.db.util.DbDocStatusDefined;
+import com.css.base.utils.CurrentUser;
 import com.css.base.utils.Response;
 import com.css.base.utils.StringUtils;
 import com.css.base.utils.UUIDUtils;
@@ -132,6 +133,7 @@ public class ImportController{
 					subDocInfo.setInfoId(infoId);
 					String cbdw = undertakerMap.get("cbdw");// 承办单位；
 					String cbrName = undertakerMap.get("cbr"); // 承办人；
+					String cbrdh = undertakerMap.get("cbrdh");
 					//分局名称和分局id
 					Map<String, Object> map = new HashMap<String, Object>();
 					map.put("name", cbdw);
@@ -167,6 +169,7 @@ public class ImportController{
 							}
 							subDocInfo.setUndertaker(userId);
 							subDocInfo.setUndertakerName(cbrName);
+							subDocInfo.setUndertakerPhone(cbrdh);
 							if(!"".equals(excleDate.get(3))) {
 							//添加主分支的落实情况
 							List<Map<String, String>> dblsqkLis = (List<Map<String, String>>) excleDate.get(3);//督办落实情况
@@ -201,8 +204,15 @@ public class ImportController{
 									replyExplainService.save(replyExplain);
 									//添加流转记录
 									SubDocTracking tracking = new SubDocTracking();
-									tracking.setId(UUIDUtils.random());
 									tracking.setSubId(subId);
+									String loginUserId=CurrentUser.getUserId();
+									String loginUserName=CurrentUser.getUsername();
+									String loginUserDeptId=CurrentUser.getDepartmentId();
+									String loginUserDeptName=CurrentUser.getOrgName();
+									tracking.setSenderId(loginUserId);
+									tracking.setSenderName(loginUserName);
+									tracking.setSenDeptId(loginUserDeptId);
+									tracking.setSenDeptName(loginUserDeptName);
 									tracking.setReceiverId(replyUserId);
 									BaseAppUser user = baseAppUserService.queryObject(replyUserId);
 									if(user != null) {
@@ -213,7 +223,6 @@ public class ImportController{
 										}
 									}
 									tracking.setReceiverName(cbrName);
-									tracking.setCreatedTime(new Date());
 									tracking.setTrackingType("4");
 									subDocTrackingService.save(tracking);
 								}

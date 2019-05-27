@@ -203,6 +203,14 @@ public class DocumentZbjlController {
 			documentZbjlService.save(zbjl);
 			//添加流转记录
 			SubDocTracking tracking = new SubDocTracking();
+			String loginUserId=CurrentUser.getUserId();
+			String loginUserName=CurrentUser.getUsername();
+			String loginUserDeptId=CurrentUser.getDepartmentId();
+			String loginUserDeptName=CurrentUser.getOrgName();
+			tracking.setSenderId(loginUserId);
+			tracking.setSenderName(loginUserName);
+			tracking.setSenDeptId(loginUserDeptId);
+			tracking.setSenDeptName(loginUserDeptName);
 			tracking.setReceiverId(userId);
 			tracking.setReceiverName(userName);
 			tracking.setRecDeptId(deptId);
