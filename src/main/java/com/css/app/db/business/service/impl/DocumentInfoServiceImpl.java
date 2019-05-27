@@ -1,6 +1,7 @@
 package com.css.app.db.business.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -120,7 +121,9 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 				//删除附件
 				replyAttacDao.deleteBySubId(subId);
 				//删除反馈
-				replyExplainDao.deleteBySubId(subId);
+				Map<String, Object> map=new HashMap<>();
+				map.put("subId", subId);
+				replyExplainDao.deleteByParam(map);
 				//删除流转记录
 				subDocTrackingDao.deleteBySubId(subId);
 				//删除子分支

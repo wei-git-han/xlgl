@@ -95,9 +95,8 @@ public class ReplyExplainServiceImpl implements ReplyExplainService {
 	}
 
 	@Override
-	public void deleteBySubId(String subId) {
-		replyExplainDao.deleteBySubId(subId);
-		
+	public void deleteByParam(Map<String, Object> map) {
+		replyExplainDao.deleteByParam(map);
 	}
 	
 }

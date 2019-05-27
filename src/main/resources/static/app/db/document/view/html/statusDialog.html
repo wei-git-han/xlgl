@@ -20,9 +20,9 @@
 		<div class="newstyle2"> 
 			<div class="pr100">
 				<div class="pr100 radio-list">
-                   	<div><label class="radio-inline"><input type="radio" name="dbStatus" value="1" checked="checked" />办理中</label></div>
-                   	<div><label class="radio-inline"><input type="radio" name="dbStatus" value="2" />办结</label></div>
-                   	<div><label class="radio-inline"><input type="radio" name="dbStatus" value="3" />常态落实</label></div>
+                   	<div><label class=""><input type="radio" name="dbStatus" value="1" checked="checked" />办理中</label></div>
+                   	<div><label class=""><input type="radio" name="dbStatus" value="2" />办结</label></div>
+                   	<div><label class=""><input type="radio" name="dbStatus" value="3" />常态落实</label></div>
                 </div>
 			</div>
 		</div>
@@ -46,9 +46,13 @@
 	<script type="text/javascript" src="../../../common/js/jquery.form.js"></script>
 	<script type="text/javascript" src="../js/statusDialog.js"></script>
 	<script type="text/javascript">
-		jQuery(document).ready(function() {
+		//jQuery(document).ready(function() {
+			
+		//});
+		
+		window.onload = function(){
 			pageModule.initControl();
-		});
+		}
 	</script>
 </body>
 </html>

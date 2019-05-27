@@ -10,24 +10,14 @@ var pageModule = function(){
 			var dbStatus = $("input[type=radio]:checked").val();
 			newbootbox.newdialogClose("statusDialog");
 			newbootbox.newdialog({
-							id:"tijiaoDialog",
-							width:800,
-							height:600,
-							header:true,
-							title:"提交",
-							classed:"cjDialog",
-							url:"/app/db/document/view/html/tijiaoDialog.html?subId="+subId+"&infoId="+infoId+"&cbrFlag="+cbrFlag+"&fromMsg="+fromMsg+"&dbStatus="+dbStatus
-						})
-			/*$ajax({
-				url:saveUrl,
-				data:{infoId:infoId,subId:subId,dbStatus:dbStatus},
-				success:function(data){
-					newbootbox.newdialogClose("statusDialog");
-					if(data.result=="success"){
-						
-					}
-				}
-			})*/
+				id:"tijiaoDialog",
+				width:800,
+				height:600,
+				header:true,
+				title:"提交",
+				classed:"cjDialog",
+				url:"/app/db/document/view/html/tijiaoDialog.html?subId="+subId+"&infoId="+infoId+"&cbrFlag="+cbrFlag+"&fromMsg="+fromMsg+"&dbStatus="+dbStatus
+			})
 		});
 		
 		//关闭

@@ -7,23 +7,20 @@ import java.util.Map;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.stereotype.Controller;
 
-import com.css.base.entity.SSOUser;
-import com.css.base.utils.CurrentUser;
-import com.css.base.utils.GwPageUtils;
-import com.css.base.utils.PageUtils;
-import com.css.base.utils.UUIDUtils;
-import com.github.pagehelper.PageHelper;
-import com.css.base.utils.Response;
-import com.css.base.utils.StringUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.css.app.db.config.entity.DbExpDeedbackSet;
 import com.css.app.db.config.service.DbExpDeedbackSetService;
+import com.css.base.utils.CurrentUser;
+import com.css.base.utils.GwPageUtils;
+import com.css.base.utils.Response;
+import com.css.base.utils.StringUtils;
+import com.css.base.utils.UUIDUtils;
+import com.github.pagehelper.PageHelper;
 
 
 /**
@@ -54,6 +51,20 @@ public class DbExpDeedbackSetController {
 		Response.json(pageUtil);
 	}
 	
+	/**
+	 * @description:范例查看
+	 * @author:zhangyw
+	 * @date:2019年5月27日
+	 * @Version v1.0
+	 */
+	@ResponseBody
+	@RequestMapping("/exampleList")
+	public void exampleList(Integer page, Integer pagesize){
+		Map<String, Object> map = new HashMap<>();
+		//查询列表数据
+		List<DbExpDeedbackSet> list = dbExpDeedbackSetService.queryList(map);
+		Response.json(list);
+	}
 	
 	/**
 	 * 信息

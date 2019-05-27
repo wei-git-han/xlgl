@@ -527,8 +527,8 @@ var pageModule = function(){
 				
 				newbootbox.newdialog({
 					id:"statusDialog",
-					width:800,
-					height:600,
+					width:550,
+					height:400,
 					header:true,
 					title:"选择办件状态",
 					classed:"cjDialog",
