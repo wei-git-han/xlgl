@@ -220,7 +220,7 @@ public class DocumentInfoController {
 	@RequestMapping("/replyList")
 	public void replyList(Integer page, Integer pagesize,String search,String status,String typeId,String orgid,String month,String startDate,String endDate,String initFlag){
 		List<DocumentInfo> infoList =null;
-		if(StringUtils.equals("1", initFlag)) {//initFlag为1 为导出页的初始化加载
+		if(!StringUtils.equals("1", initFlag)) {//initFlag为1 为导出页的初始化加载
 			String loginUserId=CurrentUser.getUserId();
 			String dateStr = null;
 			if(!StringUtils.isEmpty(month) && StringUtil.equals("all", month)) {
