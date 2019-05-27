@@ -221,8 +221,13 @@ public class ImportExcleServiceImpl implements ImportExcleService {
 			System.out.println("总列数：" + columnTotalNum);
 			int end = row.getLastCellNum();
 			for (int i = 0; i < end; i++) {
+				String val = null;
 				Cell cell = row.getCell(i);
-				String val = String.valueOf(getValue(cell));
+				if (cell != null) {
+					val = String.valueOf(getValue(cell)).trim();
+				} else {
+					val = "";
+				}
 				resultLis.add(val);
 			}
 			dataLis.add(0, "");
@@ -336,8 +341,13 @@ public class ImportExcleServiceImpl implements ImportExcleService {
 			System.out.println("总列数：" + columnTotalNum);
 			int end = row.getLastCellNum();
 			for (int i = 0; i < end; i++) {
+				String val = null;
 				Cell cell = row.getCell(i);
-				String val = String.valueOf(getValue(cell));
+				if (cell != null) {
+					val = String.valueOf(getValue(cell)).trim();
+				} else {
+					val = "";
+				}
 				resultLis.add(val);
 			}
 			dataLis.add(0, "");// 印发时间
