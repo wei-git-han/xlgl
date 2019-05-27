@@ -28,6 +28,7 @@ import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.entity.SubDocTracking;
 import com.css.app.db.business.service.DocumentInfoService;
 import com.css.app.db.business.service.DocumentZbjlService;
+import com.css.app.db.business.service.ReplyExplainService;
 import com.css.app.db.business.service.SubDocInfoService;
 import com.css.app.db.business.service.SubDocTrackingService;
 import com.css.app.db.config.service.AdminSetService;
@@ -62,6 +63,8 @@ public class DocumentZbjlController {
 	private SubDocTrackingService subDocTrackingService;
 	@Autowired
 	private BaseAppOrgMappedService baseAppOrgMappedService;
+	@Autowired
+	private ReplyExplainService replyExplainService;
 	@Autowired
 	private AdminSetService adminSetService;
 	@Autowired
@@ -210,8 +213,17 @@ public class DocumentZbjlController {
 			//改变文件状态 ，文件状态为待落实
 			if(subInfo != null) {
 				subInfo.setDocStatus(DbDocStatusDefined.DAI_LUO_SHI);
+				/*subInfo.setUndertaker("");
+				subInfo.setUndertakerName("");*/
 				subDocInfoService.update(subInfo);
 			}
+			/*//承办人转办，删除承办人当前临时反馈
+			Map<String, Object> map =new HashMap<>();
+			map.put("infoId",infoId );
+			map.put("subId",subId );
+			map.put("showFlag","0" );
+			map.put("version","0" );
+			replyExplainService.deleteByParam(map);*/
 			// 发送消息提醒
 			MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_JU_ZHUANBAN_MSG_TITLE);
 			if (msg != null) {

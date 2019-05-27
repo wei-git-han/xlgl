@@ -18,7 +18,13 @@
 		<if test="roleParam != null and roleParam != null">
 			and ROLE_FLAG &gt; 1
 		</if>
+		<if test="sort != null and sort != null">
+			and SORT = #{sort}
+		</if>
 		order by ROLE_FLAG
+		<if test="roleFlag == '1'.toString()">
+			,SORT asc
+		</if>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
@@ -37,7 +43,8 @@
 			"DEPT_ID", 
 			"DEPT_NAME", 
 			"ROLE_FLAG", 
-			"REMARK"
+			"REMARK",
+			"SORT"
 		)
 		values
 		(
@@ -47,7 +54,8 @@
 			#{deptId}, 
 			#{deptName}, 
 			#{roleFlag}, 
-			#{remark}
+			#{remark},
+			#{sort}
 		)
 	</insert>
 	 
@@ -59,7 +67,8 @@
 			<if test="deptId != null">"DEPT_ID" = #{deptId}, </if>
 			<if test="deptName != null">"DEPT_NAME" = #{deptName}, </if>
 			<if test="roleFlag != null">"ROLE_FLAG" = #{roleFlag}, </if>
-			<if test="remark != null">"REMARK" = #{remark}</if>
+			<if test="remark != null">"REMARK" = #{remark},</if>
+			<if test="sort != null">"SORT" = #{sort}</if>
 		</set>
 		where ID = #{id}
 	</update>

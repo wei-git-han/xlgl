@@ -86,7 +86,7 @@
 						        <div class="tab-pane active" id="tab_15_2" style="position: relative;">
 						        	<form action="" class="pr100" id="commentForm" method="post" enctype="multipart/form-data">
 							        	<div class="pr100">
-							        		<div class="newtop" style="position:absolute;bottom:50px;left:0;width:100%;top:0;right:0;">
+							        		<div class="newtop" style="position:absolute;bottom:40px;left:0;width:100%;top:0;right:0;">
 							        			<!-- 判断是否有催办内容 -->
 									        	<div id="ifcuibanContent" class="ifcuibanContent">
 									        	</div>
@@ -109,40 +109,49 @@
 									            				<input type="hidden" id="editTeamId" name="editTeamId" /><!-- 编辑的反馈的teamId -->
 																<div class="sryj_title">
 																	<span class="pull-left css3" data="0">输入意见/反馈：</span>
+																	
 																	<a class="pull-right changeStatus"  id="changewrite"  style="display:none;">
 															        	<img src='../../../common/images/u618.png' /> 切换为手写签批
 															        </a>
 															        <a class="pull-right changeStatus" id="changejianpan" style="display:none;">
 															        	<img src='../../../common/images/Asset1.png' /> 切换为键盘输入
 															        </a>
+															        
 															        <span class="pull-right setpen">
 															        	<img src="../../../common/images/u619.png" /> 笔粗(<span id="penNum">0.5</span>)
 															        </span>
 																</div>
+																<div class="sryj_title2">
+																	<a class="pull-right" id="fanli">
+															        	范例
+															        </a>
+																</div>
 											        			<div class="sryj_center">
-											        				<div class="pr100" style="border:1px dashed #ccc;">
-										        			    		<textarea class="opinionContent"  id="replyContent" maxlength="500" placeholder="此处填写办理进度供部内审议"  maxlength="500"></textarea> 
-										        			    		<div id="write" class="wh100" style="display:none;">
-										        			    			<input type="hidden" id= "tabletbutton" value="手写工具" onclick="tablet()"/>
-																			<input type="hidden" value="全屏手写" onclick="fullscreen()"/>
-																			<input type="hidden" value="批注颜色" onclick="setcolor()"/>
-																			<input type="hidden" id="clearbutton"  value="清空" onclick="clearsign()"/>
-																			<input type="hidden" id="endbutton"  value="签批确定" onclick="end()"/>
-																			<input type="hidden" id="uploadbutton"   value="上传" onclick="upload()"/>
-																			<div class="pr100">
-																				<embed id="signtool" type="application/ofdsign" class="wh100"/>
-																			</div>
-																			<div style="display:none;">
-																				<img  alt="" id="showimg" src="" />
-																			</div>
-										        			    		</div>
-										        			    		
-										        			    		<ul id="setpenchoose">
-																        	<li data="signpen_05mm"><img src="../images/0.5.png"/><font>0.5</font></li>
-																        	<li data="signpen_1mm"><img src="../images/pen1.png" /><font>1</font></li>
-																        	<li data="softpen_2mm"><img src="../images/pen1.png" /><font>2</font></li>
-																        	<li data="softpen_3mm"><img src="../images/pen3.png" /><font>3</font></li>
-																        </ul>
+											        				<div class="pr100 newstyle">
+											        					<div class="wh100" style="border:1px dashed #ccc;">
+											        			    		<textarea class="opinionContent"  id="replyContent" maxlength="500" placeholder="此处填写办理进度供部内审议"  maxlength="500"></textarea> 
+											        			    		<div id="write" class="wh100" style="display:none;">
+											        			    			<input type="hidden" id= "tabletbutton" value="手写工具" onclick="tablet()"/>
+																				<input type="hidden" value="全屏手写" onclick="fullscreen()"/>
+																				<input type="hidden" value="批注颜色" onclick="setcolor()"/>
+																				<input type="hidden" id="clearbutton"  value="清空" onclick="clearsign()"/>
+																				<input type="hidden" id="endbutton"  value="签批确定" onclick="end()"/>
+																				<input type="hidden" id="uploadbutton"   value="上传" onclick="upload()"/>
+																				<div class="pr100">
+																					<embed id="signtool" type="application/ofdsign" class="wh100"/>
+																				</div>
+																				<div style="display:none;">
+																					<img  alt="" id="showimg" src="" />
+																				</div>
+											        			    		</div>
+											        			    		
+											        			    		<ul id="setpenchoose">
+																	        	<li data="signpen_05mm"><img src="../images/0.5.png"/><font>0.5</font></li>
+																	        	<li data="signpen_1mm"><img src="../images/pen1.png" /><font>1</font></li>
+																	        	<li data="softpen_2mm"><img src="../images/pen1.png" /><font>2</font></li>
+																	        	<li data="softpen_3mm"><img src="../images/pen3.png" /><font>3</font></li>
+																	        </ul>
+																        </div>
 											        			    </div>
 											        			</div>
 										            		</div>
@@ -160,7 +169,7 @@
 								            	<button class="ifShow" type="button" id="zhuanban">转办</button>
 						        				<button class="ifShow" type="button" id="clear">清屏</button>
 						        				
-						        				<div class="btn-group dropup ifShow" id="bjandls" style="display:inline-block;margin-top:-7px;" title="点击确认">
+						        				<!-- <div class="btn-group dropup ifShow" id="bjandls" style="display:inline-block;margin-top:-7px;" title="点击确认">
 													<button class="btn dropdown-toggle" type="button" data-toggle="dropdown" style="background: #6699FF;color:#fff!important">办结 <i class="fa fa-angle-up"></i>
 													</button>
 													<ul class="dropdown-menu pull-right" role="menu">
@@ -171,7 +180,7 @@
 															<a href="javascript:;">常态落实</a>
 														</li>
 													</ul>
-												</div>
+												</div> -->
 						        				
 						        				<div class="ifShow" id="ifaddfj" style="display:inline-block;vertical-align: top;margin-right: 20px;margin-top: 6px;float:right;">
 													<a class="filebutton addfjbtn" id="file1"><i class="fa fa-link"></i> 添加附件 </a>

@@ -447,6 +447,7 @@ public class DocumentInfoController {
 		boolean cuiBanBtn =false;
 		boolean zhuanBanBtn =false;
 		boolean quXiaoBtn =false;
+		boolean banjieBtn =false;
 		
 		//当前登录人的管理员类型
 		Map<String, Object> adminMap = new HashMap<>();
@@ -461,26 +462,81 @@ public class DocumentInfoController {
 			Integer status = documentInfo.getStatus();
 			String cuibanFlag = documentInfo.getCuibanFlag();
 			if(StringUtils.equals("1", adminType)) {
-				zhuanBanBtn=true;
-				if(status>1) {
+				if(status<2) {
+					zhuanBanBtn=true;
+					banjieBtn=true;
+					if(!StringUtils.equals("1", cuibanFlag)) {
+						cuiBanBtn=true;
+					}
+				}else {
 					quXiaoBtn=true;
 				}
 			}
-			if(!StringUtils.equals("1", cuibanFlag) && StringUtils.equals("1", adminType)) {
-				cuiBanBtn=true;
-			}
-		}
-		if(quXiaoBtn) {
-			 cuiBanBtn =false;
-			 zhuanBanBtn =false;
 		}
 		JSONObject json= new JSONObject();
 		json.put("cuiBanBtn", cuiBanBtn);
 		json.put("quXiaoBtn", quXiaoBtn);
 		json.put("zhuanBanBtn", zhuanBanBtn);
+		json.put("banjieBtn", banjieBtn);
 		Response.json(json);
 	}
 	
+	/**
+	 * @description:部管理员强制常态落实
+	 * @author:zhangyw
+	 * @date:2019年5月24日
+	 * @Version v1.0
+	 * @param infoId 主文件id
+	 */
+	@ResponseBody
+	@RequestMapping("/luoShiOperation")
+	public void luoShiOperation(String infoId){
+		JSONObject json= new JSONObject();
+		if(StringUtils.isNotBlank(infoId)) {
+			//主文件状态变为常态落实
+			DocumentInfo info = documentInfoService.queryObject(infoId);
+			info.setSzReadIds("");
+			info.setStatus(3);
+			documentInfoService.update(info);
+			//办结落实记录
+			DocumentBjjl bjjl=new DocumentBjjl();
+			bjjl.setInfoId(infoId);
+			bjjl.setContent("常态落实");
+			documentBjjlService.save(bjjl);
+			json.put("result", "success");
+		}else {
+			json.put("result", "fail");
+		}
+		Response.json(json);
+	}
+	/**
+	 * @description:部管理员强制办结
+	 * @author:zhangyw
+	 * @date:2019年5月24日
+	 * @Version v1.0
+	 * @param infoId 主文件id
+	 */
+	@ResponseBody
+	@RequestMapping("/banJieOperation")
+	public void banJieOperation(String infoId){
+		JSONObject json= new JSONObject();
+		if(StringUtils.isNotBlank(infoId)) {
+			//主文件状态变为办结
+			DocumentInfo info = documentInfoService.queryObject(infoId);
+			info.setSzReadIds("");
+			info.setStatus(2);
+			documentInfoService.update(info);
+			//办结落实记录
+			DocumentBjjl bjjl=new DocumentBjjl();
+			bjjl.setInfoId(infoId);
+			bjjl.setContent("办结");
+			documentBjjlService.save(bjjl);
+			json.put("result", "success");
+		}else {
+			json.put("result", "fail");
+		}
+		Response.json(json);
+	}
 	/**
 	 * 取消办结操作
 	 * @param id 主文件id
@@ -490,41 +546,46 @@ public class DocumentInfoController {
 	public void cancleOperation(String id){
 		JSONObject json= new JSONObject();
 		DocumentInfo info = documentInfoService.queryObject(id);
-		Integer subStatus = DbDocStatusDefined.BAN_LI_ZHONG;
-		//取最后一个办结或落实的局的主文件
+		//取最后办结或落实的局的主文件(正常系统中只会有一个分支文件的状态大于11，导入的会有多个)
 		//文件局内状态（1:待转办；3：退回修改；5：待落实；7：待审批；9：办理中；10：建议办结；11：建议落实；12：办结；1:3：常态落实）
-		SubDocInfo lastEndSubInfo = subDocInfoService.queryLastEndSubInfo(id);
-		String subId =lastEndSubInfo.getId();
-		if(StringUtils.isNotBlank(subId)) {
-			//添加办结记录
-			DocumentBjjl newBjjl=new DocumentBjjl();
-			newBjjl.setContent("取消办结");
-			newBjjl.setInfoId(id);
-			newBjjl.setSubId(subId);
-			documentBjjlService.save(newBjjl);				
-			//取最后一条流转记录
-			SubDocTracking tracking = subDocTrackingService.queryLatestRecord(subId);
-			//trackingType（1：转办；2：审批流转；3：退回;4:新一轮反馈的开始，即承办人的办理）
-			String trackingType = tracking.getTrackingType();
-			//如果最后一条流转为审批，接收人为承办人则文件为办理中，否则文件为待审批
-			if(StringUtils.equals("2",trackingType)) {
-				if(!StringUtils.equals(lastEndSubInfo.getUndertaker(), tracking.getReceiverId())) {
-					subStatus = DbDocStatusDefined.DAI_SHEN_PI;
+		List<SubDocInfo> lastEndSubInfos = subDocInfoService.queryLastEndSubInfo(id);
+		if(lastEndSubInfos !=null && lastEndSubInfos.size()>0) {
+			//lastEndSubInfos存在说明是承办人办结的文或导入的已办结的文
+			for (SubDocInfo lastEndSubInfo : lastEndSubInfos) {
+				String subId =lastEndSubInfo.getId();
+				if(StringUtils.isNotBlank(subId)) {
+					Integer subStatus = DbDocStatusDefined.BAN_LI_ZHONG;
+					//添加办结记录
+					DocumentBjjl newBjjl=new DocumentBjjl();
+					newBjjl.setContent("取消办结");
+					newBjjl.setInfoId(id);
+					newBjjl.setSubId(subId);
+					documentBjjlService.save(newBjjl);				
+					//取最后一条流转记录
+					SubDocTracking tracking = subDocTrackingService.queryLatestRecord(subId);
+					//trackingType（1：转办；2：审批流转；3：退回;4:新一轮反馈的开始，即承办人的办理）
+					String trackingType = tracking.getTrackingType();
+					//如果最后一条流转为审批，接收人为承办人则文件为办理中，否则文件为待审批
+					if(StringUtils.equals("2",trackingType)) {
+						if(!StringUtils.equals(lastEndSubInfo.getUndertaker(), tracking.getReceiverId())) {
+							subStatus = DbDocStatusDefined.DAI_SHEN_PI;
+						}
+						//如果最后一条流转为退回修改，则文件状态为退回修改
+					}else if(StringUtils.equals("3",trackingType)){
+						subStatus = DbDocStatusDefined.TUIHUI_XIUGAI;
+					}
+					//修改最后一个局的文件状态
+					lastEndSubInfo.setDocStatus(subStatus);
+					subDocInfoService.update(lastEndSubInfo);
+				}else {
+					json.put("result", "fail");
 				}
-			//如果最后一条流转为退回修改，则文件状态为退回修改
-			}else if(StringUtils.equals("3",trackingType)){
-				subStatus = DbDocStatusDefined.TUIHUI_XIUGAI;
 			}
-			//修改最后一个局的文件状态
-			lastEndSubInfo.setDocStatus(subStatus);
-			subDocInfoService.update(lastEndSubInfo);
-			//主文件变为办理中
-			info.setStatus(1);
-			documentInfoService.update(info);
-			json.put("result", "success");
-		}else {
-			json.put("result", "fail");
 		}
+		//lastEndSubInfos不存在说明是部管理员强制办结的文，只需要将主文件变为办理中
+		info.setStatus(1);
+		documentInfoService.update(info);
+		json.put("result", "success");
 		Response.json(json);
 	}
 	
