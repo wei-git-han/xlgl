@@ -129,7 +129,8 @@ public class ExportController{
 						telephone = txlOrgtel.get("telephone").toString();
 					}
 				}
-				subInfoBuilder.append(deptName + "                                                  " + subInfoName + "                                                  " + telephone);
+				subInfoBuilder.append(deptName + "   "
+						+ "                                               " + subInfoName + "                                                  " + telephone);
 			}											
 			exportDataMap.put("banjianNumber", documentInfo.getBanjianNumber()==null?"":documentInfo.getBanjianNumber());// 军 委办件号：
 			exportDataMap.put("docCode", documentInfo.getDocCode()==null?"":documentInfo.getDocCode());//文件号：

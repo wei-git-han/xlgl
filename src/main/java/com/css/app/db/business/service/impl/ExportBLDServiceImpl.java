@@ -151,7 +151,7 @@ public class ExportBLDServiceImpl implements ExportService {
 				XWPFTableRow comTableRowOther = ComTable.createRow();
 				XWPFTableCell insertCell = comTableRowOther.getCell(0);
 				insertCell.setText("  已办结事项（共" + banjieNum + "项）");// 已办结事项
-				mergeCell(ComTable, 1, 0, 6);
+				mergeCell(ComTable, 1, 0, 5);
 			}
 			int banjieIndex = 1;
 			for (int i = 0; i < list.size(); i++) {
@@ -184,7 +184,7 @@ public class ExportBLDServiceImpl implements ExportService {
 				XWPFTableRow comTableRowOther2 = ComTable.createRow();
 				XWPFTableCell insertCell2 = comTableRowOther2.getCell(0);
 				insertCell2.setText("  未办结事项（共" + weibanjieNum + "项）");// 未办结事项
-				mergeCell(ComTable, banjieNum > 0 ? banjieNum + 2 : banjieNum + 1, 0, 6);
+				mergeCell(ComTable, banjieNum > 0 ? banjieNum + 2 : banjieNum + 1, 0, 5);
 			}
 			int weibanjieIndex = 1;
 			for (int i = 0; i < list.size(); i++) {
