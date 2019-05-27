@@ -70,6 +70,8 @@ public class ExportController{
 		String exportFileName = "";
 		File tempFile = null;
 		DocumentInfo documentInfo = null;
+		int banjieNum = 0;//办结数量
+		int weibanjieNum = 0;//未办结数量
 		List<Map<String, String>> exportDataLis = new ArrayList<Map<String, String>>();
 		for (String id : ids) {
 			StringBuilder commentBuilder = new StringBuilder();
@@ -81,12 +83,15 @@ public class ExportController{
 			switch (documentInfo.getStatus()) {
 			case 1:
 				statusName = "办理中";
+				weibanjieNum++;
 				break;
 			case 2:
 				statusName = "办结";
+				banjieNum++;
 				break;
 			case 3:
 				statusName = "常态落实";
+				banjieNum++;
 				break;
 			}
 
@@ -94,20 +99,17 @@ public class ExportController{
 			map.put("infoId", id);
 			// 批示指示内容
 			List<DocumentSzps> documentSzpsList = documentSzpsService.queryList(map);
-
 			// 督办落实情况
 			List<ReplyExplain> latestOneReply = replyExplainService.queryAllLatestOneReply(id);
 			// 承办单位人员
 			List<SubDocInfo> subByInfoId = subDocInfoService.queryAllSubByInfoId(id);
 			for (DocumentSzps docSzps : documentSzpsList) {
 				commentBuilder.append(
-						docSzps.getUserName() + " 于" + docSzps.getCreatedTime() + "发表批示内容：" + docSzps.getLeaderComment()
+						docSzps.getUserName() + docSzps.getCreatedTime() + "批示：" + docSzps.getLeaderComment()
 								+ "                                                                        ");
 			}
 			for (ReplyExplain reply : latestOneReply) {
-				replyBuilder.append(
-						reply.getUserName() + " 于" + new SimpleDateFormat("yyyy-MM-dd").format(reply.getCreatedTime())
-								+ "发表办理反馈内容：" + reply.getReplyContent()
+				replyBuilder.append("	"+reply.getReplyContent()
 								+ "                                                                        ");
 			}
 			for (SubDocInfo subInfo : subByInfoId) {
@@ -126,8 +128,8 @@ public class ExportController{
 						telephone = txlOrgtel.get("telephone").toString();
 					}
 				}
-				subInfoBuilder.append(deptName + "        " + subInfoName + "         " + telephone);
-			}
+				subInfoBuilder.append(deptName + "                                                  " + subInfoName + "                                                  " + telephone);
+			}											
 			exportDataMap.put("banjianNumber", documentInfo.getBanjianNumber());// 军 委办件号：
 			exportDataMap.put("docCode", documentInfo.getDocCode());//文件号：
 			exportDataMap.put("docTitle", documentInfo.getDocTitle());// 文件标题
@@ -151,7 +153,7 @@ public class ExportController{
 				tempFile = creatFile(exportFileName);
 				ExportService exportJWZYServiceImpl = new ExportJWZYServiceImpl();
 				ExportWPSservice exportWPSserviceJWZY = new ExportWPSserviceImpl(exportJWZYServiceImpl, exportDataLis,
-						tempFile.getAbsolutePath());
+						tempFile.getAbsolutePath(),banjieNum,weibanjieNum);
 				exportInvoke.setExportWPSservice(exportWPSserviceJWZY);
 				is = exportInvoke.export();
 				break;
@@ -160,7 +162,7 @@ public class ExportController{
 				tempFile = creatFile(exportFileName);
 				ExportService exportJWSZServiceImpl = new ExportJWSZServiceImpl();
 				ExportWPSservice exportWPSserviceJWSZ = new ExportWPSserviceImpl(exportJWSZServiceImpl, exportDataLis,
-						tempFile.getAbsolutePath());
+						tempFile.getAbsolutePath(),banjieNum,weibanjieNum);
 				exportInvoke.setExportWPSservice(exportWPSserviceJWSZ);
 				is = exportInvoke.export();
 				break;
@@ -169,7 +171,7 @@ public class ExportController{
 				tempFile = creatFile(exportFileName);
 				ExportService exportZYJCServiceImpl = new ExportZYJCServiceImpl();
 				ExportWPSservice exportWPSserviceZYJC = new ExportWPSserviceImpl(exportZYJCServiceImpl, exportDataLis,
-						tempFile.getAbsolutePath());
+						tempFile.getAbsolutePath(),banjieNum,weibanjieNum);
 				exportInvoke.setExportWPSservice(exportWPSserviceZYJC);
 				is = exportInvoke.export();
 				break;
@@ -178,7 +180,7 @@ public class ExportController{
 				tempFile = creatFile(exportFileName);
 				ExportService exportBLDServiceImpl = new ExportBLDServiceImpl();
 				ExportWPSservice exportWPSserviceBLD = new ExportWPSserviceImpl(exportBLDServiceImpl, exportDataLis,
-						tempFile.getAbsolutePath());
+						tempFile.getAbsolutePath(),banjieNum,weibanjieNum);
 				exportInvoke.setExportWPSservice(exportWPSserviceBLD);
 				is = exportInvoke.export();
 				break;
@@ -187,7 +189,7 @@ public class ExportController{
 				tempFile = creatFile(exportFileName);
 				ExportService exportBNZYGZServiceImpl = new ExportBNZYGZServiceImpl();
 				ExportWPSservice exportWPSserviceBNZYGZ = new ExportWPSserviceImpl(exportBNZYGZServiceImpl,
-						exportDataLis, tempFile.getAbsolutePath());
+						exportDataLis, tempFile.getAbsolutePath(),banjieNum,weibanjieNum);
 				exportInvoke.setExportWPSservice(exportWPSserviceBNZYGZ);
 				is = exportInvoke.export();
 				break;
@@ -196,7 +198,7 @@ public class ExportController{
 				tempFile = creatFile(exportFileName);
 				ExportService exportQTServiceImpl = new ExportQTServiceImpl();
 				ExportWPSservice exportWPSserviceQT = new ExportWPSserviceImpl(exportQTServiceImpl, exportDataLis,
-						tempFile.getAbsolutePath());
+						tempFile.getAbsolutePath(),banjieNum,weibanjieNum);
 				exportInvoke.setExportWPSservice(exportWPSserviceQT);
 				is = exportInvoke.export();
 				break;

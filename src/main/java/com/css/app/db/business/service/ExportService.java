@@ -12,5 +12,5 @@ import java.util.Map;
  */
 public interface ExportService {
 
-	FileInputStream exportWPSdoc(List<Map<String, String>> list,String fileName) throws IOException;
+	FileInputStream exportWPSdoc(List<Map<String, String>> list,String fileName,int banjieNum,int weibanjieNum) throws IOException;
 }

@@ -31,6 +31,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc;
@@ -45,7 +46,7 @@ import com.css.app.db.business.service.ExportService;
 @Service("exportQTServiceImpl")
 public class ExportQTServiceImpl implements ExportService{
     @Override
-	public  FileInputStream exportWPSdoc(List<Map<String, String>> list,String fileName) throws IOException {
+	public  FileInputStream exportWPSdoc(List<Map<String, String>> list,String fileName,int banjieNum,int weibanjieNum) throws IOException {
 		FileOutputStream fout = null;
         try {						
 	        //添加标题
@@ -150,39 +151,77 @@ public class ExportQTServiceImpl implements ExportService{
 			headerCell .setText("办理状态");
 			headerCell = comTableRowOne.addNewTableCell();
 			cellCentre(headerCell);
-			headerCell.setText("承办单位人员");
-			
-			for(int i=0;i<list.size();i++){
-				//表格内容行
-				Map<String, String> dataMap = list.get(i);
-				XWPFTableRow comTableRowTwo = ComTable.createRow();
-				XWPFTableCell bodyCell = comTableRowTwo.getCell(0);
-				cellCentre(bodyCell);
-				bodyCell.setText(String.valueOf(i+1));//序号
-				bodyCell = comTableRowTwo.getCell(1);
-				cellCentre(bodyCell);
-				bodyCell.setText(dataMap.get("printDate"));//印发时间
-				bodyCell = comTableRowTwo.getCell(2);
-				cellCentre(bodyCell);
-				bodyCell.setText(dataMap.get("docCode"));//办件号
-				bodyCell = comTableRowTwo.getCell(3);
-				cellCentre(bodyCell);
-				bodyCell.setText(dataMap.get("docTitle"));//文件标题
-				bodyCell = comTableRowTwo.getCell(4);
-				cellleft(bodyCell);
-				bodyCell.setText(dataMap.get("jobContent"));//批示指示内容
-				bodyCell = comTableRowTwo.getCell(5);
-				cellleft(bodyCell);
-				bodyCell.setText(dataMap.get("replyComment"));//督办落实情况
-				bodyCell = comTableRowTwo.getCell(6);
-				cellCentre(bodyCell);
-				bodyCell.setText(dataMap.get("status"));//办理状态
-				bodyCell = comTableRowTwo.getCell(7);
-				cellCentre(bodyCell);
-				bodyCell.setText(dataMap.get("subInfoComment"));//承办单位 人员
-				
-			}
-		
+			headerCell.setText("督办单位/人员");
+						 XWPFTableRow comTableRowOther = ComTable.createRow();
+		        XWPFTableCell insertCell = comTableRowOther.getCell(0);
+		        insertCell.setText("  已办结事项（共"+banjieNum+"项）");//已办结事项
+				mergeCell(ComTable,1,0,6);	
+			    int banjieIndex =1;
+				for(int i=0;i<list.size();i++){
+					//表格内容行
+					Map<String, String> dataMap = list.get(i);
+					XWPFTableRow comTableRowTwo = ComTable.createRow();
+					XWPFTableCell bodyCell = comTableRowTwo.getCell(0);
+					cellCentre(bodyCell);
+					bodyCell.setText(String.valueOf(banjieIndex++));//序号
+					bodyCell = comTableRowTwo.getCell(1);
+					cellCentre(bodyCell);
+					bodyCell.setText(dataMap.get("printDate"));//印发时间
+					bodyCell = comTableRowTwo.getCell(2);
+					cellCentre(bodyCell);
+					bodyCell.setText(dataMap.get("docCode"));//办件号
+					bodyCell = comTableRowTwo.getCell(3);
+					cellCentre(bodyCell);
+					bodyCell.setText(dataMap.get("docTitle"));//文件标题
+					bodyCell = comTableRowTwo.getCell(4);
+					cellleft(bodyCell);
+					bodyCell.setText(dataMap.get("jobContent"));//批示指示内容
+					bodyCell = comTableRowTwo.getCell(5);
+					cellleft(bodyCell);
+					bodyCell.setText(dataMap.get("replyComment"));//督办落实情况
+					bodyCell = comTableRowTwo.getCell(6);
+					cellCentre(bodyCell);
+					bodyCell.setText(dataMap.get("status"));//办理状态
+					bodyCell = comTableRowTwo.getCell(7);
+					cellCentre(bodyCell);
+					bodyCell.setText(dataMap.get("subInfoComment"));//承办单位 人员
+					
+				}
+				XWPFTableRow comTableRowOther2 = ComTable.createRow();
+				XWPFTableCell insertCell2 = comTableRowOther2.getCell(0);
+				insertCell2.setText("  未办结事项（共"+weibanjieNum+"项）");//未办结事项
+				mergeCell(ComTable,banjieNum+2,0,6);
+			    int weibanjieIndex =1;
+				for(int i=0;i<list.size();i++){
+					//表格内容行
+					Map<String, String> dataMap = list.get(i);
+					XWPFTableRow comTableRowTwo = ComTable.createRow();
+					XWPFTableCell bodyCell = comTableRowTwo.getCell(0);
+					cellCentre(bodyCell);
+					bodyCell.setText(String.valueOf(weibanjieIndex++));//序号
+					bodyCell = comTableRowTwo.getCell(1);
+					cellCentre(bodyCell);
+					bodyCell.setText(dataMap.get("printDate"));//印发时间
+					bodyCell = comTableRowTwo.getCell(2);
+					cellCentre(bodyCell);
+					bodyCell.setText(dataMap.get("docCode"));//办件号
+					bodyCell = comTableRowTwo.getCell(3);
+					cellCentre(bodyCell);
+					bodyCell.setText(dataMap.get("docTitle"));//文件标题
+					bodyCell = comTableRowTwo.getCell(4);
+					cellleft(bodyCell);
+					bodyCell.setText(dataMap.get("jobContent"));//批示指示内容
+					bodyCell = comTableRowTwo.getCell(5);
+					cellleft(bodyCell);
+					bodyCell.setText(dataMap.get("replyComment"));//督办落实情况
+					bodyCell = comTableRowTwo.getCell(6);
+					cellCentre(bodyCell);
+					bodyCell.setText(dataMap.get("status"));//办理状态
+					bodyCell = comTableRowTwo.getCell(7);
+					cellCentre(bodyCell);
+					bodyCell.setText(dataMap.get("subInfoComment"));//承办单位 人员
+					
+				}
 			fout = new FileOutputStream(fileName);
 			document.write(fout);
 			fout.flush();
@@ -223,7 +262,18 @@ public class ExportQTServiceImpl implements ExportService{
 		cttc.getPList().get(0).addNewPPr().addNewJc().setVal(STJc.LEFT);
 	}
 	
-
+	private void mergeCell(XWPFTable table, int row, int fromCell, int toCell) {
+		if (row > 0) {
+			for (int cellIndex = fromCell; cellIndex <= toCell; cellIndex++) {
+				XWPFTableCell cell = table.getRow(row).getCell(cellIndex);
+				if (cellIndex == fromCell) {
+					cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+				} else {
+					cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+				}
+			}
+		}
+	}
 }
 	
 
