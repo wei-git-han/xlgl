@@ -533,19 +533,8 @@ var pageModule = function(){
 			    },
 			    width: 1600,
 			    height:850,
-			    url: rootPath + "/document/blfk/html/importTable.html?tableNum="+tableNum+'&typeId='+$("#classType li.active").attr("value")+'&fileFrom='+fileFrom
+			    url: rootPath + "/document/blfk/html/exportTable.html?tableNum="+tableNum+'&typeId='+$("#classType li.active").attr("value")+'&fileFrom='+fileFrom
 			  });
-/*			newbootbox.newdialog({
-			    id: "importTable",
-			    title: "导出",
-			    style: {
-			      "padding": "1px"
-			    },
-			    width: 1600,
-			    height: 850,
-			    url: rootPath + "/document/blfk/html/importTable.html?tableNum="+tableNum;
-			  });
-			});*/
 		/*			var datas;
 		if($("#gridcont3").is(":visible")){
 			datas=grid3.getcheckrow();

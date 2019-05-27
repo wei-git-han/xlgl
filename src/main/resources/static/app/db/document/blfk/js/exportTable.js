@@ -1,19 +1,25 @@
 var tableList= {"url":"/app/db/documentinfo/replyList","dataType":"text"};//原table数据
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var typeId = getUrlParam("typeId");
-var grid = null;
-var grid2 = null;
-var grid3 = null;
+var newGrid = null;
+var newGrid2 = null;
+var newGrid3 = null;
 var total=0;//列表中，数据的总条数
 var tableNum = getUrlParam("tableNum");
 if(!window.top.memory){
 	window.top.memory = {};
 }
 var o = window.top.memory;
-
+var page = 1;
+var pageSize = 100000;
+var initFlag = '1';
 var pageModule = function(){
-
 	var initTableNum = function(){
+		if(typeId==1||typeId==2||typeId==4){
+			$('#timeTitle').html("批示指示时间")
+		}else if(typeId==3||typeId==5||typeId==6 ){
+			$('#timeTitle').html('转办时间')
+		};
 		if(tableNum == "3"){ //部领导批示指示 
 			window.top.memory.tree = "3";
 			$("#gridcont3").show();
@@ -35,7 +41,7 @@ var pageModule = function(){
 		}
 	}
 	var initgrid = function(){
-        grid = $("#gridcont").createGrid({
+        newGrid = $("#gridcont").createGrid({
             columns:[
             	{display:"军委办件号",name:"",width:"8%",align:"left",title:true,render:function(rowdata,n){
                	 	return rowdata.banjianNumber;
@@ -107,9 +113,12 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 10000,
             pageyno:false,
-            paramobj:{search:"",status:"",typeId:typeId,startDate:$('#designStart').val(),endDate:$('#designEnd').val(),pagesize:100000,page:1},
+            paramobj:{search:"",status:"",typeId:typeId,startDate:$('#designStart').val(),endDate:$('#designEnd').val(),pagesize:pageSize,page:page,initFlag:initFlag},
             loadafter:function(data){
             	total=data.total;
+            	if(data.rows.length>0){
+            		$('#showNone').hide()
+            	}
             	$(".zspsnr").each(function(){
 					var maxwidth = 85;
 					if($(this).text().length > maxwidth){
@@ -144,7 +153,7 @@ var pageModule = function(){
 	}
 	
 	var initgrid2 = function(){
-        grid2 = $("#gridcont2").createGrid({
+        newGrid2 = $("#gridcont2").createGrid({
             columns:[
             	{display:"印发时间",name:"",width:"6%",align:"center",paixu:false,render:function(rowdata){
             		if(rowdata.printDate && rowdata.printDate!="" && rowdata.printDate!="null" && rowdata.printDate!=null){
@@ -211,9 +220,12 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 100000,
             pageyno:false,
-            paramobj:{search:'',status:"",typeId:typeId,startDate:$('#designStart').val(),endDate:$('#designEnd').val(),pagesize:100000,page:1},
+            paramobj:{search:'',status:"",typeId:typeId,startDate:$('#designStart').val(),endDate:$('#designEnd').val(),pagesize:pageSize,page:page,initFlag:initFlag},
             loadafter:function(data){
             	total=data.total;
+            	if(data.rows.length>0){
+            		$('#showNone').hide()
+            	}
             	$(".dblsqk span").each(function(){
 					var maxwidth = 80;
 					if($(this).text().length > maxwidth){
@@ -248,7 +260,7 @@ var pageModule = function(){
 	}
 
 	var initgrid3 = function(){
-        grid3 = $("#gridcont3").createGrid({
+        newGrid3 = $("#gridcont3").createGrid({
             columns:[
                 {display:"办理状态",name:"",width:"8%",align:"center",render:function(rowdata,n){
                 	var statusName="";
@@ -317,9 +329,12 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 100000,
             pageyno:false,
-            paramobj:{search:"",status:"",typeId:typeId,startDate:$('#designStart').val(),endDate:$('#designEnd').val(),pagesize:100000,page:1},
+            paramobj:{search:"",status:"",typeId:typeId,startDate:$('#designStart').val(),endDate:$('#designEnd').val(),pagesize:pageSize,page:page,initFlag:initFlag},
             loadafter:function(data){
             	total=data.total;
+            	if(data.rows.length>0){
+            		$('#showNone').hide()
+            	}
             	$(".zspsnr").each(function(){
 					var maxwidth = 85;
 					if($(this).text().length > maxwidth){
@@ -362,26 +377,32 @@ var pageModule = function(){
 		    format : "yyyy-mm-dd",
 		    autoclose: true
 		});
-		
+		if(initFlag==1){
+			$('#showNone').show();
+		}
 		//筛选功能
 		$("#sure").click(function(){
-			 refreshgrid();
+			initFlag = '';
+			refreshgrid();
+			$('#showNone').hide();
 		});
 		
 		//重置
 		$("#reset").click(function(){
 			removeInputData(["designStart","designEnd"]);
+			initFlag = '1';
+			refreshgrid();
+			$('#showNone').show();
 		});
-		
 		//导出
 		$("#export").click(function(){
 			var datas;
 			if(tableNum==3){
-				datas=grid3.getcheckrow();
+				datas=newGrid3.getcheckrow();
 			}else if(tableNum==2){
-				datas=grid2.getcheckrow();
+				datas=newGrid2.getcheckrow();
 			}else{
-				datas=grid.getcheckrow();
+				datas=newGrid.getcheckrow();
 			}
 			var ids='';
 			var t_count=0;
@@ -395,7 +416,7 @@ var pageModule = function(){
 			     	title:"提示",
 			     	message: "将导出"+t_count+"条数据！",
 			     	callback1:function(){
-			     		window.location.href='/app/db/export/exportDocx?stringIds='+ids;
+			     		window.top.location.href='/app/db/export/exportDocx?stringIds='+ids;
 			     	}
 			    });
 			}else{

@@ -173,7 +173,7 @@ body {
 	vertical-align: middle;
 }
 .time .control-label{
-	width: 64px;
+	width: 100px;
 	display: inline-block;
 	text-align: right;
 	float: left;
@@ -210,4 +210,10 @@ body {
 	border-radius: 10px;
 	background-color: #999999;
 	padding: 2px 3px;
+}
+.showNone{
+	font-size: 1.3em;
+	position: absolute;
+	left: 42%;
+	top: 45%;
 }
