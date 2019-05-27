@@ -1,22 +1,6 @@
-//注：修改列表查询的参数一定要对应的修改红点显示leftMenuUrl和统计数numsList
 var tableList= {"url":"/app/db/documentinfo/replyList","dataType":"text"};//原table数据
-var numsList={"url":"/app/db/documentinfo/replyNums","dataType":"text"};//筛选状态数字统计
-var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//部门树
-var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//人员树
-var leftMenuUrl = {"url":"/app/db//documentinfo/getDicByTypet","dataType":"text"};//左侧菜单
-var batchReadUrl = {"url":"/app/db/documentinfo/batchRead","dataType":"text"};//批量已读
-var leftMenuNums = {"url":"","dataType":"text"};//左侧菜单数字统计
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
-var orgid=getUrlParam("orgid")||""; //统计图传过来的机构
-var month=getUrlParam("month")||""; //统计图传过来的月份
-var ytype=getUrlParam("ytype")||""; //统计图传过来的办理状态
 var typeId = getUrlParam("typeId");
-if(fileFrom && fileFrom == "jcdb"){
-	if(ytype){
-		$("input[value="+ytype+"]").attr("checked",true);
-	}
-}
-
 var grid = null;
 var grid2 = null;
 var grid3 = null;
@@ -28,67 +12,7 @@ if(!window.top.memory){
 var o = window.top.memory;
 
 var pageModule = function(){
-	//左侧菜单树
-/*	var leftMenufn = function(){
-		$ajax({
-			url:leftMenuUrl,
-			data:{orgid:orgid,month:month},
-			async:false,
-			success:function(data){
-				$("#classType").html("");
-				$.each(data.document_type,function(i,item){
-					var dot ='';
-					if(item.hasUpdateNum!=0){
-						dot = '<span class="dot"></span>'
-					}
-					$("#classType").append('<li class="'+(i==0?"active":"")+'" data_flag="'+item.gridFlag+'" value="'+item.value+'"><span>'+item.text+dot+'</span><font id="Menu_num'+i+'"></font><i class="fa fa-angle-right"></i></li>');
-				});
-				
-				$("#classType li").unbind("click");
-				$("#classType li").click(function(){
-					window.top.memory.value = $(this).attr("value");
-					$(this).siblings().removeClass("active");
-					$(this).addClass("active");
-					if($(this).attr("data_flag") == "3"){ //部领导批示指示 
-						window.top.memory.tree = "3";
-						$("#gridcont3").show();
-						$("#gridcont2").hide();
-						$("#gridcont").hide();
-						refreshgrid3();
-					}else if($(this).attr("data_flag") == "2"){//分工
-						window.top.memory.tree = "2";
-						$("#gridcont3").hide();
-						$("#gridcont").hide();
-						$("#gridcont2").show();
-						refreshgrid2();
-					}else{//批示
-						window.top.memory.tree = "1";
-						$("#gridcont3").hide();
-						$("#gridcont2").hide();
-						$("#gridcont").show();
-						refreshgrid1();
-					}
-				});
-				
-				if(o.value!="" && o.value!=null &&　o.value!="null" && o.value!="undefined"){
-					$("#classType li").removeClass("active");
-					$("#classType li[value="+o.value+"]").addClass("active");
-				}
-				
-				$ajax({
-					url:leftMenuNums,
-					data:{dicType:"document_type"},
-					success:function(data){
-						$.each(data,function(j,item2){
-							var id = "Menu_num"+j;
-							$("#"+id).html(item2);
-						});
-					}
-				});	
-				
-			}
-		});	
-	}*/
+
 	var initTableNum = function(){
 		if(tableNum == "3"){ //部领导批示指示 
 			window.top.memory.tree = "3";
@@ -183,7 +107,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 10000,
             pageyno:false,
-            paramobj:{search:"",status:"",typeId:typeId,designStart:$('#designStart').val(),designEnd:$('#designEnd').val(),pagesize:100000,page:1},
+            paramobj:{search:"",status:"",typeId:typeId,startDate:$('#designStart').val(),endDate:$('#designEnd').val(),pagesize:100000,page:1},
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
@@ -287,7 +211,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 100000,
             pageyno:false,
-            paramobj:{search:'',status:"",typeId:typeId,designStart:$('#designStart').val(),designEnd:$('#designEnd').val(),pagesize:100000,page:1},
+            paramobj:{search:'',status:"",typeId:typeId,startDate:$('#designStart').val(),endDate:$('#designEnd').val(),pagesize:100000,page:1},
             loadafter:function(data){
             	total=data.total;
             	$(".dblsqk span").each(function(){
@@ -393,7 +317,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 100000,
             pageyno:false,
-            paramobj:{search:"",status:"",typeId:typeId,designStart:$('#designStart').val(),designEnd:$('#designEnd').val(),pagesize:100000,page:1},
+            paramobj:{search:"",status:"",typeId:typeId,startDate:$('#designStart').val(),endDate:$('#designEnd').val(),pagesize:100000,page:1},
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
@@ -429,18 +353,6 @@ var pageModule = function(){
        });
 	}
 	
-/*	var numsListfn = function(){
-		$ajax({
-			url:numsList,
-			data:{search:$("#searchVal").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month},
-			success:function(data){
-				$.each(data,function(i,item){
-					var id = "grdb"+i;
-					$("#"+id).html(item);
-				});
-			}
-		});	
-	}*/
 	
 	var initother = function(){
 		$(".date-picker").datepicker({
@@ -451,89 +363,14 @@ var pageModule = function(){
 		    autoclose: true
 		});
 		
-		$(".search").hover(function(){
-			$(this).attr("src","../../../common/images/u132_mouseOver.png");
-		},function(){
-			$(this).attr("src","../../../common/images/u132_mouseDown.png");
-		});
-
-		$("input[name='documentStatus']").click(function(){
-			refreshgrid();
-		});
-		
-		$(".search").click(function(){
-			refreshgrid();
-		});
-		
-		$("#searchAll").click(function(){
-			$("#searchwrap").toggle();
-		});
-		
-		$("body").click(function(e){
-			if($(e.target).hasClass("searchAll") || $(e.target).hasClass("form-group") || $(e.target).parents("div").hasClass("searchwrap")){
-				return;
-			};
-			$(".searchwrap").slideUp(50);
-		});
-		
 		//筛选功能
 		$("#sure").click(function(){
-//			 $("#searchwrap").slideUp(50);
 			 refreshgrid();
 		});
-/*		
-		//筛选功能
-		$("#close").click(function(){
-			$("#searchwrap").slideUp(50);
-		});*/
 		
 		//重置
 		$("#reset").click(function(){
 			removeInputData(["designStart","designEnd"]);
-		});
-		
-		$("#plyd").click(function(){
-			var datas;
-			var ids=[];
-			if($("#gridcont3").is(":visible")){
-				datas=grid3.getcheckrow();
-				$(datas).each(function(i){
-					ids[i]=this.id;
-				});
-			}else if($("#gridcont2").is(":visible")){
-				datas=grid2.getcheckrow();
-				$(datas).each(function(i){
-					ids[i]=this.id;
-				});
-			}else{
-				datas=grid.getcheckrow();
-				$(datas).each(function(i){
-					ids[i]=this.id;
-				});
-			}
-			if(datas.length>0){
-				newbootbox.confirm({
-				    title: "提示",
-				    message: "是否要进行确认已读操作？",
-				    callback1:function(){
-				    	$ajax({
-							url:batchReadUrl,
-							data:{ids:ids.toString()},
-							success:function(data){
-								if(data.result == "success"){
-									newbootbox.alertInfo("已读成功！").done(function(){
-//										leftMenufn();
-										refreshgrid();
-										window.top.blfkfn();
-									});
-								}
-							}
-						});	
-				    }
-				});
-			}else{
-				newbootbox.alertInfo("请选择要确认已读的数据！");
-			}
 		});
 		
 		//导出
@@ -565,74 +402,10 @@ var pageModule = function(){
 				newbootbox.alertInfo("请选择要导出的数据！");
 			}
 		});
-		//导入
-		$("#wjdr").click(function(){
-			 newbootbox.newdialog({
-			    id: "fileDr",
-			    title: "选择文件",
-			    style: {
-			      "padding": "1px"
-			    },
-			    width: 800,
-			    height: 200,
-			    url: rootPath + "/document/blfk/html/filepage.html"
-			  });
-		});
 		
-		//菜单左缩进
-		$("#suo").click(function(){
-			if($(this).find("i").hasClass("fa-chevron-right")){
-				$(this).find("i").removeClass("fa-chevron-right").addClass("fa-chevron-left");
-				$("#right_content").css("left","256px");
-				$(this).parent().css("left","256px");
-				$("#left_content").show();
-			}else{
-				$(this).find("i").removeClass("fa-chevron-left").addClass("fa-chevron-right");
-				$("#left_content").hide();
-				$(this).parent().css("left","0px");
-				$("#right_content").css("left","0px");
-			}
-			if($("#gridcont2").is(":hidden")){
-				pageModule.initgrid();
-			}else{
-				pageModule.initgrid2();
-			}
-		});
 		$("#closeTable,#cancel").click(function(){
 			newbootbox.newdialogClose("importTable");
 		})
-		
-	}
-	
-	var inittree = function(){
-		$("#deptname").createcheckboxtree({
-			url : deptUrl,
-			width : "100%",
-			success : function(data, treeobj) {},
-			selectnode : function(e, data,treessname,treessid) {
-				$("#deptid").val(treessid);
-				$("#deptname").val(treessname);
-			},
-			deselectnode:function(e,data,treessname,treessid){
-				$("#deptid").val(treessid);
-				$("#deptname").val(treessname);
-		   }
-		});
-		
-		$("#username").createUserTree({
-			url : userUrl,
-			width : "100%",
-			success : function(data, treeobj) {
-			},
-			selectnode : function(e, data,treessname,treessid) {
-				$("#userid").val(treessid);
-				$("#username").val(treessname);
-			},
-			deselectnode : function(e, data,treessname,treessid) {
-				$("#userid").val(treessid);
-				$("#username").val(treessname);
-			}
-		});
 	}
 	
 
@@ -642,7 +415,6 @@ var pageModule = function(){
 			initTableNum();
 			initgrid();
 			initother();
-			inittree();
 		},
 		initgrid:function(){
 			initgrid();
@@ -652,7 +424,6 @@ var pageModule = function(){
 		},
 		initgrid3:function(){
 			initgrid3();
-//			numsListfn();
 		}
 	};
 }();
