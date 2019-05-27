@@ -218,75 +218,94 @@ public class DocumentInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/replyList")
-	public void replyList(Integer page, Integer pagesize,String search
-			,String status,String typeId,String orgid,String month){
-		String loginUserId=CurrentUser.getUserId();
-		String dateStr = null;
-		if(!StringUtils.isEmpty(month) && StringUtil.equals("all", month)) {
-			dateStr = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE).substring(0,4);
-		}else if(!StringUtils.isEmpty(month)) {
-			dateStr = LocalDate.now().withMonth(Integer.parseInt(month)).format(DateTimeFormatter.ISO_LOCAL_DATE).substring(0,7);
-		}
-		String adminType = null;//管理员类型（1：部管理员；2：局管理员）
-		String roleType = DbDefined.ROLE_6;//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
-		//当前登录人的管理员类型
-		Map<String, Object> adminMap = new HashMap<>();
-		adminMap.put("userId", loginUserId);
-		List<AdminSet> adminList = adminSetService.queryList(adminMap);
-		if(adminList != null && adminList.size()>0) {
-			adminType = adminList.get(0).getAdminType();
-		}
-		//当前登录人的角色
-		Map<String, Object> roleMap = new HashMap<>();
-		roleMap.put("userId", loginUserId);
-		List<RoleSet> roleList = roleSetService.queryList(roleMap);
-		if(roleList != null && roleList.size()>0) {
-			roleType = roleList.get(0).getRoleFlag();
-		}
+	public void replyList(Integer page, Integer pagesize,String search,String status,String typeId,String orgid,String month,String startDate,String endDate,String initFlag){
 		List<DocumentInfo> infoList =null;
-		Map<String, Object> map = new HashMap<>();
-		map.put("docStatus", "2");
-		map.put("type", typeId);
-		map.put("search", search);
-		map.put("orgid", orgid);
-		map.put("year", dateStr);
-		if(StringUtils.isNotBlank(status)) {
-			if(StringUtils.equals("update", status)) {
-				map.put("loginUserId", loginUserId);
-				map.put("hasUpdate", status);
-			}else {
-				map.put("state", status);
+		if(!StringUtils.equals("1", initFlag)) {//initFlag为1 为导出页的初始化加载
+			String loginUserId=CurrentUser.getUserId();
+			String dateStr = null;
+			if(!StringUtils.isEmpty(month) && StringUtil.equals("all", month)) {
+				dateStr = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE).substring(0,4);
+			}else if(!StringUtils.isEmpty(month)) {
+				dateStr = LocalDate.now().withMonth(Integer.parseInt(month)).format(DateTimeFormatter.ISO_LOCAL_DATE).substring(0,7);
 			}
-		}
-		if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType)
-				&& !StringUtils.equals(DbDefined.ROLE_1, roleType) && !StringUtils.equals(DbDefined.ROLE_3, roleType)) {
-			if(StringUtils.equals(DbDefined.ROLE_5, roleType)) {
-				map.put("deptId", CurrentUser.getDepartmentId());
-			}else {
-				map.put("loginUserId", loginUserId);
+			String adminType = null;//管理员类型（1：部管理员；2：局管理员）
+			String roleType = DbDefined.ROLE_6;//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
+			//当前登录人的管理员类型
+			Map<String, Object> adminMap = new HashMap<>();
+			adminMap.put("userId", loginUserId);
+			List<AdminSet> adminList = adminSetService.queryList(adminMap);
+			if(adminList != null && adminList.size()>0) {
+				adminType = adminList.get(0).getAdminType();
 			}
-			PageHelper.startPage(page, pagesize);
-			infoList = documentInfoService.queryPersonList(map);
-		} else {
-			if(StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType)) {
-				String orgId = baseAppUserService.getBareauByUserId(loginUserId);
-				if(StringUtils.isNotBlank(orgId)) {
-					map.put("orgid", orgId);
+			//当前登录人的角色
+			Map<String, Object> roleMap = new HashMap<>();
+			roleMap.put("userId", loginUserId);
+			List<RoleSet> roleList = roleSetService.queryList(roleMap);
+			if(roleList != null && roleList.size()>0) {
+				roleType = roleList.get(0).getRoleFlag();
+			}
+			Map<String, Object> map = new HashMap<>();
+			map.put("docStatus", "2");
+			map.put("type", typeId);
+			map.put("search", search);
+			map.put("orgid", orgid);
+			map.put("year", dateStr);
+			if(StringUtils.isNotBlank(status)) {
+				if(StringUtils.equals("update", status)) {
+					map.put("loginUserId", loginUserId);
+					map.put("hasUpdate", status);
+				}else {
+					map.put("state", status);
 				}
 			}
-			PageHelper.startPage(page, pagesize);
-			infoList = documentInfoService.queryList(map);
-		}
-		for (DocumentInfo info : infoList) {
-			//是否已读
-			Map<String, Object> readMap = new HashMap<>();
-			readMap.put("userId", loginUserId);
-			readMap.put("infoId", info.getId());
-			List<DocumentRead> list = documentReadService.queryList(readMap);
-			
-			//催办为0，未读，最新反馈字段有值则标识为已更新
-			if(list.size()==0 && StringUtils.isNotBlank(info.getLatestReply())) {
-				info.setUpdateFlag("1");
+			//导出的时间段搜索批示指示时间
+			if(StringUtils.isNotBlank(startDate)||StringUtils.isNotBlank(endDate)) {
+				if(StringUtils.equals("3", typeId)||StringUtils.equals("5", typeId)||StringUtils.equals("6", typeId)) {
+					if(StringUtils.isNotBlank(startDate)) {
+						map.put("zbStartDate", startDate);
+					}
+					if(StringUtils.isNotBlank(endDate)) { 
+						map.put("zbEndDate", endDate);
+					}
+				}else {
+					if(StringUtils.isNotBlank(startDate)) {
+						map.put("startDate", startDate);
+					}
+					if(StringUtils.isNotBlank(endDate)) { 
+						map.put("endDate", endDate);
+					}
+				}
+			}
+			if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType)
+					&& !StringUtils.equals(DbDefined.ROLE_1, roleType) && !StringUtils.equals(DbDefined.ROLE_3, roleType)) {
+				if(StringUtils.equals(DbDefined.ROLE_5, roleType)) {
+					map.put("deptId", CurrentUser.getDepartmentId());
+				}else {
+					map.put("loginUserId", loginUserId);
+				}
+				PageHelper.startPage(page, pagesize);
+				infoList = documentInfoService.queryPersonList(map);
+			} else {
+				if(StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType)) {
+					String orgId = baseAppUserService.getBareauByUserId(loginUserId);
+					if(StringUtils.isNotBlank(orgId)) {
+						map.put("orgid", orgId);
+					}
+				}
+				PageHelper.startPage(page, pagesize);
+				infoList = documentInfoService.queryList(map);
+			}
+			for (DocumentInfo info : infoList) {
+				//是否已读
+				Map<String, Object> readMap = new HashMap<>();
+				readMap.put("userId", loginUserId);
+				readMap.put("infoId", info.getId());
+				List<DocumentRead> list = documentReadService.queryList(readMap);
+				
+				//催办为0，未读，最新反馈字段有值则标识为已更新
+				if(list.size()==0 && StringUtils.isNotBlank(info.getLatestReply())) {
+					info.setUpdateFlag("1");
+				}
 			}
 		}
 		GwPageUtils pageUtil = new GwPageUtils(infoList);
