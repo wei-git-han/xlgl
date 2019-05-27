@@ -37,78 +37,80 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc;
 import org.springframework.stereotype.Service;
 import com.css.app.db.business.service.ExportService;
+
 /**
- * wps相关操作类
- * 部内重要工作分工
+ * wps相关操作类 部内重要工作分工
+ * 
  * @author weizy
  *
  */
 @Service
-public class ExportBNZYGZServiceImpl implements ExportService{
-    @Override
-	public  FileInputStream exportWPSdoc(List<Map<String, String>> list,String fileName,int banjieNum,int weibanjieNum) throws IOException {
+public class ExportBNZYGZServiceImpl implements ExportService {
+	@Override
+	public FileInputStream exportWPSdoc(List<Map<String, String>> list, String fileName, int banjieNum,
+			int weibanjieNum) throws IOException {
 		FileOutputStream fout = null;
-        try {						
-	        //添加标题
-            XWPFDocument document= new XWPFDocument();
-            CTDocument1 doc = document.getDocument();
-            CTBody body = doc.getBody();
-            if(!body.isSetSectPr()) {
-            	body.addNewSectPr();            	
-            }
-            CTSectPr section = body.getSectPr();
-            if(!section.isSetPgSz()) {
-            	section.addNewPgSz();          	
-            }
-            CTPageSz pgSz = section.getPgSz();
-            
-            pgSz.setW(BigInteger.valueOf(15840));
-            pgSz.setH(BigInteger.valueOf(11907));
-            pgSz.setOrient(STPageOrientation.LANDSCAPE);
+		try {
+			// 添加标题
+			XWPFDocument document = new XWPFDocument();
+			CTDocument1 doc = document.getDocument();
+			CTBody body = doc.getBody();
+			if (!body.isSetSectPr()) {
+				body.addNewSectPr();
+			}
+			CTSectPr section = body.getSectPr();
+			if (!section.isSetPgSz()) {
+				section.addNewPgSz();
+			}
+			CTPageSz pgSz = section.getPgSz();
 
-	        //X密部分
-	        XWPFParagraph xmiParagraph = document.createParagraph();
-	        xmiParagraph.setAlignment(ParagraphAlignment.LEFT);	 
-	        XWPFRun xmiParagraphRun = xmiParagraph.createRun();
-	        xmiParagraphRun.setText("X 密");
-	        xmiParagraphRun.setFontSize(13);
+			pgSz.setW(BigInteger.valueOf(15840));
+			pgSz.setH(BigInteger.valueOf(11907));
+			pgSz.setOrient(STPageOrientation.LANDSCAPE);
 
-			//标题部分
+			// X密部分
+			XWPFParagraph xmiParagraph = document.createParagraph();
+			xmiParagraph.setAlignment(ParagraphAlignment.LEFT);
+			XWPFRun xmiParagraphRun = xmiParagraph.createRun();
+			xmiParagraphRun.setText("X 密");
+			xmiParagraphRun.setFontSize(13);
+
+			// 标题部分
 			XWPFParagraph titleParagraph = document.createParagraph();
-			titleParagraph.setAlignment(ParagraphAlignment.CENTER);	 
+			titleParagraph.setAlignment(ParagraphAlignment.CENTER);
 			XWPFRun titleParagraphRun = titleParagraph.createRun();
 			titleParagraphRun.setText("装备发展部重要工作分工落实情况表");
 			titleParagraphRun.setColor("000000");
 			titleParagraphRun.setFontSize(20);
-			
-			//基本信息表格
-			XWPFTable infoTable = document.createTable(1,3);
-			setTableWith(infoTable,"12000");
+
+			// 基本信息表格
+			XWPFTable infoTable = document.createTable(1, 3);
+			setTableWith(infoTable, "12000");
 			CTTbl infoCtTbl = infoTable.getCTTbl();
 			CTTblGrid infoNewTblGrid = infoCtTbl.addNewTblGrid();
-			String[] infoColWidths=new String[]{"5000","2000","5000"};
-			for(String colWidth:infoColWidths) {
+			String[] infoColWidths = new String[] { "5000", "2000", "5000" };
+			for (String colWidth : infoColWidths) {
 				CTTblGridCol infoNewGridCol = infoNewTblGrid.addNewGridCol();
 				infoNewGridCol.setW(new BigInteger(colWidth));
 			}
-			//去表格边框
-			infoTable.getCTTbl().getTblPr().unsetTblBorders();	
+			// 去表格边框
+			infoTable.getCTTbl().getTblPr().unsetTblBorders();
 			XWPFTableRow infoTableRowOne = infoTable.getRow(0);
 			infoTableRowOne.getCell(0).setText("填报单位:中央军委装备发展部");
-			infoTableRowOne.getCell(2).setText("填报日期:"+new SimpleDateFormat("yyyy年MM月dd日").format(new Date()));
-			
-			//加入空行
+			infoTableRowOne.getCell(2).setText("填报日期:" + new SimpleDateFormat("yyyy年MM月dd日").format(new Date()));
+
+			// 加入空行
 			XWPFParagraph voidParagraph = document.createParagraph();
-			XWPFRun createRun = voidParagraph.createRun();  
+			XWPFRun createRun = voidParagraph.createRun();
 			createRun.setFontSize(1);
 			createRun.setText("0");
-			//工作经历表格
+			// 工作经历表格
 			XWPFTable ComTable = document.createTable();
-			setTableWith(ComTable,"12000");
+			setTableWith(ComTable, "12000");
 			CTTbl ctTbl = ComTable.getCTTbl();
 			CTTblGrid addNewTblGrid = ctTbl.addNewTblGrid();
-			String[] colWidths=new String[]{"400","1100","1000","1500","3900","2000","1100","1000"};
-			for(String colWidth:colWidths) {
+			String[] colWidths = new String[] { "400", "1100", "1000", "1500", "3900", "2000", "1100", "1000" };
+			for (String colWidth : colWidths) {
 				CTTblGridCol addNewGridCol = addNewTblGrid.addNewGridCol();
 				addNewGridCol.setW(new BigInteger(colWidth));
 			}
@@ -123,147 +125,152 @@ public class ExportBNZYGZServiceImpl implements ExportService{
 			rightBorder.setVal(STBorder.Enum.forString("double"));
 			vborder.setVal(STBorder.Enum.forString("single"));
 			hborder.setVal(STBorder.Enum.forString("double"));
-			
-			
-			//表格第一行
+
+			// 表格第一行
 			XWPFTableRow comTableRowOne = ComTable.getRow(0);
 			XWPFTableCell headerCell = comTableRowOne.getCell(0);
 			cellCentre(headerCell);
 			headerCell.setText("序号 ");
-			
-			headerCell =comTableRowOne.addNewTableCell();
+
+			headerCell = comTableRowOne.addNewTableCell();
 			cellCentre(headerCell);
 			headerCell.setText("印发时间");
-			headerCell =comTableRowOne.addNewTableCell();
+			headerCell = comTableRowOne.addNewTableCell();
 			cellCentre(headerCell);
 			headerCell.setText("文件号");
 			headerCell = comTableRowOne.addNewTableCell();
 			cellCentre(headerCell);
 			headerCell.setText("文件标题");
-			headerCell =comTableRowOne.addNewTableCell();
+			headerCell = comTableRowOne.addNewTableCell();
 			cellCentre(headerCell);
 			headerCell.setText("工作分工内容");
-			headerCell =comTableRowOne.addNewTableCell();
+			headerCell = comTableRowOne.addNewTableCell();
 			cellCentre(headerCell);
 			headerCell.setText("督办落实情况");
 			headerCell = comTableRowOne.addNewTableCell();
 			cellCentre(headerCell);
-			headerCell .setText("办理状态");
+			headerCell.setText("办理状态");
 			headerCell = comTableRowOne.addNewTableCell();
 			cellCentre(headerCell);
 			headerCell.setText("督办单位/人员");
-					
 
-			 XWPFTableRow comTableRowOther = ComTable.createRow();
-		        XWPFTableCell insertCell = comTableRowOther.getCell(0);
-		        insertCell.setText("  已办结事项（共"+banjieNum+"项）");//已办结事项
-				mergeCell(ComTable,1,0,6);	
-			    int banjieIndex =1;
-				for(int i=0;i<list.size();i++){
-					//表格内容行
-					Map<String, String> dataMap = list.get(i);
-					XWPFTableRow comTableRowTwo = ComTable.createRow();
-					XWPFTableCell bodyCell = comTableRowTwo.getCell(0);
-					cellCentre(bodyCell);
-					bodyCell.setText(String.valueOf(banjieIndex++));//序号
-					bodyCell = comTableRowTwo.getCell(1);
-					cellCentre(bodyCell);
-					bodyCell.setText(dataMap.get("printDate"));//印发时间
-					bodyCell = comTableRowTwo.getCell(2);
-					cellCentre(bodyCell);
-					bodyCell.setText(dataMap.get("docCode"));//办件号
-					bodyCell = comTableRowTwo.getCell(3);
-					cellCentre(bodyCell);
-					bodyCell.setText(dataMap.get("docTitle"));//文件标题
-					bodyCell = comTableRowTwo.getCell(4);
-					cellleft(bodyCell);
-					bodyCell.setText(dataMap.get("jobContent"));//内容
-					bodyCell = comTableRowTwo.getCell(5);
-					cellleft(bodyCell);
-					bodyCell.setText(dataMap.get("replyComment"));//督办落实情况
-					bodyCell = comTableRowTwo.getCell(6);
-					cellCentre(bodyCell);
-					bodyCell.setText(dataMap.get("status"));//办理状态
-					bodyCell = comTableRowTwo.getCell(7);
-					cellCentre(bodyCell);
-					bodyCell.setText(dataMap.get("subInfoComment"));//承办单位 人员
-					
+			if (banjieNum > 0) {
+				XWPFTableRow comTableRowOther = ComTable.createRow();
+				XWPFTableCell insertCell = comTableRowOther.getCell(0);
+				insertCell.setText("  已办结事项（共" + banjieNum + "项）");// 已办结事项
+				mergeCell(ComTable, 1, 0, 6);
+			}
+			int banjieIndex = 1;
+			for (int i = 0; i < list.size(); i++) {
+				// 表格内容行
+				Map<String, String> dataMap = list.get(i);
+				String statusName = dataMap.get("status");
+				if ("办结".equals(statusName) || "常态落实".equals(statusName)) {
+				XWPFTableRow comTableRowTwo = ComTable.createRow();
+				XWPFTableCell bodyCell = comTableRowTwo.getCell(0);
+				cellCentre(bodyCell);
+				bodyCell.setText(String.valueOf(banjieIndex++));// 序号
+				bodyCell = comTableRowTwo.getCell(1);
+				cellCentre(bodyCell);
+				bodyCell.setText(dataMap.get("printDate"));// 印发时间
+				bodyCell = comTableRowTwo.getCell(2);
+				cellCentre(bodyCell);
+				bodyCell.setText(dataMap.get("docCode"));// 办件号
+				bodyCell = comTableRowTwo.getCell(3);
+				cellCentre(bodyCell);
+				bodyCell.setText(dataMap.get("docTitle"));// 文件标题
+				bodyCell = comTableRowTwo.getCell(4);
+				cellleft(bodyCell);
+				bodyCell.setText(dataMap.get("jobContent"));// 内容
+				bodyCell = comTableRowTwo.getCell(5);
+				cellleft(bodyCell);
+				bodyCell.setText(dataMap.get("replyComment"));// 督办落实情况
+				bodyCell = comTableRowTwo.getCell(6);
+				cellCentre(bodyCell);
+				bodyCell.setText(dataMap.get("status"));// 办理状态
+				bodyCell = comTableRowTwo.getCell(7);
+				cellCentre(bodyCell);
+				bodyCell.setText(dataMap.get("subInfoComment"));// 承办单位 人员
 				}
+			}
+			if (weibanjieNum > 0) {
 				XWPFTableRow comTableRowOther2 = ComTable.createRow();
 				XWPFTableCell insertCell2 = comTableRowOther2.getCell(0);
-				insertCell2.setText("  未办结事项（共"+weibanjieNum+"项）");//未办结事项
-				mergeCell(ComTable,banjieNum+2,0,6);
-			    int weibanjieIndex =1;
-				for(int i=0;i<list.size();i++){
-					//表格内容行
-					Map<String, String> dataMap = list.get(i);
-					XWPFTableRow comTableRowTwo = ComTable.createRow();
-					XWPFTableCell bodyCell = comTableRowTwo.getCell(0);
-					cellCentre(bodyCell);
-					bodyCell.setText(String.valueOf(weibanjieIndex++));//序号
-					bodyCell = comTableRowTwo.getCell(1);
-					cellCentre(bodyCell);
-					bodyCell.setText(dataMap.get("printDate"));//印发时间
-					bodyCell = comTableRowTwo.getCell(2);
-					cellCentre(bodyCell);
-					bodyCell.setText(dataMap.get("docCode"));//办件号
-					bodyCell = comTableRowTwo.getCell(3);
-					cellCentre(bodyCell);
-					bodyCell.setText(dataMap.get("docTitle"));//文件标题
-					bodyCell = comTableRowTwo.getCell(4);
-					cellleft(bodyCell);
-					bodyCell.setText(dataMap.get("jobContent"));//内容
-					bodyCell = comTableRowTwo.getCell(5);
-					cellleft(bodyCell);
-					bodyCell.setText(dataMap.get("replyComment"));//督办落实情况
-					bodyCell = comTableRowTwo.getCell(6);
-					cellCentre(bodyCell);
-					bodyCell.setText(dataMap.get("status"));//办理状态
-					bodyCell = comTableRowTwo.getCell(7);
-					cellCentre(bodyCell);
-					bodyCell.setText(dataMap.get("subInfoComment"));//承办单位 人员
-					
+				insertCell2.setText("  未办结事项（共" + weibanjieNum + "项）");// 未办结事项
+				mergeCell(ComTable, banjieNum > 0 ? banjieNum + 2 : banjieNum + 1, 0, 6);
+			}
+			int weibanjieIndex = 1;
+			for (int i = 0; i < list.size(); i++) {
+				// 表格内容行
+				Map<String, String> dataMap = list.get(i);
+				String statusName = dataMap.get("status");
+				if ("办理中".equals(statusName)) {
+				XWPFTableRow comTableRowTwo = ComTable.createRow();
+				XWPFTableCell bodyCell = comTableRowTwo.getCell(0);
+				cellCentre(bodyCell);
+				bodyCell.setText(String.valueOf(weibanjieIndex++));// 序号
+				bodyCell = comTableRowTwo.getCell(1);
+				cellCentre(bodyCell);
+				bodyCell.setText(dataMap.get("printDate"));// 印发时间
+				bodyCell = comTableRowTwo.getCell(2);
+				cellCentre(bodyCell);
+				bodyCell.setText(dataMap.get("docCode"));// 办件号
+				bodyCell = comTableRowTwo.getCell(3);
+				cellCentre(bodyCell);
+				bodyCell.setText(dataMap.get("docTitle"));// 文件标题
+				bodyCell = comTableRowTwo.getCell(4);
+				cellleft(bodyCell);
+				bodyCell.setText(dataMap.get("jobContent"));// 内容
+				bodyCell = comTableRowTwo.getCell(5);
+				cellleft(bodyCell);
+				bodyCell.setText(dataMap.get("replyComment"));// 督办落实情况
+				bodyCell = comTableRowTwo.getCell(6);
+				cellCentre(bodyCell);
+				bodyCell.setText(dataMap.get("status"));// 办理状态
+				bodyCell = comTableRowTwo.getCell(7);
+				cellCentre(bodyCell);
+				bodyCell.setText(dataMap.get("subInfoComment"));// 承办单位 人员
 				}
-														
+			}
+
 			fout = new FileOutputStream(fileName);
 			document.write(fout);
 			fout.flush();
-	} catch (Exception e) {
-		e.printStackTrace();
-	} finally {
-		if (fout != null) {
-			fout.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (fout != null) {
+				fout.close();
+			}
 		}
-	}
-	return new FileInputStream(fileName);
-        
+		return new FileInputStream(fileName);
+
 	}
 
-	
-	private void setTableWith(XWPFTable table,String width) {
-        CTTbl ttbl = table.getCTTbl();
-         CTTblPr tblpr= ttbl.getTblPr()==null? ttbl.addNewTblPr():ttbl.getTblPr();
-         CTTblWidth tblWith=tblpr.isSetTblW()?tblpr.getTblW():tblpr.addNewTblW();
-         CTJc cTJc = tblpr.addNewJc();
-         cTJc.setVal(STJc.Enum.forString("center"));
-         tblWith.setW(new BigInteger(width));
-         tblWith.setType(STTblWidth.DXA);
+	private void setTableWith(XWPFTable table, String width) {
+		CTTbl ttbl = table.getCTTbl();
+		CTTblPr tblpr = ttbl.getTblPr() == null ? ttbl.addNewTblPr() : ttbl.getTblPr();
+		CTTblWidth tblWith = tblpr.isSetTblW() ? tblpr.getTblW() : tblpr.addNewTblW();
+		CTJc cTJc = tblpr.addNewJc();
+		cTJc.setVal(STJc.Enum.forString("center"));
+		tblWith.setW(new BigInteger(width));
+		tblWith.setType(STTblWidth.DXA);
 	}
 
-	
 	private void cellCentre(XWPFTableCell cell) {
 		CTTc cttc = cell.getCTTc();
 		CTTcPr addNewTcPr = cttc.addNewTcPr();
 		addNewTcPr.addNewVAlign().setVal(STVerticalJc.CENTER);
 		cttc.getPList().get(0).addNewPPr().addNewJc().setVal(STJc.CENTER);
 	}
+
 	private void cellleft(XWPFTableCell cell) {
 		CTTc cttc = cell.getCTTc();
 		CTTcPr addNewTcPr = cttc.addNewTcPr();
 		addNewTcPr.addNewVAlign().setVal(STVerticalJc.CENTER);
 		cttc.getPList().get(0).addNewPPr().addNewJc().setVal(STJc.LEFT);
 	}
-	
+
 	private void mergeCell(XWPFTable table, int row, int fromCell, int toCell) {
 		if (row > 0) {
 			for (int cellIndex = fromCell; cellIndex <= toCell; cellIndex++) {
@@ -277,6 +284,3 @@ public class ExportBNZYGZServiceImpl implements ExportService{
 		}
 	}
 }
-	
-
-
