@@ -184,12 +184,12 @@ public class ImportExcleServiceImpl implements ImportExcleService {
 					String[] detailUndertakes = undertake.split("\\|");
 					if (detailUndertakes != null && detailUndertakes.length > 0) {
 						undertakeMap.put("cbdw", detailUndertakes[0]);// 承办单位；
-						if (StringUtils.equals("\\*", detailUndertakes[1])) {
+						if (StringUtils.equals("*", detailUndertakes[1])) {
 							undertakeMap.put("cbr", "");// 承办人；
 						} else {
 							undertakeMap.put("cbr", detailUndertakes[1]);// 承办人；
 						}
-						if (StringUtils.equals("\\*", detailUndertakes[2])) {
+						if (StringUtils.equals("*", detailUndertakes[2])) {
 							undertakeMap.put("cbrdh", "");// 承办人；
 						} else {
 							undertakeMap.put("cbrdh", detailUndertakes[2]);// 承办人电话
@@ -291,12 +291,12 @@ public class ImportExcleServiceImpl implements ImportExcleService {
 					String[] detailUndertakes = undertake.split("\\|");
 					if (detailUndertakes != null && detailUndertakes.length > 0) {
 						undertakeMap.put("cbdw", detailUndertakes[0]);// 承办单位；
-						if (StringUtils.equals("\\*", detailUndertakes[1])) {
+						if (StringUtils.equals("*", detailUndertakes[1])) {
 							undertakeMap.put("cbr", "");// 承办人；
 						} else {
 							undertakeMap.put("cbr", detailUndertakes[1]);// 承办人；
 						}
-						if (StringUtils.equals("\\*", detailUndertakes[2])) {
+						if (StringUtils.equals("*", detailUndertakes[2])) {
 							undertakeMap.put("cbrdh", "");// 承办人；
 						} else {
 							undertakeMap.put("cbrdh", detailUndertakes[2]);// 承办人电话
@@ -409,10 +409,10 @@ public class ImportExcleServiceImpl implements ImportExcleService {
 			}
 			dataLis.add(6, docTypeId);// docTypeId
 			dataLis.add(7, resultLis.get(0));// 印发时间
-			dataLis.add(8, resultLis.get(1));// 文件号
+			dataLis.add(8, resultLis.get(1)==null?"":resultLis.get(1));// 文件号
 			// ---------------------工作分工内容
 			String comments = resultLis.get(3);
-			dataLis.add(9, comments);// 工作分工内容
+			dataLis.add(9, comments==null?"":comments);// 工作分工内容
 			totalLis.add(dataLis);
 		}
 	}
