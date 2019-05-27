@@ -218,8 +218,7 @@ public class DocumentInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/replyList")
-	public void replyList(Integer page, Integer pagesize,String search
-			,String status,String typeId,String orgid,String month){
+	public void replyList(Integer page, Integer pagesize,String search,String status,String typeId,String orgid,String month,String startDate,String endDate){
 		String loginUserId=CurrentUser.getUserId();
 		String dateStr = null;
 		if(!StringUtils.isEmpty(month) && StringUtil.equals("all", month)) {
@@ -256,6 +255,24 @@ public class DocumentInfoController {
 				map.put("hasUpdate", status);
 			}else {
 				map.put("state", status);
+			}
+		}
+		//导出的时间段搜索批示指示时间
+		if(StringUtils.isNotBlank(startDate)||StringUtils.isNotBlank(endDate)) {
+			if(StringUtils.equals("3", typeId)||StringUtils.equals("5", typeId)||StringUtils.equals("6", typeId)) {
+				if(StringUtils.isNotBlank(startDate)) {
+					map.put("zbStartDate", startDate);
+				}
+				if(StringUtils.isNotBlank(endDate)) { 
+					map.put("zbEndDate", endDate);
+				}
+			}else {
+				if(StringUtils.isNotBlank(startDate)) {
+					map.put("startDate", startDate);
+				}
+				if(StringUtils.isNotBlank(endDate)) { 
+					map.put("endDate", endDate);
+				}
 			}
 		}
 		if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType)
