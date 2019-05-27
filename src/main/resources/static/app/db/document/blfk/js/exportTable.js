@@ -1,96 +1,47 @@
-//注：修改列表查询的参数一定要对应的修改红点显示leftMenuUrl和统计数numsList
 var tableList= {"url":"/app/db/documentinfo/replyList","dataType":"text"};//原table数据
-var numsList={"url":"/app/db/documentinfo/replyNums","dataType":"text"};//筛选状态数字统计
-var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//部门树
-var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//人员树
-var leftMenuUrl = {"url":"/app/db//documentinfo/getDicByTypet","dataType":"text"};//左侧菜单
-var batchReadUrl = {"url":"/app/db/documentinfo/batchRead","dataType":"text"};//批量已读
-var leftMenuNums = {"url":"","dataType":"text"};//左侧菜单数字统计
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
-var orgid=getUrlParam("orgid")||""; //统计图传过来的机构
-var month=getUrlParam("month")||""; //统计图传过来的月份
-var ytype=getUrlParam("ytype")||""; //统计图传过来的办理状态
-if(fileFrom && fileFrom == "jcdb"){
-	if(ytype){
-		$("input[value="+ytype+"]").attr("checked",true);
-	}
-}
-
-var grid = null;
-var grid2 = null;
-var grid3 = null;
+var typeId = getUrlParam("typeId");
+var newGrid = null;
+var newGrid2 = null;
+var newGrid3 = null;
 var total=0;//列表中，数据的总条数
-
+var tableNum = getUrlParam("tableNum");
 if(!window.top.memory){
 	window.top.memory = {};
 }
 var o = window.top.memory;
-
+var page = 1;
+var pageSize = 100000;
+var initFlag = '1';
 var pageModule = function(){
-	//左侧菜单树
-	var leftMenufn = function(){
-		$ajax({
-			url:leftMenuUrl,
-			data:{orgid:orgid,month:month},
-			async:false,
-			success:function(data){
-				$("#classType").html("");
-				$.each(data.document_type,function(i,item){
-					var dot ='';
-					if(item.hasUpdateNum!=0){
-						dot = '<span class="dot"></span>'
-					}
-					$("#classType").append('<li class="'+(i==0?"active":"")+'" data_flag="'+item.gridFlag+'" value="'+item.value+'"><span>'+item.text+dot+'</span><font id="Menu_num'+i+'"></font><i class="fa fa-angle-right"></i></li>');
-				});
-				
-				$("#classType li").unbind("click");
-				$("#classType li").click(function(){
-					window.top.memory.value = $(this).attr("value");
-					$(this).siblings().removeClass("active");
-					$(this).addClass("active");
-					if($(this).attr("data_flag") == "3"){ //部领导批示指示 
-						window.top.memory.tree = "3";
-						$("#gridcont3").show();
-						$("#gridcont2").hide();
-						$("#gridcont").hide();
-						refreshgrid3();
-					}else if($(this).attr("data_flag") == "2"){//分工
-						window.top.memory.tree = "2";
-						$("#gridcont3").hide();
-						$("#gridcont").hide();
-						$("#gridcont2").show();
-						refreshgrid2();
-					}else{//批示
-						window.top.memory.tree = "1";
-						$("#gridcont3").hide();
-						$("#gridcont2").hide();
-						$("#gridcont").show();
-						refreshgrid1();
-					}
-				});
-				
-				if(o.value!="" && o.value!=null &&　o.value!="null" && o.value!="undefined"){
-					$("#classType li").removeClass("active");
-					$("#classType li[value="+o.value+"]").addClass("active");
-				}
-				
-				/*$ajax({
-					url:leftMenuNums,
-					data:{dicType:"document_type"},
-					success:function(data){
-						$.each(data,function(j,item2){
-							var id = "Menu_num"+j;
-							$("#"+id).html(item2);
-						});
-					}
-				});	*/
-				
-			}
-		});	
+	var initTableNum = function(){
+		if(typeId==1||typeId==2||typeId==4){
+			$('#timeTitle').html("批示指示时间")
+		}else if(typeId==3||typeId==5||typeId==6 ){
+			$('#timeTitle').html('转办时间')
+		};
+		if(tableNum == "3"){ //部领导批示指示 
+			window.top.memory.tree = "3";
+			$("#gridcont3").show();
+			$("#gridcont2").hide();
+			$("#gridcont").hide();
+			refreshgrid3();
+		}else if(tableNum == "2"){//分工
+			window.top.memory.tree = "2";
+			$("#gridcont3").hide();
+			$("#gridcont").hide();
+			$("#gridcont2").show();
+			refreshgrid2();
+		}else{//批示
+			window.top.memory.tree = "1";
+			$("#gridcont3").hide();
+			$("#gridcont2").hide();
+			$("#gridcont").show();
+			refreshgrid1();
+		}
 	}
-	
 	var initgrid = function(){
-        grid = $("#gridcont").createGrid({
+        newGrid = $("#gridcont").createGrid({
             columns:[
             	{display:"军委办件号",name:"",width:"8%",align:"left",title:true,render:function(rowdata,n){
                	 	return rowdata.banjianNumber;
@@ -115,7 +66,7 @@ var pageModule = function(){
                  	 if(rowdata.cuibanFlag=="1"){
                  		 cuiban = '<label class="cuibanlabel">催办</label>';
                 	 }
-                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
+                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1" onclick="closeTable()">'+cuiban+rowdata.docTitle+'</a>'
                  }},
                  {display:"批示指示内容",name:"",width:"26%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var szpsCont="";
@@ -160,11 +111,14 @@ var pageModule = function(){
             checkbox: true,
             rownumberyon:true,
             overflowx:false,
-            pagesize: 10,
-            pageyno:true,
-            paramobj:{search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month},
+            pagesize: 10000,
+            pageyno:false,
+            paramobj:{search:"",status:"",typeId:typeId,startDate:$('#designStart').val(),endDate:$('#designEnd').val(),pagesize:pageSize,page:page,initFlag:initFlag},
             loadafter:function(data){
             	total=data.total;
+            	if(data.rows.length>0){
+            		$('#showNone').hide()
+            	}
             	$(".zspsnr").each(function(){
 					var maxwidth = 85;
 					if($(this).text().length > maxwidth){
@@ -199,7 +153,7 @@ var pageModule = function(){
 	}
 	
 	var initgrid2 = function(){
-        grid2 = $("#gridcont2").createGrid({
+        newGrid2 = $("#gridcont2").createGrid({
             columns:[
             	{display:"印发时间",name:"",width:"6%",align:"center",paixu:false,render:function(rowdata){
             		if(rowdata.printDate && rowdata.printDate!="" && rowdata.printDate!="null" && rowdata.printDate!=null){
@@ -227,7 +181,7 @@ var pageModule = function(){
                  	 if(rowdata.cuibanFlag=="1"){
                  		 cuiban = '<label class="cuibanlabel">催办</label>';
                 	 }
-                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
+                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1"  onclick="closeTable()">'+cuiban+rowdata.docTitle+'</a>'
                  }},
                  {display:"工作分工内容",name:"",width:"21%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 return '<div class="gzfgnr" title="'+rowdata.jobContent+'">'+rowdata.jobContent+'</div>';
@@ -264,11 +218,14 @@ var pageModule = function(){
             checkbox: true,
             rownumberyon:true,
             overflowx:false,
-            pagesize: 10,
-            pageyno:true,
-            paramobj:{search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month},
+            pagesize: 100000,
+            pageyno:false,
+            paramobj:{search:'',status:"",typeId:typeId,startDate:$('#designStart').val(),endDate:$('#designEnd').val(),pagesize:pageSize,page:page,initFlag:initFlag},
             loadafter:function(data){
             	total=data.total;
+            	if(data.rows.length>0){
+            		$('#showNone').hide()
+            	}
             	$(".dblsqk span").each(function(){
 					var maxwidth = 80;
 					if($(this).text().length > maxwidth){
@@ -303,7 +260,7 @@ var pageModule = function(){
 	}
 
 	var initgrid3 = function(){
-        grid3 = $("#gridcont3").createGrid({
+        newGrid3 = $("#gridcont3").createGrid({
             columns:[
                 {display:"办理状态",name:"",width:"8%",align:"center",render:function(rowdata,n){
                 	var statusName="";
@@ -325,7 +282,7 @@ var pageModule = function(){
                  	 if(rowdata.cuibanFlag=="1"){
                  		 cuiban = '<label class="cuibanlabel">催办</label>';
                 	 }
-                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
+                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1"  onclick="closeTable()">'+cuiban+rowdata.docTitle+'</a>'
                  }},
                  {display:"批示指示内容",name:"",width:"26%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var szpsCont="";
@@ -370,11 +327,14 @@ var pageModule = function(){
             checkbox: true,
             rownumberyon:true,
             overflowx:false,
-            pagesize: 10,
-            pageyno:true,
-            paramobj:{search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month},
+            pagesize: 100000,
+            pageyno:false,
+            paramobj:{search:"",status:"",typeId:typeId,startDate:$('#designStart').val(),endDate:$('#designEnd').val(),pagesize:pageSize,page:page,initFlag:initFlag},
             loadafter:function(data){
             	total=data.total;
+            	if(data.rows.length>0){
+            		$('#showNone').hide()
+            	}
             	$(".zspsnr").each(function(){
 					var maxwidth = 85;
 					if($(this).text().length > maxwidth){
@@ -408,18 +368,6 @@ var pageModule = function(){
        });
 	}
 	
-	var numsListfn = function(){
-		$ajax({
-			url:numsList,
-			data:{search:$("#searchVal").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month},
-			success:function(data){
-				$.each(data,function(i,item){
-					var id = "grdb"+i;
-					$("#"+id).html(item);
-				});
-			}
-		});	
-	}
 	
 	var initother = function(){
 		$(".date-picker").datepicker({
@@ -429,227 +377,74 @@ var pageModule = function(){
 		    format : "yyyy-mm-dd",
 		    autoclose: true
 		});
-		
-		$(".search").hover(function(){
-			$(this).attr("src","../../../common/images/u132_mouseOver.png");
-		},function(){
-			$(this).attr("src","../../../common/images/u132_mouseDown.png");
-		});
-
-		$("input[name='documentStatus']").click(function(){
-			refreshgrid();
-		});
-		
-		$(".search").click(function(){
-			refreshgrid();
-		});
-		
-		$("#searchAll").click(function(){
-			$("#searchwrap").toggle();
-		});
-		
-		$("body").click(function(e){
-			if($(e.target).hasClass("searchAll") || $(e.target).hasClass("form-group") || $(e.target).parents("div").hasClass("searchwrap")){
-				return;
-			};
-			$(".searchwrap").slideUp(50);
-		});
-		
+		if(initFlag==1){
+			$('#showNone').show();
+		}
 		//筛选功能
 		$("#sure").click(function(){
-			 $("#searchwrap").slideUp(50);
-			 refreshgrid();
-		});
-		
-		//筛选功能
-		$("#close").click(function(){
-			$("#searchwrap").slideUp(50);
+			initFlag = '';
+			refreshgrid();
+			$('#showNone').hide();
 		});
 		
 		//重置
 		$("#reset").click(function(){
-			removeInputData(["title","deptid","deptname","username","userid","blstatus","designStart","designEnd","fileType"]);
+			removeInputData(["designStart","designEnd"]);
+			initFlag = '1';
+			refreshgrid();
+			$('#showNone').show();
 		});
-		
-		$("#plyd").click(function(){
-			var datas;
-			var ids=[];
-			if($("#gridcont3").is(":visible")){
-				datas=grid3.getcheckrow();
-				$(datas).each(function(i){
-					ids[i]=this.id;
-				});
-			}else if($("#gridcont2").is(":visible")){
-				datas=grid2.getcheckrow();
-				$(datas).each(function(i){
-					ids[i]=this.id;
-				});
-			}else{
-				datas=grid.getcheckrow();
-				$(datas).each(function(i){
-					ids[i]=this.id;
-				});
-			}
-			if(datas.length>0){
-				newbootbox.confirm({
-				    title: "提示",
-				    message: "是否要进行确认已读操作？",
-				    callback1:function(){
-				    	$ajax({
-							url:batchReadUrl,
-							data:{ids:ids.toString()},
-							success:function(data){
-								if(data.result == "success"){
-									newbootbox.alertInfo("已读成功！").done(function(){
-										leftMenufn();
-										refreshgrid();
-										window.top.blfkfn();
-									});
-								}
-							}
-						});	
-				    }
-				});
-			}else{
-				newbootbox.alertInfo("请选择要确认已读的数据！");
-			}
-		});
-		
 		//导出
 		$("#export").click(function(){
-			var tableNum;
-			if($("#gridcont3").is(":visible")){
-				tableNum= '3';
-			}else if($("#gridcont2").is(":visible")){
-				tableNum= '2';
+			var datas;
+			if(tableNum==3){
+				datas=newGrid3.getcheckrow();
+			}else if(tableNum==2){
+				datas=newGrid2.getcheckrow();
 			}else{
-				tableNum= '1';
-			};
-			newbootbox.newdialog({
-			    id: "importTable",
-			    title: "导出",
-			    style: {
-			      "padding": "1px"
-			    },
-			    width: 1600,
-			    height:850,
-			    url: rootPath + "/document/blfk/html/exportTable.html?tableNum="+tableNum+'&typeId='+$("#classType li.active").attr("value")+'&fileFrom='+fileFrom
-			  });
-		/*			var datas;
-		if($("#gridcont3").is(":visible")){
-			datas=grid3.getcheckrow();
-		}else if($("#gridcont2").is(":visible")){
-			datas=grid2.getcheckrow();
-		}else{
-			datas=grid.getcheckrow();
-		}
-		var ids='';
-		var t_count=0;
-		$(datas).each(function(i){
-			ids+=i!=0?(','+this.id):this.id;
-			t_count++;
-		});
-		t_count=t_count>0?t_count:total;
-		if(datas.length>0){
-			newbootbox.confirm({
-		     	title:"提示",
-		     	message: "将导出"+t_count+"条数据！",
-		     	callback1:function(){
-		     		window.location.href='/app/db/export/exportDocx?stringIds='+ids;
-		     	}
-		    });
-		}else{
-			newbootbox.alertInfo("请选择要导出的数据！");
-		}*/
-		});
-		//导入
-		$("#wjdr").click(function(){
-			 newbootbox.newdialog({
-			    id: "fileDr",
-			    title: "选择文件",
-			    style: {
-			      "padding": "1px"
-			    },
-			    width: 800,
-			    height: 200,
-			    url: rootPath + "/document/blfk/html/filepage.html"
-			  });
-		});
-		
-		//菜单左缩进
-		$("#suo").click(function(){
-			if($(this).find("i").hasClass("fa-chevron-right")){
-				$(this).find("i").removeClass("fa-chevron-right").addClass("fa-chevron-left");
-				$("#right_content").css("left","256px");
-				$(this).parent().css("left","256px");
-				$("#left_content").show();
-			}else{
-				$(this).find("i").removeClass("fa-chevron-left").addClass("fa-chevron-right");
-				$("#left_content").hide();
-				$(this).parent().css("left","0px");
-				$("#right_content").css("left","0px");
+				datas=newGrid.getcheckrow();
 			}
-			if($("#gridcont2").is(":hidden")){
-				pageModule.initgrid();
+			var ids='';
+			var t_count=0;
+			$(datas).each(function(i){
+				ids+=i!=0?(','+this.id):this.id;
+				t_count++;
+			});
+			t_count=t_count>0?t_count:total;
+			if(datas.length>0){
+				newbootbox.confirm({
+			     	title:"提示",
+			     	message: "将导出"+t_count+"条数据！",
+			     	callback1:function(){
+			     		window.top.location.href='/app/db/export/exportDocx?stringIds='+ids;
+			     	}
+			    });
 			}else{
-				pageModule.initgrid2();
+				newbootbox.alertInfo("请选择要导出的数据！");
 			}
 		});
 		
-	}
-	
-	var inittree = function(){
-		$("#deptname").createcheckboxtree({
-			url : deptUrl,
-			width : "100%",
-			success : function(data, treeobj) {},
-			selectnode : function(e, data,treessname,treessid) {
-				$("#deptid").val(treessid);
-				$("#deptname").val(treessname);
-			},
-			deselectnode:function(e,data,treessname,treessid){
-				$("#deptid").val(treessid);
-				$("#deptname").val(treessname);
-		   }
-		});
-		
-		$("#username").createUserTree({
-			url : userUrl,
-			width : "100%",
-			success : function(data, treeobj) {
-			},
-			selectnode : function(e, data,treessname,treessid) {
-				$("#userid").val(treessid);
-				$("#username").val(treessname);
-			},
-			deselectnode : function(e, data,treessname,treessid) {
-				$("#userid").val(treessid);
-				$("#username").val(treessname);
-			}
-		});
+		$("#closeTable,#cancel").click(function(){
+			newbootbox.newdialogClose("importTable");
+		})
 	}
 	
 
 	return{
 		//加载页面处理程序
 		initControl:function(){
-			leftMenufn();
+			initTableNum();
 			initgrid();
-			numsListfn();
 			initother();
-			inittree();
 		},
 		initgrid:function(){
 			initgrid();
-			numsListfn();
 		},
 		initgrid2:function(){
 			initgrid2();
-			numsListfn();
 		},
 		initgrid3:function(){
 			initgrid3();
-			numsListfn();
 		}
 	};
 }();
@@ -662,9 +457,9 @@ function refreshgrid(){
 	}else{
 		$("#gridcont").show();
 	}
-	if($("#gridcont3").is(":visible")){
+	if(tableNum==3){
 		pageModule.initgrid3();
-	}else if($("#gridcont2").is(":visible")){
+	}else if(tableNum==2){
 		pageModule.initgrid2();
 	}else{
 		pageModule.initgrid();
@@ -681,8 +476,6 @@ function refreshgrid2(){
 function refreshgrid3(){
 	pageModule.initgrid3();
 }
-
-
 //批示指示内容弹出框
 function pszsnrAlert(id){
 	newbootbox.newdialog({
@@ -707,4 +500,7 @@ function dblsqkAlert(id){
 		classed:"cjDialog",
 		url:"/app/db/document/view/html/dblsqk.html?fileId="+id
 	})
+}
+function closeTable(){
+	newbootbox.newdialogClose("importTable");
 }
