@@ -122,6 +122,7 @@ public class ExportController{
 					LinkedMultiValueMap<String, Object> paraMap = new LinkedMultiValueMap<String, Object>();
 					paraMap.add("id", subInfo.getUndertaker());
 					String url = "http://172.16.3.13:64001/txluser/getUser";
+//					String urlPathGWCL = baseAppOrgMappedService.getWebUrl(AppType.APP_GWCL, AppInterfaceConstant.WEB_INTERFACE_GWCL_API_QUERYMSG);		
 					JSONObject jsonData = CrossDomainUtil.getJsonData(url, paraMap);
 					if (jsonData != null && jsonData.get("txlOrgtel") != null) {
 						Map<String, Object> txlOrgtel = (Map<String, Object>) jsonData.get("txlOrgtel");
@@ -130,11 +131,11 @@ public class ExportController{
 				}
 				subInfoBuilder.append(deptName + "                                                  " + subInfoName + "                                                  " + telephone);
 			}											
-			exportDataMap.put("banjianNumber", documentInfo.getBanjianNumber());// 军 委办件号：
-			exportDataMap.put("docCode", documentInfo.getDocCode());//文件号：
+			exportDataMap.put("banjianNumber", documentInfo.getBanjianNumber()==null?"":documentInfo.getBanjianNumber());// 军 委办件号：
+			exportDataMap.put("docCode", documentInfo.getDocCode()==null?"":documentInfo.getDocCode());//文件号：
 			exportDataMap.put("docTitle", documentInfo.getDocTitle());// 文件标题
-			exportDataMap.put("printDate", documentInfo.getPrintDate());// 印发时间
-			exportDataMap.put("jobContent", documentInfo.getJobContent());// 工作分工内容
+			exportDataMap.put("printDate", documentInfo.getPrintDate()==null?"":documentInfo.getPrintDate());// 印发时间
+			exportDataMap.put("jobContent", documentInfo.getJobContent()==null?"":documentInfo.getJobContent());// 工作分工内容
 			exportDataMap.put("status", statusName);// 办理状态 (0:还未转办1：办理中；2：办结：3：常态落实）
 			exportDataMap.put("leaderComment", commentBuilder.toString());// 批示指示内容
 			exportDataMap.put("replyComment", replyBuilder.toString());// 督办落实情况
