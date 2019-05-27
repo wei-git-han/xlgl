@@ -97,11 +97,6 @@ public class RoleSetController {
 		String orgId="";
 		String orgName="";
 		String userId = dbRoleSet.getUserId();
-		Map<String, Object> resultMap = new HashMap<>();
-		Map<String, Object> map = new HashMap<>();
-		map.put("roleFlag", dbRoleSet.getRoleFlag());
-		map.put("sort", dbRoleSet.getSort());
-		List<RoleSet> roleSetList = roleSetService.queryList(map);
 		if(StringUtils.isNotBlank(userId)) {
 			List<BaseAppUser> users = baseAppUserService.findByUserId(userId);
 			if(users != null) {
@@ -112,26 +107,54 @@ public class RoleSetController {
 				}
 			}
 		}
-		if(StringUtils.isNotBlank(dbRoleSet.getId())) {
-			if(roleSetList != null && roleSetList.size()==1 && dbRoleSet.getId().equals(roleSetList.get(0).getId()) || roleSetList == null || roleSetList.size()==0) {
+		if(StringUtils.equals("1", dbRoleSet.getRoleFlag())) {//首长的新增要做排序校验
+			Map<String, Object> resultMap = new HashMap<>();
+			Map<String, Object> map = new HashMap<>();
+			map.put("roleFlag", dbRoleSet.getRoleFlag());
+			map.put("sort", dbRoleSet.getSort());
+			List<RoleSet> roleSetList = roleSetService.queryList(map);
+			map.put("sort", dbRoleSet.getSort());
+			
+			if(StringUtils.isNotBlank(dbRoleSet.getId())) {
+				if(roleSetList != null && roleSetList.size()==1 && dbRoleSet.getId().equals(roleSetList.get(0).getId()) || roleSetList == null || roleSetList.size()==0) {
+					if(!StringUtils.equals( DbDefined.ROLE_1, dbRoleSet.getRoleFlag())) {
+						dbRoleSet.setDeptId(orgId);		
+						dbRoleSet.setDeptName(orgName);
+					}
+					roleSetService.update(dbRoleSet);
+					resultMap.put("code", "0");
+					resultMap.put("result", "保存成功");
+					Response.json(resultMap);
+				}else {
+					resultMap.put("code", "1");
+					resultMap.put("result", "排序序号重复！");
+					Response.json(resultMap);
+				}
+			}else {
+				if(roleSetList != null && roleSetList.size()>0) {
+					resultMap.put("code", "1");
+					resultMap.put("result", "排序序号重复！");
+					Response.json(resultMap);
+				}else {
+					roleSetService.deleteByUserId(userId);
+					dbRoleSet.setId(UUIDUtils.random());
+					if(!StringUtils.equals( DbDefined.ROLE_1, dbRoleSet.getRoleFlag())) {
+						dbRoleSet.setDeptId(orgId);		
+						dbRoleSet.setDeptName(orgName);
+					}
+					roleSetService.save(dbRoleSet);
+					resultMap.put("code", "0");
+					resultMap.put("result", "保存成功");
+					Response.json(resultMap);
+				}
+			}
+		}else {
+			if(StringUtils.isNotBlank(dbRoleSet.getId())) {
 				if(!StringUtils.equals( DbDefined.ROLE_1, dbRoleSet.getRoleFlag())) {
 					dbRoleSet.setDeptId(orgId);		
 					dbRoleSet.setDeptName(orgName);
 				}
 				roleSetService.update(dbRoleSet);
-				resultMap.put("code", "0");
-				resultMap.put("result", "保存成功");
-				Response.json(resultMap);
-			}else {
-				resultMap.put("code", "1");
-				resultMap.put("result", "排序序号重复！");
-				Response.json(resultMap);
-			}
-		}else {
-			if(roleSetList != null && roleSetList.size()>0) {
-				resultMap.put("code", "1");
-				resultMap.put("result", "排序序号重复！");
-				Response.json(resultMap);
 			}else {
 				roleSetService.deleteByUserId(userId);
 				dbRoleSet.setId(UUIDUtils.random());
@@ -140,10 +163,8 @@ public class RoleSetController {
 					dbRoleSet.setDeptName(orgName);
 				}
 				roleSetService.save(dbRoleSet);
-				resultMap.put("code", "0");
-				resultMap.put("result", "保存成功");
-				Response.json(resultMap);
 			}
+			Response.json("result", "success");
 		}
 	}
 	
