@@ -143,8 +143,26 @@
 		delete from DB_REPLY_EXPLAIN where ID = #{value}
 	</delete>
 	
-	<delete id="deleteBySubId">
-		delete from DB_REPLY_EXPLAIN where SUB_ID = #{subId}
+	<delete id="deleteByParam">
+		delete from DB_REPLY_EXPLAIN where 1=1
+		<if test="userId != null and userId != ''">
+			and USER_ID= #{userId}
+		</if>
+		<if test="subId != null and subId != ''">
+			and SUB_ID= #{subId}
+		</if>
+		<if test="infoId != null and infoId != ''">
+			and INFO_ID= #{infoId}
+		</if>
+		<if test="showFlag != null and showFlag != ''">
+			and SHOW_FLAG= #{showFlag}
+		</if>
+		<if test="teamId != null and teamId != ''">
+			and TEAM_ID= #{teamId}
+		</if>
+		<if test="version != null and version != ''">
+			and RE_VERSION= #{version}
+		</if>
 	</delete>
 	
 	<delete id="deleteBatch">

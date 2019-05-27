@@ -29,7 +29,7 @@ public interface SubDocInfoDao extends BaseDao<SubDocInfo> {
 	
 	List<String> queryAllSubDeptIds(String infoId);
 	
-	SubDocInfo queryLastEndSubInfo(String infoId);
+	List<SubDocInfo> queryLastEndSubInfo(String infoId);
 	
 	List<SubDocInfo> queryAllSubByInfoId(String infoId);
 	

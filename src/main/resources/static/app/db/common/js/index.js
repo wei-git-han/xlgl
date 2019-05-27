@@ -33,6 +33,7 @@ var pageModule = function(){
 					$(".menuli li").click(function(){
 						$(this).siblings().removeClass("active");
 						$(this).addClass("active");
+						window.top.memory = {};
 					});
 					grdbfn();
 					jndbfn();

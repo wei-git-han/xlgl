@@ -121,7 +121,7 @@ public class ExportController{
 				if (orgMapped != null) {
 					LinkedMultiValueMap<String, Object> paraMap = new LinkedMultiValueMap<String, Object>();
 					paraMap.add("id", subInfo.getUndertaker());
-					String url = orgMapped.getUrl() + "/txluser/getUser";
+					String url = "http://172.16.3.13:64001/txluser/getUser";
 					JSONObject jsonData = CrossDomainUtil.getJsonData(url, paraMap);
 					if (jsonData != null && jsonData.get("txlOrgtel") != null) {
 						Map<String, Object> txlOrgtel = (Map<String, Object>) jsonData.get("txlOrgtel");
