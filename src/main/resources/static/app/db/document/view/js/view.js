@@ -188,8 +188,12 @@ var pageModule = function(){
 				if(data && !!data){
 					$("#gwName").text(data.docTitle);
 					$(".commonHtml").html("");
+					var miji="";
+					if(data.urgencyDegree && data.urgencyDegree!="" && !!data.urgencyDegree){
+						miji = '<font class="miji secretLevelName">'+data.urgencyDegree+'</font>';
+					}
 					$(".commonHtml").append(
-						'<div class="line1"><span class="fileName">'+data.docTitle+'</span><font class="miji secretLevelName">'+data.urgencyDegree+'</font></div>'+
+						'<div class="line1"><span class="fileName">'+data.docTitle+'</span>'+miji+'</div>'+
 		            	'<div class="line2 fileNum">'+data.banjianNumber+'</div>'
 					)
 				}
