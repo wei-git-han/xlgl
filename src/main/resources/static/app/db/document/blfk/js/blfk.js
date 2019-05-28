@@ -562,19 +562,7 @@ var pageModule = function(){
 			newbootbox.alertInfo("请选择要导出的数据！");
 		}*/
 		});
-		//导入
-		$("#wjdr").click(function(){
-			 newbootbox.newdialog({
-			    id: "fileDr",
-			    title: "选择文件",
-			    style: {
-			      "padding": "1px"
-			    },
-			    width: 800,
-			    height: 200,
-			    url: rootPath + "/document/blfk/html/filepage.html"
-			  });
-		});
+		
 		
 		//菜单左缩进
 		$("#suo").click(function(){

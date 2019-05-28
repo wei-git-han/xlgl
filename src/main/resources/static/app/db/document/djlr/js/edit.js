@@ -41,9 +41,13 @@ var pageModule = function(){
 			data:{id:fileId},
 			success:function(data){
 				setformdata(data);
-				if(data.docTypeId == "1" || data.docTypeId == "2" || data.docTypeId == "4"){
+				if(data.docTypeId == "1" || data.docTypeId == "2"){
 					$("#jobContent").attr("disabled",true);
 					$("#banjianNumber").removeAttr("disabled");
+					$("#chaoqing").show();
+				}else if(data.docTypeId == "4"){
+					$("#banjianNumber").attr("disabled",true);
+					$("#jobContent").attr("disabled",true);
 					$("#chaoqing").show();
 				}else{
 					$("#chaoqing").hide();
@@ -194,9 +198,13 @@ var pageModule = function(){
 	var initother = function(){
 		//文件类别change事件
 		$("#docTypeId").change(function(){
-			if($(this).val() == "1" || $(this).val() == "2" || $(this).val() == "4"){
+			if($(this).val() == "1" || $(this).val() == "2"){
 				$("#jobContent").attr("disabled",true);
 				$("#banjianNumber").attr("disabled",true);
+				$("#chaoqing").show();
+			}else if($(this).val() == "4"){
+				$("#banjianNumber").attr("disabled",true);
+				$("#jobContent").attr("disabled",true);
 				$("#chaoqing").show();
 			}else{
 				$("#chaoqing").hide();
