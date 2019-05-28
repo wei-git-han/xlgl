@@ -18,8 +18,11 @@ import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTJc;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
@@ -48,8 +51,9 @@ import com.css.app.db.business.service.ExportService;
 public class ExportZYJCServiceImpl implements ExportService {
 	@Override
 	public FileInputStream exportWPSdoc(List<Map<String, String>> list, String fileName, int banjieNum,
-			int weibanjieNum) throws IOException {
-		FileOutputStream fout = null;
+			int weibanjieNum,String docTypeId) throws IOException {
+		FileOutputStream fout = null;		
+		String tonggeIndex ="一、";
 		try {
 			// 添加标题
 			XWPFDocument document = new XWPFDocument();
@@ -79,7 +83,14 @@ public class ExportZYJCServiceImpl implements ExportService {
 			XWPFParagraph titleParagraph = document.createParagraph();
 			titleParagraph.setAlignment(ParagraphAlignment.CENTER);
 			XWPFRun titleParagraphRun = titleParagraph.createRun();
-			titleParagraphRun.setText("党中央、中央军委、国务院重要决策部署分工落实情况表");
+			String setText="";
+			if("3".equals(docTypeId))
+				setText="党中央、中央军委、国务院重要决策部署分工落实情况表";
+			else if("5".equals(docTypeId))
+				setText="备发展部重要工作分工落实情况表";
+			else if("6".equals(docTypeId))
+			    setText="其他重要工作落实情况表";
+			titleParagraphRun.setText(setText);
 			titleParagraphRun.setColor("000000");
 			titleParagraphRun.setFontSize(20);
 
@@ -131,7 +142,6 @@ public class ExportZYJCServiceImpl implements ExportService {
 			XWPFTableCell headerCell = comTableRowOne.getCell(0);
 			cellCentre(headerCell);
 			headerCell.setText("序号 ");
-
 			headerCell = comTableRowOne.addNewTableCell();
 			cellCentre(headerCell);
 			headerCell.setText("印发时间");
@@ -154,10 +164,13 @@ public class ExportZYJCServiceImpl implements ExportService {
 			cellCentre(headerCell);
 			headerCell.setText("督办单位/人员");
 			if (banjieNum > 0) {
+				String tex=tonggeIndex+"已办结事项（共" + banjieNum + "项）";
 				XWPFTableRow comTableRowOther = ComTable.createRow();
 				XWPFTableCell insertCell = comTableRowOther.getCell(0);
-				insertCell.setText("  已办结事项（共" + banjieNum + "项）");// 已办结事项
+				this.getPara(insertCell,tex);
+//				insertCell.setText(tonggeIndex+"已办结事项（共" + banjieNum + "项）");// 已办结事项
 				mergeCell(ComTable, 1, 0, 7);
+				tonggeIndex="二、";
 			}
 			int banjieIndex = 1;
 			for (int i = 0; i < list.size(); i++) {
@@ -193,9 +206,11 @@ public class ExportZYJCServiceImpl implements ExportService {
 				}
 			}
 			if (weibanjieNum > 0) {
+				String tex=tonggeIndex+"未办结事项（共" + weibanjieNum + "项）";
 				XWPFTableRow comTableRowOther2 = ComTable.createRow();
 				XWPFTableCell insertCell2 = comTableRowOther2.getCell(0);
-				insertCell2.setText("  未办结事项（共" + weibanjieNum + "项）");// 未办结事项
+				this.getPara(insertCell2,tex);
+//				insertCell2.setText(tonggeIndex+"未办结事项（共" + weibanjieNum + "项）");// 未办结事项
 				mergeCell(ComTable, banjieNum > 0 ? banjieNum + 2 : banjieNum + 1, 0, 7);
 			}
 			int weibanjieIndex = 1;
@@ -274,11 +289,27 @@ public class ExportZYJCServiceImpl implements ExportService {
 			for (int cellIndex = fromCell; cellIndex <= toCell; cellIndex++) {
 				XWPFTableCell cell = table.getRow(row).getCell(cellIndex);
 				if (cellIndex == fromCell) {
-					cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+					cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);					
 				} else {
 					cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
 				}
+				Integer width=(toCell-fromCell+1)/8*table.getCTTbl().getTblPr().getTblW().getW().intValue();
+				cell.getCTTc().getTcPr().addNewTcW().setW(BigInteger.valueOf(width));
 			}
 		}
+	}
+	
+	private void getPara(XWPFTableCell cell,String cellText) {
+		CTP ctp = CTP.Factory.newInstance();
+		XWPFParagraph p=new XWPFParagraph(ctp, cell);
+		p.setAlignment(ParagraphAlignment.LEFT);
+		XWPFRun run = p.createRun();
+		run.setText(cellText);
+		CTRPr rpr=run.getCTR().isSetRPr()?run.getCTR().getRPr():run.getCTR().addNewRPr();
+		CTFonts fonts=rpr.isSetRFonts()?rpr.getRFonts():rpr.addNewRFonts();
+		fonts.setAscii("黑体");
+		fonts.setEastAsia("黑体");
+		fonts.setHAnsi("黑体");
+		cell.setParagraph(p);
 	}
 }

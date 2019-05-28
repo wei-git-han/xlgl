@@ -2,7 +2,6 @@ package com.css.app.db.business.controller;
 
 import java.io.File;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,11 +28,8 @@ import com.css.app.db.business.service.ExportWPSservice;
 import com.css.app.db.business.service.ReplyExplainService;
 import com.css.app.db.business.service.SubDocInfoService;
 import com.css.app.db.business.service.impl.ExportBLDServiceImpl;
-import com.css.app.db.business.service.impl.ExportBNZYGZServiceImpl;
 import com.css.app.db.business.service.impl.ExportInvoke;
-import com.css.app.db.business.service.impl.ExportJWSZServiceImpl;
 import com.css.app.db.business.service.impl.ExportJWZYServiceImpl;
-import com.css.app.db.business.service.impl.ExportQTServiceImpl;
 import com.css.app.db.business.service.impl.ExportWPSserviceImpl;
 import com.css.app.db.business.service.impl.ExportZYJCServiceImpl;
 import com.css.base.utils.CrossDomainUtil;
@@ -155,16 +151,16 @@ public class ExportController{
 				tempFile = creatFile(exportFileName);
 				ExportService exportJWZYServiceImpl = new ExportJWZYServiceImpl();
 				ExportWPSservice exportWPSserviceJWZY = new ExportWPSserviceImpl(exportJWZYServiceImpl, exportDataLis,
-						tempFile.getAbsolutePath(),banjieNum,weibanjieNum);
+						tempFile.getAbsolutePath(),banjieNum,weibanjieNum,docTypeId);
 				exportInvoke.setExportWPSservice(exportWPSserviceJWZY);
 				is = exportInvoke.export();
 				break;
 			case "2":
 				exportFileName = "军委首长批示指示督办落实情况表.docx";
 				tempFile = creatFile(exportFileName);
-				ExportService exportJWSZServiceImpl = new ExportJWSZServiceImpl();
+				ExportService exportJWSZServiceImpl = new ExportJWZYServiceImpl();
 				ExportWPSservice exportWPSserviceJWSZ = new ExportWPSserviceImpl(exportJWSZServiceImpl, exportDataLis,
-						tempFile.getAbsolutePath(),banjieNum,weibanjieNum);
+						tempFile.getAbsolutePath(),banjieNum,weibanjieNum,docTypeId);
 				exportInvoke.setExportWPSservice(exportWPSserviceJWSZ);
 				is = exportInvoke.export();
 				break;
@@ -173,7 +169,7 @@ public class ExportController{
 				tempFile = creatFile(exportFileName);
 				ExportService exportZYJCServiceImpl = new ExportZYJCServiceImpl();
 				ExportWPSservice exportWPSserviceZYJC = new ExportWPSserviceImpl(exportZYJCServiceImpl, exportDataLis,
-						tempFile.getAbsolutePath(),banjieNum,weibanjieNum);
+						tempFile.getAbsolutePath(),banjieNum,weibanjieNum,docTypeId);
 				exportInvoke.setExportWPSservice(exportWPSserviceZYJC);
 				is = exportInvoke.export();
 				break;
@@ -182,25 +178,25 @@ public class ExportController{
 				tempFile = creatFile(exportFileName);
 				ExportService exportBLDServiceImpl = new ExportBLDServiceImpl();
 				ExportWPSservice exportWPSserviceBLD = new ExportWPSserviceImpl(exportBLDServiceImpl, exportDataLis,
-						tempFile.getAbsolutePath(),banjieNum,weibanjieNum);
+						tempFile.getAbsolutePath(),banjieNum,weibanjieNum,docTypeId);
 				exportInvoke.setExportWPSservice(exportWPSserviceBLD);
 				is = exportInvoke.export();
 				break;
 			case "5":
 				exportFileName = "装备发展部重要工作分工落实情况表.docx";
 				tempFile = creatFile(exportFileName);
-				ExportService exportBNZYGZServiceImpl = new ExportBNZYGZServiceImpl();
+				ExportService exportBNZYGZServiceImpl = new ExportZYJCServiceImpl();
 				ExportWPSservice exportWPSserviceBNZYGZ = new ExportWPSserviceImpl(exportBNZYGZServiceImpl,
-						exportDataLis, tempFile.getAbsolutePath(),banjieNum,weibanjieNum);
+						exportDataLis, tempFile.getAbsolutePath(),banjieNum,weibanjieNum,docTypeId);
 				exportInvoke.setExportWPSservice(exportWPSserviceBNZYGZ);
 				is = exportInvoke.export();
 				break;
 			case "6":
 				exportFileName = "其他重要工作落实情况表.docx";
 				tempFile = creatFile(exportFileName);
-				ExportService exportQTServiceImpl = new ExportQTServiceImpl();
+				ExportService exportQTServiceImpl = new ExportZYJCServiceImpl();
 				ExportWPSservice exportWPSserviceQT = new ExportWPSserviceImpl(exportQTServiceImpl, exportDataLis,
-						tempFile.getAbsolutePath(),banjieNum,weibanjieNum);
+						tempFile.getAbsolutePath(),banjieNum,weibanjieNum,docTypeId);
 				exportInvoke.setExportWPSservice(exportWPSserviceQT);
 				is = exportInvoke.export();
 				break;

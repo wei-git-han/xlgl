@@ -16,16 +16,19 @@ public class ExportWPSserviceImpl implements ExportWPSservice {
 	String fileName;
 	int banjieNum;
 	int weibanjieNum;
-	public ExportWPSserviceImpl(ExportService exportService,List<Map<String, String>> list,String fileName,int banjieNum,int weibanjieNum) {
+	String docTypeId;
+	public ExportWPSserviceImpl(ExportService exportService,List<Map<String, String>> list,String fileName,
+			int banjieNum,int weibanjieNum,String docTypeId) {
 		this.exportService=exportService;
 		this.list=list;
 		this.fileName=fileName;
 		this.banjieNum=banjieNum;
 		this.weibanjieNum=weibanjieNum;
+		this.docTypeId=docTypeId;
 	}
 	@Override
 	public FileInputStream exportExecude() throws IOException {
-		return exportService.exportWPSdoc(list, fileName,banjieNum,weibanjieNum);
+		return exportService.exportWPSdoc(list, fileName,banjieNum,weibanjieNum,docTypeId);
 	}
 
 }
