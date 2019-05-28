@@ -199,6 +199,7 @@ public class ImportController{
 									replyExplain.setShowFlag("1");
 									replyExplain.setSubDeptId(subDeptId);
 									replyExplain.setSubDeptName(cbdw);
+									replyExplain.setTeamId(UUIDUtils.random());
 									replyExplainService.save(replyExplain);
 									//添加流转记录
 									SubDocTracking tracking = new SubDocTracking();
@@ -216,8 +217,8 @@ public class ImportController{
 									if(user != null) {
 										BaseAppOrgan organ = baseAppOrganService.queryObject(user.getOrganid());
 										if(organ != null) {
-											tracking.setSenDeptId(user.getOrganid());
-											tracking.setSenDeptName(organ.getName());
+											tracking.setRecDeptId(user.getOrganid());
+											tracking.setRecDeptName(organ.getName());
 										}
 									}
 									tracking.setReceiverName(cbrName);

@@ -41,7 +41,7 @@ var pageModule = function(){
 								newbootbox.alertInfo('导入成功！');
 							}
 							newbootbox.newdialogClose("fileDr");
-							$("#iframe1",window.top.document).attr("src","/app/db/document/blfk/html/blfk.html?fileFrom=blfk");
+							$("#iframe1",window.top.document).attr("src","/app/db/document/djlr/html/djlr.html?fileFrom=djlr");
 							
 						}else{
 							newbootbox.alertInfo('导入失败！');

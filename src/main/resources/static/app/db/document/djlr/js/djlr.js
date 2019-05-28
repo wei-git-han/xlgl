@@ -115,6 +115,21 @@ var pageModule = function(){
 	}
 	
 	var initother = function(){
+		
+		//导入
+		$("#wjdr").click(function(){
+			 newbootbox.newdialog({
+			    id: "fileDr",
+			    title: "选择文件",
+			    style: {
+			      "padding": "1px"
+			    },
+			    width: 800,
+			    height: 200,
+			    url: rootPath + "/document/blfk/html/filepage.html"
+			  });
+		});
+		
 		$(".date-picker").datepicker({
 		    language:"zh-CN",
 		    rtl: Metronic.isRTL(),
