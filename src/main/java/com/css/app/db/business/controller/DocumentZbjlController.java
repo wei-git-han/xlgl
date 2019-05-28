@@ -221,17 +221,18 @@ public class DocumentZbjlController {
 			//改变文件状态 ，文件状态为待落实
 			if(subInfo != null) {
 				subInfo.setDocStatus(DbDocStatusDefined.DAI_LUO_SHI);
-				/*subInfo.setUndertaker("");
-				subInfo.setUndertakerName("");*/
+				subInfo.setUndertaker("");
+				subInfo.setUndertakerName("");
 				subDocInfoService.update(subInfo);
 			}
-			/*//承办人转办，删除承办人当前临时反馈
+			//承办人未走流程转办，删除承办人当前临时反馈
 			Map<String, Object> map =new HashMap<>();
 			map.put("infoId",infoId );
 			map.put("subId",subId );
+			map.put("userId",loginUserId);
 			map.put("showFlag","0" );
 			map.put("version","0" );
-			replyExplainService.deleteByParam(map);*/
+			replyExplainService.deleteByParam(map);
 			// 发送消息提醒
 			MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_JU_ZHUANBAN_MSG_TITLE);
 			if (msg != null) {

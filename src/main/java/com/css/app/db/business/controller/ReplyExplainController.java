@@ -76,77 +76,82 @@ public class ReplyExplainController {
 			}
 			if(subDocInfo != null) {
 				String cbrId=subDocInfo.getUndertaker();
-				if(StringUtils.isNotBlank(cbrId)) {
-					List<ReplyExplain> dbReplyExplainList = replyExplainService.querySubLatestReply(infoId, subId);
-					for (ReplyExplain replyExplain : dbReplyExplainList) {
-						boolean editFlag=false;
-						JSONObject json=new JSONObject();
-						String teamId=replyExplain.getTeamId();
-						Date firstDate = null;
-						Map<String, Object> replyMap =new HashMap<>();
-						replyMap.put("subId", subId);
-						replyMap.put("teamId", teamId);
-						replyMap.put("cbrFlag", "1");
-						replyMap.put("sort", "asc");
-						List<ReplyExplain> list = replyExplainService.queryList(replyMap);
-						if(list !=null && list.size()>0) {
-							firstDate = list.get(0).getCreatedTime();
-							String showFlag = list.get(0).getShowFlag();
-							//未正式发布的,显示当前承办人（因为可能会存在转办但下一个承办人承办了但还没做任何反馈的修改的时候）
+				//获取某局各组最新的反馈
+				List<ReplyExplain> dbReplyExplainList = replyExplainService.querySubLatestReply(infoId, subId);
+				for (ReplyExplain replyExplain : dbReplyExplainList) {
+					boolean editFlag=false;
+					JSONObject json=new JSONObject();
+					String teamId=replyExplain.getTeamId();
+					Date firstDate = null;
+					Map<String, Object> replyMap =new HashMap<>();
+					replyMap.put("subId", subId);
+					replyMap.put("teamId", teamId);
+					replyMap.put("cbrFlag", "1");
+					replyMap.put("sort", "asc");
+					List<ReplyExplain> list = replyExplainService.queryList(replyMap);
+					if(list !=null && list.size()>0) {
+						//第一个承办人反馈的时间
+						firstDate = list.get(0).getCreatedTime();
+						String showFlag = list.get(0).getShowFlag();
+						if(StringUtils.isNotBlank(cbrId)) {
+							//如果已经正式发布显示这一组最后一个承办人姓名
 							if(StringUtils.equals("1", showFlag)) {
-								json.put("cbrId", list.get(0).getUserId());
-								json.put("cbrName", list.get(0).getUserName());
+								json.put("cbrId", list.get(list.size()-1).getUserId());
+								json.put("cbrName", list.get(list.size()-1).getUserName());
 							}else {
-								//承办后再转办如实记录承办人
+								//如果未正式发布则显示系统当前承办人姓名（（因为可能会存在流程中转办但下一个承办人承办了但还没做任何反馈的修改的时候））
 								json.put("cbrId", cbrId);
 								json.put("cbrName", subDocInfo.getUndertakerName());
 							}
+						}else {
+							//如果处在为承办的过程中，则显示当前组的最后一个承办人姓名
+							json.put("cbrId", list.get(list.size()-1).getUserId());
+							json.put("cbrName", list.get(list.size()-1).getUserName());
 						}
-						json.put("danwei", subDocInfo.getSubDeptName());
-						json.put("firstDate", firstDate);
-						/*json.put("cbrId", cbrId);
-						json.put("cbrName", subDocInfo.getUndertakerName());*/
-						json.put("teamId", teamId);
-						json.put("content",replyExplain.getReplyContent());
-						json.put("updateTime",replyExplain.getCreatedTime());
-						if(!StringUtils.equals("1", replyExplain.getShowFlag()) && isCheckUser && subDocInfo.getDocStatus()!=5) {
-							editFlag=true;
-						}
-						json.put("edit",editFlag);
-						//附件
-						Map<String, Object> map = new HashMap<>();
-						map.put("teamId", teamId);
-						map.put("subId", subId);
-						List<ReplyAttac> attchList = replyAttacService.queryList(map);
-						json.put("attchList",attchList);
-						Map<String, Object> opMap = new HashMap<>();
-						opMap.put("subId", subId);
-						opMap.put("teamId", teamId);
-						List<ApprovalOpinion> opinionList = approvalOpinionService.queryList(map);
-						if(opinionList != null && opinionList.size()>0) {
-							json.put("cuowei","1");
-							for(ApprovalOpinion opinion : opinionList) {
-								if(StringUtils.equals("1", opinion.getYjType())) {
-									if(StringUtils.isNotBlank(opinion.getOpinionContent())) {
-										HTTPFile httpFile = new HTTPFile(opinion.getOpinionContent());
-										opinion.setOpinionContent(httpFile.getAssginDownloadURL());
-									}else {
-										System.out.print("局长手写签批获取不到");
-									}
+					}
+					json.put("danwei", subDocInfo.getSubDeptName());
+					json.put("firstDate", firstDate);
+					json.put("teamId", teamId);
+					json.put("content",replyExplain.getReplyContent());
+					json.put("updateTime",replyExplain.getCreatedTime());
+					//编辑的显示条件：1、当前反馈未正式发布2.登录人为当前处理人3.非待落实状态
+					if(!StringUtils.equals("1", replyExplain.getShowFlag()) && isCheckUser && subDocInfo.getDocStatus()!=5) {
+						editFlag=true;
+					}
+					json.put("edit",editFlag);
+					//附件
+					Map<String, Object> map = new HashMap<>();
+					map.put("teamId", teamId);
+					map.put("subId", subId);
+					List<ReplyAttac> attchList = replyAttacService.queryList(map);
+					json.put("attchList",attchList);
+					Map<String, Object> opMap = new HashMap<>();
+					opMap.put("subId", subId);
+					opMap.put("teamId", teamId);
+					List<ApprovalOpinion> opinionList = approvalOpinionService.queryList(map);
+					if(opinionList != null && opinionList.size()>0) {
+						json.put("cuowei","1");
+						for(ApprovalOpinion opinion : opinionList) {
+							if(StringUtils.equals("1", opinion.getYjType())) {
+								if(StringUtils.isNotBlank(opinion.getOpinionContent())) {
+									HTTPFile httpFile = new HTTPFile(opinion.getOpinionContent());
+									opinion.setOpinionContent(httpFile.getAssginDownloadURL());
+								}else {
+									System.out.print("标识为手写签批，但局长手写签批获取不到，可能原因为标识存错或者链接不到文件服务");
 								}
 							}
-							json.put("opinionList",opinionList);
-						}else {
-							json.put("cuowei","0");
 						}
-						//未完成审批的默认展开标识
-						if(StringUtils.equals("1", replyExplain.getShowFlag())) {
-							json.put("show","0");
-						}else {
-							json.put("show","1");
-						}
-						jsonArray.add(json);
+						json.put("opinionList",opinionList);
+					}else {
+						json.put("cuowei","0");
 					}
+					//未完成审批的默认展开标识
+					if(StringUtils.equals("1", replyExplain.getShowFlag())) {
+						json.put("show","0");
+					}else {
+						json.put("show","1");
+					}
+					jsonArray.add(json);
 				}
 			}
 		}
@@ -162,61 +167,59 @@ public class ReplyExplainController {
 	public void allReplyList(String infoId){
 		JSONArray jsonArray = new JSONArray();
 		if(StringUtils.isNotBlank(infoId)) {
+			//获取所有分支局已经正式发布的反馈按创建时间倒叙排列
 			List<ReplyExplain> dbReplyExplainList = replyExplainService.queryAllLatestReply(infoId);
 			for (ReplyExplain replyExplain : dbReplyExplainList) {
 				String subId=replyExplain.getSubId();
 				SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
 				if(subDocInfo != null) {
-					String cbrId=subDocInfo.getUndertaker();
-					if(StringUtils.isNotBlank(cbrId)) {
-						JSONObject json=new JSONObject();
-						String teamId=replyExplain.getTeamId();
-						Date firstDate = null;
-						Map<String, Object> replyMap =new HashMap<>();
-						replyMap.put("subId", subId);
-						replyMap.put("teamId", teamId);
-						replyMap.put("cbrFlag", "1");
-						replyMap.put("sort", "asc");
-						List<ReplyExplain> list = replyExplainService.queryList(replyMap);
-						if(list !=null && list.size()>0) {
-							firstDate = list.get(0).getCreatedTime();
-							json.put("cbrId", list.get(0).getUserId());
-							json.put("cbrName", list.get(0).getUserName());
-						}
-						json.put("danwei", subDocInfo.getSubDeptName());
-						json.put("firstDate", firstDate);
-						json.put("subId", subId);
-						json.put("teamId", teamId);
-						json.put("content",replyExplain.getReplyContent());
-						json.put("updateTime",replyExplain.getCreatedTime());
-						//附件
-						Map<String, Object> map = new HashMap<>();
-						map.put("teamId", teamId);
-						map.put("subId", subId);
-						List<ReplyAttac> attchList = replyAttacService.queryList(map);
-						json.put("attchList",attchList);
-						Map<String, Object> opMap = new HashMap<>();
-						opMap.put("subId", subId);
-						opMap.put("teamId", teamId);
-						List<ApprovalOpinion> opinionList = approvalOpinionService.queryList(map);
-						if(opinionList != null && opinionList.size()>0) {
-							json.put("cuowei","1");
-							for(ApprovalOpinion opinion : opinionList) {
-								if(StringUtils.equals("1", opinion.getYjType())) {
-									if(StringUtils.isNotBlank(opinion.getOpinionContent())) {
-										HTTPFile httpFile = new HTTPFile(opinion.getOpinionContent());
-										opinion.setOpinionContent(httpFile.getAssginDownloadURL());
-									}else {
-										System.out.print("局长手写签批没有保存上");
-									}
+					JSONObject json=new JSONObject();
+					String teamId=replyExplain.getTeamId();
+					Date firstDate = null;
+					Map<String, Object> replyMap =new HashMap<>();
+					replyMap.put("subId", subId);
+					replyMap.put("teamId", teamId);
+					replyMap.put("cbrFlag", "1");
+					replyMap.put("sort", "asc");
+					List<ReplyExplain> list = replyExplainService.queryList(replyMap);
+					if(list !=null && list.size()>0) {
+						firstDate = list.get(0).getCreatedTime();
+						json.put("cbrId", list.get(list.size()-1).getUserId());
+						json.put("cbrName", list.get(list.size()-1).getUserName());
+					}
+					json.put("danwei", subDocInfo.getSubDeptName());
+					json.put("firstDate", firstDate);
+					json.put("subId", subId);
+					json.put("teamId", teamId);
+					json.put("content",replyExplain.getReplyContent());
+					json.put("updateTime",replyExplain.getCreatedTime());
+					//附件
+					Map<String, Object> map = new HashMap<>();
+					map.put("teamId", teamId);
+					map.put("subId", subId);
+					List<ReplyAttac> attchList = replyAttacService.queryList(map);
+					json.put("attchList",attchList);
+					Map<String, Object> opMap = new HashMap<>();
+					opMap.put("subId", subId);
+					opMap.put("teamId", teamId);
+					List<ApprovalOpinion> opinionList = approvalOpinionService.queryList(map);
+					if(opinionList != null && opinionList.size()>0) {
+						json.put("cuowei","1");
+						for(ApprovalOpinion opinion : opinionList) {
+							if(StringUtils.equals("1", opinion.getYjType())) {
+								if(StringUtils.isNotBlank(opinion.getOpinionContent())) {
+									HTTPFile httpFile = new HTTPFile(opinion.getOpinionContent());
+									opinion.setOpinionContent(httpFile.getAssginDownloadURL());
+								}else {
+									System.out.print("标识为手写签批，但局长手写签批获取不到，可能原因为标识存错或者链接不到文件服务");
 								}
 							}
-							json.put("opinionList",opinionList);
-						}else {
-							json.put("cuowei","0");
 						}
-						jsonArray.add(json);
+						json.put("opinionList",opinionList);
+					}else {
+						json.put("cuowei","0");
 					}
+					jsonArray.add(json);
 				}
 			}
 		}
@@ -231,6 +234,16 @@ public class ReplyExplainController {
 	@RequestMapping("/getAllLatestOneReply")
 	public void getAllLatestOneReply(String infoId) {
 		List<ReplyExplain> latestOneReply = replyExplainService.queryAllLatestOneReply(infoId);
+		for (ReplyExplain replyExplain : latestOneReply) {
+			Map<String, Object> replyMap =new HashMap<>();
+			replyMap.put("subId", replyExplain.getSubId());
+			replyMap.put("teamId", replyExplain.getTeamId());
+			replyMap.put("cbrFlag", "1");
+			List<ReplyExplain> list = replyExplainService.queryList(replyMap);
+			if(list !=null && list.size()>0) {
+				replyExplain.setUserName(list.get(0).getUserName());
+			}
+		}
 		Response.json(latestOneReply);
 	}
 	
