@@ -1011,6 +1011,8 @@ function viewcont(teamId,subId){
 			            '</div>'
 		            )
 				});
+	    	}else{
+	    		$(".viewcontent").html("暂无数据!");
 	    	}
 	    }
 	});

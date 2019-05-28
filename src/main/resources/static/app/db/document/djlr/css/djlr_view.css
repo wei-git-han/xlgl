@@ -859,7 +859,7 @@ ul{
 .newpanel-right-bottom .btn-link .guanbi{display:none;}
 .newpanel-cont.active .btn-link .zhankai{display:none;}
 .newpanel-cont.active .btn-link .guanbi{display:inline-block;}
-.viewcontent{line-height:30px;font-size:18px;}
+.viewcontent{line-height:30px;font-size:16px;}
 .modal.in .modal-dialog {
     transform: inherit!important;
 }

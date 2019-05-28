@@ -27,7 +27,7 @@ body{background: #3F5C9A;}
 .right_top_zbjl .tabbable-line > .nav-tabs > li a:hover {background: transparent;border-color: #6699FF;color: #6699FF;}
 .right_top_zbjl .tabbable-line > .nav-tabs > li.active > a, .right_top_zbjl .tabbable-line > .nav-tabs > li.active > a:focus, .right_top_zbjl .tabbable-line > .nav-tabs > li.active > a:hover {color: rgba(1, 204, 255, 1) !important;}
 .right_top_zbjl .tabbable-line > .nav-tabs > li.active {border-bottom: 4px solid rgba(1, 204, 255, 1);}
-.record{color:#fff;}
+/* .record{color:#fff;} */
 .cbdw,.xiangy,.zbUser{margin-top:10px;color:#fff;font-size:16px;font-weight:700;}
 .zbDate, .xycontent, .cbDate, .bjDate {color: #fff;margin-left: 20px;}
 
@@ -64,7 +64,7 @@ body{background: #3F5C9A;}
 .newpanel-right-bottom .btn-link .guanbi{display:none;}
 .newpanel-cont.active .btn-link .zhankai{display:none;}
 .newpanel-cont.active .btn-link .guanbi{display:inline-block;}
-.viewcontent{line-height:30px;font-size:18px;}
+.viewcontent{line-height:30px;font-size:16px;}
 .modal.in .modal-dialog {
     transform: inherit!important;
 }
