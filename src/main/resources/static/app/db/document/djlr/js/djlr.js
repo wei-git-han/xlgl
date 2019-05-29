@@ -258,7 +258,7 @@ var pageModule = function(){
 		if(o.radio!="undefined" && o.radio!=null && o.radio!=""){
 			$.uniform.update($("input[value='"+o.radio+"']").prop("checked",true));
 		}else{
-			$.uniform.update($("input[value='']").prop("checked",true));
+			$.uniform.update($("input[value='0']").prop("checked",true));
 		}
 		$("#searchVal").val(o.search);
 	}
