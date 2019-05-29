@@ -583,8 +583,12 @@ var pageModule = function(){
 							var surl = location.protocol+ "//"+ location.host+ "/servlet/suwell/savePictureYj?access_token="+data.result;
 						    document.getElementById("signtool").SetUploadURL(surl);
 							var result = document.getElementById("signtool").UploadImageStream();
-							imgFileId = result.replace(/^\"|\"$/g,'');
-							replyContent = imgFileId;
+							if(result && result!="" && result!=null){
+								imgFileId = result.replace(/^\"|\"$/g,'');
+								replyContent = imgFileId;
+							}else{
+								saveFlag="0"; //图片
+							}
 						}
 					})
 				}else{
@@ -633,8 +637,12 @@ var pageModule = function(){
 									var surl = location.protocol+ "//"+ location.host+ "/servlet/suwell/savePictureYj?access_token="+data.result;
 								    document.getElementById("signtool").SetUploadURL(surl);
 									var result = document.getElementById("signtool").UploadImageStream();
-									imgFileId = result.replace(/^\"|\"$/g,'');
-									replyContent = imgFileId;
+									if(result && result!="" && result!=null){
+										imgFileId = result.replace(/^\"|\"$/g,'');
+										replyContent = imgFileId;
+									}else{
+										saveFlag="0"; //图片
+									}
 								}
 							})
 						}else{
