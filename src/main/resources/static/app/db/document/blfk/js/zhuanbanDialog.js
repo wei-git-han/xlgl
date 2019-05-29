@@ -57,10 +57,10 @@ var pageModule = function(){
 									$("#iframe1",window.top.document).attr("src","/app/db/document/djlr/html/djlr.html?fileFrom=djlr");
 								}else if(fileFrom=="blfk"){  //文件来源于办理反馈
 									$("#iframe1",window.top.document).attr("src","/app/db/document/blfk/html/blfk.html?fileFrom=blfk");
-									window.top.blfkfn();
 								}else{ 
 									$("#iframe1",window.top.document).attr("src","/app/db/document/djlr/html/djlr.html?fileFrom=djlr");
 								}
+								window.top.blfkfn();
 							}
 						});
 					}else{

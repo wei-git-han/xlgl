@@ -599,7 +599,9 @@ var pageModule = function(){
 					if(data.result == "success"){
 						newbootbox.alert("已返回承办人！").done(function(){
 							if(!fromMsg || fromMsg == false){
+								window.top.jndbfn();
 								window.top.grdbfn();
+								window.top.blfkfn();
 							}
 							window.location.reload();
 						});
@@ -648,7 +650,9 @@ var pageModule = function(){
 								newbootbox.alert("审批完成！").done(function(){
 									window.location.reload();
 									if(!fromMsg || fromMsg == false){
+										window.top.jndbfn();
 										window.top.grdbfn();
+										window.top.blfkfn();
 									}
 								});
 							}
@@ -684,7 +688,7 @@ var pageModule = function(){
 			})
 		});
 		
-		//办结
+		/*//办结
 		$("#banjie").click(function(){
 			newbootbox.oconfirm({
 			 	title:"提示",
@@ -729,7 +733,7 @@ var pageModule = function(){
 			 	}
 			});
 		});
-		
+		*/
 		//办理反馈-添加附件
 		var o1 = $("#file1").createfile({
 			//initdata:filedata1,
@@ -981,7 +985,7 @@ function editfn(id,content,el){
 			header:true,
 			title:"编辑",
 			classed:"cjDialog",
-			url:"/app/db/document/view/html/editDialog.html?fileId="+fileId+"&replyContent="+content+"&subId="+subId+"&teamId="+id
+			url:"/app/db/document/view/html/editDialog.html?fileId="+fileId+"&replyContent="+content+"&subId="+subId+"&teamId="+id+"&fromMsg="+fromMsg
 		})
 	}
 }

@@ -152,6 +152,7 @@ public class DocumentZbjlController {
 						if (msg != null) {
 							String msgUrl = msg.getMsgRedirect()+"&fileId="+infoId+"&subId="+subInfo.getId();
 							for (String userId : userIds) {
+								System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>userId:"+userId+"路径："+msgUrl);
 								msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId, appId,clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "","true");
 							}
 						}

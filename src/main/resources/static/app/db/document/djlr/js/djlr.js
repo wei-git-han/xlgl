@@ -327,6 +327,7 @@ function chehuiDoc(docId) {
 					if(data.result=='success'){
 						newbootbox.alertInfo('撤回成功！').done(function(){
 							pageModule.initgrid();
+							window.top.blfkfn();
 						});
 					}else{
 						newbootbox.alertInfo('撤回失败！')

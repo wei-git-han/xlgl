@@ -266,10 +266,10 @@ public class DocumentInfoController {
 			if(StringUtils.isNotBlank(startDate)||StringUtils.isNotBlank(endDate)) {
 				if(StringUtils.equals("3", typeId)||StringUtils.equals("5", typeId)||StringUtils.equals("6", typeId)) {
 					if(StringUtils.isNotBlank(startDate)) {
-						map.put("zbStartDate", startDate);
+						map.put("zbStartDate", startDate+" 00:00");
 					}
 					if(StringUtils.isNotBlank(endDate)) { 
-						map.put("zbEndDate", endDate);
+						map.put("zbEndDate", endDate+" 23:59");
 					}
 				}else {
 					if(StringUtils.isNotBlank(startDate)) {
