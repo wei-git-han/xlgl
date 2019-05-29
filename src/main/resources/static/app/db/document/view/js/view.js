@@ -985,7 +985,7 @@ function editfn(id,content,el){
 			header:true,
 			title:"编辑",
 			classed:"cjDialog",
-			url:"/app/db/document/view/html/editDialog.html?fileId="+fileId+"&replyContent="+content+"&subId="+subId+"&teamId="+id
+			url:"/app/db/document/view/html/editDialog.html?fileId="+fileId+"&replyContent="+content+"&subId="+subId+"&teamId="+id+"&fromMsg="+fromMsg
 		})
 	}
 }

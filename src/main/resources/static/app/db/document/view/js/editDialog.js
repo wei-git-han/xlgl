@@ -2,8 +2,8 @@ var sureUrl = {"url":"/app/db/replyexplain/edit","dataType":"text"}; //保存
 var subId=getUrlParam("subId")||""; //子分支主id
 var fileId=getUrlParam("fileId")||""; 
 var teamId=getUrlParam("teamId")||""; 
+var fromMsg=getUrlParam("fromMsg")|| false; 
 var replyContent=getUrlParam2("replyContent")||""; //文件来源
-
 var pageModule = function(){
 	var initother = function(){
 		$("#replyContent").val(replyContent);
@@ -16,9 +16,15 @@ var pageModule = function(){
 				success:function(data){
 					newbootbox.newdialogClose("editDialog");
 					if(data.result=="success"){
-						newbootbox.alert("修改成功！").done(function(){
-							window.top.iframe1.window.pageModule.initblfkList();
-						});
+						if(fromMsg && fromMsg == true){
+							newbootbox.alert("修改成功！").done(function(){
+								window.parent.pageModule.initblfkList();
+							});
+						}else{
+							newbootbox.alert("修改成功！").done(function(){
+								window.top.iframe1.window.pageModule.initblfkList();
+							});
+						}
 					}else{
 						newbootbox.alert("修改失败！");
 					}
