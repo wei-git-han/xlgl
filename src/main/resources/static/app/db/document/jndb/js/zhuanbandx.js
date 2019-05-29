@@ -51,7 +51,7 @@ var pageModule = function(){
 					newbootbox.newdialogClose("zhuanbanDialog");
 					if(data.result=="success"){
 						newbootbox.alert("转办成功！").done(function(){
-							if(fromMsg && fromMsg == true){
+							if(fromMsg && fromMsg == "true"){
 								windowClose();
 							}else{
 								if(fileFrom == "jndb"){

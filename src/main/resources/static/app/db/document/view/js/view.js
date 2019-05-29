@@ -493,7 +493,7 @@ var pageModule = function(){
 	}
 
 	var initother = function(){
-		if(fromMsg && fromMsg == true){
+		if(fromMsg && (fromMsg == true || fromMsg == "true")){
 			$("#goback").hide();
 		}
 		
@@ -931,9 +931,7 @@ var pageModule = function(){
 
 //跳转返回事件
 function skip(){
-	if(fromMsg && fromMsg == true){
-		windowClose();
-	}else{
+	if(!fromMsg || fromMsg == false){
 		if(fileFrom == "djlr"){//文件来源于登记录入
 			window.location.href="/app/db/document/djlr/html/djlr.html?fileFrom=djlr";
 		}else if(fileFrom == "grdb"){//文件来源于个人待办
@@ -943,6 +941,8 @@ function skip(){
 		}else{ 
 			window.location.href="/app/db/document/grdb/html/grdb.html?fileFrom=grdb";
 		}
+	}else{
+		windowClose();
 	}
 }
 
