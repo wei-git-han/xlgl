@@ -207,7 +207,7 @@ var pageModule = function(){
 	               	}
 	               	return '';
                 }},
-                {display:"办理状态",name:"",width:"6%",align:"center",render:function(rowdata,n){
+                {display:"办理状态",name:"",width:"8%",align:"center",render:function(rowdata,n){
                 	var statusName="";
                	 	var bgColor="";
                	 	if(rowdata.status==1){
@@ -232,7 +232,7 @@ var pageModule = function(){
                  {display:"工作分工内容",name:"",width:"21%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 return '<div class="gzfgnr" title="'+rowdata.jobContent+'">'+rowdata.jobContent+'</div>';
                  }},
-                 {display:"督办落实情况",name:"",width:"30%",align:"left",paixu:false,title:false,render:function(rowdata){
+                 {display:"督办落实情况",name:"",width:"28%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var duban="";
                  	 if(rowdata.updateFlag=="1"){
                  		duban = '<label class="cuibanlabel">已更新</label>';
@@ -270,7 +270,7 @@ var pageModule = function(){
             loadafter:function(data){
             	total=data.total;
             	$(".dblsqk span").each(function(){
-					var maxwidth = 80;
+					var maxwidth = 72;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');

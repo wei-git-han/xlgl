@@ -33,5 +33,7 @@ public interface DocumentInfoDao extends BaseDao<DocumentInfo> {
 	List<Map<String, Object>> queryListByDicStutas(Map<String, Object> map);
 
 	List<DocumentDic> queryDicByType(Map<String, Object> map);
+
+	List<Map<String, Object>> getMaxSecurity(String[] id);
 	
 }
