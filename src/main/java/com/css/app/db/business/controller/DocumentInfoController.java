@@ -572,6 +572,11 @@ public class DocumentInfoController {
 		//取最后办结或落实的局的主文件(正常系统中只会有一个分支文件的状态大于11，导入的会有多个)
 		//文件局内状态（1:待转办；3：退回修改；5：待落实；7：待审批；9：办理中；10：建议办结；11：建议落实；12：办结；1:3：常态落实）
 		List<SubDocInfo> lastEndSubInfos = subDocInfoService.queryLastEndSubInfo(id);
+		//添加办结记录
+		DocumentBjjl newBjjl=new DocumentBjjl();
+		newBjjl.setContent("取消办结");
+		newBjjl.setInfoId(id);
+		documentBjjlService.save(newBjjl);	
 		if(lastEndSubInfos !=null && lastEndSubInfos.size()>0) {
 			//lastEndSubInfos存在说明是承办人选择办结的文或导入的已办结的文
 			for (SubDocInfo lastEndSubInfo : lastEndSubInfos) {
@@ -580,12 +585,6 @@ public class DocumentInfoController {
 					String undertaker = lastEndSubInfo.getUndertaker();
 					String undertakerName = lastEndSubInfo.getUndertakerName();
 					Integer subStatus = DbDocStatusDefined.BAN_LI_ZHONG;
-					//添加办结记录
-					DocumentBjjl newBjjl=new DocumentBjjl();
-					newBjjl.setContent("取消办结");
-					newBjjl.setInfoId(id);
-					newBjjl.setSubId(subId);
-					documentBjjlService.save(newBjjl);				
 					//取最后一条流转记录
 					SubDocTracking lastTracking = subDocTrackingService.queryLatestRecord(subId);
 					//trackingType（1：转办；2：审批流转；3：退回;4:新一轮反馈的开始，即承办人的办理）
