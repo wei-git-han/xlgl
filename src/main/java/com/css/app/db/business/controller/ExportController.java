@@ -122,7 +122,7 @@ public class ExportController{
 								+ "                                                                        ");
 			}
 			for (SubDocInfo subInfo : subByInfoId) {
-				String telephone = subInfo.getUndertakerPhone();
+				String telephone = subInfo.getUndertakerPhone() == null ? "" :subInfo.getUndertakerPhone();
 				String deptName = subInfo.getSubDeptName() == null ? "" : subInfo.getSubDeptName();
 				String subInfoName = subInfo.getUndertakerName() == null ? "" : subInfo.getUndertakerName();				
 				// 查询承办单位/人电话情况
@@ -136,8 +136,7 @@ public class ExportController{
 //						Map<String, Object> txlOrgtel = (Map<String, Object>) jsonData.get("txlOrgtel");
 //						telephone = txlOrgtel.get("telephone").toString();
 //					}
-//				}
-				
+//				}				
 				subInfoBuilder.append(deptName + "   "
 						+ "                                               " + subInfoName + "                                                  " + telephone);
 			}											
