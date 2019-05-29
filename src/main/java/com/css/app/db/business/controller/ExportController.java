@@ -122,22 +122,22 @@ public class ExportController{
 								+ "                                                                        ");
 			}
 			for (SubDocInfo subInfo : subByInfoId) {
-				String telephone = "";
+				String telephone = subInfo.getUndertakerPhone();
 				String deptName = subInfo.getSubDeptName() == null ? "" : subInfo.getSubDeptName();
-				String subInfoName = subInfo.getUndertakerName() == null ? "" : subInfo.getUndertakerName();
+				String subInfoName = subInfo.getUndertakerName() == null ? "" : subInfo.getUndertakerName();				
 				// 查询承办单位/人电话情况
-				BaseAppOrgMapped orgMapped = (BaseAppOrgMapped) baseAppOrgMappedService.orgMapped("", "",AppType.APP_TXL);
-				if (orgMapped != null) {
-					LinkedMultiValueMap<String, Object> paraMap = new LinkedMultiValueMap<String, Object>();
-					paraMap.add("id", subInfo.getUndertaker());
-					String url = "http://172.16.3.13:64001/txluser/getUser";
-//					String urlPathGWCL = baseAppOrgMappedService.getWebUrl(AppType.APP_GWCL, AppInterfaceConstant.WEB_INTERFACE_GWCL_API_QUERYMSG);		
-					JSONObject jsonData = CrossDomainUtil.getJsonData(url, paraMap);
-					if (jsonData != null && jsonData.get("txlOrgtel") != null) {
-						Map<String, Object> txlOrgtel = (Map<String, Object>) jsonData.get("txlOrgtel");
-						telephone = txlOrgtel.get("telephone").toString();
-					}
-				}
+//				BaseAppOrgMapped orgMapped = (BaseAppOrgMapped) baseAppOrgMappedService.orgMapped("", "",AppType.APP_TXL);
+//				if (orgMapped != null) {
+//					LinkedMultiValueMap<String, Object> paraMap = new LinkedMultiValueMap<String, Object>();
+//					paraMap.add("id", subInfo.getUndertaker());
+//					String url = "http://172.16.3.13:64001/txluser/getUser";
+//					JSONObject jsonData = CrossDomainUtil.getJsonData(url, paraMap);
+//					if (jsonData != null && jsonData.get("txlOrgtel") != null) {
+//						Map<String, Object> txlOrgtel = (Map<String, Object>) jsonData.get("txlOrgtel");
+//						telephone = txlOrgtel.get("telephone").toString();
+//					}
+//				}
+				
 				subInfoBuilder.append(deptName + "   "
 						+ "                                               " + subInfoName + "                                                  " + telephone);
 			}											
