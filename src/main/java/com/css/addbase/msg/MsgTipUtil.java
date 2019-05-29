@@ -137,9 +137,9 @@ public class MsgTipUtil {
         HttpEntity<LinkedMultiValueMap<String, Object>> formEntity = new HttpEntity<LinkedMultiValueMap<String, Object>>(map, headers);
         String msgUrl = msgConfig.getMsgUrl() + "/message/user/" + userIds + "?access_token=";
 			logger.info("消息请求路径:", msgUrl + accessToken);
-//			result = restTemplate.postForEntity(msgUrl+ accessToken, formEntity, String.class);	
+			restTemplate.postForEntity(msgUrl+ accessToken, formEntity, String.class);	
 			System.out.println("==================将桌面消息放入任务队列开始==========================");
-			pcSendUtil.sendPC(msgUrl,accessToken,formEntity,String.class,appId,appSecret);
+			//pcSendUtil.sendPC(msgUrl,accessToken,formEntity,String.class,appId,appSecret);
 			System.out.println("==================将桌面消息放入任务队列结束==========================");
 		String[] ids = StringUtils.split(userIds,",");
 		String phone="";
