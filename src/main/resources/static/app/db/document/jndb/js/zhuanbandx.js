@@ -55,13 +55,14 @@ var pageModule = function(){
 								windowClose();
 							}else{
 								if(fileFrom == "jndb"){
-									window.top.jndbfn();
 									$("#iframe1",window.top.document).attr("src","/app/db/document/jndb/html/jndb.html?fileFrom="+fileFrom);
 								}
 								if(fileFrom == "grdb"){
-									window.top.grdbfn();
 									$("#iframe1",window.top.document).attr("src","/app/db/document/grdb/html/grdb.html?fileFrom="+fileFrom);
 								}
+								window.top.jndbfn();
+								window.top.grdbfn();
+								window.top.blfkfn();
 							}
 						});
 					}else{

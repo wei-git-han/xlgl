@@ -43,7 +43,6 @@ var pageModule = function(){
 							newbootbox.newdialogClose("fileDr");
 							$("#iframe1",window.top.document).attr("src","/app/db/document/djlr/html/djlr.html?fileFrom=djlr");
 							window.top.blfkfn();
-							
 						}else{
 							newbootbox.alertInfo('导入失败！');
 						}

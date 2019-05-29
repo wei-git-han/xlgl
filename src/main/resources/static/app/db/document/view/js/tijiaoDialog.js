@@ -58,7 +58,9 @@ var pageModule = function(){
 								if(fromMsg && fromMsg == true){
 									windowClose();
 								}else{
+									window.top.jndbfn();
 									window.top.grdbfn();
+									window.top.blfkfn();
 									$("#iframe1",window.top.document).attr("src","/app/db/document/grdb/html/grdb.html");
 								}
 							});
@@ -76,7 +78,14 @@ var pageModule = function(){
 						newbootbox.newdialogClose("tijiaoDialog");
 						if(data.result=="success"){
 							newbootbox.alert("提交成功！").done(function(){
-								$("#iframe1",window.top.document).attr("src","/app/db/document/grdb/html/grdb.html");
+								if(fromMsg && fromMsg == true){
+									windowClose();
+								}else{
+									window.top.jndbfn();
+									window.top.grdbfn();
+									window.top.blfkfn();
+									$("#iframe1",window.top.document).attr("src","/app/db/document/grdb/html/grdb.html");
+								}
 							});
 						}else{
 							newbootbox.alert("提交失败！");
