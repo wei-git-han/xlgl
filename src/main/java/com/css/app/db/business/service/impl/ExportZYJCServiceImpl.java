@@ -169,7 +169,7 @@ public class ExportZYJCServiceImpl implements ExportService {
 				XWPFTableCell insertCell = comTableRowOther.getCell(0);
 				this.getPara(insertCell,tex);
 //				insertCell.setText(tonggeIndex+"已办结事项（共" + banjieNum + "项）");// 已办结事项
-				mergeCell(ComTable, 1, 0, 8);
+				mergeCell(ComTable, 1, 0, 7);
 				tonggeIndex="二、";
 			}
 			int banjieIndex = 1;
@@ -211,7 +211,7 @@ public class ExportZYJCServiceImpl implements ExportService {
 				XWPFTableCell insertCell2 = comTableRowOther2.getCell(0);
 				this.getPara(insertCell2,tex);
 //				insertCell2.setText(tonggeIndex+"未办结事项（共" + weibanjieNum + "项）");// 未办结事项
-				mergeCell(ComTable, banjieNum > 0 ? banjieNum + 2 : banjieNum + 1, 0, 8);
+				mergeCell(ComTable, banjieNum > 0 ? banjieNum + 2 : banjieNum + 1, 0, 7);
 			}
 			int weibanjieIndex = 1;
 			for (int i = 0; i < list.size(); i++) {
