@@ -154,4 +154,9 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 	public List<DocumentDic> queryDicByType(Map<String, Object> map) {
 		return documentInfoDao.queryDicByType(map);
 	}
+
+	@Override
+	public List<Map<String, Object>> getMaxSecurity(String[] stringIds) {
+		return documentInfoDao.getMaxSecurity(stringIds);
+	}
 }
