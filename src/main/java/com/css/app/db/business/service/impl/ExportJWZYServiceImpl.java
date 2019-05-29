@@ -9,6 +9,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.usermodel.Range;
+import org.apache.poi.hwpf.usermodel.Table;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -57,6 +60,7 @@ public class ExportJWZYServiceImpl implements ExportService {
 		FileOutputStream fout = null;
 		String tonggeIndex ="一、";
 		try {
+			
 			// 添加标题
 			XWPFDocument document = new XWPFDocument();
 			CTDocument1 doc = document.getDocument();
@@ -78,7 +82,7 @@ public class ExportJWZYServiceImpl implements ExportService {
 			XWPFParagraph xmiParagraph = document.createParagraph();
 			xmiParagraph.setAlignment(ParagraphAlignment.LEFT);
 			XWPFRun xmiParagraphRun = xmiParagraph.createRun();
-			xmiParagraphRun.setText("X 密");
+			xmiParagraphRun.setText(list.get(0).get("security")==null?"X 密":list.get(0).get("security"));
 			xmiParagraphRun.setFontSize(13);
 			// 标题部分
 			XWPFParagraph titleParagraph = document.createParagraph();
@@ -275,11 +279,11 @@ public class ExportJWZYServiceImpl implements ExportService {
 				XWPFTableCell cell = table.getRow(row).getCell(cellIndex);
 				if (cellIndex == fromCell) {
 					cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+					Integer width=(toCell-fromCell+1)/7*table.getCTTbl().getTblPr().getTblW().getW().intValue();
+					cell.getCTTc().getTcPr().addNewTcW().setW(BigInteger.valueOf(width));
 				} else {
 					cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
 				}
-				Integer width=(toCell-fromCell+1)/7*table.getCTTbl().getTblPr().getTblW().getW().intValue();
-				cell.getCTTc().getTcPr().addNewTcW().setW(BigInteger.valueOf(width));
 			}
 		}
 	}
@@ -292,6 +296,7 @@ public class ExportJWZYServiceImpl implements ExportService {
 		run.setText(cellText);
 		CTRPr rpr=run.getCTR().isSetRPr()?run.getCTR().getRPr():run.getCTR().addNewRPr();
 		CTFonts fonts=rpr.isSetRFonts()?rpr.getRFonts():rpr.addNewRFonts();
+		run.setFontSize(14);
 		fonts.setAscii("黑体");
 		fonts.setEastAsia("黑体");
 		fonts.setHAnsi("黑体");

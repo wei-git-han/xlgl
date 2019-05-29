@@ -290,6 +290,17 @@
 		select count(*) from DB_DOCUMENT_INFO 
 	</select>
 	 
+ 	<select id="getMaxSecurity" resultType="map">
+	select max(security_id) security_id,security_classification security_name from DB_DOCUMENT_INFO where id in
+	<foreach item="id" collection="array" open="(" separator="," close=")">
+		#{id}
+	</foreach>
+	group by security_classification
+   </select>
+	 
+	 
+	 
+	 
 	<insert id="save" parameterType="com.css.app.db.business.entity.DocumentInfo">
 		insert into DB_DOCUMENT_INFO
 		(
