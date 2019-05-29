@@ -162,7 +162,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 10,
             pageyno:true,
-            paramobj:{search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month},
+            paramobj:{page:o.pagesize1,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month},
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
@@ -194,7 +194,10 @@ var pageModule = function(){
 					}
 				});
             },
-            url: tableList
+            url: tableList,
+            getpagefn:function(page){
+            	return window.top.memory.pagesize1 = page;   
+            }
        });
 	}
 	
@@ -266,7 +269,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 10,
             pageyno:true,
-            paramobj:{search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month},
+            paramobj:{page:o.pagesize2,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month},
             loadafter:function(data){
             	total=data.total;
             	$(".dblsqk span").each(function(){
@@ -298,7 +301,10 @@ var pageModule = function(){
 					}
 				});
             },
-            url: tableList
+            url: tableList,
+            getpagefn:function(page){
+            	return window.top.memory.pagesize2 = page;   
+            }
        });
 	}
 
@@ -372,7 +378,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 10,
             pageyno:true,
-            paramobj:{search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month},
+            paramobj:{page:o.pagesize3,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month},
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
@@ -404,7 +410,10 @@ var pageModule = function(){
 					}
 				});
             },
-            url: tableList
+            url: tableList,
+            getpagefn:function(page){
+            	return window.top.memory.pagesize3 = page;   
+            }
        });
 	}
 	
@@ -535,32 +544,6 @@ var pageModule = function(){
 			    height:850,
 			    url: rootPath + "/document/blfk/html/exportTable.html?tableNum="+tableNum+'&typeId='+$("#classType li.active").attr("value")+'&fileFrom='+fileFrom
 			  });
-		/*			var datas;
-		if($("#gridcont3").is(":visible")){
-			datas=grid3.getcheckrow();
-		}else if($("#gridcont2").is(":visible")){
-			datas=grid2.getcheckrow();
-		}else{
-			datas=grid.getcheckrow();
-		}
-		var ids='';
-		var t_count=0;
-		$(datas).each(function(i){
-			ids+=i!=0?(','+this.id):this.id;
-			t_count++;
-		});
-		t_count=t_count>0?t_count:total;
-		if(datas.length>0){
-			newbootbox.confirm({
-		     	title:"提示",
-		     	message: "将导出"+t_count+"条数据！",
-		     	callback1:function(){
-		     		window.location.href='/app/db/export/exportDocx?stringIds='+ids;
-		     	}
-		    });
-		}else{
-			newbootbox.alertInfo("请选择要导出的数据！");
-		}*/
 		});
 		
 		
@@ -617,10 +600,20 @@ var pageModule = function(){
 		});
 	}
 	
+	var initfn = function(){
+		$.uniform.update($("input[name='documentStatus']").prop("checked",false));
+		if(o.radio!="undefined" && o.radio!=null && o.radio!=""){
+			$.uniform.update($("input[value='"+o.radio+"']").prop("checked",true));
+		}else{
+			$.uniform.update($("input[value='']").prop("checked",true));
+		}
+		$("#searchVal").val(o.search);
+	}
 
 	return{
 		//加载页面处理程序
 		initControl:function(){
+			initfn();
 			leftMenufn();
 			initgrid();
 			numsListfn();
@@ -645,10 +638,16 @@ var pageModule = function(){
 function refreshgrid(){
 	if(o.tree == "3"){
 		$("#gridcont3").show();
+		$("#gridcont2").hide();
+		$("#gridcont").hide();
 	}else if(o.tree == "2"){
 		$("#gridcont2").show();
+		$("#gridcont3").hide();
+		$("#gridcont").hide();
 	}else{
 		$("#gridcont").show();
+		$("#gridcont2").hide();
+		$("#gridcont3").hide();
 	}
 	if($("#gridcont3").is(":visible")){
 		pageModule.initgrid3();
@@ -657,6 +656,10 @@ function refreshgrid(){
 	}else{
 		pageModule.initgrid();
 	}
+	var search = $("#searchVal").val();
+	var documentStatus= $("input[name='documentStatus']:checked").val();
+	window.top.memory.radio = documentStatus;
+	window.top.memory.search = search;
 }
 
 //查询
