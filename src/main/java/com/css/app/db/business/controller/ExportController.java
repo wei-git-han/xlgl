@@ -122,7 +122,7 @@ public class ExportController{
 								+ "                                                                        ");
 			}
 			for (SubDocInfo subInfo : subByInfoId) {
-				String telephone = subInfo.getUndertakerPhone();
+				String telephone = subInfo.getUndertakerPhone() == null ? "" :subInfo.getUndertakerPhone();
 				String deptName = subInfo.getSubDeptName() == null ? "" : subInfo.getSubDeptName();
 				String subInfoName = subInfo.getUndertakerName() == null ? "" : subInfo.getUndertakerName();				
 				// 查询承办单位/人电话情况
@@ -136,8 +136,7 @@ public class ExportController{
 //						Map<String, Object> txlOrgtel = (Map<String, Object>) jsonData.get("txlOrgtel");
 //						telephone = txlOrgtel.get("telephone").toString();
 //					}
-//				}
-				
+//				}				
 				subInfoBuilder.append(deptName + "   "
 						+ "                                               " + subInfoName + "                                                  " + telephone);
 			}											
@@ -188,7 +187,7 @@ public class ExportController{
 				is = exportInvoke.export();
 				break;
 			case "4":
-				exportFileName = "装备发展部领导批示指示督办落实情况表.doc";
+				exportFileName = "装备发展部领导批示指示督办落实情况表.docx";
 				tempFile = creatFile(exportFileName);
 				ExportService exportBLDServiceImpl = new ExportBLDServiceImpl();
 				ExportWPSservice exportWPSserviceBLD = new ExportWPSserviceImpl(exportBLDServiceImpl, exportDataLis,
