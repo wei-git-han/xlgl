@@ -187,7 +187,7 @@ public class ExportController{
 				is = exportInvoke.export();
 				break;
 			case "4":
-				exportFileName = "装备发展部领导批示指示督办落实情况表.doc";
+				exportFileName = "装备发展部领导批示指示督办落实情况表.docx";
 				tempFile = creatFile(exportFileName);
 				ExportService exportBLDServiceImpl = new ExportBLDServiceImpl();
 				ExportWPSservice exportWPSserviceBLD = new ExportWPSserviceImpl(exportBLDServiceImpl, exportDataLis,
