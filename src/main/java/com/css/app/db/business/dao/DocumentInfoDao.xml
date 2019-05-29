@@ -290,12 +290,13 @@
 		select count(*) from DB_DOCUMENT_INFO 
 	</select>
 	 
- 	<select id="getMaxSecurity" resultType="map">
-	select max(security_id) security_id,security_classification security_name from DB_DOCUMENT_INFO where id in
+ 	<select id="getMaxSecurity" resultType="java.lang.String">
+ 	SELECT TEXT FROM DB_DOCUMENT_DIC WHERE DIC_TYPE='SECURITY_CLASSIFICATION' AND VALUE=(
+	SELECT MAX(SECURITY_ID) FROM DB_DOCUMENT_INFO WHERE ID IN
 	<foreach item="id" collection="array" open="(" separator="," close=")">
 		#{id}
 	</foreach>
-	group by security_classification
+	)
    </select>
 	 
 	 

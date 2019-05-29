@@ -30,6 +30,7 @@ import com.css.app.db.business.service.impl.ExportInvoke;
 import com.css.app.db.business.service.impl.ExportJWZYServiceImpl;
 import com.css.app.db.business.service.impl.ExportWPSserviceImpl;
 import com.css.app.db.business.service.impl.ExportZYJCServiceImpl;
+import com.css.app.db.config.service.DocumentDicService;
 import com.css.base.utils.CrossDomainUtil;
 import com.css.base.utils.Response;
 
@@ -53,6 +54,8 @@ public class ExportController{
     BaseAppOrgMappedService baseAppOrgMappedService;
     @Autowired
     ExportInvoke exportInvoke;    
+    @Autowired
+    DocumentDicService documentDicService;    
 	@Value("${filePath}")
 	private String filePath;
 
@@ -67,7 +70,7 @@ public class ExportController{
 		int banjieNum = 0;//办结数量
 		int weibanjieNum = 0;//未办结数量
 		List<Map<String, String>> exportDataLis = new ArrayList<Map<String, String>>();	
-		List<Map<String, Object>> securityList=documentInfoService.getMaxSecurity(ids);
+		String security=documentInfoService.getMaxSecurity(ids);
 		for (String id : ids) {
 			StringBuilder commentBuilder = new StringBuilder();
 			StringBuilder replyBuilder = new StringBuilder();
@@ -104,7 +107,8 @@ public class ExportController{
 				if(createdTime !=null) {
 					String[] split = createdTime.split("-");
 					if(split.length<2) {
-						throw new RuntimeException("首长批示的创建时间（createdTime）:"+createdTime+"格式有误！");
+						System.out.println("首长批示的创建时间（createdTime）:"+createdTime+"格式有误！");
+//						throw new RuntimeException("首长批示的创建时间（createdTime）:"+createdTime+"格式有误！");
 					}else {
 						newForMatCreatedTime=split[0]+"年"+split[1]+"月"+split[2]+"日";
 					}					
@@ -145,8 +149,8 @@ public class ExportController{
 			exportDataMap.put("status", statusName);// 办理状态 (0:还未转办1：办理中；2：办结：3：常态落实）
 			exportDataMap.put("leaderComment", commentBuilder.toString());// 批示指示内容
 			exportDataMap.put("replyComment", replyBuilder.toString());// 督办落实情况
-			if(securityList !=null && securityList.size()>0)
-			exportDataMap.put("security",(String) securityList.get(0).get("security_name"));
+			exportDataMap.put("subInfoComment", subInfoBuilder.toString());// 承办单位人员
+			exportDataMap.put("security",security);
 			exportDataLis.add(exportDataMap);
 		}
 

@@ -40,5 +40,5 @@ public interface DocumentInfoService {
 	void deleteByCheHui(String id);
 	List<DocumentDic> queryDicByType(Map<String, Object> map);
 
-	List<Map<String, Object>> getMaxSecurity(String[] stringIds);
+	String getMaxSecurity(String[] stringIds);
 }
