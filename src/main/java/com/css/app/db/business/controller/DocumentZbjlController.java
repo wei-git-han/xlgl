@@ -220,6 +220,7 @@ public class DocumentZbjlController {
 				subInfo.setDocStatus(DbDocStatusDefined.DAI_LUO_SHI);
 				subInfo.setUndertaker("");
 				subInfo.setUndertakerName("");
+				subInfo.setUndertakerPhone("");
 				subDocInfoService.update(subInfo);
 			}
 			//承办人未走流程转办，删除承办人当前临时反馈
