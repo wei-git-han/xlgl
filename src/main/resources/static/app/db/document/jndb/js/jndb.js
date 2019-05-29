@@ -138,7 +138,7 @@ var pageModule = function(){
 					}
 				});
             	$(".cbdw").each(function(){
-					var maxwidth = 60;
+					var maxwidth = 42;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
