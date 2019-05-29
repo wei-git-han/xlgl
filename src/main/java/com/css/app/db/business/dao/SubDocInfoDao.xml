@@ -10,7 +10,7 @@
 	<select id="queryAllSubInfo"  resultType="com.css.app.db.business.entity.SubDocInfo">
 		select * from DB_SUB_DOC_INFO where 1=1 
 		<if test="infoId != null and infoId != ''">
-		   and INFO_ID = #{value}
+		   and INFO_ID = #{infoId}
 		</if>
 	</select>
 

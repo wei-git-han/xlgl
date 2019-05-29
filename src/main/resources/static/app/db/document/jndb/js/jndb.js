@@ -3,6 +3,7 @@ var numsList={"url":"/app/db/subdocinfo/numsList","dataType":"text"};//筛选状
 var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//高级搜索--部门树
 var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//高级搜索--人员树
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
+var fromMsg=getUrlParam("fromMsg")||false; //是否为消息进入
 var grid = null;
 var total=0;//列表中，数据的总条数
 var pageModule = function(){
@@ -100,7 +101,7 @@ var pageModule = function(){
                 	 var caozuo = '';
                 	 if(rowdata.docStatus == "1"){
                 		 //待修改
-                     	 caozuo +='<a title="转办" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="zhuanbanDoc(\''+rowdata.id+'\',\''+rowdata.infoId+'\')"><i class="fa fa-external-link"></i></a>';
+                     	 caozuo +='<a title="转办" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="zhuanbanDoc(\''+rowdata.id+'\',\''+rowdata.infoId+'\',\''+fromMsg+'\')"><i class="fa fa-external-link"></i></a>';
     				 }
                 	 return caozuo;
                  }}
@@ -282,14 +283,14 @@ function refreshgrid(){
 }
 
 
-function zhuanbanDoc(subId,infoId){
+function zhuanbanDoc(subId,infoId,fromMsg){
 	newbootbox.newdialog({
 		id:"zhuanbanDialog",
 		width:800,
 		height:600,
 		header:true,
 		title:"转办",
-		url:"/app/db/document/jndb/html/zhuanbandx.html?subId="+subId+"&infoId="+infoId+"&fileFrom="+fileFrom
+		url:"/app/db/document/jndb/html/zhuanbandx.html?subId="+subId+"&infoId="+infoId+"&fileFrom="+fileFrom+"&fromMsg="+fromMsg
 	})
 }
 

@@ -499,7 +499,7 @@ var pageModule = function(){
 		
 		//返回
 		$("#goback").click(function(){
-			if(!fromMsg){
+			if(!fromMsg || fromMsg == false){
 				window.top.grdbfn();
 			}
 			skip();
@@ -598,7 +598,7 @@ var pageModule = function(){
 				success:function(data){
 					if(data.result == "success"){
 						newbootbox.alert("已返回承办人！").done(function(){
-							if(!fromMsg){
+							if(!fromMsg || fromMsg == false){
 								window.top.grdbfn();
 							}
 							window.location.reload();
@@ -647,7 +647,7 @@ var pageModule = function(){
 							if(data.result == "success"){
 								newbootbox.alert("审批完成！").done(function(){
 									window.location.reload();
-									if(!fromMsg){
+									if(!fromMsg || fromMsg == false){
 										window.top.grdbfn();
 									}
 								});
@@ -696,7 +696,7 @@ var pageModule = function(){
 	 					type: "GET",
 	 					success:function(data){
 	 						if(data.result == "success"){
-	 							if(!fromMsg){
+	 							if(!fromMsg || fromMsg == false){
 									window.top.grdbfn();
 								}
 	 							window.location.reload();
@@ -719,7 +719,7 @@ var pageModule = function(){
 	 					type: "GET",
 	 					success:function(data){
 	 						if(data.result == "success"){
-	 							if(!fromMsg){
+	 							if(!fromMsg || fromMsg == false){
 									window.top.grdbfn();
 								}
 	 							window.location.reload();
