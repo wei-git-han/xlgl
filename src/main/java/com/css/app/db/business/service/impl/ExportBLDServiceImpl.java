@@ -265,11 +265,11 @@ public class ExportBLDServiceImpl implements ExportService {
 				XWPFTableCell cell = table.getRow(row).getCell(cellIndex);
 				if (cellIndex == fromCell) {
 					cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+					Integer width=(toCell-fromCell+1)/6*table.getCTTbl().getTblPr().getTblW().getW().intValue();
+					cell.getCTTc().getTcPr().addNewTcW().setW(BigInteger.valueOf(width));
 				} else {
 					cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
 				}
-				Integer width=(toCell-fromCell+1)/6*table.getCTTbl().getTblPr().getTblW().getW().intValue();
-				cell.getCTTc().getTcPr().addNewTcW().setW(BigInteger.valueOf(width));
 			}
 		}
 	}
