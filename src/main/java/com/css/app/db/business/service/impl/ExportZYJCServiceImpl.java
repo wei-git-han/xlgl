@@ -76,7 +76,7 @@ public class ExportZYJCServiceImpl implements ExportService {
 			XWPFParagraph xmiParagraph = document.createParagraph();
 			xmiParagraph.setAlignment(ParagraphAlignment.LEFT);
 			XWPFRun xmiParagraphRun = xmiParagraph.createRun();
-			xmiParagraphRun.setText("X 密");
+			xmiParagraphRun.setText(list.get(0).get("security")==null?"X 密":list.get(0).get("security"));
 			xmiParagraphRun.setFontSize(13);
 
 			// 标题部分
@@ -169,7 +169,7 @@ public class ExportZYJCServiceImpl implements ExportService {
 				XWPFTableCell insertCell = comTableRowOther.getCell(0);
 				this.getPara(insertCell,tex);
 //				insertCell.setText(tonggeIndex+"已办结事项（共" + banjieNum + "项）");// 已办结事项
-				mergeCell(ComTable, 1, 0, 7);
+				mergeCell(ComTable, 1, 0, 2);
 				tonggeIndex="二、";
 			}
 			int banjieIndex = 1;
@@ -211,7 +211,7 @@ public class ExportZYJCServiceImpl implements ExportService {
 				XWPFTableCell insertCell2 = comTableRowOther2.getCell(0);
 				this.getPara(insertCell2,tex);
 //				insertCell2.setText(tonggeIndex+"未办结事项（共" + weibanjieNum + "项）");// 未办结事项
-				mergeCell(ComTable, banjieNum > 0 ? banjieNum + 2 : banjieNum + 1, 0, 7);
+				mergeCell(ComTable, banjieNum > 0 ? banjieNum + 2 : banjieNum + 1, 0, 3);
 			}
 			int weibanjieIndex = 1;
 			for (int i = 0; i < list.size(); i++) {
@@ -307,6 +307,7 @@ public class ExportZYJCServiceImpl implements ExportService {
 		run.setText(cellText);
 		CTRPr rpr=run.getCTR().isSetRPr()?run.getCTR().getRPr():run.getCTR().addNewRPr();
 		CTFonts fonts=rpr.isSetRFonts()?rpr.getRFonts():rpr.addNewRFonts();
+		run.setFontSize(14);
 		fonts.setAscii("黑体");
 		fonts.setEastAsia("黑体");
 		fonts.setHAnsi("黑体");

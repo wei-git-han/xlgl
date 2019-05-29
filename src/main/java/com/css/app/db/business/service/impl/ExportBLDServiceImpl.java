@@ -76,7 +76,7 @@ public class ExportBLDServiceImpl implements ExportService {
 			XWPFParagraph xmiParagraph = document.createParagraph();
 			xmiParagraph.setAlignment(ParagraphAlignment.LEFT);
 			XWPFRun xmiParagraphRun = xmiParagraph.createRun();
-			xmiParagraphRun.setText("X 密");
+			xmiParagraphRun.setText(list.get(0).get("security")==null?"X 密":list.get(0).get("security"));
 			xmiParagraphRun.setFontSize(13);
 
 			// 标题部分
@@ -265,11 +265,11 @@ public class ExportBLDServiceImpl implements ExportService {
 				XWPFTableCell cell = table.getRow(row).getCell(cellIndex);
 				if (cellIndex == fromCell) {
 					cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+					Integer width=(toCell-fromCell+1)/6*table.getCTTbl().getTblPr().getTblW().getW().intValue();
+					cell.getCTTc().getTcPr().addNewTcW().setW(BigInteger.valueOf(width));
 				} else {
 					cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
 				}
-				Integer width=(toCell-fromCell+1)/6*table.getCTTbl().getTblPr().getTblW().getW().intValue();
-				cell.getCTTc().getTcPr().addNewTcW().setW(BigInteger.valueOf(width));
 			}
 		}
 	}
@@ -282,6 +282,7 @@ public class ExportBLDServiceImpl implements ExportService {
 		run.setText(cellText);
 		CTRPr rpr=run.getCTR().isSetRPr()?run.getCTR().getRPr():run.getCTR().addNewRPr();
 		CTFonts fonts=rpr.isSetRFonts()?rpr.getRFonts():rpr.addNewRFonts();
+		run.setFontSize(14);
 		fonts.setAscii("黑体");
 		fonts.setEastAsia("黑体");
 		fonts.setHAnsi("黑体");

@@ -1950,3 +1950,11 @@ jQuery.fn.extend({ //成员函数
 		}
 	}
 })
+
+
+var showModal = function(obj){
+	$("#"+obj).modal("show");
+}
+var hideModal = function(obj){
+	$("#"+obj).modal("hide");
+}

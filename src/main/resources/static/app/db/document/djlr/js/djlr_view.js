@@ -501,7 +501,7 @@ var pageModule = function(){
 		
 		//返回
 		$("#goback").click(function(){
-			if(!fromMsg){
+			if(!fromMsg || fromMsg == false){
 				window.top.blfkfn();
 			}
 			skip();
@@ -545,7 +545,7 @@ var pageModule = function(){
 						$("#viewcont2").modal("hide");
 						newbootbox.alert("操作成功!").done(function(){
 							window.location.reload();
-							if(!fromMsg){
+							if(!fromMsg || fromMsg == false){
 								window.top.blfkfn();
 							}
 						});
@@ -578,7 +578,7 @@ var pageModule = function(){
 					if(data.result=="success"){
 						newbootbox.alert("取消办结成功!").done(function(){
 							showButton();
-							if(!fromMsg){
+							if(!fromMsg || fromMsg == false){
 								window.top.blfkfn();
 							}
 						});
@@ -604,7 +604,7 @@ var pageModule = function(){
 	 					type: "GET",
 	 					success:function(data){
 	 						if(data.result == "success"){
-	 							if(!fromMsg){
+	 							if(!fromMsg || fromMsg == false){
 									window.top.blfkfn();
 								}
 	 							window.location.reload();
@@ -627,7 +627,7 @@ var pageModule = function(){
 	 					type: "GET",
 	 					success:function(data){
 	 						if(data.result == "success"){
-	 							if(!fromMsg){
+	 							if(!fromMsg || fromMsg == false){
 									window.top.blfkfn();
 								}
 	 							window.location.reload();

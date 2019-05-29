@@ -290,6 +290,18 @@
 		select count(*) from DB_DOCUMENT_INFO 
 	</select>
 	 
+ 	<select id="getMaxSecurity" resultType="java.lang.String">
+ 	SELECT TEXT FROM DB_DOCUMENT_DIC WHERE DIC_TYPE='SECURITY_CLASSIFICATION' AND VALUE=(
+	SELECT MAX(SECURITY_ID) FROM DB_DOCUMENT_INFO WHERE ID IN
+	<foreach item="id" collection="array" open="(" separator="," close=")">
+		#{id}
+	</foreach>
+	)
+   </select>
+	 
+	 
+	 
+	 
 	<insert id="save" parameterType="com.css.app.db.business.entity.DocumentInfo">
 		insert into DB_DOCUMENT_INFO
 		(

@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -146,18 +145,16 @@ public class DocumentZbjlController {
 					subInfo.setCreatedTime(date);
 					subDocInfoService.save(subInfo);
 					//获取局管理员id
-					String juAdminIds="";
 					List<String> userIds = adminSetService.queryUserIdByOrgId(deptId);
 					if(userIds !=null && userIds.size()>0) {
-						juAdminIds=userIds.stream().collect(Collectors.joining(","));
-					}
-					// 发送消息提醒
-					MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_BU_ZHUANBAN_MSG_TITLE);
-					if (msg != null) {
-						String msgUrl = msg.getMsgRedirect()+"&fileId="+infoId+"&subId="+subInfo.getId();
-						if(StringUtils.isNotBlank(juAdminIds)){
-							msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, juAdminIds, appId,clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "","true");
-						}				
+						// 发送消息提醒
+						MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_BU_ZHUANBAN_MSG_TITLE);
+						if (msg != null) {
+							String msgUrl = msg.getMsgRedirect()+"&fileId="+infoId+"&subId="+subInfo.getId();
+							for (String userId : userIds) {
+								msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId, appId,clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "","true");
+							}
+						}
 					}
 				}
 			}

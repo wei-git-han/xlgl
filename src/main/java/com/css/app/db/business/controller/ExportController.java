@@ -30,6 +30,7 @@ import com.css.app.db.business.service.impl.ExportInvoke;
 import com.css.app.db.business.service.impl.ExportJWZYServiceImpl;
 import com.css.app.db.business.service.impl.ExportWPSserviceImpl;
 import com.css.app.db.business.service.impl.ExportZYJCServiceImpl;
+import com.css.app.db.config.service.DocumentDicService;
 import com.css.base.utils.CrossDomainUtil;
 import com.css.base.utils.Response;
 
@@ -53,6 +54,8 @@ public class ExportController{
     BaseAppOrgMappedService baseAppOrgMappedService;
     @Autowired
     ExportInvoke exportInvoke;    
+    @Autowired
+    DocumentDicService documentDicService;    
 	@Value("${filePath}")
 	private String filePath;
 
@@ -66,7 +69,8 @@ public class ExportController{
 		DocumentInfo documentInfo = null;
 		int banjieNum = 0;//办结数量
 		int weibanjieNum = 0;//未办结数量
-		List<Map<String, String>> exportDataLis = new ArrayList<Map<String, String>>();
+		List<Map<String, String>> exportDataLis = new ArrayList<Map<String, String>>();	
+		String security=documentInfoService.getMaxSecurity(ids);
 		for (String id : ids) {
 			StringBuilder commentBuilder = new StringBuilder();
 			StringBuilder replyBuilder = new StringBuilder();
@@ -98,8 +102,19 @@ public class ExportController{
 			// 承办单位人员
 			List<SubDocInfo> subByInfoId = subDocInfoService.queryAllSubByInfoId(id);
 			for (DocumentSzps docSzps : documentSzpsList) {
+				String newForMatCreatedTime = "xxxx年xx月xx日";
+				String createdTime = docSzps.getCreatedTime();
+				if(createdTime !=null) {
+					String[] split = createdTime.split("-");
+					if(split.length<2) {
+						System.out.println("首长批示的创建时间（createdTime）:"+createdTime+"格式有误！");
+//						throw new RuntimeException("首长批示的创建时间（createdTime）:"+createdTime+"格式有误！");
+					}else {
+						newForMatCreatedTime=split[0]+"年"+split[1]+"月"+split[2]+"日";
+					}					
+				}				
 				commentBuilder.append(
-						docSzps.getUserName() + docSzps.getCreatedTime() + "批示：" + docSzps.getLeaderComment()
+						docSzps.getUserName() + newForMatCreatedTime + "批示：" + docSzps.getLeaderComment()
 								+ "                                                                        ");
 			}
 			for (ReplyExplain reply : latestOneReply) {
@@ -135,6 +150,7 @@ public class ExportController{
 			exportDataMap.put("leaderComment", commentBuilder.toString());// 批示指示内容
 			exportDataMap.put("replyComment", replyBuilder.toString());// 督办落实情况
 			exportDataMap.put("subInfoComment", subInfoBuilder.toString());// 承办单位人员
+			exportDataMap.put("security",security);
 			exportDataLis.add(exportDataMap);
 		}
 
@@ -172,7 +188,7 @@ public class ExportController{
 				is = exportInvoke.export();
 				break;
 			case "4":
-				exportFileName = "装备发展部领导批示指示督办落实情况表.docx";
+				exportFileName = "装备发展部领导批示指示督办落实情况表.doc";
 				tempFile = creatFile(exportFileName);
 				ExportService exportBLDServiceImpl = new ExportBLDServiceImpl();
 				ExportWPSservice exportWPSserviceBLD = new ExportWPSserviceImpl(exportBLDServiceImpl, exportDataLis,
