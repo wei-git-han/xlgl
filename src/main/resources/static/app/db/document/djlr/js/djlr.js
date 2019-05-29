@@ -9,6 +9,12 @@ var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var grid = null;
 var total=0;//列表中，数据的总条数
+
+if(!window.top.memory){
+	window.top.memory = {};
+}
+var o = window.top.memory;
+
 var pageModule = function(){
 	var initgrid = function(){
         grid = $("#gridcont").createGrid({
@@ -72,7 +78,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 10,
             pageyno:true,
-            paramobj:{search:$("#searchVal").val(),documentStatus:$("input[name='documentStatus']:checked").val()},
+            paramobj:{page:o.pagesize,search:$("#searchVal").val(),documentStatus:$("input[name='documentStatus']:checked").val()},
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
@@ -97,7 +103,10 @@ var pageModule = function(){
 					}
 				});
             },
-            url: tableList
+            url: tableList,
+            getpagefn:function(page){
+            	return window.top.memory.pagesize = page;   
+            }
        });
 	}
 	
@@ -244,9 +253,20 @@ var pageModule = function(){
 		});
 	}
 
+	var initfn = function(){
+		$.uniform.update($("input[name='documentStatus']").prop("checked",false));
+		if(o.radio!="undefined" && o.radio!=null && o.radio!=""){
+			$.uniform.update($("input[value='"+o.radio+"']").prop("checked",true));
+		}else{
+			$.uniform.update($("input[value='']").prop("checked",true));
+		}
+		$("#searchVal").val(o.search);
+	}
+	
 	return{
 		//加载页面处理程序
 		initControl:function(){
+			initfn();
 			initgrid();
 			numsListfn();
 			initother();
@@ -261,8 +281,12 @@ var pageModule = function(){
 
 function refreshgrid(){
 	var search = $("#searchVal").val();
-	grid.setparams({search:search,documentStatus:$("input[name='documentStatus']:checked").val()});
+	var documentStatus= $("input[name='documentStatus']:checked").val();
+	grid.setparams({search:search,documentStatus:documentStatus});
 	grid.loadtable();
+	
+	window.top.memory.radio = documentStatus;
+	window.top.memory.search = search;
 }
 
 //删除数据
