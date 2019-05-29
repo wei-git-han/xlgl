@@ -55,7 +55,7 @@ var pageModule = function(){
 						newbootbox.newdialogClose("tijiaoDialog");
 						if(data.result=="success"){
 							newbootbox.alert("提交成功！").done(function(){
-								if(fromMsg && fromMsg == true){
+								if(fromMsg && fromMsg == "true"){
 									windowClose();
 								}else{
 									window.top.jndbfn();
@@ -78,7 +78,7 @@ var pageModule = function(){
 						newbootbox.newdialogClose("tijiaoDialog");
 						if(data.result=="success"){
 							newbootbox.alert("提交成功！").done(function(){
-								if(fromMsg && fromMsg == true){
+								if(fromMsg && fromMsg == "true"){
 									windowClose();
 								}else{
 									window.top.jndbfn();
