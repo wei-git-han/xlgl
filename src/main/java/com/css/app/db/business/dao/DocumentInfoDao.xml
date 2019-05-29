@@ -14,7 +14,7 @@
 		select s.INFO_ID,s.USER_NAME as leader_name,s.LEADER_COMMENT as leader_content,s.CREATED_TIME as leader_time,
            row_number() over(partition by s.info_id order by b.sort asc) as dNum from DB_DOCUMENT_SZPS s inner join DB_ROLE_SET b on s.USER_NAME=b.USER_NAME order by b.sort asc
 		) d on t.id = d.info_id
-		left join (select distinct info_id,listagg(sub_dept_name || nvl2(undertaker_name,'/' || undertaker_name ||nvl2(undertaker_phone,'('||undertaker_phone||')',null),null), ',') within group(order by created_time desc) over(partition by info_id) under_depts from DB_SUB_DOC_INFO) c on t.id = c.info_id	
+		left join (select distinct info_id,listagg(sub_dept_name || nvl2(DECODE(undertaker_name,'',null,'NULL',null,undertaker_name),'/' || undertaker_name ||nvl2(DECODE(undertaker_phone,'',null,'NULL',null,undertaker_phone),'('||undertaker_phone||')',null),null), ',') within group(order by created_time desc) over(partition by info_id) under_depts from DB_SUB_DOC_INFO) c on t.id = c.info_id	
 		<if test="orgid != null and orgid != ''" >
 			left join DB_SUB_DOC_INFO  dadi on t.id=dadi.INFO_ID
 		</if>
@@ -91,7 +91,7 @@
 		select s.INFO_ID,s.USER_NAME as leader_name,s.LEADER_COMMENT as leader_content,s.CREATED_TIME as leader_time,
         row_number() over(partition by s.info_id order by b.sort asc) as dNum from DB_DOCUMENT_SZPS s inner join DB_ROLE_SET b on s.USER_NAME=b.USER_NAME order by b.sort asc
 		) d on t.id = d.info_id
-		left join (select distinct info_id,listagg(sub_dept_name || nvl2(undertaker_name,'/' || undertaker_name ||nvl2(undertaker_phone,'('||undertaker_phone||')',null),null), ',') within group(order by created_time desc) over(partition by info_id) under_depts from DB_SUB_DOC_INFO) c on t.id = c.info_id
+		left join (select distinct info_id,listagg(sub_dept_name || nvl2(DECODE(undertaker_name,'',null,'NULL',null,undertaker_name),'/' || undertaker_name ||nvl2(DECODE(undertaker_phone,'',null,'NULL',null,undertaker_phone),'('||undertaker_phone||')',null),null), ',') within group(order by created_time desc) over(partition by info_id) under_depts from DB_SUB_DOC_INFO) c on t.id = c.info_id
 		where (d.dNum = 1 or d.dNum is null) 
 		<if test='docStatus == "1"'>
 			and t.STATUS=0
