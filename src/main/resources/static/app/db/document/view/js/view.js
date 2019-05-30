@@ -53,36 +53,41 @@ var pageModule = function(){
 				boolean isUndertaken=false;//是否已承办
 				boolean isUndertaker=false;//是否承办人*/
 				if(data.docStatus<10){//文件为办理中
-					if(data.docStatus==5 && data.isCheckUser){//承办、转办按钮显示，输入框相关不显示
-						$(".newbottom").show(); //所有按钮的容器
-						$("#chengban").show();
+					if(data.docStatus==1 && "jndb"==fileFrom){
+						$(".newbottom").show(); 
 						$("#zhuanban").show();
 					}else{
-						if(data.isUndertaker && data.docStatus!=5){
+						if(data.docStatus==5 && data.isCheckUser){//承办、转办按钮显示，输入框相关不显示
 							$(".newbottom").show(); //所有按钮的容器
-							$("#bjandls").show(); //办结和常态落实合并为一个
-						}
-						if(data.isCheckUser){//显示办结、常态落实,输入框
-							$(".blfk_bottom").show(); //意见外大框
-							$(".newbottom").show(); //所有按钮的容器
-							$(".blfk_top").css({"bottom":"40%","height":"58%"});   //意见框上方元素样式控制
-							$("#clear").show();
-							if(data.roleType=='3'){//是局长显示审批完成否则显示提交
-								$("#sptg").show();
-								if(!data.isUndertaker){
-									$("#changewrite").show();
-								}
-							}else{
-								$("#tijiao").show();
+							$("#chengban").show();
+							$("#zhuanban").show();
+						}else{
+							if(data.isUndertaker && data.docStatus!=5){
+								$(".newbottom").show(); //所有按钮的容器
+								$("#bjandls").show(); //办结和常态落实合并为一个
 							}
-							if(!data.isUndertaker){//当前处理人是承办人则不显示返回修改
-								$("#fhxg").show();
-							}else{
-								$("#save").show();
-								$("#ifaddfj").show();
-								$("#showfj").show();
-								$("#zhuanban").show();
-								isCbr = 1;
+							if(data.isCheckUser){//显示办结、常态落实,输入框
+								$(".blfk_bottom").show(); //意见外大框
+								$(".newbottom").show(); //所有按钮的容器
+								$(".blfk_top").css({"bottom":"40%","height":"58%"});   //意见框上方元素样式控制
+								$("#clear").show();
+								if(data.roleType=='3'){//是局长显示审批完成否则显示提交
+									$("#sptg").show();
+									if(!data.isUndertaker){
+										$("#changewrite").show();
+									}
+								}else{
+									$("#tijiao").show();
+								}
+								if(!data.isUndertaker){//当前处理人是承办人则不显示返回修改
+									$("#fhxg").show();
+								}else{
+									$("#save").show();
+									$("#ifaddfj").show();
+									$("#showfj").show();
+									$("#zhuanban").show();
+									isCbr = 1;
+								}
 							}
 						}
 					}
@@ -499,11 +504,13 @@ var pageModule = function(){
 		
 		//返回
 		$("#goback").click(function(){
-			if(!fromMsg || fromMsg == false){
+			if(fromMsg && fromMsg=="true"){
+			}else{
 				window.top.grdbfn();
+				skip();
 			}
-			skip();
 		});
+		
 		
 		//办理反馈清屏
 		$("#clear").click(function(){
@@ -602,12 +609,13 @@ var pageModule = function(){
 				success:function(data){
 					if(data.result == "success"){
 						newbootbox.alert("已返回承办人！").done(function(){
-							if(!fromMsg || fromMsg == false){
+							window.location.reload();
+							if(fromMsg && fromMsg=="true"){
+							}else{
 								window.top.jndbfn();
 								window.top.grdbfn();
 								window.top.blfkfn();
 							}
-							window.location.reload();
 						});
 					}
 				}
@@ -657,7 +665,8 @@ var pageModule = function(){
 							if(data.result == "success"){
 								newbootbox.alert("审批完成！").done(function(){
 									window.location.reload();
-									if(!fromMsg || fromMsg == false){
+									if(fromMsg && fromMsg=="true"){
+									}else{
 										window.top.jndbfn();
 										window.top.grdbfn();
 										window.top.blfkfn();
@@ -939,7 +948,9 @@ var pageModule = function(){
 
 //跳转返回事件
 function skip(){
-	if(!fromMsg || fromMsg == false){
+	if(fromMsg && fromMsg=="true"){
+		windowClose();
+	}else{
 		if(fileFrom == "djlr"){//文件来源于登记录入
 			window.location.href="/app/db/document/djlr/html/djlr.html?fileFrom=djlr";
 		}else if(fileFrom == "grdb"){//文件来源于个人待办
@@ -949,8 +960,6 @@ function skip(){
 		}else{ 
 			window.location.href="/app/db/document/grdb/html/grdb.html?fileFrom=grdb";
 		}
-	}else{
-		windowClose();
 	}
 }
 

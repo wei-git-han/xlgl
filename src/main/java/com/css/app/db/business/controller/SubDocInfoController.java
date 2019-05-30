@@ -35,7 +35,9 @@ import com.css.app.db.business.service.DocumentReadService;
 import com.css.app.db.business.service.ReplyExplainService;
 import com.css.app.db.business.service.SubDocInfoService;
 import com.css.app.db.business.service.SubDocTrackingService;
+import com.css.app.db.config.entity.AdminSet;
 import com.css.app.db.config.entity.RoleSet;
+import com.css.app.db.config.service.AdminSetService;
 import com.css.app.db.config.service.RoleSetService;
 import com.css.app.db.util.DbDefined;
 import com.css.app.db.util.DbDocStatusDefined;
@@ -62,6 +64,8 @@ public class SubDocInfoController {
 	private BaseAppUserService baseAppUserService;
 	@Autowired
 	private RoleSetService roleSetService;
+	@Autowired
+	private AdminSetService adminSetService;
 	@Autowired
 	private SubDocTrackingService subDocTrackingService;
 	@Autowired
@@ -300,6 +304,13 @@ public class SubDocInfoController {
 		if(roleList != null && roleList.size()>0) {
 			roleType = roleList.get(0).getRoleFlag();
 		}
+		/*//当前登录人的管理员类型
+		Map<String, Object> adminMap = new HashMap<>();
+		adminMap.put("userId", loginUserId);
+		List<AdminSet> adminList = adminSetService.queryList(adminMap);
+		if(adminList != null && adminList.size()>0) {
+			adminType = adminList.get(0).getAdminType();
+		}*/
 		if(StringUtils.isNotBlank(subId)){
 			//获取文件状态
 			SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);

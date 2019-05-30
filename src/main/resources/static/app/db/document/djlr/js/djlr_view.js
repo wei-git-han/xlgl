@@ -65,7 +65,7 @@ var pageModule = function(){
 					}
 				}
 				
-				if(data.zhuanBanBtn && ("blfk"==fileFrom||"djlr"==fileFrom ||"jndb"==fileFrom)){
+				if(data.zhuanBanBtn && ("blfk"==fileFrom||"djlr"==fileFrom)){
 					$(".newbottom").show();
 					$("#zhuanban").show();
 				}
@@ -501,11 +501,13 @@ var pageModule = function(){
 		
 		//返回
 		$("#goback").click(function(){
-			if(!fromMsg || fromMsg == false){
+			if(fromMsg && fromMsg=="true"){
+			}else{
 				window.top.blfkfn();
+				skip();
 			}
-			skip();
 		});
+		
 		//办理反馈-添加附件
 		var o1 = $("#file1").createfile({
 			//initdata:filedata1,
@@ -545,7 +547,9 @@ var pageModule = function(){
 						$("#viewcont2").modal("hide");
 						newbootbox.alert("操作成功！").done(function(){
 							window.location.reload();
-							if(!fromMsg || fromMsg == false){
+							if(fromMsg && fromMsg=="true"){
+								//windowClose();
+							}else{
 								window.top.blfkfn();
 							}
 						});
@@ -578,7 +582,9 @@ var pageModule = function(){
 					if(data.result=="success"){
 						newbootbox.alert("取消办结成功！").done(function(){
 							showButton();
-							if(!fromMsg || fromMsg == false){
+							if(fromMsg && fromMsg=="true"){
+								windowClose();
+							}else{
 								window.top.blfkfn();
 							}
 						});
@@ -605,12 +611,12 @@ var pageModule = function(){
 	 					success:function(data){
 	 						if(data.result == "success"){
 	 							newbootbox.alert("已办结！").done(function(){
-	 								if(!fromMsg || fromMsg == false){
-										window.top.blfkfn();
+	 								if(fromMsg && fromMsg=="true"){
+	 									windowClose();
+	 								}else{
+	 									window.top.blfkfn();
 										skip();
-									}else{
-										windowClose();
-									}
+	 								}
 	 							});
 	 						}else{
 	 							newbootbox.alert("办结失败！")
@@ -634,12 +640,12 @@ var pageModule = function(){
 	 					success:function(data){
 	 						if(data.result == "success"){
 	 							newbootbox.alert("文件已常态落实！").done(function(){
-	 								if(!fromMsg || fromMsg == false){
-										window.top.blfkfn();
+	 								if(fromMsg && fromMsg=="true"){
+	 									windowClose();
+	 								}else{
+	 									window.top.blfkfn();
 										skip();
-									}else{
-										windowClose();
-									}
+	 								}
 	 							});
 	 						}else{
 	 							newbootbox.alert("落实失败！")

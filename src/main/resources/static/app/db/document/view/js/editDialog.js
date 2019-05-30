@@ -16,13 +16,13 @@ var pageModule = function(){
 				success:function(data){
 					newbootbox.newdialogClose("editDialog");
 					if(data.result=="success"){
-						if(!fromMsg || fromMsg == false){
+						if(fromMsg && fromMsg=="true"){
 							newbootbox.alert("修改成功！").done(function(){
-								window.top.iframe1.window.pageModule.initblfkList();
+								window.parent.pageModule.initblfkList();
 							});
 						}else{
 							newbootbox.alert("修改成功！").done(function(){
-								window.parent.pageModule.initblfkList();
+								window.top.iframe1.window.pageModule.initblfkList();
 							});
 						}
 					}else{
