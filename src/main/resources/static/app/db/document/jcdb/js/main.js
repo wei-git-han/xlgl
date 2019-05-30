@@ -307,7 +307,7 @@ var pageModule = function(){
 		})
 		
 		$("#chartbutton").click(function(){
-			window.location.href = "index.html"
+			window.location.href = "index.html";
 		});
 		
 		$(".right-left-button .btn").click(function(){

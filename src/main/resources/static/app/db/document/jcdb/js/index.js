@@ -476,6 +476,10 @@ var pageModule = function(){
 		})
 		
 		inittable(month);
+		
+		$("#listbutton").click(function(){
+			window.location.href = "main.html";
+		});
 	}
 	
 	return{
