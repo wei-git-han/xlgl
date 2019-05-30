@@ -65,7 +65,7 @@ var pageModule = function(){
 					}
 				}
 				
-				if(data.zhuanBanBtn && ("blfk"==fileFrom||"djlr"==fileFrom)){
+				if(data.zhuanBanBtn && ("blfk"==fileFrom||"djlr"==fileFrom ||"jndb"==fileFrom)){
 					$(".newbottom").show();
 					$("#zhuanban").show();
 				}
@@ -534,7 +534,7 @@ var pageModule = function(){
 		$("#fasong").click(function(){
 			var textarea = $("#textarea").val();
 			if($.trim(textarea)==""){
-				newbootbox.alert("请填写内容!");
+				newbootbox.alert("请填写内容！");
 				return;
 			}
 			$ajax({
@@ -543,7 +543,7 @@ var pageModule = function(){
 				success:function(data){
 					if(data.result=="success"){
 						$("#viewcont2").modal("hide");
-						newbootbox.alert("操作成功!").done(function(){
+						newbootbox.alert("操作成功！").done(function(){
 							window.location.reload();
 							if(!fromMsg || fromMsg == false){
 								window.top.blfkfn();
@@ -576,7 +576,7 @@ var pageModule = function(){
 				data:{id:fileId},
 				success:function(data){
 					if(data.result=="success"){
-						newbootbox.alert("取消办结成功!").done(function(){
+						newbootbox.alert("取消办结成功！").done(function(){
 							showButton();
 							if(!fromMsg || fromMsg == false){
 								window.top.blfkfn();
@@ -604,10 +604,16 @@ var pageModule = function(){
 	 					type: "GET",
 	 					success:function(data){
 	 						if(data.result == "success"){
-	 							if(!fromMsg || fromMsg == false){
-									window.top.blfkfn();
-								}
-	 							window.location.reload();
+	 							newbootbox.alert("已办结！").done(function(){
+	 								if(!fromMsg || fromMsg == false){
+										window.top.blfkfn();
+										skip();
+									}else{
+										windowClose();
+									}
+	 							});
+	 						}else{
+	 							newbootbox.alert("办结失败！")
 	 						}
 	 					}
 	 				});
@@ -627,10 +633,16 @@ var pageModule = function(){
 	 					type: "GET",
 	 					success:function(data){
 	 						if(data.result == "success"){
-	 							if(!fromMsg || fromMsg == false){
-									window.top.blfkfn();
-								}
-	 							window.location.reload();
+	 							newbootbox.alert("文件已常态落实！").done(function(){
+	 								if(!fromMsg || fromMsg == false){
+										window.top.blfkfn();
+										skip();
+									}else{
+										windowClose();
+									}
+	 							});
+	 						}else{
+	 							newbootbox.alert("落实失败！")
 	 						}
 	 					}
 	 				});
