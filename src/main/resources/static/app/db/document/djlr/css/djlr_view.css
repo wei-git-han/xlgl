@@ -187,6 +187,9 @@ ul{
 	font-size:14px;
 	font-weight:700;
 	text-align: center;
+	background:#fff;
+	position:relative;
+	width: 100%;
 }
 .wjlb_title{
 	margin-top:20px;
@@ -981,4 +984,21 @@ ul{
 	padding:0px 10px;
 	padding-bottom:10px;
 	background:#fff;
+}
+
+.ps_title{
+	width: 20px;
+	background:#FC4C4F;
+	color:#fff;
+	border-radius: 2px 0px 0px 2px !important;
+}
+.psMain{
+	text-align:left;
+	padding: 5px 10px;
+}
+.psMain span:last-child {
+	font-weight:100;
+}
+.psrecord{
+	line-height:24px;
 }

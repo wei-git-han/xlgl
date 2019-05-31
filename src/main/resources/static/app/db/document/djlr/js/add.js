@@ -140,6 +140,7 @@ var pageModule = function(){
 			}else if($(this).val() == "4"){
 				$("#banjianNumber").attr("disabled",true);
 				$("#jobContent").attr("disabled",true);
+				$("#qishu").removeAttr("disabled");
 				$("#chaoqing").show();
 			}else{
 				$("#chaoqing").hide();
@@ -179,7 +180,7 @@ var pageModule = function(){
 		    	$("#securityClassification").val($("#securityId option:checked").text());
 		    	$("#urgencyDegree").val($("#urgencyId option:checked").text());
 			    var elementarry = ["docTypeId","docTypeName","docTitle","securityId","securityClassification",
-			    	"urgencyId","urgencyDegree","docCode","banjianNumber","userId","userName","applyTime","printDate","jobContent","remark"];
+			    	"urgencyId","urgencyDegree","docCode","banjianNumber","userId","userName","applyTime","printDate","jobContent","remark","qishu"];
 				var paramdata = getformdata(elementarry);
 				paramdata.id = $("#id").val();
 				//newbootbox.alert('正在保存，请稍候...',false);

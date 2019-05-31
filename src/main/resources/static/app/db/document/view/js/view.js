@@ -173,12 +173,17 @@ var pageModule = function(){
 			url:getSzpsListUrl,
 			data:{infoId:fileId},
 			success:function(data){
-				var psxqBtn="";
-				if(data.length>0){
-					psxqBtn='<a href="javascript:;" class="psxqBtn" onclick="showXQ(\''+fileId+'\')">详情</a>'
-				}
 				if(data&&data.length>0){
-					$(".line3").html('<i class="fa fa-info-circle" style="color:#33CC99"></i> <span class="option"><font class="psstyle">'+data[0].userName+'批示：'+data[0].leaderComment+'</font>'+psxqBtn+'</span>');
+					$(".psMain").html("");
+					$.each(data,function(i,item){
+						$(".psMain").append(
+							'<div class="psrecord">'+
+				            '	<div class="pslist"><span>'+item.userName+'：</span><span>'+item.leaderComment+'</span></div>'+
+				            '</div>'
+			            )
+					});
+				}else{
+					$(".line3").html("");
 				}
 			}
 		});	
@@ -964,7 +969,7 @@ function skip(){
 }
 
 //批示详情
-function showXQ(id){
+/*function showXQ(id){
 	newbootbox.newdialog({
 		id:"psDialog",
 		width:800,
@@ -974,7 +979,7 @@ function showXQ(id){
 		classed:"cjDialog",
 		url:"/app/db/document/view/html/psDialog.html?fileId="+id,
 	})
-}
+}*/
 
 //下载
 function downloadfn(fileServerId){
