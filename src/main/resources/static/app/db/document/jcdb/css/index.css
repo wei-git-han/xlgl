@@ -1,5 +1,13 @@
-html,body{background-color:#1B3163;height:100%;}
-body{padding-top:50px!important;overflow:auto;}
+html,body{background-color:#1B3163;height:100%;position:relative;}
+body{overflow:auto;}
+.layout-top{width: 100%;height: 55px;position: absolute;top: 0;left: 0;}
+ .top-right-ckbtn{padding-top:9px;float: right;padding-right:10px;}
+.right-label.active{background:#243B6D!important;color:#6699FF!important;border:1px solid #6699FF;}
+.right-label{background:#6699FF!important;color:#fff!important;border:1px solid #6699FF;}
+.label1{border-radius:5px 0 0 5px!important;}
+.label2{border-radius:0 5px 5px 0!important;} 
+
+.layout-main{width: 100%;position: absolute;top: 55px;left: 0;bottom: 0;}
 .wh100{width:100%;height:100%;position:relative;}
 .newlayout-cont{padding-left:20px;padding-right:5px;width:100%;height:100%;position:relative;background: -moz-linear-gradient(#0E1241,#2870DE);background: -webkit-linear-gradient(#0E1241,#2870DE);}
 .bgimg{width:100%;height:100%;position:absolute;top:0;left:0;}
