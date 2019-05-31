@@ -35,9 +35,7 @@ import com.css.app.db.business.service.DocumentReadService;
 import com.css.app.db.business.service.ReplyExplainService;
 import com.css.app.db.business.service.SubDocInfoService;
 import com.css.app.db.business.service.SubDocTrackingService;
-import com.css.app.db.config.entity.AdminSet;
 import com.css.app.db.config.entity.RoleSet;
-import com.css.app.db.config.service.AdminSetService;
 import com.css.app.db.config.service.RoleSetService;
 import com.css.app.db.util.DbDefined;
 import com.css.app.db.util.DbDocStatusDefined;
@@ -64,8 +62,6 @@ public class SubDocInfoController {
 	private BaseAppUserService baseAppUserService;
 	@Autowired
 	private RoleSetService roleSetService;
-	@Autowired
-	private AdminSetService adminSetService;
 	@Autowired
 	private SubDocTrackingService subDocTrackingService;
 	@Autowired
