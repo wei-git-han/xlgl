@@ -992,3 +992,6 @@ div.radio, div.radio span, div.radio input {
 .bg{
 	background:#F5F5F5 url(../images/bg.png) no-repeat center center;
 }
+.pslist{
+	word-break: break-all;
+}

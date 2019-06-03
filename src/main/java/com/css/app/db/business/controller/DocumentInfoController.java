@@ -34,6 +34,7 @@ import com.css.app.db.business.entity.DocumentCbjl;
 import com.css.app.db.business.entity.DocumentFile;
 import com.css.app.db.business.entity.DocumentInfo;
 import com.css.app.db.business.entity.DocumentRead;
+import com.css.app.db.business.entity.DocumentSzps;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.entity.SubDocTracking;
 import com.css.app.db.business.service.DocumentBjjlService;
@@ -188,6 +189,12 @@ public class DocumentInfoController {
 		map.put("docStatus", documentStatus);
 		PageHelper.startPage(page, pagesize);
 		List<DocumentInfo> infoList = documentInfoService.queryList(map);
+		for (DocumentInfo documentInfo : infoList) {
+			Map<String, Object> szpsMap = new HashMap<>();
+			szpsMap.put("infoId", documentInfo.getId());
+			List<DocumentSzps> list = documentSzpsService.queryList(szpsMap);
+			documentInfo.setSzpslist(list);
+		}
 		GwPageUtils pageUtil = new GwPageUtils(infoList);
 		Response.json(pageUtil);
 	}
@@ -310,6 +317,11 @@ public class DocumentInfoController {
 				if(list.size()==0 && StringUtils.isNotBlank(info.getLatestReply())) {
 					info.setUpdateFlag("1");
 				}
+				//首长批示
+				Map<String, Object> szpsMap = new HashMap<>();
+				szpsMap.put("infoId", info.getId());
+				List<DocumentSzps> szpsList = documentSzpsService.queryList(szpsMap);
+				info.setSzpslist(szpsList);
 			}
 		}
 		GwPageUtils pageUtil = new GwPageUtils(infoList);

@@ -13,12 +13,13 @@ var pageModule = function(){
 					$("#zdwh").show();
 					$('#departAdmin').show();
 					$('#juAdmin').show();
+					$("#fkfl").show(); //反馈范例...
 				}else if(data=="1"){//部管理员
 					$('#departAdmin').show();
 					$('#juAdmin').show();
 					$("#szsz").show();
 					$("#zdwh").show();
-					$("#fkfl").show(); //只是给部级加了反馈范例...
+					$("#fkfl").show(); //反馈范例...
 				}else{ //局管理员
 					$('#juAdmin').show();
 					$("#jssz").show();

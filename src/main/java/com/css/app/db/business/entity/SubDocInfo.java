@@ -2,6 +2,7 @@ package com.css.app.db.business.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 
 
@@ -61,18 +62,20 @@ public class SubDocInfo implements Serializable {
 	private String latestUndertaker;
 	//最新反馈审批完成时间
 	private Date latestReplyTime;
-	//最新的首长名字
+	/*//最新的首长名字
 	private String leaderName;
 	//最新的首长批示
 	private String leaderContent;
 	//最新的首长批示时间
-	private String leaderTime;
+	private String leaderTime;*/
 	//我是不是当前处理人
 	private Integer receiverIsMe;
 	//承办单位/人
 	private String underDepts;
 	//已更新标识
 	private String updateFlag;
+	//首长批示
+	private List<DocumentSzps> szpslist;
 	/*----------------------------列表接收值---------end---------------------------*/	
 	/**
 	 * 设置：唯一标识
@@ -236,24 +239,6 @@ public class SubDocInfo implements Serializable {
 	public void setLatestReplyTime(Date latestReplyTime) {
 		this.latestReplyTime = latestReplyTime;
 	}
-	public String getLeaderName() {
-		return leaderName;
-	}
-	public void setLeaderName(String leaderName) {
-		this.leaderName = leaderName;
-	}
-	public String getLeaderContent() {
-		return leaderContent;
-	}
-	public void setLeaderContent(String leaderContent) {
-		this.leaderContent = leaderContent;
-	}
-	public String getLeaderTime() {
-		return leaderTime;
-	}
-	public void setLeaderTime(String leaderTime) {
-		this.leaderTime = leaderTime;
-	}
 	public Integer getReceiverIsMe() {
 		return receiverIsMe;
 	}
@@ -284,4 +269,11 @@ public class SubDocInfo implements Serializable {
 	public void setChooseStatus(String chooseStatus) {
 		this.chooseStatus = chooseStatus;
 	}
+	public List<DocumentSzps> getSzpslist() {
+		return szpslist;
+	}
+	public void setSzpslist(List<DocumentSzps> szpslist) {
+		this.szpslist = szpslist;
+	}
+	
 }

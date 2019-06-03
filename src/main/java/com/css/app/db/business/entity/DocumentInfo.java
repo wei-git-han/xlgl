@@ -81,7 +81,7 @@ public class DocumentInfo implements Serializable {
 	private String updateFlag;
 	//承办单位/人
 	private String underDepts;
-	
+	//首长批示
 	private List<DocumentSzps> szpslist;
 	/**
 	 * 设置：唯一标识

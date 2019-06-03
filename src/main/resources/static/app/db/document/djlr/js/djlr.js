@@ -41,7 +41,7 @@ var pageModule = function(){
                 	 return rowdata.urgencyDegree;
                  }},
                  {display:"批示指示内容",name:"",width:"25%",align:"left",paixu:false,title:false,render:function(rowdata){
-                	 var szpsCont="";
+                	 /*var szpsCont="";
                 	 var leaderTime1="";
                 	 if(rowdata.leaderTime!="" && rowdata.leaderTime!=null){
                 		 leaderTime1= rowdata.leaderTime.substring(0,16);
@@ -49,7 +49,18 @@ var pageModule = function(){
                 	 if(rowdata.leaderName && rowdata.leaderContent){
                 		 szpsCont=rowdata.leaderName+" "+leaderTime1+"批示："+rowdata.leaderContent
                 	 }
-                	 return '<div class="zspsnr"  onclick="pszsnrAlert(\''+rowdata.id+'\')" title="'+szpsCont+'">'+szpsCont+'</div>';
+                	 return '<div class="zspsnr"  onclick="pszsnrAlert(\''+rowdata.id+'\')" title="'+szpsCont+'">'+szpsCont+'</div>';*/
+                	 var html1="";
+                	 $.each(rowdata.szpslist,function(i,item){
+                		 var createdTime="";
+                		 if(item.createdTime!="" && item.createdTime!=null){
+                			 createdTime= item.createdTime.substring(0,16);
+                		 }
+                		 html1+=	'<div class="pslist">'+
+	     			            '	'+item.userName+'&nbsp;&nbsp;'+createdTime+'批示：'+item.leaderComment+
+	     			            '</div>';
+     				 });
+                	 return html1;
                  }},
                  {display:"承办单位/人",name:"",width:"20%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 return '<div class="cbdw" title="'+rowdata.underDepts+'">'+rowdata.underDepts+'</div>'

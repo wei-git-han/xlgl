@@ -24,6 +24,7 @@ import com.css.app.db.business.entity.DocumentBjjl;
 import com.css.app.db.business.entity.DocumentCbjl;
 import com.css.app.db.business.entity.DocumentInfo;
 import com.css.app.db.business.entity.DocumentRead;
+import com.css.app.db.business.entity.DocumentSzps;
 import com.css.app.db.business.entity.ReplyExplain;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.entity.SubDocTracking;
@@ -32,6 +33,7 @@ import com.css.app.db.business.service.DocumentBjjlService;
 import com.css.app.db.business.service.DocumentCbjlService;
 import com.css.app.db.business.service.DocumentInfoService;
 import com.css.app.db.business.service.DocumentReadService;
+import com.css.app.db.business.service.DocumentSzpsService;
 import com.css.app.db.business.service.ReplyExplainService;
 import com.css.app.db.business.service.SubDocInfoService;
 import com.css.app.db.business.service.SubDocTrackingService;
@@ -79,6 +81,8 @@ public class SubDocInfoController {
 	@Autowired
 	private DocumentReadService documentReadService;
 	@Autowired
+	private DocumentSzpsService documentSzpsService;
+	@Autowired
 	private MsgTipService msgService;
 	@Autowired
 	private MsgTipUtil msgUtil;
@@ -120,6 +124,11 @@ public class SubDocInfoController {
 			if(list.size()==0 && StringUtils.isNotBlank(subDocInfo.getLatestReply())) {
 				subDocInfo.setUpdateFlag("1");
 			}
+			//首长批示
+			Map<String, Object> szpsMap = new HashMap<>();
+			szpsMap.put("infoId", subDocInfo.getInfoId());
+			List<DocumentSzps> szpsList = documentSzpsService.queryList(szpsMap);
+			subDocInfo.setSzpslist(szpsList);
 		}
 		GwPageUtils pageUtil = new GwPageUtils(subDocInfoList);
 		Response.json(pageUtil);
@@ -221,6 +230,11 @@ public class SubDocInfoController {
 			if(list.size()==0 && StringUtils.isNotBlank(subDocInfo.getLatestReply())) {
 				subDocInfo.setUpdateFlag("1");
 			}
+			//首长批示
+			Map<String, Object> szpsMap = new HashMap<>();
+			szpsMap.put("infoId", subDocInfo.getInfoId());
+			List<DocumentSzps> szpsList = documentSzpsService.queryList(szpsMap);
+			subDocInfo.setSzpslist(szpsList);
 		}
 		GwPageUtils pageUtil = new GwPageUtils(subDocInfoList);
 		Response.json(pageUtil);
