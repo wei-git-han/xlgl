@@ -294,7 +294,7 @@ public class DocumentSzInfoController {
 			jo.put("title", documentInfo.getDocTitle());
 			String sz=documentInfo.getSzReadIds();
 			if(StringUtils.isNotBlank(documentInfo.getLeaderName())) {
-				jo.put("pszsmr", documentInfo.getLeaderName()+":" +documentInfo.getLeaderContent() +" " +(documentInfo.getLeaderTime()==null?"":documentInfo.getLeaderTime()));
+				jo.put("pszsmr", documentInfo.getLeaderName()+" " +(documentInfo.getLeaderTime()==null?"":documentInfo.getLeaderTime())+"批示：" +documentInfo.getLeaderContent());
 				//jo.put("pszsmr", "");				
 			}else {
 				jo.put("pszsmr", "");				

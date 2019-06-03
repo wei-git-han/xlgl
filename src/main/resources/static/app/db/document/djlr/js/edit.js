@@ -10,7 +10,7 @@ var zbjlDataUrl = {"url":"/app/db/documentzbjl/list","dataType":"json"}; //文�
 var getFormatFileUrl = {"url":"/app/db/documentfile/getFile","dataType":"text"}; /*相关文件-点击获取对应文件*/
 var getData ={"url":"/app/db/documentinfo/info","dataType":"json"}; /*编辑返回的数据*/
 var getPdfPath = {"url":rootPath +"/fileinfo/getFormaFileUrl","dataType":"text"};
-var UserTreeUrl = {"url":"/app/base/user/treeByPost","dataType":"text"}; //登记人树
+var UserTreeUrl = {"url":"/app/base/user/allTree","dataType":"text"}; //登记人树
 var deleteSzcqUrl = {"url":"/app/db/documentszps/delete","dataType":"text"};//删除首长批示
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var fileId=getUrlParam("fileId")||""; //主文件id
@@ -205,10 +205,11 @@ var pageModule = function(){
 			}else if($(this).val() == "4"){
 				$("#banjianNumber").attr("disabled",true);
 				$("#jobContent").attr("disabled",true);
-				$("#qishu").removeAttr("disabled");
+				$("#period").removeAttr("disabled");
 				$("#chaoqing").show();
 			}else{
 				$("#chaoqing").hide();
+				$("#period").attr("disabled",true);
 				$("#jobContent").removeAttr("disabled");
 				$("#banjianNumber").removeAttr("disabled");
 			}
@@ -241,7 +242,7 @@ var pageModule = function(){
 		    	$("#securityClassification").val($("#securityId option:checked").text());
 		    	$("#urgencyDegree").val($("#urgencyId option:checked").text());
 			    var elementarry = ["docTypeId","docTypeName","docTitle","securityId","securityClassification",
-			    	"urgencyId","urgencyDegree","docCode","banjianNumber","userId","userName","applyTime","printDate","jobContent","remark","qishu"];
+			    	"urgencyId","urgencyDegree","docCode","banjianNumber","userId","userName","applyTime","printDate","jobContent","remark","period"];
 				var paramdata = getformdata(elementarry);
 				paramdata.id = fileId;
 				//newbootbox.alert('正在保存，请稍候...',false);

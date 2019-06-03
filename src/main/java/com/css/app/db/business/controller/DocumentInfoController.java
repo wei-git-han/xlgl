@@ -52,6 +52,7 @@ import com.css.app.db.config.service.RoleSetService;
 import com.css.app.db.util.DbDefined;
 import com.css.app.db.util.DbDocStatusDefined;
 import com.css.base.utils.CurrentUser;
+import com.css.base.utils.DateUtil;
 import com.css.base.utils.GwPageUtils;
 import com.css.base.utils.Response;
 import com.css.base.utils.UUIDUtils;
@@ -99,7 +100,6 @@ public class DocumentInfoController {
 	private BaseAppConfigService baseAppConfigService;
 	@Autowired
 	private BaseAppOrganService baseAppOrganService;
-	
 	/**
 	 * 文件上传保存
 	 * @param idpdf 主记录id(documentInfo的id)
@@ -419,6 +419,22 @@ public class DocumentInfoController {
 		}
 		Response.json(documentInfo);
 	}
+	@ResponseBody
+	@RequestMapping("/lastInfo")
+	public void lastInfo(){
+		Map<String, Object> map =new HashMap<>();
+		map.put("typeId", "4");
+		List<DocumentInfo> list = documentInfoService.queryInfoByParam(map);
+		String period="〔"+DateUtil.getCurrentYear()+"〕第期";
+		if(list != null && list.size()>0) {
+			String lastPeriod = list.get(0).getPeriod();
+			if(StringUtils.isNotBlank(lastPeriod)) {
+				period=lastPeriod;
+			}
+		}
+		Response.json("period",period);
+	}
+	
 	public String getRoleType() {
 		BaseAppConfig mapped = baseAppConfigService.queryObject(AppConstant.LEAD_TEAM);//首长单位id
 		String depid=CurrentUser.getDepartmentId();

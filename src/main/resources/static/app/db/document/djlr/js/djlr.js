@@ -47,7 +47,7 @@ var pageModule = function(){
                 		 leaderTime1= rowdata.leaderTime.substring(0,16);
                 	 }
                 	 if(rowdata.leaderName && rowdata.leaderContent){
-                		 szpsCont=rowdata.leaderName+":"+rowdata.leaderContent+" "+leaderTime1
+                		 szpsCont=rowdata.leaderName+" "+leaderTime1+"批示："+rowdata.leaderContent
                 	 }
                 	 return '<div class="zspsnr"  onclick="pszsnrAlert(\''+rowdata.id+'\')" title="'+szpsCont+'">'+szpsCont+'</div>';
                  }},

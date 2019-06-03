@@ -54,7 +54,7 @@ public class DocumentDicController {
 				 json.put(DbDefined.URGENCY_DEGREE, documentDicService.queryDicByType(DbDefined.URGENCY_DEGREE));
 				 json.put(DbDefined.SECURITY_CLASSIFICATION, documentDicService.queryDicByType(DbDefined.SECURITY_CLASSIFICATION));
 			}else {
-				 json.put(dicType, documentDicService.queryDicByType(dicType));
+				json.put(dicType, documentDicService.queryDicByType(dicType));
 			}
 		}
 		Response.json(json);

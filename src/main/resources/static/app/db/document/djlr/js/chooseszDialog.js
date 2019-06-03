@@ -15,39 +15,20 @@ var pageModule = function(){
  						$("#peoples").append(html1);
  					})				
  				}
+ 				
+ 				$("input[name=users]").click(function(){
+ 					window.top.iframe1.window.pageModule.getUserData($(this).attr("personName"));
+ 					newbootbox.newdialogClose("chooseszDialog");
+ 				})
+ 				
  			}
  		});
 	}
 	
-	var initother = function(){
-		//确定
-		$("#sure").click(function(){
-			var personName="";
-			$("#peoples").find("[name=users]").each(function(){
-				if($(this).is(":checked")){					
-					personName=$(this).attr("personName")
-				}
-			})
-			
-			if(personName == ""||personName==null||personName==undefined){
-				newbootbox.alert("请选择首长！");
-				return;
-			}else{
-				window.top.iframe1.window.pageModule.getUserData(personName);
-				newbootbox.newdialogClose("chooseszDialog");
-			}
-		});
-		
-		//关闭
-		$("#close").click(function(){
-			newbootbox.newdialogClose("chooseszDialog");
-		})
-	}
 	return{
 		//加载页面处理程序
 		initControl:function(){
 			initPeoples();
-			initother();
 		}
 	};
 }();

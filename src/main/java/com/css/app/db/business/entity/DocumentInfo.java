@@ -2,6 +2,7 @@ package com.css.app.db.business.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 
 
@@ -67,6 +68,8 @@ public class DocumentInfo implements Serializable {
 	private String latestUndertaker;
 	//最新反馈审批完成时间
 	private Date latestReplyTime;
+	//期数
+	private String period;
 	/*------------------------------------*/
 	//最新的首长名字
 	private String leaderName;
@@ -79,6 +82,7 @@ public class DocumentInfo implements Serializable {
 	//承办单位/人
 	private String underDepts;
 	
+	private List<DocumentSzps> szpslist;
 	/**
 	 * 设置：唯一标识
 	 */
@@ -384,6 +388,18 @@ public class DocumentInfo implements Serializable {
 	}
 	public void setUnderDepts(String underDepts) {
 		this.underDepts = underDepts;
+	}
+	public String getPeriod() {
+		return period;
+	}
+	public void setPeriod(String period) {
+		this.period = period;
+	}
+	public List<DocumentSzps> getSzpslist() {
+		return szpslist;
+	}
+	public void setSzpslist(List<DocumentSzps> szpslist) {
+		this.szpslist = szpslist;
 	}
 	
 }

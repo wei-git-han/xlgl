@@ -298,10 +298,14 @@
 	</foreach>
 	)
    </select>
-	 
-	 
-	 
-	 
+	 <select id="queryInfoByParam" resultType="com.css.app.db.business.entity.DocumentInfo">
+		 select * from DB_DOCUMENT_INFO where 1=1
+		 <if test="typeId != null and typeId != ''">
+		  and DOC_TYPE_ID=#{typeId}
+		 </if>
+		 order by CREATED_TIME desc
+	 </select>
+
 	<insert id="save" parameterType="com.css.app.db.business.entity.DocumentInfo">
 		insert into DB_DOCUMENT_INFO
 		(
@@ -330,7 +334,8 @@
 			"LATEST_REPLY",
 			"LATEST_SUB_DEPT",
 			"LATEST_UNDERTAKER",
-			"LATEST_REPLY_TIME"
+			"LATEST_REPLY_TIME",
+			"PERIOD"
 		)
 		values
 		(
@@ -359,7 +364,8 @@
 			#{latestReply},
 			#{latestSubDept},
 			#{latestUndertaker},
-			#{latestReplyTime}
+			#{latestReplyTime},
+			#{period}
 		)
 	</insert>
 	 
@@ -373,6 +379,7 @@
 			<if test="urgencyDegree != null">"URGENCY_DEGREE" = #{urgencyDegree}, </if>
 			<if test="docCode != null">"DOC_CODE" = #{docCode}, </if>
 			<if test="banjianNumber != null">"BANJIAN_NUMBER" = #{banjianNumber}, </if>
+			<if test="period != null">"PERIOD" = #{period},</if>
 			<if test="userId != null">"USER_ID" = #{userId}, </if>
 			<if test="userName != null">"USER_NAME" = #{userName}, </if>
 			<if test="applyTime != null">"APPLY_TIME" = #{applyTime}, </if>

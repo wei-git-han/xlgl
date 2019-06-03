@@ -159,4 +159,9 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 	public String getMaxSecurity(String[] stringIds) {
 		return documentInfoDao.getMaxSecurity(stringIds);
 	}
+
+	@Override
+	public List<DocumentInfo> queryInfoByParam(Map<String, Object> map) {
+		return documentInfoDao.queryInfoByParam(map);
+	}
 }

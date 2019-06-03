@@ -104,7 +104,7 @@ jQuery(document).ready(function() {
 	var year = pagedate.getFullYear();
 	$(".year").val(year);
 	$(".datee").val(year+"-"+month+"-"+day);
-	
+	$(".datee2").val(year+"年"+month+"月"+day+"日");
 	
 	var hh = pagedate.getHours();
 	if(hh<10){

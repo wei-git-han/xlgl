@@ -3,6 +3,7 @@ var sureUrl = {"url":"/app/db/documentzbjl/save","dataType":"text"}; //保存
 var fromMsg=getUrlParam("fromMsg")||false; //是否为消息进入
 var infoIds=getUrlParam("fileIds")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
+var zhuanbanAdd=getUrlParam("zhuanbanAdd"); //
 var pageModule = function(){
 	var initTree = function(){
 		$ajax({
@@ -57,8 +58,12 @@ var pageModule = function(){
 									$("#iframe1",window.top.document).attr("src","/app/db/document/djlr/html/djlr.html?fileFrom=djlr");
 								}else if(fileFrom=="blfk"){  //文件来源于办理反馈
 									$("#iframe1",window.top.document).attr("src","/app/db/document/blfk/html/blfk.html?fileFrom=blfk");
-								}else{ 
-									$("#iframe1",window.top.document).attr("src","/app/db/document/djlr/html/djlr.html?fileFrom=djlr");
+								}else{
+									if(!!zhuanbanAdd && zhuanbanAdd == "1"){//新增页转办后新增
+										$("#iframe1",window.top.document).attr("src","/app/db/document/djlr/html/add.html");
+									}else{
+										$("#iframe1",window.top.document).attr("src","/app/db/document/djlr/html/djlr.html?fileFrom=djlr");
+									}
 								}
 								window.top.blfkfn();
 							}

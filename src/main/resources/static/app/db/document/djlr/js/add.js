@@ -8,10 +8,12 @@ var fileDataUrl = {"url":rootPath +"/documentfile/list","dataType":"text"}; //�
 var delFileUrl = {"url":"/app/db/documentfile/delete","dataType":"text"}; /*相关文件--删除附件*/
 var getFormatFileUrl = {"url":"/app/db/documentfile/getFile","dataType":"text"}; /*相关文件-点击获取对应文件*/
 var getPdfPath = {"url":rootPath +"/fileinfo/getFormaFileUrl","dataType":"text"};
-var UserTreeUrl = {"url":"/app/base/user/treeByPost","dataType":"text"}; //登记人树
+var UserTreeUrl = {"url":"/app/base/user/allTree","dataType":"text"}; //登记人树
 var deleteSzcqUrl = {"url":"/app/db/documentszps/delete","dataType":"text"};//删除首长批示
+var getlastPeriodUrl ={"url":"/app/db/documentinfo/lastInfo","dataType":"json"}; /*查询上一条期数*/
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var scanFilePath = "";//扫描件路径
+var addcqFlag="";//此变量用来标识是不是抄清自动保存的操作，在submit中区分保存回调
 var pageModule = function(){
 	 /*带入录入人*/
 	var makeLoginUser = function(){
@@ -138,11 +140,20 @@ var pageModule = function(){
 				$("#banjianNumber").removeAttr("disabled");
 				$("#chaoqing").show();
 			}else if($(this).val() == "4"){
+				$ajax({
+					url:getlastPeriodUrl,
+					success:function(data){
+						if(data.code!=500){//&&data.document_period!="" && data.document_period!=null && typeof(data.document_period)!=undefined){
+							$("#period").val(data.period);
+						}
+					}
+				});
 				$("#banjianNumber").attr("disabled",true);
 				$("#jobContent").attr("disabled",true);
-				$("#qishu").removeAttr("disabled");
+				$("#period").removeAttr("disabled");
 				$("#chaoqing").show();
 			}else{
+				$("#period").attr("disabled",true);
 				$("#chaoqing").hide();
 				$("#jobContent").removeAttr("disabled");
 				$("#banjianNumber").attr("disabled",true);
@@ -180,7 +191,7 @@ var pageModule = function(){
 		    	$("#securityClassification").val($("#securityId option:checked").text());
 		    	$("#urgencyDegree").val($("#urgencyId option:checked").text());
 			    var elementarry = ["docTypeId","docTypeName","docTitle","securityId","securityClassification",
-			    	"urgencyId","urgencyDegree","docCode","banjianNumber","userId","userName","applyTime","printDate","jobContent","remark","qishu"];
+			    	"urgencyId","urgencyDegree","docCode","banjianNumber","userId","userName","applyTime","printDate","jobContent","remark","period"];
 				var paramdata = getformdata(elementarry);
 				paramdata.id = $("#id").val();
 				//newbootbox.alert('正在保存，请稍候...',false);
@@ -188,6 +199,7 @@ var pageModule = function(){
 					url:updateUrl.url,
 					data:paramdata,
 					type:"post",
+					async:false,
 					success:function(data){
 						$("#id").val(data.id);
 						window.top.$(".newclose").click();
@@ -196,10 +208,12 @@ var pageModule = function(){
 						}else if(returnSave){
 							window.location.href = "/app/db/document/djlr/html/djlr.html?fileFrom=djlr";
 						}else{
-							setTimeout(function(){
-								newbootbox.alert("保存成功！").done(function(){
-								});
-							},200);
+							if(addcqFlag != "0"){
+								setTimeout(function(){
+									newbootbox.alert("保存成功！").done(function(){
+									});
+								},200);
+							}
 						}
 					}
 				})
@@ -283,10 +297,14 @@ var pageModule = function(){
 		
 		//增加批示
 		$("#addcq").click(function(){
+			addcqFlag="0";
 			var psszName = $("#psszName").val();
 			if($("#id").val() == "" || $("#id").val() == null || typeof($("#id").val()) == undefined){
-				newbootbox.alertInfo("请先保存要素信息再增加批示！"); 
-				return  false;
+				if($("#docTitle").val() == "" || $("#docTitle").val() == null || typeof($("#docTitle").val()) == undefined){
+					newbootbox.alertInfo("请先填写文件标题！"); 
+					return;
+				} 
+				$("#commentForm").submit();
 			} 
 			var leaderComment=$("#cqcontent").val();
 			var createdTime=$("#cqDate").val();
@@ -301,6 +319,7 @@ var pageModule = function(){
 			$ajax({
 				url:saveSzpsUrl,
 				data:{infoId:$("#id").val(),userName:psszName,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
+				async:false,
 				success:function(data){
 					if(data.result == "success"){
 						newbootbox.alert("保存成功！").done(function(){
@@ -329,7 +348,7 @@ var pageModule = function(){
 				header:true,
 				title:"转办",
 				classed:"cjDialog",
-				url:"/app/db/document/blfk/html/zhuanbanDialog.html?fileIds="+fileId
+				url:"/app/db/document/blfk/html/zhuanbanDialog.html?fileIds="+fileId+"&zhuanbanAdd=1"
 			})
 		});
 		
