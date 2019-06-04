@@ -88,9 +88,7 @@ var pageModule = function(){
                 		 if(item.createdTime!="" && item.createdTime!=null){
                 			 createdTime= item.createdTime.substring(0,16);
                 		 }
-                		 html1+=	'<div class="pslist">'+
-	     			            '	'+item.userName+'&nbsp;&nbsp;'+createdTime+'批示：'+item.leaderComment+
-	     			            '</div>';
+                		 html1+=item.userName+'&nbsp;&nbsp;'+createdTime+'批示：'+item.leaderComment+'&nbsp;&nbsp;&nbsp;'
      				 });
                 	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.infoId+'\')">'+html1+'</div>';
                  }},
