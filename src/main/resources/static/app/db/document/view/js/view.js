@@ -686,7 +686,7 @@ var pageModule = function(){
 					header:true,
 					title:"提交",
 					classed:"cjDialog",
-					url:"/app/db/document/view/html/tijiaoDialog.html?subId="+subId+"&infoId="+fileId+"&replyContent="+replyContent+"&cbrFlag="+cbrFlag+"&saveFlag"+saveFlag+"&fromMsg="+fromMsg
+					url:"/app/db/document/view/html/tijiaoDialog.html?subId="+subId+"&infoId="+fileId+"&replyContent="+replyContent+"&cbrFlag="+cbrFlag+"&saveFlag="+saveFlag+"&fromMsg="+fromMsg
 				})
 			}
 		});
