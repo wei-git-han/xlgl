@@ -60,7 +60,7 @@ var pageModule = function(){
 	     			            '	'+item.userName+'&nbsp;&nbsp;'+createdTime+'批示：'+item.leaderComment+
 	     			            '</div>';
      				 });
-                	 return html1;
+                	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.id+'\')">'+html1+'</div>';
                  }},
                  {display:"承办单位/人",name:"",width:"20%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 return '<div class="cbdw" title="'+rowdata.underDepts+'">'+rowdata.underDepts+'</div>'

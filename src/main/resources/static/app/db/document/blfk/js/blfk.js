@@ -133,11 +133,12 @@ var pageModule = function(){
                 		 if(item.createdTime!="" && item.createdTime!=null){
                 			 createdTime= item.createdTime.substring(0,16);
                 		 }
+                		 
                 		 html1+=	'<div class="pslist">'+
 	     			            '	'+item.userName+'&nbsp;&nbsp;'+createdTime+'批示：'+item.leaderComment+
 	     			            '</div>';
      				 });
-                	 return html1;
+                	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.id+'\')">'+html1+'</div>';
                  }},
                  {display:"督办落实情况",name:"",width:"21%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var duban="";
@@ -364,7 +365,7 @@ var pageModule = function(){
 	     			            '	'+item.userName+'&nbsp;&nbsp;'+createdTime+'批示：'+item.leaderComment+
 	     			            '</div>';
      				 });
-                	 return html1;
+                	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.id+'\')">'+html1+'</div>';
                  }},
                  {display:"督办落实情况",name:"",width:"24%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var duban="";

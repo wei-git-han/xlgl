@@ -77,17 +77,17 @@ var pageModule = function(){
                 		 szpsCont=rowdata.leaderName+" "+leaderTime1+"批示："+rowdata.leaderContent
                 	 }
                 	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.infoId+'\')"  title="'+szpsCont+'">'+szpsCont+'</div>';*/
-                	var html1="";
-               	 	$.each(rowdata.szpslist,function(i,item){
-               		 var createdTime="";
-               		 if(item.createdTime!="" && item.createdTime!=null){
-               			 createdTime= item.createdTime.substring(0,16);
-               		 }
-               		 html1+=	'<div class="pslist">'+
-	     			            '	'+item.userName+'&nbsp;&nbsp;'+createdTime+'批示：'+item.leaderComment+
-	     			            '</div>';
-    				 });
-               	 return html1;
+                	 var html1="";
+               	 	 $.each(rowdata.szpslist,function(i,item){
+	               		 var createdTime="";
+	               		 if(item.createdTime!="" && item.createdTime!=null){
+	               			 createdTime= item.createdTime.substring(0,16);
+	               		 }
+	               		 html1+=	'<div class="pslist">'+
+		     			            '	'+item.userName+'&nbsp;&nbsp;'+createdTime+'批示：'+item.leaderComment+
+		     			            '</div>';
+	    		     });
+               	     return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.infoId+'\')">'+html1+'</div>';
                 }},
                 {display:"督办落实情况",name:"",width:"20%",align:"left",paixu:false,render:function(rowdata){
                 	 var duban="";

@@ -92,7 +92,7 @@ var pageModule = function(){
 	     			            '	'+item.userName+'&nbsp;&nbsp;'+createdTime+'批示：'+item.leaderComment+
 	     			            '</div>';
      				 });
-                	 return html1;
+                	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.infoId+'\')">'+html1+'</div>';
                  }},
                  {display:"督办落实情况",name:"",width:"20%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var duban="";

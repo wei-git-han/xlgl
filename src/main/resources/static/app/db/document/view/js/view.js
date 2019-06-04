@@ -73,6 +73,7 @@ var pageModule = function(){
 								$("#clear").show();
 								if(data.roleType=='3'){//是局长显示审批完成否则显示提交
 									$("#sptg").show();
+									$("#send").show();
 									if(!data.isUndertaker){
 										$("#changewrite").show();
 									}
@@ -627,6 +628,37 @@ var pageModule = function(){
 			});
 		});
 		
+		/*局长送审 */
+		$("#send").click(function(){
+			var replyContent = $("#replyContent").val();
+			var imgFileId="";
+			var saveFlag="0"; //文字
+			if($("span.css3").attr("data") =="1"){
+				if(checkIsModified()){
+					saveFlag="1"; //图片
+					$.ajax({
+						url : "/app/base/user/getToken",
+						type : "GET",
+						async : false,
+						success : function(data) {//插件读取文件
+							end();	//签批确定
+							var surl = location.protocol+ "//"+ location.host+ "/servlet/suwell/savePictureYj?access_token="+data.result;
+						    document.getElementById("signtool").SetUploadURL(surl);
+							var result = document.getElementById("signtool").UploadImageStream();
+							if(result && result!="" && result!=null){
+								imgFileId = result.replace(/^\"|\"$/g,'');
+								replyContent = imgFileId;
+							}else{
+								saveFlag="0"; //图片
+							}
+						}
+					})
+				}else{
+					newbootbox.alert('保存失败！请填写您的意见！')
+				}
+			}
+			$("#tijiao").click();
+		});
 		
 		
 		//审批通过
