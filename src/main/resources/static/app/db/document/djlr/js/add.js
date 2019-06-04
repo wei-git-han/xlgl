@@ -13,7 +13,7 @@ var deleteSzcqUrl = {"url":"/app/db/documentszps/delete","dataType":"text"};//�
 var getlastPeriodUrl ={"url":"/app/db/documentinfo/lastInfo","dataType":"json"}; /*查询上一条期数*/
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var scanFilePath = "";//扫描件路径
-var addcqFlag="";//此变量用来标识是不是抄清自动保存的操作，在submit中区分保存回调
+var addcqFlag="";//此变量用来标识是不是自动保存的操作，在submit中区分保存回调
 var pageModule = function(){
 	 /*带入录入人*/
 	var makeLoginUser = function(){
@@ -336,9 +336,13 @@ var pageModule = function(){
 		
 		//转办
 		$("#zhuanban").click(function(){
+			addcqFlag="0";
 			if($("#id").val() == "" || $("#id").val() == null || typeof($("#id").val()) == undefined){
-				newbootbox.alertInfo("请先保存要素信息再开始转办！"); 
-				return  false;
+				if($("#docTitle").val() == "" || $("#docTitle").val() == null || typeof($("#docTitle").val()) == undefined){
+					newbootbox.alertInfo("请先填写文件标题！"); 
+					return;
+				} 
+				$("#commentForm").submit();
 			} 
 			var fileId = $("#id").val();
 			newbootbox.newdialog({
