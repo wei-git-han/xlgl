@@ -519,11 +519,11 @@ public class SubDocInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/sendOperation")
-	public void sendOperation(String infoId,String subId,String userName,String userId,String replyContent){
+	public void sendOperation(String infoId,String subId,String userName,String userId,String replyContent,String saveFlag){
 		//流转到下一个人并将临时反馈变为发布
 		this.submitRelation(subId, userName, userId,"2");
 		//保存审批意见
-		approvalOpinionService.saveOpinion(subId, replyContent, "1",null);
+		approvalOpinionService.saveOpinion(subId, replyContent, "1",saveFlag);
 		//保存最新更新时间
 		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
 		if(subDocInfo != null) {

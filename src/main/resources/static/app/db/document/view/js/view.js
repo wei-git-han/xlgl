@@ -632,7 +632,6 @@ var pageModule = function(){
 		$("#send").click(function(){
 			var cbrFlag="";
 			var replyContent = $("#replyContent").val();
-			alert(replyContent);
 			if(isCbr && isCbr == 1){ //承办人
 				cbrFlag="1";
 				if(replyContent !="" && !!replyContent){
@@ -687,7 +686,7 @@ var pageModule = function(){
 					header:true,
 					title:"提交",
 					classed:"cjDialog",
-					url:"/app/db/document/view/html/tijiaoDialog.html?subId="+subId+"&infoId="+fileId+"&replyContent="+replyContent+"&cbrFlag="+cbrFlag+"&fromMsg="+fromMsg
+					url:"/app/db/document/view/html/tijiaoDialog.html?subId="+subId+"&infoId="+fileId+"&replyContent="+replyContent+"&cbrFlag="+cbrFlag+"&saveFlag"+saveFlag+"&fromMsg="+fromMsg
 				})
 			}
 		});
