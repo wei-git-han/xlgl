@@ -48,6 +48,7 @@ var pageModule = function(){
 				}else if(data.docTypeId == "4"){
 					$("#banjianNumber").attr("disabled",true);
 					$("#jobContent").attr("disabled",true);
+					$("#period").removeAttr("disabled");
 					$("#chaoqing").show();
 				}else{
 					$("#chaoqing").hide();
