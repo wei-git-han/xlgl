@@ -630,34 +630,65 @@ var pageModule = function(){
 		
 		/*局长送审 */
 		$("#send").click(function(){
+			var cbrFlag="";
 			var replyContent = $("#replyContent").val();
-			var imgFileId="";
-			var saveFlag="0"; //文字
-			if($("span.css3").attr("data") =="1"){
-				if(checkIsModified()){
-					saveFlag="1"; //图片
-					$.ajax({
-						url : "/app/base/user/getToken",
-						type : "GET",
-						async : false,
-						success : function(data) {//插件读取文件
-							end();	//签批确定
-							var surl = location.protocol+ "//"+ location.host+ "/servlet/suwell/savePictureYj?access_token="+data.result;
-						    document.getElementById("signtool").SetUploadURL(surl);
-							var result = document.getElementById("signtool").UploadImageStream();
-							if(result && result!="" && result!=null){
-								imgFileId = result.replace(/^\"|\"$/g,'');
-								replyContent = imgFileId;
-							}else{
-								saveFlag="0"; //图片
-							}
-						}
-					})
+			if(isCbr && isCbr == 1){ //承办人
+				cbrFlag="1";
+				if(replyContent !="" && !!replyContent){
+					isSave=1;
+					$("#save").click();
 				}else{
-					newbootbox.alert('保存失败！请填写您的意见！')
+					if(ifShowEditBtn&&ifShowEditBtn=="0"){//如果没有编辑按钮：说明没有任何反馈，则必须填写反馈
+						newbootbox.alert("反馈不能为空！");
+						return;
+					}
 				}
+				newbootbox.newdialog({
+					id:"statusDialog",
+					width:550,
+					height:400,
+					header:true,
+					title:"选择办件状态",
+					classed:"cjDialog",
+					url:"/app/db/document/view/html/statusDialog.html?subId="+subId+"&infoId="+fileId+"&cbrFlag="+cbrFlag+"&fromMsg="+fromMsg
+				});
+			}else{
+				var imgFileId="";
+				var saveFlag="0"; //文字
+				if($("span.css3").attr("data") =="1"){
+					if(checkIsModified()){
+						saveFlag="1"; //图片
+						$.ajax({
+							url : "/app/base/user/getToken",
+							type : "GET",
+							async : false,
+							success : function(data) {//插件读取文件
+								end();	//签批确定
+								var surl = location.protocol+ "//"+ location.host+ "/servlet/suwell/savePictureYj?access_token="+data.result;
+							    document.getElementById("signtool").SetUploadURL(surl);
+								var result = document.getElementById("signtool").UploadImageStream();
+								if(result && result!="" && result!=null){
+									imgFileId = result.replace(/^\"|\"$/g,'');
+									replyContent = imgFileId;
+								}else{
+									saveFlag="0"; //图片
+								}
+							}
+						})
+					}else{
+						newbootbox.alert('保存失败！请填写您的意见！')
+					}
+				}
+				newbootbox.newdialog({
+					id:"tijiaoDialog",
+					width:800,
+					height:600,
+					header:true,
+					title:"提交",
+					classed:"cjDialog",
+					url:"/app/db/document/view/html/tijiaoDialog.html?subId="+subId+"&infoId="+fileId+"&replyContent="+replyContent+"&cbrFlag="+cbrFlag+"&saveFlag="+saveFlag+"&fromMsg="+fromMsg
+				})
 			}
-			$("#tijiao").click();
 		});
 		
 		
