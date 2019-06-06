@@ -17,6 +17,7 @@ import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.db.config.entity.RoleSet;
 import com.css.app.db.config.service.RoleSetService;
 import com.css.app.db.util.DbDefined;
+import com.css.base.utils.CurrentUser;
 import com.css.base.utils.GwPageUtils;
 import com.css.base.utils.Response;
 import com.css.base.utils.UUIDUtils;
@@ -46,8 +47,12 @@ public class RoleSetController {
 	@ResponseBody
 	@RequestMapping("/list")
 	public void list(Integer page, Integer pagesize){
+		String deptId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
 		Map<String, Object> map = new HashMap<>();
 		map.put("roleParam", "roleParam");
+		if(StringUtils.isNotBlank(deptId)) {
+			map.put("deptId", deptId);
+		}
 		PageHelper.startPage(page, pagesize);
 		List<RoleSet> roleSetList = roleSetService.queryList(map);
 		GwPageUtils pageUtil = new GwPageUtils(roleSetList);

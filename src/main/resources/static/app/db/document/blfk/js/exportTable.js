@@ -16,9 +16,23 @@ var initFlag = '1';
 var pageModule = function(){
 	var initTableNum = function(){
 		if(typeId==1||typeId==2||typeId==4){
-			$('#timeTitle').html("批示指示时间")
+			$('#timeTitle').html("批示指示时间");
+			$(".date-picker").datepicker({
+			    language:"zh-CN",
+			    rtl: Metronic.isRTL(),
+			    orientation: "right",
+			    format : "yyyy年mm月dd日",
+			    autoclose: true
+			});
 		}else if(typeId==3||typeId==5||typeId==6 ){
-			$('#timeTitle').html('转办时间')
+			$('#timeTitle').html('转办时间');
+			$(".date-picker").datepicker({
+			    language:"zh-CN",
+			    rtl: Metronic.isRTL(),
+			    orientation: "right",
+			    format : "yyyy-mm-dd",
+			    autoclose: true
+			});
 		};
 		if(tableNum == "3"){ //部领导批示指示 
 			window.top.memory.tree = "3";
@@ -69,7 +83,7 @@ var pageModule = function(){
                 	 return '<a title="'+rowdata.docTitle+'" class="tabletitle" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1" onclick="closeTable()">'+cuiban+rowdata.docTitle+'</a>'
                  }},
                  {display:"批示指示内容",name:"",width:"26%",align:"left",paixu:false,title:false,render:function(rowdata){
-                	 var szpsCont="";
+                	 /*var szpsCont="";
                 	 var leaderTime1="";
                 	 if(rowdata.leaderTime!="" && rowdata.leaderTime!=null){
                 		 leaderTime1= rowdata.leaderTime.substring(0,16);
@@ -77,7 +91,16 @@ var pageModule = function(){
                 	 if(rowdata.leaderName && rowdata.leaderContent){
                 		 szpsCont=rowdata.leaderName+":"+rowdata.leaderContent+" "+leaderTime1
                 	 }
-                	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.id+'\')" title="'+szpsCont+'">'+szpsCont+'</div>';
+                	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.id+'\')" title="'+szpsCont+'">'+szpsCont+'</div>';*/
+                	 var html1="";
+                	 $.each(rowdata.szpslist,function(i,item){
+                		 var createdTime="";
+                		 if(item.createdTime!="" && item.createdTime!=null){
+                			 createdTime= item.createdTime.substring(0,16);
+                		 }
+                		 html1+=item.userName+'&nbsp;&nbsp;'+createdTime+'批示：'+item.leaderComment+'&nbsp;&nbsp;&nbsp;'
+     				 });
+                	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.id+'\')">'+html1+'</div>';
                  }},
                  {display:"督办落实情况",name:"",width:"21%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var duban="";
@@ -262,6 +285,9 @@ var pageModule = function(){
 	var initgrid3 = function(){
         newGrid3 = $("#gridcont3").createGrid({
             columns:[
+            	{display:"期数",name:"",width:"9%",align:"left",title:true,render:function(rowdata,n){
+               	 	return rowdata.period;
+                }},
                 {display:"办理状态",name:"",width:"8%",align:"center",render:function(rowdata,n){
                 	var statusName="";
                	 	var bgColor="";
@@ -277,7 +303,7 @@ var pageModule = function(){
                	 	}
   				  	return '<div title="'+statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+statusName+'</div>';
                  }},
-                 {display:"办件标题",name:"",width:"20%",align:"left",title:false,render:function(rowdata){
+                 {display:"办件标题",name:"",width:"15%",align:"left",title:false,render:function(rowdata){
                 	 var cuiban="";
                  	 if(rowdata.cuibanFlag=="1"){
                  		 cuiban = '<label class="cuibanlabel">催办</label>';
@@ -285,7 +311,7 @@ var pageModule = function(){
                 	 return '<a title="'+rowdata.docTitle+'" class="tabletitle" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1"  onclick="closeTable()">'+cuiban+rowdata.docTitle+'</a>'
                  }},
                  {display:"批示指示内容",name:"",width:"26%",align:"left",paixu:false,title:false,render:function(rowdata){
-                	 var szpsCont="";
+                	/* var szpsCont="";
                 	 var leaderTime1="";
                 	 if(rowdata.leaderTime!="" && rowdata.leaderTime!=null){
                 		 leaderTime1= rowdata.leaderTime.substring(0,16);
@@ -293,9 +319,18 @@ var pageModule = function(){
                 	 if(rowdata.leaderName && rowdata.leaderContent){
                 		 szpsCont=rowdata.leaderName+":"+rowdata.leaderContent+" "+leaderTime1
                 	 }
-                	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.id+'\')" title="'+szpsCont+'">'+szpsCont+'</div>';
+                	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.id+'\')" title="'+szpsCont+'">'+szpsCont+'</div>';*/
+                	 var html1="";
+                	 $.each(rowdata.szpslist,function(i,item){
+                		 var createdTime="";
+                		 if(item.createdTime!="" && item.createdTime!=null){
+                			 createdTime= item.createdTime.substring(0,16);
+                		 }
+                		 html1+=item.userName+'&nbsp;&nbsp;'+createdTime+'批示：'+item.leaderComment+'&nbsp;&nbsp;&nbsp;'
+     				 });
+                	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.id+'\')">'+html1+'</div>';
                  }},
-                 {display:"督办落实情况",name:"",width:"24%",align:"left",paixu:false,title:false,render:function(rowdata){
+                 {display:"督办落实情况",name:"",width:"21%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var duban="";
                  	 if(rowdata.updateFlag=="1"){
                  		duban = '<label class="cuibanlabel">已更新</label>';
@@ -370,13 +405,6 @@ var pageModule = function(){
 	
 	
 	var initother = function(){
-		$(".date-picker").datepicker({
-		    language:"zh-CN",
-		    rtl: Metronic.isRTL(),
-		    orientation: "right",
-		    format : "yyyy-mm-dd",
-		    autoclose: true
-		});
 		if(initFlag==1){
 			$('#showNone').show();
 		}
@@ -452,10 +480,16 @@ var pageModule = function(){
 function refreshgrid(){
 	if(o.tree == "3"){
 		$("#gridcont3").show();
+		$("#gridcont2").hide();
+		$("#gridcont").hide();
 	}else if(o.tree == "2"){
 		$("#gridcont2").show();
+		$("#gridcont3").hide();
+		$("#gridcont").hide();
 	}else{
 		$("#gridcont").show();
+		$("#gridcont2").hide();
+		$("#gridcont3").hide();
 	}
 	if(tableNum==3){
 		pageModule.initgrid3();
@@ -465,6 +499,7 @@ function refreshgrid(){
 		pageModule.initgrid();
 	}
 }
+
 
 //查询
 function refreshgrid1(){

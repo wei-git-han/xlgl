@@ -9,14 +9,17 @@
 
 	<select id="queryList" resultType="com.css.app.db.config.entity.RoleSet">
 		select * from DB_ROLE_SET where 1=1
-		<if test="userId != null and userId != null">
+		<if test="userId != null and userId != ''">
 			and USER_ID = #{userId}
 		</if>
-		<if test="roleFlag != null and roleFlag != null">
+		<if test="roleFlag != null and roleFlag != ''">
 			and ROLE_FLAG = #{roleFlag}
 		</if>
-		<if test="roleParam != null and roleParam != null">
+		<if test="roleParam != null and roleParam != ''">
 			and ROLE_FLAG &gt; 1
+		</if>
+		<if test="deptId !=null and deptId !=''">
+			and DEPT_ID in (select ID from BASE_APP_ORGAN start with  id=#{deptId} connect by prior id=parent_Id)
 		</if>
 		<if test="sort != null and sort != null">
 			and SORT = #{sort}

@@ -320,7 +320,10 @@ var pageModule = function(){
 	var initgrid3 = function(){
         grid3 = $("#gridcont3").createGrid({
             columns:[
-                {display:"办理状态",name:"",width:"8%",align:"center",render:function(rowdata,n){
+            	{display:"期数",name:"",width:"9%",align:"left",title:true,render:function(rowdata,n){
+               	 	return rowdata.period;
+                }},
+                {display:"办理状态",name:"",width:"7%",align:"center",render:function(rowdata,n){
                 	var statusName="";
                	 	var bgColor="";
                	 	if(rowdata.status==1){
@@ -335,7 +338,7 @@ var pageModule = function(){
                	 	}
   				  	return '<div title="'+statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+statusName+'</div>';
                  }},
-                 {display:"办件标题",name:"",width:"20%",align:"left",title:false,render:function(rowdata){
+                 {display:"办件标题",name:"",width:"15%",align:"left",title:false,render:function(rowdata){
                 	 var cuiban="";
                  	 if(rowdata.cuibanFlag=="1"){
                  		 cuiban = '<label class="cuibanlabel">催办</label>';
@@ -362,7 +365,7 @@ var pageModule = function(){
      				 });
                 	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.id+'\')">'+html1+'</div>';
                  }},
-                 {display:"督办落实情况",name:"",width:"24%",align:"left",paixu:false,title:false,render:function(rowdata){
+                 {display:"督办落实情况",name:"",width:"21%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var duban="";
                  	 if(rowdata.updateFlag=="1"){
                  		duban = '<label class="cuibanlabel">已更新</label>';
