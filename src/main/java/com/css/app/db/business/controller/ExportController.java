@@ -33,6 +33,9 @@ import com.css.app.db.business.service.impl.ExportZYJCServiceImpl;
 import com.css.app.db.config.service.DocumentDicService;
 import com.css.base.utils.CrossDomainUtil;
 import com.css.base.utils.Response;
+import com.jacob.activeX.ActiveXComponent;
+import com.jacob.com.Dispatch;
+import com.jacob.com.Variant;
 
 /**
  * 导出wps
@@ -102,19 +105,19 @@ public class ExportController{
 			// 承办单位人员
 			List<SubDocInfo> subByInfoId = subDocInfoService.queryAllSubByInfoId(id);
 			for (DocumentSzps docSzps : documentSzpsList) {
-				String newForMatCreatedTime = "xxxx年xx月xx日";
-				String createdTime = docSzps.getCreatedTime();
-				if(createdTime !=null) {
-					String[] split = createdTime.split("-");
-					if(split.length<2) {
-						System.out.println("首长批示的创建时间（createdTime）:"+createdTime+"格式有误！");
+//				String newForMatCreatedTime = "xxxx年xx月xx日";
+//				String createdTime = docSzps.getCreatedTime();
+//				if(createdTime !=null) {
+//					String[] split = createdTime.split("-");
+//					if(split.length<2) {
+//						System.out.println("首长批示的创建时间（createdTime）:"+createdTime+"格式有误！");
 //						throw new RuntimeException("首长批示的创建时间（createdTime）:"+createdTime+"格式有误！");
-					}else {
-						newForMatCreatedTime=split[0]+"年"+split[1]+"月"+split[2]+"日";
-					}					
-				}				
+//					}else {
+//						newForMatCreatedTime=split[0]+"年"+split[1]+"月"+split[2]+"日";
+//					}					
+//				}				
 				commentBuilder.append(
-						docSzps.getUserName() + newForMatCreatedTime + "批示：" + docSzps.getLeaderComment()
+						docSzps.getUserName() + docSzps.getCreatedTime() + "批示：" + docSzps.getLeaderComment()
 								+ "                                                                        ");
 			}
 			for (ReplyExplain reply : latestOneReply) {
@@ -149,11 +152,11 @@ public class ExportController{
 			exportDataMap.put("leaderComment", commentBuilder.toString());// 批示指示内容
 			exportDataMap.put("replyComment", replyBuilder.toString());// 督办落实情况
 			exportDataMap.put("subInfoComment", subInfoBuilder.toString());// 承办单位人员
-			exportDataMap.put("security",security);
+			exportDataMap.put("period", documentInfo.getPeriod());// 期数
+			exportDataMap.put("security",security);//秘籍
 			exportDataLis.add(exportDataMap);
 		}
 
-		// 本地文件路径（应用中下载操作的默认文件保存路径）
 		InputStream is = null;
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		try {
@@ -165,7 +168,7 @@ public class ExportController{
 				ExportService exportJWZYServiceImpl = new ExportJWZYServiceImpl();
 				ExportWPSservice exportWPSserviceJWZY = new ExportWPSserviceImpl(exportJWZYServiceImpl, exportDataLis,
 						tempFile.getAbsolutePath(),banjieNum,weibanjieNum,docTypeId);
-				exportInvoke.setExportWPSservice(exportWPSserviceJWZY);
+				exportInvoke.setExportWPSservice(exportWPSserviceJWZY);												
 				is = exportInvoke.export();
 				break;
 			case "2":
@@ -220,6 +223,7 @@ public class ExportController{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 		Response.download(exportFileName, is);
 
 	}

@@ -113,7 +113,7 @@ public class ExportBLDServiceImpl implements ExportService {
 			setTableWith(ComTable, "12000");
 			CTTbl ctTbl = ComTable.getCTTbl();
 			CTTblGrid addNewTblGrid = ctTbl.addNewTblGrid();
-			String[] colWidths = new String[] { "400", "1500", "5000", "2000", "1100", "1000" };
+			String[] colWidths = new String[] { "400","900","1600", "4000", "2000", "1100", "1000" };
 			for (String colWidth : colWidths) {
 				CTTblGridCol addNewGridCol = addNewTblGrid.addNewGridCol();
 				addNewGridCol.setW(new BigInteger(colWidth));
@@ -136,6 +136,10 @@ public class ExportBLDServiceImpl implements ExportService {
 			cellCentre(headerCell);
 			headerCell.setText("序号 ");
 
+			headerCell = comTableRowOne.addNewTableCell();
+			cellCentre(headerCell);
+			headerCell.setText("期数");
+			
 			headerCell = comTableRowOne.addNewTableCell();
 			cellCentre(headerCell);
 			headerCell.setText("文件标题");
@@ -171,17 +175,20 @@ public class ExportBLDServiceImpl implements ExportService {
 				bodyCell.setText(String.valueOf(banjieIndex++));// 序号
 				bodyCell = comTableRowTwo.getCell(1);
 				cellCentre(bodyCell);
-				bodyCell.setText(dataMap.get("docTitle"));// 文件标题
+				bodyCell.setText(dataMap.get("period"));// 期数
 				bodyCell = comTableRowTwo.getCell(2);
-				cellleft(bodyCell);
-				bodyCell.setText(dataMap.get("leaderComment"));// 批示指示内容
+				cellCentre(bodyCell);
+				bodyCell.setText(dataMap.get("docTitle"));// 文件标题
 				bodyCell = comTableRowTwo.getCell(3);
 				cellleft(bodyCell);
-				bodyCell.setText(dataMap.get("replyComment"));// 督办落实情况
+				bodyCell.setText(dataMap.get("leaderComment"));// 批示指示内容
 				bodyCell = comTableRowTwo.getCell(4);
+				cellleft(bodyCell);
+				bodyCell.setText(dataMap.get("replyComment"));// 督办落实情况
+				bodyCell = comTableRowTwo.getCell(5);
 				cellCentre(bodyCell);
 				bodyCell.setText(dataMap.get("status"));// 办理状态
-				bodyCell = comTableRowTwo.getCell(5);
+				bodyCell = comTableRowTwo.getCell(6);
 				cellCentre(bodyCell);
 				bodyCell.setText(dataMap.get("subInfoComment"));// 承办单位 人员
 				}
@@ -205,17 +212,20 @@ public class ExportBLDServiceImpl implements ExportService {
 				bodyCell.setText(String.valueOf(weibanjieIndex++));// 序号
 				bodyCell = comTableRowTwo.getCell(1);
 				cellCentre(bodyCell);
-				bodyCell.setText(dataMap.get("docTitle"));// 文件标题
+				bodyCell.setText(dataMap.get("period"));// 期数
 				bodyCell = comTableRowTwo.getCell(2);
-				cellleft(bodyCell);
-				bodyCell.setText(dataMap.get("leaderComment"));// 批示指示内容
+				cellCentre(bodyCell);
+				bodyCell.setText(dataMap.get("docTitle"));// 文件标题
 				bodyCell = comTableRowTwo.getCell(3);
 				cellleft(bodyCell);
-				bodyCell.setText(dataMap.get("replyComment"));// 督办落实情况
+				bodyCell.setText(dataMap.get("leaderComment"));// 批示指示内容
 				bodyCell = comTableRowTwo.getCell(4);
+				cellleft(bodyCell);
+				bodyCell.setText(dataMap.get("replyComment"));// 督办落实情况
+				bodyCell = comTableRowTwo.getCell(5);
 				cellCentre(bodyCell);
 				bodyCell.setText(dataMap.get("status"));// 办理状态
-				bodyCell = comTableRowTwo.getCell(5);
+				bodyCell = comTableRowTwo.getCell(6);
 				cellCentre(bodyCell);
 				bodyCell.setText(dataMap.get("subInfoComment"));// 承办单位 人员
 				}
