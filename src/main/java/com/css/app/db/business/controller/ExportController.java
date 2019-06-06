@@ -6,14 +6,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.alibaba.fastjson.JSONObject;
-import com.css.addbase.apporgmapped.constant.AppType;
-import com.css.addbase.apporgmapped.entity.BaseAppOrgMapped;
+
 import com.css.addbase.apporgmapped.service.BaseAppOrgMappedService;
 import com.css.app.db.business.entity.DocumentInfo;
 import com.css.app.db.business.entity.DocumentSzps;
@@ -31,11 +29,7 @@ import com.css.app.db.business.service.impl.ExportJWZYServiceImpl;
 import com.css.app.db.business.service.impl.ExportWPSserviceImpl;
 import com.css.app.db.business.service.impl.ExportZYJCServiceImpl;
 import com.css.app.db.config.service.DocumentDicService;
-import com.css.base.utils.CrossDomainUtil;
 import com.css.base.utils.Response;
-import com.jacob.activeX.ActiveXComponent;
-import com.jacob.com.Dispatch;
-import com.jacob.com.Variant;
 
 /**
  * 导出wps
