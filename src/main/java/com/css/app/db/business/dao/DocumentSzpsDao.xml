@@ -55,6 +55,10 @@
 		where ID = #{id}
 	</update>
 	
+	<update id="updateUserNameByUserId">
+		update DB_DOCUMENT_SZPS set "USER_NAME" = #{0} where "USER_ID" = #{1}
+	</update>
+	
 	<delete id="delete">
 		delete from DB_DOCUMENT_SZPS where ID = #{value}
 	</delete>

@@ -14,6 +14,7 @@ import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
+import com.css.app.db.business.service.DocumentSzpsService;
 import com.css.app.db.config.entity.RoleSet;
 import com.css.app.db.config.service.RoleSetService;
 import com.css.app.db.util.DbDefined;
@@ -41,6 +42,9 @@ public class RoleSetController {
 	
 	@Autowired
 	private BaseAppUserService baseAppUserService;
+	
+	@Autowired
+	private DocumentSzpsService documentSzpsService;
 	/**
 	 * 列表
 	 */
@@ -121,8 +125,9 @@ public class RoleSetController {
 			map.put("sort", dbRoleSet.getSort());
 			
 			if(StringUtils.isNotBlank(dbRoleSet.getId())) {
-				if((roleSetList != null && roleSetList.size()==1 && dbRoleSet.getId().equals(roleSetList.get(0).getId())) || roleSetList == null || roleSetList.size()==0) {
+				if((roleSetList != null && roleSetList.size()==1 && dbRoleSet.getId().equals(roleSetList.get(0).getId())) || roleSetList == null || roleSetList.size()==0) {			
 					roleSetService.update(dbRoleSet);
+					documentSzpsService.updateUserNameByUserId(dbRoleSet.getUserName(), dbRoleSet.getUserId());
 					resultMap.put("code", "0");
 					resultMap.put("result", "保存成功");
 					Response.json(resultMap);

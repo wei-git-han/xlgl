@@ -52,5 +52,10 @@ public class DocumentSzpsServiceImpl implements DocumentSzpsService {
 		documentSzpsDao.deleteByInfoId(infoId);
 		
 	}
+
+	@Override
+	public void updateUserNameByUserId(String userName, String userId) {
+		documentSzpsDao.updateUserNameByUserId(userName, userId);
+	}
 	
 }
