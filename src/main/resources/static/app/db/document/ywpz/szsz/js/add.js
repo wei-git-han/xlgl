@@ -2,6 +2,7 @@ var saveUrl = {"url":rootPath +"/roleset/saveOrUpdate","dataType":"text"};  //�
 var editInfo = {"url":rootPath +"/roleset/info","dataType":"text"}; //编辑数据
 var treeurl = {"url":"/app/base/user/allTree","dataType":"text"}; //人员树
 var id = getUrlParam("id");
+var userId = getUrlParam("userId");
 var pageModule = function(){
 	var initdatafn = function(){
 		if(id && id != "null" && id != ""){
@@ -34,7 +35,7 @@ var pageModule = function(){
 				}
 				$ajax({
 					url:saveUrl,
-					data:{id:id,userName:adminName,roleFlag:"1",sort:sort},
+					data:{id:id,userName:adminName,roleFlag:"1",sort:sort,userId:userId},
 					type:'GET',
 					success:function(data){
 						if(data.code == 0){

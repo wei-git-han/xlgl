@@ -108,7 +108,7 @@ public class RoleSetController {
 		String userId = dbRoleSet.getUserId();
 		if(StringUtils.isNotBlank(userId)) {
 			List<BaseAppUser> users = baseAppUserService.findByUserId(userId);
-			if(users != null) {
+			if(users != null && users.size()>0) {
 				orgId = users.get(0).getOrganid();
 				BaseAppOrgan organ = baseAppOrganService.queryObject(orgId);
 				if(organ != null) {

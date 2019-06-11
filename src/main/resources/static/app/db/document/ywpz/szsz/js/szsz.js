@@ -15,7 +15,7 @@ var pageModule = function() {
 						  return "首长"
 					  }}, 
 					  {display: "操作",name: "do",width: "10%",align: "center",render: function(rowdata,n){
-						  return '<i class="fa fa fa-pencil" style="cursor:pointer;background:#5498EB;padding:4px 5px;color:#fff;" onclick="editfn(\''+rowdata.id+'\')" title="编辑"></i>';
+						  return '<i class="fa fa fa-pencil" style="cursor:pointer;background:#5498EB;padding:4px 5px;color:#fff;" onclick="editfn(\''+rowdata.id+'\',\''+rowdata.userId+'\')" title="编辑"></i>';
 					  }}
 					 ],
 			width: "100%",
@@ -82,6 +82,6 @@ var removefn = function(id){
 }
 
 //编辑
-var editfn = function(id){
-	window.location.href="/app/db/document/ywpz/szsz/html/add.html?id="+id;
+var editfn = function(id,userId){
+	window.location.href="/app/db/document/ywpz/szsz/html/add.html?id="+id+"&userId="+userId;
 }

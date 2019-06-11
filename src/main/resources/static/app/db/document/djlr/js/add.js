@@ -346,6 +346,7 @@ var pageModule = function(){
 				newbootbox.alert('请选择首长！');
 				return;
 			}
+
 			$ajax({
 				url:saveSzpsUrl,
 				data:{infoId:$("#id").val(),userName:psszName,userId:psszId,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
