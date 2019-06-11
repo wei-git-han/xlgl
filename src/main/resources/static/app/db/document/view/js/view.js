@@ -240,7 +240,7 @@ var pageModule = function(){
 					if(edit==true){
 						ifShowEditBtn="1";
 						edit =  '<div class="nrt-cont-top-btn">'+
-								'	<a class="isEditbtn" data="'+id+'" onclick="editfn(\''+id+'\',\''+content+'\',this)" >编辑</a>'+
+								'	<a class="isEditbtn" data="'+id+'" dataContent="'+content+'"  onclick="editfn(\''+id+'\',this)" >编辑</a>'+
 								'</div>';
 					}else{
 						edit=''
@@ -1056,7 +1056,8 @@ function downloadfn(fileServerId){
 	    }
 	});
 }
-function editfn(id,content,el){
+function editfn(id,el){
+	var content=$(el).attr("dataContent");
 	$(el).parents(".nrt-cont").find(".nrt-cont-file .remove").show();
 	if(isCbr==1){
 		$("#editTeamId").val(id);

@@ -1952,6 +1952,13 @@ jQuery.fn.extend({ //成员函数
 })
 
 
+//这个方法是解决浏览器中input框焦点丢失问题的调用方法
+//建议是在所有的input框中都调用这个方法
+function fixForcesBug(){
+	  var obj = document.getElementById("fixfocusbug");
+	  obj.ResetFocus();
+}
+
 var showModal = function(obj){
 	$("#"+obj).modal("show");
 }
