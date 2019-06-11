@@ -202,6 +202,31 @@ var pageModule = function(){
 					async:false,
 					success:function(data){
 						$("#id").val(data.id);
+						
+						var psszName = $("#psszName").val();
+						var leaderComment=$("#cqcontent").val();
+						var createdTime=$("#cqDate").val();
+						
+						if($.trim(leaderComment) != "" && $.trim(leaderComment) != null){
+							if($.trim(psszName) == "" || $.trim(psszName) == null){
+								newbootbox.alert('请选择首长！');
+								return;
+							}else{
+								$.ajax({
+									url:saveSzpsUrl.url,
+									data:{infoId:$("#id").val(),userName:psszName,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
+									async:false,
+									success:function(data){
+										if(data.result == "success"){
+											newbootbox.alert("保存成功！").done(function(){
+												initCqfn();
+											});
+										}
+									}
+								});
+							}
+						}
+
 						window.top.$(".newclose").click();
 						if(addFlag){
 							window.location.href="/app/db/document/djlr/html/add.html";
@@ -253,8 +278,8 @@ var pageModule = function(){
 		})
 		//返回按钮
 		$("#goback").click(function(){
-				//$("#commentForm").submit();
-			newbootbox.confirm100({
+			//$("#commentForm").submit();
+			/*newbootbox.confirm100({
 			    title: "提示",
 			    message: "是否保存当前更改？不保存将丢失编辑数据",
 			    callback1:function(){
@@ -264,7 +289,9 @@ var pageModule = function(){
 			    callback2:function(){
 			    	window.location.href = "/app/db/document/djlr/html/djlr.html?fileFrom=djlr";
 			    }
-			});
+			});*/
+			returnSave=true;
+	    	$("#commentForm").submit();
 		});
 		
 		

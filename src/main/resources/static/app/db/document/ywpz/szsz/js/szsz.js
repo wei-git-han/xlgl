@@ -5,8 +5,8 @@ var pageModule = function() {
 	var initgrid = function() {
 		grid = $("#gridcont").createGrid({
 			columns: [
-					  {display: "部门",name:"deptName",width: "40%",align: "left",render: function(rowdata,n){
-						  return rowdata.deptName;   
+					  {display: "首长排序号",name:"deptName",width: "40%",align: "center",render: function(rowdata,n){
+						  return rowdata.sort;   
 					  }}, 
 					  {display: "姓名",name: "userName",width: "40%",align: "center",render: function(rowdata,n){
 						  return rowdata.userName;   
