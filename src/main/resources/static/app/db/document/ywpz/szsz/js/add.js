@@ -26,7 +26,7 @@ var pageModule = function(){
 		$("#commentForm").validate({
 		    submitHandler: function() {
 		    	var adminName = $("#userName").val();
-		    	var deptName = $("#deptName").val();
+		    	//var deptName = $("#deptName").val();
 		    	var sort = $("#sort").val();
 				if(adminName == null || adminName == ''){
 					newbootbox.alert("请输入姓名！");
@@ -34,7 +34,7 @@ var pageModule = function(){
 				}
 				$ajax({
 					url:saveUrl,
-					data:{id:id,userName:adminName,roleFlag:"1",deptName:deptName,sort:sort},
+					data:{id:id,userName:adminName,roleFlag:"1",sort:sort},
 					type:'GET',
 					success:function(data){
 						if(data.code == 0){

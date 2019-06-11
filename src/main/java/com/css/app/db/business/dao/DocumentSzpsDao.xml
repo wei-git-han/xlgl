@@ -8,7 +8,7 @@
 	</select>
 
 	<select id="queryList" resultType="com.css.app.db.business.entity.DocumentSzps">
-		select * from DB_DOCUMENT_SZPS a left join  DB_ROLE_SET b on a.USER_NAME=b.USER_NAME where 1=1 
+		select * from DB_DOCUMENT_SZPS a left join  DB_ROLE_SET b on a.USER_ID=b.USER_ID where 1=1 
 		<if test="infoId != null and infoId != ''">
 			and INFO_ID = #{infoId}
 		</if>

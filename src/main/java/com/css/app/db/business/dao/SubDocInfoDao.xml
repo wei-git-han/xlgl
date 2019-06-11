@@ -22,7 +22,7 @@
 		left join (
 		<!-- select INFO_ID,USER_NAME as leader_name ,LEADER_COMMENT as leader_content,CREATED_TIME as leader_time,row_number() over(partition by info_id order by created_time asc) as num from DB_DOCUMENT_SZPS -->
 		select s.INFO_ID,s.USER_NAME as leader_name,s.LEADER_COMMENT as leader_content,s.CREATED_TIME as leader_time,
-        row_number() over(partition by s.info_id order by d.sort asc) as num from DB_DOCUMENT_SZPS s inner join DB_ROLE_SET d on s.USER_NAME=d.USER_NAME order by d.sort asc
+        row_number() over(partition by s.info_id order by d.sort asc) as num from DB_DOCUMENT_SZPS s inner join DB_ROLE_SET d on s.USER_ID=d.USER_ID order by d.sort asc
 		) c on a.info_id = c.info_id
 		left join (select distinct info_id,listagg(sub_dept_name || nvl2(DECODE(undertaker_name,'',null,'NULL',null,undertaker_name),'/' || undertaker_name || nvl2(DECODE(undertaker_phone,'',null,'NULL',null,undertaker_phone),'('||undertaker_phone||')',null),null), ',') within group(order by created_time desc) over(partition by info_id) under_depts from DB_SUB_DOC_INFO) e on a.INFO_ID = e.info_id
 		where (num = 1 or num is null) 
@@ -63,7 +63,7 @@
 		left join (
 		<!-- select INFO_ID,USER_NAME as leader_name ,LEADER_COMMENT as leader_content,CREATED_TIME as leader_time,row_number() over(partition by info_id order by created_time asc) as dNum from DB_DOCUMENT_SZPS -->
 		select s.INFO_ID,s.USER_NAME as leader_name,s.LEADER_COMMENT as leader_content,s.CREATED_TIME as leader_time,
-        row_number() over(partition by s.info_id order by g.sort asc) as dNum from DB_DOCUMENT_SZPS s inner join DB_ROLE_SET g on s.USER_NAME=g.USER_NAME order by g.sort asc
+        row_number() over(partition by s.info_id order by g.sort asc) as dNum from DB_DOCUMENT_SZPS s inner join DB_ROLE_SET g on s.USER_ID=g.USER_ID order by g.sort asc
 		) d on c.id = d.info_id
 	    <!--  承办单位/人 -->
 		left join (select distinct info_id,listagg(sub_dept_name || nvl2(DECODE(undertaker_name,'',null,'NULL',null,undertaker_name),'/' || undertaker_name || nvl2(DECODE(undertaker_phone,'',null,'NULL',null,undertaker_phone),'('||undertaker_phone||')',null),null), ',') within group(order by created_time desc) over(partition by info_id) under_depts from DB_SUB_DOC_INFO) h on a.INFO_ID = h.info_id

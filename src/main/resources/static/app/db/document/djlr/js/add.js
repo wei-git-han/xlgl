@@ -528,7 +528,7 @@ var pageModule = function(){
 			initother();
 			initPdf();
 		},
-		getUserData:function(message1){
+		getUserData:function(message1,message2){
 			$("#psszName").val(message1);
 		}
 	}

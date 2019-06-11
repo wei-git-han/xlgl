@@ -1,4 +1,5 @@
 var userName;//选择的首长名字
+var userId;//选择的首长id
 var pageModule = function(){
 	var initPeoples = function(){
 		$.ajax({
@@ -10,14 +11,14 @@ var pageModule = function(){
  					$("#peoples").html("");
  					$.each(data,function(i,obj){
  						var	html1 ='<label class="radio-inline">'
-		     							html1+='<input type="radio" name="users" personName="'+obj.userName+'">'+obj.userName
+		     							html1+='<input type="radio" name="users"  data="'+obj.userId+'" personName="'+obj.userName+'">'+obj.userName
  						           '</label>'
  						$("#peoples").append(html1);
  					})				
  				}
  				
  				$("input[name=users]").click(function(){
- 					window.top.iframe1.window.pageModule.getUserData($(this).attr("personName"));
+ 					window.top.iframe1.window.pageModule.getUserData($(this).attr("personName"),$(this).attr("data"));
  					newbootbox.newdialogClose("chooseszDialog");
  				})
  				
