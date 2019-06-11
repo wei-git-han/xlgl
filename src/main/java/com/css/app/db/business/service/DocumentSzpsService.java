@@ -27,4 +27,6 @@ public interface DocumentSzpsService {
 	void deleteBatch(String[] ids);
 	
 	void deleteByInfoId(String infoId);
+	
+	void updateUserNameByUserId(String userName,String userId);
 }

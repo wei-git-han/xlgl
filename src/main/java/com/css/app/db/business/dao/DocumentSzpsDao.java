@@ -18,4 +18,6 @@ public interface DocumentSzpsDao extends BaseDao<DocumentSzps> {
 	
 	void deleteByInfoId(String infoId);
 	
+	void updateUserNameByUserId(String userName,String userId);
+	
 }
