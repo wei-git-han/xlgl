@@ -91,7 +91,7 @@ var pageModule = function(){
 				$.each(data,function(i,item){
 					$("#showcq").append(
 						'<div class="cqline">'+
-						'	<div dataId="'+item.id+'" dataName="'+item.leaderComment+'" dataUser="'+item.userName+'" dataDate="'+item.createdTime+'"><span>'+item.userName+'</span><span class="cqrq">'+item.createdTime+'</span><span class="pull-right"><a style="margin-right:10px" class="editcq">编辑</a><a class="delcq">删除</a></span></div>'+
+						'	<div dataId="'+item.id+'" dataUserId="'+item.userId+'" dataName="'+item.leaderComment+'" dataUser="'+item.userName+'" dataDate="'+item.createdTime+'"><span>'+item.userName+'</span><span class="cqrq">'+item.createdTime+'</span><span class="pull-right"><a style="margin-right:10px" class="editcq">编辑</a><a class="delcq">删除</a></span></div>'+
 						'	<div>'+item.leaderComment+'</div>'+
 						'</div>'
 					);
@@ -103,6 +103,7 @@ var pageModule = function(){
 					$("#editcqId").val($(this).parent().parent().attr("dataId"));
 					
 					$("#psszName").val($(this).parent().parent().attr("dataUser"));
+					$("#psszId").val($(this).parent().parent().attr("dataUserId"));
 					$("#cqDate").val($(this).parent().parent().attr("dataDate"));
 				});
 				
@@ -236,6 +237,7 @@ var pageModule = function(){
 					type:"post",
 					success:function(data){
 						var psszName = $("#psszName").val();
+						var psszId = $("#psszId").val();
 						var leaderComment=$("#cqcontent").val();
 						var createdTime=$("#cqDate").val();
 						
@@ -246,7 +248,7 @@ var pageModule = function(){
 							}else{
 								$ajax({
 									url:saveSzpsUrl,
-									data:{infoId:$("#id").val(),userName:psszName,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
+									data:{infoId:$("#id").val(),userName:psszName,userId:psszId,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
 									async:false,
 									success:function(data){
 										if(data.result == "success"){
@@ -356,6 +358,7 @@ var pageModule = function(){
 		//增加批示
 		$("#addcq").click(function(){
 			var psszName = $("#psszName").val();
+			var psszId = $("#psszId").val();
 			var leaderComment=$("#cqcontent").val();
 			var createdTime=$("#cqDate").val();
 			if($.trim(leaderComment) == "" || $.trim(leaderComment) == null){
@@ -368,7 +371,7 @@ var pageModule = function(){
 			}
 			$ajax({
 				url:saveSzpsUrl,
-				data:{infoId:$("#id").val(),userName:psszName,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
+				data:{infoId:$("#id").val(),userName:psszName,userId:psszId,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
 				success:function(data){
 					if(data.result == "success"){
 						newbootbox.alert("保存成功！").done(function(){
@@ -381,6 +384,7 @@ var pageModule = function(){
 			$("#cqDate").val("");
 			$("#cqcontent").val("");
 			$("#psszName").val("");
+			$("#psszId").val("");
 		});
 		
 		/*//转办
@@ -539,8 +543,9 @@ var pageModule = function(){
 			initother();
 			initPdf();
 		},
-		getUserData:function(message1){
+		getUserData:function(message1,message2){
 			$("#psszName").val(message1);
+			$("#psszId").val(message2);
 		}
 	}
 	

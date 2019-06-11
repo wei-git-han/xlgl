@@ -65,7 +65,7 @@ var pageModule = function(){
 				$.each(data,function(i,item){
 					$("#showcq").append(
 						'<div class="cqline">'+
-						'	<div dataId="'+item.id+'" dataName="'+item.leaderComment+'" dataUser="'+item.userName+'" dataDate="'+item.createdTime+'"><span>'+item.userName+'</span><span class="cqrq">'+item.createdTime+'</span><span class="pull-right"><a style="margin-right:10px" class="editcq">编辑</a><a class="delcq">删除</a></span></div>'+
+						'	<div dataId="'+item.id+'" dataName="'+item.leaderComment+'"  dataUserId="'+item.userId+'"  dataUser="'+item.userName+'" dataDate="'+item.createdTime+'"><span>'+item.userName+'</span><span class="cqrq">'+item.createdTime+'</span><span class="pull-right"><a style="margin-right:10px" class="editcq">编辑</a><a class="delcq">删除</a></span></div>'+
 						'	<div>'+item.leaderComment+'</div>'+
 						'</div>'
 					);
@@ -76,6 +76,7 @@ var pageModule = function(){
 					$("#editcqId").val($(this).parent().parent().attr("dataId"));
 					
 					$("#psszName").val($(this).parent().parent().attr("dataUser"));
+					$("#psszId").val($(this).parent().parent().attr("dataUserId"));
 					$("#cqDate").val($(this).parent().parent().attr("dataDate"));
 				});
 				
@@ -204,6 +205,7 @@ var pageModule = function(){
 						$("#id").val(data.id);
 						
 						var psszName = $("#psszName").val();
+						var psszId = $("#psszId").val();
 						var leaderComment=$("#cqcontent").val();
 						var createdTime=$("#cqDate").val();
 						
@@ -214,7 +216,7 @@ var pageModule = function(){
 							}else{
 								$.ajax({
 									url:saveSzpsUrl.url,
-									data:{infoId:$("#id").val(),userName:psszName,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
+									data:{infoId:$("#id").val(),userName:psszName,userId:psszId,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
 									async:false,
 									success:function(data){
 										if(data.result == "success"){
@@ -326,6 +328,7 @@ var pageModule = function(){
 		$("#addcq").click(function(){
 			addcqFlag="0";
 			var psszName = $("#psszName").val();
+			var psszId = $("#psszId").val();
 			if($("#id").val() == "" || $("#id").val() == null || typeof($("#id").val()) == undefined){
 				if($("#docTitle").val() == "" || $("#docTitle").val() == null || typeof($("#docTitle").val()) == undefined){
 					newbootbox.alertInfo("请先填写文件标题！"); 
@@ -345,7 +348,7 @@ var pageModule = function(){
 			}
 			$ajax({
 				url:saveSzpsUrl,
-				data:{infoId:$("#id").val(),userName:psszName,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
+				data:{infoId:$("#id").val(),userName:psszName,userId:psszId,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
 				async:false,
 				success:function(data){
 					if(data.result == "success"){
@@ -359,6 +362,7 @@ var pageModule = function(){
 			$("#cqDate").val("");
 			$("#cqcontent").val("");
 			$("#psszName").val("");
+			$("#psszId").val("");
 		});
 		
 		//转办
@@ -530,6 +534,7 @@ var pageModule = function(){
 		},
 		getUserData:function(message1,message2){
 			$("#psszName").val(message1);
+			$("#psszId").val(message2);
 		}
 	}
 	
