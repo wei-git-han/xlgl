@@ -801,6 +801,7 @@ public class DocumentInfoController {
 	@RequestMapping("/getDicByTypet")
 	public void getDicByTypet(String orgid,String month,boolean menuFlag){
 		String dateStr = null;
+		String orgId=orgid;
 		if(!StringUtils.isEmpty(month) && StringUtil.equals("all", month)) {
 			dateStr = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE).substring(0,4);
 		}else if(!StringUtils.isEmpty(month)) {
@@ -826,18 +827,10 @@ public class DocumentInfoController {
 		Map<String, Object> map = new HashMap<>();
 		map.put("userId", loginUserId);
 		map.put("docType", DbDefined.DOCUMENT_TYPE);
-		map.put("orgId", orgid);
 		map.put("year", dateStr);
-		/*if(StringUtils.isNotBlank(status)) {
-			if(StringUtils.equals("update", status)) {
-				map.put("loginUserId", loginUserId);
-				map.put("hasUpdate", status);
-			}else {
-				map.put("state", status);
-			}
-		}*/
 		if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType)
 				&& !StringUtils.equals(DbDefined.ROLE_1, roleType) && !StringUtils.equals(DbDefined.ROLE_3, roleType)) {
+			orgId=null;
 			if(StringUtils.equals(DbDefined.ROLE_5, roleType)) {
 				map.put("deptId", CurrentUser.getDepartmentId());
 			}else {
@@ -845,12 +838,13 @@ public class DocumentInfoController {
 			}
 		}else {
 			if(StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType)) {
-				String orgId = baseAppUserService.getBareauByUserId(loginUserId);
-				if(StringUtils.isNotBlank(orgId)) {
-					map.put("orgId", orgId);
+				String loginOrgId = baseAppUserService.getBareauByUserId(loginUserId);
+				if(StringUtils.isNotBlank(loginOrgId)) {
+					orgId=loginOrgId;
 				}
 			}
 		}
+		map.put("orgId", orgId);
 		List<DocumentDic> dicByType = documentInfoService.queryDicByType(map);
 		int blfkNum=0;
 		if(menuFlag) {
