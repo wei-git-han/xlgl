@@ -1,6 +1,6 @@
 html,body{background-color:#1B3163;height:100%;position:relative;}
 body{overflow:auto;}
-.layout-top{width: 100%;height: 55px;position: absolute;top: 0;left: 0;}
+.layout-top{width: 100%;height: 55px;position: absolute;top: 0;left: 0;display:none;}
  .top-right-ckbtn{padding-top:9px;float: right;padding-right:10px;}
 .right-label.active{background:#243B6D!important;color:#6699FF!important;border:1px solid #6699FF;}
 .right-label{background:#6699FF!important;color:#fff!important;border:1px solid #6699FF;}

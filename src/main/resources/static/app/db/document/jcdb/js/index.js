@@ -6,6 +6,11 @@ var url3 = {"url":"/app/db/documentjcdb/orglist2","dataType":"text"};
 var url4 = {"url":"/app/db/documentjcdb/orglist3","dataType":"text"};
 var url5 = {"url":"/app/db/documentjcdb/orglist4","dataType":"text"};
 //var url5 = {"url":"../data/json5.json","dataType":"text"};
+
+var szFlag=getUrlParam("szFlag")||""; //首长页面进入标识
+if(szFlag== "1" || szFlag ==1){
+	$(".layout-top").show();
+}
 var pageModule = function(){
 	
 	var inittopfn = function(){
