@@ -59,7 +59,7 @@ public class MenuController {
 			if(list!=null && list.size()>0) {
 				String adminType = list.get(0).getAdminType();
 				if(StringUtils.equals("1", adminType)) {
-					menuIds= new String[] {"002","003"};
+					menuIds= new String[] {"003"};
 				}else if(StringUtils.equals("2", adminType)) {
 					menuIds= new String[] {"001"};
 				}
