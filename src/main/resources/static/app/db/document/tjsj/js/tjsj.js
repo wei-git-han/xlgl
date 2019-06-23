@@ -4,11 +4,8 @@ var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"
 var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//高级搜索--人员树
 var grid = null;
 var total=0;//列表中，数据的总条数
-
-if(!window.top.memory){
-	window.top.memory = {};
-}
-var o = window.top.memory;
+var bjtype = getUrlParam("type");
+var leaderid = getUrlParam("type");
 
 var pageModule = function(){
 	var initgrid = function(){
@@ -76,7 +73,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 10,
             pageyno:true,
-            paramobj:{page:o.pagesize,search:$("#searchVal").val(),docStatus:$("input[name='documentStatus']:checked").val()},
+            paramobj:{docStatus:bjtype,leaderid:leaderid},
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
@@ -108,10 +105,7 @@ var pageModule = function(){
 					}
 				});
             },
-            url: tableList,
-            getpagefn:function(page){
-            	return window.top.memory.pagesize = page;   
-            }
+            url: tableList
        });
 	}
 	
@@ -150,17 +144,16 @@ var pageModule = function(){
 		$(".search").click(function(){
 			refreshgrid();
 		});
+		
+		$("#contenttitle").click(function(){
+			window.location.href = "../../jcdb/html/index.html"
+		})
 	}
 
 	
 	var initfn = function(){
 		$.uniform.update($("input[name='documentStatus']").prop("checked",false));
-		if(o.radio!="undefined" && o.radio!=null && o.radio!=""){
-			$.uniform.update($("input[value='"+o.radio+"']").prop("checked",true));
-		}else{
-			$.uniform.update($("input[value='']").prop("checked",true));
-		}
-		$("#searchVal").val(o.search);
+		$.uniform.update($("input[value='"+bjtype+"']").prop("checked",true));
 	}
 	
 	return{
@@ -181,11 +174,8 @@ var pageModule = function(){
 function refreshgrid(){
 	var search = $("#searchVal").val();
 	var documentStatus= $("input[name='documentStatus']:checked").val();
-	grid.setparams({search:search,docStatus:documentStatus});
+	grid.setparams({search:search,docStatus:documentStatus,leaderid:leaderid});
 	grid.loadtable();
-	
-	window.top.memory.radio = documentStatus;
-	window.top.memory.search = search;
 }
 
 //批示指示内容弹出框

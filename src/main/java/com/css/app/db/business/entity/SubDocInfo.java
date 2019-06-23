@@ -36,7 +36,7 @@ public class SubDocInfo implements Serializable {
 	private String undertakerName;
 	//承办人电话
 	private String undertakerPhone;
-	//承办人提交选择的状态
+	//承办人提交选择的状态（1:办理中；2：办结；3：常态落实；）
 	private String chooseStatus;
 /*----------------------------以下字段只用来列表接收值用--------------start----------------------*/	
 	private String dealUserName;

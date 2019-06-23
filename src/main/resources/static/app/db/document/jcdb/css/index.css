@@ -46,3 +46,14 @@ body{overflow:auto;}
 .newtable tr:nth-of-type(2n) {background-color: #2E3778;}
 .th1{width:50px;}
 .newtable tr:hover{background:rgba(0,255,255,0.1);}
+.newtable2{width:100%;}
+.newtable2 th{color:#87A8ED;font-size:18px;text-align:center;font-weight: inherit;height:50px;background:#293370;}
+.newtable2 td{color:#fff;font-size:16px;text-align:center;font-weight: inherit;height:40px;}
+.newtable2 tr:nth-of-type(2n) {background-color: #2E3778;}
+.newtable2 .th1{width:30px;}
+.newdate2{width:80%;margin:0 auto;background:transparent;}
+.newdate2 input{height:50px;background:transparent;color:#66CBFF!important;font-size:18px;}
+.newdate2 input:nth-child(1){border:1px solid #5761A8;border-radius:7px 0 0 7px!important;border-right:none;padding-right:0;}
+.newdate2 span:nth-child(2){border-top:1px solid #5761A8;border-bottom:1px solid #5761A8;background:transparent;color:#66CBFF;text-shadow: none;min-width:30px;}
+.newdate2 input:nth-child(3){border:1px solid #5761A8;border-radius:0 7px 7px 0!important;border-left:none;padding-left:0;}
+.newtable2 a{color:#fff;text-decoration:none;}

@@ -4,6 +4,8 @@ var fileId=getUrlParam("fileId")||"";
 var teamId=getUrlParam("teamId")||""; 
 var fromMsg=getUrlParam("fromMsg")|| false; 
 var replyContent=getUrlParam2("replyContent")||""; //文件来源
+var checkStatus = getUrlParam("checkStatus");
+$("#button1").find("font").text($.trim($("#button1 [data="+checkStatus+"]").text()));
 var pageModule = function(){
 	var initother = function(){
 		$("#replyContent").val(replyContent);
@@ -11,7 +13,7 @@ var pageModule = function(){
 		$("#sure").click(function(){
 			$.ajax({
 				url:sureUrl.url,
-				data:{subId:subId,infoId:fileId,teamId:teamId,replyContent:$("#replyContent").val()},
+				data:{subId:subId,infoId:fileId,teamId:teamId,replyContent:$("#replyContent").val(),checkStatus:checkStatus},
 				type:'post',
 				success:function(data){
 					newbootbox.newdialogClose("editDialog");
@@ -24,7 +26,7 @@ var pageModule = function(){
 							newbootbox.alert("修改成功！").done(function(){
 								window.top.iframe1.window.pageModule.initblfkList();
 							});
-						}
+						}  
 					}else{
 						newbootbox.alert("修改失败！");
 					}
@@ -36,6 +38,13 @@ var pageModule = function(){
 		$("#close").click(function(){
 			newbootbox.newdialogClose("editDialog");
 		});
+		
+		$("#button1 a").click(function(){
+			var data = $(this).attr("data");
+			checkStatus = data;
+			var name = $.trim($(this).text());
+			$("#button1").find("font").text(name);
+		})
 	}
 	return{
 		//加载页面处理程序

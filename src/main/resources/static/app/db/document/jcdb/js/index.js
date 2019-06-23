@@ -6,6 +6,7 @@ var url3 = {"url":"/app/db/documentjcdb/orglist2","dataType":"text"};
 var url4 = {"url":"/app/db/documentjcdb/orglist3","dataType":"text"};
 var url5 = {"url":"/app/db/documentjcdb/orglist4","dataType":"text"};
 //var url5 = {"url":"../data/json5.json","dataType":"text"};
+var url6 = {"url":"../data/json7.json","dataType":"text"};
 
 var szFlag=getUrlParam("szFlag")||""; //首长页面进入标识
 if(szFlag== "1" || szFlag ==1){
@@ -101,6 +102,52 @@ var pageModule = function(){
 		});
 		
 	}
+	
+	var inittable2 = function(startdate,enddate){
+		$ajax({
+			url:url6,
+			data:{startdate:startdate,enddate:enddate},
+			success:function(data){
+				$("#tbody2").html('');
+				$.each(data,function(i){
+					var id = this.id;
+					var leaderid = this.leaderid;
+					var dwname = this.dwname;
+					var blz = this.blz;
+					var bj = this.bj;
+					var ctls = this.ctls;
+					var ifclick = true;
+					$("#tbody2").append(
+						`
+							<tr id="${id}">
+								<td>${i+1}</td>
+								<td><a name="0" ifclick="${ifclick}" id="${leaderid}">${dwname}</a></td>
+								<td><a name="1" ifclick="${ifclick}" id="${leaderid}">${blz}</a></td>
+								<td><a name="2" ifclick="${ifclick}" id="${leaderid}">${bj}</a></td>
+								<td><a name="3" ifclick="${ifclick}" id="${leaderid}">${ctls}</a></td>
+							</tr>
+						`
+					);
+				});
+				
+				$("#tbody2 tr a").unbind("click");
+				$("#tbody2 tr a").click(function(){
+					
+					var type = $(this).attr("name");//0 全部 ，1办理中，2已 办结 ，3常态落实
+					var leaderid = $(this).attr("id");
+					
+					var ifclick = $(this).attr("ifclick");
+					if(ifclick=="false"){newbootbox.alertInfo("您没有权限查看此数据!");return;}
+					
+					window.location.href = "../../tjsj/html/tjsj.html?type="+type+"&leaderid="+leaderid;
+					
+				})
+			}
+		});
+		
+		
+	}
+	
 	
 	var initpage = function(){
 		require.config({
@@ -297,8 +344,8 @@ var pageModule = function(){
 				    },
 				    legend: {
 				    	textStyle:{color: '#C8D3FF'},
-				        orient : 'vertical',
-				        x : 'right',
+				        //orient : 'vertical',
+				        y : 'bottom',
 				        data:legend
 				    },
 				    calculable : false,
@@ -306,8 +353,8 @@ var pageModule = function(){
 				        {
 				            name:'落实事项',
 				            type:'pie',
-				            center:['40%', '50%'],
-				            radius : ['50%', '70%'],
+				            center:['50%', '40%'],
+				            radius : ['30%', '50%'],
 				            itemStyle : {
 							    normal: {
 							        label:{
@@ -485,12 +532,36 @@ var pageModule = function(){
 		$("#listbutton").click(function(){
 			window.location.href = "main.html";
 		});
+		
+		var o1 = false;
+		$(".date-picker").datepicker({
+		    language:"zh-CN",
+		    rtl: Metronic.isRTL(),
+		    orientation: "left",
+		    autoclose: true
+		}).on("changeDate",function(e1,e2){
+			
+			if(o1){clearTimeout(o1)};
+			o1 = setTimeout(function(){
+				
+				var startdate = $("#startdate").val();
+				var enddate = $("#enddate").val();
+				if(startdate.length==10){startdate = startdate.substr(0,4)+"-"+startdate.substr(5,2)+"-"+startdate.substr(8,2);}
+				if(enddate.length==10){enddate = enddate.substr(0,4)+"-"+enddate.substr(5,2)+"-"+enddate.substr(8,2);}
+				inittable2(startdate,enddate);
+				
+			},100);
+			
+		});
+		
+		
 	}
 	
 	return{
 		//加载页面处理程序
 		initControl:function(){
 			initpage();
+			inittable2("","");
 			inittopfn();
 			initother();
 		}

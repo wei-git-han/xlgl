@@ -98,7 +98,8 @@
 			"SUB_DEPT_NAME",
 			"TEAM_ID",
 			"RE_VERSION",
-			"CBR_FLAG"
+			"CBR_FLAG",
+			"CHOOSE_STATUS"
 		)
 		values
 		(
@@ -114,7 +115,8 @@
 			#{subDeptName},
 			#{teamId}, 
 			#{reVersion},
-			#{cbrFlag}
+			#{cbrFlag},
+			#{chooseStatus}
 		)
 	</insert>
 	<update id="updateShowFlag">
@@ -134,7 +136,8 @@
 			<if test="subDeptName != null">"SUB_DEPT_NAME" = #{subDeptName}, </if>
 			<if test="teamId != null">"TEAM_ID" = #{teamId}, </if>
 			<if test="reVersion != null">"RE_VERSION" = #{reVersion} ,</if>
-			<if test="cbrFlag != null">"CBR_FLAG" = #{cbrFlag} </if>
+			<if test="cbrFlag != null">"CBR_FLAG" = #{cbrFlag}, </if>
+			<if test="chooseStatus != null">"CHOOSE_STATUS" = #{chooseStatus}</if>
 		</set>
 		where ID = #{id}
 	</update>

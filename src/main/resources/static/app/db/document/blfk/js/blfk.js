@@ -1,7 +1,7 @@
 //注：修改列表查询的参数一定要对应的修改红点显示leftMenuUrl和统计数numsList
 var tableList= {"url":"/app/db/documentinfo/replyList","dataType":"text"};//原table数据
 var numsList={"url":"/app/db/documentinfo/replyNums","dataType":"text"};//筛选状态数字统计
-var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//部门树
+var leaderTreeUrl= {"url":"/app/db/roleset/queryLeaderTree","dataType":"text"};//高级搜索首长选择树
 var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//人员树
 var leftMenuUrl = {"url":"/app/db//documentinfo/getDicByTypet","dataType":"text"};//左侧菜单
 var batchReadUrl = {"url":"/app/db/documentinfo/batchRead","dataType":"text"};//批量已读
@@ -171,7 +171,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 10,
             pageyno:true,
-            paramobj:{page:o.pagesize1,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month},
+            paramobj:{page:o.pagesize1,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val(),psStartDate:$("#startDate").val(),psEndDate:$("#endDate").val(),status:$("#status").val()},
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
@@ -278,7 +278,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 10,
             pageyno:true,
-            paramobj:{page:o.pagesize2,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month},
+            paramobj:{page:o.pagesize2,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val(),status:$("#status").val()},
             loadafter:function(data){
             	total=data.total;
             	$(".dblsqk span").each(function(){
@@ -399,7 +399,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 10,
             pageyno:true,
-            paramobj:{page:o.pagesize3,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month},
+            paramobj:{page:o.pagesize3,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val(),psStartDate:$("#startDate").val(),psEndDate:$("#endDate").val(),period:$("#period").val(),status:$("#status").val()},
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
@@ -441,7 +441,7 @@ var pageModule = function(){
 	var numsListfn = function(){
 		$ajax({
 			url:numsList,
-			data:{search:$("#searchVal").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month},
+			data:{search:$("#searchVal").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val(),psStartDate:$("#startDate").val(),psEndDate:$("#endDate").val(),period:$("#period").val()},
 			success:function(data){
 				$.each(data,function(i,item){
 					var id = "grdb"+i;
@@ -456,7 +456,7 @@ var pageModule = function(){
 		    language:"zh-CN",
 		    rtl: Metronic.isRTL(),
 		    orientation: "right",
-		    format : "yyyy-mm-dd",
+		    format : "yyyy年mm月dd日",
 		    autoclose: true
 		});
 		
@@ -471,6 +471,9 @@ var pageModule = function(){
 		});
 		
 		$(".search").click(function(){
+			if(!!$("#searchVal").val()){
+				removeInputData(["title", "leaderId", "leaderName", "startDate", "endDate", "period", "status"]);
+			}
 			refreshgrid();
 		});
 		
@@ -478,16 +481,25 @@ var pageModule = function(){
 			$("#searchwrap").toggle();
 		});
 		
-		$("body").click(function(e){
+		$("#status option").click(function(){
+			var checkedVal = $(this).val();
+			$.uniform.update($(".radio-inline input").prop("checked",false));
+			$.uniform.update($(".radio-inline input[value="+checkedVal+"]").prop("checked",true));
+		});
+		
+		/*$("body").click(function(e){
 			if($(e.target).hasClass("searchAll") || $(e.target).hasClass("form-group") || $(e.target).parents("div").hasClass("searchwrap")){
 				return;
 			};
 			$(".searchwrap").slideUp(50);
-		});
+		});*/
 		
 		//筛选功能
 		$("#sure").click(function(){
 			 $("#searchwrap").slideUp(50);
+				if(!!$("#title").val()){
+					$("#searchVal").val('')
+				}
 			 refreshgrid();
 		});
 		
@@ -498,7 +510,7 @@ var pageModule = function(){
 		
 		//重置
 		$("#reset").click(function(){
-			removeInputData(["title","deptid","deptname","username","userid","blstatus","designStart","designEnd","fileType"]);
+			removeInputData(["title","leaderId","leaderName","startDate","endDate","period","status"]);
 		});
 		
 		$("#plyd").click(function(){
@@ -544,7 +556,58 @@ var pageModule = function(){
 				newbootbox.alertInfo("请选择要确认已读的数据！");
 			}
 		});
-		
+		// 批量催办
+		$("#plcb").click(function(){
+			var datas;
+			var ids=[];
+			if($("#gridcont3").is(":visible")){
+				datas=grid3.getcheckrow();
+				$(datas).each(function(i){
+					ids[i]=this.id;
+				});
+			}else if($("#gridcont2").is(":visible")){
+				datas=grid2.getcheckrow();
+				$(datas).each(function(i){
+					ids[i]=this.id;
+				});
+			}else{
+				datas=grid.getcheckrow();
+				$(datas).each(function(i){
+					ids[i]=this.id;
+				});
+			}
+			if(datas.length>0){
+				newbootbox.newdialog({
+				    id: "cuibanDialog",
+				    title: "催办",
+				    header:true,
+				    width: 600,
+				    height:400,
+				    url: rootPath + "/document/blfk/html/cuibanDialog.html?fileIds="+ids.toString()
+				  });
+//				newbootbox.confirm({
+//				    title: "提示",
+//				    message: "是否要进行确认已读操作？",
+//				    callback1:function(){
+//				    	$ajax({
+//							url:batchReadUrl,
+//							data:{ids:ids.toString()},
+//							success:function(data){
+//								if(data.result == "success"){
+//									newbootbox.alertInfo("已读成功！").done(function(){
+//										leftMenufn();
+//										refreshgrid();
+//										window.top.blfkfn();
+//									});
+//								}
+//							}
+//						});	
+//				    }
+//				});
+			}else{
+				newbootbox.alertInfo("请选择要确认已读的数据！");
+			}
+		});
 		//导出
 		$("#export").click(function(){
 			var tableNum;
@@ -591,33 +654,18 @@ var pageModule = function(){
 	}
 	
 	var inittree = function(){
-		$("#deptname").createcheckboxtree({
-			url : deptUrl,
+		$("#leaderName").createUserTree({
+			url : leaderTreeUrl,
 			width : "100%",
 			success : function(data, treeobj) {},
 			selectnode : function(e, data,treessname,treessid) {
-				$("#deptid").val(treessid);
-				$("#deptname").val(treessname);
+				$("#leaderId").val(treessid);
+				$("#leaderName").val(treessname);
 			},
 			deselectnode:function(e,data,treessname,treessid){
-				$("#deptid").val(treessid);
-				$("#deptname").val(treessname);
+				$("#leaderId").val(treessid);
+				$("#leaderName").val(treessname);
 		   }
-		});
-		
-		$("#username").createUserTree({
-			url : userUrl,
-			width : "100%",
-			success : function(data, treeobj) {
-			},
-			selectnode : function(e, data,treessname,treessid) {
-				$("#userid").val(treessid);
-				$("#username").val(treessname);
-			},
-			deselectnode : function(e, data,treessname,treessid) {
-				$("#userid").val(treessid);
-				$("#username").val(treessname);
-			}
 		});
 	}
 	
@@ -681,6 +729,8 @@ function refreshgrid(){
 	var documentStatus= $("input[name='documentStatus']:checked").val();
 	window.top.memory.radio = documentStatus;
 	window.top.memory.search = search;
+	
+	removeInputData(["title","leaderId","leaderName","startDate","endDate","period","status"]);
 }
 
 //查询

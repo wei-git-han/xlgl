@@ -154,7 +154,7 @@ var pageModule = function(){
 					$.each(data,function(i,item){
 						$(".psMain").append(
 							'<div class="psrecord">'+
-				            '	<div class="pslist"><span>'+item.userName+'：</span><span>'+item.leaderComment+'</span></div>'+
+				            '	<div class="pslist"><span>'+item.userName+'&nbsp;&nbsp;'+item.createdTime+'&nbsp;&nbsp;批示：</span><span>'+item.leaderComment+'</span></div>'+
 				            '</div>'
 			            )
 					});
@@ -764,10 +764,18 @@ function viewcont(teamId,subId){
 	    	if(data && data.length>0){
 	    		$(".viewcontent").html("");
 				$.each(data,function(i,item){
+					var statusName = "";
+					if(item.chooseStatus==1){
+						statusName='<div class="record_line1">设置状态：办理中</div>';
+					}else if(item.chooseStatus==2){
+						statusName='<div class="record_line1">设置状态：办结</div>';
+					}else if(item.chooseStatus==3){
+						statusName='<div class="record_line1">设置状态：常态落实</div>';
+					}
 					$(".viewcontent").append(
 						'<div class="record">'+
 			            '	<div class="record_line1"><span>'+item.userName+'&nbsp;&nbsp;'+item.createdTime+'&nbsp;&nbsp;落实情况：</span></div>'+
-			            '	<div class="record_line2">'+item.replyContent+'</div>'+
+			            '	<div class="record_line2">'+item.replyContent+'</div>'+statusName+
 			            '</div>'
 		            )
 				});

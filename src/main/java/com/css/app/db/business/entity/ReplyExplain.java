@@ -41,6 +41,8 @@ public class ReplyExplain implements Serializable {
 	private String reVersion;
 	//1为承办人
 	private String cbrFlag;
+	//当前文件状态（1:办理中；2：办结；3：常态落实；）
+	private String chooseStatus;
 
 	/**
 	 * 设置：唯一标识
@@ -168,6 +170,11 @@ public class ReplyExplain implements Serializable {
 	public void setCbrFlag(String cbrFlag) {
 		this.cbrFlag = cbrFlag;
 	}
-	
+	public String getChooseStatus() {
+		return chooseStatus;
+	}
+	public void setChooseStatus(String chooseStatus) {
+		this.chooseStatus = chooseStatus;
+	}
 	
 }

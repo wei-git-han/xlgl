@@ -14,7 +14,16 @@
            row_number() over(partition by s.info_id order by b.sort asc) as dNum from DB_DOCUMENT_SZPS s inner join DB_ROLE_SET b on s.USER_ID=b.USER_ID order by b.sort asc
 		) d on t.id = d.info_id
 		left join (select distinct info_id,listagg(sub_dept_name || nvl2(DECODE(undertaker_name,'',null,'NULL',null,undertaker_name),'/' || undertaker_name ||nvl2(DECODE(undertaker_phone,'',null,'NULL',null,undertaker_phone),'('||undertaker_phone||')',null),null), ',') within group(order by b.sort,created_time desc) over(partition by info_id) under_depts from DB_SUB_DOC_INFO a inner join BASE_APP_ORGAN b
-        on a.sub_dept_id=b.id) c on t.id = c.info_id	
+        on a.sub_dept_id=b.id) c on t.id = c.info_id
+        <if test="leaderId !=null and leaderId !=''">
+        inner join (select info_id from DB_DOCUMENT_SZPS where USER_ID=#{leaderId}
+	        <if test="psStartDate != null and psStartDate != ''">
+				and CREATED_TIME >= #{psStartDate} 
+			</if>
+			<if test="psEndDate != null and psEndDate != ''">
+				and CREATED_TIME &lt;= #{psEndDate} 
+			</if>) v on t.id=v.info_Id 
+        </if>	
 		<if test="orgid != null and orgid != ''" >
 			left join DB_SUB_DOC_INFO  dadi on t.id=dadi.INFO_ID
 		</if>
@@ -33,6 +42,12 @@
 		</if>
 		<if test="search != null and search != ''">
 			and (t.DOC_TITLE like '%'||#{search}||'%' or t.BANJIAN_NUMBER  like '%'||#{search}||'%')
+		</if>
+		<if test="title != null and title != ''">
+			and t.DOC_TITLE like '%'||#{title}||'%'
+		</if>
+		<if test="period != null and period != ''">
+			and t.PERIOD like '%'||#{period}||'%'
 		</if>
 		<if test="year != null">
 			and to_char(t.FIRST_ZB_TIME) like '%'||#{year}||'%'
@@ -86,13 +101,21 @@
 			
 		select t.*,c.under_depts,d.* from DB_DOCUMENT_INFO t
 		left join DB_SUB_DOC_INFO  dadi on t.id=dadi.INFO_ID inner join V_RESULT a on dadi.id= a.sub_id
-		left join (
-		<!-- select INFO_ID,USER_NAME as leader_name ,LEADER_COMMENT as leader_content,CREATED_TIME as leader_time,row_number() over(partition by info_id order by created_time asc) as dNum from DB_DOCUMENT_SZPS -->
-		select s.INFO_ID,s.USER_NAME as leader_name,s.LEADER_COMMENT as leader_content,s.CREATED_TIME as leader_time,
+		left join (select s.INFO_ID,s.USER_NAME as leader_name,s.LEADER_COMMENT as leader_content,s.CREATED_TIME as leader_time,
         row_number() over(partition by s.info_id order by b.sort asc) as dNum from DB_DOCUMENT_SZPS s inner join DB_ROLE_SET b on s.USER_ID=b.USER_ID order by b.sort asc
 		) d on t.id = d.info_id
 		left join (select distinct info_id,listagg(sub_dept_name || nvl2(DECODE(undertaker_name,'',null,'NULL',null,undertaker_name),'/' || undertaker_name ||nvl2(DECODE(undertaker_phone,'',null,'NULL',null,undertaker_phone),'('||undertaker_phone||')',null),null), ',') within group(order by f.sort,created_time desc) over(partition by info_id) under_depts from DB_SUB_DOC_INFO e inner join BASE_APP_ORGAN f
-        on e.sub_dept_id=f.id) c on t.id = c.info_id where (d.dNum = 1 or d.dNum is null) 
+        on e.sub_dept_id=f.id) c on t.id = c.info_id
+        <if test="leaderId !=null and leaderId !=''">
+        	inner join (select info_id from DB_DOCUMENT_SZPS where USER_ID=#{leaderId}
+        	<if test="psStartDate != null and psStartDate != ''">
+				and CREATED_TIME >= #{psStartDate} 
+			</if>
+			<if test="psEndDate != null and psEndDate != ''">
+				and CREATED_TIME &lt;= #{psEndDate} 
+			</if>) v on t.id=v.info_Id
+        </if>	 
+        where (d.dNum = 1 or d.dNum is null) 
 		<if test='docStatus == "1"'>
 			and t.STATUS=0
 		</if>
@@ -104,6 +127,12 @@
 		</if>
 		<if test="search != null and search != ''">
 			and (t.DOC_TITLE like '%'||#{search}||'%' or t.BANJIAN_NUMBER  like '%'||#{search}||'%')
+		</if>
+		<if test="title != null and title != ''">
+			and t.DOC_TITLE like '%'||#{search}||'%'
+		</if>
+		<if test="period != null and period != ''">
+			and t.PERIOD like '%'||#{period}||'%'
 		</if>
 		<if test="year != null">
 			and to_char(t.FIRST_ZB_TIME) like '%'||#{year}||'%'
@@ -155,8 +184,7 @@
 			from DB_SUB_DOC_TRACKING where RECEIVER_ID = #{loginUserId})
 			where num =1) b on a.ID = b.SUB_ID
 		</if>
-		where t.LATEST_REPLY !=''
-		and t.LATEST_REPLY is not null
+		where t.LATEST_REPLY !='' and t.LATEST_REPLY is not null
 		<if test="orgId != null and orgId != '' ">
 			and a.SUB_DEPT_ID=#{orgId}
 		</if>
