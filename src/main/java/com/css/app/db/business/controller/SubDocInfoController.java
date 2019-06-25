@@ -508,7 +508,7 @@ public class SubDocInfoController {
 	@RequestMapping("/submitOperation")
 	public void submitOperation(String infoId,String subId,String userName,String userId,String dbStatus){
 		//流转到下一个人并将临时反馈变为发布
-		this.submitRelation(subId, userName, userId,"2");
+		this.submitRelation(subId, userName, userId,"2",dbStatus);
 		//分支文件保存最新更新时间及选择状态
 		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
 		if(subDocInfo != null) {
@@ -539,7 +539,7 @@ public class SubDocInfoController {
 	@RequestMapping("/sendOperation")
 	public void sendOperation(String infoId,String subId,String userName,String userId,String replyContent,String saveFlag){
 		//流转到下一个人并将临时反馈变为发布
-		this.submitRelation(subId, userName, userId,"2");
+		this.submitRelation(subId, userName, userId,"2",null);
 		//保存审批意见
 		approvalOpinionService.saveOpinion(subId, replyContent, "1",saveFlag);
 		//保存最新更新时间
@@ -574,7 +574,7 @@ public class SubDocInfoController {
 			if(StringUtils.isNotBlank(subDocInfo.getUndertaker())) {
 				String userId=subDocInfo.getUndertaker();
 				//流转到下一个人并将临时反馈变为发布
-				this.submitRelation(subId, subDocInfo.getUndertakerName(),userId,"3");
+				this.submitRelation(subId, subDocInfo.getUndertakerName(),userId,"3",null);
 				//保存审批意见
 				approvalOpinionService.saveOpinion(subId, replyContent, "3",saveFlag);
 				//保存最新更新时间
@@ -611,7 +611,7 @@ public class SubDocInfoController {
 			String chooseStatus = subDocInfo.getChooseStatus();
 			if(StringUtils.equals("1", chooseStatus)) {//承办人提交选择办理中
 				//流转到下一个人并将临时反馈变为发布
-				this.submitRelation(subId, subDocInfo.getUndertakerName(),subDocInfo.getUndertaker(),"4");
+				this.submitRelation(subId, subDocInfo.getUndertakerName(),subDocInfo.getUndertaker(),"4",null);
 				//分支文件更新完成审批标识
 				if(subDocInfo != null) {
 					subDocInfo.setDocStatus(DbDocStatusDefined.BAN_LI_ZHONG);
@@ -690,7 +690,7 @@ public class SubDocInfoController {
 		Response.json(json);
 	}
 	
-	private void submitRelation(String subId,String userName,String userId,String trackingType) {
+	private void submitRelation(String subId,String userName,String userId,String trackingType,String status) {
 		//获取当前登录人信息
 		String loginUserId=CurrentUser.getUserId();
 		String deptId = null;
@@ -727,6 +727,9 @@ public class SubDocInfoController {
 		ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
 		if(tempReply!=null) {
 			tempReply.setReVersion("1");
+			if(StringUtils.isNotBlank(status)) {
+				tempReply.setChooseStatus(status);
+			}
 			replyExplainService.update(tempReply);
 		}
 	}
