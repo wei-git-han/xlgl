@@ -172,9 +172,9 @@ public class DocumentWithdrawController {
 					}
 //					replyAttacService.queryList(map);
 					Map<String, Object> map1 = new HashMap<>();
-					map.put("subId", subId);
-					map.put("showFlag", 0);
-					map.put("userId", userId);
+					map1.put("subId", subId);
+					map1.put("showFlag", 0);
+					map1.put("userId", userId);
 					List<ApprovalOpinion> approvalOpinions = approvalOpinionService.queryList(map1);
 					if (approvalOpinions != null && approvalOpinions.size() > 0) {
 						//删除审批意见表数据
@@ -199,9 +199,9 @@ public class DocumentWithdrawController {
 		if (StringUtils.isBlank(infoId) && !StringUtils.isBlank(subId)) {
 			logger.info("根据subId：{}查不到{}的记录！", subId, tableName);
 		}else if (!StringUtils.isBlank(infoId) && !StringUtils.isBlank(subId)) {
-			logger.info("根据subId：{}，infoId：{}查不到"+tableName+"的记录！", subId, infoId);
+			logger.info("根据subId：{}，infoId：{}查不到{}的记录！", subId, infoId,tableName);
 		}else {
-			logger.info("根据subId：{}，infoId：{}查不到"+tableName+"的记录！", subId, infoId);
+			logger.info("根据subId：{}，infoId：{}查不到{}的记录！", subId, infoId, tableName);
 		}
 		json.put("result", "fail");
 	}

@@ -198,6 +198,7 @@ public class DocumentZbjlController {
 			zbjl.setOrgName(subInfo.getSubDeptName());
 			zbjl.setSubId(subId);
 			zbjl.setCreatedTime(new Date());
+			zbjl.setDocStatus(subInfo.getDocStatus()+"");
 			documentZbjlService.save(zbjl);
 			//添加流转记录
 			SubDocTracking tracking = new SubDocTracking();

@@ -11,7 +11,7 @@ import com.css.base.dao.BaseDao;
  * 
  * @author 中软信息系统工程有限公司
  * @email 
- * @date 2019-06-19 13:24:14
+ * @date 2019-06-25 18:00:32
  */
 @Mapper
 public interface DocumentZbjlDao extends BaseDao<DocumentZbjl> {

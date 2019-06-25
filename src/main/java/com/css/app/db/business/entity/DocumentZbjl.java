@@ -10,7 +10,7 @@ import java.util.Date;
  * 
  * @author 中软信息系统工程有限公司
  * @email 
- * @date 2019-06-19 13:24:14
+ * @date 2019-06-25 18:00:32
  */
 public class DocumentZbjl implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -41,6 +41,8 @@ public class DocumentZbjl implements Serializable {
 	private String orgName;
 	//子分支主键
 	private String subId;
+	//文件局内状态（1:待转办；3：退回修改；5：待落实；7：待审批；9：办理中；10：建议办结 ;12：办结；13:常态落实；11：建议落实）
+	private String docStatus;
 
 	/**
 	 * 设置：唯一标识
@@ -192,5 +194,16 @@ public class DocumentZbjl implements Serializable {
 	public String getSubId() {
 		return subId;
 	}
-	
+	/**
+	 * 设置：文件局内状态（1:待转办；3：退回修改；5：待落实；7：待审批；9：办理中；10：建议办结 ;12：办结；13:常态落实；11：建议落实）
+	 */
+	public void setDocStatus(String docStatus) {
+		this.docStatus = docStatus;
+	}
+	/**
+	 * 获取：文件局内状态（1:待转办；3：退回修改；5：待落实；7：待审批；9：办理中；10：建议办结 ;12：办结；13:常态落实；11：建议落实）
+	 */
+	public String getDocStatus() {
+		return docStatus;
+	}
 }

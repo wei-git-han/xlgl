@@ -40,7 +40,8 @@
 			"RECEIVER_DEPT_NAME", 
 			"CREATED_TIME", 
 			"ORG_NAME", 
-			"SUB_ID"
+			"SUB_ID", 
+			"DOC_STATUS"
 		)
 		values
 		(
@@ -56,11 +57,12 @@
 			#{receiverDeptName}, 
 			#{createdTime}, 
 			#{orgName}, 
-			#{subId}
+			#{subId}, 
+			#{docStatus}
 		)
 	</insert>
 	 
-	<update id="update" parameterType="com.css.app.db.business.entity.DocumentZbjl">
+	<update id="update" parameterType="com.css.app.db.business.entity.DbDocumentZbjl">
 		update DB_DOCUMENT_ZBJL 
 		<set>
 			<if test="infoId != null">"INFO_ID" = #{infoId}, </if>
@@ -74,7 +76,8 @@
 			<if test="receiverDeptName != null">"RECEIVER_DEPT_NAME" = #{receiverDeptName}, </if>
 			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
 			<if test="orgName != null">"ORG_NAME" = #{orgName}, </if>
-			<if test="subId != null">"SUB_ID" = #{subId}</if>
+			<if test="subId != null">"SUB_ID" = #{subId}, </if>
+			<if test="docStatus != null">"DOC_STATUS" = #{docStatus}</if>
 		</set>
 		where ID = #{id}
 	</update>
