@@ -33,6 +33,9 @@
 		<if test="cbrFlag != null and cbrFlag != ''">
 			and CBR_FLAG= #{cbrFlag}
 		</if>
+		<if test="time != null">
+			and CREATED_TIME >= #{time}
+		</if>
 			order by CREATED_TIME
 		<choose>
 			<when test="sort == 'asc'">ASC</when>

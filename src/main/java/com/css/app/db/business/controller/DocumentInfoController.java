@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +30,6 @@ import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.addbase.constant.AppConstant;
 import com.css.addbase.suwell.OfdTransferUtil;
-import com.css.app.db.business.dto.LeaderStatisticsDto;
 import com.css.app.db.business.entity.DocumentBjjl;
 import com.css.app.db.business.entity.DocumentCbjl;
 import com.css.app.db.business.entity.DocumentFile;
@@ -355,6 +355,8 @@ public class DocumentInfoController {
 				if(list.size()==0 && StringUtils.isNotBlank(info.getLatestReply())) {
 					info.setUpdateFlag("1");
 				}
+				//是否批示超过3个月
+				this.isOverTreeMonth(info);
 				//首长批示
 				Map<String, Object> szpsMap = new HashMap<>();
 				szpsMap.put("infoId", info.getId());
@@ -365,7 +367,23 @@ public class DocumentInfoController {
 		GwPageUtils pageUtil = new GwPageUtils(infoList);
 		Response.json(pageUtil);
 	}
-	
+	/**
+	 * 计算首长批示时间到现在是否查过三月；
+	 * @param leaderTime
+	 * @param subDocInfo
+	 */
+	private void isOverTreeMonth(DocumentInfo info) {
+		String leaderTime = info.getLeaderTime();
+		// 2019年05月08日
+		if (StringUtils.isNotBlank(leaderTime)) {
+			LocalDate currdate = LocalDate.now();
+			LocalDate leaderDate = LocalDate.parse(leaderTime, DateTimeFormatter.ofPattern("yyyy年MM月dd日"));
+			//如果该文没有办结且超过批示时间三个月的，显示超期提示；
+			if ((int)ChronoUnit.MONTHS.between(leaderDate, currdate) > 3 && info.getStatus() == 1) {
+				info.setIsOverTreeMonth(1);
+			}
+		}
+	}
 	/**
 	 * 办理反馈数量统计
 	 * @param search 搜索

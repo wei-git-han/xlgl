@@ -175,4 +175,9 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 	public List<DocumentInfo> queryStatisticsList(Map<String, Object> map) {
 		return documentInfoDao.queryStatisticsList(map);
 	}
+	
+	@Override
+	public void updateDocumentInfoById(DocumentInfo documentInfo) {
+		documentInfoDao.updateDocumentInfoById(documentInfo);
+	}
 }

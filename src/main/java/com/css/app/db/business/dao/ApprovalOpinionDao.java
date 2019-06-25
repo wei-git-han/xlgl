@@ -2,6 +2,8 @@ package com.css.app.db.business.dao;
 
 import com.css.app.db.business.entity.ApprovalOpinion;
 
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.css.base.dao.BaseDao;
@@ -18,5 +20,6 @@ public interface ApprovalOpinionDao extends BaseDao<ApprovalOpinion> {
 	
 	void updateShowFlag(String subId);
 	void deleteBySubId(String subId);
+	void deleteByParam(Map<String, Object> map);
 	
 }

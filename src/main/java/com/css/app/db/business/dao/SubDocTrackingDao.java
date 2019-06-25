@@ -2,6 +2,8 @@ package com.css.app.db.business.dao;
 
 import com.css.app.db.business.entity.SubDocTracking;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.css.base.dao.BaseDao;
@@ -18,4 +20,5 @@ public interface SubDocTrackingDao extends BaseDao<SubDocTracking> {
 	
 	SubDocTracking  queryLatestRecord(String subId);
 	void deleteBySubId(String subId);
+	List<SubDocTracking> queryListBySubId(String subId);
 }

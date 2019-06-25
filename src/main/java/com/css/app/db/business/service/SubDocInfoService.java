@@ -42,4 +42,8 @@ public interface SubDocInfoService {
 	List<SubDocInfo> queryAllSubByInfoId(String infoId);
 	
 	List<SubDocInfo> queryAllSubInfo(Map<String, Object> map);
+
+	SubDocInfo querySubDocInfoBySubIdAndInfoId(String subId, String infoId);
+
+	void updateSubDocInfoById(SubDocInfo subDocInfo);
 }

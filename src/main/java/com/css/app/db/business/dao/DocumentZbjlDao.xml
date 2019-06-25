@@ -6,6 +6,9 @@
 	<select id="queryObject" resultType="com.css.app.db.business.entity.DocumentZbjl">
 		select * from DB_DOCUMENT_ZBJL where ID = #{value}
 	</select>
+	<select id="queryBySubIdAndInfoId" resultType="com.css.app.db.business.entity.DocumentZbjl">
+		select * from DB_DOCUMENT_ZBJL where SUB_ID = #{0} AND INFO_ID = #{1} order by created_time desc limit 1
+	</select>
 
 	<select id="queryList" resultType="com.css.app.db.business.entity.DocumentZbjl">
 		select * from DB_DOCUMENT_ZBJL where 1=1
@@ -35,8 +38,9 @@
 			"RECEIVER_NAMES", 
 			"RECEIVER_DEPT_ID", 
 			"RECEIVER_DEPT_NAME", 
-			"CREATED_TIME",
-			"ORG_NAME"
+			"CREATED_TIME", 
+			"ORG_NAME", 
+			"SUB_ID"
 		)
 		values
 		(
@@ -50,8 +54,9 @@
 			#{receiverNames}, 
 			#{receiverDeptId}, 
 			#{receiverDeptName}, 
-			#{createdTime},
-			#{orgName}
+			#{createdTime}, 
+			#{orgName}, 
+			#{subId}
 		)
 	</insert>
 	 
@@ -67,8 +72,9 @@
 			<if test="receiverNames != null">"RECEIVER_NAMES" = #{receiverNames}, </if>
 			<if test="receiverDeptId != null">"RECEIVER_DEPT_ID" = #{receiverDeptId}, </if>
 			<if test="receiverDeptName != null">"RECEIVER_DEPT_NAME" = #{receiverDeptName}, </if>
-			<if test="createdTime != null">"CREATED_TIME" = #{createdTime},</if>
-			<if test="orgName != null">"ORG_NAME" = #{orgName}</if>
+			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
+			<if test="orgName != null">"ORG_NAME" = #{orgName}, </if>
+			<if test="subId != null">"SUB_ID" = #{subId}</if>
 		</set>
 		where ID = #{id}
 	</update>
@@ -79,6 +85,9 @@
 	
 	<delete id="deleteByInfoId">
 		delete from DB_DOCUMENT_ZBJL where INFO_ID =#{infoId}	
+	</delete>
+	<delete id="deleteBySubIdAndInfoId">
+		delete from DB_DOCUMENT_ZBJL where SUB_ID = #{0} AND INFO_ID = #{1}	
 	</delete>
 	<delete id="deleteBatch">
 		delete from DB_DOCUMENT_ZBJL where ID in 

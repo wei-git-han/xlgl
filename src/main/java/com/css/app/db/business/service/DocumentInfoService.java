@@ -51,4 +51,6 @@ public interface DocumentInfoService {
 	List<LeaderStatisticsDto> queryLeaderStatistics(Map<String, Object> map);
 	
 	List<DocumentInfo> queryStatisticsList(Map<String, Object> map);
+
+	void updateDocumentInfoById(DocumentInfo documentInfo);
 }

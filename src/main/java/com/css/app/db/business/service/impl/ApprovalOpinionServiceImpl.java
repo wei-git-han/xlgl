@@ -90,5 +90,11 @@ public class ApprovalOpinionServiceImpl implements ApprovalOpinionService {
 		approvalOpinionDao.deleteBySubId(subId);
 		
 	}
+
+	@Override
+	public void deleteByParam(Map<String, Object> map) {
+		approvalOpinionDao.deleteByParam(map);
+		
+	}
 	
 }

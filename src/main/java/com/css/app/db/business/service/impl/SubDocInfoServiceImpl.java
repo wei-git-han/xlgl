@@ -88,5 +88,16 @@ public class SubDocInfoServiceImpl implements SubDocInfoService {
 	public List<SubDocInfo> queryAllSubInfo(Map<String, Object> map) {
 		return subDocInfoDao.queryAllSubInfo(map);
 	}
+
+	@Override
+	public SubDocInfo querySubDocInfoBySubIdAndInfoId(String subId, String infoId) {
+		return subDocInfoDao.querySubDocInfoBySubIdAndInfoId(subId, infoId);
+	}
+
+	@Override
+	public void updateSubDocInfoById(SubDocInfo subDocInfo) {
+		subDocInfoDao.updateSubDocInfoById(subDocInfo);
+		
+	}
 	
 }

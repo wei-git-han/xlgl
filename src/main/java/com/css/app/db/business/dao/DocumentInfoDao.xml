@@ -473,7 +473,18 @@
 		</set>
 		where ID = #{id}
 	</update>
-	
+	<update id="updateDocumentInfoById" parameterType="com.css.app.db.business.entity.DocumentInfo">
+		update DB_DOCUMENT_INFO 
+		set 
+		"DOC_TITLE" = #{docTitle}, "SECURITY_ID" = #{securityId}, "SECURITY_CLASSIFICATION" = #{securityClassification},
+		"URGENCY_ID" = #{urgencyId},"URGENCY_DEGREE" = #{urgencyDegree},"DOC_CODE" = #{docCode},
+		"BANJIAN_NUMBER" = #{banjianNumber},"PERIOD" = #{period},"USER_ID" = #{userId},"USER_NAME" = #{userName},
+		"APPLY_TIME" = #{applyTime},"PRINT_DATE" = #{printDate},"JOB_CONTENT" = #{jobContent},"FIRST_ZB_TIME" = #{firstZbTime},
+		"SZ_READ_IDS" = #{szReadIds}, "CUIBAN_FLAG" = #{cuibanFlag},"DOC_TYPE_ID" = #{docTypeId},"DOC_TYPE_NAME" = #{docTypeName},
+		"CREATED_TIME" = #{createdTime},"REMARK" = #{remark},"STATUS" = #{status},"FINISH_TIME" = #{finishTime},"LATEST_REPLY" = #{latestReply},
+		"LATEST_SUB_DEPT" = #{latestSubDept},"LATEST_UNDERTAKER" = #{latestUndertaker},"LATEST_REPLY_TIME" = #{latestReplyTime} 
+		where ID = #{id}
+	</update>
 	<delete id="delete">
 		delete from DB_DOCUMENT_INFO where ID = #{value}
 	</delete>

@@ -60,5 +60,10 @@ public class SubDocTrackingServiceImpl implements SubDocTrackingService {
 	public void deleteBySubId(String subId) {
 		subDocTrackingDao.deleteBySubId(subId);
 	}
+
+	@Override
+	public List<SubDocTracking> queryListBySubId(String subId) {
+		return subDocTrackingDao.queryListBySubId(subId);
+	}
 	
 }

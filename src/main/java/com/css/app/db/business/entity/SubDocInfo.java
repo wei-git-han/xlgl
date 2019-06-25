@@ -76,6 +76,13 @@ public class SubDocInfo implements Serializable {
 	private String updateFlag;
 	//首长批示
 	private List<DocumentSzps> szpslist;
+	//是否支持撤回  1-显示撤回按钮
+	private Integer withdrawFlag;
+	//审批撤回提示标志
+	private Integer approveWithdrawFlag;
+	//批示时间是否超过3个月  1：超过3月
+	private Integer isOverTreeMonth;
+	
 	/*----------------------------列表接收值---------end---------------------------*/	
 	/**
 	 * 设置：唯一标识
@@ -275,5 +282,28 @@ public class SubDocInfo implements Serializable {
 	public void setSzpslist(List<DocumentSzps> szpslist) {
 		this.szpslist = szpslist;
 	}
-	
+	public Integer getWithdrawFlag() {
+		return withdrawFlag;
+	}
+	public void setWithdrawFlag(Integer withdrawFlag) {
+		this.withdrawFlag = withdrawFlag;
+	}
+	public String getLeaderTime() {
+		return leaderTime;
+	}
+	public void setLeaderTime(String leaderTime) {
+		this.leaderTime = leaderTime;
+	}
+	public Integer getApproveWithdrawFlag() {
+		return approveWithdrawFlag;
+	}
+	public void setApproveWithdrawFlag(Integer approveWithdrawFlag) {
+		this.approveWithdrawFlag = approveWithdrawFlag;
+	}
+	public Integer getIsOverTreeMonth() {
+		return isOverTreeMonth;
+	}
+	public void setIsOverTreeMonth(Integer isOverTreeMonth) {
+		this.isOverTreeMonth = isOverTreeMonth;
+	}
 }

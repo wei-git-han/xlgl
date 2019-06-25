@@ -26,4 +26,8 @@ public interface DocumentZbjlService {
 	
 	void deleteBatch(String[] ids);
 	void deleteByInfoId(String infoId);
+
+	void deleteBySubIdAndInfoId(String subId, String infoId);
+
+	DocumentZbjl queryBySubIdAndInfoId(String subId, String infoId);
 }
