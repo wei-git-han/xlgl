@@ -37,5 +37,7 @@ public interface DocumentInfoDao extends BaseDao<DocumentInfo> {
 	String getMaxSecurity(String[] id);
 	
 	List<DocumentInfo> queryInfoByParam(Map<String, Object> map);
+
+	void updateDocumentInfoById(DocumentInfo documentInfo);
 	
 }

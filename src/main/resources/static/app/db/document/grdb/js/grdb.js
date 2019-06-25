@@ -2,8 +2,11 @@ var tableList= {"url":"/app/db/subdocinfo/personList","dataType":"text"};//原ta
 var numsList={"url":"/app/db/subdocinfo/presonNumsList","dataType":"text"};//筛选状态数字统计
 var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//高级搜索--部门树
 var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//高级搜索--人员树
+var chehuiUrl = {"url":"/app/db/withdraw/juInnnerWithdraw","dataType":"text"};//撤回url
+var currUserRoleTypeUrl = {"url":"/app/db/subdocinfo/currUserRoleType","dataType":"text"};//获取当前用户的角色类型
 var grid = null;
 var total=0;//列表中，数据的总条数
+var currentUserRole = "6";
 
 if(!window.top.memory){
 	window.top.memory = {};
@@ -15,7 +18,7 @@ var pageModule = function(){
         grid = $("#gridcont").createGrid({
             columns:[
             	{display:"军委办件号",name:"banjianNumber",width:"6%",align:"left",render:function(rowdata,n){
-               	 return rowdata.banjianNumber;
+               	 	return rowdata.banjianNumber;
                 }},
                 {display:"局内状态",name:"statusName",width:"7%",align:"center",render:function(rowdata,n){
                 	var statusName="";
@@ -62,21 +65,17 @@ var pageModule = function(){
                 	if(rowdata.cuibanFlag=="1"){
                 		cuiban = '<label class="cuibanlabel">催办</label>';
                	    }
-               	 	return '<a title="'+rowdata.docTitle+'" class="tabletitle" href="../../view/html/view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&fileFrom=grdb" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
+                	//isOverTreeMonth
+                	var csFlag = "";
+                	if(rowdata.isOverTreeMonth==1){
+                		csFlag = '<img src="../../../common/images/u301.png" class="titleimg" />';
+                	}
+               	 	return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../view/html/view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&fileFrom=grdb" target="iframe1">'+cuiban+rowdata.docTitle+csFlag+'</a>'
                 }},
                 {display:"紧急程度",name:"urgencyDegree",width:"5%",align:"center",paixu:false,render:function(rowdata){
-               	 return rowdata.urgencyDegree;
+               	 	return rowdata.urgencyDegree;
                 }},
                 {display:"批示指示内容",name:"",width:"20%",align:"left",paixu:false,render:function(rowdata){
-                	 /*var szpsCont="";
-                	 var leaderTime1="";
-                	 if(rowdata.leaderTime!="" && rowdata.leaderTime!=null){
-                		 leaderTime1= rowdata.leaderTime.substring(0,16);
-                	 }
-                	 if(rowdata.leaderName && rowdata.leaderContent){
-                		 szpsCont=rowdata.leaderName+" "+leaderTime1+"批示："+rowdata.leaderContent
-                	 }
-                	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.infoId+'\')"  title="'+szpsCont+'">'+szpsCont+'</div>';*/
                 	 var html1="";
                	 	 $.each(rowdata.szpslist,function(i,item){
 	               		 var createdTime="";
@@ -87,7 +86,7 @@ var pageModule = function(){
 	    		     });
                	     return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.infoId+'\')">'+html1+'</div>';
                 }},
-                {display:"督办落实情况",name:"",width:"20%",align:"left",paixu:false,render:function(rowdata){
+                {display:"督办落实情况",name:"",width:"17%",align:"left",paixu:false,render:function(rowdata){
                 	 var duban="";
                  	 if(rowdata.updateFlag=="1"){
                  		duban = '<label class="cuibanlabel">已更新</label>';
@@ -103,18 +102,27 @@ var pageModule = function(){
                 	return '<div class="cbdw" title="'+rowdata.underDepts+'">'+rowdata.underDepts+'</div>'
                 }},
                 {display:"办件分类",name:"docTypeName",width:"5%",align:"center",paixu:false,render:function(rowdata){
-               	 return rowdata.docTypeName;
+               	 	return rowdata.docTypeName;
                 }},
-                {display:"转办时间",name:"createdTime",width:"6%",align:"center",render:function(rowdata){
-               	 return rowdata.createdTime.substring(0,16);
+                {display:"转办时间",name:"createdTime",width:"5%",align:"center",render:function(rowdata){
+               	 	return rowdata.createdTime.substring(0,16);
                 }},
-                 {display:"更新时间",name:"",width:"6%",align:"center",paixu:false,render:function(rowdata){
+                {display:"更新时间",name:"",width:"5%",align:"center",paixu:false,render:function(rowdata){
                 	 var updateTime="";
                 	 if(rowdata.updateTime){
                 		 updateTime = rowdata.updateTime.substring(0,16);
                 	 }
                 	 return updateTime;
-                 }}
+                }},
+                {display:"操作",name:"",width:"5%",align:"center",paixu:false,render:function(rowdata){
+	               	 var btnHtml="";
+	               	 if(rowdata.withdrawFlag == "1"){
+	               		btnHtml+='<a title="撤回" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="chehuiDoc(\''+rowdata.id+'\',\''+rowdata.infoId+'\')"><i class="fa fa-mail-reply"></i></a>';
+	               	 }/*else{//待修改---if和else现在按钮一摸一样，条件修改成立后，把else删掉就行
+	               		btnHtml+='<a title="撤回" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="chehuiDoc(\''+rowdata.id+'\',\''+rowdata.infoId+'\')"><i class="fa fa-mail-reply"></i></a>';
+	               	 }*/
+	               	 return btnHtml;
+               }}
             ],
             width:"100%",
             height:"100%",
@@ -224,6 +232,34 @@ var pageModule = function(){
 		$("#reset").click(function(){
 			removeInputData(["title","deptid","deptname","username","userid","blstatus","designStart","designEnd","fileType"]);
 		});
+		
+		//批量审批
+		$("#plsp").click(function(){
+			var ids=[];
+			var datas=grid.getcheckrow();
+			var count = 0;//统计不是本人待审批的数据条数
+			$(datas).each(function(i){
+				ids[i]=this.id;
+				if(this.docStatus != "7"){
+					count++;
+				}else{
+					if(this.receiverIsMe != "1"){
+						count++;
+					}
+				}
+			});
+			if(datas.length>0){
+				if(count > 0){
+					newbootbox.alertInfo("所选文件有"+count+"个文件不支持批量审批，请单独处理");
+					return;
+				}else{
+					plspFn(ids.toString(),currentUserRole);
+				}
+			}else{
+				newbootbox.alertInfo("请选择待审批的数据！");
+				return;
+			}
+		});
 	}
 	
 	var inittree = function(){
@@ -268,6 +304,19 @@ var pageModule = function(){
 		$("#searchVal").val(o.search);
 	}
 	
+	var initUserRole = function(){
+		$ajax({
+			url:currUserRoleTypeUrl,
+//			data:{search:$("#searchVal").val()},
+			success:function(data){
+				//是局长
+				if(data.result == "success"){
+					currentUserRole = data.currUserRoleType;
+				}
+			}
+		});	
+	}
+	
 	return{
 		//加载页面处理程序
 		initControl:function(){
@@ -276,6 +325,7 @@ var pageModule = function(){
 			numsListfn();
 			initother();
 			inittree();
+			initUserRole();
 		},
 		initgrid:function(){
 			initgrid();
@@ -317,5 +367,36 @@ function dblsqkAlert(id){
 		title:"督办详情",
 		classed:"cjDialog",
 		url:"/app/db/document/view/html/dblsqk.html?fileId="+id
+	})
+}
+
+//撤回
+function chehuiDoc(id, infoId){
+	$ajax({
+		url:chehuiUrl,
+		data:{subId:id,infoId:infoId},
+		success:function(data){
+			if(data.result=='success'){
+				newbootbox.alertInfo('撤回成功！').done(function(){
+					pageModule.initgrid();
+				});
+			}else{
+				newbootbox.alertInfo('撤回失败！');
+			}
+		}
+	});	
+}
+
+
+//批量审批
+function plspFn(ids, curRole){
+	newbootbox.newdialog({
+		id:"plspDialog",
+		width:850,
+		height:500,
+		header:true,
+		title:"审批",
+		classed:"cjDialog",
+		url:"/app/db/document/grdb/html/plsp.html?ids="+ids+"&curRole="+curRole
 	})
 }

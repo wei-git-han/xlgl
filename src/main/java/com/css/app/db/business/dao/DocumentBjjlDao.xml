@@ -6,6 +6,9 @@
 	<select id="queryObject" resultType="com.css.app.db.business.entity.DocumentBjjl">
 		select * from DB_DOCUMENT_BJJL where ID = #{value}
 	</select>
+	<select id="queryBjjlBySubId" resultType="com.css.app.db.business.entity.DocumentBjjl">
+		select * from DB_DOCUMENT_BJJL where SUB_ID = #{id}
+	</select>
 
 	<select id="queryList" resultType="com.css.app.db.business.entity.DocumentBjjl">
 		select * from DB_DOCUMENT_BJJL where 1=1

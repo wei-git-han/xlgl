@@ -212,6 +212,45 @@ $(function () {
 		error : function(error) {}
 	});
 });
+function withdraw(){
+$.ajax({
+        url: $("#withdraw").val() + "/app/db/withdraw/juAdministratorWithdraw",
+        data: {subId: $("#subId").val(), infoId: $("#infoId").val(), loginMode:"100",service:$("#servicePath").val()},
+        type: 'POST',
+        dataType: "JSON",
+        success: function(data){
+            // get access_token
+			alert(data.sucess);
+			//$('#token').text(data.access_token);
+        },
+        error: function(error){
+            // show error
+            //var a = error;
+        	alert(data.fail);
+            
+        }
+    });
+}
+
+function withdraw1(){
+	$.ajax({
+	        url: $("#withdraw1").val() + "/app/db/withdraw/juInnnerWithdraw",
+	        data: {subId: $("#subId1").val(), infoId: $("#infoId1").val(), loginMode:"100",service:$("#servicePath").val()},
+	        type: 'POST',
+	        dataType: "JSON",
+	        success: function(data){
+	            // get access_token
+				alert(data.result);
+				//$('#token').text(data.access_token);
+	        },
+	        error: function(error){
+	            // show error
+	            //var a = error;
+	        	alert(data.fail);
+	            
+	        }
+	    });
+	}
 </script>
 </head>
 <body>
@@ -235,6 +274,14 @@ $(function () {
 <button type="button" onclick="startNoteMsgTimer()" style="display:none" id="startNoteMsgTimer">启动定时短信发送</button>
 <button type="button" onclick="cancelNoteMsgTimer()" style="display:none" id="cancelNoteMsgTimer">停止定时短信发送</button>
 <div><label>返回结果: </label><label id="orgText"></label></div>
+subId：<input name="subId" id= "subId" /><br> 
+infoId：<input name="infoId" id = "infoId"/><br> 
+<button type="button" onclick="withdraw()">局管理员撤回</button>
+网关地址:<input type="text" value="http://localhost:11008" id="withdraw1" style="width:325px;"/><span style="border:1px solid blue;cursor:pointer;">本地測試</span><br/>
 
+subId：<input name="subId" id= "subId1" /><br> 
+infoId：<input name="infoId" id = "infoId1"/><br> 
+<button type="button" onclick="withdraw1()">局内撤回</button>
+网关地址:<input type="text" value="http://localhost:11008" id="withdraw1" style="width:325px;"/><span style="border:1px solid blue;cursor:pointer;">本地測試</span><br/>
 </body>
 </html>

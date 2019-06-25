@@ -71,5 +71,10 @@ public class ReplyAttacServiceImpl implements ReplyAttacService {
 		replyAttacDao.deleteBySubId(subId);
 		
 	}
+
+	@Override
+	public void deleteBySubIdAndTeamId(String subId, String teamId) {
+		replyAttacDao.deleteBySubIdAndTeamId(subId, teamId);
+	}
 	
 }

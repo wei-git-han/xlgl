@@ -196,6 +196,7 @@ public class DocumentZbjlController {
 			zbjl.setReceiverDeptId(deptId);
 			zbjl.setReceiverDeptName(deptName);
 			zbjl.setOrgName(subInfo.getSubDeptName());
+			zbjl.setSubId(subId);
 			zbjl.setCreatedTime(new Date());
 			documentZbjlService.save(zbjl);
 			//添加流转记录

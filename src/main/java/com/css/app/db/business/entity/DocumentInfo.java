@@ -83,6 +83,8 @@ public class DocumentInfo implements Serializable {
 	private String underDepts;
 	//首长批示
 	private List<DocumentSzps> szpslist;
+	//首长批示
+	private Integer isOverTreeMonth;
 	/**
 	 * 设置：唯一标识
 	 */
@@ -400,6 +402,12 @@ public class DocumentInfo implements Serializable {
 	}
 	public void setSzpslist(List<DocumentSzps> szpslist) {
 		this.szpslist = szpslist;
+	}
+	public Integer getIsOverTreeMonth() {
+		return isOverTreeMonth;
+	}
+	public void setIsOverTreeMonth(Integer isOverTreeMonth) {
+		this.isOverTreeMonth = isOverTreeMonth;
 	}
 	
 }

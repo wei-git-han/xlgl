@@ -70,5 +70,10 @@ public class DocumentBjjlServiceImpl implements DocumentBjjlService {
 		documentBjjlDao.deleteByInfoId(infoId);
 		
 	}
+
+	@Override
+	public DocumentBjjl queryBjjlBySubId(String id) {
+		return documentBjjlDao.queryBjjlBySubId(id);
+	}
 	
 }

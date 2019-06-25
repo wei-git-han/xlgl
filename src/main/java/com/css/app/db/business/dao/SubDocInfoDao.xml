@@ -112,6 +112,9 @@
  	<select id="queryTotal" resultType="int">
 		select count(*) from DB_SUB_DOC_INFO 
 	</select>
+	<select id="querySubDocInfoBySubIdAndInfoId" resultType="com.css.app.db.business.entity.SubDocInfo">
+	   select * from DB_SUB_DOC_INFO where ID = #{0} AND INFO_ID = #{1}
+	</select>
 	<update id="updateDocStatus">
 		update DB_SUB_DOC_INFO set DOC_STATUS=#{0},UPDATE_TIME = #{1} where INFO_ID=#{2}
 	</update>
@@ -160,6 +163,15 @@
 			<if test="undertakerPhone != null">"UNDERTAKER_PHONE" = #{undertakerPhone},</if>
 			<if test="chooseStatus != null">"CHOOSE_STATUS" = #{chooseStatus}</if>
 		</set>
+		where ID = #{id}
+	</update>
+	
+	<update id="updateSubDocInfoById" parameterType="com.css.app.db.business.entity.SubDocInfo">
+		update DB_SUB_DOC_INFO 
+		set 
+		"INFO_ID" = #{infoId},"SUB_DEPT_ID" = #{subDeptId}, "SUB_DEPT_NAME" = #{subDeptName}, "CREATED_TIME" = #{createdTime},
+		"DOC_STATUS" = #{docStatus}, "UNDERTAKER" = #{undertaker},"UPDATE_TIME" = #{updateTime},"UNDERTAKER_NAME" = #{undertakerName},
+		"UNDERTAKER_PHONE" = #{undertakerPhone},"CHOOSE_STATUS" = #{chooseStatus} 
 		where ID = #{id}
 	</update>
 	

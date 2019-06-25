@@ -31,4 +31,6 @@ public interface ApprovalOpinionService {
 	void updateShowFlag(String subId);
 	
 	void deleteBySubId(String subId);
+
+	void deleteByParam(Map<String, Object> map);
 }

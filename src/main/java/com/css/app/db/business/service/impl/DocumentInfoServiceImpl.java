@@ -164,4 +164,10 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 	public List<DocumentInfo> queryInfoByParam(Map<String, Object> map) {
 		return documentInfoDao.queryInfoByParam(map);
 	}
+
+	@Override
+	public void updateDocumentInfoById(DocumentInfo documentInfo) {
+		documentInfoDao.updateDocumentInfoById(documentInfo);
+		
+	}
 }

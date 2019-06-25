@@ -63,5 +63,17 @@ public class DocumentZbjlServiceImpl implements DocumentZbjlService {
 		documentZbjlDao.deleteByInfoId(infoId);
 		
 	}
+
+	@Override
+	public void deleteBySubIdAndInfoId(String subId, String infoId) {
+		documentZbjlDao.deleteBySubIdAndInfoId(subId, infoId);
+		
+	}
+
+	@Override
+	public DocumentZbjl queryBySubIdAndInfoId(String subId, String infoId) {
+		return documentZbjlDao.queryBySubIdAndInfoId(subId, infoId);
+		
+	}
 	
 }

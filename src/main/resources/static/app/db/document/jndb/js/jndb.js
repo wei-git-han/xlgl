@@ -2,6 +2,7 @@ var tableList= {"url":"/app/db/subdocinfo/list","dataType":"text"};//原table数
 var numsList={"url":"/app/db/subdocinfo/numsList","dataType":"text"};//筛选状态数字统计
 var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//高级搜索--部门树
 var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//高级搜索--人员树
+var chehuiUrl = {"url":"/app/db/withdraw/juAdministratorWithdraw","dataType":"text"};//撤回url
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var fromMsg=getUrlParam("fromMsg")||false; //是否为消息进入
 var grid = null;
@@ -67,21 +68,17 @@ var pageModule = function(){
                  	 if(rowdata.cuibanFlag=="1"){
                  		 cuiban = '<label class="cuibanlabel">催办</label>';
                 	 }
-                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle" href="../../view/html/view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
+                 	//isOverTreeMonth
+                 	var csFlag = "";
+                	if(rowdata.isOverTreeMonth==1){
+                		csFlag = '<img src="../../../common/images/u301.png" class="titleimg" />';
+                	}
+                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../view/html/view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+rowdata.docTitle+csFlag+'</a>'
                  }},
                  {display:"紧急程度",name:"urgencyDegree",width:"5%",align:"center",paixu:false,render:function(rowdata){
                 	 return rowdata.urgencyDegree;
                  }},
                  {display:"批示指示内容",name:"",width:"20%",align:"left",paixu:false,title:false,render:function(rowdata){
-                	 /*var szpsCont="";
-                	 var leaderTime1="";
-                	 if(rowdata.leaderTime!="" && rowdata.leaderTime!=null){
-                		 leaderTime1= rowdata.leaderTime.substring(0,16);
-                	 }
-                	 if(rowdata.leaderName && rowdata.leaderContent){
-                		 szpsCont=rowdata.leaderName+" "+leaderTime1+"批示："+rowdata.leaderContent
-                	 }
-                	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.infoId+'\')" title="'+szpsCont+'">'+szpsCont+'</div>';*/
                 	 var html1="";
                 	 $.each(rowdata.szpslist,function(i,item){
                 		 var createdTime="";
@@ -115,8 +112,10 @@ var pageModule = function(){
                  {display:"操作",name:"do",width:"4%",align:"center",render:function(rowdata){
                 	 var caozuo = '';
                 	 if(rowdata.docStatus == "1"){
-                		 //待修改
                      	 caozuo +='<a title="转办" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="zhuanbanDoc(\''+rowdata.id+'\',\''+rowdata.infoId+'\',\''+fromMsg+'\')"><i class="fa fa-external-link"></i></a>';
+    				 }
+                	 if(rowdata.withdrawFlag == "1"){  //判断条件成立后加撤回按钮
+                	 	 caozuo+='<a title="撤回" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="chehuiDoc(\''+rowdata.id+'\',\''+rowdata.infoId+'\')"><i class="fa fa-mail-reply"></i></a>';
     				 }
                 	 return caozuo;
                  }}
@@ -351,4 +350,21 @@ function dblsqkAlert(id){
 		classed:"cjDialog",
 		url:"/app/db/document/view/html/dblsqk.html?fileId="+id
 	})
+}
+
+//撤回
+function chehuiDoc(id, infoId){
+	$ajax({
+		url:chehuiUrl,
+		data:{subId:id, infoId:infoId},
+		success:function(data){
+			if(data.result=='success'){
+				newbootbox.alertInfo('撤回成功！').done(function(){
+					pageModule.initgrid();
+				});
+			}else{
+				newbootbox.alertInfo('撤回失败！');
+			}
+		}
+	});	
 }

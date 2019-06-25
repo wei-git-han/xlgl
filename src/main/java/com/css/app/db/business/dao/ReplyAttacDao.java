@@ -17,4 +17,6 @@ import com.css.base.dao.BaseDao;
 public interface ReplyAttacDao extends BaseDao<ReplyAttac> {
 	void deleteBySubId(String subId);
 	
+	void deleteBySubIdAndTeamId(String subId,String teamId);
+	
 }

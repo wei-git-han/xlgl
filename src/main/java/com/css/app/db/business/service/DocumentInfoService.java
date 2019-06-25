@@ -42,4 +42,6 @@ public interface DocumentInfoService {
 
 	String getMaxSecurity(String[] stringIds);
 	List<DocumentInfo> queryInfoByParam(Map<String, Object> map);
+
+	void updateDocumentInfoById(DocumentInfo documentInfo);
 }

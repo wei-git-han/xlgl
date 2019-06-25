@@ -20,6 +20,10 @@
  	<select id="queryTotal" resultType="int">
 		select count(*) from DB_SUB_DOC_TRACKING 
 	</select>
+	
+ 	<select id="queryListBySubId" resultType="com.css.app.db.business.entity.SubDocTracking" parameterType="string">
+		select * from DB_SUB_DOC_TRACKING where SUB_ID = #{subId} AND TRACKING_TYPE = '2' ORDER BY CREATED_TIME ASC
+	</select>
 	 
 	<insert id="save" parameterType="com.css.app.db.business.entity.SubDocTracking">
 		insert into DB_SUB_DOC_TRACKING
@@ -76,7 +80,7 @@
 	</update>
 	
 	<delete id="delete">
-		delete from DB_SUB_DOC_TRACKING where ID = #{value}
+		delete from DB_SUB_DOC_TRACKING where ID = #{id}
 	</delete>
 	<delete id="deleteBySubId">
 		delete from DB_SUB_DOC_TRACKING where SUB_ID = #{subId}

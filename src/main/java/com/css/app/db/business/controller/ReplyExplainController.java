@@ -1,11 +1,16 @@
 package com.css.app.db.business.controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,11 +21,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.css.app.db.business.entity.ApprovalOpinion;
+import com.css.app.db.business.entity.DocumentBjjl;
 import com.css.app.db.business.entity.ReplyAttac;
 import com.css.app.db.business.entity.ReplyExplain;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.entity.SubDocTracking;
 import com.css.app.db.business.service.ApprovalOpinionService;
+import com.css.app.db.business.service.DocumentBjjlService;
 import com.css.app.db.business.service.ReplyAttacService;
 import com.css.app.db.business.service.ReplyExplainService;
 import com.css.app.db.business.service.SubDocInfoService;
@@ -42,6 +49,7 @@ import cn.com.css.filestore.impl.HTTPFile;
 @Controller
 @RequestMapping("/app/db/replyexplain")
 public class ReplyExplainController {
+	private final Logger logger = LoggerFactory.getLogger(ReplyExplainController.class);
 	@Autowired
 	private ReplyExplainService replyExplainService;
 	@Autowired
@@ -52,7 +60,6 @@ public class ReplyExplainController {
 	private ApprovalOpinionService approvalOpinionService;
 	@Autowired
 	private SubDocTrackingService subDocTrackingService;
-	
 	/**
 	 * 获取某个分支局反馈
 	 * @param infoId 主文件id
@@ -357,7 +364,6 @@ public class ReplyExplainController {
 		}
 		Response.json(json);
 	}
-	
 	/**
 	 * 编辑反馈意见
 	 */
@@ -458,5 +464,5 @@ public class ReplyExplainController {
 		    url = hf.getAssginDownloadURL();
 		}
 		Response.json("url", url);
-	}	
+	}
 }
