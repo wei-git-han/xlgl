@@ -18,6 +18,7 @@ import com.css.app.db.business.dao.ReplyAttacDao;
 import com.css.app.db.business.dao.ReplyExplainDao;
 import com.css.app.db.business.dao.SubDocInfoDao;
 import com.css.app.db.business.dao.SubDocTrackingDao;
+import com.css.app.db.business.dto.LeaderStatisticsDto;
 import com.css.app.db.business.entity.DocumentInfo;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.service.DocumentInfoService;
@@ -163,5 +164,15 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 	@Override
 	public List<DocumentInfo> queryInfoByParam(Map<String, Object> map) {
 		return documentInfoDao.queryInfoByParam(map);
+	}
+
+	@Override
+	public List<LeaderStatisticsDto> queryLeaderStatistics(Map<String, Object> map) {
+		return documentInfoDao.queryLeaderStatistics(map);
+	}
+
+	@Override
+	public List<DocumentInfo> queryStatisticsList(Map<String, Object> map) {
+		return documentInfoDao.queryStatisticsList(map);
 	}
 }

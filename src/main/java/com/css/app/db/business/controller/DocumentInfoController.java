@@ -29,6 +29,7 @@ import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.addbase.constant.AppConstant;
 import com.css.addbase.suwell.OfdTransferUtil;
+import com.css.app.db.business.dto.LeaderStatisticsDto;
 import com.css.app.db.business.entity.DocumentBjjl;
 import com.css.app.db.business.entity.DocumentCbjl;
 import com.css.app.db.business.entity.DocumentFile;
@@ -350,7 +351,7 @@ public class DocumentInfoController {
 				readMap.put("infoId", info.getId());
 				List<DocumentRead> list = documentReadService.queryList(readMap);
 				
-				//催办为0，未读，最新反馈字段有值则标识为已更新
+				//未读，最新反馈字段有值则标识为已更新
 				if(list.size()==0 && StringUtils.isNotBlank(info.getLatestReply())) {
 					info.setUpdateFlag("1");
 				}
@@ -969,4 +970,5 @@ public class DocumentInfoController {
 		}
 		return fileId;
 	}
+	
 }

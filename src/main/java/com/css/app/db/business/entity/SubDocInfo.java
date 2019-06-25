@@ -62,12 +62,12 @@ public class SubDocInfo implements Serializable {
 	private String latestUndertaker;
 	//最新反馈审批完成时间
 	private Date latestReplyTime;
-	/*//最新的首长名字
+	//最新的首长名字
 	private String leaderName;
 	//最新的首长批示
 	private String leaderContent;
 	//最新的首长批示时间
-	private String leaderTime;*/
+	private String leaderTime;
 	//我是不是当前处理人
 	private Integer receiverIsMe;
 	//承办单位/人

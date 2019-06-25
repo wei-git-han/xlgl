@@ -19,14 +19,23 @@ import com.css.addbase.appconfig.service.BaseAppConfigService;
 import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.constant.AppConstant;
+import com.css.app.db.business.dto.LeaderStatisticsDto;
+import com.css.app.db.business.entity.DocumentInfo;
+import com.css.app.db.business.entity.DocumentRead;
+import com.css.app.db.business.entity.DocumentSzps;
 import com.css.app.db.business.service.DocumentInfoService;
+import com.css.app.db.business.service.DocumentReadService;
+import com.css.app.db.business.service.DocumentSzpsService;
 import com.css.app.db.config.entity.AdminSet;
 import com.css.app.db.config.entity.RoleSet;
 import com.css.app.db.config.service.AdminSetService;
 import com.css.app.db.config.service.RoleSetService;
 import com.css.base.utils.CurrentUser;
+import com.css.base.utils.DateUtil;
+import com.css.base.utils.GwPageUtils;
 import com.css.base.utils.Response;
 import com.css.base.utils.StringUtils;
+import com.github.pagehelper.PageHelper;
 
 import dm.jdbc.util.StringUtil;
 
@@ -52,8 +61,10 @@ public class DocumentJcdbController {
 	private BaseAppOrganService baseAppOrganService;
 	@Autowired
 	private BaseAppConfigService baseAppConfigService;
-	
-	
+	@Autowired
+	private DocumentSzpsService documentSzpsService;
+	@Autowired
+	private DocumentReadService documentReadService;
 	
 	/**
 	 * 数据统计报表-(年度,状态数量)
@@ -123,7 +134,6 @@ public class DocumentJcdbController {
 	@ResponseBody
 	@RequestMapping("/orglist")
 	public void orglist(String year,String month){
-		
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy");
 		Map<String, Object> map = new HashMap<>();
 		if(StringUtil.isEmpty(year)) {
@@ -286,7 +296,7 @@ public class DocumentJcdbController {
 			}
 		}
 		legend.add("办理中");
-		legend.add("办结");
+		legend.add("已办结");
 		legend.add("常态落实");
 		jo2.put("legend",legend);
 		jo2.put("xdata", xdata);
@@ -382,6 +392,83 @@ public class DocumentJcdbController {
 		jo2.put("xdata", xdata);
 		jo2.put("wcldata", wcldata);
 		Response.json(jo2);
+	}
+	/**
+	 * @description:统计图当前首长批示落实统计查询
+	 * @param year 年份
+	 * @param startDate 开始截取时间
+	 * @param endDate 结束截取时间
+	 * @author:zhangyw
+	 * @date:2019年6月23日
+	 * @Version v1.0
+	 */
+	@ResponseBody
+	@RequestMapping("/orglist5")
+	public void orglist5(String year,String startDate,String endDate){
+		JSONObject json =new JSONObject();
+		String role=getRoleType();
+		if(StringUtils.equals("1", role)||StringUtils.equals("1", role)) {
+			json.put("clickFlag", "true");
+		}else {
+			json.put("clickFlag", "false");
+		}
+		Map<String, Object> map = new HashMap<>();
+		if(StringUtil.isEmpty(year)) {
+			year=DateUtil.getCurrentYear()+"";
+		}
+		map.put("year", year);
+		map.put("startDate",startDate);
+		map.put("endDate",endDate);
+		List<LeaderStatisticsDto> list = documentInfoService.queryLeaderStatistics(map);
+		json.put("list", list);
+		Response.json(json);
+	}
+	
+	/**
+	 * @description:统计图首长批示落实统计详情页查询
+	 * @param year 年份
+	 * @param startDate 开始截取时间
+	 * @param endDate 结束截取时间
+	 * @param search 搜索参数
+	 * @author:zhangyw
+	 * @date:2019年6月24日
+	 * @Version v1.0
+	 */
+	@ResponseBody
+	@RequestMapping("/leaderStatisticsList")
+	public void saveSmjToFile(Integer page, Integer pagesize,String year,String startDate,String endDate,String docStatus,String leaderId) {
+		Map<String, Object> map = new HashMap<>();
+		if(StringUtil.isEmpty(year)) {
+			year=DateUtil.getCurrentYear()+"";
+		}
+		map.put("year", year);
+		map.put("startDate",startDate);
+		map.put("endDate",endDate);
+		if(!StringUtils.equals("all", docStatus)) {
+			map.put("status", docStatus);
+		}
+		map.put("leaderId", leaderId);
+		PageHelper.startPage(page, pagesize);
+		List<DocumentInfo> list = documentInfoService.queryStatisticsList(map);
+		GwPageUtils pageUtil = new GwPageUtils(list);
+		for (DocumentInfo info : list) {
+			/*//是否已读
+			Map<String, Object> readMap = new HashMap<>();
+			readMap.put("userId", CurrentUser.getUserId());
+			readMap.put("infoId", info.getId());
+			List<DocumentRead> readlist = documentReadService.queryList(readMap);
+			
+			//未读，最新反馈字段有值则标识为已更新
+			if(readlist.size()==0 && StringUtils.isNotBlank(info.getLatestReply())) {
+				info.setUpdateFlag("1");
+			}*/
+			//首长批示
+			Map<String, Object> szpsMap = new HashMap<>();
+			szpsMap.put("infoId", info.getId());
+			List<DocumentSzps> szpsList = documentSzpsService.queryList(szpsMap);
+			info.setSzpslist(szpsList);
+		}
+		Response.json(pageUtil);
 	}
 	
 	public String getRoleType() {

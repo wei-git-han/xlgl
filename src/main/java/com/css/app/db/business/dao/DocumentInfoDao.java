@@ -1,5 +1,6 @@
 package com.css.app.db.business.dao;
 
+import com.css.app.db.business.dto.LeaderStatisticsDto;
 import com.css.app.db.business.entity.DocumentInfo;
 import com.css.app.db.config.entity.DocumentDic;
 
@@ -37,5 +38,9 @@ public interface DocumentInfoDao extends BaseDao<DocumentInfo> {
 	String getMaxSecurity(String[] id);
 	
 	List<DocumentInfo> queryInfoByParam(Map<String, Object> map);
+	
+	List<LeaderStatisticsDto> queryLeaderStatistics(Map<String, Object> map);
+	
+	List<DocumentInfo> queryStatisticsList(Map<String, Object> map);
 	
 }

@@ -21,11 +21,17 @@
 	<div class="pr100">
 		<div id="headbox" class="headbox">
 			<div class="contenthead">
-				<div class="contenttitle" id="contenttitle" style="cursor:pointer;" >统计数据</div>
-				<div class="contentsearch">
-					<input  type="text" name="searchVal" id="searchVal" value=""  placeholder="搜索" />
-					<img src="../../../common/images/u132_mouseDown.png" class="search"  title="搜索" />
+				<div class="titleleft" style="margin-right: 10px;">
+					<div class="facont">
+						<button type="button" id="goback"  class="btn btn-xs" style="background:transparent;padding:1px 5px;"><i class="fa fa-arrow-circle-left " style="font-size: 27px!important;"></i></button>
+					</div>
 				</div>
+				<div class="titleleft">
+					<div class="titlefont">
+						<div class="contenttitle" id="contenttitle" style="cursor:pointer;" >统计数据</div>
+					</div>
+				</div>
+				
 			</div>
 		</div>
 		<!-- main部分 -->
@@ -38,7 +44,7 @@
 								<div class="radiocont">
 					                <div class="radio-list" id="radiocont">
 					                    <label class="radio-inline">
-					                    	<input type="radio" name="documentStatus" value="0" > 全部(<font id="tjsj0">0</font>)
+					                    	<input type="radio" name="documentStatus" value="all" > 全部(<font id="tjsj0">0</font>)
 					                    </label>
 					                    <label class="radio-inline">
 					                    	<input type="radio" name="documentStatus" value="1" > 办理中(<font id="tjsj2">0</font>)

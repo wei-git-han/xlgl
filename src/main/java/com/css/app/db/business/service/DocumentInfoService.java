@@ -1,5 +1,6 @@
 package com.css.app.db.business.service;
 
+import com.css.app.db.business.dto.LeaderStatisticsDto;
 import com.css.app.db.business.entity.DocumentInfo;
 import com.css.app.db.config.entity.DocumentDic;
 
@@ -36,10 +37,18 @@ public interface DocumentInfoService {
 	List<Map<String, Object>> queryListByDicStu(Map<String, Object> map);
 	
 	List<DocumentInfo> queryPersonList(Map<String, Object> map);
+	
 	List<Map<String, Object>> queryListByDicStutas(Map<String, Object> map);
+	
 	void deleteByCheHui(String id);
+	
 	List<DocumentDic> queryDicByType(Map<String, Object> map);
-
+	
 	String getMaxSecurity(String[] stringIds);
+	
 	List<DocumentInfo> queryInfoByParam(Map<String, Object> map);
+	//统计图首长批示落实统计查询
+	List<LeaderStatisticsDto> queryLeaderStatistics(Map<String, Object> map);
+	
+	List<DocumentInfo> queryStatisticsList(Map<String, Object> map);
 }

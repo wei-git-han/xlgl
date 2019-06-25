@@ -129,6 +129,15 @@ public class SubDocInfoController {
 			szpsMap.put("infoId", subDocInfo.getInfoId());
 			List<DocumentSzps> szpsList = documentSzpsService.queryList(szpsMap);
 			subDocInfo.setSzpslist(szpsList);
+			//本局最新反馈
+			subDocInfo.setLatestReply("");
+			Map<String, Object> replyMap = new HashMap<>();
+			replyMap.put("subId", subDocInfo.getId());
+			replyMap.put("infoId", subDocInfo.getInfoId());
+			List<ReplyExplain> queryList = replyExplainService.queryList(replyMap);
+			if(queryList!=null && queryList.size()>0) {
+				subDocInfo.setLatestReply(queryList.get(0).getReplyContent());
+			}
 		}
 		GwPageUtils pageUtil = new GwPageUtils(subDocInfoList);
 		Response.json(pageUtil);
@@ -235,6 +244,15 @@ public class SubDocInfoController {
 			szpsMap.put("infoId", subDocInfo.getInfoId());
 			List<DocumentSzps> szpsList = documentSzpsService.queryList(szpsMap);
 			subDocInfo.setSzpslist(szpsList);
+			//本局最新反馈
+			subDocInfo.setLatestReply("");
+			Map<String, Object> replyMap = new HashMap<>();
+			replyMap.put("subId", subDocInfo.getId());
+			replyMap.put("infoId", subDocInfo.getInfoId());
+			List<ReplyExplain> queryList = replyExplainService.queryList(replyMap);
+			if(queryList!=null && queryList.size()>0) {
+				subDocInfo.setLatestReply(queryList.get(0).getReplyContent());
+			}
 		}
 		GwPageUtils pageUtil = new GwPageUtils(subDocInfoList);
 		Response.json(pageUtil);

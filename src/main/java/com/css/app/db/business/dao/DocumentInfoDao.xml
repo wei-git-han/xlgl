@@ -195,6 +195,50 @@
 		on dic.value = s.DOC_TYPE_ID
 		where dic.DIC_TYPE = #{docType} order by value asc
 	</select>
+	<!-- 统计图首长批示详情页列表 -->
+	<select id="queryStatisticsList" resultType="com.css.app.db.business.entity.DocumentInfo">
+		select * from (
+		select db.* ,row_number() over(partition by db.id order by ps.created_time) as num from "DB_DOCUMENT_INFO" db left join "DB_DOCUMENT_SZPS" ps on db.id=ps.info_id where db.status>0
+		<if test="leaderId !=null and leaderId !=''">
+			and ps.USER_ID=#{leaderId}
+		</if>
+		<if test="status !=null and status !=''">
+			and db.status=#{status}
+		</if>
+		<if test="startDate !=null and startDate !=''">
+		    and ps.CREATED_TIME >= #{startDate}
+		</if>
+		<if test="endDate !=null and endDate !=''">
+			and ps.CREATED_TIME &lt;= #{endDate}
+		</if>
+		) t left join (select distinct info_id,listagg(sub_dept_name || nvl2(DECODE(undertaker_name,'',null,'NULL',null,undertaker_name),'/' || undertaker_name ||nvl2(DECODE(undertaker_phone,'',null,'NULL',null,undertaker_phone),'('||undertaker_phone||')',null),null), ',') within group(order by b.sort,created_time desc) over(partition by info_id) under_depts from DB_SUB_DOC_INFO a inner join BASE_APP_ORGAN b
+        on a.sub_dept_id=b.id) c on t.id = c.info_id
+		where t.num=1 order by t.STATUS asc,t.CREATED_TIME desc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	<!-- 统计图首长批示查询 -->
+	<select id="queryLeaderStatistics" resultType="com.css.app.db.business.dto.LeaderStatisticsDto">
+	 select t.* from (select shu.user_id as leaderId,shu.user_name as leaderName,isnull(sum(shu.blz), 0) as blzCount,isnull(sum(shu.bj), 0) as ybjCount,isnull(sum(shu.ctls), 0) as ctlsCount  
+		from (select ddi.user_id,ddi.user_name,
+			(case when ddi.STATUS='1' then count(ddi.STATUS) else 0 end ) as blz,
+			(case when ddi.STATUS='2' then count(ddi.STATUS) else 0 end ) as bj,
+			(case when ddi.STATUS='3' then count(ddi.STATUS) else 0 end ) as ctls
+		         from(
+		             select ps.user_id,ps.user_name,ps.info_id,db.status, row_number() over(partition by ps.user_name,ps.info_id order by ps.CREATED_TIME) as num from "DB_DOCUMENT_SZPS" ps left join "DB_DOCUMENT_INFO" db on ps.info_id=db.id where db.status>0 
+		             <if test="year !=null and year !=''">
+		             	and to_char(db.CREATED_TIME) like '%'||#{year}||'%'
+		             </if>
+		             <if test="startDate != null and startDate != ''">
+						and ps.CREATED_TIME >= #{startDate} 
+					 </if>
+					 <if test="endDate != null and endDate != ''">
+						and ps.CREATED_TIME &lt;= #{endDate} 
+					 </if>
+		             )  ddi where num = '1' group by ddi.user_id,ddi.user_name,ddi.STATUS
+	         )shu  group by shu.user_id,shu.user_name) t left join  DB_ROLE_SET b on t.leaderId=b.USER_ID order by b.sort asc 
+	</select>
 
 	<!--根据年度获取每个状态的数量   CREATED_TIME暂为年度时间-->
 	<select id="queryListByYear" resultType="map">

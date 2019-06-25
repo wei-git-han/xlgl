@@ -704,6 +704,8 @@ function skip(){
 			window.location="/app/db/document/blfk/html/blfk.html?fileFrom=blfk";
 		}else if(fileFrom=="jndb"){ 
 			window.location.href="/app/db/document/jndb/html/jndb.html?fileFrom="+fileFrom;
+		}else if(fileFrom=="sztj"){ 
+			window.location.href="/app/db/document/tjsj/html/tjsj.html?fileFrom="+fileFrom;
 		}else{ 
 			window.location.href="/app/db/document/grdb/html/grdb.html?fileFrom="+fileFrom;
 		}

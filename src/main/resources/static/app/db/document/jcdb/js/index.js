@@ -1,17 +1,21 @@
 var url1 = {"url":"/app/db/documentjcdb/list","dataType":"text"};
-//var url2 = {"url":"../data/json2.json","dataType":"text"};
 var url2 = {"url":"/app/db/documentjcdb/orglist","dataType":"text"};
 var url3 = {"url":"/app/db/documentjcdb/orglist2","dataType":"text"};
-//var url3 = {"url":"../data/json3.json","dataType":"text"};
 var url4 = {"url":"/app/db/documentjcdb/orglist3","dataType":"text"};
 var url5 = {"url":"/app/db/documentjcdb/orglist4","dataType":"text"};
-//var url5 = {"url":"../data/json5.json","dataType":"text"};
-var url6 = {"url":"../data/json7.json","dataType":"text"};
-
+var url6 = {"url":"/app/db/documentjcdb/orglist5","dataType":"text"};
+//var url6 = {"url":"../data/json7.json","dataType":"text"};
 var szFlag=getUrlParam("szFlag")||""; //首长页面进入标识
 if(szFlag== "1" || szFlag ==1){
 	$(".layout-top").show();
 }
+
+if(!window.top.memory){
+	window.top.memory = {};
+}
+var o = window.top.memory;
+
+
 var pageModule = function(){
 	
 	var inittopfn = function(){
@@ -70,7 +74,7 @@ var pageModule = function(){
 		
 		$ajax({
 			url:url2,
-			data:{month:month},
+			data:{month:"all"},
 			success:function(data){
 				$("#tbody").html('');
 				$.each(data,function(i){
@@ -106,22 +110,23 @@ var pageModule = function(){
 	var inittable2 = function(startdate,enddate){
 		$ajax({
 			url:url6,
-			data:{startdate:startdate,enddate:enddate},
+			data:{startDate:startdate,endDate:enddate},
 			success:function(data){
 				$("#tbody2").html('');
-				$.each(data,function(i){
+				//var ifclick = data.clickFlag;
+				var ifclick = true;
+				$.each(data.list,function(i){
 					var id = this.id;
-					var leaderid = this.leaderid;
-					var dwname = this.dwname;
-					var blz = this.blz;
-					var bj = this.bj;
-					var ctls = this.ctls;
-					var ifclick = true;
+					var leaderid = this.leaderId;
+					var dwname = this.leaderName;
+					var blz = this.blzCount;
+					var bj = this.ybjCount;
+					var ctls = this.ctlsCount;
 					$("#tbody2").append(
 						`
 							<tr id="${id}">
 								<td>${i+1}</td>
-								<td><a name="0" ifclick="${ifclick}" id="${leaderid}">${dwname}</a></td>
+								<td><a name="all" ifclick="${ifclick}" id="${leaderid}">${dwname}</a></td>
 								<td><a name="1" ifclick="${ifclick}" id="${leaderid}">${blz}</a></td>
 								<td><a name="2" ifclick="${ifclick}" id="${leaderid}">${bj}</a></td>
 								<td><a name="3" ifclick="${ifclick}" id="${leaderid}">${ctls}</a></td>
@@ -139,7 +144,15 @@ var pageModule = function(){
 					var ifclick = $(this).attr("ifclick");
 					if(ifclick=="false"){newbootbox.alertInfo("您没有权限查看此数据!");return;}
 					
-					window.location.href = "../../tjsj/html/tjsj.html?type="+type+"&leaderid="+leaderid;
+					var startdate = $("#startdate").val();
+					var enddate = $("#enddate").val();
+					
+					window.top.memory = {};
+					window.top.memory.status = type;
+					window.top.memory.leaderId = leaderid;
+					window.top.memory.startdate = startdate;
+					window.top.memory.enddate = enddate;
+					window.location.href = "../../tjsj/html/tjsj.html?status="+type+"&leaderId="+leaderid+"&startdate="+startdate+"&enddate="+enddate;
 					
 				})
 			}
@@ -249,7 +262,7 @@ var pageModule = function(){
 				            data:blzdata
 				        },
 				        {
-				            name:'办结',
+				            name:'已办结',
 				            itemStyle:{
 							    normal: {
 							    	color : (function (){
@@ -546,8 +559,8 @@ var pageModule = function(){
 				
 				var startdate = $("#startdate").val();
 				var enddate = $("#enddate").val();
-				if(startdate.length==10){startdate = startdate.substr(0,4)+"-"+startdate.substr(5,2)+"-"+startdate.substr(8,2);}
-				if(enddate.length==10){enddate = enddate.substr(0,4)+"-"+enddate.substr(5,2)+"-"+enddate.substr(8,2);}
+				/*if(startdate.length==10){startdate = startdate.substr(0,4)+"-"+startdate.substr(5,2)+"-"+startdate.substr(8,2);}
+				if(enddate.length==10){enddate = enddate.substr(0,4)+"-"+enddate.substr(5,2)+"-"+enddate.substr(8,2);}*/
 				inittable2(startdate,enddate);
 				
 			},100);

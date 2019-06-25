@@ -1,70 +1,85 @@
-var tableList= {"url":"/app/db/subdocinfo/personList","dataType":"text"};//原table数据
+var tableList= {"url":"/app/db/documentjcdb/leaderStatisticsList","dataType":"text"};//原table数据
 var numsList={"url":"/app/db/subdocinfo/presonNumsList","dataType":"text"};//筛选状态数字统计
 var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//高级搜索--部门树
 var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//高级搜索--人员树
 var grid = null;
 var total=0;//列表中，数据的总条数
-var bjtype = getUrlParam("type");
-var leaderid = getUrlParam("type");
+var fileFrom=getUrlParam("fileFrom")||"sztj"; //文件来源
+var status = getUrlParam("status");//统计图传过来的状态
+var leaderId = getUrlParam("leaderId");//统计图传过来的首长ID
+
+var startdate = getUrlParam2("startdate");
+var enddate = getUrlParam2("enddate");
+
+if(!window.top.memory){
+	window.top.memory = {};
+}
+var o = window.top.memory;
+
 
 var pageModule = function(){
 	var initgrid = function(){
         grid = $("#gridcont").createGrid({
             columns:[
-                {display:"状态",name:"statusName",width:"7%",align:"center",render:function(rowdata,n){
+            	{display:"办理状态",name:"",width:"8%",align:"center",render:function(rowdata,n){
                 	var statusName="";
-               	 	var bgColor="#FF6600";
-               	 	if(rowdata.docStatus==9){
+               	 	var bgColor="";
+               	 	if(rowdata.status==1){
 	               	 	statusName="办理中";
-	               	 	bgColor="rgba(43, 170, 129, 1)";
-               	 	}else if(rowdata.docStatus==11){
+	               		bgColor="#2BAA81";
+            	 	}else if(rowdata.status==2){
+	               	 	statusName="已办结";
+	               		bgColor="#BCBCBC";
+               	 	}else if(rowdata.status==3){
 	               	 	statusName="常态落实";
-	               	 	bgColor="rgba(153, 153, 153, 1)";
+	               	 	bgColor="#BCBCBC";
                	 	}
   				  	return '<div title="'+statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+statusName+'</div>';
-                }},
-                {display:"办件标题",name:"docTitle",width:"20%",align:"left",render:function(rowdata){
-                	var cuiban="";
-                	if(rowdata.cuibanFlag=="1"){
-                		cuiban = '<label class="cuibanlabel">催办</label>';
-               	    }
-               	 	return '<a title="'+rowdata.docTitle+'" class="tabletitle" href="../../view/html/view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&fileFrom=grdb" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
-                }},
-                {display:"批示指示内容",name:"",width:"25%",align:"left",paixu:false,render:function(rowdata){
-               	 	var html1="";
-              	 	$.each(rowdata.szpslist,function(i,item){
-	               		var createdTime="";
-	               		if(item.createdTime!="" && item.createdTime!=null){
-	               			 createdTime= item.createdTime.substring(0,16);
-	               		}
-	               		html1+=item.userName+'&nbsp;&nbsp;'+createdTime+'批示：'+item.leaderComment+'&nbsp;&nbsp;&nbsp;'
-	    		    });
-              	    return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.infoId+'\')">'+html1+'</div>';
-                }},
-                {display:"督办落实情况",name:"",width:"25%",align:"left",paixu:false,render:function(rowdata){
-                	var duban="";
-                	if(rowdata.updateFlag=="1"){
-                		duban = '<label class="cuibanlabel">已更新</label>';
-                	}
-                	var dbCont="";
-                	if(rowdata.latestReply){
-                		dbCont=rowdata.latestReply;
-                	}	 
-                	return '<div class="dblsqk" onclick="dblsqkAlert(\''+rowdata.infoId+'\')"  title="'+dbCont+'">'+duban+'<span>'+dbCont+'</span></div>';
-                }},
-                {display:"承办单位/人",name:"",width:"11%",align:"left",paixu:false,title:false,render:function(rowdata){
-                	return '<div class="cbdw" title="'+rowdata.underDepts+'">'+rowdata.underDepts+'</div>'
-                }},
-                {display:"转办时间",name:"createdTime",width:"6%",align:"center",render:function(rowdata){
-               	 return rowdata.createdTime.substring(0,16);
-                }},
-                 {display:"反馈时间",name:"",width:"6%",align:"center",paixu:false,render:function(rowdata){
-                	 var updateTime="";
-                	 if(rowdata.updateTime){
-                		 updateTime = rowdata.updateTime.substring(0,16);
+                 }},
+                 {display:"办件标题",name:"",width:"15%",align:"left",title:false,render:function(rowdata){
+                	 var cuiban="";
+                 	 if(rowdata.cuibanFlag=="1"){
+                 		 cuiban = '<label class="cuibanlabel">催办</label>';
                 	 }
-                	 return updateTime;
-                 }}
+                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
+                 }},
+                 {display:"批示指示内容",name:"",width:"26%",align:"left",paixu:false,title:false,render:function(rowdata){
+                	 var html1="";
+                	 $.each(rowdata.szpslist,function(i,item){
+                		 var createdTime="";
+                		 if(item.createdTime!="" && item.createdTime!=null){
+                			 createdTime= item.createdTime.substring(0,16);
+                		 }
+                		 html1+=item.userName+'&nbsp;&nbsp;'+createdTime+'批示：'+item.leaderComment+'&nbsp;&nbsp;&nbsp;'
+     				 });
+                	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.id+'\')">'+html1+'</div>';
+                 }},
+                {display:"督办落实情况",name:"",width:"21%",align:"left",paixu:false,title:false,render:function(rowdata){
+               	 var duban="";
+                	 if(rowdata.updateFlag=="1"){
+                		duban = '<label class="cuibanlabel">已更新</label>';
+               	 }
+               	 var dbCont="";
+               	 if(rowdata.latestReply){
+               		dbCont=rowdata.latestReply;
+               	 }
+               	 return '<div class="dblsqk" onclick="dblsqkAlert(\''+rowdata.id+'\')" title="'+dbCont+'">'+duban+'<span>'+dbCont+'</span></div>';
+                }},
+                {display:"承办单位/人",name:"",width:"12%",align:"left",paixu:false,title:false,render:function(rowdata){
+               	 return '<div class="cbdw" title="'+rowdata.underDepts+'">'+rowdata.underDepts+'</div>'
+                }},
+                {display:"转办时间",name:"",width:"9%",align:"center",render:function(rowdata){
+               	 if(rowdata.firstZbTime && !!rowdata.firstZbTime){
+               		 return rowdata.firstZbTime.substring(0,16);
+               	 }
+               	 return '';
+                }},
+                {display:"反馈时间",name:"",width:"9%",align:"center",paixu:false,render:function(rowdata){
+               	 if(rowdata.latestReplyTime && !!rowdata.latestReplyTime){
+               		 return rowdata.latestReplyTime.substring(0,16);
+               	 }
+               	 return '';
+                }}
             ],
             width:"100%",
             height:"100%",
@@ -73,9 +88,11 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 10,
             pageyno:true,
-            paramobj:{docStatus:bjtype,leaderid:leaderid},
+            paramobj:{docStatus:status,leaderId:leaderId,startDate:startdate,endDate:enddate},
             loadafter:function(data){
             	total=data.total;
+            	$("input[name='documentStatus']:checked").parents("label").find("font").text(total);
+
             	$(".zspsnr").each(function(){
 					var maxwidth = 75;
 					if($(this).text().length > maxwidth){
@@ -109,51 +126,36 @@ var pageModule = function(){
        });
 	}
 	
-	var numsListfn = function(){
-		$ajax({
-			url:numsList,
-			data:{search:$("#searchVal").val()},
-			success:function(data){
-				$.each(data,function(i,item){
-					var id = "tjsj"+i;
-					$("#"+id).html(item);
-				});
-			}
-		});	
-	}
-	
 	var initother = function(){
-		$(".date-picker").datepicker({
-		    language:"zh-CN",
-		    rtl: Metronic.isRTL(),
-		    orientation: "right",
-		    format : "yyyy-mm-dd",
-		    autoclose: true
-		});
-		
-		$(".search").hover(function(){
-			$(this).attr("src","../../../common/images/u132_mouseOver.png");
-		},function(){
-			$(this).attr("src","../../../common/images/u132_mouseDown.png");
-		});
-
-		$("input[name='documentStatus']").click(function(){
-			refreshgrid();
-		});
-		
-		$(".search").click(function(){
-			refreshgrid();
-		});
-		
-		$("#contenttitle").click(function(){
+		$("#goback").click(function(){
+			window.top.memory = {};
 			window.location.href = "../../jcdb/html/index.html"
-		})
+		});
 	}
 
 	
 	var initfn = function(){
 		$.uniform.update($("input[name='documentStatus']").prop("checked",false));
-		$.uniform.update($("input[value='"+bjtype+"']").prop("checked",true));
+		$.uniform.update($("input[name='documentStatus']").prop("disabled",true));
+		if(o.status != ""  && o.status != null && o.status != "undefined"){
+			$.uniform.update($("input[value='"+o.status+"']").prop("checked",true));
+			$.uniform.update($("input[value='"+o.status+"']").prop("disabled",false));
+			status = o.status;
+		}else{
+			$.uniform.update($("input[value='"+status+"']").prop("checked",true));
+			$.uniform.update($("input[value='"+status+"']").prop("disabled",false));
+			
+		}	
+		
+		if(o.leaderId != ""  && o.leaderId != null && o.leaderId != "undefined" &&　o.leaderId!="null"){
+			leaderId = o.leaderId;
+		}
+		if(o.startdate != "" && o.startdate != null && o.startdate != "undefined"  &&　o.startdate!="null"){
+			startdate = o.startdate;
+		}
+		if(o.enddate != "" && o.enddate != null && o.enddate != "undefined"  &&　o.enddate!="null"){
+			enddate = o.enddate;
+		}
 	}
 	
 	return{
@@ -161,22 +163,13 @@ var pageModule = function(){
 		initControl:function(){
 			initfn();
 			initgrid();
-			numsListfn();
 			initother();
 		},
 		initgrid:function(){
 			initgrid();
-			numsListfn();
 		}
 	};
 }();
-
-function refreshgrid(){
-	var search = $("#searchVal").val();
-	var documentStatus= $("input[name='documentStatus']:checked").val();
-	grid.setparams({search:search,docStatus:documentStatus,leaderid:leaderid});
-	grid.loadtable();
-}
 
 //批示指示内容弹出框
 function pszsnrAlert(id){
