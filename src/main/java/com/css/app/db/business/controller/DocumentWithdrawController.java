@@ -240,21 +240,6 @@ public class DocumentWithdrawController {
 		 * 5.如果办结记录表有数据，则根据subId全部删除 
 		 * 6.如果办理反馈表、反馈附件记录表有数据，则删除；
 		 */
-		//督办基本信息表 恢复数据
-		DocumentInfo documentInfo = documentInfoService.queryObject(infoId);
-		if (documentInfo != null) {
-			documentInfo.setSzReadIds(null);
-			documentInfo.setStatus(1);
-			documentInfo.setLatestReply(null);
-			documentInfo.setLatestSubDept(null);
-			documentInfo.setLatestUndertaker(null);
-			documentInfo.setLatestReplyTime(null);
-			documentInfoService.updateDocumentInfoById(documentInfo);
-		}else {
-			this.unifiedDealErrorLog(json, infoId, subId, "督办基本信息表");
-			json.put("result", "fail");
-			return json;
-		}
 		// 更新状态   恢复数据
 		SubDocInfo subDocInfo = subDocInfoService.querySubDocInfoBySubIdAndInfoId(subId, infoId);
 		if (subDocInfo != null) {
@@ -267,6 +252,23 @@ public class DocumentWithdrawController {
 			subDocInfoService.updateSubDocInfoById(subDocInfo);
 		} else {
 			this.unifiedDealErrorLog(json, infoId, subId, "分支主记录表");
+			json.put("result", "fail");
+			return json;
+		}
+		//督办基本信息表 恢复数据
+		DocumentInfo documentInfo = documentInfoService.queryObject(infoId);
+		if (documentInfo != null) {
+			documentInfo.setSzReadIds(null);
+			documentInfo.setStatus(1);
+			if(StringUtils.equals(subDocInfo.getSubDeptName(), documentInfo.getLatestSubDept())) {
+				documentInfo.setLatestReply(null);
+				documentInfo.setLatestSubDept(null);
+				documentInfo.setLatestUndertaker(null);
+				documentInfo.setLatestReplyTime(null);
+			}
+			documentInfoService.updateDocumentInfoById(documentInfo);
+		}else {
+			this.unifiedDealErrorLog(json, infoId, subId, "督办基本信息表");
 			json.put("result", "fail");
 			return json;
 		}

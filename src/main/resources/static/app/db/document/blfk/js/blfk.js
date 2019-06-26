@@ -176,7 +176,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 10,
             pageyno:true,
-            paramobj:{page:o.pagesize1,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val(),psStartDate:$("#startDate").val(),psEndDate:$("#endDate").val(),status:$("#status").val()},
+            paramobj:{page:o.pagesize1,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val(),psStartDate:$("#startDate").val(),psEndDate:$("#endDate").val()},
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
@@ -288,7 +288,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 10,
             pageyno:true,
-            paramobj:{page:o.pagesize2,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val(),status:$("#status").val()},
+            paramobj:{page:o.pagesize2,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val()},
             loadafter:function(data){
             	total=data.total;
             	$(".dblsqk span").each(function(){
@@ -414,7 +414,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 10,
             pageyno:true,
-            paramobj:{page:o.pagesize3,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val(),psStartDate:$("#startDate").val(),psEndDate:$("#endDate").val(),period:$("#period").val(),status:$("#status").val()},
+            paramobj:{page:o.pagesize3,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val(),psStartDate:$("#startDate").val(),psEndDate:$("#endDate").val(),period:$("#period").val()},
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
@@ -456,7 +456,7 @@ var pageModule = function(){
 	var numsListfn = function(){
 		$ajax({
 			url:numsList,
-			data:{search:$("#searchVal").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val(),psStartDate:$("#startDate").val(),psEndDate:$("#endDate").val(),period:$("#period").val()},
+			data:{search:$("#searchVal").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val(),psStartDate:$("#startDate").val(),psEndDate:$("#endDate").val(),period:$("#period").val(),status:$("input[name='documentStatus']:checked").val()},
 			success:function(data){
 				$.each(data,function(i,item){
 					var id = "grdb"+i;

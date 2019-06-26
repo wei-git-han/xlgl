@@ -49,17 +49,17 @@
  	<select id="queryTotal" resultType="int">
 		select count(*) from DB_REPLY_EXPLAIN 
 	</select>
-	<!-- 查询所有分支局的最新一条反馈 -->
+	<!-- 查询所有分支局的最新一条已发布反馈 -->
 	<select id="queryAllLatestOneReply" resultType="com.css.app.db.business.entity.ReplyExplain">
 		select * from (select *, row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num from DB_REPLY_EXPLAIN where INFO_ID=#{infoId} and SHOW_FLAG='1') where num=1 order by CREATED_TIME desc
 	</select>
-	<!-- 查询所有分支局的反馈 -->
+	<!-- 查询所有分支局的各轮最新已发布反馈 -->
 	<select id="queryAllLatestReply" resultType="com.css.app.db.business.entity.ReplyExplain">
 	select * from(
 	select *,row_number() over(partition by sub_id,team_id order by created_time desc) as num from DB_REPLY_EXPLAIN where info_id = #{infoId} and show_flag='1'
 	)where num = '1' order by CREATED_TIME desc;
 	</select>
-	<!-- 查询某分支局的反馈 -->
+	<!-- 查询某分支局的各轮最新反馈 -->
 	<select id="querySubLatestReply" resultType="com.css.app.db.business.entity.ReplyExplain">
 	select * from(
 	select *,row_number() over(partition by team_id order by created_time desc) as num from DB_REPLY_EXPLAIN where info_id = #{0} and sub_id = #{1}
