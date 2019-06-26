@@ -296,7 +296,7 @@ public class SubDocInfoController {
 		//查询局内流转记录表
 		SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(id);
 		if (subDocTracking != null) {
-			if (StringUtils.equals(userId, subDocTracking.getSenderId())) {
+			if (StringUtils.equals(userId, subDocTracking.getSenderId()) && !StringUtils.equals(userId, subDocTracking.getReceiverId())) {
 				//如果状态为待落实  则此文承办人未送出，撤回删除转办记录表和局内流转表的最新一条
 				if (StringUtils.equals(subDocTracking.getTrackingType(), "1")) {
 					//撤回按钮显示标志
