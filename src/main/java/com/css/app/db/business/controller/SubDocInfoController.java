@@ -280,8 +280,19 @@ public class SubDocInfoController {
 			LocalDate currdate = LocalDate.now();
 			LocalDate leaderDate = LocalDate.parse(leaderTime, DateTimeFormatter.ofPattern("yyyy年MM月dd日"));
 			//如果该文没有办结且超过批示时间三个月的，显示超期提示；
-			if ((int)ChronoUnit.MONTHS.between(leaderDate, currdate) > 3 && subDocInfo.getDocStatus() < 12) {
-				subDocInfo.setIsOverTreeMonth(1);
+			if (subDocInfo.getDocStatus() < 12) {
+				if ((int)ChronoUnit.YEARS.between(leaderDate, currdate) == 0) {
+					if ((int)ChronoUnit.MONTHS.between(leaderDate, currdate) == 3) {
+						//提取天数
+						if (currdate.getDayOfMonth() > leaderDate.getDayOfMonth()) {
+							subDocInfo.setIsOverTreeMonth(1);
+						}
+					}else if ((int)ChronoUnit.MONTHS.between(leaderDate, currdate) > 3) {
+						subDocInfo.setIsOverTreeMonth(1);
+					}
+				}else if ((int)ChronoUnit.YEARS.between(leaderDate, currdate) > 0){
+					subDocInfo.setIsOverTreeMonth(1);
+				}
 			}
 		}
 	}
@@ -298,12 +309,12 @@ public class SubDocInfoController {
 		if (subDocTracking != null) {
 			if (StringUtils.equals(userId, subDocTracking.getSenderId()) && !StringUtils.equals(userId, subDocTracking.getReceiverId())) {
 				//如果状态为待落实  则此文承办人未送出，撤回删除转办记录表和局内流转表的最新一条
-				if (StringUtils.equals(subDocTracking.getTrackingType(), "1")) {
+				if (StringUtils.equals(subDocTracking.getTrackingType(), "1") && StringUtils.isBlank(subDocInfo.getUndertaker())) {
 					//撤回按钮显示标志
 					subDocInfo.setWithdrawFlag(1);
 				}
 				//如果状态为待审批  则此文承办人已发送审批，但是还在审批中，则支持撤回；
-				if (StringUtils.equals(subDocTracking.getTrackingType(), "2")) {
+				if (StringUtils.equals(subDocTracking.getTrackingType(), "2") && subDocInfo.getDocStatus() == 7) {
 					//撤回按钮显示标志
 					subDocInfo.setWithdrawFlag(1);
 					//审批撤回弹窗提示标志
