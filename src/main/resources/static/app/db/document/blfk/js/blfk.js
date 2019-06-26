@@ -575,52 +575,52 @@ var pageModule = function(){
 		$("#plcb").click(function(){
 			var datas;
 			var ids=[];
+			var docStatus=[];
+			var count = 0;
 			if($("#gridcont3").is(":visible")){
 				datas=grid3.getcheckrow();
 				$(datas).each(function(i){
 					ids[i]=this.id;
+					docStatus[i]=this.status;
+					if(this.status != "1"){
+						count++;
+					}
 				});
 			}else if($("#gridcont2").is(":visible")){
 				datas=grid2.getcheckrow();
 				$(datas).each(function(i){
 					ids[i]=this.id;
+					docStatus[i]=this.status;
+					if(this.status != "1"){
+						count++;
+					}
 				});
 			}else{
 				datas=grid.getcheckrow();
 				$(datas).each(function(i){
 					ids[i]=this.id;
+					docStatus[i]=this.status;
+					if(this.status != "1"){
+						count++;
+					}
 				});
 			}
 			if(datas.length>0){
-				newbootbox.newdialog({
-				    id: "cuibanDialog",
-				    title: "催办",
-				    header:true,
-				    width: 600,
-				    height:400,
-				    url: rootPath + "/document/blfk/html/cuibanDialog.html?fileIds="+ids.toString()
-				  });
-//				newbootbox.confirm({
-//				    title: "提示",
-//				    message: "是否要进行确认已读操作？",
-//				    callback1:function(){
-//				    	$ajax({
-//							url:batchReadUrl,
-//							data:{ids:ids.toString()},
-//							success:function(data){
-//								if(data.result == "success"){
-//									newbootbox.alertInfo("已读成功！").done(function(){
-//										leftMenufn();
-//										refreshgrid();
-//										window.top.blfkfn();
-//									});
-//								}
-//							}
-//						});	
-//				    }
-//				});
+				if(count > 0){
+					newbootbox.alertInfo("所选文件有"+count+"个文件不支持批量审批，请单独处理");
+					return;
+				}else{
+					newbootbox.newdialog({
+					    id: "cuibanDialog",
+					    title: "催办",
+					    header:true,
+					    width: 600,
+					    height:400,
+					    url: rootPath + "/document/blfk/html/cuibanDialog.html?fileIds="+ids.toString()
+					});
+				}
 			}else{
-				newbootbox.alertInfo("请选择要确认已读的数据！");
+				newbootbox.alertInfo("请选择要催办的数据！");
 			}
 		});
 		//导出
