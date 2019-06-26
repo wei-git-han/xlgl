@@ -978,7 +978,7 @@ public class SubDocInfoController {
 		tracking.setSubId(subId);
 		tracking.setTrackingType(trackingType);
 		if(StringUtils.isNotBlank(status)) {
-			tracking.setDocStatus( Integer.parseInt(status));
+			tracking.setPreviousStatus(Integer.parseInt(status));
 		}
 		subDocTrackingService.save(tracking);
 	}

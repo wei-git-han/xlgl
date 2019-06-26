@@ -42,15 +42,15 @@ public class SubDocTracking implements Serializable {
 	//备用字段
 	private String remark;
 	//转办前状态（撤回时用）
-	private Integer docStatus;
+	private Integer previousStatus;
 	//转办前承办人id（撤回时用）
 	private String undertaker;
 
-	public Integer getDocStatus() {
-		return docStatus;
+	public Integer getPreviousStatus() {
+		return previousStatus;
 	}
-	public void setDocStatus(Integer docStatus) {
-		this.docStatus = docStatus;
+	public void setPreviousStatus(Integer previousStatus) {
+		this.previousStatus = previousStatus;
 	}
 	/**
 	 * 设置：唯一标识

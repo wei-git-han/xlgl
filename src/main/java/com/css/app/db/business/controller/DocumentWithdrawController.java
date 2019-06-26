@@ -125,6 +125,7 @@ public class DocumentWithdrawController {
 			this.unifiedDealErrorLog(json, null, subId, "局内流转记录表");
 			return json;
 		}
+		Integer preStatus = subDocTracking.getPreviousStatus();
 		String senderId = subDocTracking.getSenderId();
 		//查询当前文的承办人ID  undertakerId
 		String undertakerId = subDocInfo.getUndertaker();
@@ -141,7 +142,7 @@ public class DocumentWithdrawController {
 							subDocInfo.setUndertakerPhone(appUser.getTelephone());
 						}
 					}
-					this.unifiedModifyDocStatus(subDocInfo,subDocTracking.getDocStatus());
+					this.unifiedModifyDocStatus(subDocInfo,preStatus);
 				}
 				
 				// 删除局内转办最新的一条记录
@@ -167,7 +168,7 @@ public class DocumentWithdrawController {
 					//删除带附件的反馈数据
 					//replyAttacService.deleteBySubIdAndTeamId(subId,delTeamId);
 					//承办人送审撤回
-					subDocInfo.setChooseStatus(subDocTracking.getDocStatus()+"");
+					subDocInfo.setChooseStatus(preStatus+"");
 					this.unifiedModifyDocStatus(subDocInfo, DbDocStatusDefined.BAN_LI_ZHONG);
 				}else {
 					//删除反馈记录表数据,没有显示给首长看
@@ -192,7 +193,7 @@ public class DocumentWithdrawController {
 						approvalOpinionService.delete(approvalOpinions.get(0).getId());
 					}
 					//审批人送审批
-					subDocInfo.setChooseStatus(subDocTracking.getDocStatus()+"");
+					subDocInfo.setChooseStatus(preStatus+"");
 					this.unifiedModifyDocStatus(subDocInfo, DbDocStatusDefined.DAI_SHEN_PI);
 				}
 				// 删除局内流转记录表,前提是有数据，然后删除

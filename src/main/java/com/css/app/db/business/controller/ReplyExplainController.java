@@ -400,7 +400,7 @@ public class ReplyExplainController {
 				ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
 				SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
 				if(StringUtils.isNotBlank(checkStatus)) {
-					subDocTracking.setDocStatus(Integer.parseInt(subDocInfo.getChooseStatus()));
+					subDocTracking.setPreviousStatus(Integer.parseInt(subDocInfo.getChooseStatus()));
 					subDocTrackingService.update(subDocTracking);
 				}
 				if(tempReply != null) {
