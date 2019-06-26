@@ -41,7 +41,17 @@ public class SubDocTracking implements Serializable {
 	private String trackingType;
 	//备用字段
 	private String remark;
+	//转办前状态（撤回时用）
+	private Integer docStatus;
+	//转办前承办人id（撤回时用）
+	private String undertaker;
 
+	public Integer getDocStatus() {
+		return docStatus;
+	}
+	public void setDocStatus(Integer docStatus) {
+		this.docStatus = docStatus;
+	}
 	/**
 	 * 设置：唯一标识
 	 */
@@ -197,5 +207,11 @@ public class SubDocTracking implements Serializable {
 	 */
 	public String getRemark() {
 		return remark;
+	}
+	public String getUndertaker() {
+		return undertaker;
+	}
+	public void setUndertaker(String undertaker) {
+		this.undertaker = undertaker;
 	}
 }

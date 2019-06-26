@@ -1,8 +1,5 @@
 package com.css.app.db.business.controller;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,13 +18,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.css.app.db.business.entity.ApprovalOpinion;
-import com.css.app.db.business.entity.DocumentBjjl;
 import com.css.app.db.business.entity.ReplyAttac;
 import com.css.app.db.business.entity.ReplyExplain;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.entity.SubDocTracking;
 import com.css.app.db.business.service.ApprovalOpinionService;
-import com.css.app.db.business.service.DocumentBjjlService;
 import com.css.app.db.business.service.ReplyAttacService;
 import com.css.app.db.business.service.ReplyExplainService;
 import com.css.app.db.business.service.SubDocInfoService;
@@ -403,6 +398,11 @@ public class ReplyExplainController {
 				map.put("teamId", teamId);
 				map.put("showFlag", "0");
 				ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
+				SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
+				if(StringUtils.isNotBlank(checkStatus)) {
+					subDocTracking.setDocStatus(Integer.parseInt(subDocInfo.getChooseStatus()));
+					subDocTrackingService.update(subDocTracking);
+				}
 				if(tempReply != null) {
 					if(StringUtils.isNotBlank(checkStatus)) {
 						subDocInfo.setChooseStatus(checkStatus);

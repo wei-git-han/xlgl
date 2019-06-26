@@ -40,7 +40,7 @@
 			"RECEIVER_DEPT_NAME", 
 			"CREATED_TIME", 
 			"ORG_NAME", 
-			"SUB_ID"
+			"SUB_ID" 
 		)
 		values
 		(
@@ -74,7 +74,7 @@
 			<if test="receiverDeptName != null">"RECEIVER_DEPT_NAME" = #{receiverDeptName}, </if>
 			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
 			<if test="orgName != null">"ORG_NAME" = #{orgName}, </if>
-			<if test="subId != null">"SUB_ID" = #{subId}</if>
+			<if test="subId != null">"SUB_ID" = #{subId} </if>
 		</set>
 		where ID = #{id}
 	</update>

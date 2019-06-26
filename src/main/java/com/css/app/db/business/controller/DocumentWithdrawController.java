@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.css.addbase.apporgan.entity.BaseAppUser;
+import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.db.business.entity.ApprovalOpinion;
 import com.css.app.db.business.entity.DocumentBjjl;
 import com.css.app.db.business.entity.DocumentInfo;
@@ -61,6 +63,8 @@ public class DocumentWithdrawController {
 	private ApprovalOpinionService approvalOpinionService;
 	@Autowired
 	private DocumentInfoService documentInfoService;
+	@Autowired
+	private BaseAppUserService baseAppUserService;
 
 	/**
 	 * 在局内待办菜单内增加局管理员超级撤回功能
@@ -129,12 +133,17 @@ public class DocumentWithdrawController {
 			if (StringUtils.equals(subDocTracking.getTrackingType(), "1")) {
 				if(StringUtils.isBlank(undertakerId)) {//没有点承办
 					//承办人转办撤回,更新状态
-					this.unifiedModifyDocStatus(subDocInfo, DbDocStatusDefined.DAI_LUO_SHI);
-				}else {
-					if(StringUtils.equals(userId, undertakerId)) {
-						this.unifiedModifyDocStatus(subDocInfo, DbDocStatusDefined.BAN_LI_ZHONG);
+					if(StringUtils.isNotBlank(subDocTracking.getUndertaker())) {
+						subDocInfo.setUndertaker(subDocTracking.getUndertaker());
+						subDocInfo.setUndertakerName(CurrentUser.getUsername());
+						BaseAppUser appUser = baseAppUserService.queryObject(CurrentUser.getUserId());
+						if(appUser !=null) {
+							subDocInfo.setUndertakerPhone(appUser.getTelephone());
+						}
 					}
+					this.unifiedModifyDocStatus(subDocInfo,subDocTracking.getDocStatus());
 				}
+				
 				// 删除局内转办最新的一条记录
 				documentZbjlService.delete(id);
 				// 删除局内流转记录表,前提是有数据，然后删除
@@ -143,31 +152,30 @@ public class DocumentWithdrawController {
 			}else if (StringUtils.equals(subDocTracking.getTrackingType(), "2")) {
 				//支持撤回     当前情况属于承办人/审批人送审批撤回
 				if (StringUtils.equals(userId, undertakerId)) {
-					//承办人送审撤回
-					this.unifiedModifyDocStatus(subDocInfo, DbDocStatusDefined.BAN_LI_ZHONG);
-					String delTeamId="";
+					//String delTeamId="";
 					Map<String, Object> map = new HashMap<>();
 					map.put("infoId", infoId);
 					map.put("subId", subId);
 					map.put("showFlag", "0");
-					map.put("userId", userId);
+					map.put("userId", subDocTracking.getReceiverId());
 					List<ReplyExplain> replyExplains = replyExplainService.queryList(map);
 					if (replyExplains != null && replyExplains.size() > 0) {
 						ReplyExplain explain = replyExplains.get(0);
-						delTeamId=explain.getTeamId();
+						//delTeamId=explain.getTeamId();
 						replyExplainService.delete(explain.getId());
 					}
 					//删除带附件的反馈数据
-					replyAttacService.deleteBySubIdAndTeamId(subId,delTeamId);
+					//replyAttacService.deleteBySubIdAndTeamId(subId,delTeamId);
+					//承办人送审撤回
+					subDocInfo.setChooseStatus(subDocTracking.getDocStatus()+"");
+					this.unifiedModifyDocStatus(subDocInfo, DbDocStatusDefined.BAN_LI_ZHONG);
 				}else {
-					//审批人送审批
-					this.unifiedModifyDocStatus(subDocInfo, DbDocStatusDefined.DAI_SHEN_PI);
 					//删除反馈记录表数据,没有显示给首长看
 					Map<String, Object> map = new HashMap<>();
 					map.put("infoId", infoId);
 					map.put("subId", subId);
 					map.put("showFlag", 0);
-					map.put("userId", userId);
+					map.put("userId", subDocTracking.getReceiverId());
 					map.put("time",subDocTracking.getCreatedTime());//确保是当前流转中写的反馈
 					List<ReplyExplain> replyExplains = replyExplainService.queryList(map);
 					if (replyExplains != null && replyExplains.size() > 0) {
@@ -183,6 +191,9 @@ public class DocumentWithdrawController {
 						//删除审批意见表数据
 						approvalOpinionService.delete(approvalOpinions.get(0).getId());
 					}
+					//审批人送审批
+					subDocInfo.setChooseStatus(subDocTracking.getDocStatus()+"");
+					this.unifiedModifyDocStatus(subDocInfo, DbDocStatusDefined.DAI_SHEN_PI);
 				}
 				// 删除局内流转记录表,前提是有数据，然后删除
 				subDocTrackingService.delete(subDocTracking.getId());
@@ -202,9 +213,9 @@ public class DocumentWithdrawController {
 		if (StringUtils.isBlank(infoId) && !StringUtils.isBlank(subId)) {
 			logger.info("根据subId：{}查不到{}的记录！", subId, tableName);
 		}else if (!StringUtils.isBlank(infoId) && !StringUtils.isBlank(subId)) {
-			logger.info("根据subId：{}，infoId：{}查不到"+tableName+"的记录！", subId, infoId);
+			logger.info("根据subId：{}，infoId：{}查不到{}的记录！", subId, infoId,tableName);
 		}else {
-			logger.info("根据subId：{}，infoId：{}查不到"+tableName+"的记录！", subId, infoId);
+			logger.info("根据subId：{}，infoId：{}查不到{}的记录！", subId, infoId, tableName);
 		}
 		json.put("result", "fail");
 	}

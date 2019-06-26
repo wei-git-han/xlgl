@@ -949,6 +949,19 @@ public class SubDocInfoController {
 				deptName=organ.getName();
 			}
 		}
+		//将临时反馈变为发布
+		Map<String, Object> map =new HashMap<>();
+		map.put("subId", subId);
+		map.put("userId", loginUserId);
+		map.put("showFlag", "0");
+		ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
+		if(tempReply!=null) {
+			tempReply.setReVersion("1");
+			if(StringUtils.isNotBlank(status)) {
+				tempReply.setChooseStatus(status);
+			}
+			replyExplainService.update(tempReply);
+		}
 		//添加流转记录
 		SubDocTracking tracking = new SubDocTracking();
 		String loginUserName=CurrentUser.getUsername();
@@ -964,20 +977,10 @@ public class SubDocInfoController {
 		tracking.setRecDeptName(deptName);
 		tracking.setSubId(subId);
 		tracking.setTrackingType(trackingType);
-		subDocTrackingService.save(tracking);
-		//将临时反馈变为发布
-		Map<String, Object> map =new HashMap<>();
-		map.put("subId", subId);
-		map.put("userId", loginUserId);
-		map.put("showFlag", "0");
-		ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
-		if(tempReply!=null) {
-			tempReply.setReVersion("1");
-			if(StringUtils.isNotBlank(status)) {
-				tempReply.setChooseStatus(status);
-			}
-			replyExplainService.update(tempReply);
+		if(StringUtils.isNotBlank(status)) {
+			tracking.setDocStatus( Integer.parseInt(status));
 		}
+		subDocTrackingService.save(tracking);
 	}
 	
 	/**

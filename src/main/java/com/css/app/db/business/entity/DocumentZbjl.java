@@ -10,7 +10,7 @@ import java.util.Date;
  * 
  * @author 中软信息系统工程有限公司
  * @email 
- * @date 2019-06-19 13:24:14
+ * @date 2019-06-25 18:00:32
  */
 public class DocumentZbjl implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -192,5 +192,4 @@ public class DocumentZbjl implements Serializable {
 	public String getSubId() {
 		return subId;
 	}
-	
 }

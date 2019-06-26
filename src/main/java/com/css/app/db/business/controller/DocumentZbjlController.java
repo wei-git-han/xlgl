@@ -215,6 +215,8 @@ public class DocumentZbjlController {
 			tracking.setRecDeptName(deptName);
 			tracking.setSubId(subId);
 			tracking.setTrackingType("1");
+			tracking.setDocStatus(subInfo.getDocStatus());
+			tracking.setUndertaker(subInfo.getUndertaker());
 			subDocTrackingService.save(tracking);
 			//改变文件状态 ，文件状态为待落实
 			if(subInfo != null) {

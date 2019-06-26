@@ -40,7 +40,9 @@
 			"REC_DEPT_ID", 
 			"REC_DEPT_NAME", 
 			"TRACKING_TYPE", 
-			"REMARK"
+			"REMARK",
+			"DOC_STATUS",
+			"UNDERTAKER"
 		)
 		values
 		(
@@ -56,7 +58,9 @@
 			#{recDeptId}, 
 			#{recDeptName}, 
 			#{trackingType}, 
-			#{remark}
+			#{remark},
+			#{docStatus},
+			#{undertaker}
 		)
 	</insert>
 	 
@@ -74,7 +78,9 @@
 			<if test="recDeptId != null">"REC_DEPT_ID" = #{recDeptId}, </if>
 			<if test="recDeptName != null">"REC_DEPT_NAME" = #{recDeptName}, </if>
 			<if test="trackingType != null">"TRACKING_TYPE" = #{trackingType}, </if>
-			<if test="remark != null">"REMARK" = #{remark}</if>
+			<if test="remark != null">"REMARK" = #{remark},</if>
+			<if test="docStatus != null">"DOC_STATUS" = #{docStatus},</if>
+			<if test="undertaker != null">"UNDERTAKER" = #{undertaker}</if>
 		</set>
 		where ID = #{id}
 	</update>
