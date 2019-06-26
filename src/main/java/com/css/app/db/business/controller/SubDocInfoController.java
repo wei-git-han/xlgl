@@ -122,14 +122,14 @@ public class SubDocInfoController {
 		PageHelper.startPage(page, pagesize);
 		List<SubDocInfo> subDocInfoList = subDocInfoService.queryList(map);
 		for (SubDocInfo subDocInfo : subDocInfoList) {
-			//是否已读
-			Map<String, Object> readMap = new HashMap<>();
+			//是否已读---暂时不显示改为本局最新反馈，但不能删，随时会换回来
+			/*Map<String, Object> readMap = new HashMap<>();
 			readMap.put("userId", loginUserId);
 			readMap.put("infoId", subDocInfo.getInfoId());
 			List<DocumentRead> list = documentReadService.queryList(readMap);
 			if(list.size()==0 && StringUtils.isNotBlank(subDocInfo.getLatestReply())) {
 				subDocInfo.setUpdateFlag("1");
-			}
+			}*/
 			//首长批示
 			Map<String, Object> szpsMap = new HashMap<>();
 			szpsMap.put("infoId", subDocInfo.getInfoId());
@@ -239,14 +239,14 @@ public class SubDocInfoController {
 		PageHelper.startPage(page, pagesize);
 		List<SubDocInfo> subDocInfoList = subDocInfoService.queryPersonList(map);
 		for (SubDocInfo subDocInfo : subDocInfoList) {
-			//是否已读
+			/*是否已读---暂时去掉改为本局最新反馈，不能删，随时会换回来
 			Map<String, Object> readMap = new HashMap<>();
 			readMap.put("userId", loginUserId);
 			readMap.put("infoId", subDocInfo.getInfoId());
 			List<DocumentRead> list = documentReadService.queryList(readMap);
 			if(list.size()==0 && StringUtils.isNotBlank(subDocInfo.getLatestReply())) {
 				subDocInfo.setUpdateFlag("1");
-			}
+			}*/
 			//首长批示
 			Map<String, Object> szpsMap = new HashMap<>();
 			szpsMap.put("infoId", subDocInfo.getInfoId());
