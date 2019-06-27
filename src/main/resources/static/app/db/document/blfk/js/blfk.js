@@ -53,18 +53,34 @@ var pageModule = function(){
 						$("#gridcont3").show();
 						$("#gridcont2").hide();
 						$("#gridcont").hide();
+						$("#period").removeAttr("disabled");
+						$("#leaderName").removeAttr("disabled");
+						$("#leaderName").parents(".form-control").css("background","#fff");
+						$("#startDate").removeAttr("disabled");
+						$("#endDate").removeAttr("disabled");
 						refreshgrid3();
 					}else if($(this).attr("data_flag") == "2"){//分工
 						window.top.memory.tree = "2";
 						$("#gridcont3").hide();
 						$("#gridcont").hide();
 						$("#gridcont2").show();
+						$("#period").attr("disabled",true).val("");
+						$("#leaderName").attr("disabled",true).val("");
+						$("#leaderId").val("");
+						$("#leaderName").parents(".form-control").css("background","#eee");
+						$("#startDate").attr("disabled",true).val("");
+						$("#endDate").attr("disabled",true).val("");
 						refreshgrid2();
 					}else{//批示
 						window.top.memory.tree = "1";
 						$("#gridcont3").hide();
 						$("#gridcont2").hide();
 						$("#gridcont").show();
+						$("#period").attr("disabled",true).val("");
+						$("#leaderName").removeAttr("disabled");
+						$("#leaderName").parents(".form-control").css("background","#fff");
+						$("#startDate").removeAttr("disabled");
+						$("#endDate").removeAttr("disabled");
 						refreshgrid1();
 					}
 				});
@@ -111,15 +127,6 @@ var pageModule = function(){
                 	 return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+rowdata.docTitle+csFlag+'</a>'
                  }},
                  {display:"批示指示内容",name:"",width:"26%",align:"left",paixu:false,title:false,render:function(rowdata){
-                	 /*var szpsCont="";
-                	 var leaderTime1="";
-                	 if(rowdata.leaderTime!="" && rowdata.leaderTime!=null){
-                		 leaderTime1= rowdata.leaderTime.substring(0,16);
-                	 }
-                	 if(rowdata.leaderName && rowdata.leaderContent){
-                		 szpsCont=rowdata.leaderName+" "+leaderTime1+"批示："+rowdata.leaderContent
-                	 }
-                	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.id+'\')" title="'+szpsCont+'">'+szpsCont+'</div>';*/
                 	 var html1="";
                 	 $.each(rowdata.szpslist,function(i,item){
                 		 var createdTime="";
@@ -276,7 +283,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 10,
             pageyno:true,
-            paramobj:{page:o.pagesize2,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val()},
+            paramobj:{page:o.pagesize2,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val()},
             loadafter:function(data){
             	total=data.total;
             	$(".dblsqk span").each(function(){
