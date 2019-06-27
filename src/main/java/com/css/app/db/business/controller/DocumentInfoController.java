@@ -379,7 +379,7 @@ public class DocumentInfoController {
 			LocalDate currdate = LocalDate.now();
 			LocalDate leaderDate = LocalDate.parse(leaderTime, DateTimeFormatter.ofPattern("yyyy年MM月dd日"));
 			//如果该文没有办结且超过批示时间三个月的，显示超期提示；
-			if (info.getStatus() < 12) {
+			if (info.getStatus() < 2) {
 				if ((int)ChronoUnit.YEARS.between(leaderDate, currdate) == 0) {
 					if ((int)ChronoUnit.MONTHS.between(leaderDate, currdate) == 3) {
 						//提取天数

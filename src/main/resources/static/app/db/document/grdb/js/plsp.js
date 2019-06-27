@@ -8,20 +8,26 @@ var pageModule = function(){
 		}
 		//审批通过
 		$("#pass").click(function(){
-			$ajax({
-				url:passUrl,
-				data:{subIds:ids,content:$("#content").val()},
-				success:function(data){
-					newbootbox.newdialogClose("plspDialog");
-					if(data.result=='success'){
-						newbootbox.alertInfo('公文已审批通过！').done(function(){
-							window.top.iframe1.pageModule.initgrid();
-						});
-					}else{
-						newbootbox.alertInfo('审批未通过！');
-					}
-				}
-			});	
+			newbootbox.oconfirm({
+			 	title:"提示",
+			 	message: "审批完成，确认后将正式发布此办件落实情况？",
+			 	callback1:function(){
+			 		$ajax({
+						url:passUrl,
+						data:{subIds:ids,content:$("#content").val()},
+						success:function(data){
+							newbootbox.newdialogClose("plspDialog");
+							if(data.result=='success'){
+								newbootbox.alertInfo('公文已审批通过！').done(function(){
+									window.top.iframe1.pageModule.initgrid();
+								});
+							}else{
+								newbootbox.alertInfo('审批未通过！');
+							}
+						}
+					});	
+			 	}
+			});
 		});
 		
 		//送审批

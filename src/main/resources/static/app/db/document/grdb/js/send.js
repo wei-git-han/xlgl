@@ -1,7 +1,7 @@
 var deptTreeUrl = {"url":"/app/base/user/tree","dataType":"text"}; //部门树
 var sureUrl = {"url":"/app/db/subdocinfo/batchSendOperation","dataType":"text"}; //保存
 var fileId=getUrlParam("ids"); //主文件id
-var content=getUrlParam("content"); //意见内容
+var content=getUrlParam2("content"); //意见内容
 var userId="";
 var userName="";
 var pageModule = function(){
