@@ -10,12 +10,12 @@ var leaderId = getUrlParam("leaderId");//统计图传过来的首长ID
 
 var startdate = getUrlParam2("startdate");
 var enddate = getUrlParam2("enddate");
-
-if(!window.top.memory){
+/*if(!window.top.memory){
 	window.top.memory = {};
 }
-var o = window.top.memory;
+var o = window.top.memory;*/
 
+//alert(JSON.stringify(gettop().memory))
 
 var pageModule = function(){
 	var initgrid = function(){
@@ -41,7 +41,7 @@ var pageModule = function(){
                  	 if(rowdata.cuibanFlag=="1"){
                  		 cuiban = '<label class="cuibanlabel">催办</label>';
                 	 }
-                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
+                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'&leaderId='+leaderId+'&startdate='+startdate+'&enddate='+enddate+'&status='+status+'" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
                  }},
                  {display:"批示指示内容",name:"",width:"26%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var html1="";
@@ -128,7 +128,7 @@ var pageModule = function(){
 	
 	var initother = function(){
 		$("#goback").click(function(){
-			window.top.memory = {};
+			/*remember = {};*/
 			window.location.href = "../../jcdb/html/index.html"
 		});
 	}
@@ -137,25 +137,25 @@ var pageModule = function(){
 	var initfn = function(){
 		$.uniform.update($("input[name='documentStatus']").prop("checked",false));
 		$.uniform.update($("input[name='documentStatus']").prop("disabled",true));
-		if(o.status != ""  && o.status != null && o.status != "undefined"){
-			$.uniform.update($("input[value='"+o.status+"']").prop("checked",true));
-			$.uniform.update($("input[value='"+o.status+"']").prop("disabled",false));
+		/*if(remember.status != ""  && remember.status != null && remember.status != "undefined"){
+			$.uniform.update($("input[value='"+remember.status+"']").prop("checked",true));
+			$.uniform.update($("input[value='"+remember.status+"']").prop("disabled",false));
 			status = o.status;
-		}else{
+		}else{*/
 			$.uniform.update($("input[value='"+status+"']").prop("checked",true));
 			$.uniform.update($("input[value='"+status+"']").prop("disabled",false));
 			
-		}	
+		/*}	
 		
-		if(o.leaderId != ""  && o.leaderId != null && o.leaderId != "undefined" &&　o.leaderId!="null"){
-			leaderId = o.leaderId;
+		if(remember.leaderId != ""  && remember.leaderId != null && remember.leaderId != "undefined" &&　remember.leaderId!="null"){
+			leaderId = remember.leaderId;
 		}
-		if(o.startdate != "" && o.startdate != null && o.startdate != "undefined"  &&　o.startdate!="null"){
-			startdate = o.startdate;
+		if(remember.startdate != "" && remember.startdate != null && remember.startdate != "undefined"  &&　remember.startdate!="null"){
+			startdate = remember.startdate;
 		}
-		if(o.enddate != "" && o.enddate != null && o.enddate != "undefined"  &&　o.enddate!="null"){
-			enddate = o.enddate;
-		}
+		if(remember.enddate != "" && remember.enddate != null && remember.enddate != "undefined"  &&　remember.enddate!="null"){
+			enddate = remember.enddate;
+		}*/
 	}
 	
 	return{

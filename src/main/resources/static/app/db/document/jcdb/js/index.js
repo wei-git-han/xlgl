@@ -10,14 +10,16 @@ if(szFlag== "1" || szFlag ==1){
 	$(".layout-top").show();
 }
 
-if(!window.top.memory){
+/*if(!window.top.memory){
 	window.top.memory = {};
 }
-var o = window.top.memory;
+var o = window.top.memory;*/
 
+
+
+/*var remember = gettop().memory;*/
 
 var pageModule = function(){
-	
 	var inittopfn = function(){
 		
 		$ajax({
@@ -147,13 +149,12 @@ var pageModule = function(){
 					var startdate = $("#startdate").val();
 					var enddate = $("#enddate").val();
 					
-					window.top.memory = {};
-					window.top.memory.status = type;
-					window.top.memory.leaderId = leaderid;
-					window.top.memory.startdate = startdate;
-					window.top.memory.enddate = enddate;
+					/*remember = {};
+					remember.status = type;
+					remember.leaderId = leaderid;
+					remember.startdate = startdate;
+					remember.enddate = enddate;*/
 					window.location.href = "../../tjsj/html/tjsj.html?status="+type+"&leaderId="+leaderid+"&startdate="+startdate+"&enddate="+enddate;
-					
 				})
 			}
 		});

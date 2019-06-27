@@ -19,6 +19,13 @@ var banjieUrl = {"url":"/app/db/documentinfo/banJieOperation","dataType":"text"}
 var fileId=getUrlParam("fileId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var fromMsg=getUrlParam("fromMsg")||false; //是否为消息进入
+
+
+var status = getUrlParam("status");//统计图传过来的状态
+var leaderId = getUrlParam("leaderId");//统计图传过来的首长ID
+var startdate = getUrlParam2("startdate");
+var enddate = getUrlParam2("enddate");
+
 var pageModule = function(){
 	//打开页面标识已读
 	var initReadfn = function(){
@@ -705,12 +712,11 @@ function skip(){
 		}else if(fileFrom=="jndb"){ 
 			window.location.href="/app/db/document/jndb/html/jndb.html?fileFrom="+fileFrom;
 		}else if(fileFrom=="sztj"){ 
-			window.location.href="/app/db/document/tjsj/html/tjsj.html?fileFrom="+fileFrom;
+			window.location.href="/app/db/document/tjsj/html/tjsj.html?fileFrom="+fileFrom+"&status="+status+"&leaderId="+leaderId+"&startdate="+startdate+"&enddate="+enddate;
 		}else{ 
 			window.location.href="/app/db/document/grdb/html/grdb.html?fileFrom="+fileFrom;
 		}
 	}
-
 }
 
 /*//批示详情
