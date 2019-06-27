@@ -314,7 +314,7 @@ public class SubDocInfoController {
 					subDocInfo.setWithdrawFlag(1);
 				}
 				//如果状态为待审批  则此文承办人已发送审批，但是还在审批中，则支持撤回；
-				if (StringUtils.equals(subDocTracking.getTrackingType(), "2") && subDocInfo.getDocStatus() == 7) {
+				if (StringUtils.equals(subDocTracking.getTrackingType(), "2") && subDocInfo.getDocStatus() < 10) {
 					//撤回按钮显示标志
 					subDocInfo.setWithdrawFlag(1);
 					//审批撤回弹窗提示标志
