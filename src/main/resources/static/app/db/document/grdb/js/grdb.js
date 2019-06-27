@@ -385,6 +385,10 @@ function chehuiDoc(id, infoId){
 				newbootbox.alertInfo('撤回成功！').done(function(){
 					pageModule.initgrid();
 				});
+			}else if(data.result=='deal'){
+				newbootbox.alertInfo('当前文件已被处理，不能撤回！').done(function(){
+					pageModule.initgrid();
+				});
 			}else{
 				newbootbox.alertInfo('撤回失败！');
 			}

@@ -143,6 +143,9 @@ public class DocumentWithdrawController {
 						}
 					}
 					this.unifiedModifyDocStatus(subDocInfo,preStatus);
+				}else {
+					json.put("result", "deal");
+					return json;
 				}
 				
 				// 删除局内转办最新的一条记录
@@ -199,6 +202,8 @@ public class DocumentWithdrawController {
 				subDocTrackingService.delete(subDocTracking.getId());
 			}
 			json.put("result", "success");
+		}else {
+			json.put("result", "deal");
 		}
 		return json;
 	}
