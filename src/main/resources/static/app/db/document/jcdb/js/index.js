@@ -528,8 +528,24 @@ var pageModule = function(){
 	
 	var initother = function(){
 		var newdate = new Date();
+		var newyear = newdate.getFullYear();
+		var newmonth = newdate.getMonth();
+		
+		
+		
+		
+		var comparemonth = newdate.getMonth()+1;
+		
+		if(comparemonth == 1){
+			newmonth = 12;
+			newyear= parseInt(newyear)-1;
+		}
+		
+		$(".newDateVal").val(newyear+"年"+newmonth+"月"+"01日"); //new
+		
 		var month = newdate.format("MM");
 		$(".bs-select").val(month);
+		
 		
 		$(".bs-select").selectpicker({
 		    iconBase: "fa",
@@ -545,6 +561,7 @@ var pageModule = function(){
 		$("#listbutton").click(function(){
 			window.location.href = "main.html";
 		});
+		
 		
 		var o1 = false;
 		$(".date-picker").datepicker({
