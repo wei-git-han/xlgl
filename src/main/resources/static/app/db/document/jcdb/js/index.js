@@ -530,16 +530,17 @@ var pageModule = function(){
 		var newdate = new Date();
 		var newyear = newdate.getFullYear();
 		var newmonth = newdate.getMonth();
-		
-		
-		
-		
 		var comparemonth = newdate.getMonth()+1;
 		
 		if(comparemonth == 1){
 			newmonth = 12;
 			newyear= parseInt(newyear)-1;
 		}
+		
+		if(newmonth<10){
+			newmonth = "0"+newmonth;
+		}
+		
 		
 		$(".newDateVal").val(newyear+"年"+newmonth+"月"+"01日"); //new
 		
@@ -591,9 +592,9 @@ var pageModule = function(){
 		//加载页面处理程序
 		initControl:function(){
 			initpage();
-			inittable2("","");
-			inittopfn();
 			initother();
+			inittable2($(".newDateVal").val(),$(".datee2").val());
+			inittopfn();
 		}
 	}
 	
