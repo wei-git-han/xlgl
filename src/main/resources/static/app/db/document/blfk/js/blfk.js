@@ -5,7 +5,7 @@ var leaderTreeUrl= {"url":"/app/db/roleset/queryLeaderTree","dataType":"text"};/
 var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//人员树
 var leftMenuUrl = {"url":"/app/db//documentinfo/getDicByTypet","dataType":"text"};//左侧菜单
 var batchReadUrl = {"url":"/app/db/documentinfo/batchRead","dataType":"text"};//批量已读
-var leftMenuNums = {"url":"","dataType":"text"};//左侧菜单数字统计
+var getUserAdminTypeUrl = {"url":"/app/db/adminset/getAuthor","dataType":"text"};
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var orgid=getUrlParam("orgid")||""; //统计图传过来的机构
 var month=getUrlParam("month")||""; //统计图传过来的月份
@@ -72,19 +72,7 @@ var pageModule = function(){
 				if(o.value!="" && o.value!=null &&　o.value!="null" && o.value!="undefined"){
 					$("#classType li").removeClass("active");
 					$("#classType li[value="+o.value+"]").addClass("active");
-				}
-				
-				/*$ajax({
-					url:leftMenuNums,
-					data:{dicType:"document_type"},
-					success:function(data){
-						$.each(data,function(j,item2){
-							var id = "Menu_num"+j;
-							$("#"+id).html(item2);
-						});
-					}
-				});	*/
-				
+				}				
 			}
 		});	
 	}
@@ -466,6 +454,22 @@ var pageModule = function(){
 		});	
 	}
 	
+	var initBtn = function(){
+		$ajax({
+			url: getUserAdminTypeUrl,
+			type: "GET",
+			success: function(data) {
+				if(data=="0"||data=="1"){//超级管理员或部管理员				
+					$("#plcb").show(); //批量催办
+				}
+			}
+		});
+		$(".newpage8").click(function(){
+			$(".newpage8").removeClass("active");
+			$(this).addClass("active");
+		});
+	}
+	
 	var initother = function(){
 		$(".date-picker").datepicker({
 		    language:"zh-CN",
@@ -575,52 +579,52 @@ var pageModule = function(){
 		$("#plcb").click(function(){
 			var datas;
 			var ids=[];
+			var docStatus=[];
+			var count = 0;
 			if($("#gridcont3").is(":visible")){
 				datas=grid3.getcheckrow();
 				$(datas).each(function(i){
 					ids[i]=this.id;
+					docStatus[i]=this.status;
+					if(this.status != "1" || this.cuibanFlag=="1"){
+						count++;
+					}
 				});
 			}else if($("#gridcont2").is(":visible")){
 				datas=grid2.getcheckrow();
 				$(datas).each(function(i){
 					ids[i]=this.id;
+					docStatus[i]=this.status;
+					if(this.status != "1" || this.cuibanFlag=="1"){
+						count++;
+					}
 				});
 			}else{
 				datas=grid.getcheckrow();
 				$(datas).each(function(i){
 					ids[i]=this.id;
+					docStatus[i]=this.status;
+					if(this.status != "1" || this.cuibanFlag=="1"){
+						count++;
+					}
 				});
 			}
 			if(datas.length>0){
-				newbootbox.newdialog({
-				    id: "cuibanDialog",
-				    title: "催办",
-				    header:true,
-				    width: 600,
-				    height:400,
-				    url: rootPath + "/document/blfk/html/cuibanDialog.html?fileIds="+ids.toString()
-				  });
-//				newbootbox.confirm({
-//				    title: "提示",
-//				    message: "是否要进行确认已读操作？",
-//				    callback1:function(){
-//				    	$ajax({
-//							url:batchReadUrl,
-//							data:{ids:ids.toString()},
-//							success:function(data){
-//								if(data.result == "success"){
-//									newbootbox.alertInfo("已读成功！").done(function(){
-//										leftMenufn();
-//										refreshgrid();
-//										window.top.blfkfn();
-//									});
-//								}
-//							}
-//						});	
-//				    }
-//				});
+				if(count > 0){
+					newbootbox.alertInfo("所选文件有"+count+"个文件不支持批量催办，请单独处理");
+					return;
+				}else{
+					newbootbox.newdialog({
+					    id: "cuibanDialog",
+					    title: "催办",
+					    header:true,
+					    width: 600,
+					    height:400,
+					    url: rootPath + "/document/blfk/html/cuibanDialog.html?fileIds="+ids.toString()
+					});
+				}
 			}else{
-				newbootbox.alertInfo("请选择要确认已读的数据！");
+				newbootbox.alertInfo("请选择要催办的数据！");
 			}
 		});
 		//导出
@@ -697,6 +701,7 @@ var pageModule = function(){
 	return{
 		//加载页面处理程序
 		initControl:function(){
+			initBtn();
 			initfn();
 			leftMenufn();
 			initgrid();

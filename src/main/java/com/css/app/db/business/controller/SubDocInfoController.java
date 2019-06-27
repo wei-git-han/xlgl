@@ -674,10 +674,6 @@ public class SubDocInfoController {
 	 * @param infoId 文ID
 	 */
 	private void sendApprovalUnifiedDeal(String subId, String userName, String userId, String replyContent, String infoId) {
-		//流转到下一个人并将临时反馈变为发布
-		this.submitRelation(subId, userName, userId,"2",null);
-		//保存审批意见
-		approvalOpinionService.saveOpinion(subId, replyContent, "1",null);
 		//保存最新更新时间
 		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
 		if(subDocInfo != null) {
@@ -685,6 +681,10 @@ public class SubDocInfoController {
 			subDocInfo.setUpdateTime(new Date());
 			subDocInfoService.update(subDocInfo);
 		}
+		//流转到下一个人并将临时反馈变为发布
+		this.submitRelation(subId, userName, userId,"2",subDocInfo.getChooseStatus());
+		//保存审批意见
+		approvalOpinionService.saveOpinion(subId, replyContent, "1",null);
 		// 发送消息提醒
 		MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_SONGSHEN_MSG_TITLE);
 		if (msg != null) {
