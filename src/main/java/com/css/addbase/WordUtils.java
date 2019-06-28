@@ -9,6 +9,8 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
@@ -17,6 +19,7 @@ import freemarker.template.TemplateExceptionHandler;
 
 public class WordUtils {
 	
+	private static Logger LOG = Logger.getLogger(WordUtils.class);
 	private Configuration configure = null;
 	
 	public WordUtils(){
@@ -92,5 +95,52 @@ public class WordUtils {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	
+	/**
+	 * 根据DOC模板生成word文件
+	 * 
+	 * @param dataList
+	 *            word中需要放的数据
+	 * @param templatePath 
+	 * 				模板路径 
+	 * @param tempFileName
+	 *            模板文件名
+	 */
+	public static void creatDoc(Map<String, Object> dataList, String fileName, String templateName, String templatePath) {
+		Configuration cfg = new Configuration(Configuration.VERSION_2_3_24);
+		cfg.setDefaultEncoding("utf-8");
+		Writer out = null;
+		FileOutputStream fos = null;
+		// 加载模板文件
+		cfg.setClassForTemplateLoading(WordUtils.class, templatePath);
+		// 设置异常处理器
+		cfg.setTemplateExceptionHandler(TemplateExceptionHandler.IGNORE_HANDLER);
+		Template temp =null;
+		try {
+			// 定义Template对象，注意模板类型名字与fileName要一致
+			temp = cfg.getTemplate(templateName);// 装载模板
+			fos = new FileOutputStream(new File(fileName));
+			out = new BufferedWriter(new OutputStreamWriter(fos, "utf-8"));
+			//合成對象
+			temp.process(dataList, out);
+		} catch (Exception e) {
+			LOG.error("【报错信息】Word文档转换出错，" + e.getMessage());
+			e.printStackTrace();
+		}finally {
+			try {
+				if(null!=out) {
+					out.close();
+				}
+				if(null!=fos) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
 	}
 }
