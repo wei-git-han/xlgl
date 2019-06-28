@@ -171,7 +171,7 @@ public class ExportController{
 			case "2":
 				exportFileName = "军委首长批示指示督办落实情况表.doc";
 				tempFile = creatFile(exportFileName);
-				ExportService exportJWSZServiceImpl = new ExportJWZYServiceImpl();
+				ExportService exportJWSZServiceImpl = new ExportJWZYServiceImpl2();
 				ExportWPSservice exportWPSserviceJWSZ = new ExportWPSserviceImpl(exportJWSZServiceImpl, exportDataLis,
 						tempFile.getAbsolutePath(),banjieNum,weibanjieNum,docTypeId);
 				exportInvoke.setExportWPSservice(exportWPSserviceJWSZ);
@@ -198,7 +198,7 @@ public class ExportController{
 			case "5":
 				exportFileName = "装备发展部重要工作分工落实情况表.doc";
 				tempFile = creatFile(exportFileName);
-				ExportService exportBNZYGZServiceImpl = new ExportZYJCServiceImpl();
+				ExportService exportBNZYGZServiceImpl = new ExportZYJCServiceImpl2();
 				ExportWPSservice exportWPSserviceBNZYGZ = new ExportWPSserviceImpl(exportBNZYGZServiceImpl,
 						exportDataLis, tempFile.getAbsolutePath(),banjieNum,weibanjieNum,docTypeId);
 				exportInvoke.setExportWPSservice(exportWPSserviceBNZYGZ);
@@ -207,7 +207,7 @@ public class ExportController{
 			case "6":
 				exportFileName = "其他重要工作落实情况表.doc";
 				tempFile = creatFile(exportFileName);
-				ExportService exportQTServiceImpl = new ExportZYJCServiceImpl();
+				ExportService exportQTServiceImpl = new ExportZYJCServiceImpl2();
 				ExportWPSservice exportWPSserviceQT = new ExportWPSserviceImpl(exportQTServiceImpl, exportDataLis,
 						tempFile.getAbsolutePath(),banjieNum,weibanjieNum,docTypeId);
 				exportInvoke.setExportWPSservice(exportWPSserviceQT);
