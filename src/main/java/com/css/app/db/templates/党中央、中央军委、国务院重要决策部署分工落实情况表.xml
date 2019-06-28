@@ -273,7 +273,7 @@
 ><v:fill
 	on="f"
 	focussize="0,0" /></v:background></w:bgPict><w:docPr><w:view
-	w:val="print" /><w:zoom w:percent="130" /><w:characterSpacingControl
+	w:val="print" /><w:zoom w:percent="100" /><w:characterSpacingControl
 	w:val="DontCompress" /><w:documentProtection
 	w:enforcement="off" /><w:punctuationKerning /><w:doNotEmbedSystemFonts /><w:bordersDontSurroundHeader /><w:bordersDontSurroundFooter /><w:defaultTabStop
 	w:val="500" /><w:displayHorizontalDrawingGridEvery
