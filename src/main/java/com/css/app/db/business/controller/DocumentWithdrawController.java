@@ -152,6 +152,7 @@ public class DocumentWithdrawController {
 				documentZbjlService.delete(id);
 				// 删除局内流转记录表,前提是有数据，然后删除
 				subDocTrackingService.delete(subDocTracking.getId());
+				json.put("result", "success");
 			}else if (StringUtils.equals(subDocTracking.getTrackingType(), "2")) {
 				//支持撤回     当前情况属于承办人/审批人送审批撤回
 				if (StringUtils.equals(userId, undertakerId)) {
@@ -200,8 +201,8 @@ public class DocumentWithdrawController {
 				}
 				// 删除局内流转记录表,前提是有数据，然后删除
 				subDocTrackingService.delete(subDocTracking.getId());
+				json.put("result", "success");
 			}
-			json.put("result", "success");
 		}else {
 			json.put("result", "deal");
 		}
