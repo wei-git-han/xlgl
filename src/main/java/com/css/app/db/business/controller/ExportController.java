@@ -169,7 +169,7 @@ public class ExportController{
 				is = exportInvoke.export();
 				break;
 			case "2":
-				exportFileName = "军委首长批示指示督办落实情况表.docx";
+				exportFileName = "军委首长批示指示督办落实情况表.doc";
 				tempFile = creatFile(exportFileName);
 				ExportService exportJWSZServiceImpl = new ExportJWZYServiceImpl();
 				ExportWPSservice exportWPSserviceJWSZ = new ExportWPSserviceImpl(exportJWSZServiceImpl, exportDataLis,
@@ -178,7 +178,7 @@ public class ExportController{
 				is = exportInvoke.export();
 				break;
 			case "3":
-				exportFileName = "党中央、中央军委、国务院重要决策部署分工落实情况表.docx";
+				exportFileName = "党中央、中央军委、国务院重要决策部署分工落实情况表.doc";
 				tempFile = creatFile(exportFileName);
 				ExportService exportZYJCServiceImpl = new ExportZYJCServiceImpl2();
 				ExportWPSservice exportWPSserviceZYJC = new ExportWPSserviceImpl(exportZYJCServiceImpl, exportDataLis,
@@ -187,7 +187,7 @@ public class ExportController{
 				is = exportInvoke.export();
 				break;
 			case "4":
-				exportFileName = "装备发展部领导批示指示督办落实情况表.docx";
+				exportFileName = "装备发展部领导批示指示督办落实情况表.doc";
 				tempFile = creatFile(exportFileName);
 				ExportService exportBLDServiceImpl = new ExportBLDServiceImpl2();
 				ExportWPSservice exportWPSserviceBLD = new ExportWPSserviceImpl(exportBLDServiceImpl, exportDataLis,
@@ -196,7 +196,7 @@ public class ExportController{
 				is = exportInvoke.export();
 				break;
 			case "5":
-				exportFileName = "装备发展部重要工作分工落实情况表.docx";
+				exportFileName = "装备发展部重要工作分工落实情况表.doc";
 				tempFile = creatFile(exportFileName);
 				ExportService exportBNZYGZServiceImpl = new ExportZYJCServiceImpl();
 				ExportWPSservice exportWPSserviceBNZYGZ = new ExportWPSserviceImpl(exportBNZYGZServiceImpl,
@@ -205,7 +205,7 @@ public class ExportController{
 				is = exportInvoke.export();
 				break;
 			case "6":
-				exportFileName = "其他重要工作落实情况表.docx";
+				exportFileName = "其他重要工作落实情况表.doc";
 				tempFile = creatFile(exportFileName);
 				ExportService exportQTServiceImpl = new ExportZYJCServiceImpl();
 				ExportWPSservice exportWPSserviceQT = new ExportWPSserviceImpl(exportQTServiceImpl, exportDataLis,
