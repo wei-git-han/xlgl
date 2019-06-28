@@ -7,15 +7,10 @@ var total=0;//列表中，数据的总条数
 var fileFrom=getUrlParam("fileFrom")||"sztj"; //文件来源
 var status = getUrlParam("status");//统计图传过来的状态
 var leaderId = getUrlParam("leaderId");//统计图传过来的首长ID
-
 var startdate = getUrlParam2("startdate");
 var enddate = getUrlParam2("enddate");
-/*if(!window.top.memory){
-	window.top.memory = {};
-}
-var o = window.top.memory;*/
 
-//alert(JSON.stringify(gettop().memory))
+/*alert(JSON.stringify(gettop2().memory))*/
 
 var pageModule = function(){
 	var initgrid = function(){
@@ -128,7 +123,6 @@ var pageModule = function(){
 	
 	var initother = function(){
 		$("#goback").click(function(){
-			/*remember = {};*/
 			window.location.href = "../../jcdb/html/index.html"
 		});
 	}
@@ -137,25 +131,8 @@ var pageModule = function(){
 	var initfn = function(){
 		$.uniform.update($("input[name='documentStatus']").prop("checked",false));
 		$.uniform.update($("input[name='documentStatus']").prop("disabled",true));
-		/*if(remember.status != ""  && remember.status != null && remember.status != "undefined"){
-			$.uniform.update($("input[value='"+remember.status+"']").prop("checked",true));
-			$.uniform.update($("input[value='"+remember.status+"']").prop("disabled",false));
-			status = o.status;
-		}else{*/
-			$.uniform.update($("input[value='"+status+"']").prop("checked",true));
-			$.uniform.update($("input[value='"+status+"']").prop("disabled",false));
-			
-		/*}	
-		
-		if(remember.leaderId != ""  && remember.leaderId != null && remember.leaderId != "undefined" &&　remember.leaderId!="null"){
-			leaderId = remember.leaderId;
-		}
-		if(remember.startdate != "" && remember.startdate != null && remember.startdate != "undefined"  &&　remember.startdate!="null"){
-			startdate = remember.startdate;
-		}
-		if(remember.enddate != "" && remember.enddate != null && remember.enddate != "undefined"  &&　remember.enddate!="null"){
-			enddate = remember.enddate;
-		}*/
+		$.uniform.update($("input[value='"+status+"']").prop("checked",true));
+		$.uniform.update($("input[value='"+status+"']").prop("disabled",false));
 	}
 	
 	return{

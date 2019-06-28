@@ -1965,12 +1965,3 @@ var showModal = function(obj){
 var hideModal = function(obj){
 	$("#"+obj).modal("hide");
 }
-
-
-function gettop(){
-	try{
-		return window.top
-	}catch(e){
-		return window.parent 
-	}
-}
