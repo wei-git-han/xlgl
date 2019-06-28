@@ -202,6 +202,8 @@ public class DocumentWithdrawController {
 				// 删除局内流转记录表,前提是有数据，然后删除
 				subDocTrackingService.delete(subDocTracking.getId());
 				json.put("result", "success");
+			}else {
+				json.put("result", "deal");
 			}
 		}else {
 			json.put("result", "deal");
