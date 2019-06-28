@@ -2,6 +2,7 @@ package com.css.app.db.business.dao;
 
 import com.css.app.db.business.entity.ReplyExplain;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ public interface ReplyExplainDao extends BaseDao<ReplyExplain> {
 	//获取临时反馈
 	ReplyExplain queryLastestTempReply(Map<String, Object> map);
 	//更新发布状态
-	void updateShowFlag(String subId);
+	void updateShowFlag(Date showTime,String subId);
 	//查询所有分支局的反馈
 	List<ReplyExplain> queryAllLatestReply(String infoId);
 	//查询某分支局的反馈

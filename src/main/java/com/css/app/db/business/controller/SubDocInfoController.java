@@ -621,7 +621,7 @@ public class SubDocInfoController {
 						//查詢局內文流转记录最新一笔-判断当前文是否需要本人审批，否则拒绝掉
 						SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
 						if (StringUtils.equals(currUserId, subDocTracking.getReceiverId())) {
-							this.sendApprovalUnifiedDeal(subId,userName, userId, replyContent, subDocInfo.getInfoId());
+							this.sendApprovalUnifiedDeal(subId,userName, userId, replyContent, subDocInfo.getInfoId(),null);
 						}else {
 							logger.info("当前文的局ID：{}，由{}正在审批中。", subId, subDocTracking.getReceiverName());
 							continue;
@@ -661,8 +661,8 @@ public class SubDocInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/sendOperation")
-	public void sendOperation(String infoId,String subId,String userName,String userId,String replyContent){
-		this.sendApprovalUnifiedDeal(subId,userName, userId, replyContent, infoId);
+	public void sendOperation(String infoId,String subId,String userName,String userId,String replyContent,String saveFlag){
+		this.sendApprovalUnifiedDeal(subId,userName, userId, replyContent, infoId, saveFlag);
 		Response.json("result", "success");
 	}
 	/**
@@ -673,7 +673,7 @@ public class SubDocInfoController {
 	 * @param replyContent 意见内容
 	 * @param infoId 文ID
 	 */
-	private void sendApprovalUnifiedDeal(String subId, String userName, String userId, String replyContent, String infoId) {
+	private void sendApprovalUnifiedDeal(String subId, String userName, String userId, String replyContent, String infoId,String saveFlag) {
 		//保存最新更新时间
 		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
 		if(subDocInfo != null) {
@@ -684,7 +684,7 @@ public class SubDocInfoController {
 		//流转到下一个人并将临时反馈变为发布
 		this.submitRelation(subId, userName, userId,"2",subDocInfo.getChooseStatus());
 		//保存审批意见
-		approvalOpinionService.saveOpinion(subId, replyContent, "1",null);
+		approvalOpinionService.saveOpinion(subId, replyContent, "1",saveFlag);
 		// 发送消息提醒
 		MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_SONGSHEN_MSG_TITLE);
 		if (msg != null) {
@@ -810,6 +810,7 @@ public class SubDocInfoController {
 			ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
 			if(tempReply!=null) {
 				tempReply.setReVersion("1");
+				tempReply.setVersionTime(new Date());
 				replyExplainService.update(tempReply);
 			}
 			//分支文件更新完成审批标识,并添加办结记录
@@ -823,6 +824,7 @@ public class SubDocInfoController {
 			ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
 			if(tempReply!=null) {
 				tempReply.setReVersion("1");
+				tempReply.setVersionTime(new Date());
 				replyExplainService.update(tempReply);
 			}
 			//分支文件更新完成审批标识,并添加办结记录
@@ -863,7 +865,7 @@ public class SubDocInfoController {
 		//清理除首长外的本文件已读
 		documentReadService.deleteByInfoId(infoId);
 		//反馈对他局和部可见(顺序必须放标识催办完成后边，因为showFlag的值作为参数进行了查询)
-		replyExplainService.updateShowFlag(subId);
+		replyExplainService.updateShowFlag(new Date(),subId);
 		//意见对他局和部可见
 		approvalOpinionService.updateShowFlag(subId);
 		json.put("result", "success");
@@ -890,6 +892,7 @@ public class SubDocInfoController {
 		ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
 		if(tempReply!=null) {
 			tempReply.setReVersion("1");
+			tempReply.setVersionTime(new Date());
 			if(StringUtils.isNotBlank(status)) {
 				tempReply.setChooseStatus(status);
 			}

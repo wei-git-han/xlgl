@@ -102,7 +102,9 @@
 			"TEAM_ID",
 			"RE_VERSION",
 			"CBR_FLAG",
-			"CHOOSE_STATUS"
+			"CHOOSE_STATUS",
+			"SHOW_TIME",
+			"VERSION_TIME"
 		)
 		values
 		(
@@ -119,11 +121,13 @@
 			#{teamId}, 
 			#{reVersion},
 			#{cbrFlag},
-			#{chooseStatus}
+			#{chooseStatus},
+			#{chowTime},
+			#{versionTime}
 		)
 	</insert>
 	<update id="updateShowFlag">
-		update DB_REPLY_EXPLAIN set SHOW_FLAG='1' where SUB_ID=#{subId}
+		update DB_REPLY_EXPLAIN set SHOW_FLAG='1',SHOW_TIME=#{0} where SUB_ID=#{1} and SHOW_FLAG='0'
 	</update>
 	<update id="update" parameterType="com.css.app.db.business.entity.ReplyExplain">
 		update DB_REPLY_EXPLAIN 
@@ -140,7 +144,9 @@
 			<if test="teamId != null">"TEAM_ID" = #{teamId}, </if>
 			<if test="reVersion != null">"RE_VERSION" = #{reVersion} ,</if>
 			<if test="cbrFlag != null">"CBR_FLAG" = #{cbrFlag}, </if>
-			<if test="chooseStatus != null">"CHOOSE_STATUS" = #{chooseStatus}</if>
+			<if test="chooseStatus != null">"CHOOSE_STATUS" = #{chooseStatus},</if>
+			<if test="chowTime != null">"SHOW_TIME" = #{chowTime}, </if>
+			<if test="versionTime != null">"VERSION_TIME" = #{versionTime}</if>
 		</set>
 		where ID = #{id}
 	</update>
