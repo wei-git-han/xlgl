@@ -83,7 +83,7 @@ var pageModule = function(){
 	               		 }
 	               		html1+=item.userName+'&nbsp;&nbsp;'+createdTime+'批示：'+item.leaderComment+'&nbsp;&nbsp;&nbsp;'
 	    		     });
-               	     return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.infoId+'\')">'+html1+'</div>';
+               	     return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.infoId+'\')" title="'+html1+'">'+html1+'</div>';
                 }},
                 {display:"本期局内反馈",name:"",width:"20%",align:"left",paixu:false,render:function(rowdata){
 		           	var dbCont="";
