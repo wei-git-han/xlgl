@@ -43,6 +43,10 @@ public class ReplyExplain implements Serializable {
 	private String cbrFlag;
 	//当前文件状态（1:办理中；2：办结；3：常态落实；）
 	private String chooseStatus;
+	//正式发布完成时间
+	private Date chowTime;
+	//临时反馈变成已发布的时间
+	private Date versionTime;
 
 	/**
 	 * 设置：唯一标识
@@ -175,6 +179,18 @@ public class ReplyExplain implements Serializable {
 	}
 	public void setChooseStatus(String chooseStatus) {
 		this.chooseStatus = chooseStatus;
+	}
+	public Date getChowTime() {
+		return chowTime;
+	}
+	public void setChowTime(Date chowTime) {
+		this.chowTime = chowTime;
+	}
+	public Date getVersionTime() {
+		return versionTime;
+	}
+	public void setVersionTime(Date versionTime) {
+		this.versionTime = versionTime;
 	}
 	
 }

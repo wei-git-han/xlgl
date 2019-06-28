@@ -810,6 +810,7 @@ public class SubDocInfoController {
 			ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
 			if(tempReply!=null) {
 				tempReply.setReVersion("1");
+				tempReply.setVersionTime(new Date());
 				replyExplainService.update(tempReply);
 			}
 			//分支文件更新完成审批标识,并添加办结记录
@@ -823,6 +824,7 @@ public class SubDocInfoController {
 			ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
 			if(tempReply!=null) {
 				tempReply.setReVersion("1");
+				tempReply.setVersionTime(new Date());
 				replyExplainService.update(tempReply);
 			}
 			//分支文件更新完成审批标识,并添加办结记录
@@ -863,7 +865,7 @@ public class SubDocInfoController {
 		//清理除首长外的本文件已读
 		documentReadService.deleteByInfoId(infoId);
 		//反馈对他局和部可见(顺序必须放标识催办完成后边，因为showFlag的值作为参数进行了查询)
-		replyExplainService.updateShowFlag(subId);
+		replyExplainService.updateShowFlag(new Date(),subId);
 		//意见对他局和部可见
 		approvalOpinionService.updateShowFlag(subId);
 		json.put("result", "success");
@@ -890,6 +892,7 @@ public class SubDocInfoController {
 		ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
 		if(tempReply!=null) {
 			tempReply.setReVersion("1");
+			tempReply.setVersionTime(new Date());
 			if(StringUtils.isNotBlank(status)) {
 				tempReply.setChooseStatus(status);
 			}
