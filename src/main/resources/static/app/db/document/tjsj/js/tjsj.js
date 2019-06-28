@@ -94,7 +94,7 @@ var pageModule = function(){
             	$("input[name='documentStatus']:checked").parents("label").find("font").text(total);
 
             	$(".zspsnr").each(function(){
-					var maxwidth = 75;
+					var maxwidth = 105;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
@@ -108,14 +108,14 @@ var pageModule = function(){
 					}
 				});
             	$(".tabletitle").each(function(){
-					var maxwidth = 57;
+					var maxwidth = 65;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
 					}
 				});
             	$(".cbdw").each(function(){
-					var maxwidth = 32;
+					var maxwidth = 50;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');

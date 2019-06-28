@@ -65,7 +65,6 @@ var pageModule = function(){
                 	if(rowdata.cuibanFlag=="1"){
                 		cuiban = '<label class="cuibanlabel">催办</label>';
                	    }
-                	//isOverTreeMonth
                 	var csFlag = "";
                 	if(rowdata.isOverTreeMonth==1){
                 		csFlag = '<img src="../../../common/images/u301.png" class="titleimg" />';
@@ -86,18 +85,6 @@ var pageModule = function(){
 	    		     });
                	     return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.infoId+'\')">'+html1+'</div>';
                 }},
-/*                {display:"督办落实情况",name:"",width:"20%",align:"left",paixu:false,render:function(rowdata){
-                	 var duban="";
-                 	 if(rowdata.updateFlag=="1"){
-                 		duban = '<label class="cuibanlabel">已更新</label>';
-                	 }
-                 	 
-                	var dbCont="";
-                	if(rowdata.latestReply){
-                		dbCont=rowdata.latestReply;
-                	}	 
-                	return '<div class="dblsqk" onclick="dblsqkAlert(\''+rowdata.infoId+'\')"  title="'+dbCont+'">'+duban+'<span>'+dbCont+'</span></div>';
-                }},*/
                 {display:"本期局内反馈",name:"",width:"20%",align:"left",paixu:false,render:function(rowdata){
 		           	var dbCont="";
 		           	if(rowdata.latestReply){
@@ -140,28 +127,28 @@ var pageModule = function(){
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
-					var maxwidth = 75;
+					var maxwidth = 88;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
 					}
 				});
             	$(".dblsqk span").each(function(){
-					var maxwidth = 73;
+					var maxwidth = 79;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
 					}
 				});
             	$(".tabletitle").each(function(){
-					var maxwidth = 57;
+					var maxwidth = 47;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
 					}
 				});
             	$(".cbdw").each(function(){
-					var maxwidth = 32;
+					var maxwidth = 42;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
