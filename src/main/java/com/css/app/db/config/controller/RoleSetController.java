@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
@@ -73,8 +75,32 @@ public class RoleSetController {
 		List<RoleSet> roleSetList = roleSetService.queryList(map);
 		Response.json(roleSetList);
 	}
+	
 	/**
-	 * 登记录入获取首长
+	 * @description:办理反馈高级筛选首长选择树
+	 * @author:zhangyw
+	 * @date:2019年6月20日
+	 * @Version v1.0
+	 */
+	@ResponseBody
+	@RequestMapping("/queryLeaderTree")
+	public void queryLeaderTree(){
+		JSONArray array=new JSONArray();
+		Map<String, Object> map = new HashMap<>();
+		map.put("roleFlag", DbDefined.ROLE_1);
+		List<RoleSet> roleSetList = roleSetService.queryList(map);
+		for (RoleSet roleSet : roleSetList) {
+			JSONObject json=new JSONObject();
+			json.put("id", roleSet.getUserId());
+			json.put("text", roleSet.getUserName());
+			json.put("type", 1);
+			array.add(json);
+		}
+		Response.json(array);
+	}
+	
+	/**
+	 * 业务配置获取首长
 	 */
 	@ResponseBody
 	@RequestMapping("/queryLeaderList")

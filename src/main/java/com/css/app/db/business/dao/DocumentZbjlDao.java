@@ -11,11 +11,15 @@ import com.css.base.dao.BaseDao;
  * 
  * @author 中软信息系统工程有限公司
  * @email 
- * @date 2019-04-18 16:39:37
+ * @date 2019-06-25 18:00:32
  */
 @Mapper
 public interface DocumentZbjlDao extends BaseDao<DocumentZbjl> {
 	
 	void deleteByInfoId(String infoId);
+
+	void deleteBySubIdAndInfoId(String subId, String infoId);
+
+	DocumentZbjl queryBySubIdAndInfoId(String subId, String infoId);
 	
 }

@@ -10,7 +10,7 @@ import java.util.Date;
  * 
  * @author 中软信息系统工程有限公司
  * @email 
- * @date 2019-04-18 16:39:37
+ * @date 2019-06-25 18:00:32
  */
 public class DocumentZbjl implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -37,8 +37,10 @@ public class DocumentZbjl implements Serializable {
 	private String receiverDeptName;
 	//转办时间
 	private Date createdTime;
-	//转办单位
+	//转办人单位
 	private String orgName;
+	//子分支主键
+	private String subId;
 
 	/**
 	 * 设置：唯一标识
@@ -178,5 +180,16 @@ public class DocumentZbjl implements Serializable {
 	public void setOrgName(String orgName) {
 		this.orgName = orgName;
 	}
-	
+		/**
+	 * 设置：子分支主键
+	 */
+	public void setSubId(String subId) {
+		this.subId = subId;
+	}
+	/**
+	 * 获取：子分支主键
+	 */
+	public String getSubId() {
+		return subId;
+	}
 }

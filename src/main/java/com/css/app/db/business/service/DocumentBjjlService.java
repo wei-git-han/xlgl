@@ -29,4 +29,6 @@ public interface DocumentBjjlService {
 	DocumentBjjl queryLatestBjjl(String infoId);
 	
 	void deleteByInfoId(String infoId);
+
+	DocumentBjjl queryBjjlBySubId(String id);
 }

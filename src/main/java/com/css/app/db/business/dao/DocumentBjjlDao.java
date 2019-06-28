@@ -18,4 +18,5 @@ public interface DocumentBjjlDao extends BaseDao<DocumentBjjl> {
 	
 	DocumentBjjl queryLatestBjjl(String infoId);
 	void deleteByInfoId(String infoId);
+	DocumentBjjl queryBjjlBySubId(String id);
 }

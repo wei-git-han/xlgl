@@ -1,5 +1,6 @@
 package com.css.app.db.business.service.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,7 +57,7 @@ public class ReplyExplainServiceImpl implements ReplyExplainService {
 
 	@Override
 	public void saveReply(String subId, String infoId, String userId, String userName, String teamId,
-			String replyContent, String subDeptId, String subDeptName,String cbrFlag) {
+			String replyContent, String subDeptId, String subDeptName,String cbrFlag,String checkStatus) {
 		ReplyExplain reply=new ReplyExplain();
 		reply.setId(UUIDUtils.random());
 		reply.setSubId(subId);
@@ -71,6 +72,9 @@ public class ReplyExplainServiceImpl implements ReplyExplainService {
 		reply.setShowFlag("0");
 		reply.setReVersion("0");
 		reply.setCbrFlag(cbrFlag);
+		if(StringUtils.isNotBlank(checkStatus)) {
+			reply.setChooseStatus(checkStatus);
+		}
 		replyExplainDao.save(reply);
 	}
 

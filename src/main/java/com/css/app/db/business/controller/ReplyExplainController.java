@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +44,7 @@ import cn.com.css.filestore.impl.HTTPFile;
 @Controller
 @RequestMapping("/app/db/replyexplain")
 public class ReplyExplainController {
+	private final Logger logger = LoggerFactory.getLogger(ReplyExplainController.class);
 	@Autowired
 	private ReplyExplainService replyExplainService;
 	@Autowired
@@ -52,7 +55,6 @@ public class ReplyExplainController {
 	private ApprovalOpinionService approvalOpinionService;
 	@Autowired
 	private SubDocTrackingService subDocTrackingService;
-	
 	/**
 	 * 获取某个分支局反馈
 	 * @param infoId 主文件id
@@ -150,7 +152,20 @@ public class ReplyExplainController {
 						json.put("show","0");
 					}else {
 						json.put("show","1");
+						String status = subDocInfo.getChooseStatus();
+						String statusName="";
+						if(StringUtils.equals("1", status)) {
+							statusName="办理中";
+						}else if(StringUtils.equals("2", status)){
+							statusName="办结";
+						}else if(StringUtils.equals("3", status)) {
+							statusName="常态落实";
+						}
+						json.put("checkStatus",status);
+						json.put("checkStatusName",statusName);
+						
 					}
+					//当前文件状态
 					jsonArray.add(json);
 				}
 			}
@@ -316,7 +331,7 @@ public class ReplyExplainController {
 			if(StringUtils.isBlank(teamId)) {
 				String uuid=UUIDUtils.random();
 				//新增反馈及附件
-				replyExplainService.saveReply(subId, infoId, loginUserId, loginUserName, uuid, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName(),cbrFlag);
+				replyExplainService.saveReply(subId, infoId, loginUserId, loginUserName, uuid, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName(),cbrFlag,null);
 				if(files!=null){
 					replyAttacService.saveAttacs(files, subId, uuid);
 				}
@@ -344,7 +359,7 @@ public class ReplyExplainController {
 						zbTempReply.setReVersion("1");
 						replyExplainService.update(zbTempReply);
 					}
-					replyExplainService.saveReply(subId, infoId, loginUserId, loginUserName, teamId, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName(),cbrFlag);
+					replyExplainService.saveReply(subId, infoId, loginUserId, loginUserName, teamId, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName(),cbrFlag,null);
 				}
 				if(files!=null && files.length>0){
 					replyAttacService.saveAttacs(files, subId, teamId);
@@ -357,13 +372,12 @@ public class ReplyExplainController {
 		}
 		Response.json(json);
 	}
-	
 	/**
 	 * 编辑反馈意见
 	 */
 	@ResponseBody
 	@RequestMapping("/edit")
-	public void edit(String subId,String infoId,String teamId,String replyContent){
+	public void edit(String subId,String infoId,String teamId,String replyContent,String checkStatus){
 		String loginUserId=CurrentUser.getUserId();
 		String loginUserName=CurrentUser.getUsername();
 		String cbrFlag="0";
@@ -376,7 +390,7 @@ public class ReplyExplainController {
 			if(StringUtils.isBlank(teamId)) {
 				String uuid=UUIDUtils.random();
 				//新增反馈及附件
-				replyExplainService.saveReply(subId, infoId, loginUserId, loginUserName, uuid, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName(),cbrFlag);
+				replyExplainService.saveReply(subId, infoId, loginUserId, loginUserName, uuid, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName(),cbrFlag,checkStatus);
 			}else {
 				Map<String, Object> map =new HashMap<>();
 				map.put("subId", subId);
@@ -384,11 +398,25 @@ public class ReplyExplainController {
 				map.put("teamId", teamId);
 				map.put("showFlag", "0");
 				ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
+				SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
+				if(StringUtils.isNotBlank(checkStatus)) {
+					subDocTracking.setPreviousStatus(Integer.parseInt(subDocInfo.getChooseStatus()));
+					subDocTrackingService.update(subDocTracking);
+				}
 				if(tempReply != null) {
+					if(StringUtils.isNotBlank(checkStatus)) {
+						subDocInfo.setChooseStatus(checkStatus);
+						subDocInfoService.update(subDocInfo);
+						tempReply.setChooseStatus(checkStatus);
+					}
 					tempReply.setReplyContent(replyContent);
 					replyExplainService.update(tempReply);
 				}else {
-					replyExplainService.saveReply(subId, infoId, loginUserId, loginUserName, teamId, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName(),cbrFlag);
+					if(StringUtils.isNotBlank(checkStatus)) {
+						subDocInfo.setChooseStatus(checkStatus);
+						subDocInfoService.update(subDocInfo);
+					}
+					replyExplainService.saveReply(subId, infoId, loginUserId, loginUserName, teamId, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName(),cbrFlag,checkStatus);
 				}
 			}
 			json.put("result", "success");
@@ -458,5 +486,5 @@ public class ReplyExplainController {
 		    url = hf.getAssginDownloadURL();
 		}
 		Response.json("url", url);
-	}	
+	}
 }

@@ -27,7 +27,7 @@
 		<div id="headbox" class="headbox">
 			<div class="contenthead">
 				<div class="contenttitle" id="contenttitle">办理反馈</div>
-				<!-- <a id="searchAll" class="pull-right searchAll">高级查询</a>  -->
+				<a id="searchAll" class="pull-right searchAll">高级查询</a>
 				<div class="contentsearch">
 					<input  type="text" name="searchVal" id="searchVal" value=""  placeholder="搜索" />
 					<img src="../../../common/images/u132_mouseDown.png" class="search"  title="搜索" />
@@ -40,55 +40,46 @@
 			<div class="form-group" style="margin-left:20px;display:inline-block;">
                 <label class="control-label">标题</label>
                 <div style="display:inline-block;width: 320px;">
-	                <input type="text" class="form-control"  id="title" name="title" />
+	                <input type="text" class="form-control"  id="title" name="title"  autocomplete="off" />
                 </div>
             </div>
 			<div class="form-group" style="margin-left:20px;display:inline-block;">
-                <label class="control-label">承办单位</label>
+                <label class="control-label">批示首长</label>
                 <div style="display:inline-block;width: 320px;float:right;">
 					<div class="form-control" style="padding:0px;position:relative;">
 	                	<div class="selecttree">
-	                    	<input type="text" class="form-control bgwhite  pointer addbg"  id="deptname" name="deptname"  />
-	                    	<input type="hidden" id="deptid" name="deptid" />
+	                    	<input type="text" class="form-control bgwhite  pointer addbg"  id="leaderName" name="leaderName"  autocomplete="off" />
+	                    	<input type="hidden" id="leaderId" name="leaderId"  autocomplete="off"/>
 	                	</div>
 	                </div>
                 </div>
             </div> 
             <div class="form-group" style="margin-left:20px;display:inline-block;">
-                <label class="control-label">承办人</label>
+				<label class="control-label">批示时间</label>
+				<div style="display:inline-block">
+					<div class="input-group input-large date-picker input-daterange">
+						<input type="text" class="form-control" id="startDate" name="startDate" autocomplete="off" />
+						<span class="input-group-addon">
+						至 </span>
+						<input type="text" class="form-control" id="endDate" name="endDate" autocomplete="off"/>
+					</div>
+				</div>
+			</div>
+         
+			<div class="form-group" style="margin-left:20px;display:inline-block;">
+                <label class="control-label">期数</label>
                 <div style="display:inline-block;width: 320px;">
-					<div class="form-control" style="padding:0px;position:relative;">
-	                	<div class="selecttree">
-	                    	<input type="text" class="form-control bgwhite  pointer addbg"  id="username" name="username"  />
-	                    	<input type="hidden" id="userid" name="userid" />
-	                	</div>
-	                </div>
+					<input type="text" class="form-control"  id="period" name="period" disabled="disabled" autocomplete="off"/>
                 </div>
             </div>
             <div class="form-group" style="margin-left:20px;display:inline-block;">
                 <label class="control-label">办理状态</label>
                 <div style="display:inline-block;width: 320px;">
-					<select class="form-control" id="blstatus" name="blstatus">
-						<option value="0">未办结</option>
-						<option value="1">已办结</option>
-	                </select>
-                </div>
-            </div>
-            <div class="form-group" style="margin-left:20px;display:inline-block;">
-				<label class="control-label">登记日期</label>
-				<div style="display:inline-block">
-					<div class="input-group input-large date-picker input-daterange">
-						<input type="text" class="form-control" id="designStart" name="designStart"  />
-						<span class="input-group-addon">
-						至 </span>
-						<input type="text" class="form-control" id="designEnd" name="designEnd" />
-					</div>
-				</div>
-			</div>
-			<div class="form-group" style="margin-left:20px;display:inline-block;">
-                <label class="control-label">文件分类</label>
-                <div style="display:inline-block;width: 320px;">
-					<select class="form-control" id="fileType" name="fileType">
+					<select class="form-control" id="status" name="status" autocomplete="off">
+						<option value="">全部</option>
+						<option value="1">办理中</option>
+						<option value="2">已办结</option>
+						<option value="3">常态落实</option>
 	                </select>
                 </div>
             </div>
@@ -146,6 +137,7 @@
 								</div>
 							</div>
 							<div class="pull-right">
+								<button type="button" class="tableBtns" id="plcb" style="display:none;">批量催办</button>
 								<button type="button" class="tableBtns" id="plyd">批量已读</button>
 								<button type="button" class="tableBtns" id="export">导出</button>
 							</div>

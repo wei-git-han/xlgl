@@ -2,55 +2,25 @@
 		{
 			"id":"01",
 			"text": "1111",
-			"state": {"opened": true},
-			"children": [
-							{
-								"id":"02",
-    							"text": "22222",
-								"children": [
-												{
-													"id":"03",
-					    							"text": "3333",
-					    							"children": [
-																	{
-																		"id":"033",
-										    							"text": "4444"	
-																	},
-																	{
-																		"id":"034",
-										    							"text": "5555"
-																	}
-																]	
-												},
-												{
-													"id":"04",
-					    							"text": "666"
-												}
-											]
-							}
-						]
+			"type":"1"
 			
 		},
 		{
 			"id":"05",
 			"text": "777",
-			"state": {"opened": true},
-			"children": [
-							{
-								"id":"06",
-    							"text": "3556",
-								"children": [
-												{
-													"id":"07",
-					    							"text": "cfsdf"
-												},
-												{
-													"id":"08",
-					    							"text": "aaaa"
-												}
-											]
-							}
-						]
+			"type":"1"
+			
+		},
+		{
+			"id":"05444",
+			"text": "74444477",
+			"type":"0"
+			
+		},
+		{
+			"id":"035",
+			"text": "77555667",
+			"type":"0"
 			
 		}
 	]

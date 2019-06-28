@@ -179,7 +179,7 @@ var pageModule = function(){
 					$.each(data,function(i,item){
 						$(".psMain").append(
 							'<div class="psrecord">'+
-				            '	<div class="pslist"><span>'+item.userName+'：</span><span>'+item.leaderComment+'</span></div>'+
+				            '	<div class="pslist"><span>'+item.userName+'&nbsp;&nbsp;'+item.createdTime+'&nbsp;&nbsp;批示：</span><span>'+item.leaderComment+'</span></div>'+
 				            '</div>'
 			            )
 					});
@@ -226,7 +226,10 @@ var pageModule = function(){
 				var state = '';
 				var file = '';
 				var edit = '';
+				var otherhtml = '';
 				var teamId = '';
+				var checkStatus = '';
+				var checkStatusname = '';
 				if(n==1){
 					id = o.teamId;
 					teamId = o.teamId;
@@ -236,11 +239,22 @@ var pageModule = function(){
 					danwei = o.danwei||"某单位";
 					ld = o.cbrName;
 					content = o.content;
+					checkStatus = o.checkStatus;
+					checkStatusname = o.checkStatusName;
+					if(checkStatus){
+						otherhtml = '<div class="nrt-cont-top-right">'+
+									'	<div class="nrt-cont-top-btn">'+
+									'		<span class="nrt-cont-top-content">本次提交状态：'+checkStatusname+'</span>'+
+									'	</div>'+
+									'</div>';
+					}else{
+						otherhtml='';
+					}
 					edit = o.edit;
 					if(edit==true){
 						ifShowEditBtn="1";
 						edit =  '<div class="nrt-cont-top-btn">'+
-								'	<a class="isEditbtn" data="'+id+'" dataContent="'+content+'"  onclick="editfn(\''+id+'\',this)" >编辑</a>'+
+								'	<a class="isEditbtn" data="'+id+'" dataContent="'+content+'"  onclick="editfn(\''+id+'\',this,\''+checkStatus+'\')" >编辑</a>'+
 								'</div>';
 					}else{
 						edit=''
@@ -331,9 +345,8 @@ var pageModule = function(){
 					'								<font>'+date+'</font>'+
 					'							</div>'+
 					'						</div>'+
-					'						<div class="nrt-cont-top-right">'+
-												edit+
-					'						</div>'+
+					'						<div class="nrt-cont-top-right">'+edit+
+					'						</div>'+otherhtml+
 					'					</div>'+
 					'					<div class="nrt-cont-cent">'+
 					'						<div class="wh100 scroller">'+
@@ -529,7 +542,7 @@ var pageModule = function(){
 		
 		//送审
 		$("#tijiao").click(function(){
-			var cbrFlag="";
+			var cbrFlag="";  
 			if(isCbr && isCbr == 1){ //承办人
 				cbrFlag="1";
 				if($("#replyContent").val() !="" && !!$("#replyContent").val()){
@@ -1025,6 +1038,8 @@ function skip(){
 			window.location.href="/app/db/document/grdb/html/grdb.html?fileFrom=grdb";
 		}else if(fileFrom=="blfk"){  //文件来源于办理反馈
 			window.location="/app/db/document/blfk/html/blfk.html?fileFrom=blfk";
+		}else if(fileFrom=="jndb"){  //文件来源于局内待办
+			window.location="/app/db/document/jndb/html/jndb.html?fileFrom=jndb";
 		}else{ 
 			window.location.href="/app/db/document/grdb/html/grdb.html?fileFrom=grdb";
 		}
@@ -1056,7 +1071,7 @@ function downloadfn(fileServerId){
 	    }
 	});
 }
-function editfn(id,el){
+function editfn(id,el,checkStatus){
 	var content=$(el).attr("dataContent");
 	$(el).parents(".nrt-cont").find(".nrt-cont-file .remove").show();
 	if(isCbr==1){
@@ -1071,7 +1086,7 @@ function editfn(id,el){
 			header:true,
 			title:"编辑",
 			classed:"cjDialog",
-			url:"/app/db/document/view/html/editDialog.html?fileId="+fileId+"&replyContent="+content+"&subId="+subId+"&teamId="+id+"&fromMsg="+fromMsg
+			url:"/app/db/document/view/html/editDialog.html?fileId="+fileId+"&replyContent="+content+"&subId="+subId+"&teamId="+id+"&fromMsg="+fromMsg+"&checkStatus="+checkStatus
 		})
 	}
 }
@@ -1098,10 +1113,18 @@ function viewcont(teamId,subId){
 	    	if(data && data.length>0){
 	    		$(".viewcontent").html("");
 				$.each(data,function(i,item){
+					var statusName = "";
+					if(item.chooseStatus==1){
+						statusName='<div class="record_line1">设置状态：办理中</div>';
+					}else if(item.chooseStatus==2){
+						statusName='<div class="record_line1">设置状态：办结</div>';
+					}else if(item.chooseStatus==3){
+						statusName='<div class="record_line1">设置状态：常态落实</div>';
+					}
 					$(".viewcontent").append(
 						'<div class="record">'+
 			            '	<div class="record_line1"><span>'+item.userName+'&nbsp;&nbsp;'+item.createdTime+'&nbsp;&nbsp;落实情况：</span></div>'+
-			            '	<div class="record_line2">'+item.replyContent+'</div>'+
+			            '	<div class="record_line2">'+item.replyContent+'</div>'+statusName+
 			            '</div>'
 		            )
 				});

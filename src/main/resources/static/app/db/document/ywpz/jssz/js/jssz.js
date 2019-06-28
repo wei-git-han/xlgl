@@ -19,13 +19,13 @@ var pageModule = function() {
 							  return "首长秘书"
 						  }*/
 						  if('3'==rowdata.roleFlag){
-							  return "局长"
+							  return "局领导"
 						  }
 /*						  if('4'==rowdata.roleFlag){
 							  return "局秘书"
 						  }*/
 						  if('5'==rowdata.roleFlag){
-							  return "处长"
+							  return "处领导"
 						  }
 /*						  if('6'==rowdata.roleFlag){
 							  return "参谋"

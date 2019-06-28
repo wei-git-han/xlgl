@@ -449,34 +449,37 @@ public class DocumentSzInfoController {
 	@ResponseBody
 	@RequestMapping("/press")
 	public void press(String id,String textarea){
+		String[] ids = id.split(",");
 		String userid=CurrentUser.getUserId();
-		DocumentInfo info=documentInfoService.queryObject(id);
-		info.setCuibanFlag("1");//首长催办
-		String szreadids=info.getSzReadIds();
-		if(StringUtils.isBlank(szreadids)) {
-			info.setSzReadIds(userid);
-		}else if(!szreadids.contains(userid)){
-			info.setSzReadIds(szreadids+","+userid);				
-		}
-		
-		documentInfoService.update(info);
-		//保存催办历史
-		DocumentCbjl cb=new DocumentCbjl();
-		cb.setUrgeContent(textarea);
-		cb.setInfoId(id);
-		documentCbjlService.save(cb);
-		// 发送消息提醒
-		Map<String, Object> map=new HashMap<>();
-		map.put("infoId", id);
-		List<SubDocInfo> subInfos = subDocInfoService.queryAllSubInfo(map);
-		if(subInfos!=null && subInfos.size()>0) {
-			for (SubDocInfo subDocInfo : subInfos) {
-				String userId=subDocInfo.getUndertaker();
-				if(StringUtils.isNotBlank(userId)) {
-					MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_CUIBAN_MSG_TITLE);
-					if (msg != null) {
-						String msgUrl = msg.getMsgRedirect()+"&fileId="+id+"&subId="+subDocInfo.getId();
-						msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId, appId,clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "","true");
+		for (String key : ids) {
+			DocumentInfo info=documentInfoService.queryObject(key);
+			info.setCuibanFlag("1");//首长催办
+			String szreadids=info.getSzReadIds();
+			if(StringUtils.isBlank(szreadids)) {
+				info.setSzReadIds(userid);
+			}else if(!szreadids.contains(userid)){
+				info.setSzReadIds(szreadids+","+userid);				
+			}
+			
+			documentInfoService.update(info);
+			//保存催办历史
+			DocumentCbjl cb=new DocumentCbjl();
+			cb.setUrgeContent(textarea);
+			cb.setInfoId(key);
+			documentCbjlService.save(cb);
+			// 发送消息提醒
+			Map<String, Object> map=new HashMap<>();
+			map.put("infoId", key);
+			List<SubDocInfo> subInfos = subDocInfoService.queryAllSubInfo(map);
+			if(subInfos!=null && subInfos.size()>0) {
+				for (SubDocInfo subDocInfo : subInfos) {
+					String userId=subDocInfo.getUndertaker();
+					if(StringUtils.isNotBlank(userId)) {
+						MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_CUIBAN_MSG_TITLE);
+						if (msg != null) {
+							String msgUrl = msg.getMsgRedirect()+"&fileId="+key+"&subId="+subDocInfo.getId();
+							msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId, appId,clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "","true");
+						}
 					}
 				}
 			}

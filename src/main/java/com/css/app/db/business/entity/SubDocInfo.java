@@ -36,7 +36,7 @@ public class SubDocInfo implements Serializable {
 	private String undertakerName;
 	//承办人电话
 	private String undertakerPhone;
-	//承办人提交选择的状态
+	//承办人提交选择的状态（1:办理中；2：办结；3：常态落实；）
 	private String chooseStatus;
 /*----------------------------以下字段只用来列表接收值用--------------start----------------------*/	
 	private String dealUserName;
@@ -62,12 +62,12 @@ public class SubDocInfo implements Serializable {
 	private String latestUndertaker;
 	//最新反馈审批完成时间
 	private Date latestReplyTime;
-	/*//最新的首长名字
+	//最新的首长名字
 	private String leaderName;
 	//最新的首长批示
 	private String leaderContent;
 	//最新的首长批示时间
-	private String leaderTime;*/
+	private String leaderTime;
 	//我是不是当前处理人
 	private Integer receiverIsMe;
 	//承办单位/人
@@ -76,6 +76,13 @@ public class SubDocInfo implements Serializable {
 	private String updateFlag;
 	//首长批示
 	private List<DocumentSzps> szpslist;
+	//是否支持撤回  1-显示撤回按钮
+	private Integer withdrawFlag;
+	//审批撤回提示标志
+	private Integer approveWithdrawFlag;
+	//批示时间是否超过3个月  1：超过3月
+	private Integer isOverTreeMonth;
+	
 	/*----------------------------列表接收值---------end---------------------------*/	
 	/**
 	 * 设置：唯一标识
@@ -275,5 +282,28 @@ public class SubDocInfo implements Serializable {
 	public void setSzpslist(List<DocumentSzps> szpslist) {
 		this.szpslist = szpslist;
 	}
-	
+	public Integer getWithdrawFlag() {
+		return withdrawFlag;
+	}
+	public void setWithdrawFlag(Integer withdrawFlag) {
+		this.withdrawFlag = withdrawFlag;
+	}
+	public String getLeaderTime() {
+		return leaderTime;
+	}
+	public void setLeaderTime(String leaderTime) {
+		this.leaderTime = leaderTime;
+	}
+	public Integer getApproveWithdrawFlag() {
+		return approveWithdrawFlag;
+	}
+	public void setApproveWithdrawFlag(Integer approveWithdrawFlag) {
+		this.approveWithdrawFlag = approveWithdrawFlag;
+	}
+	public Integer getIsOverTreeMonth() {
+		return isOverTreeMonth;
+	}
+	public void setIsOverTreeMonth(Integer isOverTreeMonth) {
+		this.isOverTreeMonth = isOverTreeMonth;
+	}
 }

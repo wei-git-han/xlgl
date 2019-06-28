@@ -20,6 +20,10 @@
  	<select id="queryTotal" resultType="int">
 		select count(*) from DB_SUB_DOC_TRACKING 
 	</select>
+	
+ 	<select id="queryListBySubId" resultType="com.css.app.db.business.entity.SubDocTracking" parameterType="string">
+		select * from DB_SUB_DOC_TRACKING where SUB_ID = #{subId} AND TRACKING_TYPE = '2' ORDER BY CREATED_TIME ASC
+	</select>
 	 
 	<insert id="save" parameterType="com.css.app.db.business.entity.SubDocTracking">
 		insert into DB_SUB_DOC_TRACKING
@@ -36,7 +40,9 @@
 			"REC_DEPT_ID", 
 			"REC_DEPT_NAME", 
 			"TRACKING_TYPE", 
-			"REMARK"
+			"REMARK",
+			"PREVIOUS_STATUS",
+			"UNDERTAKER"
 		)
 		values
 		(
@@ -52,7 +58,9 @@
 			#{recDeptId}, 
 			#{recDeptName}, 
 			#{trackingType}, 
-			#{remark}
+			#{remark},
+			#{previousStatus},
+			#{undertaker}
 		)
 	</insert>
 	 
@@ -70,13 +78,15 @@
 			<if test="recDeptId != null">"REC_DEPT_ID" = #{recDeptId}, </if>
 			<if test="recDeptName != null">"REC_DEPT_NAME" = #{recDeptName}, </if>
 			<if test="trackingType != null">"TRACKING_TYPE" = #{trackingType}, </if>
-			<if test="remark != null">"REMARK" = #{remark}</if>
+			<if test="remark != null">"REMARK" = #{remark},</if>
+			<if test="previousStatus != null">"PREVIOUS_STATUS" = #{previousStatus},</if>
+			<if test="undertaker != null">"UNDERTAKER" = #{undertaker}</if>
 		</set>
 		where ID = #{id}
 	</update>
 	
 	<delete id="delete">
-		delete from DB_SUB_DOC_TRACKING where ID = #{value}
+		delete from DB_SUB_DOC_TRACKING where ID = #{id}
 	</delete>
 	<delete id="deleteBySubId">
 		delete from DB_SUB_DOC_TRACKING where SUB_ID = #{subId}

@@ -29,4 +29,7 @@ public interface SubDocTrackingService {
 	SubDocTracking  queryLatestRecord(String subId);
 	
 	void deleteBySubId(String subId);
+
+	List<SubDocTracking> queryListBySubId(String subId);
+
 }

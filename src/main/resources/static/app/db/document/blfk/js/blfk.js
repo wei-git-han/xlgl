@@ -1,11 +1,11 @@
 //注：修改列表查询的参数一定要对应的修改红点显示leftMenuUrl和统计数numsList
 var tableList= {"url":"/app/db/documentinfo/replyList","dataType":"text"};//原table数据
 var numsList={"url":"/app/db/documentinfo/replyNums","dataType":"text"};//筛选状态数字统计
-var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//部门树
+var leaderTreeUrl= {"url":"/app/db/roleset/queryLeaderTree","dataType":"text"};//高级搜索首长选择树
 var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//人员树
 var leftMenuUrl = {"url":"/app/db//documentinfo/getDicByTypet","dataType":"text"};//左侧菜单
 var batchReadUrl = {"url":"/app/db/documentinfo/batchRead","dataType":"text"};//批量已读
-var leftMenuNums = {"url":"","dataType":"text"};//左侧菜单数字统计
+var getUserAdminTypeUrl = {"url":"/app/db/adminset/getAuthor","dataType":"text"};
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var orgid=getUrlParam("orgid")||""; //统计图传过来的机构
 var month=getUrlParam("month")||""; //统计图传过来的月份
@@ -53,18 +53,34 @@ var pageModule = function(){
 						$("#gridcont3").show();
 						$("#gridcont2").hide();
 						$("#gridcont").hide();
+						$("#period").removeAttr("disabled");
+						$("#leaderName").removeAttr("disabled");
+						$("#leaderName").parents(".form-control").css("background","#fff");
+						$("#startDate").removeAttr("disabled");
+						$("#endDate").removeAttr("disabled");
 						refreshgrid3();
 					}else if($(this).attr("data_flag") == "2"){//分工
 						window.top.memory.tree = "2";
 						$("#gridcont3").hide();
 						$("#gridcont").hide();
 						$("#gridcont2").show();
+						$("#period").attr("disabled",true).val("");
+						$("#leaderName").attr("disabled",true).val("");
+						$("#leaderId").val("");
+						$("#leaderName").parents(".form-control").css("background","#eee");
+						$("#startDate").attr("disabled",true).val("");
+						$("#endDate").attr("disabled",true).val("");
 						refreshgrid2();
 					}else{//批示
 						window.top.memory.tree = "1";
 						$("#gridcont3").hide();
 						$("#gridcont2").hide();
 						$("#gridcont").show();
+						$("#period").attr("disabled",true).val("");
+						$("#leaderName").removeAttr("disabled");
+						$("#leaderName").parents(".form-control").css("background","#fff");
+						$("#startDate").removeAttr("disabled");
+						$("#endDate").removeAttr("disabled");
 						refreshgrid1();
 					}
 				});
@@ -72,19 +88,7 @@ var pageModule = function(){
 				if(o.value!="" && o.value!=null &&　o.value!="null" && o.value!="undefined"){
 					$("#classType li").removeClass("active");
 					$("#classType li[value="+o.value+"]").addClass("active");
-				}
-				
-				/*$ajax({
-					url:leftMenuNums,
-					data:{dicType:"document_type"},
-					success:function(data){
-						$.each(data,function(j,item2){
-							var id = "Menu_num"+j;
-							$("#"+id).html(item2);
-						});
-					}
-				});	*/
-				
+				}				
 			}
 		});	
 	}
@@ -110,23 +114,19 @@ var pageModule = function(){
                	 	}
   				  	return '<div title="'+statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+statusName+'</div>';
                  }},
-                 {display:"办件标题",name:"",width:"15%",align:"left",title:false,render:function(rowdata){
+                 {display:"办件标题",name:"",width:"15%",align:"left",title:false,render:function(rowdata,n){
                 	 var cuiban="";
                  	 if(rowdata.cuibanFlag=="1"){
                  		 cuiban = '<label class="cuibanlabel">催办</label>';
                 	 }
-                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
+                 	//isOverTreeMonth
+                 	var csFlag = "";
+                	if(rowdata.isOverTreeMonth==1){
+                		csFlag = '<img src="../../../common/images/u301.png" class="titleimg"/>';
+                	}
+                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+rowdata.docTitle+csFlag+'</a>'
                  }},
                  {display:"批示指示内容",name:"",width:"26%",align:"left",paixu:false,title:false,render:function(rowdata){
-                	 /*var szpsCont="";
-                	 var leaderTime1="";
-                	 if(rowdata.leaderTime!="" && rowdata.leaderTime!=null){
-                		 leaderTime1= rowdata.leaderTime.substring(0,16);
-                	 }
-                	 if(rowdata.leaderName && rowdata.leaderContent){
-                		 szpsCont=rowdata.leaderName+" "+leaderTime1+"批示："+rowdata.leaderContent
-                	 }
-                	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.id+'\')" title="'+szpsCont+'">'+szpsCont+'</div>';*/
                 	 var html1="";
                 	 $.each(rowdata.szpslist,function(i,item){
                 		 var createdTime="";
@@ -171,7 +171,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 10,
             pageyno:true,
-            paramobj:{page:o.pagesize1,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month},
+            paramobj:{page:o.pagesize1,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val(),psStartDate:$("#startDate").val(),psEndDate:$("#endDate").val()},
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
@@ -239,7 +239,12 @@ var pageModule = function(){
                  	 if(rowdata.cuibanFlag=="1"){
                  		 cuiban = '<label class="cuibanlabel">催办</label>';
                 	 }
-                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
+                 	//isOverTreeMonth
+                  	var csFlag = "";
+                 	if(rowdata.isOverTreeMonth==1){
+                 		csFlag = '<img src="../../../common/images/u301.png" class="titleimg" />';
+                 	}
+                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+rowdata.docTitle+csFlag+'</a>'
                  }},
                  {display:"工作分工内容",name:"",width:"21%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 return '<div class="gzfgnr" title="'+rowdata.jobContent+'">'+rowdata.jobContent+'</div>';
@@ -278,7 +283,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 10,
             pageyno:true,
-            paramobj:{page:o.pagesize2,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month},
+            paramobj:{page:o.pagesize2,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val()},
             loadafter:function(data){
             	total=data.total;
             	$(".dblsqk span").each(function(){
@@ -343,7 +348,12 @@ var pageModule = function(){
                  	 if(rowdata.cuibanFlag=="1"){
                  		 cuiban = '<label class="cuibanlabel">催办</label>';
                 	 }
-                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
+                 	//isOverTreeMonth
+                   	var csFlag = "";
+                  	if(rowdata.isOverTreeMonth==1){
+                  		csFlag = '<img src="../../../common/images/u301.png" class="titleimg"/>';
+                  	}
+                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+rowdata.docTitle+csFlag+'</a>'
                  }},
                  {display:"批示指示内容",name:"",width:"26%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 /*var szpsCont="";
@@ -399,7 +409,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 10,
             pageyno:true,
-            paramobj:{page:o.pagesize3,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month},
+            paramobj:{page:o.pagesize3,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val(),psStartDate:$("#startDate").val(),psEndDate:$("#endDate").val(),period:$("#period").val()},
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
@@ -441,7 +451,7 @@ var pageModule = function(){
 	var numsListfn = function(){
 		$ajax({
 			url:numsList,
-			data:{search:$("#searchVal").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month},
+			data:{search:$("#searchVal").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val(),psStartDate:$("#startDate").val(),psEndDate:$("#endDate").val(),period:$("#period").val(),status:$("input[name='documentStatus']:checked").val()},
 			success:function(data){
 				$.each(data,function(i,item){
 					var id = "grdb"+i;
@@ -451,12 +461,28 @@ var pageModule = function(){
 		});	
 	}
 	
+	var initBtn = function(){
+		$ajax({
+			url: getUserAdminTypeUrl,
+			type: "GET",
+			success: function(data) {
+				if(data=="0"||data=="1"){//超级管理员或部管理员				
+					$("#plcb").show(); //批量催办
+				}
+			}
+		});
+		$(".newpage8").click(function(){
+			$(".newpage8").removeClass("active");
+			$(this).addClass("active");
+		});
+	}
+	
 	var initother = function(){
 		$(".date-picker").datepicker({
 		    language:"zh-CN",
 		    rtl: Metronic.isRTL(),
 		    orientation: "right",
-		    format : "yyyy-mm-dd",
+		    format : "yyyy年mm月dd日",
 		    autoclose: true
 		});
 		
@@ -471,6 +497,9 @@ var pageModule = function(){
 		});
 		
 		$(".search").click(function(){
+			if(!!$("#searchVal").val()){
+				removeInputData(["title", "leaderId", "leaderName", "startDate", "endDate", "period", "status"]);
+			}
 			refreshgrid();
 		});
 		
@@ -478,16 +507,25 @@ var pageModule = function(){
 			$("#searchwrap").toggle();
 		});
 		
-		$("body").click(function(e){
+		$("#status option").click(function(){
+			var checkedVal = $(this).val();
+			$.uniform.update($(".radio-inline input").prop("checked",false));
+			$.uniform.update($(".radio-inline input[value="+checkedVal+"]").prop("checked",true));
+		});
+		
+		/*$("body").click(function(e){
 			if($(e.target).hasClass("searchAll") || $(e.target).hasClass("form-group") || $(e.target).parents("div").hasClass("searchwrap")){
 				return;
 			};
 			$(".searchwrap").slideUp(50);
-		});
+		});*/
 		
 		//筛选功能
 		$("#sure").click(function(){
 			 $("#searchwrap").slideUp(50);
+				if(!!$("#title").val()){
+					$("#searchVal").val('')
+				}
 			 refreshgrid();
 		});
 		
@@ -498,7 +536,7 @@ var pageModule = function(){
 		
 		//重置
 		$("#reset").click(function(){
-			removeInputData(["title","deptid","deptname","username","userid","blstatus","designStart","designEnd","fileType"]);
+			removeInputData(["title","leaderId","leaderName","startDate","endDate","period","status"]);
 		});
 		
 		$("#plyd").click(function(){
@@ -544,7 +582,58 @@ var pageModule = function(){
 				newbootbox.alertInfo("请选择要确认已读的数据！");
 			}
 		});
-		
+		// 批量催办
+		$("#plcb").click(function(){
+			var datas;
+			var ids=[];
+			var docStatus=[];
+			var count = 0;
+			if($("#gridcont3").is(":visible")){
+				datas=grid3.getcheckrow();
+				$(datas).each(function(i){
+					ids[i]=this.id;
+					docStatus[i]=this.status;
+					if(this.status != "1" || this.cuibanFlag=="1"){
+						count++;
+					}
+				});
+			}else if($("#gridcont2").is(":visible")){
+				datas=grid2.getcheckrow();
+				$(datas).each(function(i){
+					ids[i]=this.id;
+					docStatus[i]=this.status;
+					if(this.status != "1" || this.cuibanFlag=="1"){
+						count++;
+					}
+				});
+			}else{
+				datas=grid.getcheckrow();
+				$(datas).each(function(i){
+					ids[i]=this.id;
+					docStatus[i]=this.status;
+					if(this.status != "1" || this.cuibanFlag=="1"){
+						count++;
+					}
+				});
+			}
+			if(datas.length>0){
+				if(count > 0){
+					newbootbox.alertInfo("所选文件有"+count+"个文件不支持批量催办，请单独处理");
+					return;
+				}else{
+					newbootbox.newdialog({
+					    id: "cuibanDialog",
+					    title: "催办",
+					    header:true,
+					    width: 600,
+					    height:400,
+					    url: rootPath + "/document/blfk/html/cuibanDialog.html?fileIds="+ids.toString()
+					});
+				}
+			}else{
+				newbootbox.alertInfo("请选择要催办的数据！");
+			}
+		});
 		//导出
 		$("#export").click(function(){
 			var tableNum;
@@ -591,33 +680,18 @@ var pageModule = function(){
 	}
 	
 	var inittree = function(){
-		$("#deptname").createcheckboxtree({
-			url : deptUrl,
+		$("#leaderName").createUserTree({
+			url : leaderTreeUrl,
 			width : "100%",
 			success : function(data, treeobj) {},
 			selectnode : function(e, data,treessname,treessid) {
-				$("#deptid").val(treessid);
-				$("#deptname").val(treessname);
+				$("#leaderId").val(treessid);
+				$("#leaderName").val(treessname);
 			},
 			deselectnode:function(e,data,treessname,treessid){
-				$("#deptid").val(treessid);
-				$("#deptname").val(treessname);
+				$("#leaderId").val(treessid);
+				$("#leaderName").val(treessname);
 		   }
-		});
-		
-		$("#username").createUserTree({
-			url : userUrl,
-			width : "100%",
-			success : function(data, treeobj) {
-			},
-			selectnode : function(e, data,treessname,treessid) {
-				$("#userid").val(treessid);
-				$("#username").val(treessname);
-			},
-			deselectnode : function(e, data,treessname,treessid) {
-				$("#userid").val(treessid);
-				$("#username").val(treessname);
-			}
 		});
 	}
 	
@@ -634,6 +708,7 @@ var pageModule = function(){
 	return{
 		//加载页面处理程序
 		initControl:function(){
+			initBtn();
 			initfn();
 			leftMenufn();
 			initgrid();
@@ -681,6 +756,8 @@ function refreshgrid(){
 	var documentStatus= $("input[name='documentStatus']:checked").val();
 	window.top.memory.radio = documentStatus;
 	window.top.memory.search = search;
+	
+	removeInputData(["title","leaderId","leaderName","startDate","endDate","period","status"]);
 }
 
 //查询

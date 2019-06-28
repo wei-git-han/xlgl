@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -136,11 +137,10 @@ public class MsgTipUtil {
 		System.out.println(map.toString() + "*****发给1*****" + userIds);
         HttpEntity<LinkedMultiValueMap<String, Object>> formEntity = new HttpEntity<LinkedMultiValueMap<String, Object>>(map, headers);
         String msgUrl = msgConfig.getMsgUrl() + "/message/user/" + userIds + "?access_token=";
-			logger.info("消息请求路径:", msgUrl + accessToken);
-			restTemplate.postForEntity(msgUrl+ accessToken, formEntity, String.class);	
-			System.out.println("==================将桌面消息放入任务队列开始==========================");
+			logger.info("消息请求路径:{}", msgUrl + accessToken);
+			ResponseEntity<String> postForEntity = restTemplate.postForEntity(msgUrl+ accessToken, formEntity, String.class);
+			logger.info("消息请求返回:{}",postForEntity.getBody());
 			//pcSendUtil.sendPC(msgUrl,accessToken,formEntity,String.class,appId,appSecret);
-			System.out.println("==================将桌面消息放入任务队列结束==========================");
 		String[] ids = StringUtils.split(userIds,",");
 		String phone="";
 	/*	for(String id : ids){

@@ -19,6 +19,13 @@ var banjieUrl = {"url":"/app/db/documentinfo/banJieOperation","dataType":"text"}
 var fileId=getUrlParam("fileId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var fromMsg=getUrlParam("fromMsg")||false; //是否为消息进入
+
+
+var status = getUrlParam("status");//统计图传过来的状态
+var leaderId = getUrlParam("leaderId");//统计图传过来的首长ID
+var startdate = getUrlParam2("startdate");
+var enddate = getUrlParam2("enddate");
+
 var pageModule = function(){
 	//打开页面标识已读
 	var initReadfn = function(){
@@ -154,7 +161,7 @@ var pageModule = function(){
 					$.each(data,function(i,item){
 						$(".psMain").append(
 							'<div class="psrecord">'+
-				            '	<div class="pslist"><span>'+item.userName+'：</span><span>'+item.leaderComment+'</span></div>'+
+				            '	<div class="pslist"><span>'+item.userName+'&nbsp;&nbsp;'+item.createdTime+'&nbsp;&nbsp;批示：</span><span>'+item.leaderComment+'</span></div>'+
 				            '</div>'
 			            )
 					});
@@ -704,11 +711,12 @@ function skip(){
 			window.location="/app/db/document/blfk/html/blfk.html?fileFrom=blfk";
 		}else if(fileFrom=="jndb"){ 
 			window.location.href="/app/db/document/jndb/html/jndb.html?fileFrom="+fileFrom;
+		}else if(fileFrom=="sztj"){ 
+			window.location.href="/app/db/document/tjsj/html/tjsj.html?fileFrom="+fileFrom+"&status="+status+"&leaderId="+leaderId+"&startdate="+startdate+"&enddate="+enddate;
 		}else{ 
 			window.location.href="/app/db/document/grdb/html/grdb.html?fileFrom="+fileFrom;
 		}
 	}
-
 }
 
 /*//批示详情
@@ -764,10 +772,18 @@ function viewcont(teamId,subId){
 	    	if(data && data.length>0){
 	    		$(".viewcontent").html("");
 				$.each(data,function(i,item){
+					var statusName = "";
+					if(item.chooseStatus==1){
+						statusName='<div class="record_line1">设置状态：办理中</div>';
+					}else if(item.chooseStatus==2){
+						statusName='<div class="record_line1">设置状态：办结</div>';
+					}else if(item.chooseStatus==3){
+						statusName='<div class="record_line1">设置状态：常态落实</div>';
+					}
 					$(".viewcontent").append(
 						'<div class="record">'+
 			            '	<div class="record_line1"><span>'+item.userName+'&nbsp;&nbsp;'+item.createdTime+'&nbsp;&nbsp;落实情况：</span></div>'+
-			            '	<div class="record_line2">'+item.replyContent+'</div>'+
+			            '	<div class="record_line2">'+item.replyContent+'</div>'+statusName+
 			            '</div>'
 		            )
 				});

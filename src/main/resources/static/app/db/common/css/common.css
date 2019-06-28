@@ -967,6 +967,12 @@ div.radio, div.radio span, div.radio input {
 .table-title2{
 	color: #0063dc;
 }
+table{
+	table-layout:fixed;
+	word-break:break-all;
+	word-wrap:bread-word;
+	border-collapse:collapse;
+}
 
 .table-advance tr td {
     vertical-align: middle!important;

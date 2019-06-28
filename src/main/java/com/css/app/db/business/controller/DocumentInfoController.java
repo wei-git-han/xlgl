@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -224,12 +225,19 @@ public class DocumentInfoController {
 	}
 	
 	/**
-	 * 办理反馈列表查询
 	 * 注：修改列表查询的参数一定要对应的修改红点显示/getDicByTypet和统计数/replyNums
+	 * @description:办理反馈列表查询
+	 * @param search 搜索参数,status 状态参数,typeId 文件类型,orgid 统计图传的局id,统计图传的月,
+	 * @param startDate 导出的首长（第一个最大的首长）批示（或转办）开始时间,endDate 导出的首长（第一个最大的首长）批示（或转办）结束时间,initFlag 导出液的初始化加载标识
+	 * @param psStartDate 办理反馈高级搜索的指示开始时间,psEndDate	办理反馈高级搜索的指示开始时间 
+	 * @author:zhangyw
+	 * @date:2019年6月19日
+	 * @Version v1.0
 	 */
 	@ResponseBody
 	@RequestMapping("/replyList")
-	public void replyList(Integer page, Integer pagesize,String search,String status,String typeId,String orgid,String month,String startDate,String endDate,String initFlag){
+	public void replyList(Integer page, Integer pagesize,String search,String status,String typeId,
+			String orgid,String month,String startDate,String endDate,String initFlag,String title,String leaderId,String period,String psStartDate,String psEndDate){
 		List<DocumentInfo> infoList =null;
 		if(!StringUtils.equals("1", initFlag)) {//initFlag为1 为导出页的初始化加载
 			String loginUserId=CurrentUser.getUserId();
@@ -261,6 +269,7 @@ public class DocumentInfoController {
 			map.put("search", search);
 			map.put("orgid", orgid);
 			map.put("year", dateStr);
+			map.put("title", title);
 			if(StringUtils.isNotBlank(status)) {
 				if(StringUtils.equals("update", status)) {
 					map.put("loginUserId", loginUserId);
@@ -269,16 +278,20 @@ public class DocumentInfoController {
 					map.put("state", status);
 				}
 			}
-			//导出的时间段搜索批示指示时间
-			if(StringUtils.isNotBlank(startDate)||StringUtils.isNotBlank(endDate)) {
-				if(StringUtils.equals("3", typeId)||StringUtils.equals("5", typeId)||StringUtils.equals("6", typeId)) {
+			
+			if(StringUtils.equals("3", typeId)||StringUtils.equals("5", typeId)||StringUtils.equals("6", typeId)) {
+				//导出的时间段搜索转办时间
+				if(StringUtils.isNotBlank(startDate)||StringUtils.isNotBlank(endDate)) {
 					if(StringUtils.isNotBlank(startDate)) {
 						map.put("zbStartDate", startDate+" 00:00");
 					}
 					if(StringUtils.isNotBlank(endDate)) { 
 						map.put("zbEndDate", endDate+" 23:59");
 					}
-				}else {
+				}
+			}else {
+				//导出的时间段搜索批示指示时间
+				if(StringUtils.isNotBlank(startDate)||StringUtils.isNotBlank(endDate)) {
 					if(StringUtils.isNotBlank(startDate)) {
 						map.put("startDate", startDate);
 					}
@@ -286,7 +299,32 @@ public class DocumentInfoController {
 						map.put("endDate", endDate);
 					}
 				}
+				//办理反馈高级搜索批示指示时间:
+				//1.如果高级搜索中选择了首长，则按所选首长的批示时间筛选
+				if(StringUtils.isNotBlank(leaderId)) {
+					map.put("leaderId", leaderId);
+					if(StringUtils.isNotBlank(psStartDate)||StringUtils.isNotBlank(psEndDate)) {
+						if(StringUtils.isNotBlank(psStartDate)) {
+							map.put("psStartDate", psStartDate);
+						}
+						if(StringUtils.isNotBlank(psEndDate)) { 
+							map.put("psEndDate", psEndDate);
+						}
+					}
+				}else {
+					//1.如果高级搜索中没有选择首长，则按这条文最大的首长的批示时间筛选
+					if(StringUtils.isNotBlank(psStartDate)) {
+						map.put("startDate", psStartDate);
+					}
+					if(StringUtils.isNotBlank(psEndDate)) { 
+						map.put("endDate", psEndDate);
+					}
+				}
+				if(StringUtils.isNotBlank(period)&&StringUtils.equals("4", typeId)) {
+					map.put("period", period);
+				}
 			}
+			
 			if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType)
 					&& !StringUtils.equals(DbDefined.ROLE_1, roleType) && !StringUtils.equals(DbDefined.ROLE_3, roleType)) {
 				if(StringUtils.equals(DbDefined.ROLE_5, roleType)) {
@@ -313,10 +351,12 @@ public class DocumentInfoController {
 				readMap.put("infoId", info.getId());
 				List<DocumentRead> list = documentReadService.queryList(readMap);
 				
-				//催办为0，未读，最新反馈字段有值则标识为已更新
+				//未读，最新反馈字段有值则标识为已更新
 				if(list.size()==0 && StringUtils.isNotBlank(info.getLatestReply())) {
 					info.setUpdateFlag("1");
 				}
+				//是否批示超过3个月
+				this.isOverTreeMonth(info);
 				//首长批示
 				Map<String, Object> szpsMap = new HashMap<>();
 				szpsMap.put("infoId", info.getId());
@@ -327,7 +367,34 @@ public class DocumentInfoController {
 		GwPageUtils pageUtil = new GwPageUtils(infoList);
 		Response.json(pageUtil);
 	}
-	
+	/**
+	 * 计算首长批示时间到现在是否查过三月；
+	 * @param leaderTime
+	 * @param subDocInfo
+	 */
+	private void isOverTreeMonth(DocumentInfo info) {
+		String leaderTime = info.getLeaderTime();
+		// 2019年05月08日
+		if (StringUtils.isNotBlank(leaderTime)) {
+			LocalDate currdate = LocalDate.now();
+			LocalDate leaderDate = LocalDate.parse(leaderTime, DateTimeFormatter.ofPattern("yyyy年MM月dd日"));
+			//如果该文没有办结且超过批示时间三个月的，显示超期提示；
+			if (info.getStatus() < 2) {
+				if ((int)ChronoUnit.YEARS.between(leaderDate, currdate) == 0) {
+					if ((int)ChronoUnit.MONTHS.between(leaderDate, currdate) == 3) {
+						//提取天数
+						if (currdate.getDayOfMonth() > leaderDate.getDayOfMonth()) {
+							info.setIsOverTreeMonth(1);
+						}
+					}else if ((int)ChronoUnit.MONTHS.between(leaderDate, currdate) > 3) {
+						info.setIsOverTreeMonth(1);
+					}
+				}else if ((int)ChronoUnit.YEARS.between(leaderDate, currdate) > 0){
+					info.setIsOverTreeMonth(1);
+				}
+			}
+		}
+	}
 	/**
 	 * 办理反馈数量统计
 	 * @param search 搜索
@@ -335,7 +402,7 @@ public class DocumentInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/replyNums")
-	public void replyNums(String search,String typeId,String orgid,String month) {
+	public void replyNums(String search,String typeId,String orgid,String month,String title,String leaderId,String period,String psStartDate,String psEndDate) {
 		String dateStr = null;
 		if(!StringUtils.isEmpty(month) && StringUtil.equals("all", month)) {
 			dateStr = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE).substring(0,4);
@@ -367,6 +434,33 @@ public class DocumentInfoController {
 		map.put("type", typeId);
 		map.put("orgid", orgid);
 		map.put("year", dateStr);
+		map.put("title", title);
+		if(StringUtils.equals("1", typeId)||StringUtils.equals("2", typeId)||StringUtils.equals("4", typeId)) {
+			//办理反馈高级搜索批示指示时间:
+			//1.如果高级搜索中选择了首长，则按所选首长的批示时间筛选
+			if(StringUtils.isNotBlank(leaderId)) {
+				map.put("leaderId", leaderId);
+				if(StringUtils.isNotBlank(psStartDate)||StringUtils.isNotBlank(psEndDate)) {
+					if(StringUtils.isNotBlank(psStartDate)) {
+						map.put("psStartDate", psStartDate);
+					}
+					if(StringUtils.isNotBlank(psEndDate)) { 
+						map.put("psEndDate", psEndDate);
+					}
+				}
+			}else {
+				//1.如果高级搜索中没有选择首长，则按这条文最大的首长的批示时间筛选
+				if(StringUtils.isNotBlank(psStartDate)) {
+					map.put("startDate", psStartDate);
+				}
+				if(StringUtils.isNotBlank(psEndDate)) { 
+					map.put("endDate", psEndDate);
+				}
+			}
+			if(StringUtils.isNotBlank(period)&&StringUtils.equals("4", typeId)) {
+				map.put("period", period);
+			}
+		}
 		if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType)
 				&& !StringUtils.equals(DbDefined.ROLE_1, roleType) && !StringUtils.equals(DbDefined.ROLE_3, roleType)) {
 			if(StringUtils.equals(DbDefined.ROLE_5, roleType)) {
@@ -905,4 +999,5 @@ public class DocumentInfoController {
 		}
 		return fileId;
 	}
+	
 }
