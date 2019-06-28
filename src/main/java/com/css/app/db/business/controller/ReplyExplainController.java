@@ -357,6 +357,7 @@ public class ReplyExplainController {
 							zbTempReply.setCbrFlag("0");
 						}
 						zbTempReply.setReVersion("1");
+						zbTempReply.setVersionTime(new Date());
 						replyExplainService.update(zbTempReply);
 					}
 					replyExplainService.saveReply(subId, infoId, loginUserId, loginUserName, teamId, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName(),cbrFlag,null);
@@ -426,42 +427,6 @@ public class ReplyExplainController {
 		Response.json(json);
 	}
 	
-	/**
-	 * 保存反馈意见
-	 *//*
-	@ResponseBody
-	@RequestMapping("/save")
-	public void save(String subId,String infoId,String teamId,String replyContent){
-		String loginUserId=CurrentUser.getUserId();
-		String loginUserName=CurrentUser.getUsername();
-		JSONObject json=new JSONObject();
-		if(StringUtils.isNotBlank(infoId) && StringUtils.isNotBlank(subId)) {
-			SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
-			if(StringUtils.isBlank(teamId)) {
-				String uuid=UUIDUtils.random();
-				//新增反馈及附件
-				replyExplainService.saveReply(subId, infoId, loginUserId, loginUserName, uuid, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName());
-				
-			}else {
-				Map<String, Object> map =new HashMap<>();
-				map.put("subId", subId);
-				map.put("userId", loginUserId);
-				map.put("teamId", teamId);
-				map.put("showFlag", "0");
-				ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
-				if(tempReply != null) {
-					tempReply.setReplyContent(replyContent);
-					replyExplainService.update(tempReply);
-				}else {
-					replyExplainService.saveReply(subId, infoId, loginUserId, loginUserName, teamId, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName());
-				}
-			}
-			json.put("result", "success");
-		}else {
-			json.put("result", "fail");
-		}
-		Response.json(json);
-	}*/
 	/**
 	 * 删除附件
 	 * @param id 附件id

@@ -245,6 +245,43 @@ public class DocumentWithdrawController {
 		 * 5.如果办结记录表有数据，则根据subId全部删除 
 		 * 6.如果办理反馈表、反馈附件记录表有数据，则删除；
 		 */
+		if(StringUtils.isNotBlank(infoId) && StringUtils.isNotBlank(subId)) {
+			// 删除局内转办记录
+			documentZbjlService.deleteBySubIdAndInfoId(subId, infoId);
+			// 删除局内流转记录表,前提是有数据，然后删除
+			SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
+			if (subDocTracking != null) {
+				subDocTrackingService.deleteBySubId(subId);
+			}else {
+				this.unifiedDealErrorLog(json, null, subId, "局内流转记录表");
+				json.put("result", "fail");
+				return json;
+			}
+			// 删除办结记录 ,前提是有数据，然后删除
+			DocumentBjjl documentBjjl = documentBjjlService.queryBjjlBySubId(subId);
+			if (documentBjjl != null) {
+				documentBjjlService.delete(documentBjjl.getId());
+			}
+			List<ReplyExplain> replyExplains = replyExplainService.querySubLatestReply(infoId, subId);
+			Map<String, Object> map = new HashMap<>();
+			map.put("subId", subId);
+			if (replyExplains != null && replyExplains.size() > 0) {
+				replyExplainService.deleteByParam(map);
+			}
+			// 删除办理反馈附件表
+			List<ReplyAttac> replyAttacs = replyAttacService.queryList(map);
+			if (replyAttacs != null && replyAttacs.size() > 0) {
+				replyAttacService.deleteBySubId(subId);
+			}
+			//刪除审批意见表数据
+			List<ApprovalOpinion> approvalOpinions = approvalOpinionService.queryList(map);
+			if (approvalOpinions != null && approvalOpinions.size() > 0) {
+				approvalOpinionService.deleteBySubId(subId);
+			}
+		}else {
+			json.put("result", "fail");
+			return json;
+		}
 		// 更新状态   恢复数据
 		SubDocInfo subDocInfo = subDocInfoService.querySubDocInfoBySubIdAndInfoId(subId, infoId);
 		if (subDocInfo != null) {
@@ -266,48 +303,37 @@ public class DocumentWithdrawController {
 			documentInfo.setSzReadIds(null);
 			documentInfo.setStatus(1);
 			if(StringUtils.equals(subDocInfo.getSubDeptName(), documentInfo.getLatestSubDept())) {
-				documentInfo.setLatestReply(null);
-				documentInfo.setLatestSubDept(null);
-				documentInfo.setLatestUndertaker(null);
-				documentInfo.setLatestReplyTime(null);
+				Map<String, Object> replyMap =new HashMap<>();
+				replyMap.put("infoId", infoId);
+				replyMap.put("cbrFlag", "1");
+				replyMap.put("showFlag", "1");
+				List<ReplyExplain> list = replyExplainService.queryList(replyMap);
+				if(list !=null && list.size()>0) {
+					ReplyExplain explain = list.get(0);
+					documentInfo.setLatestUndertaker(explain.getUserName());
+					Map<String, Object> repMap =new HashMap<>();
+					repMap.put("infoId", infoId);
+					repMap.put("subId", explain.getSubId());
+					repMap.put("showFlag", "1");
+					List<ReplyExplain> repList = replyExplainService.queryList(repMap);
+					if(repList != null && repList.size()>0) {
+						ReplyExplain repExplain = repList.get(0);
+						documentInfo.setLatestReply(repExplain.getReplyContent());
+						documentInfo.setLatestSubDept(repExplain.getSubDeptName());
+						documentInfo.setLatestReplyTime(repExplain.getVersionTime());
+					}
+				}else {
+					documentInfo.setLatestReply(null);
+					documentInfo.setLatestSubDept(null);
+					documentInfo.setLatestUndertaker(null);
+					documentInfo.setLatestReplyTime(null);
+				}
 			}
 			documentInfoService.updateDocumentInfoById(documentInfo);
 		}else {
 			this.unifiedDealErrorLog(json, infoId, subId, "督办基本信息表");
 			json.put("result", "fail");
 			return json;
-		}
-		// 删除局内转办记录
-		documentZbjlService.deleteBySubIdAndInfoId(subId, infoId);
-		// 删除局内流转记录表,前提是有数据，然后删除
-		SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
-		if (subDocTracking != null) {
-			subDocTrackingService.deleteBySubId(subId);
-		}else {
-			this.unifiedDealErrorLog(json, null, subId, "局内流转记录表");
-			json.put("result", "fail");
-			return json;
-		}
-		// 删除办结记录 ,前提是有数据，然后删除
-		DocumentBjjl documentBjjl = documentBjjlService.queryBjjlBySubId(subId);
-		if (documentBjjl != null) {
-			documentBjjlService.delete(documentBjjl.getId());
-		}
-		List<ReplyExplain> replyExplains = replyExplainService.querySubLatestReply(infoId, subId);
-		Map<String, Object> map = new HashMap<>();
-		map.put("subId", subId);
-		if (replyExplains != null && replyExplains.size() > 0) {
-			replyExplainService.deleteByParam(map);
-		}
-		// 删除办理反馈附件表
-		List<ReplyAttac> replyAttacs = replyAttacService.queryList(map);
-		if (replyAttacs != null && replyAttacs.size() > 0) {
-			replyAttacService.deleteBySubId(subId);
-		}
-		//刪除审批意见表数据
-		List<ApprovalOpinion> approvalOpinions = approvalOpinionService.queryList(map);
-		if (approvalOpinions != null && approvalOpinions.size() > 0) {
-			approvalOpinionService.deleteBySubId(subId);
 		}
 		json.put("result", "success");
 		return json;

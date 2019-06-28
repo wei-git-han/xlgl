@@ -87,19 +87,8 @@ var pageModule = function(){
                 		 }
                 		 html1+=item.userName+'&nbsp;&nbsp;'+createdTime+'批示：'+item.leaderComment+'&nbsp;&nbsp;&nbsp;'
      				 });
-                	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.infoId+'\')">'+html1+'</div>';
+                	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.infoId+'\')" title="'+html1+'">'+html1+'</div>';
                  }},
-                 /*{display:"督办落实情况",name:"",width:"20%",align:"left",paixu:false,title:false,render:function(rowdata){
-                	 var duban="";
-                 	 if(rowdata.updateFlag=="1"){
-                 		duban = '<label class="cuibanlabel">已更新</label>';
-                	 }
-                	 var dbCont="";
-                	 if(rowdata.latestReply){
-                		dbCont=rowdata.latestReply;
-                	 }	 
-                	 return '<div class="dblsqk" onclick="dblsqkAlert(\''+rowdata.infoId+'\')" title="'+dbCont+'">'+duban+'<span>'+dbCont+'</span></div>';
-                 }},*/
                  {display:"本期局内反馈",name:"",width:"20%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var dbCont="";
                 	 if(rowdata.latestReply){
@@ -137,7 +126,7 @@ var pageModule = function(){
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
-					var maxwidth = 78;
+					var maxwidth = 83;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
@@ -145,14 +134,14 @@ var pageModule = function(){
 				});
             	
             	$(".dblsqk span").each(function(){
-					var maxwidth = 72;
+					var maxwidth = 77;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
 					}
 				});
             	$(".tabletitle").each(function(){
-					var maxwidth = 55;
+					var maxwidth =56;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
