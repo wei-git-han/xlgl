@@ -555,6 +555,10 @@ var pageModule = function(){
 			window.location.href = "main.html";
 		});
 		
+		$("#calendar_btn").click(function(){
+			$("#clocker").toggle();
+		});
+		
 		
 		var o1 = false;
 		$(".date-picker").datepicker({
@@ -563,7 +567,7 @@ var pageModule = function(){
 		    orientation: "left",
 		    autoclose: true
 		}).on("changeDate",function(e1,e2){
-			
+			$("#clocker").hide();
 			if(o1){clearTimeout(o1)};
 			o1 = setTimeout(function(){
 				

@@ -785,6 +785,6 @@ function dblsqkAlert(id){
 		header:true,
 		title:"督办详情",
 		classed:"cjDialog",
-		url:"/app/db/document/view/html/dblsqk.html?fileId="+id
+		url:"/app/db/document/view/html/dblsqk.html?fileId="+id+"&fileFrom="+fileFrom
 	})
 }

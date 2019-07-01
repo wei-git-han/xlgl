@@ -33,6 +33,12 @@
 		<if test="cbrFlag != null and cbrFlag != ''">
 			and CBR_FLAG= #{cbrFlag}
 		</if>
+		<if test="chooseStatus != null and chooseStatus != ''">
+			and CHOOSE_STATUS= #{chooseStatus}
+		</if>
+		<if test="tjStatus != null and tjStatus != ''">
+			and (CHOOSE_STATUS is not null or CHOOSE_STATUS !='') 
+		</if>
 		<if test="time != null">
 			and CREATED_TIME >= #{time}
 		</if>

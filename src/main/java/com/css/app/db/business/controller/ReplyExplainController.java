@@ -174,7 +174,7 @@ public class ReplyExplainController {
 	}
 	
 	/**
-	 * 获取所有分支局反馈
+	 * 获取所有分支局最新已发布反馈
 	 * @param infoId 主文件id
 	 */
 	@ResponseBody
@@ -242,7 +242,7 @@ public class ReplyExplainController {
 	}
 	
 	/**
-	 * 获取所有局最新一条的已发布反馈
+	 * 获取所有局最新一轮最新一条的已发布反馈
 	 * @param infoId
 	 */
 	@ResponseBody
@@ -257,6 +257,44 @@ public class ReplyExplainController {
 			List<ReplyExplain> list = replyExplainService.queryList(replyMap);
 			if(list !=null && list.size()>0) {
 				replyExplain.setUserName(list.get(0).getUserName());
+			}
+			Map<String, Object> statusMap =new HashMap<>();
+			statusMap.put("subId", replyExplain.getSubId());
+			statusMap.put("teamId", replyExplain.getTeamId());
+			statusMap.put("tjStatus", "yes");
+			List<ReplyExplain> statuslist = replyExplainService.queryList(statusMap);
+			if(statuslist !=null && statuslist.size()>0) {
+				String chooseStatus = statuslist.get(0).getChooseStatus();
+				replyExplain.setChooseStatus(chooseStatus);
+			}
+		}
+		Response.json(latestOneReply);
+	}
+	
+	/**
+	 * 获取所有局最新一条的已发布反馈
+	 * @param infoId
+	 */
+	@ResponseBody
+	@RequestMapping("/queryAllLatestReply")
+	public void queryAllLatestReply(String infoId) {
+		List<ReplyExplain> latestOneReply = replyExplainService.queryAllLatestReply(infoId);
+		for (ReplyExplain replyExplain : latestOneReply) {
+			Map<String, Object> replyMap =new HashMap<>();
+			replyMap.put("subId", replyExplain.getSubId());
+			replyMap.put("teamId", replyExplain.getTeamId());
+			replyMap.put("cbrFlag", "1");
+			List<ReplyExplain> list = replyExplainService.queryList(replyMap);
+			if(list !=null && list.size()>0) {
+				replyExplain.setUserName(list.get(0).getUserName());
+			}
+			Map<String, Object> statusMap =new HashMap<>();
+			statusMap.put("subId", replyExplain.getSubId());
+			statusMap.put("teamId", replyExplain.getTeamId());
+			statusMap.put("tjStatus", "yes");
+			List<ReplyExplain> statuslist = replyExplainService.queryList(statusMap);
+			if(statuslist !=null && statuslist.size()>0) {
+				replyExplain.setChooseStatus(list.get(0).getChooseStatus());
 			}
 		}
 		Response.json(latestOneReply);

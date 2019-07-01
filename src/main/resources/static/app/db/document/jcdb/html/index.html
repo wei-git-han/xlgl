@@ -174,34 +174,41 @@
 										<div class="newpanel-top-title">
 											<font>首长批示落实</font>
 										</div>
+										<div class="btn-group btn-group" style="position: absolute;right: 20px;top: 13px;">
+											<button type="button" class="btn  btn-sm green tabtopbtn"  id="calendar_btn" style="background:#153679;"><i class="fa fa-calendar" style="color:#66CBFF"></i></button>
+											<ul class="dropdown-menu" role="menu" style="width: 350px;" id="clocker">
+												<li>
+													<a href="javascript:;">
+														<div class="input-group date-picker input-daterange newdate2" data-date-format="yyyy年mm月dd日">
+														    <input type="text" class="form-control newDateVal" name="from" id="startdate" >
+														    <span class="input-group-addon">至</span>
+														    <input type="text" class="form-control datee2" name="to" id="enddate" >
+														</div>
+													</a>
+												</li>
+											</ul>
+										</div>
 									</div>
 									<div class="newpanel-cent">
-											<div class="newpanel-cent-top">
-												<div class="input-group date-picker input-daterange newdate2" data-date-format="yyyy年mm月dd日">
-												    <input type="text" class="form-control newDateVal" name="from" id="startdate" >
-												    <span class="input-group-addon">至</span>
-												    <input type="text" class="form-control datee2" name="to" id="enddate" >
+										<div class="newpanel-cent-cent" style="top:0;">
+											<div class="newpanel-cent-inner">
+												<div class="wh100 scroller" style="padding-right:0;">
+													<table class="newtable2">
+														<thead>
+															<tr>
+																<th class="th1"></th>
+																<th class="th2">首长名称</th>
+																<th class="th3">办理中</th>
+																<th class="th4">已办结</th>
+																<th class="th5">常态落实</th>
+															</tr>
+														</thead>
+														<tbody id="tbody2">
+														</tbody>
+													</table>
 												</div>
 											</div>
-											<div class="newpanel-cent-cent">
-												<div class="newpanel-cent-inner">
-													<div class="wh100 scroller" style="padding-right:0;">
-														<table class="newtable2">
-															<thead>
-																<tr>
-																	<th class="th1"></th>
-																	<th class="th2">首长名称</th>
-																	<th class="th3">办理中</th>
-																	<th class="th4">已办结</th>
-																	<th class="th5">常态落实</th>
-																</tr>
-															</thead>
-															<tbody id="tbody2">
-															</tbody>
-														</table>
-													</div>
-												</div>
-											</div>
+										</div>
 									</div>
 								</div>
 							</div>

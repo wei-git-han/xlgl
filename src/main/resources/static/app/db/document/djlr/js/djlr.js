@@ -326,7 +326,7 @@ function deleteDoc(docId) {
 function chehuiDoc(docId) {
 	newbootbox.confirm({
 	    title: "提示",
-	    message: "是否要进行撤回操作？",
+	    message: "本办件撤回后各局办理信息都将被删除且无法恢复！是否确认撤回！",
 	    callback1:function(){
 			$ajax({
 				url:chehuiDocUrl,

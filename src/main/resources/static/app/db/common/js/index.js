@@ -15,7 +15,8 @@ var pageModule = function(){
 				}else{
 					$.each(data, function(i, item) {
 						if(i==0){
-							$("#iframe1").attr("src",item.defaultPage+"?menuId="+item.id);
+							var str = item.defaultPage.indexOf('?')>-1?"&":"?";
+							$("#iframe1").attr("src",item.defaultPage+str+"menuId="+item.id);
 						}
 						lis += '<li id="'+item.id+'"><a href="'+item.defaultPage+'" target="iframe1">'+item.menuName;
 						if(item.id=='002'){

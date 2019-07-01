@@ -343,23 +343,29 @@ function dblsqkAlert(id){
 		header:true,
 		title:"督办详情",
 		classed:"cjDialog",
-		url:"/app/db/document/view/html/dblsqk.html?fileId="+id
+		url:"/app/db/document/view/html/dblsqk.html?fileId="+id+"&fileFrom="+fileFrom
 	})
 }
 
 //撤回
 function chehuiDoc(id, infoId){
-	$ajax({
-		url:chehuiUrl,
-		data:{subId:id, infoId:infoId},
-		success:function(data){
-			if(data.result=='success'){
-				newbootbox.alertInfo('撤回成功！').done(function(){
-					pageModule.initgrid();
-				});
-			}else{
-				newbootbox.alertInfo('撤回失败！');
-			}
-		}
-	});	
+	newbootbox.confirm({
+	 	title:"提示",
+	 	message: "本办件撤回后所有本局办理信息都将被删除且无法恢复！是否确认撤回！",
+	 	callback1:function(){
+	 		$ajax({
+	 			url:chehuiUrl,
+	 			data:{subId:id, infoId:infoId},
+	 			success:function(data){
+	 				if(data.result=='success'){
+	 					newbootbox.alertInfo('撤回成功！').done(function(){
+	 						pageModule.initgrid();
+	 					});
+	 				}else{
+	 					newbootbox.alertInfo('撤回失败！');
+	 				}
+	 			}
+	 		});	
+	 		}
+	 	})
 }
