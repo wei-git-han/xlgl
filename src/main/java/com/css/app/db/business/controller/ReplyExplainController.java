@@ -264,8 +264,7 @@ public class ReplyExplainController {
 			statusMap.put("tjStatus", "yes");
 			List<ReplyExplain> statuslist = replyExplainService.queryList(statusMap);
 			if(statuslist !=null && statuslist.size()>0) {
-				String chooseStatus = statuslist.get(0).getChooseStatus();
-				replyExplain.setChooseStatus(chooseStatus);
+				replyExplain.setChooseStatus(statuslist.get(0).getChooseStatus());
 			}
 		}
 		Response.json(latestOneReply);
@@ -294,7 +293,7 @@ public class ReplyExplainController {
 			statusMap.put("tjStatus", "yes");
 			List<ReplyExplain> statuslist = replyExplainService.queryList(statusMap);
 			if(statuslist !=null && statuslist.size()>0) {
-				replyExplain.setChooseStatus(list.get(0).getChooseStatus());
+				replyExplain.setChooseStatus(statuslist.get(0).getChooseStatus());
 			}
 		}
 		Response.json(latestOneReply);
