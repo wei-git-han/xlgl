@@ -1,7 +1,6 @@
 var tableList= {"url":"/app/db/documentinfo/list","dataType":"text"};//table数据
 var delDocUrl = {"url":"/app/db/documentinfo/delete","dataType":"text"};//表格数据删除
 var numsList={"url":"/app/db/documentinfo/numsList","dataType":"text"};//筛选状态数字统计
-var chehuiDocUrl = {"url":"/app/db/documentinfo/cheHuiOperation","dataType":"text"};//表格数据撤回
 
 var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//部门树
 var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//人员树
@@ -324,27 +323,17 @@ function deleteDoc(docId) {
 
 //撤回数据
 function chehuiDoc(docId) {
-	newbootbox.confirm({
-	    title: "提示",
-	    message: "本办件撤回后各局办理信息都将被删除且无法恢复！是否确认撤回！",
-	    callback1:function(){
-			$ajax({
-				url:chehuiDocUrl,
-				data:{id:docId},
-				type: "GET",
-				success:function(data){
-					if(data.result=='success'){
-						newbootbox.alertInfo('撤回成功！').done(function(){
-							pageModule.initgrid();
-							window.top.blfkfn();
-						});
-					}else{
-						newbootbox.alertInfo('撤回失败！')
-					}
-				}
-			});
-	    }
-	});
+	newbootbox.newdialog({
+		id:"ch_confim",
+		width:400,
+		height:200,
+		header:true,
+		title:"撤回",
+		classed:"cjDialog",
+		style:{"padding":"1px","oveflow":"hidden"},
+		url:"/app/db/document/djlr/html/ch_confim.html?id="+docId
+	})
+
 }
 
 //批示指示内容弹出框
