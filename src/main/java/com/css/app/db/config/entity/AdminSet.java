@@ -34,6 +34,10 @@ public class AdminSet implements Serializable {
 	private String orgName;
 	
 	private String editFlag;
+	//挂接首长名字
+	private String seniorOfficial;
+	//挂接首长ID
+	private String seniorOfficialId;
 
 	/**
 	 * 设置：唯一标识
@@ -136,6 +140,18 @@ public class AdminSet implements Serializable {
 	}
 	public void setEditFlag(String editFlag) {
 		this.editFlag = editFlag;
+	}
+	public String getSeniorOfficial() {
+		return seniorOfficial;
+	}
+	public void setSeniorOfficial(String seniorOfficial) {
+		this.seniorOfficial = seniorOfficial;
+	}
+	public String getSeniorOfficialId() {
+		return seniorOfficialId;
+	}
+	public void setSeniorOfficialId(String seniorOfficialId) {
+		this.seniorOfficialId = seniorOfficialId;
 	}
 	
 }

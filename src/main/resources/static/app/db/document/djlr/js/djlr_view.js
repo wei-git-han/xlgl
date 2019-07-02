@@ -161,7 +161,7 @@ var pageModule = function(){
 					$.each(data,function(i,item){
 						$(".psMain").append(
 							'<div class="psrecord">'+
-				            '	<div class="pslist"><span>'+item.userName+'&nbsp;&nbsp;'+item.createdTime+'&nbsp;&nbsp;批示：</span><span>'+item.leaderComment+'</span></div>'+
+				            '	<div style="color:black;" class="pslist"><span>'+item.userName+'&nbsp;&nbsp;'+item.createdTime+'&nbsp;&nbsp;批示：</span><span>'+item.leaderComment+'</span></div>'+
 				            '</div>'
 			            )
 					});
@@ -668,7 +668,6 @@ var pageModule = function(){
 			});
 		});
 	}
-		
 	return{
 		//加载页面处理程序
 		initControl:function(){
@@ -688,6 +687,25 @@ var pageModule = function(){
 		}
 	};
 }();
+
+
+
+
+//$(function()){
+//	$("#checkAll").click(function){
+//		$("input:checkbox").prop("checked","checked");
+//	};
+//	$("#checkNo").click(function){
+//		$("input:checkbox").removeAttr("checked","checked");
+//	};
+//	$("#checkRev").click(function){
+//		$("input:checkbox").each(function()){
+//			this.checked=!this.checked;
+//		}
+//	};
+//}
+
+
 
 
 //跳转返回事件
@@ -718,6 +736,11 @@ function skip(){
 		}
 	}
 }
+
+
+
+
+
 
 /*//批示详情
 function showXQ(id){
@@ -792,4 +815,11 @@ function viewcont(teamId,subId){
 	    	}
 	    }
 	});
+	
+	
+	
+	
+	
+	
+	
 }

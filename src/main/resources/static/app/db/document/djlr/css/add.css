@@ -81,7 +81,7 @@ html, body {
 .newtable .form-control{width:100%!important;background-color:#fff;}
 .form-control[readonly] {background-color: #fff!important;}
 .form-control[disabled] {background-color: #eee!important;}
-.newlabel{text-align:right;padding-right:10px;width:100px;font-size:16px;}
+.newlabel{text-align:right;padding-right:10px;width:106px;font-size:16px;}
 .newform .newlabel{width:100px;padding-left:10px;font-size:15px;}
 
 .newrequired{color:red;}

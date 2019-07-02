@@ -3,6 +3,7 @@ var saveUrl = {"url":rootPath +"/adminset/saveOrUpdate","dataType":"text"};  //�
 var editInfo = {"url":rootPath +"/adminset/info","dataType":"text"}; //编辑数据
 var getUserAdminTypeUrl = {"url":rootPath +"/adminset/getAuthor","dataType":"text"};//那当前用户的类型1：部管理员，2：局管理员
 var userTree ={"url":"/app/base/user/allTree","dataType":"text"}; //人员选择树
+var shouZhangTree ={"url":"/app/db/documentjcdb/allShouZhang","dataType":"text"}; //人员选择树
 var pageModule = function(){
 	var initdatafn = function(){
 		$ajax({
@@ -14,7 +15,7 @@ var pageModule = function(){
 			}
 		})
 	}
-	
+
 	var initother = function(){
 		$("#userName").createUserTree({
 			url : userTree,
@@ -25,6 +26,19 @@ var pageModule = function(){
 				$("#userId").val(data.node.id);
 			}
 		});
+ 
+		//选择首长       seniorOfficial
+		$("#seniorOfficial").createUserTree({
+			url : shouZhangTree,
+			width:"100%",
+			success : function(data, treeobj) {
+				alert(data[0].truename)
+			},
+			selectnode : funseniorOfficialction(e, data) {
+				$("#").val(data.node.text);
+				$("#seniorOfficialId").val(data.node.id);
+			}
+		});
 		
 		$("#quxiao,#fanhui").click(function(){
 			window.location.href="/app/db/document/ywpz/bglysz/html/index.html";
@@ -33,13 +47,15 @@ var pageModule = function(){
 		$("#save").click(function(){
 			var userName=$("#userName").val();
 			var userId=$("#userId").val();
+			var seniorOfficial=$("#seniorOfficial").val();
+			var seniorOfficialId=$("#seniorOfficialId").val();
 			if(userId == ''){
 				newbootbox.alertInfo("请选择用户！");
 				return;
 			}
 			$ajax({
 				url:saveUrl,
-				data:{id:id,userName:userName,userId:userId,adminType:"1"},
+				data:{id:id,userName:userName,userId:userId,adminType:"1",seniorOfficial:seniorOfficial,seniorOfficialId:seniorOfficialId},
 				type: "GET",
 				success:function(data){
 					if(data.result == "success") {
@@ -51,7 +67,6 @@ var pageModule = function(){
 					}
 				}
 			});
-			
 		})
 	}
 	
@@ -61,6 +76,5 @@ var pageModule = function(){
 			initdatafn();
 			initother();
 		}
-	};
-	
+	}
 }();

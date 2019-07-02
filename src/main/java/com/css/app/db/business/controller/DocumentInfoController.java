@@ -357,6 +357,7 @@ public class DocumentInfoController {
 				}
 				//是否批示超过3个月
 				this.isOverTreeMonth(info);
+				this.showAddRecord(info, adminType);
 				//首长批示
 				Map<String, Object> szpsMap = new HashMap<>();
 				szpsMap.put("infoId", info.getId());
@@ -367,6 +368,12 @@ public class DocumentInfoController {
 		GwPageUtils pageUtil = new GwPageUtils(infoList);
 		Response.json(pageUtil);
 	}
+	private void showAddRecord(DocumentInfo info, String adminType) {
+		if (StringUtils.equals(adminType, "1")) {
+			info.setIsAddRecord(1);
+		}
+	}
+
 	/**
 	 * 计算首长批示时间到现在是否查过三月；
 	 * @param leaderTime
@@ -565,6 +572,7 @@ public class DocumentInfoController {
 	@ResponseBody
 	@RequestMapping("/update")
 	public void update(DocumentInfo documentInfo){
+		System.err.println(documentInfo.getWorkableMatter());
 		String uuid="";
 		JSONObject jo=new JSONObject();
 		if (StringUtils.isNotBlank(documentInfo.getId())) {

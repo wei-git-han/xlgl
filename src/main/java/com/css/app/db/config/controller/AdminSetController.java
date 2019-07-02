@@ -152,6 +152,7 @@ public class AdminSetController {
 			adminSet.setDeptName(deptName);
 			adminSet.setOrgId(orgId);
 			adminSet.setOrgName(orgName);
+			adminSet.setOrgName(orgName);
 			adminSetService.update(adminSet);
 		}else {
 			adminSetService.deleteByUserId(userId);

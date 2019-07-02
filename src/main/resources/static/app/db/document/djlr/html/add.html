@@ -220,24 +220,24 @@ License: You must have a valid license purchased only from themeforest(the above
 																制文日期
 															</td>
 															<td>
-															 	<div class="input-group  date date-picker" data-date-format="yyyy-mm-dd" >
-																    <input type="text" class="form-control datee seteee" id="printDate" name="printDate" onfocus="blur()"  />
+															 	<div class="input-group  date date-picker" data-date-format="yyyy-mm-dd">
+																    <input type="text" class="form-control datee seteee" id="printDate" name="printDate" onfocus="blur()"/>
 																    <span class="input-group-btn">
-																    	<button class="btn default setdis"  type="button"><i class="fa fa-calendar"></i></button>
+																    	<button class="btn default setdis" type="button"><i class="fa fa-calendar"></i></button>
 																    </span>
 																</div>
-															</td>
+															</td>	 
 														 </tr>
 														
 														<tr id="chaoqing">
 															<td class="newlabel" style="position:relative;">
-																抄清
+																批示指示内容
 															</td>
 															<td colspan="3">
 																<div class="cqwrap">
 																	<div style="padding:10px;overflow: hidden;width: 100%;">
 																		<div style="overflow: hidden;">
-																			<span class="pull-left">新增/编辑抄清</span>
+																			<span class="pull-left">新增/编辑批示指示内容</span>
 																		</div>
 																		<input type="hidden" class="form-control" id="editcqId" name="editcqId" />
 																		<div class="cqnr">
@@ -270,12 +270,20 @@ License: You must have a valid license purchased only from themeforest(the above
 																</div>
 															</td>
 														</tr>
-														<tr>
+														<tr class="job">
+															<td class="newlabel" style="position:relative;">
+																工作分工内容
+															</td>
+															<td colspan="3">
+																<textarea class="form-control"  id="jobContent" name="jobContent" rows="3" style="resize:none;" disabled="disabled" maxlen="500"></textarea>
+															</td>
+														</tr>
+														<tr class="matter" style="display:none;">
 															<td class="newlabel" style="position:relative;">
 																落实事项
 															</td>
 															<td colspan="3">
-																<textarea class="form-control"  id="jobContent" name="jobContent" rows="3" style="resize:none;" disabled="disabled" maxlen="500"></textarea>
+																<textarea class="form-control"  id="workableMatter" name="workableMatter" rows="3" style="resize:none;" maxlen="500"></textarea>
 															</td>
 														</tr>
 														<tr>

@@ -15,6 +15,7 @@ if(!window.top.memory){
 }
 var o = window.top.memory;
 
+
 var pageModule = function(){
 	var initgrid = function(){
         grid = $("#gridcont").createGrid({
@@ -34,7 +35,7 @@ var pageModule = function(){
     				 }
    				  	 return '<div title="'+documentStatusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+documentStatusName+'</div>';
                  }},
-                 {display:"办件标题",name:"",width:"15%",align:"left",render:function(rowdata){
+                 {display:"文件标题",name:"",width:"15%",align:"left",render:function(rowdata){
                 	 return '<a title="'+rowdata.docTitle+'" class="tabletitle" href="djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+rowdata.docTitle+'</a>'
                  }},
                  {display:"紧急程度",name:"",width:"4%",align:"center",paixu:false,render:function(rowdata){
@@ -63,7 +64,7 @@ var pageModule = function(){
                  {display:"承办单位/人",name:"",width:"20%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 return '<div class="cbdw" title="'+rowdata.underDepts+'">'+rowdata.underDepts+'</div>'
                  }},
-                 {display:"办件分类",name:"",width:"10%",align:"left",paixu:false,title:true,render:function(rowdata){
+                 {display:"类别",name:"",width:"10%",align:"left",paixu:false,title:true,render:function(rowdata){
                 	 return rowdata.docTypeName;
                  }},
                  {display:"创建时间",name:"",width:"9%",align:"center",title:true,render:function(rowdata){
@@ -195,7 +196,7 @@ var pageModule = function(){
 			window.location.href="/app/db/document/djlr/html/add.html";
 		});
 		
-		//编辑
+		//补录
 		$("#edit").click(function(){
 			var datas=grid.getcheckrow();
 			var ids=[];

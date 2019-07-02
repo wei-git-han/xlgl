@@ -14,6 +14,7 @@ var pageModule = function(){
 					window.location.href="error.html";
 				}else{
 					$.each(data, function(i, item) {
+						console.log(i+"---------"+item);
 						if(i==0){
 							$("#iframe1").attr("src",item.defaultPage+"?menuId="+item.id);
 						}

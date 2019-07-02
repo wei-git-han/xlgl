@@ -159,6 +159,22 @@ var pageModule = function(){
 				$("#jobContent").removeAttr("disabled");
 				$("#banjianNumber").attr("disabled",true);
 			}
+			if($(this).val() == "6"){
+				$(".job").hide();
+				$(".matter").show();
+			}else{
+				$(".job").show();
+				$(".matter").hide();
+			}
+			if($(this).val() == "3" || $(this).val() == "5" ){
+				$(".seteee").attr("disabled",true);
+				$(".setdis").attr("disabled",true);
+				$(".seteee").val("");
+				$(".setdis").val("");
+			}else{
+				$(".seteee").removeAttr("disabled");
+				$(".setdis").removeAttr("disabled");
+			}
 		});
 		
 		//扫描设置
@@ -192,7 +208,7 @@ var pageModule = function(){
 		    	$("#securityClassification").val($("#securityId option:checked").text());
 		    	$("#urgencyDegree").val($("#urgencyId option:checked").text());
 			    var elementarry = ["docTypeId","docTypeName","docTitle","securityId","securityClassification",
-			    	"urgencyId","urgencyDegree","docCode","banjianNumber","userId","userName","applyTime","printDate","jobContent","remark","period"];
+			    	"urgencyId","urgencyDegree","docCode","banjianNumber","userId","userName","applyTime","printDate","jobContent","remark","period","workableMatter"];
 				var paramdata = getformdata(elementarry);
 				paramdata.id = $("#id").val();
 				//newbootbox.alert('正在保存，请稍候...',false);
@@ -203,12 +219,10 @@ var pageModule = function(){
 					async:false,
 					success:function(data){
 						$("#id").val(data.id);
-						
 						var psszName = $("#psszName").val();
 						var psszId = $("#psszId").val();
 						var leaderComment=$("#cqcontent").val();
 						var createdTime=$("#cqDate").val();
-						
 						if($.trim(leaderComment) != "" && $.trim(leaderComment) != null){
 							if($.trim(psszName) == "" || $.trim(psszName) == null){
 								newbootbox.alert('请选择首长！');

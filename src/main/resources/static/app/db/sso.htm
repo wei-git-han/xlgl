@@ -212,6 +212,23 @@ $(function () {
 		error : function(error) {}
 	});
 });
+function downLoadFile(){
+$.ajax({
+        url: "/app/db/documentfile/downLoadFile",
+        data: {id: $("#fileId").val()},
+        type: 'POST',
+        dataType: "JSON",
+        success: function(data){
+        	alert(data.url);
+        	
+        },
+        error: function(error){
+            // show error
+            var a = error;
+            
+        }
+    });
+}
 </script>
 </head>
 <body>
@@ -235,6 +252,8 @@ $(function () {
 <button type="button" onclick="startNoteMsgTimer()" style="display:none" id="startNoteMsgTimer">启动定时短信发送</button>
 <button type="button" onclick="cancelNoteMsgTimer()" style="display:none" id="cancelNoteMsgTimer">停止定时短信发送</button>
 <div><label>返回结果: </label><label id="orgText"></label></div>
+用户名:<input type="text" name="fileId" id="fileId"/>
+<button type="button" onclick="downLoadFile()">下载</button>
 
 </body>
 </html>

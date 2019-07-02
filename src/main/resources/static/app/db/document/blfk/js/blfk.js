@@ -15,7 +15,14 @@ if(fileFrom && fileFrom == "jcdb"){
 		$("input[value="+ytype+"]").attr("checked",true);
 	}
 }
-
+//var isAddRecord=0;  //是否显示补录按钮  edit
+//if(isAddRecord==1){    
+//	$("#edit").show();
+////	显示
+//}else{
+////	隐藏
+//	$("#edit").hide();
+//}
 var grid = null;
 var grid2 = null;
 var grid3 = null;
@@ -173,6 +180,17 @@ var pageModule = function(){
             pageyno:true,
             paramobj:{page:o.pagesize1,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val(),psStartDate:$("#startDate").val(),psEndDate:$("#endDate").val()},
             loadafter:function(data){
+            	var arr=data.rows;
+            	isAddRecord=arr[0].isAddRecord;
+            	
+            	if(isAddRecord==1){    
+            		$("#edit").show();
+//            		显示
+            	}else{
+//            		隐藏
+            		$("#edit").hide();
+            	}
+            	
             	total=data.total;
             	$(".zspsnr").each(function(){
 					var maxwidth = 90;
@@ -667,6 +685,20 @@ var pageModule = function(){
 				pageModule.initgrid2();
 			}
 		});
+		
+		//补录
+		$("#edit").click(function(){
+			var datas=grid.getcheckrow();
+			var ids=[];
+			if(datas.length==1){
+				$(datas).each(function(i){
+					ids[i]=this.id;
+				});
+				window.location.href="/app/db/document/djlr/html/edit.html?fileId="+ids.toString();
+			}else{
+				newbootbox.alertInfo("请选择一条数据进行补录！");
+			}
+		})
 		
 	}
 	

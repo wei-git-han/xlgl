@@ -16,7 +16,6 @@ var pageModule = function(){
  						$("#peoples").append(html1);
  					})				
  				}
- 				
  				$("input[name=users]").click(function(){
  					window.top.iframe1.window.pageModule.getUserData($(this).attr("personName"),$(this).attr("data"));
  					newbootbox.newdialogClose("chooseszDialog");

@@ -240,6 +240,20 @@ var pageModule = function(){
 				newbootbox.alertInfo("请选择要导出的数据！");
 			}
 		});
+		//新增文件
+		$("#add").click(function(){
+			var datas=grid.getcheckrow();
+			var ids=[];
+			if(datas.length==1){
+				$(datas).each(function(i){
+					ids[i]=this.id;
+				});
+//				alert(ids.toString());
+				window.location.href="/app/db/document/djlr/html/edit.html?fileId="+ids.toString();
+			}else{
+				newbootbox.alertInfo("请选择一条数据进行新增文件！");
+			}
+		})
 	}
 	
 	var inittree = function(){

@@ -17,7 +17,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.appconfig.entity.BaseAppConfig;
 import com.css.addbase.appconfig.service.BaseAppConfigService;
 import com.css.addbase.apporgan.entity.BaseAppOrgan;
+import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
+import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.addbase.constant.AppConstant;
 import com.css.app.db.business.dto.LeaderStatisticsDto;
 import com.css.app.db.business.entity.DocumentInfo;
@@ -64,7 +66,8 @@ public class DocumentJcdbController {
 	@Autowired
 	private DocumentSzpsService documentSzpsService;
 	@Autowired
-	private DocumentReadService documentReadService;
+	private BaseAppUserService baseAppUserService;
+
 	
 	/**
 	 * 数据统计报表-(年度,状态数量)
@@ -524,5 +527,50 @@ public class DocumentJcdbController {
 			szids+=","+ mapped2.getValue();
 		}
 		return szids;
+	}
+	/**
+	 * 当前用户是否为首长或者部管理员下挂接首长
+	 */
+	@ResponseBody
+	@RequestMapping("/isShouZhang")
+	public void isShouZhang() {
+		JSONObject jsonObject = new JSONObject();
+		String userId = CurrentUser.getUserId();
+		System.err.println(userId);
+		Map<String, Object> map = new HashMap<>();
+		map.put("userId", userId);
+		List<AdminSet> adminSets = adminSetService.queryList(map);
+		if (adminSets != null && adminSets.size() > 0) {
+			AdminSet adminSet = adminSets.get(0);
+			if (StringUtils.equals(adminSet.getAdminType(), "1") && StringUtils.isNotBlank(adminSet.getSeniorOfficial())) {
+				jsonObject.put("isGuaZaiShouZhang", 1);
+				jsonObject.put("result", "success");
+			}else {
+				jsonObject.put("result", "fail");
+			}
+		}
+		List<RoleSet> roleSets = roleSetService.queryList(map);
+		if (roleSets != null && roleSets.size() > 0) {
+			RoleSet roleSet = roleSets.get(0);
+			if (StringUtils.equals(roleSet.getRoleFlag(), "1")) {
+				jsonObject.put("result", "success");
+			}else {
+				jsonObject.put("result", "fail");
+			}
+		}
+		Response.json(jsonObject);
+	}
+	/**
+	 * 查询所有首长
+	 */
+	@ResponseBody
+	@RequestMapping("/allShouZhang")
+	public void allShouZhang() {
+		BaseAppConfig mapped = baseAppConfigService.queryObject(AppConstant.LEAD_TEAM);//首长单位id
+		Map<String, Object> map = new HashMap<>();
+		map.put("organid",mapped.getValue());
+		List<BaseAppUser> baseAppUsers = baseAppUserService.queryList(map);
+		Response.json(baseAppUsers);
+//		return "";
 	}
 }

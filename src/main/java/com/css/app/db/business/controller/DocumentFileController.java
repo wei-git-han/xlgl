@@ -1,15 +1,25 @@
 package com.css.app.db.business.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.css.addbase.FileBaseUtil;
 import com.css.app.db.business.entity.DocumentFile;
 import com.css.app.db.business.service.DocumentFileService;
 import com.css.base.utils.Response;
@@ -28,6 +38,8 @@ import cn.com.css.filestore.impl.HTTPFile;
 @Controller
 @RequestMapping("/app/db/documentfile")
 public class DocumentFileController {
+	private final Logger logger = LoggerFactory.getLogger(DocumentFileController.class);
+
 	@Autowired
 	private DocumentFileService documentFileService;
 	
@@ -52,6 +64,7 @@ public class DocumentFileController {
 	@ResponseBody
 	@RequestMapping("/getFile")
 	public void info(String id){
+		System.err.println(id);
 		DocumentFile documentFile = documentFileService.queryObject(id);
 		JSONObject json= new JSONObject();
 		if(documentFile!=null) {
@@ -81,5 +94,74 @@ public class DocumentFileController {
 			Response.json("result","success");
 		}
 	}
-	
+	/**
+	 * 下载公文、暂时支持单个下载；
+	 */
+	@ResponseBody
+	@RequestMapping("/downLoadFile")
+	public void downLoadFile(String id){
+		List<File> files = new ArrayList<>();
+		for (String ss : id.split(",")) {
+			try {
+				DocumentFile documentFile = documentFileService.queryObject(ss);
+				File file = null;
+				if(documentFile!=null) {
+					String formatId=documentFile.getFileServerFormatId();
+					if(StringUtils.isNotBlank(formatId)){
+						//获取版式文件的下载路径
+						String url = FileBaseUtil.download(formatId);
+						HTTPFile httpFiles = new HTTPFile(formatId);
+						file = new File(httpFiles.getAssginDownloadURL(true));
+						files.add(file);
+						this.createZip(files,"d:\\xxx.zip");
+					}
+				}
+			} catch (Exception e) {
+				logger.info("下载公文异常：{}", e);
+				Response.json("result","fail");
+			}
+		}
+		Response.json("url","d:\\aaa.zip");
+	}
+	/**
+	 * 支持公文批量下载打包zip
+	 * @param files
+	 * @param zipPath
+	 */
+	private void createZip(List<File> files, String zipPath) {
+		FileInputStream fileInputStream = null;
+		ZipOutputStream zipOutputStream = null;
+		try {
+			for (File file : files) {
+				zipOutputStream = new ZipOutputStream(new FileOutputStream(zipPath));
+				fileInputStream = new FileInputStream(file);
+				zipOutputStream.putNextEntry(new ZipEntry(file.getName()));
+				int length;
+				if (fileInputStream != null) {
+					while ((length = fileInputStream.read()) != -1) {
+						zipOutputStream.write(length);
+						zipOutputStream.flush();
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.info("创建zip包异常：{}",e);
+		}finally {
+			if (zipOutputStream != null) {
+				try {
+					zipOutputStream.close();
+				} catch (IOException e) {
+					logger.info("关闭zipOutputStream流异常：{}",e);
+				}
+			}
+			if (fileInputStream != null) {
+				try {
+					fileInputStream.close();
+				} catch (IOException e) {
+					logger.info("关闭fileInputStream流异常：{}",e);
+				}
+			}
+			logger.info("生成xxx.zip包成功！");
+		}
+	}
 }

@@ -3,6 +3,7 @@ var url2 = {"url":"/app/db/documentszinfo/grouplist","dataType":"text"};
 var url3 = {"url":"/app/db/documentszinfo/read","dataType":"text"};
 var url4 = {"url":"/app/db/documentszinfo/press","dataType":"text"};
 var url5 = {"url":"/app/db/documentszinfo/AllreadByType","dataType":"text"};
+var url6 = {"url":"/app/db/documentjcdb/isShouZhang","dataType":"text"};
 var groupid=null;
 var grid = null;
 var pageModule = function(){
@@ -80,7 +81,56 @@ var pageModule = function(){
         grid = $("#gridcont").createGrid({
                     columns:[	
                     			{display:"办理状态",name:"blzt",width:"100%",align:"center",paixu:false,render:function(rowdata,n){
-									
+//                    				var button1;
+//                    				if(rowdata.blzt==1){
+//                    					button1 = '<button type="button" class="btn btn-info table-button1">办理中</button>';
+//                    				}else if(rowdata.blzt==3){
+//                    					button1 = '<button type="button" class="btn btn-info table-button2">常态落实</button>';
+//                    				}else{
+//                    					button1 = '<button type="button" class="btn btn-info table-button2">已办结</button>';
+//                    				}
+//                    				return button1;
+//                    			}},
+//                    			{display:"军委办件号",name:"jwbjh",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+//	                               	var cuiban = '',title;
+//	                            	var CuibanFlag = rowdata.CuibanFlag;
+//	                            	if(CuibanFlag==1){
+//	                            		 cuiban = '<label class="table-label2">催办</label>';
+//	                            	}
+//                    				
+//                    				title=`
+//                    					${cuiban} <font title="${title}" onclick="viewpage('${rowdata.id}','${rowdata.id}','${rowdata.id}')" style="cursor:pointer;text-decoration: underline;" >${rowdata.title}</font>
+//                    				`
+//                    					return title
+//                    			}},
+//                    			{display:"文件标题",name:"title",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+//                    				rvar cuiban = '',title;
+//	                            	var CuibanFlag = rowdata.CuibanFlag;
+//	                            	if(CuibanFlag==1){
+//	                            		 cuiban = '<label class="table-label2">催办</label>';
+//	                            	}
+//                    				title=`${cuiban} <font title="${title}" onclick="viewpage('${rowdata.id}','${rowdata.id}','${rowdata.id}')" style="cursor:pointer;text-decoration: underline;" >${rowdata.title}</font>`
+//                    				return title
+//                    			}},
+//                    			{display:"批示指示内容",name:"blzt",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+//                    				var str = `<font style="cursor:pointer" title="${rowdata.pszsmr}" onclick="pszsnrAlert('${rowdata.id}')" >${rowdata.pszsmr}</font>`;
+//                    				
+//                    			}},
+//                      			{display:"督办落实情况",name:"blzt",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+//                      				return rowdata.title;
+//                      			}},
+//                    			{display:"办件状态",name:"blzt",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+//                    				rowdata.title;
+//                    			}},
+//                    			{display:"承办单位/人",name:"blzt",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+//                    				rowdata.title;
+//                    			}},
+//                    			{display:"更新时间",name:"blzt",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+//                    				rowdata.title;
+//                    			}},
+//                      			{display:"操作",name:"blzt",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+//                      				rowdata.title;
+//                      			}}
                     				var id = rowdata.id;
                     				var blzt = rowdata.blzt;
                     				var jwbjh = rowdata.jwbjh;
@@ -363,13 +413,26 @@ var pageModule = function(){
 		})
 		
 	}
-	
-	
+
+	var initoisguajieshouzhang = function(){
+		$ajax({
+			url:url6,
+			success:function(data){
+				if(data.result=="success"){
+					if(data.isGuaZaiShouZhang == 1){
+						$(".newpanel-button1").hide();
+						$(".table-button3").hide();
+					}
+				}
+			}
+		});
+	}
 	return{
 		//加载页面处理程序
 		initControl:function(){
 			initmenu();
 			initother();
+			initoisguajieshouzhang();
 		},
 		initmenu:function(menuid){
 			initmenu(menuid);

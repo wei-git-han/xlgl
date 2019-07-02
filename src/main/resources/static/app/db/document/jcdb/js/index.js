@@ -4,6 +4,7 @@ var url3 = {"url":"/app/db/documentjcdb/orglist2","dataType":"text"};
 var url4 = {"url":"/app/db/documentjcdb/orglist3","dataType":"text"};
 var url5 = {"url":"/app/db/documentjcdb/orglist4","dataType":"text"};
 var url6 = {"url":"/app/db/documentjcdb/orglist5","dataType":"text"};
+var url7 = {"url":"/app/db/documentjcdb/isShouZhang","dataType":"text"};
 //var url6 = {"url":"../data/json7.json","dataType":"text"};
 var szFlag=getUrlParam("szFlag")||""; //首长页面进入标识
 if(szFlag== "1" || szFlag ==1){
@@ -588,7 +589,16 @@ var pageModule = function(){
 		
 		
 	}
-	
+	var initguazaishouzhang = function(){
+		$ajax({
+			url:url7,
+			success:function(data){
+				if(data.result=="success"){
+						$(".layout-top").show();
+					}
+				}
+			});
+		}
 	return{
 		//加载页面处理程序
 		initControl:function(){
@@ -596,6 +606,7 @@ var pageModule = function(){
 			initother();
 			inittable2($(".newDateVal").val(),$(".datee2").val());
 			inittopfn();
+			initguazaishouzhang();
 		}
 	}
 	

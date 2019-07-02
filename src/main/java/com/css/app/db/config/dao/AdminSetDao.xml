@@ -49,7 +49,9 @@
 			"ADMIN_TYPE", 
 			"REMARK",
 			"ORG_ID", 
-			"ORG_NAME"
+			"ORG_NAME",
+			"SENIOR_OFFICIAL",
+			"SENIOR_OFFICIAL_ID"
 		)
 		values
 		(
@@ -61,7 +63,9 @@
 			#{adminType}, 
 			#{remark},
 			#{orgId}, 
-			#{orgName}
+			#{orgName},
+			#{seniorOfficial},
+			#{seniorOfficialId}
 		)
 	</insert>
 	 
@@ -75,7 +79,9 @@
 			<if test="adminType != null">"ADMIN_TYPE" = #{adminType}, </if>
 			<if test="remark != null">"REMARK" = #{remark},</if>
 			<if test="orgId != null">"ORG_ID" = #{orgId}, </if>
-			<if test="orgName != null">"ORG_NAME" = #{orgName}</if>
+			<if test="orgName != null">"ORG_NAME" = #{orgName},</if>
+			<if test="seniorOfficial != null">"SENIOR_OFFICIAL" = #{seniorOfficial}, </if>
+			<if test="seniorOfficialId != null">"SENIOR_OFFICIAL_ID" = #{seniorOfficialId}</if> 
 		</set>
 		where ID = #{id}
 	</update>

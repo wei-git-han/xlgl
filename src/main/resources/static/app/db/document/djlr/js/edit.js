@@ -227,7 +227,7 @@ var pageModule = function(){
 		    	$("#securityClassification").val($("#securityId option:checked").text());
 		    	$("#urgencyDegree").val($("#urgencyId option:checked").text());
 			    var elementarry = ["docTypeId","docTypeName","docTitle","securityId","securityClassification",
-			    	"urgencyId","urgencyDegree","docCode","banjianNumber","userId","userName","applyTime","printDate","jobContent","remark","period"];
+			    	"urgencyId","urgencyDegree","docCode","banjianNumber","userId","userName","applyTime","printDate","jobContent","remark","period","workableMatter"];
 				var paramdata = getformdata(elementarry);
 				paramdata.id = fileId;
 				//newbootbox.alert('正在保存，请稍候...',false);
