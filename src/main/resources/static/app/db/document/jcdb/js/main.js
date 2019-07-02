@@ -7,9 +7,6 @@ var url6 = {"url":"/app/db/documentjcdb/isShouZhang","dataType":"text"};
 var groupid=null;
 var grid = null;
 var pageModule = function(){
-	
-	
-	
 	var initmenu = function(menuid){
 		$ajax({
 			url:url2,
@@ -80,217 +77,221 @@ var pageModule = function(){
 		
         grid = $("#gridcont").createGrid({
                     columns:[	
-                    			{display:"办理状态",name:"blzt",width:"100%",align:"center",paixu:false,render:function(rowdata,n){
-//                    				var button1;
-//                    				if(rowdata.blzt==1){
-//                    					button1 = '<button type="button" class="btn btn-info table-button1">办理中</button>';
-//                    				}else if(rowdata.blzt==3){
-//                    					button1 = '<button type="button" class="btn btn-info table-button2">常态落实</button>';
-//                    				}else{
-//                    					button1 = '<button type="button" class="btn btn-info table-button2">已办结</button>';
-//                    				}
-//                    				return button1;
-//                    			}},
-//                    			{display:"军委办件号",name:"jwbjh",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
-//	                               	var cuiban = '',title;
-//	                            	var CuibanFlag = rowdata.CuibanFlag;
-//	                            	if(CuibanFlag==1){
-//	                            		 cuiban = '<label class="table-label2">催办</label>';
-//	                            	}
-//                    				
-//                    				title=`
-//                    					${cuiban} <font title="${title}" onclick="viewpage('${rowdata.id}','${rowdata.id}','${rowdata.id}')" style="cursor:pointer;text-decoration: underline;" >${rowdata.title}</font>
-//                    				`
-//                    					return title
-//                    			}},
-//                    			{display:"文件标题",name:"title",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
-//                    				rvar cuiban = '',title;
-//	                            	var CuibanFlag = rowdata.CuibanFlag;
-//	                            	if(CuibanFlag==1){
-//	                            		 cuiban = '<label class="table-label2">催办</label>';
-//	                            	}
-//                    				title=`${cuiban} <font title="${title}" onclick="viewpage('${rowdata.id}','${rowdata.id}','${rowdata.id}')" style="cursor:pointer;text-decoration: underline;" >${rowdata.title}</font>`
-//                    				return title
-//                    			}},
-//                    			{display:"批示指示内容",name:"blzt",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
-//                    				var str = `<font style="cursor:pointer" title="${rowdata.pszsmr}" onclick="pszsnrAlert('${rowdata.id}')" >${rowdata.pszsmr}</font>`;
-//                    				
-//                    			}},
-//                      			{display:"督办落实情况",name:"blzt",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
-//                      				return rowdata.title;
-//                      			}},
-//                    			{display:"办件状态",name:"blzt",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
-//                    				rowdata.title;
-//                    			}},
-//                    			{display:"承办单位/人",name:"blzt",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
-//                    				rowdata.title;
-//                    			}},
-//                    			{display:"更新时间",name:"blzt",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
-//                    				rowdata.title;
-//                    			}},
-//                      			{display:"操作",name:"blzt",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
-//                      				rowdata.title;
-//                      			}}
-                    				var id = rowdata.id;
-                    				var blzt = rowdata.blzt;
-                    				var jwbjh = rowdata.jwbjh;
-                    				var title = rowdata.title;
-                    				var pszsmr = rowdata.pszsmr;
-                    				var dblsqk = rowdata.dblsqk;
-                    				var cbdwry = rowdata.cbdwry;
-                    				var update = rowdata.update;
-                    				var zbdate = rowdata.zbdate;
-                    				var other = rowdata.other;
-                    				
-                    				var miji = rowdata.miji;
-                    				var tbdw = rowdata.tbdw;
-                    				var tbrq = rowdata.tbrq;
-                    				var array = rowdata.array;
-                    				
-	                               	var cuiban = '';
+                    			{display:"办理状态",name:"blzt",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+                    				var button1;
+                    				if(rowdata.blzt==1){
+                    					button1 = '<button type="button" class="btn btn-info table-button1">办理中</button>';
+                    				}else if(rowdata.blzt==3){
+                    					button1 = '<button type="button" class="btn btn-info table-button2">常态落实</button>';
+                    				}else{
+                    					button1 = '<button type="button" class="btn btn-info table-button2">已办结</button>';
+                    				}
+                    				return button1;
+                    			}},
+                    			{display:"军委办件号",name:"jwbjh",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
+	                               	var cuiban = '',title;
 	                            	var CuibanFlag = rowdata.CuibanFlag;
 	                            	if(CuibanFlag==1){
 	                            		 cuiban = '<label class="table-label2">催办</label>';
 	                            	}
                     				
-                    				//fileId,subId,fileFrom
                     				title=`
-                    					${cuiban} <font title="${title}" onclick="viewpage('${id}','${id}','${id}')" style="cursor:pointer;text-decoration: underline;" >${title}</font>
+                    					${cuiban} <font title="${title}" onclick="viewpage('${rowdata.id}','${rowdata.id}','${rowdata.id}')" style="cursor:pointer;text-decoration: underline;" >${rowdata.title}</font>
                     				`
-                    				
-                    				var button1 = "";
-                    				if(blzt==1){
-                    					button1 = '<button type="button" class="btn btn-info table-button1">办理中</button>';
-                    				}else if(blzt==3){
-                    					button1 = '<button type="button" class="btn btn-info table-button2">常态落实</button>';
-                    				}else{
-                    					button1 = '<button type="button" class="btn btn-info table-button2">已办结</button>';
-                    				}
-                    				
+                    					return title
+                    			}},
+                    			{display:"文件标题",name:"title",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
+                    				var cuiban = '',title;
+	                            	var CuibanFlag = rowdata.CuibanFlag;
+	                            	if(CuibanFlag==1){
+	                            		 cuiban = '<label class="table-label2">催办</label>';
+	                            	}
+                    				title=`${cuiban} <font title="${rowdata.title}" onclick="viewpage('${rowdata.id}','${rowdata.id}','${rowdata.id}')" style="cursor:pointer;text-decoration: underline;" >${rowdata.title}</font>`;
+                    				return title
+                    			}},
+                    			{display:"批示指示内容",name:"pszsmr",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+                    				var str = `<font style="cursor:pointer" title="${rowdata.pszsmr}" onclick="pszsnrAlert('${rowdata.id}')" >${rowdata.pszsmr}</font>`;
+                    				return str
+                    			}},
+                      			{display:"督办落实情况",name:"dblsqk",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+                      				return rowdata.dblsqk||'';
+                      			}},
+                    			{display:"转办时间",name:"zbdate",width:"8%",align:"center",paixu:false,render:function(rowdata,n){
+                    				return rowdata.zbdate||'';
+                    			}},
+                    			{display:"承办单位/人",name:"cbdwry",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+                    				return rowdata.cbdwry||'';
+                    			}},
+                    			{display:"更新时间",name:"update",width:"8%",align:"center",paixu:false,render:function(rowdata,n){
+                    				return rowdata.update||'';
+                    			}},
+                      			{display:"操作",name:"cz",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
                     				var button2 = '';
-                    				var button3 = '';
-                    				if(blzt==1){
-                    					if(other==0){
-                        					button3 = '<a class="btn btn-info newpanel-button1"  onclick="ydfn(\''+rowdata.id+'\')">确认已读</a>';
-                        				}else if(other==1){
+                    				if(rowdata.blzt==1&&rowdata.other==1){
                         					button2 = '<button type="button" class="btn btn-info table-button3" onclick="cbfn(\''+rowdata.id+'\')">催办</button>';
-                        				}
                     				}
-                    				
-                    				
-                    				var gengxin = rowdata.gengxin;
-                    				var button4 = '';
-                    				if(gengxin==1){
-                    					button4 = '<label class="table-label">已更新</label>';
-                    				}
-                    				
-                    				
-                    				
-                    				var html2 = "";
-                    				var width = "width:25%;";
-                    				if(array.length==1){
-                    					width = "width:110%;";
-                    				}else if(array.length==2){
-                    					width = "width:50%;";
-                    				}else if(array.length==3){
-                    					width = "width:33.3%;";
-                    				}
-                    				$.each(array,function(i){
-                    					var dw = this.dw;
-                    					var ry = this.ry;
-                    					var dwry = this.dwry;
-                    					var cont = this.cont;
-                    					
-                    					html2 = `
-	                    								<div class="nc-left-group">
-															<div class="nc-left-group-cont" style="${width}">
-																<div class="nc-left-group-cont-top" >
-																	<font>${dwry}</font>
-																</div>
-																<div class="nc-left-group-cont-cont scroller" style="height:40px;">
-																	${cont}
-																</div>
-															</div>
-														</div>
-                    									`;
-										
-                    				});
-                    				if(n==4){console.log(array)}
-                    				var html = `
-										<div class="newpanel" id="${id}">
-											<div class="newpanel-cent">
-												
-												<table>
-													<thead>
-														<tr>
-															<th style="width:50px;">序号</th>
-															<th>状态</th>
-															<th>军委办件号</th>
-															<th>文件标题</th>
-															<th>批示指示内容</th>
-															<th>承办单位/人</th>
-															<th>转办时间</th>
-															<th>反馈更新</th>
-															<th>操作</th>
-														</tr>
-													</thead>
-													<tbody>
-														<tr>
-															<td style="text-align:center;">${n}</td>
-															<td style="text-align:center;">${button1}</td>
-															<td style="text-align:center;">${jwbjh}</td>
-															<td >${title}</td>
-															<td title="${pszsmr}"><font style="cursor:pointer" onclick="pszsnrAlert('${id}')" >${pszsmr}</font></td>
-															<td>${cbdwry}</td>
-															<td>${update}</td>
-															<td>${zbdate}</td>
-															<td style="text-align:center;">${button2}</td>
-														</tr>
-													</tbody>
-												</table>
-												<div class="newpanel-cent-cont">	
-													<div class="wh100">
-														
-														<div class="newpanel-cent-cont-left">
-															<div>
-																${button3}
-															</div>
-														</div>
-														
-														<div class="newpanel-cent-cont-right">
-															
-															<div class="nc-left-top">
-																<div class="nc-left-top-title">
-																	<font>督办落实情况</font>
-																	${button4}
-																</div>
-															</div>
-															<div class="nc-left-cent">
-																${html2}
-															</div>
-														</div>
-														
-													</div>
-				
-													
-												</div>
-												
-												
-												
-											</div>
-										</div>
-                    				`;
-                                    return html;
-                                 }}
+                    				return button2;
+                      			}}
+//                    				var id = rowdata.id;
+//                    				var blzt = blzt;
+//                    				var jwbjh = rowdata.jwbjh;
+//                    				var title = rowdata.title;
+//                    				var pszsmr = rowdata.pszsmr;
+//                    				var dblsqk = rowdata.dblsqk;
+//                    				var cbdwry = rowdata.cbdwry;
+//                    				var update = rowdata.update;
+//                    				var zbdate = rowdata.zbdate;
+//                    				var other = rowdata.other;
+//                    				
+//                    				var miji = rowdata.miji;
+//                    				var tbdw = rowdata.tbdw;
+//                    				var tbrq = rowdata.tbrq;
+//                    				var array = rowdata.array;
+//                    				
+//	                               	var cuiban = '';
+//	                            	var CuibanFlag = rowdata.CuibanFlag;
+//	                            	if(CuibanFlag==1){
+//	                            		 cuiban = '<label class="table-label2">催办</label>';
+//	                            	}
+//                    				
+//                    				//fileId,subId,fileFrom
+//                    				title=`
+//                    					${cuiban} <font title="${title}" onclick="viewpage('${id}','${id}','${id}')" style="cursor:pointer;text-decoration: underline;" >${title}</font>
+//                    				`
+//                    				
+//                    				var button1 = "";
+//                    				if(blzt==1){
+//                    					button1 = '<button type="button" class="btn btn-info table-button1">办理中</button>';
+//                    				}else if(blzt==3){
+//                    					button1 = '<button type="button" class="btn btn-info table-button2">常态落实</button>';
+//                    				}else{
+//                    					button1 = '<button type="button" class="btn btn-info table-button2">已办结</button>';
+//                    				}
+//                    				
+//                    				var button2 = '';
+//                    				var button3 = '';
+//                    				if(blzt==1){
+//                    					if(other==0){
+//                        					button3 = '<a class="btn btn-info newpanel-button1"  onclick="ydfn(\''+rowdata.id+'\')">确认已读</a>';
+//                        				}else if(other==1){
+//                        					button2 = '<button type="button" class="btn btn-info table-button3" onclick="cbfn(\''+rowdata.id+'\')">催办</button>';
+//                        				}
+//                    				}
+//                    				
+//                    				
+//                    				var gengxin = rowdata.gengxin;
+//                    				var button4 = '';
+//                    				if(gengxin==1){
+//                    					button4 = '<label class="table-label">已更新</label>';
+//                    				}
+//                    				
+//                    				
+//                    				
+//                    				var html2 = "";
+//                    				var width = "width:25%;";
+//                    				if(array.length==1){
+//                    					width = "width:110%;";
+//                    				}else if(array.length==2){
+//                    					width = "width:50%;";
+//                    				}else if(array.length==3){
+//                    					width = "width:33.3%;";
+//                    				}
+//                    				$.each(array,function(i){
+//                    					var dw = this.dw;
+//                    					var ry = this.ry;
+//                    					var dwry = this.dwry;
+//                    					var cont = this.cont;
+//                    					
+//                    					html2 = `
+//	                    								<div class="nc-left-group">
+//															<div class="nc-left-group-cont" style="${width}">
+//																<div class="nc-left-group-cont-top" >
+//																	<font>${dwry}</font>
+//																</div>
+//																<div class="nc-left-group-cont-cont scroller" style="height:40px;">
+//																	${cont}
+//																</div>
+//															</div>
+//														</div>
+//                    									`;
+//										
+//                    				});
+//                    				if(n==4){console.log(array)}
+//                    				var html = `
+//										<div class="newpanel" id="${id}">
+//											<div class="newpanel-cent">
+//												
+//												<table>
+//													<thead>
+//														<tr>
+//															<th style="width:50px;">序号</th>
+//															<th>状态</th>
+//															<th>军委办件号</th>
+//															<th>文件标题</th>
+//															<th>批示指示内容</th>
+//															<th>承办单位/人</th>
+//															<th>转办时间</th>
+//															<th>反馈更新</th>
+//															<th>操作</th>
+//														</tr>
+//													</thead>
+//													<tbody>
+//														<tr>
+//															<td style="text-align:center;">${n}</td>
+//															<td style="text-align:center;">${button1}</td>
+//															<td style="text-align:center;">${jwbjh}</td>
+//															<td >${title}</td>
+//															<td title="${pszsmr}"><font style="cursor:pointer" onclick="pszsnrAlert('${id}')" >${pszsmr}</font></td>
+//															<td>${cbdwry}</td>
+//															<td>${update}</td>
+//															<td>${zbdate}</td>
+//															<td style="text-align:center;">${button2}</td>
+//														</tr>
+//													</tbody>
+//												</table>
+//												<div class="newpanel-cent-cont">	
+//													<div class="wh100">
+//														
+//														<div class="newpanel-cent-cont-left">
+//															<div>
+//																${button3}
+//															</div>
+//														</div>
+//														
+//														<div class="newpanel-cent-cont-right">
+//															
+//															<div class="nc-left-top">
+//																<div class="nc-left-top-title">
+//																	<font>督办落实情况</font>
+//																	${button4}
+//																</div>
+//															</div>
+//															<div class="nc-left-cent">
+//																${html2}
+//															</div>
+//														</div>
+//														
+//													</div>
+//				
+//													
+//												</div>
+//												
+//												
+//												
+//											</div>
+//										</div>
+//                    				`;
+//                                    return html;
+//                                 }}
                              ],
                     width:"100%",
                     height:"100%",
-                    checkbox: false,
-                    rownumberyon:false,
+                    checkbox: true,
+                    rownumberyon:true,
                     paramobj:{month:'all',id:groupid,isMain:'1'},
                     overflowx:false,
                     rownumberwidth:"50px",
-                    pagesize: 4,
+                    pagesize: 6,
                     url: url1,
                     loadafter:function(data){
                     	var count2 = data.count2;
