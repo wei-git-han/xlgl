@@ -86,7 +86,7 @@ public class AdminSetController {
 	@RequestMapping("/getAuthor")
 	public void getAuthor(){
 		String adminFlag = adminSetService.getAdminTypeByUserId(CurrentUser.getUserId());
-		Response.json("adminFlag",adminFlag);
+		Response.json(adminFlag);
 	}
 	
 	/**

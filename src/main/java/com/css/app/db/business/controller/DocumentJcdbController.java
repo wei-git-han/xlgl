@@ -21,15 +21,12 @@ import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.constant.AppConstant;
 import com.css.app.db.business.dto.LeaderStatisticsDto;
 import com.css.app.db.business.entity.DocumentInfo;
-import com.css.app.db.business.entity.DocumentRead;
 import com.css.app.db.business.entity.DocumentSzps;
 import com.css.app.db.business.service.DocumentInfoService;
-import com.css.app.db.business.service.DocumentReadService;
 import com.css.app.db.business.service.DocumentSzpsService;
-import com.css.app.db.config.entity.AdminSet;
-import com.css.app.db.config.entity.RoleSet;
 import com.css.app.db.config.service.AdminSetService;
 import com.css.app.db.config.service.RoleSetService;
+import com.css.app.db.util.DbDefined;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.DateUtil;
 import com.css.base.utils.GwPageUtils;
@@ -63,8 +60,6 @@ public class DocumentJcdbController {
 	private BaseAppConfigService baseAppConfigService;
 	@Autowired
 	private DocumentSzpsService documentSzpsService;
-	@Autowired
-	private DocumentReadService documentReadService;
 	
 	/**
 	 * 数据统计报表-(年度,状态数量)
@@ -475,43 +470,22 @@ public class DocumentJcdbController {
 		//当前登录人的角色
 		//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
 		BaseAppConfig mapped = baseAppConfigService.queryObject(AppConstant.LEAD_TEAM);//首长单位id
-		
-		JSONObject jo=new JSONObject();
-		Map<String, Object> roleMap = new HashMap<>();
 		String userid=CurrentUser.getUserId();
 		String depid=CurrentUser.getDepartmentId();
-		roleMap.put("userId",userid);
-		List<RoleSet> roleList = roleSetService.queryList(roleMap);
-		String roleType="";
-		String orgid="";
-		if(roleList != null && roleList.size()>0) {
-			return roleType = roleList.get(0).getRoleFlag();
+		//当前登录人的角色（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
+		String roleType = roleSetService.getRoleTypeByUserId(userid);
+		if(!StringUtils.equals(DbDefined.ROLE_6, roleType)) {
+			return roleType;
 		}else if(mapped!=null&&depid.equals(mapped.getValue())){
 				return "1";//首长单位下的人(默认为首长)
 		}else{
-			//当前登录人的管理员类型
-			String adminType = "0";//管理员类型（1：部管理员；2：局管理员）
-			Map<String, Object> adminMap = new HashMap<>();
-			adminMap.put("userId", userid);
-			List<AdminSet> adminList = adminSetService.queryList(adminMap);
-			if(adminList != null && adminList.size()>0) {
-				adminType = adminList.get(0).getAdminType();
-				if(adminType.equals("1")) {
-					return "2";//部管理员状态为2
-				}
+			//当前登录人的管理员类型(0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员)
+			String adminType = adminSetService.getAdminTypeByUserId(userid);
+			if(("1").equals(adminType)||("3").equals(adminType)||("0").equals(adminType)) {
+				return "2";//部管理员状态为2
 			}
 		}
 		return "";
-		/*BaseAppOrgan org = baseAppOrganService.queryObject(CurrentUser.getDepartmentId());
-		if(org != null){
-			String[] pathArr = org.getTreePath().split(",");
-			if(pathArr.length > 2){
-				orgid= pathArr[2];
-			} 
-		}
-		jo.put("roleType", roleType);
-		jo.put("orgid", orgid);
-		Response.json(jo);*/
 	}
 	public String getSzOrgid() {
 		BaseAppConfig mapped = baseAppConfigService.queryObject(AppConstant.LEAD_TEAM);

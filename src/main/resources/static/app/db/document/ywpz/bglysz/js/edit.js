@@ -1,7 +1,6 @@
 var id = getUrlParam2("id");
 var saveUrl = {"url":rootPath +"/adminset/saveOrUpdate","dataType":"text"};  //保存
 var editInfo = {"url":rootPath +"/adminset/info","dataType":"text"}; //编辑数据
-var getUserAdminTypeUrl = {"url":rootPath +"/adminset/getAuthor","dataType":"text"};//那当前用户的类型1：部管理员，2：局管理员
 var userTree ={"url":"/app/base/user/allTree","dataType":"text"}; //人员选择树
 var pageModule = function(){
 	var initdatafn = function(){
