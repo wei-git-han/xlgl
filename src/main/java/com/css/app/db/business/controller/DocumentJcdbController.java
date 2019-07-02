@@ -1,6 +1,7 @@
 package com.css.app.db.business.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.addbase.constant.AppConstant;
 import com.css.app.db.business.dto.LeaderStatisticsDto;
+import com.css.app.db.business.entity.BaseTreeObject;
 import com.css.app.db.business.entity.DocumentInfo;
 import com.css.app.db.business.entity.DocumentRead;
 import com.css.app.db.business.entity.DocumentSzps;
@@ -570,7 +572,16 @@ public class DocumentJcdbController {
 		Map<String, Object> map = new HashMap<>();
 		map.put("organid",mapped.getValue());
 		List<BaseAppUser> baseAppUsers = baseAppUserService.queryList(map);
-		Response.json(baseAppUsers);
+		List<BaseTreeObject> baseTreeObjects = new ArrayList<BaseTreeObject>();
+		BaseTreeObject baseTreeObject = null;
+		for (BaseAppUser baseAppUser : baseAppUsers) {
+			baseTreeObject = new BaseTreeObject();
+			baseTreeObject.setId(baseAppUser.getUserId());
+			baseTreeObject.setText(baseAppUser.getTruename());
+			baseTreeObject.setType(baseAppUser.getType()+"");
+			baseTreeObjects.add(baseTreeObject);
+		}
+		Response.json(baseTreeObjects);
 //		return "";
 	}
 }

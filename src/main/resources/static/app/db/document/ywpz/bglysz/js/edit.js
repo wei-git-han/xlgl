@@ -31,11 +31,9 @@ var pageModule = function(){
 		$("#seniorOfficial").createUserTree({
 			url : shouZhangTree,
 			width:"100%",
-			success : function(data, treeobj) {
-				alert(data[0].truename)
-			},
-			selectnode : funseniorOfficialction(e, data) {
-				$("#").val(data.node.text);
+			success : function(data, treeobj) {alert(data[0].truename)},
+			selectnode : function(e, data) {
+				$("#seniorOfficial").val(data.node.text);
 				$("#seniorOfficialId").val(data.node.id);
 			}
 		});
