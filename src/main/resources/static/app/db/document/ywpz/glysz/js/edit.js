@@ -62,6 +62,8 @@ var pageModule = function(){
 						newbootbox.alertInfo('保存成功！').done(function(){
 							window.location.href = "/app/db/document/ywpz/glysz/html/index.html";
 						});
+					}else if(data.result == "exist"){
+						newbootbox.alertInfo("重复设置！");
 					}else{
 						newbootbox.alertInfo("保存失败！");
 					}

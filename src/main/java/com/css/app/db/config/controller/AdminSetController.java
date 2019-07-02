@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -40,10 +39,7 @@ public class AdminSetController {
 	private BaseAppOrganService baseAppOrganService;	
 	@Autowired
 	private BaseAppUserService baseAppUserService;	
-	@Value("${csse.dccb.appId}")
-	private  String appId;	
-	@Value("${csse.dccb.appSecret}")
-	private  String clientSecret;
+
 	/**
 	 * 列表
 	 */
@@ -65,10 +61,12 @@ public class AdminSetController {
 	@RequestMapping("/juList")
 	public void juList(Integer page, Integer pagesize ,String adminType){
 		List<AdminSet> adminSetList=null;
-		String adminFlag = getAdminTypeByUserId(CurrentUser.getUserId());
+		String loginUserId = CurrentUser.getUserId();
+		//获取当前人的管理员类型（0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员）
+		String adminFlag = adminSetService.getAdminTypeByUserId(loginUserId);
 		PageHelper.startPage(page, pagesize);
-		if(StringUtils.equals("2", adminFlag)) {
-			adminSetList=adminSetService.queryJuAdminList(CurrentUser.getUserId());
+		if(StringUtils.equals("2", adminFlag) || StringUtils.equals("3", adminFlag)) {
+			adminSetList=adminSetService.queryJuAdminList(loginUserId);
 		}else {
 			Map<String, Object > map = new HashMap<>();
 			map.put("adminType", adminType);
@@ -82,31 +80,13 @@ public class AdminSetController {
 	}
 	
 	/**
-	 * 管理员类型
+	 * 	获取某人的管理员类型（0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员）
 	 */
 	@ResponseBody
 	@RequestMapping("/getAuthor")
 	public void getAuthor(){
-		String adminFlag = getAdminTypeByUserId(CurrentUser.getUserId());
-		Response.json(adminFlag);
-	}
-	
-	private String getAdminTypeByUserId(String userId) {
-		String adminFlag = "";//管理员类型（0:超级管理员 ;1：部管理员；2：局管理员）
-		boolean admin = CurrentUser.getIsManager(appId, clientSecret);
-		if(admin) {
-			adminFlag="0";
-		}else {
-			//当前登录人的管理员类型
-			Map<String, Object> adminMap = new HashMap<>();
-			adminMap.put("userId",userId);
-			List<AdminSet> adminList = adminSetService.queryList(adminMap);
-			if(adminList != null && adminList.size()>0) {
-				String adminType = adminList.get(0).getAdminType();
-				adminFlag=adminType;
-			}
-		}
-		return adminFlag;
+		String adminFlag = adminSetService.getAdminTypeByUserId(CurrentUser.getUserId());
+		Response.json("adminFlag",adminFlag);
 	}
 	
 	/**
@@ -154,13 +134,21 @@ public class AdminSetController {
 			adminSet.setOrgName(orgName);
 			adminSetService.update(adminSet);
 		}else {
-			adminSetService.deleteByUserId(userId);
-			adminSet.setId(UUIDUtils.random());
-			adminSet.setDeptId(deptId);
-			adminSet.setDeptName(deptName);
-			adminSet.setOrgId(orgId);
-			adminSet.setOrgName(orgName);
-			adminSetService.save(adminSet);
+			Map<String, Object> adminMap = new HashMap<>();
+			adminMap.put("adminType", adminSet.getAdminType());
+			adminMap.put("userId", adminSet.getUserId());
+			List<AdminSet> queryList = adminSetService.queryList(adminMap);
+			if(queryList != null && queryList.size()>0) {
+				Response.json("result", "exist");
+				return;
+			}else {
+				adminSet.setId(UUIDUtils.random());
+				adminSet.setDeptId(deptId);
+				adminSet.setDeptName(deptName);
+				adminSet.setOrgId(orgId);
+				adminSet.setOrgName(orgName);
+				adminSetService.save(adminSet);
+			}
 		}
 		Response.json("result", "success");
 	}
