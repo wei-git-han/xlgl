@@ -312,7 +312,7 @@ public class DocumentInfoController {
 			}
 			
 			if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType) && !StringUtils.equals("3", adminType)
-					&& !StringUtils.equals("0", adminType) && !StringUtils.equals(DbDefined.ROLE_1, roleType) && !StringUtils.equals(DbDefined.ROLE_3, roleType)) {
+					&& !StringUtils.equals(DbDefined.ROLE_1, roleType) && !StringUtils.equals(DbDefined.ROLE_3, roleType)) {
 				if(StringUtils.equals(DbDefined.ROLE_5, roleType)) {
 					map.put("deptId", CurrentUser.getDepartmentId());
 				}else {
@@ -321,7 +321,7 @@ public class DocumentInfoController {
 				PageHelper.startPage(page, pagesize);
 				infoList = documentInfoService.queryPersonList(map);
 			} else {
-				if(StringUtils.equals("0", adminType) ||StringUtils.equals("3", adminType)||StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType)) {
+				if(StringUtils.equals("3", adminType)||StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType)) {
 					String orgId = baseAppUserService.getBareauByUserId(loginUserId);
 					if(StringUtils.isNotBlank(orgId)) {
 						map.put("orgid", orgId);
@@ -436,7 +436,7 @@ public class DocumentInfoController {
 			}
 		}
 		if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType)  && !StringUtils.equals("3", adminType)
-				&& !StringUtils.equals("0", adminType) && !StringUtils.equals(DbDefined.ROLE_1, roleType) && !StringUtils.equals(DbDefined.ROLE_3, roleType)) {
+				&& !StringUtils.equals(DbDefined.ROLE_1, roleType) && !StringUtils.equals(DbDefined.ROLE_3, roleType)) {
 			if(StringUtils.equals(DbDefined.ROLE_5, roleType)) {
 				map.put("deptId", CurrentUser.getDepartmentId());
 			}else {
@@ -444,7 +444,7 @@ public class DocumentInfoController {
 			}
 			infoList = documentInfoService.queryPersonList(map);
 		} else {
-			if(StringUtils.equals("0", adminType) || StringUtils.equals("3", adminType) || StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType)) {
+			if(StringUtils.equals("3", adminType) || StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType)) {
 				String orgId = baseAppUserService.getBareauByUserId(loginUserId);
 				if(StringUtils.isNotBlank(orgId)) {
 					map.put("orgid", orgId);
@@ -876,7 +876,7 @@ public class DocumentInfoController {
 		map.put("docType", DbDefined.DOCUMENT_TYPE);
 		map.put("year", dateStr);
 		if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType) && !StringUtils.equals("3", adminType)
-				&& !StringUtils.equals("0", adminType) && !StringUtils.equals(DbDefined.ROLE_1, roleType) && !StringUtils.equals(DbDefined.ROLE_3, roleType)) {
+				&& !StringUtils.equals(DbDefined.ROLE_1, roleType) && !StringUtils.equals(DbDefined.ROLE_3, roleType)) {
 			orgId=null;
 			if(StringUtils.equals(DbDefined.ROLE_5, roleType)) {
 				map.put("deptId", CurrentUser.getDepartmentId());
@@ -884,7 +884,7 @@ public class DocumentInfoController {
 				map.put("loginUserId", loginUserId);
 			}
 		}else {
-			if(StringUtils.equals("0", adminType)|| StringUtils.equals("3", adminType) ||StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType)) {
+			if(StringUtils.equals("3", adminType) ||StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType)) {
 				String loginOrgId = baseAppUserService.getBareauByUserId(loginUserId);
 				if(StringUtils.isNotBlank(loginOrgId)) {
 					orgId=loginOrgId;
