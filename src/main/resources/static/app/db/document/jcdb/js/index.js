@@ -65,10 +65,10 @@ var pageModule = function(){
 	
 	
 	var inittable = function(month){
-		
+		month='all';
 		$ajax({
 			url:url2,
-			data:{month:"all"},
+			data:{month:month},
 			success:function(data){
 				$("#tbody").html('');
 				$.each(data,function(i){
