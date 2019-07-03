@@ -101,10 +101,12 @@ public class DocumentFileController {
 	}
 	/**
 	 * 下载公文、暂时支持单个下载；
+	 * @param ids 文件主键ID
+	 * @param title 办件标题
 	 */
 	@ResponseBody
 	@RequestMapping("/downLoadFile")
-	public void downLoadFile(String ids){
+	public void downLoadFile(String ids, String title){
 		List<HTTPFile> httpFiles = new ArrayList<>();
 		HTTPFile httpFile = null;
 		try {
@@ -124,7 +126,7 @@ public class DocumentFileController {
 					Response.json("result","fail");
 				}
 			}
-			this.createZip(httpFiles,"压缩包的文件名.zip");
+			this.createZip(httpFiles, title+".zip");
 		} catch (Exception e) {
 			logger.info("创建zip包异常：{}", e);
 		}
@@ -140,6 +142,9 @@ public class DocumentFileController {
 		InputStream inputStream = null;
 		ZipOutputStream zipOutputStream = null;
 		try {
+			//设置zip包名中文乱码问题
+			zipFileName = new String(zipFileName.getBytes(),"ISO-8859-1");
+			httpServletResponse.setContentType("application/octet-stream");
 			httpServletResponse.setHeader("Content-Disposition", "attachment;filename="+zipFileName);
 			zipOutputStream = new ZipOutputStream(httpServletResponse.getOutputStream());
 			for (HTTPFile httpFile : httpFiles) {
