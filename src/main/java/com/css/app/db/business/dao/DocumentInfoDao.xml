@@ -409,8 +409,7 @@
 			"LATEST_SUB_DEPT",
 			"LATEST_UNDERTAKER",
 			"LATEST_REPLY_TIME",
-			"PERIOD",
-			"WORKABLE_MATTER"
+			"PERIOD"
 		)
 		values
 		(
@@ -440,8 +439,7 @@
 			#{latestSubDept},
 			#{latestUndertaker},
 			#{latestReplyTime},
-			#{period},
-			#{workableMatter}
+			#{period}
 		)
 	</insert>
 	 
@@ -473,8 +471,7 @@
 			<if test="latestReply != null">"LATEST_REPLY" = #{latestReply},</if>
 			<if test="latestSubDept != null">"LATEST_SUB_DEPT" = #{latestSubDept},</if>
 			<if test="latestUndertaker != null">"LATEST_UNDERTAKER" = #{latestUndertaker},</if>
-			<if test="latestReplyTime != null">"LATEST_REPLY_TIME" = #{latestReplyTime},</if>
-			<if test="workableMatter != null">"WORKABLE_MATTER" = #{workableMatter}</if>
+			<if test="latestReplyTime != null">"LATEST_REPLY_TIME" = #{latestReplyTime}</if>
 		</set>
 		where ID = #{id}
 	</update>
@@ -487,7 +484,7 @@
 		"APPLY_TIME" = #{applyTime},"PRINT_DATE" = #{printDate},"JOB_CONTENT" = #{jobContent},"FIRST_ZB_TIME" = #{firstZbTime},
 		"SZ_READ_IDS" = #{szReadIds}, "CUIBAN_FLAG" = #{cuibanFlag},"DOC_TYPE_ID" = #{docTypeId},"DOC_TYPE_NAME" = #{docTypeName},
 		"CREATED_TIME" = #{createdTime},"REMARK" = #{remark},"STATUS" = #{status},"FINISH_TIME" = #{finishTime},"LATEST_REPLY" = #{latestReply},
-		"LATEST_SUB_DEPT" = #{latestSubDept},"LATEST_UNDERTAKER" = #{latestUndertaker},"LATEST_REPLY_TIME" = #{latestReplyTime},"WORKABLE_MATTER" = #{workableMatter} 
+		"LATEST_SUB_DEPT" = #{latestSubDept},"LATEST_UNDERTAKER" = #{latestUndertaker},"LATEST_REPLY_TIME" = #{latestReplyTime}
 		where ID = #{id}
 	</update>
 	<delete id="delete">

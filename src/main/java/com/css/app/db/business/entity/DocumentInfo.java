@@ -83,12 +83,8 @@ public class DocumentInfo implements Serializable {
 	private String underDepts;
 	//首长批示
 	private List<DocumentSzps> szpslist;
-	//首长批示
+	//超期三个月
 	private Integer isOverTreeMonth;
-	//落实事项
-	private String workableMatter;
-	//是否显示补录按钮
-	private Integer isAddRecord;
 	/**
 	 * 设置：唯一标识
 	 */
@@ -412,18 +408,6 @@ public class DocumentInfo implements Serializable {
 	}
 	public void setIsOverTreeMonth(Integer isOverTreeMonth) {
 		this.isOverTreeMonth = isOverTreeMonth;
-	}
-	public String getWorkableMatter() {
-		return workableMatter;
-	}
-	public void setWorkableMatter(String workableMatter) {
-		this.workableMatter = workableMatter;
-	}
-	public Integer getIsAddRecord() {
-		return isAddRecord;
-	}
-	public void setIsAddRecord(Integer isAddRecord) {
-		this.isAddRecord = isAddRecord;
 	}
 	
 }

@@ -1157,17 +1157,7 @@ $("#downLoadfj").click(function(){
 				checkId.push($(this).attr("checkId"));
 			}
 		})
-		$ajax({
-			url:'',
-			data:{ids:checkId.toString()},
-			success:function(data){
-				if(data.result == "success" && data.url != ""){
-					newbootbox.alert("下载成功！").done(function(){
-		    			pageModule.takeMenufn()
-					}); 
-				}
-			}
-		})
+		window.location.href="/app/db/documentfile/downLoadFile?ids="+checkId.toString()+"&infoId="+fileId
 	}else{
 		newbootbox.alert("请选中要下载的附件！"); 
 	}

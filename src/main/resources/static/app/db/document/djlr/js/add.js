@@ -160,11 +160,9 @@ var pageModule = function(){
 				$("#banjianNumber").attr("disabled",true);
 			}
 			if($(this).val() == "6"){
-				$(".job").hide();
-				$(".matter").show();
+				$('#gzfgnr').text('落实事项')
 			}else{
-				$(".job").show();
-				$(".matter").hide();
+				$('#gzfgnr').text('工作分工内容')
 			}
 			if($(this).val() == "3" || $(this).val() == "5" ){
 				$(".seteee").removeAttr("disabled");

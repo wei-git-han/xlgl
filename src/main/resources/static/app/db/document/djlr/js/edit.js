@@ -57,9 +57,13 @@ var pageModule = function(){
 				}
 				if(data.docTypeId == "3" || data.docTypeId == "5" ){
 					$(".seteee").removeAttr("disabled");
-					$(".seteee").val("");
 				}else{
 					$(".seteee").attr("disabled",true);
+				}
+				if(data.docTypeId== "6"){
+					$('#gzfgnr').text('落实事项')
+				}else{
+					$('#gzfgnr').text('工作分工内容')
 				}
 			}
 		});

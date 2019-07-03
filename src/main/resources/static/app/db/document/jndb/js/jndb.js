@@ -63,7 +63,7 @@ var pageModule = function(){
                	 	}   				  	
                	 	return '<div title="'+statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+statusName+'</div>';
                  }},
-                 {display:"办件标题",name:"docTitle",width:"15%",align:"left",title:false,render:function(rowdata){
+                 {display:"文件标题",name:"docTitle",width:"15%",align:"left",title:false,render:function(rowdata){
                 	 var cuiban="";
                  	 if(rowdata.cuibanFlag=="1"){
                  		 cuiban = '<label class="cuibanlabel">催办</label>';
@@ -99,7 +99,7 @@ var pageModule = function(){
                  {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 return '<div class="cbdw" title="'+rowdata.underDepts+'">'+rowdata.underDepts+'</div>'
                  }},
-                 {display:"办件分类",name:"docTypeName",width:"7%",align:"left",paixu:false,render:function(rowdata){
+                 {display:"类别",name:"docTypeName",width:"7%",align:"left",paixu:false,render:function(rowdata){
                 	 return rowdata.docTypeName;
                  }},
                  {display:"转办时间",name:"createdTime",width:"5%",align:"center",render:function(rowdata){

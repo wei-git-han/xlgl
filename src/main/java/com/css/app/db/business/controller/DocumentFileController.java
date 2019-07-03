@@ -1,8 +1,5 @@
 package com.css.app.db.business.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -22,9 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
-import com.css.addbase.FileBaseUtil;
 import com.css.app.db.business.entity.DocumentFile;
+import com.css.app.db.business.entity.DocumentInfo;
 import com.css.app.db.business.service.DocumentFileService;
+import com.css.app.db.business.service.DocumentInfoService;
 import com.css.base.utils.Response;
 import com.css.base.utils.StringUtils;
 
@@ -47,6 +45,8 @@ public class DocumentFileController {
 	private DocumentFileService documentFileService;
 	@Autowired
 	private HttpServletResponse httpServletResponse;
+	@Autowired
+	private DocumentInfoService documentInfoService;
 	
 	/**
 	 * 列表
@@ -101,34 +101,39 @@ public class DocumentFileController {
 	}
 	/**
 	 * 下载公文、暂时支持单个下载；
-	 * @param ids 文件主键ID
-	 * @param title 办件标题
+	 * @param ids 文件主键ids
+	 * @param infoId 办件主键
 	 */
 	@ResponseBody
 	@RequestMapping("/downLoadFile")
-	public void downLoadFile(String ids, String title){
+	public void downLoadFile(String ids, String infoId){
 		List<HTTPFile> httpFiles = new ArrayList<>();
 		HTTPFile httpFile = null;
-		try {
-			for (String id : ids.split(",")) {
-				try {
-					DocumentFile documentFile = documentFileService.queryObject(id);
-					if(documentFile!=null) {
-						String formatId=documentFile.getFileServerFormatId();
-						if(StringUtils.isNotBlank(formatId)){
-							//获取版式文件的下载路径
-							httpFile = new HTTPFile(formatId);
-							httpFiles.add(httpFile);
+		if(StringUtils.isNotBlank(infoId)) {
+			DocumentInfo docInfo = documentInfoService.queryObject(infoId);
+			try {
+				for (String id : ids.split(",")) {
+					try {
+						DocumentFile documentFile = documentFileService.queryObject(id);
+						if(documentFile!=null) {
+							String formatId=documentFile.getFileServerFormatId();
+							if(StringUtils.isNotBlank(formatId)){
+								//获取版式文件的下载路径
+								httpFile = new HTTPFile(formatId);
+								httpFiles.add(httpFile);
+							}
 						}
+					} catch (Exception e) {
+						logger.info("下载公文异常：{}", e);
+						Response.json("result","fail");
 					}
-				} catch (Exception e) {
-					logger.info("下载公文异常：{}", e);
-					Response.json("result","fail");
 				}
+				this.createZip(httpFiles, docInfo.getDocTitle()+".zip");
+			} catch (Exception e) {
+				logger.info("创建zip包异常：{}", e);
 			}
-			this.createZip(httpFiles, title+".zip");
-		} catch (Exception e) {
-			logger.info("创建zip包异常：{}", e);
+		}else {
+			Response.json("result","fail");
 		}
 	}
 

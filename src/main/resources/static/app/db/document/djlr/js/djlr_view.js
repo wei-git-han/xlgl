@@ -839,7 +839,7 @@ $("#downLoadfj").click(function(){
 				checkId.push($(this).attr("checkId"));
 			}
 		})
-		location.href="";
+		window.location.href="/app/db/documentfile/downLoadFile?ids="+checkId.toString()+"&infoId="+fileId
 	}else{
 		newbootbox.alert("请选中要下载的附件！"); 
 	}

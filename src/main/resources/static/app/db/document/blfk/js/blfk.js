@@ -5,7 +5,7 @@ var leaderTreeUrl= {"url":"/app/db/roleset/queryLeaderTree","dataType":"text"};/
 var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//人员树
 var leftMenuUrl = {"url":"/app/db//documentinfo/getDicByTypet","dataType":"text"};//左侧菜单
 var batchReadUrl = {"url":"/app/db/documentinfo/batchRead","dataType":"text"};//批量已读
-var getUserAdminTypeUrl = {"url":"/app/db/adminset/getAuthor","dataType":"text"};
+var getUserAdminTypeUrl = {"url":"/app/db/adminset/getAuthor","dataType":"text"};//获取管理员类型
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var orgid=getUrlParam("orgid")||""; //统计图传过来的机构
 var month=getUrlParam("month")||""; //统计图传过来的月份
@@ -15,14 +15,7 @@ if(fileFrom && fileFrom == "jcdb"){
 		$("input[value="+ytype+"]").attr("checked",true);
 	}
 }
-//var isAddRecord=0;  //是否显示补录按钮  edit
-//if(isAddRecord==1){    
-//	$("#edit").show();
-////	显示
-//}else{
-////	隐藏
-//	$("#edit").hide();
-//}
+
 var grid = null;
 var grid2 = null;
 var grid3 = null;
@@ -121,7 +114,7 @@ var pageModule = function(){
                	 	}
   				  	return '<div title="'+statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+statusName+'</div>';
                  }},
-                 {display:"办件标题",name:"",width:"15%",align:"left",title:false,render:function(rowdata,n){
+                 {display:"文件标题",name:"",width:"15%",align:"left",title:false,render:function(rowdata,n){
                 	 var cuiban="";
                  	 if(rowdata.cuibanFlag=="1"){
                  		 cuiban = '<label class="cuibanlabel">催办</label>';
@@ -180,17 +173,6 @@ var pageModule = function(){
             pageyno:true,
             paramobj:{page:o.pagesize1,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val(),psStartDate:$("#startDate").val(),psEndDate:$("#endDate").val()},
             loadafter:function(data){
-            	var arr=data.rows;
-            	isAddRecord=arr[0].isAddRecord;
-            	
-            	if(isAddRecord==1){    
-            		$("#edit").show();
-//            		显示
-            	}else{
-//            		隐藏
-            		$("#edit").hide();
-            	}
-            	
             	total=data.total;
             	$(".zspsnr").each(function(){
 					var maxwidth = 90;
@@ -252,12 +234,11 @@ var pageModule = function(){
                	 	}
   				  	return '<div title="'+statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+statusName+'</div>';
                 }},
-                {display:"办件标题",name:"",width:"15%",align:"left",render:function(rowdata){
+                {display:"文件标题",name:"",width:"15%",align:"left",render:function(rowdata){
                 	 var cuiban="";
                  	 if(rowdata.cuibanFlag=="1"){
                  		 cuiban = '<label class="cuibanlabel">催办</label>';
                 	 }
-                 	//isOverTreeMonth
                   	var csFlag = "";
                  	if(rowdata.isOverTreeMonth==1){
                  		csFlag = '<img src="../../../common/images/u301.png" class="titleimg" />';
@@ -361,12 +342,11 @@ var pageModule = function(){
                	 	}
   				  	return '<div title="'+statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+statusName+'</div>';
                  }},
-                 {display:"办件标题",name:"",width:"15%",align:"left",title:false,render:function(rowdata){
+                 {display:"文件标题",name:"",width:"15%",align:"left",title:false,render:function(rowdata){
                 	 var cuiban="";
                  	 if(rowdata.cuibanFlag=="1"){
                  		 cuiban = '<label class="cuibanlabel">催办</label>';
                 	 }
-                 	//isOverTreeMonth
                    	var csFlag = "";
                   	if(rowdata.isOverTreeMonth==1){
                   		csFlag = '<img src="../../../common/images/u301.png" class="titleimg"/>';
@@ -477,6 +457,9 @@ var pageModule = function(){
 			success: function(data) {
 				if(data=="0"||data=="1"||data=="3"){//超级管理员或部管理员				
 					$("#plcb").show(); //批量催办
+					if(fileFrom=="blfk"){
+						$("#edit").show(); //补录
+					}
 				}
 			}
 		});
@@ -521,13 +504,6 @@ var pageModule = function(){
 			$.uniform.update($(".radio-inline input").prop("checked",false));
 			$.uniform.update($(".radio-inline input[value="+checkedVal+"]").prop("checked",true));
 		});
-		
-		/*$("body").click(function(e){
-			if($(e.target).hasClass("searchAll") || $(e.target).hasClass("form-group") || $(e.target).parents("div").hasClass("searchwrap")){
-				return;
-			};
-			$(".searchwrap").slideUp(50);
-		});*/
 		
 		//筛选功能
 		$("#sure").click(function(){

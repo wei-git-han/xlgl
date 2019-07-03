@@ -16,8 +16,8 @@ var pageModule = function(){
 					$.each(data, function(i, item) {
 						console.log(i+"---------"+item);
 						if(i==0){
-							var str = item.defaultPage.indexOf('?')>-1?"&":"?";
-							$("#iframe1").attr("src",item.defaultPage+str+"menuId="+item.id);
+							//var str = item.defaultPage.indexOf('?')>-1?"&":"?";
+							$("#iframe1").attr("src","/app/db/document/jcdb/html/index.html?menuId=005");
 						}
 						lis += '<li id="'+item.id+'"><a href="'+item.defaultPage+'" target="iframe1">'+item.menuName;
 						if(item.id=='002'){
@@ -31,12 +31,13 @@ var pageModule = function(){
 					});
 					
 					$('#menulist').html(lis);  //追加到页面
-					$(".menuli li").eq(0).addClass("active");
+//					$(".menuli li").eq(0).addClass("active");
 					$(".menuli li").click(function(){
 						$(this).siblings().removeClass("active");
 						$(this).addClass("active");
 						window.top.memory = {};
 					});
+					$('#005').click()
 					grdbfn();
 					jndbfn();
 					blfkfn();
