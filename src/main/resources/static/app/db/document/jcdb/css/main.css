@@ -5,7 +5,7 @@ html,body{background:#2E4A83;height:100%;}
 .top-left{float:left;margin-right:10px;}
 .top-title{line-height:55px;font-size:22px;color:#fff;font-weight:bold;}
 .top-title .fa{font-size:25px;}
-
+.top-title:hover{color:#fff;}
 .top-right{float:right;margin-left:10px;}
 .top-right-search{padding-top:7px;}
 .top-right-search input{height:40px;border-radius:5px!important;background:#5C6D91;border:none;color:#fff;width:300px;padding-right:50px!important;}

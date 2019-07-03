@@ -213,42 +213,7 @@ var pageModule = function(){
 		})
 		
 		
-				$("#qbqr").click(function(){
-			//var datas=grid.getcheckrow();
-			//var ids=[];
-			//if(datas.length==1){
-				//$(datas).each(function(i){
-				//	ids[i]=this.id;
-				//});
-				//ydfn(ids.join(","));
-			//}else{
-			//	newbootbox.alertInfo("请选择要操作的数据！");
-			//}
-			
-			
-			var menuid = $(".menu li.active").attr("id");
-			var name = $(".menu li.active font").eq(0).text();
-			
-			newbootbox.confirm({
-			    title: "提示",
-			    message: "["+name+"]是否全部已读操作？",
-			    callback1:function(){
-			    	$ajax({
-			    		url:url5,
-			    		data:{menuid:menuid},
-			    		success:function(data){
-			    			if(data.result=="success"){
-			    				//newbootbox.alertInfo("确认已读!");
-			    				pageModule.initmenu(menuid);
-			    			}
-			    		}
-			    	});
-			    	
-			    }
-			});
-			
-			
-		})
+		
 		
 		$("#quxiao").click(function(){
 			$("#viewcont").modal("hide");
@@ -259,6 +224,20 @@ var pageModule = function(){
 			var value = this.value;
 			grid.setparams({state:value});
 			grid.loadtable();
+		})
+		$(".right-left-button .btn").click(function(){
+			
+			var o = $(this).find(".fa-chevron-right").is(":hidden");
+			if(o){
+				$(".cent-left").hide();
+				$(".cent-right").css("left","0");
+			}else{
+				$(".cent-left").show();
+				$(".cent-right").css("left","280px");
+			}
+			initgrid();
+			$(this).find(".fa-chevron-right").toggle();
+			$(this).find(".fa-chevron-left").toggle();
 		})
 		
 		
