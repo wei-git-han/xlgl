@@ -88,53 +88,46 @@ var pageModule = function(){
                     				}
                     				return button1;
                     			}},
-                    			/*{display:"军委办件号",name:"jwbjh",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
-	                               	var cuiban = '',title;
-	                            	var CuibanFlag = rowdata.CuibanFlag;
-	                            	if(CuibanFlag==1){
-	                            		 cuiban = '<label class="table-label2">催办</label>';
-	                            	}
-                    				
-                    				title=`
-                    					${cuiban} <font title="${title}" onclick="viewpage('${rowdata.id}','${rowdata.id}','${rowdata.id}')" style="cursor:pointer;text-decoration: underline;" >${rowdata.title}</font>
-                    				`
+                    			{display:"军委办件号",name:"jwbjh",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
+	                               	var cuiban =
+                    				title=` <font title="${rowdata.jwbjh}" style="cursor:pointer;" >${rowdata.jwbjh}</font>`
                     					return title
-                    			}},*/
+                    			}},
                     			{display:"文件标题",name:"title",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
-                    				var cuiban = '',title;
+                    				var cuiban = '',title="";
 	                            	var CuibanFlag = rowdata.CuibanFlag;
 	                            	if(CuibanFlag==1){
 	                            		 cuiban = '<label class="table-label2">催办</label>';
 	                            	}
-                    				title=`${cuiban} <font title="${rowdata.title}" onclick="viewpage('${rowdata.id}','${rowdata.id}','${rowdata.id}')" style="cursor:pointer;text-decoration: underline;" >${rowdata.title}</font>`;
+                    				title=`${cuiban} <font class="title" title="${rowdata.title}" onclick="viewpage('${rowdata.id}','${rowdata.id}','${rowdata.id}')" style="cursor:pointer;text-decoration: underline;" >${rowdata.title}</font>`;
                     				return title
                     			}},
-                    			{display:"批示指示内容",name:"pszsmr",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
-                    				var str = `<font style="cursor:pointer" title="${rowdata.pszsmr}" onclick="pszsnrAlert('${rowdata.id}')" >${rowdata.pszsmr}</font>`;
+                    			{display:"批示指示内容",name:"pszsmr",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+                    				var str = `<font class="pszsmr" style="cursor:pointer" title="${rowdata.pszsmr}" onclick="pszsnrAlert('${rowdata.id}')" >${rowdata.pszsmr}</font>`;
                     				return str
                     			}},
-                      			{display:"督办落实情况",name:"dblsqk",width:"20%",align:"center",paixu:false,render:function(rowdata,n){
-                    				var button2 = '';
-                    				if(rowdata.gengxin==1){
-                    					button2 = '<label class="table-label">已更新</label>';
-                    				}
-                      				return rowdata.dblsqk||'';
+                      			{display:"督办落实情况",name:"dblsqk",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+                      					
+                    				var title=`<font class="dblsqk" title="${rowdata.dblsqk}" onclick="dblsqkAlert('${rowdata.id}')" style="cursor:pointer;text-decoration: underline;" >${rowdata.dblsqk}</font>`;
+                    				return title
+//                            	 return '<div class="dblsqk" onclick="dblsqkAlert(\''+rowdata.id+'\')" title="'+rowdata.dblsqk+'"><span class="hiddenInfo">'+rowdata.dblsqk+'</span></div>';
                       			}},
-                      			{display:"承办单位/人",name:"cbdwry",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
-                      				return rowdata.cbdwry||'';
-                      			}},
-                    			{display:"转办时间",name:"update",width:"8%",align:"center",paixu:false,render:function(rowdata,n){
-                    				return rowdata.update||'';
-                    			}},
-                    			{display:"反馈时间",name:"zbdate",width:"8%",align:"center",paixu:false,render:function(rowdata,n){
+                    			{display:"转办时间",name:"zbdate",width:"8%",align:"center",paixu:false,render:function(rowdata,n){
                     				return rowdata.zbdate||'';
                     			}},
+                    			{display:"承办单位/人",name:"cbdwry",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+                    				var title=`<font class="cbdw" title="${rowdata.cbdwry}">${rowdata.cbdwry}</font>`;
+                    				return title
+                    			}},
+                    			{display:"更新时间",name:"update",width:"8%",align:"center",paixu:false,render:function(rowdata,n){
+                    				return rowdata.update||'';
+                    			}},
                       			{display:"操作",name:"cz",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
-                    				var button3 = '';
+                    				var button2 = '';
                     				if(rowdata.blzt==1&&rowdata.other==1){
-                        					button3 = '<button type="button" class="btn btn-info table-button3" onclick="cbfn(\''+rowdata.id+'\')">催办</button>';
+                        					button2 = '<button type="button" class="btn btn-info table-button3" onclick="cbfn(\''+rowdata.id+'\')">催办</button>';
                     				}
-                    				return button3;
+                    				return button2;
                       			}}
 //                    				var id = rowdata.id;
 //                    				var blzt = blzt;
@@ -314,6 +307,34 @@ var pageModule = function(){
                     	$("#count4").html(count4);
                     	$("#count5").html(count5);
                     	Metronic.initSlimScroll(".scroller");
+                    	$(".dblsqk").each(function(){
+        					var maxwidth = 46;
+        					if($(this).text().length > maxwidth){
+        						$(this).text($(this).text().substring(0,maxwidth));
+        						$(this).html($(this).html()+'...');
+        					}
+        				});
+                    	$(".gzfgnr").each(function(){
+        					var maxwidth = 46;
+        					if($(this).text().length > maxwidth){
+        						$(this).text($(this).text().substring(0,maxwidth));
+        						$(this).html($(this).html()+'...');
+        					}
+        				});
+                    	$(".title").each(function(){
+        					var maxwidth = 46;
+        					if($(this).text().length > maxwidth){
+        						$(this).text($(this).text().substring(0,maxwidth));
+        						$(this).html($(this).html()+'...');
+        					}
+        				});
+                    	$(".cbdw").each(function(){
+        					var maxwidth = 32;
+        					if($(this).text().length > maxwidth){
+        						$(this).text($(this).text().substring(0,maxwidth));
+        						$(this).html($(this).html()+'...');
+        					}
+        				});
                     }
                });
 		
@@ -488,5 +509,17 @@ function pszsnrAlert(id){
 		title:"批示详情",
 		classed:"cjDialog",
 		url:"/app/db/document/view/html/psDialog.html?fileId="+id
+	})
+}
+//督办落实情况弹出框
+function dblsqkAlert(id){
+	newbootbox.newdialog({
+		id:"dblsqkDialog",
+		width:800,
+		height:600,
+		header:true,
+		title:"督办详情",
+		classed:"cjDialog",
+		url:"/app/db/document/view/html/dblsqk.html?fileId="+id
 	})
 }
