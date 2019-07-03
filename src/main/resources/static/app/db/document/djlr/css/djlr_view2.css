@@ -10,7 +10,9 @@ body{background: #3F5C9A;}
 .tabbable-line > .tab-content {border:none;}
 .tabbable-line > .nav-tabs > li.active > a, .tabbable-line > .nav-tabs > li.active > a:focus, .tabbable-line > .nav-tabs > li.active > a:hover {color: rgba(1, 204, 255, 1) !important;}
 .tabbable-line > .nav-tabs > li.active {border-bottom: 4px solid rgba(1, 204, 255, 1);}
-.line1,.line2,.line3 {color: #fff;}
+.line1,.line2,.line3 {color: #fff;background-color:}
+.line3{background-color:#213356;color: #fff}
+.color-fff{color:#fff}
 .wjlb_title{color:#fff;}
 .line4 li > a.fjactive {color: #fff;}
 .line4 li > a {color: #fff;}

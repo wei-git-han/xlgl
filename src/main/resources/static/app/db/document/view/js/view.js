@@ -138,15 +138,15 @@ var pageModule = function(){
 					//文件列表——附件
 					$("#fjList").html("");
 					$.each(data,function(i,item){
-						$("#fjList").append('<li num="'+i+'" id="fj_'+item.id+'"  data_id="'+item.id+'" formatId="'+item.fileServerFormatId+'" ><a class="'+(i==0?"fjactive":"")+'">'+item.fileName+'</a></li>');
+						$("#fjList").append('<li num="'+i+'" id="fj_'+item.id+'"  data_id="'+item.id+'" formatId="'+item.fileServerFormatId+'" ><input type="checkbox" name="fjcheckbox" class="fileCheckbox" checkId="'+item.id+'"/><a class="'+(i==0?"fjactive":"")+'">'+item.fileName+'</a></li>');
 					});
 					//点击附件名称
-					$("#fjList li").click(function(){
+					$("#fjList li a").click(function(){
 						$("#fjList>li>a").removeClass("fjactive");
-						$(this).find("a").addClass("fjactive");
-						var clickfileId = $(this).attr("data_id");
+						$(this).addClass("fjactive");
+						var clickfileId = $($(this).parent('li')).attr("data_id");
 						getFile(clickfileId);
-						$("#tt").tabs("select",parseInt($(this).attr("num")))
+						$("#tt").tabs("select",parseInt($($(this).parent('li')).attr("num")))
 					}); 
 				}
 			}
@@ -1134,3 +1134,27 @@ function viewcont(teamId,subId){
 	    }
 	});
 }
+//下载附件
+$("#downLoadfj").click(function(){
+	if($("#fjList").find("input[name=fjcheckbox]:checked").length>0){
+		var checkId = [];
+		$("#fjList").find("input[name=fjcheckbox]").each(function(){
+			if($(this).is(":checked")){
+				checkId.push($(this).attr("checkId"));
+			}
+		})
+		$ajax({
+			url:'',
+			data:{ids:checkId.toString()},
+			success:function(data){
+				if(data.result == "success" && data.url != ""){
+					newbootbox.alert("下载成功！").done(function(){
+		    			pageModule.takeMenufn()
+					}); 
+				}
+			}
+		})
+	}else{
+		newbootbox.alert("请选中要下载的附件！"); 
+	}
+});

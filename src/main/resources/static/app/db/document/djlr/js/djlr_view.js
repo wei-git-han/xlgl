@@ -28,6 +28,12 @@ var startdate = getUrlParam2("startdate");
 var enddate = getUrlParam2("enddate");
 $("#id").val(fileId);
 var pageModule = function(){
+	console.log(fileFrom)
+	if(fileFrom=="djlr"){
+		$('.xgfileWrap').show()
+	}else{
+		$('.xgfileWrap').hide()
+	}
 	//打开页面标识已读
 	var initReadfn = function(){
 		$ajax({
@@ -128,9 +134,9 @@ var pageModule = function(){
 					$("#fjList li a").click(function(){
 						$("#fjList>li>a").removeClass("fjactive");
 						$(this).addClass("fjactive");
-						var clickfileId = $(this).attr("data_id");
+						var clickfileId = $($(this).parent('li')).attr("data_id");
 						getFile(clickfileId);
-						$("#tt").tabs("select",parseInt($(this).attr("num")))
+						$("#tt").tabs("select",parseInt($($(this).parent('li')).attr("num")))
 					}); 
 				}
 			}
@@ -163,7 +169,7 @@ var pageModule = function(){
 					$.each(data,function(i,item){
 						$(".psMain").append(
 							'<div class="psrecord">'+
-				            '	<div style="color:black;" class="pslist"><span>'+item.userName+'&nbsp;&nbsp;'+item.createdTime+'&nbsp;&nbsp;批示：</span><span>'+item.leaderComment+'</span></div>'+
+				            '	<div  class="pslist"><span>'+item.userName+'&nbsp;&nbsp;'+item.createdTime+'&nbsp;&nbsp;批示：</span><span>'+item.leaderComment+'</span></div>'+
 				            '</div>'
 			            )
 					});
