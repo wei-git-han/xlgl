@@ -77,7 +77,7 @@ var pageModule = function(){
 		
         grid = $("#gridcont").createGrid({
                     columns:[	
-                    			{display:"状态",name:"blzt",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+                    			{display:"状态",name:"blzt",width:"8%",align:"center",paixu:false,render:function(rowdata,n){
                     				var button1;
                     				if(rowdata.blzt==1){
                     					button1 = '<button type="button" class="btn btn-info table-button1">办理中</button>';
@@ -88,12 +88,12 @@ var pageModule = function(){
                     				}
                     				return button1;
                     			}},
-                    			{display:"军委办件号",name:"jwbjh",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
+                    			{display:"军委办件号",name:"jwbjh",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
 	                               	var cuiban =
                     				title=` <font title="${rowdata.jwbjh}" style="cursor:pointer;" >${rowdata.jwbjh}</font>`
                     					return title
                     			}},
-                    			{display:"文件标题",name:"title",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
+                    			{display:"文件标题",name:"title",width:"18%",align:"left",paixu:false,render:function(rowdata,n){
                     				var cuiban = '',title="";
 	                            	var CuibanFlag = rowdata.CuibanFlag;
 	                            	if(CuibanFlag==1){
@@ -102,27 +102,30 @@ var pageModule = function(){
                     				title=`${cuiban} <font class="title" title="${rowdata.title}" onclick="viewpage('${rowdata.id}','${rowdata.id}','${rowdata.id}')" style="cursor:pointer;text-decoration: underline;" >${rowdata.title}</font>`;
                     				return title
                     			}},
-                    			{display:"批示指示内容",name:"pszsmr",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+                    			{display:"批示指示内容",name:"pszsmr",width:"18%",align:"left",paixu:false,render:function(rowdata,n){
                     				var str = `<font class="pszsmr" style="cursor:pointer" title="${rowdata.pszsmr}" onclick="pszsnrAlert('${rowdata.id}')" >${rowdata.pszsmr}</font>`;
                     				return str
                     			}},
-                      			{display:"督办落实情况",name:"dblsqk",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
-                      					
-                    				var title=`<font class="dblsqk" title="${rowdata.dblsqk}" onclick="dblsqkAlert('${rowdata.id}')" style="cursor:pointer;text-decoration: underline;" >${rowdata.dblsqk}</font>`;
+                      			{display:"督办落实情况",name:"dblsqk",width:"18%",align:"left",paixu:false,render:function(rowdata,n){
+                      				var gengxin = "";
+                  					if(rowdata.gengxin=='1'){
+                  						gengxin = '<label class="table-label">已更新</label>';
+                  					}
+                    				var title=`<font class="dblsqk" title="${rowdata.dblsqk}" onclick="dblsqkAlert('${rowdata.id}')" style="cursor:pointer;" >${gengxin}${rowdata.dblsqk}</font>`;
                     				return title
 //                            	 return '<div class="dblsqk" onclick="dblsqkAlert(\''+rowdata.id+'\')" title="'+rowdata.dblsqk+'"><span class="hiddenInfo">'+rowdata.dblsqk+'</span></div>';
                       			}},
-                    			{display:"转办时间",name:"zbdate",width:"8%",align:"center",paixu:false,render:function(rowdata,n){
+/*                    			{display:"转办时间",name:"zbdate",width:"8%",align:"center",paixu:false,render:function(rowdata,n){
                     				return rowdata.zbdate||'';
-                    			}},
-                    			{display:"承办单位/人",name:"cbdwry",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+                    			}},*/
+                    			{display:"承办单位/人",name:"cbdwry",width:"8%",align:"center",paixu:false,render:function(rowdata,n){
                     				var title=`<font class="cbdw" title="${rowdata.cbdwry}">${rowdata.cbdwry}</font>`;
                     				return title
                     			}},
                     			{display:"更新时间",name:"update",width:"8%",align:"center",paixu:false,render:function(rowdata,n){
                     				return rowdata.update||'';
                     			}},
-                      			{display:"操作",name:"cz",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+                      			{display:"操作",name:"cz",width:"8%",align:"center",paixu:false,render:function(rowdata,n){
                     				var button2 = '';
                     				if(rowdata.blzt==1&&rowdata.other==1){
                         					button2 = '<button type="button" class="btn btn-info table-button3" onclick="cbfn(\''+rowdata.id+'\')">催办</button>';
@@ -329,7 +332,7 @@ var pageModule = function(){
         					}
         				});
                     	$(".cbdw").each(function(){
-        					var maxwidth = 32;
+        					var maxwidth = 46;
         					if($(this).text().length > maxwidth){
         						$(this).text($(this).text().substring(0,maxwidth));
         						$(this).html($(this).html()+'...');
