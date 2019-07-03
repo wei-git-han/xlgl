@@ -109,12 +109,6 @@ public class DocumentWithdrawController {
 		 */
 		//获取到当前用户ID  针对B用户未点击转办可以撤回；
 		String userId = CurrentUser.getUserId();
-		DocumentZbjl documentZbjl = documentZbjlService.queryBySubIdAndInfoId(subId, infoId);
-		if (documentZbjl == null) {
-			this.unifiedDealErrorLog(json, infoId, subId, "转办记录表");
-			return json;
-		}
-		String id = documentZbjl.getId();
 		SubDocInfo subDocInfo = subDocInfoService.querySubDocInfoBySubIdAndInfoId(subId, infoId);
 		if (subDocInfo == null) {
 			this.unifiedDealErrorLog(json, infoId, subId, "分支主记录表");
@@ -132,6 +126,12 @@ public class DocumentWithdrawController {
 		if (StringUtils.equals(userId, senderId) ) {
 			//如果状态为待落实  则此文承办人未送出，撤回删除转办记录表和局内流转表的最新一条
 			if (StringUtils.equals(subDocTracking.getTrackingType(), "1")) {
+				// 删除局内转办最新的一条记录
+				DocumentZbjl documentZbjl = documentZbjlService.queryBySubIdAndInfoId(subId, infoId);
+				if (documentZbjl == null) {
+					this.unifiedDealErrorLog(json, infoId, subId, "转办记录表");
+					return json;
+				}
 				if(StringUtils.isBlank(undertakerId)) {//没有点承办
 					//承办人转办撤回,更新状态
 					if(StringUtils.isNotBlank(subDocTracking.getUndertaker())) {
@@ -146,9 +146,8 @@ public class DocumentWithdrawController {
 				}else {
 					json.put("result", "deal");
 					return json;
-				}
-				
-				// 删除局内转办最新的一条记录
+				}			
+				String id = documentZbjl.getId();
 				documentZbjlService.delete(id);
 				// 删除局内流转记录表,前提是有数据，然后删除
 				subDocTrackingService.delete(subDocTracking.getId());
@@ -156,7 +155,6 @@ public class DocumentWithdrawController {
 			}else if (StringUtils.equals(subDocTracking.getTrackingType(), "2")) {
 				//支持撤回     当前情况属于承办人/审批人送审批撤回
 				if (StringUtils.equals(userId, undertakerId)) {
-					//String delTeamId="";
 					Map<String, Object> map = new HashMap<>();
 					map.put("infoId", infoId);
 					map.put("subId", subId);
@@ -165,11 +163,8 @@ public class DocumentWithdrawController {
 					List<ReplyExplain> replyExplains = replyExplainService.queryList(map);
 					if (replyExplains != null && replyExplains.size() > 0) {
 						ReplyExplain explain = replyExplains.get(0);
-						//delTeamId=explain.getTeamId();
 						replyExplainService.delete(explain.getId());
 					}
-					//删除带附件的反馈数据
-					//replyAttacService.deleteBySubIdAndTeamId(subId,delTeamId);
 					//承办人送审撤回
 					subDocInfo.setChooseStatus(preStatus+"");
 					this.unifiedModifyDocStatus(subDocInfo, DbDocStatusDefined.BAN_LI_ZHONG);

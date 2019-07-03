@@ -27,4 +27,6 @@ public interface RoleSetService {
 	void deleteBatch(String[] ids);
 	
 	int deleteByUserId(String userId);
+	//获取某人角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
+	String getRoleTypeByUserId(String userId);
 }

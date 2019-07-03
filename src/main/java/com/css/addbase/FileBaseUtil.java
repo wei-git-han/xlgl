@@ -63,6 +63,7 @@ public class FileBaseUtil {
 				bos.flush();
 				is.close();
 				bos.close();
+		
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

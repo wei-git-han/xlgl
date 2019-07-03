@@ -1,7 +1,6 @@
 var id = getUrlParam2("id");
 var saveUrl = {"url":rootPath +"/adminset/saveOrUpdate","dataType":"text"};  //保存
 var editInfo = {"url":rootPath +"/adminset/info","dataType":"text"}; //编辑数据
-var getUserAdminTypeUrl = {"url":rootPath +"/adminset/getAuthor","dataType":"text"};//那当前用户的类型1：部管理员，2：局管理员
 var userTree ={"url":"/app/base/user/allTree","dataType":"text"}; //人员选择树
 var shouZhangTree ={"url":"/app/db/documentjcdb/allShouZhang","dataType":"text"}; //人员选择树
 var pageModule = function(){
@@ -60,6 +59,8 @@ var pageModule = function(){
 						newbootbox.alertInfo('保存成功！').done(function(){
 							window.location.href = "/app/db/document/ywpz/bglysz/html/index.html";
 						});
+					}else if(data.result == "exist"){
+						newbootbox.alertInfo("重复设置！");
 					}else{
 						newbootbox.alertInfo("保存失败！");
 					}

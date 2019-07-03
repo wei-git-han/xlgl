@@ -41,7 +41,6 @@ import com.css.app.db.business.service.DocumentSzpsService;
 import com.css.app.db.business.service.ReplyExplainService;
 import com.css.app.db.business.service.SubDocInfoService;
 import com.css.app.db.business.service.SubDocTrackingService;
-import com.css.app.db.config.entity.RoleSet;
 import com.css.app.db.config.service.RoleSetService;
 import com.css.app.db.util.DbDefined;
 import com.css.app.db.util.DbDocStatusDefined;
@@ -385,25 +384,12 @@ public class SubDocInfoController {
 	@RequestMapping("/buttonParam")
 	public void buttonParam( String subId){
 		Integer docStatus=0;//1:待转办；3：退回修改；5：待落实；7：待审批；9：办理中；11：建议办结;
-		String roleType = DbDefined.ROLE_6;//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
 		boolean isCheckUser=false;//是否是当前办理人
 		boolean isUndertaken=false;//是否已承办
 		boolean isUndertaker=false;//是否承办人
 		String loginUserId = CurrentUser.getUserId();
-		//当前登录人的角色
-		Map<String, Object> roleMap = new HashMap<>();
-		roleMap.put("userId", loginUserId);
-		List<RoleSet> roleList = roleSetService.queryList(roleMap);
-		if(roleList != null && roleList.size()>0) {
-			roleType = roleList.get(0).getRoleFlag();
-		}
-		/*//当前登录人的管理员类型
-		Map<String, Object> adminMap = new HashMap<>();
-		adminMap.put("userId", loginUserId);
-		List<AdminSet> adminList = adminSetService.queryList(adminMap);
-		if(adminList != null && adminList.size()>0) {
-			adminType = adminList.get(0).getAdminType();
-		}*/
+		//当前登录人的角色（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
+		String roleType = roleSetService.getRoleTypeByUserId(loginUserId);
 		if(StringUtils.isNotBlank(subId)){
 			//获取文件状态
 			SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
@@ -976,14 +962,11 @@ public class SubDocInfoController {
 	public void currUserRoleType() {
 		JSONObject jsonObject = new JSONObject();
 		String loginUserId=CurrentUser.getUserId();
-		//当前登录人的角色
-		Map<String, Object> roleMap = new HashMap<>();
-		roleMap.put("userId", loginUserId);
-		List<RoleSet> roleList = roleSetService.queryList(roleMap);
+		//当前登录人的角色（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
+		String roleType = roleSetService.getRoleTypeByUserId(loginUserId);
 		String currUserRoleType = null;
-		if(roleList != null && roleList.size()>0) {
-			currUserRoleType = roleList.get(0).getRoleFlag();
-			logger.info("===================="+roleList.get(0).getUserName()+"============="+roleList.get(0).getUserId());
+		if(!StringUtils.equals(DbDefined.ROLE_6, roleType)) {
+			currUserRoleType = roleType;
 			jsonObject.put("currUserRoleType", currUserRoleType);
 			jsonObject.put("result", "success");
 		}else {

@@ -475,7 +475,7 @@ var pageModule = function(){
 			url: getUserAdminTypeUrl,
 			type: "GET",
 			success: function(data) {
-				if(data=="0"||data=="1"){//超级管理员或部管理员				
+				if(data=="0"||data=="1"||data=="3"){//超级管理员或部管理员				
 					$("#plcb").show(); //批量催办
 				}
 			}
@@ -817,6 +817,6 @@ function dblsqkAlert(id){
 		header:true,
 		title:"督办详情",
 		classed:"cjDialog",
-		url:"/app/db/document/view/html/dblsqk.html?fileId="+id
+		url:"/app/db/document/view/html/dblsqk.html?fileId="+id+"&fileFrom="+fileFrom
 	})
 }

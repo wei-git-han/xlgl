@@ -220,7 +220,9 @@
 	</select>
 	<!-- 统计图首长批示查询 -->
 	<select id="queryLeaderStatistics" resultType="com.css.app.db.business.dto.LeaderStatisticsDto">
-	 select t.* from (select shu.user_id as leaderId,shu.user_name as leaderName,isnull(sum(shu.blz), 0) as blzCount,isnull(sum(shu.bj), 0) as ybjCount,isnull(sum(shu.ctls), 0) as ctlsCount  
+	 select b.user_id as leaderId, b.user_name as leaderName,nvl(t.blzCount, 0) as blzCount,nvl(t.ybjCount, 0) as ybjCount,nvl(t.ctlsCount, 0) as ctlsCount
+     from  DB_ROLE_SET b  
+	 left join (select shu.user_id as leaderId,shu.user_name as leaderName,isnull(sum(shu.blz), 0) as blzCount,isnull(sum(shu.bj), 0) as ybjCount,isnull(sum(shu.ctls), 0) as ctlsCount  
 		from (select ddi.user_id,ddi.user_name,
 			(case when ddi.STATUS='1' then count(ddi.STATUS) else 0 end ) as blz,
 			(case when ddi.STATUS='2' then count(ddi.STATUS) else 0 end ) as bj,
@@ -237,7 +239,7 @@
 						and ps.CREATED_TIME &lt;= #{endDate} 
 					 </if>
 		             )  ddi where num = '1' group by ddi.user_id,ddi.user_name,ddi.STATUS
-	         )shu  group by shu.user_id,shu.user_name) t left join  DB_ROLE_SET b on t.leaderId=b.USER_ID order by b.sort asc 
+	         )shu  group by shu.user_id,shu.user_name) t on b.USER_ID=t.leaderId where b.ROLE_FLAG ='1' order by b.sort asc
 	</select>
 
 	<!--根据年度获取每个状态的数量   CREATED_TIME暂为年度时间-->

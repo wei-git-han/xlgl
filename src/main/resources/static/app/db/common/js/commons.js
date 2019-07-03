@@ -1105,14 +1105,14 @@ var newbootbox = {
 			classed="";
 		};
 		$(gettop2().document.body).append(
-			'<div class="modal fade in newmodal '+classed+'" id="'+obj.id+'" tabindex="-1" aria-hidden="true">'+
+			'<div class="modal fade in newmodal '+classed+'" id="'+obj.id+'" tabindex="-1" aria-hidden="true" >'+
 			'    <div class="modal-dialog" style="width:'+width+'">'+
 			'        <div class="modal-content">'+
 			'            <div class="modal-header"'+html+'>'+
 			'                <div class="newclose" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></div>'+
 			'                <h4 class="modal-title">'+title+'</h4>'+
 			'            </div>'+
-			'            <div class="modal-body" style="height:'+height+styleHtml+'">'+
+			'            <div class="modal-body" style="height:'+height+styleHtml+';overflow:hidden">'+
 			'				<iframe src="'+url+'" style="width:100%;height:100%;" frameborder="0" marginheight="0px" marginwidth="0px"  height="100%" width="100%"></iframe>'+
 			'            </div>'+
 			'        </div>'+
@@ -1964,13 +1964,4 @@ var showModal = function(obj){
 }
 var hideModal = function(obj){
 	$("#"+obj).modal("hide");
-}
-
-
-function gettop(){
-	try{
-		return window.top
-	}catch(e){
-		return window.parent 
-	}
 }

@@ -77,7 +77,7 @@ var pageModule = function(){
 		
         grid = $("#gridcont").createGrid({
                     columns:[	
-                    			{display:"办理状态",name:"blzt",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+                    			{display:"状态",name:"blzt",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
                     				var button1;
                     				if(rowdata.blzt==1){
                     					button1 = '<button type="button" class="btn btn-info table-button1">办理中</button>';
@@ -88,7 +88,7 @@ var pageModule = function(){
                     				}
                     				return button1;
                     			}},
-                    			{display:"军委办件号",name:"jwbjh",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
+                    			/*{display:"军委办件号",name:"jwbjh",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
 	                               	var cuiban = '',title;
 	                            	var CuibanFlag = rowdata.CuibanFlag;
 	                            	if(CuibanFlag==1){
@@ -99,7 +99,7 @@ var pageModule = function(){
                     					${cuiban} <font title="${title}" onclick="viewpage('${rowdata.id}','${rowdata.id}','${rowdata.id}')" style="cursor:pointer;text-decoration: underline;" >${rowdata.title}</font>
                     				`
                     					return title
-                    			}},
+                    			}},*/
                     			{display:"文件标题",name:"title",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
                     				var cuiban = '',title;
 	                            	var CuibanFlag = rowdata.CuibanFlag;
@@ -109,28 +109,32 @@ var pageModule = function(){
                     				title=`${cuiban} <font title="${rowdata.title}" onclick="viewpage('${rowdata.id}','${rowdata.id}','${rowdata.id}')" style="cursor:pointer;text-decoration: underline;" >${rowdata.title}</font>`;
                     				return title
                     			}},
-                    			{display:"批示指示内容",name:"pszsmr",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+                    			{display:"批示指示内容",name:"pszsmr",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
                     				var str = `<font style="cursor:pointer" title="${rowdata.pszsmr}" onclick="pszsnrAlert('${rowdata.id}')" >${rowdata.pszsmr}</font>`;
                     				return str
                     			}},
-                      			{display:"督办落实情况",name:"dblsqk",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+                      			{display:"督办落实情况",name:"dblsqk",width:"20%",align:"center",paixu:false,render:function(rowdata,n){
+                    				var button2 = '';
+                    				if(rowdata.gengxin==1){
+                    					button2 = '<label class="table-label">已更新</label>';
+                    				}
                       				return rowdata.dblsqk||'';
                       			}},
-                    			{display:"转办时间",name:"zbdate",width:"8%",align:"center",paixu:false,render:function(rowdata,n){
-                    				return rowdata.zbdate||'';
-                    			}},
-                    			{display:"承办单位/人",name:"cbdwry",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
-                    				return rowdata.cbdwry||'';
-                    			}},
-                    			{display:"更新时间",name:"update",width:"8%",align:"center",paixu:false,render:function(rowdata,n){
+                      			{display:"承办单位/人",name:"cbdwry",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+                      				return rowdata.cbdwry||'';
+                      			}},
+                    			{display:"转办时间",name:"update",width:"8%",align:"center",paixu:false,render:function(rowdata,n){
                     				return rowdata.update||'';
                     			}},
+                    			{display:"反馈时间",name:"zbdate",width:"8%",align:"center",paixu:false,render:function(rowdata,n){
+                    				return rowdata.zbdate||'';
+                    			}},
                       			{display:"操作",name:"cz",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
-                    				var button2 = '';
+                    				var button3 = '';
                     				if(rowdata.blzt==1&&rowdata.other==1){
-                        					button2 = '<button type="button" class="btn btn-info table-button3" onclick="cbfn(\''+rowdata.id+'\')">催办</button>';
+                        					button3 = '<button type="button" class="btn btn-info table-button3" onclick="cbfn(\''+rowdata.id+'\')">催办</button>';
                     				}
-                    				return button2;
+                    				return button3;
                       			}}
 //                    				var id = rowdata.id;
 //                    				var blzt = blzt;

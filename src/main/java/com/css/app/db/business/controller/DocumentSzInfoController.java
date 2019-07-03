@@ -28,8 +28,8 @@ import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.service.DocumentCbjlService;
 import com.css.app.db.business.service.DocumentInfoService;
 import com.css.app.db.business.service.SubDocInfoService;
-import com.css.app.db.config.entity.RoleSet;
 import com.css.app.db.config.service.RoleSetService;
+import com.css.app.db.util.DbDefined;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.Response;
 
@@ -496,14 +496,12 @@ public class DocumentSzInfoController {
 		//当前登录人的角色
 		//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
 		JSONObject jo=new JSONObject();
-		Map<String, Object> roleMap = new HashMap<>();
 		String userid=CurrentUser.getUserId();
-		roleMap.put("userId",userid);
-		List<RoleSet> roleList = roleSetService.queryList(roleMap);
-		String roleType="";
+		//当前登录人的角色（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
+		String roleType = roleSetService.getRoleTypeByUserId(userid);
 		String orgid="";
-		if(roleList != null && roleList.size()>0) {
-			roleType = roleList.get(0).getRoleFlag();
+		if(StringUtils.equals(DbDefined.ROLE_6, roleType)) {
+			roleType="";
 		}
 		BaseAppOrgan org = baseAppOrganService.queryObject(CurrentUser.getDepartmentId());
 		if(org != null){

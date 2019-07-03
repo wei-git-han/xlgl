@@ -7,7 +7,7 @@ var currUserRoleTypeUrl = {"url":"/app/db/subdocinfo/currUserRoleType","dataType
 var grid = null;
 var total=0;//列表中，数据的总条数
 var currentUserRole = "6";
-
+var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 if(!window.top.memory){
 	window.top.memory = {};
 }
@@ -358,29 +358,35 @@ function dblsqkAlert(id){
 		header:true,
 		title:"督办详情",
 		classed:"cjDialog",
-		url:"/app/db/document/view/html/dblsqk.html?fileId="+id
+		url:"/app/db/document/view/html/dblsqk.html?fileId="+id+"&fileFrom="+fileFrom
 	})
 }
 
 //撤回
 function chehuiDoc(id, infoId){
-	$ajax({
-		url:chehuiUrl,
-		data:{subId:id,infoId:infoId},
-		success:function(data){
-			if(data.result=='success'){
-				newbootbox.alertInfo('撤回成功！').done(function(){
-					pageModule.initgrid();
-				});
-			}else if(data.result=='deal'){
-				newbootbox.alertInfo('当前文件已被处理，不能撤回！').done(function(){
-					pageModule.initgrid();
-				});
-			}else{
-				newbootbox.alertInfo('撤回失败！');
-			}
-		}
-	});	
+	newbootbox.confirm({
+	    title: "提示",
+	    message: "是否确认要进行撤回操作？",
+	    callback1:function(){
+	    	$ajax({
+	    		url:chehuiUrl,
+	    		data:{subId:id,infoId:infoId},
+	    		success:function(data){
+	    			if(data.result=='success'){
+	    				newbootbox.alertInfo('撤回成功！').done(function(){
+	    					pageModule.initgrid();
+	    				});
+	    			}else if(data.result=='deal'){
+	    				newbootbox.alertInfo('当前文件已被处理，不能撤回！').done(function(){
+	    					pageModule.initgrid();
+	    				});
+	    			}else{
+	    				newbootbox.alertInfo('撤回失败！');
+	    			}
+	    		}
+	    	});	
+	    	}
+	    })
 }
 
 

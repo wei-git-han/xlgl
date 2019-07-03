@@ -357,23 +357,20 @@ function dblsqkAlert(id){
 		header:true,
 		title:"督办详情",
 		classed:"cjDialog",
-		url:"/app/db/document/view/html/dblsqk.html?fileId="+id
+		url:"/app/db/document/view/html/dblsqk.html?fileId="+id+"&fileFrom="+fileFrom
 	})
 }
 
 //撤回
 function chehuiDoc(id, infoId){
-	$ajax({
-		url:chehuiUrl,
-		data:{subId:id, infoId:infoId},
-		success:function(data){
-			if(data.result=='success'){
-				newbootbox.alertInfo('撤回成功！').done(function(){
-					pageModule.initgrid();
-				});
-			}else{
-				newbootbox.alertInfo('撤回失败！');
-			}
-		}
-	});	
+	newbootbox.newdialog({
+		id:"ch_confim",
+		width:400,
+		height:200,
+		header:true,
+		title:"撤回",
+		classed:"cjDialog",
+		style:{"padding":"1px","oveflow":"hidden"},
+		url:"/app/db/document/jndb/html/ch_confim.html?id="+id+"&infoId="+infoId
+	})
 }

@@ -25,20 +25,19 @@ import com.css.addbase.constant.AppConstant;
 import com.css.app.db.business.dto.LeaderStatisticsDto;
 import com.css.app.db.business.entity.BaseTreeObject;
 import com.css.app.db.business.entity.DocumentInfo;
-import com.css.app.db.business.entity.DocumentRead;
 import com.css.app.db.business.entity.DocumentSzps;
 import com.css.app.db.business.service.DocumentInfoService;
-import com.css.app.db.business.service.DocumentReadService;
 import com.css.app.db.business.service.DocumentSzpsService;
 import com.css.app.db.config.entity.AdminSet;
-import com.css.app.db.config.entity.RoleSet;
 import com.css.app.db.config.service.AdminSetService;
 import com.css.app.db.config.service.RoleSetService;
+import com.css.app.db.util.DbDefined;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.DateUtil;
 import com.css.base.utils.GwPageUtils;
 import com.css.base.utils.Response;
 import com.css.base.utils.StringUtils;
+import com.ctc.wstx.cfg.InputConfigFlags;
 import com.github.pagehelper.PageHelper;
 
 import dm.jdbc.util.StringUtil;
@@ -478,45 +477,23 @@ public class DocumentJcdbController {
 	
 	public String getRoleType() {
 		//当前登录人的角色
-		//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
 		BaseAppConfig mapped = baseAppConfigService.queryObject(AppConstant.LEAD_TEAM);//首长单位id
-		
-		JSONObject jo=new JSONObject();
-		Map<String, Object> roleMap = new HashMap<>();
 		String userid=CurrentUser.getUserId();
 		String depid=CurrentUser.getDepartmentId();
-		roleMap.put("userId",userid);
-		List<RoleSet> roleList = roleSetService.queryList(roleMap);
-		String roleType="";
-		String orgid="";
-		if(roleList != null && roleList.size()>0) {
-			return roleType = roleList.get(0).getRoleFlag();
+		//当前登录人的角色（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
+		String roleType = roleSetService.getRoleTypeByUserId(userid);
+		if(!StringUtils.equals(DbDefined.ROLE_6, roleType)) {
+			return roleType;
 		}else if(mapped!=null&&depid.equals(mapped.getValue())){
 				return "1";//首长单位下的人(默认为首长)
 		}else{
-			//当前登录人的管理员类型
-			String adminType = "0";//管理员类型（1：部管理员；2：局管理员）
-			Map<String, Object> adminMap = new HashMap<>();
-			adminMap.put("userId", userid);
-			List<AdminSet> adminList = adminSetService.queryList(adminMap);
-			if(adminList != null && adminList.size()>0) {
-				adminType = adminList.get(0).getAdminType();
-				if(adminType.equals("1")) {
-					return "2";//部管理员状态为2
-				}
+			//当前登录人的管理员类型(0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员)
+			String adminType = adminSetService.getAdminTypeByUserId(userid);
+			if(("1").equals(adminType)||("3").equals(adminType)||("0").equals(adminType)) {
+				return "2";//部管理员状态为2
 			}
 		}
 		return "";
-		/*BaseAppOrgan org = baseAppOrganService.queryObject(CurrentUser.getDepartmentId());
-		if(org != null){
-			String[] pathArr = org.getTreePath().split(",");
-			if(pathArr.length > 2){
-				orgid= pathArr[2];
-			} 
-		}
-		jo.put("roleType", roleType);
-		jo.put("orgid", orgid);
-		Response.json(jo);*/
 	}
 	public String getSzOrgid() {
 		BaseAppConfig mapped = baseAppConfigService.queryObject(AppConstant.LEAD_TEAM);
@@ -538,27 +515,26 @@ public class DocumentJcdbController {
 	public void isShouZhang() {
 		JSONObject jsonObject = new JSONObject();
 		String userId = CurrentUser.getUserId();
+		String deptId = CurrentUser.getDepartmentId();
 		System.err.println(userId);
 		Map<String, Object> map = new HashMap<>();
 		map.put("userId", userId);
+		map.put("adminType", "1");
 		List<AdminSet> adminSets = adminSetService.queryList(map);
 		if (adminSets != null && adminSets.size() > 0) {
 			AdminSet adminSet = adminSets.get(0);
-			if (StringUtils.equals(adminSet.getAdminType(), "1") && StringUtils.isNotBlank(adminSet.getSeniorOfficial())) {
+			if (StringUtils.isNotBlank(adminSet.getSeniorOfficial())) {
 				jsonObject.put("isGuaZaiShouZhang", 1);
 				jsonObject.put("result", "success");
 			}else {
 				jsonObject.put("result", "fail");
 			}
 		}
-		List<RoleSet> roleSets = roleSetService.queryList(map);
-		if (roleSets != null && roleSets.size() > 0) {
-			RoleSet roleSet = roleSets.get(0);
-			if (StringUtils.equals(roleSet.getRoleFlag(), "1")) {
-				jsonObject.put("result", "success");
-			}else {
-				jsonObject.put("result", "fail");
-			}
+		BaseAppConfig mapped = baseAppConfigService.queryObject(AppConstant.LEAD_TEAM);//首长单位id
+		if (mapped!=null&&deptId.equals(mapped.getValue())) {
+			jsonObject.put("result", "success");
+		}else {
+			jsonObject.put("result", "fail");
 		}
 		Response.json(jsonObject);
 	}
@@ -582,6 +558,5 @@ public class DocumentJcdbController {
 			baseTreeObjects.add(baseTreeObject);
 		}
 		Response.json(baseTreeObjects);
-//		return "";
 	}
 }

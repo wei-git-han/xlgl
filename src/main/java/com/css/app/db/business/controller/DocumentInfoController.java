@@ -46,9 +46,7 @@ import com.css.app.db.business.service.DocumentReadService;
 import com.css.app.db.business.service.DocumentSzpsService;
 import com.css.app.db.business.service.SubDocInfoService;
 import com.css.app.db.business.service.SubDocTrackingService;
-import com.css.app.db.config.entity.AdminSet;
 import com.css.app.db.config.entity.DocumentDic;
-import com.css.app.db.config.entity.RoleSet;
 import com.css.app.db.config.service.AdminSetService;
 import com.css.app.db.config.service.RoleSetService;
 import com.css.app.db.util.DbDefined;
@@ -247,22 +245,10 @@ public class DocumentInfoController {
 			}else if(!StringUtils.isEmpty(month)) {
 				dateStr = LocalDate.now().withMonth(Integer.parseInt(month)).format(DateTimeFormatter.ISO_LOCAL_DATE).substring(0,7);
 			}
-			String adminType = null;//管理员类型（1：部管理员；2：局管理员）
-			String roleType = DbDefined.ROLE_6;//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
-			//当前登录人的管理员类型
-			Map<String, Object> adminMap = new HashMap<>();
-			adminMap.put("userId", loginUserId);
-			List<AdminSet> adminList = adminSetService.queryList(adminMap);
-			if(adminList != null && adminList.size()>0) {
-				adminType = adminList.get(0).getAdminType();
-			}
-			//当前登录人的角色
-			Map<String, Object> roleMap = new HashMap<>();
-			roleMap.put("userId", loginUserId);
-			List<RoleSet> roleList = roleSetService.queryList(roleMap);
-			if(roleList != null && roleList.size()>0) {
-				roleType = roleList.get(0).getRoleFlag();
-			}
+			//当前登录人的管理员类型(0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员)
+			String adminType = adminSetService.getAdminTypeByUserId(loginUserId);			
+			//当前登录人的角色（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
+			String roleType = roleSetService.getRoleTypeByUserId(loginUserId);
 			Map<String, Object> map = new HashMap<>();
 			map.put("docStatus", "2");
 			map.put("type", typeId);
@@ -325,7 +311,7 @@ public class DocumentInfoController {
 				}
 			}
 			
-			if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType)
+			if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType) && !StringUtils.equals("3", adminType)
 					&& !StringUtils.equals(DbDefined.ROLE_1, roleType) && !StringUtils.equals(DbDefined.ROLE_3, roleType)) {
 				if(StringUtils.equals(DbDefined.ROLE_5, roleType)) {
 					map.put("deptId", CurrentUser.getDepartmentId());
@@ -335,7 +321,7 @@ public class DocumentInfoController {
 				PageHelper.startPage(page, pagesize);
 				infoList = documentInfoService.queryPersonList(map);
 			} else {
-				if(StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType)) {
+				if(StringUtils.equals("3", adminType)||StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType)) {
 					String orgId = baseAppUserService.getBareauByUserId(loginUserId);
 					if(StringUtils.isNotBlank(orgId)) {
 						map.put("orgid", orgId);
@@ -418,22 +404,10 @@ public class DocumentInfoController {
 		}
 		int [] arr = {0,0,0,0,0};
 		String loginUserId=CurrentUser.getUserId();
-		String adminType = null;//管理员类型（1：部管理员；2：局管理员）
-		String roleType = DbDefined.ROLE_6;//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
-		//当前登录人的管理员类型
-		Map<String, Object> adminMap = new HashMap<>();
-		adminMap.put("userId", loginUserId);
-		List<AdminSet> adminList = adminSetService.queryList(adminMap);
-		if(adminList != null && adminList.size()>0) {
-			adminType = adminList.get(0).getAdminType();
-		}
-		//当前登录人的角色
-		Map<String, Object> roleMap = new HashMap<>();
-		roleMap.put("userId", loginUserId);
-		List<RoleSet> roleList = roleSetService.queryList(roleMap);
-		if(roleList != null && roleList.size()>0) {
-			roleType = roleList.get(0).getRoleFlag();
-		}
+		//当前登录人的管理员类型(0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员)
+		String adminType = adminSetService.getAdminTypeByUserId(loginUserId);		
+		//当前登录人的角色（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
+		String roleType = roleSetService.getRoleTypeByUserId(loginUserId);
 		List<DocumentInfo> infoList =null;
 		Map<String, Object> map = new HashMap<>();
 		map.put("docStatus", "2");
@@ -468,7 +442,7 @@ public class DocumentInfoController {
 				map.put("period", period);
 			}
 		}
-		if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType)
+		if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType)  && !StringUtils.equals("3", adminType)
 				&& !StringUtils.equals(DbDefined.ROLE_1, roleType) && !StringUtils.equals(DbDefined.ROLE_3, roleType)) {
 			if(StringUtils.equals(DbDefined.ROLE_5, roleType)) {
 				map.put("deptId", CurrentUser.getDepartmentId());
@@ -477,7 +451,7 @@ public class DocumentInfoController {
 			}
 			infoList = documentInfoService.queryPersonList(map);
 		} else {
-			if(StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType)) {
+			if(StringUtils.equals("3", adminType) || StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType)) {
 				String orgId = baseAppUserService.getBareauByUserId(loginUserId);
 				if(StringUtils.isNotBlank(orgId)) {
 					map.put("orgid", orgId);
@@ -551,14 +525,11 @@ public class DocumentInfoController {
 	public String getRoleType() {
 		BaseAppConfig mapped = baseAppConfigService.queryObject(AppConstant.LEAD_TEAM);//首长单位id
 		String depid=CurrentUser.getDepartmentId();
-		//当前登录人的角色
-		//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
-		Map<String, Object> roleMap = new HashMap<>();
 		String userid=CurrentUser.getUserId();
-		roleMap.put("userId",userid);
-		List<RoleSet> roleList = roleSetService.queryList(roleMap);
-		if(roleList != null && roleList.size()>0) {
-			return roleList.get(0).getRoleFlag();
+		//当前登录人的角色（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
+		String roleType = roleSetService.getRoleTypeByUserId(userid);
+		if(!StringUtils.equals(DbDefined.ROLE_6, roleType)) {
+			return roleType;
 		}else if(mapped!=null){
 			if(depid.equals(mapped.getValue())) {
 				return "1";//首长单位下的人(默认为首长)
@@ -596,25 +567,19 @@ public class DocumentInfoController {
 	@RequestMapping("/buttonParam")
 	public void buttonParam(String id){
 		String loginUserId=CurrentUser.getUserId();
-		String adminType = "0";//管理员类型（1：部管理员；2：局管理员）
 		boolean cuiBanBtn =false;
 		boolean zhuanBanBtn =false;
 		boolean quXiaoBtn =false;
 		boolean banjieBtn =false;
 		
-		//当前登录人的管理员类型
-		Map<String, Object> adminMap = new HashMap<>();
-		adminMap.put("userId", loginUserId);
-		List<AdminSet> adminList = adminSetService.queryList(adminMap);
-		if(adminList != null && adminList.size()>0) {
-			adminType = adminList.get(0).getAdminType();
-		}
+		//当前登录人的管理员类型(0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员)
+		String adminType = adminSetService.getAdminTypeByUserId(loginUserId);		
 		//获取文件信息
 		DocumentInfo documentInfo = documentInfoService.queryObject(id);
 		if(documentInfo != null) {
 			Integer status = documentInfo.getStatus();
 			String cuibanFlag = documentInfo.getCuibanFlag();
-			if(StringUtils.equals("1", adminType)) {
+			if(StringUtils.equals("1", adminType)||StringUtils.equals("3", adminType)) {
 				if(status<2) {
 					zhuanBanBtn=true;
 					banjieBtn=true;
@@ -910,27 +875,15 @@ public class DocumentInfoController {
 			dateStr = LocalDate.now().withMonth(Integer.parseInt(month)).format(DateTimeFormatter.ISO_LOCAL_DATE).substring(0,7);
 		}
 		String loginUserId=CurrentUser.getUserId();
-		String adminType = null;//管理员类型（1：部管理员；2：局管理员）
-		String roleType = DbDefined.ROLE_6;//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
-		//当前登录人的管理员类型
-		Map<String, Object> adminMap = new HashMap<>();
-		adminMap.put("userId", loginUserId);
-		List<AdminSet> adminList = adminSetService.queryList(adminMap);
-		if(adminList != null && adminList.size()>0) {
-			adminType = adminList.get(0).getAdminType();
-		}
-		//当前登录人的角色
-		Map<String, Object> roleMap = new HashMap<>();
-		roleMap.put("userId", loginUserId);
-		List<RoleSet> roleList = roleSetService.queryList(roleMap);
-		if(roleList != null && roleList.size()>0) {
-			roleType = roleList.get(0).getRoleFlag();
-		}
+		//当前登录人的管理员类型(0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员)
+		String adminType = adminSetService.getAdminTypeByUserId(loginUserId);		
+		//当前登录人的角色（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
+		String roleType = roleSetService.getRoleTypeByUserId(loginUserId);
 		Map<String, Object> map = new HashMap<>();
 		map.put("userId", loginUserId);
 		map.put("docType", DbDefined.DOCUMENT_TYPE);
 		map.put("year", dateStr);
-		if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType)
+		if (!StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType) && !StringUtils.equals("3", adminType)
 				&& !StringUtils.equals(DbDefined.ROLE_1, roleType) && !StringUtils.equals(DbDefined.ROLE_3, roleType)) {
 			orgId=null;
 			if(StringUtils.equals(DbDefined.ROLE_5, roleType)) {
@@ -939,7 +892,7 @@ public class DocumentInfoController {
 				map.put("loginUserId", loginUserId);
 			}
 		}else {
-			if(StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType)) {
+			if(StringUtils.equals("3", adminType) ||StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType)) {
 				String loginOrgId = baseAppUserService.getBareauByUserId(loginUserId);
 				if(StringUtils.isNotBlank(loginOrgId)) {
 					orgId=loginOrgId;

@@ -3,12 +3,14 @@ package com.css.app.db.config.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.css.app.db.config.dao.RoleSetDao;
 import com.css.app.db.config.entity.RoleSet;
 import com.css.app.db.config.service.RoleSetService;
+import com.css.app.db.util.DbDefined;
 
 
 
@@ -50,6 +52,18 @@ public class RoleSetServiceImpl implements RoleSetService {
 	@Override
 	public int deleteByUserId(String userId) {
 		return roleSetDao.deleteByUserId(userId);
+	}
+
+	@Override
+	public String getRoleTypeByUserId(String userId) {
+		String roleType = DbDefined.ROLE_6;//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
+		Map<String, Object> roleMap = new HashMap<>();
+		roleMap.put("userId", userId);
+		List<RoleSet> roleList = roleSetDao.queryList(roleMap);
+		if(roleList != null && roleList.size()>0) {
+			roleType = roleList.get(0).getRoleFlag();
+		}
+		return roleType;
 	}
 	
 }

@@ -4,12 +4,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +45,8 @@ public class DocumentFileController {
 
 	@Autowired
 	private DocumentFileService documentFileService;
+	@Autowired
+	private HttpServletResponse httpServletResponse;
 	
 	/**
 	 * 列表
@@ -99,46 +104,51 @@ public class DocumentFileController {
 	 */
 	@ResponseBody
 	@RequestMapping("/downLoadFile")
-	public void downLoadFile(String id){
-		List<File> files = new ArrayList<>();
-		for (String ss : id.split(",")) {
-			try {
-				DocumentFile documentFile = documentFileService.queryObject(ss);
-				File file = null;
-				if(documentFile!=null) {
-					String formatId=documentFile.getFileServerFormatId();
-					if(StringUtils.isNotBlank(formatId)){
-						//获取版式文件的下载路径
-						String url = FileBaseUtil.download(formatId);
-						HTTPFile httpFiles = new HTTPFile(formatId);
-						file = new File(httpFiles.getAssginDownloadURL(true));
-						files.add(file);
-						this.createZip(files,"d:\\xxx.zip");
+	public void downLoadFile(String ids){
+		List<HTTPFile> httpFiles = new ArrayList<>();
+		HTTPFile httpFile = null;
+		try {
+			for (String id : ids.split(",")) {
+				try {
+					DocumentFile documentFile = documentFileService.queryObject(id);
+					if(documentFile!=null) {
+						String formatId=documentFile.getFileServerFormatId();
+						if(StringUtils.isNotBlank(formatId)){
+							//获取版式文件的下载路径
+							httpFile = new HTTPFile(formatId);
+							httpFiles.add(httpFile);
+						}
 					}
+				} catch (Exception e) {
+					logger.info("下载公文异常：{}", e);
+					Response.json("result","fail");
 				}
-			} catch (Exception e) {
-				logger.info("下载公文异常：{}", e);
-				Response.json("result","fail");
 			}
+			this.createZip(httpFiles,"压缩包的文件名.zip");
+		} catch (Exception e) {
+			logger.info("创建zip包异常：{}", e);
 		}
-		Response.json("url","d:\\aaa.zip");
 	}
+
 	/**
 	 * 支持公文批量下载打包zip
+	 * @param zipFileName 
 	 * @param files
-	 * @param zipPath
+	 * @param httpServletResponse
 	 */
-	private void createZip(List<File> files, String zipPath) {
-		FileInputStream fileInputStream = null;
+	private void createZip(List<HTTPFile> httpFiles, String zipFileName) {
+		InputStream inputStream = null;
 		ZipOutputStream zipOutputStream = null;
 		try {
-			for (File file : files) {
-				zipOutputStream = new ZipOutputStream(new FileOutputStream(zipPath));
-				fileInputStream = new FileInputStream(file);
-				zipOutputStream.putNextEntry(new ZipEntry(file.getName()));
+			httpServletResponse.setHeader("Content-Disposition", "attachment;filename="+zipFileName);
+			zipOutputStream = new ZipOutputStream(httpServletResponse.getOutputStream());
+			for (HTTPFile httpFile : httpFiles) {
+				inputStream = httpFile.getInputSteam();
+				zipOutputStream.putNextEntry(new ZipEntry(httpFile.getFileName()));
+				System.err.println(httpFile.getFileName());
 				int length;
-				if (fileInputStream != null) {
-					while ((length = fileInputStream.read()) != -1) {
+				if (inputStream != null) {
+					while ((length = inputStream.read()) != -1) {
 						zipOutputStream.write(length);
 						zipOutputStream.flush();
 					}
@@ -154,14 +164,14 @@ public class DocumentFileController {
 					logger.info("关闭zipOutputStream流异常：{}",e);
 				}
 			}
-			if (fileInputStream != null) {
+			if (inputStream != null) {
 				try {
-					fileInputStream.close();
+					inputStream.close();
 				} catch (IOException e) {
 					logger.info("关闭fileInputStream流异常：{}",e);
 				}
 			}
-			logger.info("生成xxx.zip包成功！");
+			logger.info("生成：{}包成功！", zipFileName);
 		}
 	}
 }

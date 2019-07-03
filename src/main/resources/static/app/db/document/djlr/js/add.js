@@ -349,6 +349,7 @@ var pageModule = function(){
 					return;
 				} 
 				$("#commentForm").submit();
+				return;
 			} 
 			var leaderComment=$("#cqcontent").val();
 			var createdTime=$("#cqDate").val();

@@ -5,7 +5,14 @@ var pageModule = function(){
 			url: getUserAdminTypeUrl,
 			type: "GET",
 			success: function(data) {
-				if(data=="0"||data=="1"){//超级管理员或部管理员
+				if(data=="3"){//即是部管理员又是局管理员
+					$("#jssz").show();
+					$('#departAdmin').show();
+					$('#juAdmin').show();
+					$("#szsz").show();
+					$("#zdwh").show();
+					$("#fkfl").show(); //反馈范例...
+				}else if (data=="0"||data=="1"){//超级管理员或部管理员
 					$('#departAdmin').show();
 					$('#juAdmin').show();
 					$("#szsz").show();
