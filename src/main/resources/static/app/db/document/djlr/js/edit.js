@@ -55,6 +55,12 @@ var pageModule = function(){
 					$("#jobContent").removeAttr("disabled");
 					$("#banjianNumber").attr("disabled",true);
 				}
+				if(data.docTypeId == "3" || data.docTypeId == "5" ){
+					$(".seteee").removeAttr("disabled");
+					$(".seteee").val("");
+				}else{
+					$(".seteee").attr("disabled",true);
+				}
 			}
 		});
 	}

@@ -167,12 +167,13 @@ var pageModule = function(){
 				$(".matter").hide();
 			}
 			if($(this).val() == "3" || $(this).val() == "5" ){
-				$(".seteee").attr("disabled",true);
+				$(".seteee").removeAttr("disabled");
+
 				$(".setdis").attr("disabled",true);
 				$(".seteee").val("");
 				$(".setdis").val("");
 			}else{
-				$(".seteee").removeAttr("disabled");
+				$(".seteee").attr("disabled",true);
 				$(".setdis").removeAttr("disabled");
 			}
 		});
