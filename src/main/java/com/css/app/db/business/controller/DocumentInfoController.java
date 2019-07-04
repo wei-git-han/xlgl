@@ -485,7 +485,7 @@ public class DocumentInfoController {
 	@RequestMapping("/info")
 	public void info(String id){
 		DocumentInfo documentInfo = documentInfoService.queryObject(id);
-		String roleid=getRoleType();
+		String roleid=getNewRoleType();
 		if(!"".equals(roleid)&&StringUtils.equals("1", roleid)) {//首长
 			if(StringUtils.isNotBlank(documentInfo.getLatestReply())) {//局长意见有更新并且待办件
 				String szreadids=documentInfo.getSzReadIds();
@@ -516,21 +516,28 @@ public class DocumentInfoController {
 		Response.json("period",period);
 	}
 	
-	public String getRoleType() {
-		BaseAppConfig mapped = baseAppConfigService.queryObject(AppConstant.LEAD_TEAM);//首长单位id
-		String depid=CurrentUser.getDepartmentId();
-		String userid=CurrentUser.getUserId();
-		//当前登录人的角色（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
-		String roleType = roleSetService.getRoleTypeByUserId(userid);
-		if(!StringUtils.equals(DbDefined.ROLE_6, roleType)) {
-			return roleType;
-		}else if(mapped!=null){
-			if(depid.equals(mapped.getValue())) {
-				return "1";//首长单位下的人(默认为首长)
-			}
+	//返回值为1：首长，返回值为2：超级管理员、部管理员、即是部管理员又是局管理员，返回值为3：局管理员或局长，返回值为""：其他人员
+	public String getNewRoleType() {
+		String newRoleTpe="";
+		String loginUserId=CurrentUser.getUserId();
+		String loginDeptId=CurrentUser.getDepartmentId();
+		//首长单位id
+		BaseAppConfig mapped = baseAppConfigService.queryObject(AppConstant.LEAD_TEAM);
+		//当前登录人的管理员类型(0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员)
+		String adminType = adminSetService.getAdminTypeByUserId(loginUserId);
+		//当前登录人的角色（3：局长；5：处长；6：其他）
+		String roleType = roleSetService.getRoleTypeByUserId(loginUserId);
+		if(StringUtils.equals("2", adminType)||StringUtils.equals("3", roleType)) {
+			newRoleTpe="3";
 		}
-		return "";
-	}	
+		if(("1").equals(adminType)||("3").equals(adminType)||("0").equals(adminType)) {
+			newRoleTpe="2";
+		}
+		if(mapped!=null&&StringUtils.equals(loginDeptId,mapped.getValue())) {
+			newRoleTpe="1";
+		}
+		return newRoleTpe;
+	}
 	/**
 	 * 新增或修改
 	 */

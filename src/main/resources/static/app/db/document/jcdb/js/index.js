@@ -80,7 +80,7 @@ var pageModule = function(){
 						`
 							<tr id="${id}">
 								<td>${i+1}</td>
-								<td title="${dwname}" ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','','${state}')">${dwname}</font></td>
+								<td title="${dwname}" ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','1','${state}')">${dwname}</font></td>
 								<td ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','1','${state}')">${blz}</font></td>
 								<td ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','2','${state}')">${bj}</font></td>
 								<td ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','3','${state}')">${ctls}</font></td>
@@ -103,6 +103,7 @@ var pageModule = function(){
 			success:function(data){
 				$("#tbody2").html('');
 				var ifclick = data.clickFlag;
+				var type = data.type;
 				$.each(data.list,function(i){
 					var id = this.id;
 					var leaderid = this.leaderId;
@@ -114,10 +115,10 @@ var pageModule = function(){
 						`
 							<tr id="${id}">
 								<td>${i+1}</td>
-								<td><a name="all" ifclick="${ifclick}" id="${leaderid}">${dwname}</a></td>
-								<td><a name="1" ifclick="${ifclick}" id="${leaderid}">${blz}</a></td>
-								<td><a name="2" ifclick="${ifclick}" id="${leaderid}">${bj}</a></td>
-								<td><a name="3" ifclick="${ifclick}" id="${leaderid}">${ctls}</a></td>
+								<td><a name="all" ifclick="${ifclick}" type="${type}" id="${leaderid}">${dwname}</a></td>
+								<td><a name="1" ifclick="${ifclick}" type="${type}" id="${leaderid}">${blz}</a></td>
+								<td><a name="2" ifclick="${ifclick}" type="${type}" id="${leaderid}">${bj}</a></td>
+								<td><a name="3" ifclick="${ifclick}" type="${type}" id="${leaderid}">${ctls}</a></td>
 							</tr>
 						`
 					);
@@ -130,6 +131,7 @@ var pageModule = function(){
 					var leaderid = $(this).attr("id");
 					
 					var ifclick = $(this).attr("ifclick");
+					var type = $(this).attr("type");
 					if(ifclick=="false"){			
 						$('#alertContent').text('您没有权限查看此数据!')
 						$("#alertInfo").modal("show");
@@ -141,13 +143,20 @@ var pageModule = function(){
 					
 					var startdate = $("#startdate").val();
 					var enddate = $("#enddate").val();
-					
-					/*gettop2().memory = {};
+					sessionStorage.setItem('status',type);
+					sessionStorage.setItem('leaderId',leaderid);
+					sessionStorage.setItem('startdate',startdate);
+					sessionStorage.setItem('enddate',enddate);
+/*					gettop2().memory = {};
 					gettop2().memory.status = type;
 					gettop2().memory.leaderId = leaderid;
 					gettop2().memory.startdate = startdate;
 					gettop2().memory.enddate = enddate;*/
-					window.location.href = "../../tjsj/html/tjsj.html?status="+type+"&leaderId="+leaderid+"&startdate="+startdate+"&enddate="+enddate;
+					if(type==1){
+						window.location.href = "../../tjsj/html/tjsj2.html?status="+type+"&leaderId="+leaderid+"&startdate="+startdate+"&enddate="+enddate;
+					}else{
+						window.location.href = "../../tjsj/html/tjsj.html?status="+type+"&leaderId="+leaderid+"&startdate="+startdate+"&enddate="+enddate;
+					}
 				})
 			}
 		});
@@ -622,7 +631,10 @@ var topage = function(orgid,type,month,ytype,state){
 			month:month,
 			ytype:ytype
 		}*/
-		window.location.href = "/app/db/document/jcdb/html/table.html?ifmenu=false&orgid="+orgid+"&month="+month+"&ytype="+ytype;
+		sessionStorage.setItem('orgid',orgid);
+		sessionStorage.setItem('month',month);
+		sessionStorage.setItem('ytype',ytype);
+		window.location.href = "/app/db/document/jcdb/html/table2.html?orgid="+orgid+"&month="+month+"&ytype="+ytype;
 	}else{
 		if(state==3){
 			$('#alertContent').text('仅支持点击查看本单位数据!')

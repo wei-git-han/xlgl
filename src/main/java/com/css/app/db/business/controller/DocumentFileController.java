@@ -100,7 +100,7 @@ public class DocumentFileController {
 		}
 	}
 	/**
-	 * 下载公文、暂时支持单个下载；
+	 * 下载公文、暂时支持单个下载；多文件下载自动打成zip
 	 * @param ids 文件主键ids
 	 * @param infoId 办件主键
 	 */
@@ -111,26 +111,38 @@ public class DocumentFileController {
 		HTTPFile httpFile = null;
 		if(StringUtils.isNotBlank(infoId)) {
 			DocumentInfo docInfo = documentInfoService.queryObject(infoId);
-			try {
-				for (String id : ids.split(",")) {
-					try {
-						DocumentFile documentFile = documentFileService.queryObject(id);
-						if(documentFile!=null) {
-							String formatId=documentFile.getFileServerFormatId();
-							if(StringUtils.isNotBlank(formatId)){
-								//获取版式文件的下载路径
-								httpFile = new HTTPFile(formatId);
-								httpFiles.add(httpFile);
-							}
-						}
-					} catch (Exception e) {
-						logger.info("下载公文异常：{}", e);
-						Response.json("result","fail");
+			String[] idArray = ids.split(",");
+			if(idArray!=null && idArray.length==1) {
+				DocumentFile documentFile = documentFileService.queryObject(ids);
+				if(documentFile!=null) {
+					String formatId=documentFile.getFileServerFormatId();
+					if(StringUtils.isNotBlank(formatId)){
+						HTTPFile hf = new HTTPFile(formatId);
+						Response.json(hf.getAssginDownloadURL());
 					}
 				}
-				this.createZip(httpFiles, docInfo.getDocTitle()+".zip");
-			} catch (Exception e) {
-				logger.info("创建zip包异常：{}", e);
+			}else {
+				try {
+					for (String id : idArray) {
+						try {
+							DocumentFile documentFile = documentFileService.queryObject(id);
+							if(documentFile!=null) {
+								String formatId=documentFile.getFileServerFormatId();
+								if(StringUtils.isNotBlank(formatId)){
+									//获取版式文件的下载路径
+									httpFile = new HTTPFile(formatId);
+									httpFiles.add(httpFile);
+								}
+							}
+						} catch (Exception e) {
+							logger.info("下载公文异常：{}", e);
+							Response.json("result","fail");
+						}
+					}
+					this.createZip(httpFiles, docInfo.getDocTitle()+".zip");
+				} catch (Exception e) {
+					logger.info("创建zip包异常：{}", e);
+				}
 			}
 		}else {
 			Response.json("result","fail");

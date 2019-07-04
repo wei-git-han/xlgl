@@ -205,6 +205,9 @@
 		<if test="status !=null and status !=''">
 			and db.status=#{status}
 		</if>
+		<if test="type !=null and type !=''">
+			and db.DOC_TYPE_ID=#{type}
+		</if>
 		<if test="startDate !=null and startDate !=''">
 		    and ps.CREATED_TIME >= #{startDate}
 		</if>

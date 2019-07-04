@@ -28,7 +28,6 @@ import com.css.app.db.business.service.DocumentInfoService;
 import com.css.app.db.business.service.DocumentSzpsService;
 import com.css.app.db.config.service.AdminSetService;
 import com.css.app.db.config.service.RoleSetService;
-import com.css.app.db.util.DbDefined;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.DateUtil;
 import com.css.base.utils.GwPageUtils;
@@ -122,10 +121,6 @@ public class DocumentJcdbController {
 	{"id":"03","dwname":"办公厅","blz":"100","bj":"101","ctls":"102"},
 	{"id":"04","dwname":"办公厅","blz":"100","bj":"101","ctls":"102"},
 	{"id":"05","dwname":"办公厅","blz":"100","bj":"101","ctls":"102"}
-	
-		public String getRoleType() {
-		//当前登录人的角色
-		//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
 		 * 
 	d.SUB_DEPT_ID,d.SUB_DEPT_NAME,sum(blz) as blz,sum(bj) as bj,sum(ctls) as ctls
 	 */
@@ -394,11 +389,16 @@ public class DocumentJcdbController {
 	@RequestMapping("/orglist5")
 	public void orglist5(String year,String startDate,String endDate){
 		JSONObject json =new JSONObject();
-		String role=getRoleType();
-		if(StringUtils.equals("1", role)||StringUtils.equals("1", role)) {
+		String role=getNewRoleType();
+		if(StringUtils.equals("1", role)) {
 			json.put("clickFlag", "true");
+			json.put("type", "1");
+		}else if (StringUtils.equals("2", role)){
+			json.put("clickFlag", "true");
+			json.put("type", "0");
 		}else {
 			json.put("clickFlag", "false");
+			json.put("type", "0");
 		}
 		Map<String, Object> map = new HashMap<>();
 		if(StringUtil.isEmpty(year)) {
@@ -413,6 +413,43 @@ public class DocumentJcdbController {
 	}
 	
 	/**
+	 * @description:首长端统计报表点击本年度办理情况和全年督办落实情况跳转页查询
+	 * @author:zhangyw
+	 * @date:2019年7月4日
+	 * @Version v1.0
+	 */
+	@ResponseBody
+	@RequestMapping("/leaderStatisticsPage")
+	public void leaderStatisticsPage(Integer page, Integer pagesize,String year,String docStatus,String orgId,String typeId) {
+		Map<String, Object> map = new HashMap<>();
+		if(StringUtil.isEmpty(year)) {
+			year=DateUtil.getCurrentYear()+"";
+		}
+		map.put("year", year);
+		map.put("orgid",orgId);
+		if(StringUtils.isNotBlank(typeId)) {
+			map.put("type",typeId);
+		}
+		if(StringUtils.isNotBlank(docStatus)) {
+			if(!StringUtils.equals("all", docStatus)) {
+				map.put("state", docStatus);
+			}
+		}
+		map.put("state", docStatus);
+		PageHelper.startPage(page, pagesize);
+		List<DocumentInfo> list = documentInfoService.queryList(map);
+		GwPageUtils pageUtil = new GwPageUtils(list);
+		for (DocumentInfo info : list) {
+			//首长批示
+			Map<String, Object> szpsMap = new HashMap<>();
+			szpsMap.put("infoId", info.getId());
+			List<DocumentSzps> szpsList = documentSzpsService.queryList(szpsMap);
+			info.setSzpslist(szpsList);
+		}
+		Response.json(pageUtil);
+	}
+	
+	/**
 	 * @description:统计图首长批示落实统计详情页查询
 	 * @param year 年份
 	 * @param startDate 开始截取时间
@@ -424,7 +461,7 @@ public class DocumentJcdbController {
 	 */
 	@ResponseBody
 	@RequestMapping("/leaderStatisticsList")
-	public void saveSmjToFile(Integer page, Integer pagesize,String year,String startDate,String endDate,String docStatus,String leaderId) {
+	public void leaderStatisticsList(Integer page, Integer pagesize,String year,String startDate,String endDate,String docStatus,String leaderId,String typeId) {
 		Map<String, Object> map = new HashMap<>();
 		if(StringUtil.isEmpty(year)) {
 			year=DateUtil.getCurrentYear()+"";
@@ -432,22 +469,22 @@ public class DocumentJcdbController {
 		map.put("year", year);
 		map.put("startDate",startDate);
 		map.put("endDate",endDate);
-		if(!StringUtils.equals("all", docStatus)) {
-			map.put("status", docStatus);
+		if(StringUtils.isNotBlank(docStatus)) {
+			if(!StringUtils.equals("all", docStatus)) {
+				map.put("status", docStatus);
+			}
+		}
+		if(StringUtils.isNotBlank(typeId)) {
+			map.put("type",typeId);
 		}
 		map.put("leaderId", leaderId);
 		PageHelper.startPage(page, pagesize);
 		List<DocumentInfo> list = documentInfoService.queryStatisticsList(map);
 		GwPageUtils pageUtil = new GwPageUtils(list);
 		for (DocumentInfo info : list) {
-			/*//是否已读
-			Map<String, Object> readMap = new HashMap<>();
-			readMap.put("userId", CurrentUser.getUserId());
-			readMap.put("infoId", info.getId());
-			List<DocumentRead> readlist = documentReadService.queryList(readMap);
-			
+			/*
 			//未读，最新反馈字段有值则标识为已更新
-			if(readlist.size()==0 && StringUtils.isNotBlank(info.getLatestReply())) {
+			if(StringUtils.isNotBlank(info.getLatestReply())) {
 				info.setUpdateFlag("1");
 			}*/
 			//首长批示
@@ -482,26 +519,6 @@ public class DocumentJcdbController {
 		return newRoleTpe;
 	}
 	
-	public String getRoleType() {
-		//当前登录人的角色
-		BaseAppConfig mapped = baseAppConfigService.queryObject(AppConstant.LEAD_TEAM);//首长单位id
-		String userid=CurrentUser.getUserId();
-		String depid=CurrentUser.getDepartmentId();
-		//当前登录人的角色（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
-		String roleType = roleSetService.getRoleTypeByUserId(userid);
-		if(!StringUtils.equals(DbDefined.ROLE_6, roleType)) {
-			return roleType;
-		}else if(mapped!=null&&depid.equals(mapped.getValue())){
-				return "1";//首长单位下的人(默认为首长)
-		}else{
-			//当前登录人的管理员类型(0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员)
-			String adminType = adminSetService.getAdminTypeByUserId(userid);
-			if(("1").equals(adminType)||("3").equals(adminType)||("0").equals(adminType)) {
-				return "2";//部管理员状态为2
-			}
-		}
-		return "";
-	}
 	public String getSzOrgid() {
 		BaseAppConfig mapped = baseAppConfigService.queryObject(AppConstant.LEAD_TEAM);
 		BaseAppConfig mapped2 = baseAppConfigService.queryObject(AppConstant.NOTDUBANTJ);

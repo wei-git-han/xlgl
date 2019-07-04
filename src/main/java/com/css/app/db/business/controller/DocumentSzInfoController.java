@@ -16,10 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.css.addbase.appconfig.entity.BaseAppConfig;
-import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
-import com.css.addbase.constant.AppConstant;
 import com.css.addbase.msg.MSGTipDefined;
 import com.css.addbase.msg.MsgTipUtil;
 import com.css.addbase.msg.entity.MsgTip;
@@ -30,10 +27,8 @@ import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.service.DocumentCbjlService;
 import com.css.app.db.business.service.DocumentInfoService;
 import com.css.app.db.business.service.SubDocInfoService;
-import com.css.app.db.config.entity.AdminSet;
 import com.css.app.db.config.service.AdminSetService;
 import com.css.app.db.config.service.RoleSetService;
-import com.css.app.db.util.DbDefined;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.Response;
 
@@ -499,34 +494,6 @@ public class DocumentSzInfoController {
 			}
 		}
 		Response.json("result", "success");
-	}
-	
-	/**
-	 * 获取当前登录人信息(角色)
-	 */
-	@ResponseBody
-	@RequestMapping("/getRoleType")
-	public void getRoleType() {
-		//当前登录人的角色
-		//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
-		JSONObject jo=new JSONObject();
-		String userid=CurrentUser.getUserId();
-		//当前登录人的角色（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
-		String roleType = roleSetService.getRoleTypeByUserId(userid);
-		String orgid="";
-		if(StringUtils.equals(DbDefined.ROLE_6, roleType)) {
-			roleType="";
-		}
-		BaseAppOrgan org = baseAppOrganService.queryObject(CurrentUser.getDepartmentId());
-		if(org != null){
-			String[] pathArr = org.getTreePath().split(",");
-			if(pathArr.length > 2){
-				orgid= pathArr[2];
-			} 
-		}
-		jo.put("roleType", roleType);
-		jo.put("orgid", orgid);
-		Response.json(jo);
 	}
 
 }

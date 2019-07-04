@@ -1,7 +1,5 @@
 var tableList= {"url":"/app/db/documentjcdb/leaderStatisticsList","dataType":"text"};//原table数据
-var numsList={"url":"/app/db/subdocinfo/presonNumsList","dataType":"text"};//筛选状态数字统计
-var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"};//高级搜索--部门树
-var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//高级搜索--人员树
+var dicUrl = {"url": "/app/db/documentdic/getDicByTypet","dataType":"text"}; //返回的下拉框字典值
 var grid = null;
 var total=0;//列表中，数据的总条数
 var fileFrom=getUrlParam("fileFrom")||"sztj"; //文件来源
@@ -10,13 +8,11 @@ var leaderId = getUrlParam("leaderId");//统计图传过来的首长ID
 var startdate = getUrlParam2("startdate");
 var enddate = getUrlParam2("enddate");
 
-/*alert(JSON.stringify(gettop2().memory))*/
-
 var pageModule = function(){
 	var initgrid = function(){
         grid = $("#gridcont").createGrid({
             columns:[
-            	{display:"状态",name:"",width:"8%",align:"center",render:function(rowdata,n){
+            	{display:"状态",name:"",width:"6%",align:"center",render:function(rowdata,n){
     				var button1;
     				if(rowdata.status==1){
     					button1 = '<button type="button" class="btn btn-info table-button1">办理中</button>';
@@ -27,14 +23,14 @@ var pageModule = function(){
     				}
     				return button1;
                  }},
-                 {display:"文件标题",name:"",width:"15%",align:"left",title:false,render:function(rowdata){
+                 {display:"文件标题",name:"",width:"16%",align:"left",title:false,render:function(rowdata){
                 	 var cuiban="";
                  	 if(rowdata.cuibanFlag=="1"){
                  		 cuiban = '<label class="table-label2">催办</label>';
                 	 }
-                	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'&leaderId='+leaderId+'&startdate='+startdate+'&enddate='+enddate+'&status='+status+'" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
+                	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'&leaderId='+leaderId+'&startdate='+startdate+'&enddate='+enddate+'&isFromChart=1&status='+status+'&frompage=0" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
                  }},
-                 {display:"批示指示内容",name:"",width:"26%",align:"left",paixu:false,title:false,render:function(rowdata){
+                 {display:"批示指示内容",name:"",width:"25%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var html1="";
                 	 $.each(rowdata.szpslist,function(i,item){
                 		 var createdTime="";
@@ -45,7 +41,7 @@ var pageModule = function(){
      				 });
                 	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.id+'\')" title="'+html1+'" style="cursor:pointer;">'+html1+'</div>';
                  }},
-                {display:"督办落实情况",name:"",width:"26%",align:"left",paixu:false,title:false,render:function(rowdata){
+                {display:"督办落实情况",name:"",width:"25%",align:"left",paixu:false,title:false,render:function(rowdata){
                	 var duban="";
                 	 if(rowdata.updateFlag=="1"){
                 		duban = '<label class="cuibanlabel">已更新</label>';
@@ -56,7 +52,7 @@ var pageModule = function(){
                	 }
                	 return '<div class="dblsqk" onclick="dblsqkAlert(\''+rowdata.id+'\')" title="'+dbCont+'" style="cursor:pointer;">'+duban+'<span>'+dbCont+'</span></div>';
                 }},
-                {display:"承办单位/人",name:"",width:"8%",align:"left",paixu:false,title:false,render:function(rowdata){
+                {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,title:false,render:function(rowdata){
                	 return '<div class="cbdw" title="'+rowdata.underDepts+'">'+rowdata.underDepts+'</div>'
                 }},
                 {display:"转办时间",name:"",width:"9%",align:"center",render:function(rowdata){
@@ -85,28 +81,28 @@ var pageModule = function(){
             	$("input[name='documentStatus']:checked").parents("label").find("font").text(total);
 
             	$(".zspsnr").each(function(){
-					var maxwidth = 46;
+					var maxwidth = 42;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
 					}
 				});
             	$(".dblsqk span").each(function(){
-					var maxwidth = 46;
+					var maxwidth = 42;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
 					}
 				});
-            	$(".tabletitle").each(function(){
-					var maxwidth = 46;
+            	$(".table-title").each(function(){
+					var maxwidth = 42;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
 					}
 				});
             	$(".cbdw").each(function(){
-					var maxwidth = 46;
+					var maxwidth = 28;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
 						$(this).html($(this).html()+'...');
@@ -140,23 +136,21 @@ var pageModule = function(){
 		$.uniform.update($("input[value='"+status+"']").prop("disabled",false));
 		$("input[value='"+status+"']").parents('label').addClass('selectedRadio')
 	}
-	
+	// 左侧下拉框
 	var initOption = function(){
-		var optionList = [{
-			text:'ssssssssssss',
-			id:1
-		},{
-			text:'ssssssssssss',
-			id:2
-		},{
-			text:'ssssssssssss',
-			id:3
-		}]
-		$('#typeOption').html('');
-		$.each(optionList,function(i,v){
-			$('#typeOption').append(`<option value="${v.id}" style="background-color:#639AC1">${v.text}</option>`)
-		})
+		$ajax({
+			url:dicUrl,
+			data:{dicType:"document_type"},
+			success:function(data){
+				$('#typeOption').html('');
+				$('#typeOption').append(`<option value="" style="background-color:#639AC1">全部</option>`)
+				$.each(data.document_type,function(i,v){
+					$('#typeOption').append(`<option value="${v.value}" style="background-color:#639AC1">${v.text}</option>`)
+				})
+			}
+		});
 	}
+	
 	return{
 		//加载页面处理程序
 		initControl:function(){
@@ -172,7 +166,7 @@ var pageModule = function(){
 }();
 
 $('.top-title').click(function(){
-	history.back()
+	window.location.href="/app/db/document/jcdb/html/index.html";
 })
 //批示指示内容弹出框
 function pszsnrAlert(id){

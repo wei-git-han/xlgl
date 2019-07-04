@@ -23,6 +23,7 @@ var status = getUrlParam("status");//统计图传过来的状态
 var leaderId = getUrlParam("leaderId");//统计图传过来的首长ID
 var startdate = getUrlParam2("startdate");
 var enddate = getUrlParam2("enddate");
+var isFromChart = getUrlParam("isFromChart");
 $("#id").val(fileId);
 var pageModule = function(){
 	console.log(fileFrom)
@@ -724,7 +725,16 @@ var pageModule = function(){
 //跳转返回事件
 function skip(){
 	if(frompage==0){
-		window.location.href="/app/db/document/jcdb/html/main.html";
+		if(isFromChart=='1'){
+			var status = sessionStorage.getItem('status');
+			var leaderId = sessionStorage.getItem('leaderId');
+			var startdate = sessionStorage.getItem('startdate');
+			var enddate = sessionStorage.getItem('enddate');
+			window.location.href="/app/db/document/tjsj/html/tjsj2.html?fileFrom="+fileFrom+"&status="+status+"&leaderId="+leaderId+"&startdate="+startdate+"&enddate="+enddate;
+		}else{
+			window.location.href="/app/db/document/jcdb/html/main.html";
+		}
+//		window.location.href="/app/db/document/jcdb/html/main.html";
 	}else if(frompage==1){
 		var indexobject = gettop2().indexobject;
 		
