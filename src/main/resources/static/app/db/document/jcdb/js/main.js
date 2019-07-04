@@ -123,7 +123,7 @@ var pageModule = function(){
                     				var title=`<font class="cbdw" title="${rowdata.cbdwry}">${rowdata.cbdwry}</font>`;
                     				return title
                     			}},
-                    			{display:"更新时间",name:"update",width:"8%",align:"center",paixu:false,render:function(rowdata,n){
+                    			{display:"更新时间",name:"update",width:"8%",align:"center",paixu:true,render:function(rowdata,n){
                     				return rowdata.update||'';
                     			}},
                       			{display:"操作",name:"cz",width:"8%",align:"center",paixu:false,render:function(rowdata,n){

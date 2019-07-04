@@ -282,7 +282,7 @@ var pageModule = function(){
 	var initfn = function(){
 		if(ifmenu!="false"){
 			$("#cent-left").show();
-			$(".top-title").attr("href","");
+			$(".top-title").attr("href","index.html");
 			initmenu();
 		}else{
 			$(".cent-right").css("left",0);
