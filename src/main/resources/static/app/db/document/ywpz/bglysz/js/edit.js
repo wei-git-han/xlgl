@@ -16,6 +16,19 @@ var pageModule = function(){
 	}
 
 	var initother = function(){
+/*		$("#leaderName").createUserTree({
+			url : leaderTreeUrl,
+			width : "100%",
+			success : function(data, treeobj) {},
+			selectnode : function(e, data,treessname,treessid) {
+				$("#leaderId").val(treessid);
+				$("#leaderName").val(treessname);
+			},
+			deselectnode:function(e,data,treessname,treessid){
+				$("#leaderId").val(treessid);
+				$("#leaderName").val(treessname);
+		   }
+		});*/
 		$("#userName").createUserTree({
 			url : userTree,
 			width:"100%",
@@ -30,7 +43,7 @@ var pageModule = function(){
 		$("#seniorOfficial").createUserTree({
 			url : shouZhangTree,
 			width:"100%",
-			success : function(data, treeobj) {alert(data[0].truename)},
+			success : function(data, treeobj) {},
 			selectnode : function(e, data) {
 				$("#seniorOfficial").val(data.node.text);
 				$("#seniorOfficialId").val(data.node.id);

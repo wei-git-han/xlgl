@@ -47,7 +47,7 @@ html,body{background:#2E4A83;height:100%;}
 .table-striped > tbody > tr:nth-of-type(2n+1) {background-color: transparent;}
 
 #gridcont_content,#gridcont_tablepage{background-color:transparent!important;}
-#gridcont_content td{font-size:16px;height:100px;max-height:100px;color:#fff;text-align:left;padding:15px 8px 5px;vertical-align: top;text-overflow: ellipsis;
+#gridcont_content td{font-size:16px;height:100px;max-height:100px;color:#fff;text-align:left;padding:15px 8px 5px;word-break:break-all;word-wrap:break-word;vertical-align: top;text-overflow: ellipsis;
 overflow: hidden;
 white-space: normal;}
 #gridcont_tablepage1{display:none;}

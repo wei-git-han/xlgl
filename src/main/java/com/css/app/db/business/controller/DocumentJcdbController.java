@@ -17,9 +17,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.appconfig.entity.BaseAppConfig;
 import com.css.addbase.appconfig.service.BaseAppConfigService;
-import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.entity.BaseAppUser;
-import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.addbase.constant.AppConstant;
 import com.css.app.db.business.dto.LeaderStatisticsDto;
@@ -28,7 +26,6 @@ import com.css.app.db.business.entity.DocumentInfo;
 import com.css.app.db.business.entity.DocumentSzps;
 import com.css.app.db.business.service.DocumentInfoService;
 import com.css.app.db.business.service.DocumentSzpsService;
-import com.css.app.db.config.entity.AdminSet;
 import com.css.app.db.config.service.AdminSetService;
 import com.css.app.db.config.service.RoleSetService;
 import com.css.app.db.util.DbDefined;
@@ -37,7 +34,6 @@ import com.css.base.utils.DateUtil;
 import com.css.base.utils.GwPageUtils;
 import com.css.base.utils.Response;
 import com.css.base.utils.StringUtils;
-import com.ctc.wstx.cfg.InputConfigFlags;
 import com.github.pagehelper.PageHelper;
 
 import dm.jdbc.util.StringUtil;
@@ -60,8 +56,6 @@ public class DocumentJcdbController {
 	private RoleSetService roleSetService;
 	@Autowired
 	private AdminSetService adminSetService;
-	@Autowired
-	private BaseAppOrganService baseAppOrganService;
 	@Autowired
 	private BaseAppConfigService baseAppConfigService;
 	@Autowired
@@ -150,20 +144,14 @@ public class DocumentJcdbController {
 			}
 		}
 		map.put("year", year);
+		//按年统计各局数据
 		List<Map<String, Object>> infoList = documentInfoService.queryListByOrgYear(map);
-		String role=getRoleType();
-		String orgid="";
-		if(!"1".equals(role)&&!"2".equals(role)) {
-			BaseAppOrgan org = baseAppOrganService.queryObject(CurrentUser.getDepartmentId());
-			if(org != null){
-				String[] pathArr = org.getTreePath().split(",");
-				if(pathArr.length > 2){
-					orgid= pathArr[2];
-				} 
-			}
+		String orgId="";
+		String szorgid=getSzOrgid();//获取首长的部门id
+		String role=getNewRoleType();//返回值为1：首长，返回值为2：超级管理员、部管理员、即是部管理员又是局管理员，返回值为3：局管理员或局长，返回值为""：其他人员
+		if("3".equals(role)) {//局管理员或局长
+			orgId=baseAppUserService.getBareauByUserId(CurrentUser.getUserId());//获取当前人的局id
 		}
-		String szorgid=getSzOrgid();
-		//blz= (int) map2.get("blz");
 		JSONArray ja=new JSONArray();
 		if (infoList!=null&&infoList.size()>0) {
 			for (Map<String, Object> map2 : infoList) {
@@ -181,16 +169,17 @@ public class DocumentJcdbController {
 				}else {
 					if("2".equals(role)) {//部管理员
 						jo.put("state", "1");//点击所有单位
-					}else {
-						if(orgid.equals(danweiid)) {//局
-							jo.put("state", "1");//该局的数据
+					}else if("3".equals(role)){//局管理员或局长
+						if(orgId.equals(danweiid)) {
+							jo.put("state", "2");//点击该局的数据
 						}else {
-							jo.put("state", "0");
+							jo.put("state", "3");//它局的数据不能点击
 						}
+					}else {//局内其他人员
+						jo.put("state", "4");//都不能点击
 					}
 					jo.put("type", "0");
 				}
-				//state
 				if(!szorgid.contains(danweiid)) {
 					ja.add(jo);
 				}
@@ -249,22 +238,16 @@ public class DocumentJcdbController {
 		JSONArray bjdata=new JSONArray();
 		JSONArray ctlsdata=new JSONArray();
 		JSONArray legend=new JSONArray();
-		JSONArray otherdata=new JSONArray();
+		//JSONArray otherdata=new JSONArray();
 		JSONObject jo=new JSONObject();
 		JSONObject jo3=new JSONObject();
-		String role=getRoleType();
-		String orgid="";
+		String orgId="";
 		String month="all";
-		if(!"1".equals(role)&&!"2".equals(role)) {
-			BaseAppOrgan org = baseAppOrganService.queryObject(CurrentUser.getDepartmentId());
-			if(org != null){
-				String[] pathArr = org.getTreePath().split(",");
-				if(pathArr.length > 2){
-					orgid= pathArr[2];
-				} 
-			}
+		String szorgid=getSzOrgid();//首长部门id
+		String role=getNewRoleType();//返回值为1：首长，返回值为2：超级管理员、部管理员、即是部管理员又是局管理员，返回值为3：局管理员或局长，返回值为""：其他人员
+		if("3".equals(role)) {//局管理员或局长
+			orgId=baseAppUserService.getBareauByUserId(CurrentUser.getUserId());//获取当前人的局id
 		}
-		String szorgid=getSzOrgid();
 		if (infoList!=null&&infoList.size()>0) {
 			for (Map<String, Object> map2 : infoList) {
 				String danweiid=(String) map2.get("ID");
@@ -278,12 +261,14 @@ public class DocumentJcdbController {
 				}else {
 					if("2".equals(role)) {//部管理员
 						jo.put("state", "1");//点击所有单位
-					}else {
-						if(orgid.equals(danweiid)) {//局
-							jo.put("state", "1");//该局的数据
+					}else if("3".equals(role)){//局管理员或局长
+						if(orgId.equals(danweiid)) {
+							jo.put("state", "2");//点击该局的数据
 						}else {
-							jo.put("state", "0");
+							jo.put("state", "3");//它局的数据不能点击
 						}
+					}else {//局内其他人员
+						jo.put("state", "4");//都不能点击
 					}
 					jo.put("type", "0");
 				}
@@ -379,7 +364,6 @@ public class DocumentJcdbController {
 		JSONArray xdata=new JSONArray();
 		if (infoList!=null&&infoList.size()>0) {
 			for (Map<String, Object> map2 : infoList) {
-				JSONObject jo=new JSONObject();
 				String name=(String) map2.get("name");
 				double bj=(long) map2.get("bj");
 				//double hh=bj;
@@ -475,6 +459,29 @@ public class DocumentJcdbController {
 		Response.json(pageUtil);
 	}
 	
+	//返回值为1：首长，返回值为2：超级管理员、部管理员、即是部管理员又是局管理员，返回值为3：局管理员或局长，返回值为""：其他人员
+	public String getNewRoleType() {
+		String newRoleTpe="";
+		String loginUserId=CurrentUser.getUserId();
+		String loginDeptId=CurrentUser.getDepartmentId();
+		//首长单位id
+		BaseAppConfig mapped = baseAppConfigService.queryObject(AppConstant.LEAD_TEAM);
+		//当前登录人的管理员类型(0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员)
+		String adminType = adminSetService.getAdminTypeByUserId(loginUserId);
+		//当前登录人的角色（3：局长；5：处长；6：其他）
+		String roleType = roleSetService.getRoleTypeByUserId(loginUserId);
+		if(StringUtils.equals("2", adminType)||StringUtils.equals("3", roleType)) {
+			newRoleTpe="3";
+		}
+		if(("1").equals(adminType)||("3").equals(adminType)||("0").equals(adminType)) {
+			newRoleTpe="2";
+		}
+		if(mapped!=null&&StringUtils.equals(loginDeptId,mapped.getValue())) {
+			newRoleTpe="1";
+		}
+		return newRoleTpe;
+	}
+	
 	public String getRoleType() {
 		//当前登录人的角色
 		BaseAppConfig mapped = baseAppConfigService.queryObject(AppConstant.LEAD_TEAM);//首长单位id
@@ -513,29 +520,19 @@ public class DocumentJcdbController {
 	@ResponseBody
 	@RequestMapping("/isShouZhang")
 	public void isShouZhang() {
+		String szFlag="";
 		JSONObject jsonObject = new JSONObject();
 		String userId = CurrentUser.getUserId();
 		String deptId = CurrentUser.getDepartmentId();
-		System.err.println(userId);
-		Map<String, Object> map = new HashMap<>();
-		map.put("userId", userId);
-		map.put("adminType", "1");
-		List<AdminSet> adminSets = adminSetService.queryList(map);
-		if (adminSets != null && adminSets.size() > 0) {
-			AdminSet adminSet = adminSets.get(0);
-			if (StringUtils.isNotBlank(adminSet.getSeniorOfficial())) {
-				jsonObject.put("isGuaZaiShouZhang", 1);
-				jsonObject.put("result", "success");
-			}else {
-				jsonObject.put("result", "fail");
-			}
+		String agentLeagerId = adminSetService.getAgentLeagerId(userId);
+		if (StringUtils.isNotBlank(agentLeagerId)) {
+			szFlag="2";				
 		}
 		BaseAppConfig mapped = baseAppConfigService.queryObject(AppConstant.LEAD_TEAM);//首长单位id
 		if (mapped!=null&&deptId.equals(mapped.getValue())) {
-			jsonObject.put("result", "success");
-		}else {
-			jsonObject.put("result", "fail");
+			szFlag="1";
 		}
+		jsonObject.put("szFlag", szFlag);
 		Response.json(jsonObject);
 	}
 	/**
@@ -554,7 +551,7 @@ public class DocumentJcdbController {
 			baseTreeObject = new BaseTreeObject();
 			baseTreeObject.setId(baseAppUser.getUserId());
 			baseTreeObject.setText(baseAppUser.getTruename());
-			baseTreeObject.setType(baseAppUser.getType()+"");
+			baseTreeObject.setType("1");
 			baseTreeObjects.add(baseTreeObject);
 		}
 		Response.json(baseTreeObjects);

@@ -5,11 +5,6 @@ var url4 = {"url":"/app/db/documentjcdb/orglist3","dataType":"text"};
 var url5 = {"url":"/app/db/documentjcdb/orglist4","dataType":"text"};
 var url6 = {"url":"/app/db/documentjcdb/orglist5","dataType":"text"};
 var url7 = {"url":"/app/db/documentjcdb/isShouZhang","dataType":"text"};
-//var url6 = {"url":"../data/json7.json","dataType":"text"};
-var szFlag=getUrlParam("szFlag")||""; //首长页面进入标识
-if(szFlag== "1" || szFlag ==1){
-	$(".layout-top").show();
-}
 
 var pageModule = function(){
 	var inittopfn = function(){
@@ -85,10 +80,10 @@ var pageModule = function(){
 						`
 							<tr id="${id}">
 								<td>${i+1}</td>
-								<td title="${dwname}" ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','')">${dwname}</font></td>
-								<td ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','1')">${blz}</font></td>
-								<td ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','2')">${bj}</font></td>
-								<td ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','3')">${ctls}</font></td>
+								<td title="${dwname}" ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','','${state}')">${dwname}</font></td>
+								<td ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','1','${state}')">${blz}</font></td>
+								<td ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','2','${state}')">${bj}</font></td>
+								<td ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','3','${state}')">${ctls}</font></td>
 							</tr>
 						`
 					);
@@ -107,8 +102,7 @@ var pageModule = function(){
 			data:{startDate:startdate,endDate:enddate},
 			success:function(data){
 				$("#tbody2").html('');
-				//var ifclick = data.clickFlag;
-				var ifclick = true;
+				var ifclick = data.clickFlag;
 				$.each(data.list,function(i){
 					var id = this.id;
 					var leaderid = this.leaderId;
@@ -136,7 +130,14 @@ var pageModule = function(){
 					var leaderid = $(this).attr("id");
 					
 					var ifclick = $(this).attr("ifclick");
-					if(ifclick=="false"){newbootbox.alertInfo("您没有权限查看此数据!");return;}
+					if(ifclick=="false"){			
+						$('#alertContent').text('您没有权限查看此数据!')
+						$("#alertInfo").modal("show");
+				        setTimeout(function(){
+				        	$("#alertInfo").modal("hide");
+						},1000)
+						return;
+					}
 					
 					var startdate = $("#startdate").val();
 					var enddate = $("#enddate").val();
@@ -314,7 +315,7 @@ var pageModule = function(){
 						ytype = 3;
 					}
 					if(state!=0){
-						topage(id,type,month,ytype);
+						topage(id,type,month,ytype,state);
 					}
 					
 				})
@@ -588,12 +589,12 @@ var pageModule = function(){
 		$ajax({
 			url:url7,
 			success:function(data){
-				if(data.result=="success"){
-						$(".layout-top").show();
-					}
+				if(data.szFlag== "1" || data.szFlag =="2"){
+					$(".layout-top").show();
 				}
-			});
-		}
+			}
+		});
+	}
 	return{
 		//加载页面处理程序
 		initControl:function(){
@@ -607,7 +608,7 @@ var pageModule = function(){
 	
 }();
 
-var topage = function(orgid,type,month,ytype){
+var topage = function(orgid,type,month,ytype,state){
 /*	alert(orgid);
 	alert(type);
 	alert(month);
@@ -621,9 +622,25 @@ var topage = function(orgid,type,month,ytype){
 			month:month,
 			ytype:ytype
 		}*/
-		window.location.href = "/app/db/document/jcdb/html/table2.html?ifmenu=true&orgid="+orgid+"&month="+month+"&ytype="+ytype;
+		window.location.href = "/app/db/document/jcdb/html/table.html?ifmenu=false&orgid="+orgid+"&month="+month+"&ytype="+ytype;
 	}else{
-		window.location.href = "/app/db/document/blfk/html/blfk.html?fileFrom=jcdb&ifmenu=false&orgid="+orgid+"&month="+month+"&ytype="+ytype;
+		if(state==3){
+			$('#alertContent').text('仅支持点击查看本单位数据!')
+			$("#alertInfo").modal("show");
+	        setTimeout(function(){
+	        	$("#alertInfo").modal("hide");
+			},1000)
+			return;
+		}else if (state==4){
+			$('#alertContent').text('您没有权限查看此数据!')
+			$("#alertInfo").modal("show");
+	        setTimeout(function(){
+	        	$("#alertInfo").modal("hide");
+			},1000)
+			return;
+		}else{
+			window.location.href = "/app/db/document/blfk/html/blfk.html?fileFrom=jcdb&ifmenu=false&orgid="+orgid+"&month="+month+"&ytype="+ytype;
+		}
 	}
 	
 }

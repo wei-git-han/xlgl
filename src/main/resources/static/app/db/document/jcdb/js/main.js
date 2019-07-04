@@ -4,6 +4,7 @@ var url3 = {"url":"/app/db/documentszinfo/read","dataType":"text"};
 var url4 = {"url":"/app/db/documentszinfo/press","dataType":"text"};
 var url5 = {"url":"/app/db/documentszinfo/AllreadByType","dataType":"text"};
 var url6 = {"url":"/app/db/documentjcdb/isShouZhang","dataType":"text"};
+var showBtn = true;
 var groupid=null;
 var grid = null;
 var pageModule = function(){
@@ -111,8 +112,8 @@ var pageModule = function(){
                   					if(rowdata.gengxin=='1'){
                   						gengxin = '<label class="table-label">已更新</label>';
                   					}
-                    				var title=`<font class="dblsqk" title="${rowdata.dblsqk}" onclick="dblsqkAlert('${rowdata.id}')" style="cursor:pointer;" >${gengxin}${rowdata.dblsqk}</font>`;
-                    				return title
+                    				var title=`<font title="${rowdata.dblsqk}" onclick="dblsqkAlert('${rowdata.id}')" style="cursor:pointer;" >${gengxin}<span class="dblsqk">${rowdata.dblsqk}</span></font>`;
+                    				return title;
 //                            	 return '<div class="dblsqk" onclick="dblsqkAlert(\''+rowdata.id+'\')" title="'+rowdata.dblsqk+'"><span class="hiddenInfo">'+rowdata.dblsqk+'</span></div>';
                       			}},
 /*                    			{display:"转办时间",name:"zbdate",width:"8%",align:"center",paixu:false,render:function(rowdata,n){
@@ -127,8 +128,12 @@ var pageModule = function(){
                     			}},
                       			{display:"操作",name:"cz",width:"8%",align:"center",paixu:false,render:function(rowdata,n){
                     				var button2 = '';
-                    				if(rowdata.blzt==1&&rowdata.other==1){
+                    				if(rowdata.blzt==1&&showBtn){
+                    					if(rowdata.other==1){
                         					button2 = '<button type="button" class="btn btn-info table-button3" onclick="cbfn(\''+rowdata.id+'\')">催办</button>';
+                    					}else if(rowdata.other==0){
+                    						button2 = '<a class="btn btn-info table-button3"  onclick="ydfn(\''+rowdata.id+'\')">确认已读</a>';
+                    					}
                     				}
                     				return button2;
                       			}}
@@ -338,6 +343,13 @@ var pageModule = function(){
         						$(this).html($(this).html()+'...');
         					}
         				});
+                    	$(".pszsmr").each(function(){
+        					var maxwidth = 46;
+        					if($(this).text().length > maxwidth){
+        						$(this).text($(this).text().substring(0,maxwidth));
+        						$(this).html($(this).html()+'...');
+        					}
+        				});
                     }
                });
 		
@@ -447,11 +459,11 @@ var pageModule = function(){
 		$ajax({
 			url:url6,
 			success:function(data){
-				if(data.result=="success"){
-					if(data.isGuaZaiShouZhang == 1){
-						$(".newpanel-button1").hide();
-						$(".table-button3").hide();
-					}
+				if( data.szFlag =="2"){
+					showBtn = false
+//					//$(".newpanel-button1").hide();
+//					$(".table-button3").hide();
+					$('#qbqr').hide()
 				}
 			}
 		});
@@ -459,9 +471,9 @@ var pageModule = function(){
 	return{
 		//加载页面处理程序
 		initControl:function(){
+			initoisguajieshouzhang();
 			initmenu();
 			initother();
-			initoisguajieshouzhang();
 		},
 		initmenu:function(menuid){
 			initmenu(menuid);

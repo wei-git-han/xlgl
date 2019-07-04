@@ -12,6 +12,7 @@ import com.css.app.db.config.dao.AdminSetDao;
 import com.css.app.db.config.entity.AdminSet;
 import com.css.app.db.config.service.AdminSetService;
 import com.css.base.utils.CurrentUser;
+import com.css.base.utils.StringUtils;
 
 
 
@@ -88,6 +89,22 @@ public class AdminSetServiceImpl implements AdminSetService {
 			}
 		}
 		return adminFlag;
+	}
+
+	@Override
+	public String getAgentLeagerId(String userId) {
+		String agentLeaderId="";
+		Map<String, Object> map = new HashMap<>();
+		map.put("userId", userId);
+		map.put("adminType", "1");
+		List<AdminSet> adminSets = adminSetDao.queryList(map);
+		if (adminSets != null && adminSets.size() > 0) {
+			AdminSet adminSet = adminSets.get(0);
+			if (StringUtils.isNotBlank(adminSet.getSeniorOfficial())) {
+				agentLeaderId=adminSet.getSeniorOfficialId();				
+			}
+		}
+		return agentLeaderId;
 	}
 	
 }

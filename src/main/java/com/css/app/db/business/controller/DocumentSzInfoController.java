@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.css.addbase.appconfig.entity.BaseAppConfig;
 import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
+import com.css.addbase.constant.AppConstant;
 import com.css.addbase.msg.MSGTipDefined;
 import com.css.addbase.msg.MsgTipUtil;
 import com.css.addbase.msg.entity.MsgTip;
@@ -28,6 +30,8 @@ import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.service.DocumentCbjlService;
 import com.css.app.db.business.service.DocumentInfoService;
 import com.css.app.db.business.service.SubDocInfoService;
+import com.css.app.db.config.entity.AdminSet;
+import com.css.app.db.config.service.AdminSetService;
 import com.css.app.db.config.service.RoleSetService;
 import com.css.app.db.util.DbDefined;
 import com.css.base.utils.CurrentUser;
@@ -58,6 +62,8 @@ public class DocumentSzInfoController {
 	@Autowired
 	private MsgTipService msgService;
 	@Autowired
+	private AdminSetService adminSetService;
+	@Autowired
 	private MsgTipUtil msgUtil;
 	@Value("${csse.dccb.appId}")
 	private  String appId;	
@@ -76,6 +82,10 @@ public class DocumentSzInfoController {
 	@RequestMapping("/grouplist")
 	public void grouplist(String search){
 		String userid=CurrentUser.getUserId();
+		String agentLeagerId = adminSetService.getAgentLeagerId(userid);//挂接首长id
+		if(StringUtils.isNotBlank(agentLeagerId)) {
+			userid=agentLeagerId;
+		}
 		Map<String, Object> map = new HashMap<>();
 		map.put("search", search);
 		map.put("status2", "0");
@@ -211,6 +221,10 @@ public class DocumentSzInfoController {
 		//SimpleDateFormat sdf2=new SimpleDateFormat("yyyy年MM月dd日");
 		SimpleDateFormat sdf3=new SimpleDateFormat("yyyy");
 		String userid=CurrentUser.getUserId();
+		String agentLeagerId = adminSetService.getAgentLeagerId(userid);//挂接首长id
+		if(StringUtils.isNotBlank(agentLeagerId)) {
+			userid=agentLeagerId;
+		}
 		JSONObject jo2=new JSONObject();
 		Map<String, Object> map = new HashMap<>();
 		map.put("search", search);
@@ -514,4 +528,5 @@ public class DocumentSzInfoController {
 		jo.put("orgid", orgid);
 		Response.json(jo);
 	}
+
 }
