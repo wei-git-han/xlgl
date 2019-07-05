@@ -213,21 +213,7 @@ $(function () {
 	});
 });
 function downLoadFile(){
-$.ajax({
-        url: "/app/db/documentfile/downLoadFile",
-        data: {id: $("#fileId").val()},
-        type: 'POST',
-        dataType: "JSON",
-        success: function(data){
-        	alert(data.url);
-        	
-        },
-        error: function(error){
-            // show error
-            var a = error;
-            
-        }
-    });
+    window.open("/app/db/documentfile/downLoadFile?ids="+$("#fileId").val())
 }
 </script>
 </head>

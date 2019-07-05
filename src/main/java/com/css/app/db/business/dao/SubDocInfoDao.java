@@ -20,6 +20,7 @@ import com.css.base.dao.BaseDao;
 public interface SubDocInfoDao extends BaseDao<SubDocInfo> {
 	
 	List<SubDocInfo> queryPersonList(Map<String, Object> map);
+	List<SubDocInfo> queryPersonList1(Map<String, Object> map);
 	
 	void updateDocStatus(Integer status,Date updateTime,String infoId);
 	

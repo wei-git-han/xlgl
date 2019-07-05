@@ -55,7 +55,7 @@
 		</if>)
 		where num =1)	
 		
-		select * from DB_SUB_DOC_INFO a inner join v_result b on a.ID = b.SUB_ID
+		select *  from DB_SUB_DOC_INFO a inner join v_result b on a.ID = b.SUB_ID
 		<!-- 主文件要素 -->	
 		left join DB_DOCUMENT_INFO c on a.INFO_ID=c.ID
 		<!-- 当前处理人 -->
@@ -74,7 +74,8 @@
 			where 1=1 
 			<if test="loginUserId !=null and loginUserId !=''">
 				and RECEIVER_ID = #{loginUserId}
-			</if> and num = 1 and DOC_STATUS &lt; 10)as e on a.ID = e.SUB_ID
+			</if> and num = 1 and DOC_STATUS &lt; 10)as e on a.ID = e.SUB_ID 
+		left join (select SUB_ID, count(0) as ideaCount from DB_DOC_XB_IDEA group by SUB_ID) p on p.SUB_ID = b.SUB_ID 
 		where 1=1	
 		<if test="search != null and search != ''">
 			and c.DOC_TITLE like '%'||#{search}||'%'
@@ -94,6 +95,58 @@
 			limit #{offset}, #{limit}
 		</if>
 	</select>
+	
+	<select id="queryPersonList1" resultType="com.css.app.db.business.entity.SubDocInfo">
+		<!-- 文在我这 -->
+		WITH V_RESULT as(select SUB_ID from 
+		(select SUB_ID, row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num
+		from DB_SUB_DOC_TRACKING where 1=1 
+		<if test="loginUserId !=null and loginUserId !=''">
+			and RECEIVER_ID = #{loginUserId}
+		</if>)
+		where num =1)	
+		
+		select *  from DB_SUB_DOC_INFO a inner join v_result b on a.ID = b.SUB_ID
+		<!-- 主文件要素 -->	
+		left join DB_DOCUMENT_INFO c on a.INFO_ID=c.ID
+		<!-- 当前处理人 -->
+		left join (select SUB_ID,RECEIVER_NAME as deal_user_name from (select SUB_ID,RECEIVER_NAME,row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num from DB_SUB_DOC_TRACKING) where num=1) f on a.id=f.sub_id
+		<!-- 最新一条首长批示 -->
+		left join (
+		<!-- select INFO_ID,USER_NAME as leader_name ,LEADER_COMMENT as leader_content,CREATED_TIME as leader_time,row_number() over(partition by info_id order by created_time asc) as dNum from DB_DOCUMENT_SZPS -->
+		select s.INFO_ID,s.USER_NAME as leader_name,s.LEADER_COMMENT as leader_content,s.CREATED_TIME as leader_time,
+        row_number() over(partition by s.info_id order by g.sort asc) as dNum from DB_DOCUMENT_SZPS s inner join DB_ROLE_SET g on s.USER_ID=g.USER_ID order by g.sort asc
+		) d on c.id = d.info_id
+	    <!--  承办单位/人 -->
+		left join (select distinct info_id,listagg(sub_dept_name || nvl2(DECODE(undertaker_name,'',null,'NULL',null,undertaker_name),'/' || undertaker_name || nvl2(DECODE(undertaker_phone,'',null,'NULL',null,undertaker_phone),'('||undertaker_phone||')',null),null), ',') within group(order by k.sort,created_time desc) over(partition by info_id) under_depts from DB_SUB_DOC_INFO i inner join BASE_APP_ORGAN k
+        on i.sub_dept_id=k.id) h on a.INFO_ID = h.info_id
+		<!-- receiverIsMe：我为当前处理人，并且文件状态<10，字段置为1 --> 
+		left join (select SUB_ID,RECEIVER_NAME deal_user_name,1 as receiver_is_me from(select SUB_ID,RECEIVER_ID,RECEIVER_NAME,n.DOC_STATUS,row_number() over(partition by SUB_ID order by m.CREATED_TIME desc) as num from DB_SUB_DOC_TRACKING m left join DB_SUB_DOC_INFO n on m.SUB_ID = n.ID)
+			where 1=1 
+			<if test="loginUserId !=null and loginUserId !=''">
+				and RECEIVER_ID = #{loginUserId}
+			</if> and num = 1 and DOC_STATUS &lt; 10)as e on a.ID = e.SUB_ID 
+		left join (select SUB_ID, count(0) as ideaCount from DB_DOC_XB_IDEA group by SUB_ID) p on p.SUB_ID = b.SUB_ID 
+		where 1=1	
+		<if test="search != null and search != ''">
+			and c.DOC_TITLE like '%'||#{search}||'%'
+		</if>
+		<if test="docStatus != null and docStatus != ''">
+			and a.DOC_STATUS = #{docStatus}
+		</if>
+		<if test="cui != null and cui != ''">
+			and c.CUIBAN_FLAG ='1'
+		</if>
+		<if test="receiver!= null and receiver != ''">
+		   and e.receiver_is_me = 1
+		</if>			
+		 and c.STATUS=1 and (dNum = 1 or dNum is null) 
+		 order by e.receiver_is_me nulls last, a.DOC_STATUS, a.CREATED_TIME desc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
 	<select id="queryAllSubByInfoId" resultType="com.css.app.db.business.entity.SubDocInfo">
 	   select * from DB_SUB_DOC_INFO where INFO_ID = #{value}
 	</select>

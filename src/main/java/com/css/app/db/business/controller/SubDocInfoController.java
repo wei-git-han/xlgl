@@ -25,6 +25,7 @@ import com.css.addbase.msg.MSGTipDefined;
 import com.css.addbase.msg.MsgTipUtil;
 import com.css.addbase.msg.entity.MsgTip;
 import com.css.addbase.msg.service.MsgTipService;
+import com.css.app.db.business.entity.DocXbInfo;
 import com.css.app.db.business.entity.DocumentBjjl;
 import com.css.app.db.business.entity.DocumentCbjl;
 import com.css.app.db.business.entity.DocumentInfo;
@@ -33,6 +34,7 @@ import com.css.app.db.business.entity.ReplyExplain;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.entity.SubDocTracking;
 import com.css.app.db.business.service.ApprovalOpinionService;
+import com.css.app.db.business.service.DocXbInfoService;
 import com.css.app.db.business.service.DocumentBjjlService;
 import com.css.app.db.business.service.DocumentCbjlService;
 import com.css.app.db.business.service.DocumentInfoService;
@@ -86,6 +88,8 @@ public class SubDocInfoController {
 	private DocumentReadService documentReadService;
 	@Autowired
 	private DocumentSzpsService documentSzpsService;
+	@Autowired
+	private DocXbInfoService docXbInfoService;
 	@Autowired
 	private MsgTipService msgService;
 	@Autowired
@@ -218,6 +222,29 @@ public class SubDocInfoController {
 	@ResponseBody
 	@RequestMapping("/personList")
 	public void personList(Integer page, Integer pagesize,String search, String docStatus){
+		String userId = CurrentUser.getUserId();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("undertakerId", userId);
+		List<DocXbInfo> docXbInfos = docXbInfoService.queryList(map);
+		List<SubDocInfo> subDocInfoList = null;
+		if (docXbInfos != null && docXbInfos.size() > 0) {
+			//协办人身份
+			subDocInfoList = this.unifiedDealPersonList(page,pagesize,search,docStatus,"1");
+		}else {
+			subDocInfoList = this.unifiedDealPersonList(page,pagesize,search,docStatus,"2");
+		}
+		GwPageUtils pageUtil = new GwPageUtils(subDocInfoList);
+		Response.json(pageUtil);
+	}
+	/**
+	 * 统一处理个人待办数据查询
+	 * @param page
+	 * @param pagesize
+	 * @param search
+	 * @param docStatus
+	 * @return
+	 */
+	private List<SubDocInfo> unifiedDealPersonList(Integer page, Integer pagesize,String search, String docStatus,String flag) {
 		Map<String, Object> map = new HashMap<>();
 		String loginUserId=CurrentUser.getUserId();
 		if(StringUtils.isNotBlank(loginUserId)) {
@@ -235,9 +262,16 @@ public class SubDocInfoController {
 		}
 		//查询列表数据
 		PageHelper.startPage(page, pagesize);
-		List<SubDocInfo> subDocInfoList = subDocInfoService.queryPersonList(map);
-		for (SubDocInfo subDocInfo : subDocInfoList) {
-			/*是否已读---暂时去掉改为本局最新反馈，不能删，随时会换回来
+		List<SubDocInfo> subDocInfoList = null;
+		if (StringUtils.equals("1", flag)) {
+			subDocInfoList = subDocInfoService.queryPersonList1(map);
+		}
+		if (StringUtils.equals("2", flag)) {
+			subDocInfoList = subDocInfoService.queryPersonList(map);
+		}
+		if (subDocInfoList != null && subDocInfoList.size() > 0) {
+			for (SubDocInfo subDocInfo : subDocInfoList) {
+				/*是否已读---暂时去掉改为本局最新反馈，不能删，随时会换回来
 			Map<String, Object> readMap = new HashMap<>();
 			readMap.put("userId", loginUserId);
 			readMap.put("infoId", subDocInfo.getInfoId());
@@ -245,27 +279,27 @@ public class SubDocInfoController {
 			if(list.size()==0 && StringUtils.isNotBlank(subDocInfo.getLatestReply())) {
 				subDocInfo.setUpdateFlag("1");
 			}*/
-			//首长批示
-			Map<String, Object> szpsMap = new HashMap<>();
-			szpsMap.put("infoId", subDocInfo.getInfoId());
-			List<DocumentSzps> szpsList = documentSzpsService.queryList(szpsMap);
-			subDocInfo.setSzpslist(szpsList);
-			//是否批示超过3个月
-			this.isOverTreeMonth(subDocInfo.getLeaderTime(), subDocInfo);
-			//是否显示撤回按钮
-			this.isShowWithdrawButton(subDocInfo);
-			//本局最新反馈
-			subDocInfo.setLatestReply("");
-			Map<String, Object> replyMap = new HashMap<>();
-			replyMap.put("subId", subDocInfo.getId());
-			replyMap.put("infoId", subDocInfo.getInfoId());
-			List<ReplyExplain> queryList = replyExplainService.queryList(replyMap);
-			if(queryList!=null && queryList.size()>0) {
-				subDocInfo.setLatestReply(queryList.get(0).getReplyContent());
+				//首长批示
+				Map<String, Object> szpsMap = new HashMap<>();
+				szpsMap.put("infoId", subDocInfo.getInfoId());
+				List<DocumentSzps> szpsList = documentSzpsService.queryList(szpsMap);
+				subDocInfo.setSzpslist(szpsList);
+				//是否批示超过3个月
+				this.isOverTreeMonth(subDocInfo.getLeaderTime(), subDocInfo);
+				//是否显示撤回按钮
+				this.isShowWithdrawButton(subDocInfo);
+				//本局最新反馈
+				subDocInfo.setLatestReply("");
+				Map<String, Object> replyMap = new HashMap<>();
+				replyMap.put("subId", subDocInfo.getId());
+				replyMap.put("infoId", subDocInfo.getInfoId());
+				List<ReplyExplain> queryList = replyExplainService.queryList(replyMap);
+				if(queryList!=null && queryList.size()>0) {
+					subDocInfo.setLatestReply(queryList.get(0).getReplyContent());
+				}
 			}
 		}
-		GwPageUtils pageUtil = new GwPageUtils(subDocInfoList);
-		Response.json(pageUtil);
+		return subDocInfoList;
 	}
 	/**
 	 * 计算首长批示时间到现在是否超过三月；

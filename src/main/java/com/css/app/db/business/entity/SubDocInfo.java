@@ -82,6 +82,8 @@ public class SubDocInfo implements Serializable {
 	private Integer approveWithdrawFlag;
 	//批示时间是否超过3个月  1：超过3月
 	private Integer isOverTreeMonth;
+	//意见统计条数
+	private Integer ideaCount;
 	
 	/*----------------------------列表接收值---------end---------------------------*/	
 	/**
@@ -305,5 +307,11 @@ public class SubDocInfo implements Serializable {
 	}
 	public void setIsOverTreeMonth(Integer isOverTreeMonth) {
 		this.isOverTreeMonth = isOverTreeMonth;
+	}
+	public Integer getIdeaCount() {
+		return ideaCount;
+	}
+	public void setIdeaCount(Integer ideaCount) {
+		this.ideaCount = ideaCount;
 	}
 }

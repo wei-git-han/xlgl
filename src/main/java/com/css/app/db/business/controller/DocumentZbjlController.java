@@ -21,10 +21,12 @@ import com.css.addbase.msg.MSGTipDefined;
 import com.css.addbase.msg.MsgTipUtil;
 import com.css.addbase.msg.entity.MsgTip;
 import com.css.addbase.msg.service.MsgTipService;
+import com.css.app.db.business.entity.DocXbInfo;
 import com.css.app.db.business.entity.DocumentInfo;
 import com.css.app.db.business.entity.DocumentZbjl;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.entity.SubDocTracking;
+import com.css.app.db.business.service.DocXbInfoService;
 import com.css.app.db.business.service.DocumentInfoService;
 import com.css.app.db.business.service.DocumentZbjlService;
 import com.css.app.db.business.service.ReplyExplainService;
@@ -74,6 +76,8 @@ public class DocumentZbjlController {
 	private  String appId;	
 	@Value("${csse.dccb.appSecret}")
 	private  String clientSecret;
+	@Autowired
+	private DocXbInfoService docXbInfoService;
 	
 	/**
 	 * 转办记录
@@ -87,11 +91,31 @@ public class DocumentZbjlController {
 			Map<String, Object> map = new HashMap<>();
 			map.put("infoId", infoId);
 			zbjlList = documentZbjlService.queryList(map);
+			this.addXbRecord(zbjlList, infoId);
 		}
 		Response.json(zbjlList);
 	}
-	
-	
+	/**
+	 * 主办人添加协办记录在转办记录中
+	 * @param zbjlList
+	 * @param infoId
+	 */
+	private void addXbRecord(List<DocumentZbjl> zbjlList, String infoId) {
+		//查询协办记录，显示在转办记录中
+		List<DocXbInfo> docXbInfos = docXbInfoService.queryXbRecord(infoId);
+		DocumentZbjl documentZbjl = null;
+		if (docXbInfos != null && docXbInfos != null) {
+			for (DocXbInfo docXbInfo : docXbInfos) {
+				documentZbjl = new DocumentZbjl();
+				documentZbjl.setCreatedTime(docXbInfo.getCreatedTime());
+				documentZbjl.setOrgName(docXbInfo.getDeptName());
+				documentZbjl.setUserName(docXbInfo.getUndertakerName());
+				documentZbjl.setReceiverDeptName(docXbInfo.getReceiverDeptName());
+				documentZbjl.setUserName(docXbInfo.getXieBanPersonNames());
+				zbjlList.add(documentZbjl);
+			}
+		}
+	}
 	/**
 	 * 保存部转办信息
 	 * @param infoId 主文件id

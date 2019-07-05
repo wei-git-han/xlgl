@@ -46,4 +46,6 @@ public interface SubDocInfoService {
 	SubDocInfo querySubDocInfoBySubIdAndInfoId(String subId, String infoId);
 
 	void updateSubDocInfoById(SubDocInfo subDocInfo);
+
+	List<SubDocInfo> queryPersonList1(Map<String, Object> map);
 }

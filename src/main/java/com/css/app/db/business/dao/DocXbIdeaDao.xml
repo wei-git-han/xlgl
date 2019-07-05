@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.db.business.dao.DocXbIdeaDao">
+
+	<select id="queryObject" resultType="com.css.app.db.business.entity.DocXbIdea">
+		select * from DB_DOC_XB_IDEA where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.db.business.entity.DocXbIdea">
+		select * from DB_DOC_XB_IDEA 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from DB_DOC_XB_IDEA 
+	</select>
+	 
+ 	<select id="queryLastNewData" resultType="com.css.app.db.business.entity.DocXbIdea">
+		select * from DB_DOC_XB_IDEA where INFO_ID = #{infoId} and SUB_ID = #{subId}
+	</select>
+	
+	<insert id="save" parameterType="com.css.app.db.business.entity.DocXbIdea">
+		insert into DB_DOC_XB_IDEA
+		(
+			"ID", 
+			"INFO_ID", 
+			"SUB_ID", 
+			"USER_ID", 
+			"USER_NAME", 
+			"FEED_BACK_IDEA", 
+			"CREATED_TIME", 
+			"GROUP_ID"
+		)
+		values
+		(
+			#{id}, 
+			#{infoId}, 
+			#{subId}, 
+			#{userId}, 
+			#{userName}, 
+			#{feedBackIdea}, 
+			#{createdTime}, 
+			#{groupId}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.db.business.entity.DocXbIdea">
+		update DB_DOC_XB_IDEA 
+		<set>
+			<if test="infoId != null">"INFO_ID" = #{infoId}, </if>
+			<if test="subId != null">"SUB_ID" = #{subId}, </if>
+			<if test="userId != null">"USER_ID" = #{userId}, </if>
+			<if test="userName != null">"USER_NAME" = #{userName}, </if>
+			<if test="feedBackIdea != null">"FEED_BACK_IDEA" = #{feedBackIdea}, </if>
+			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
+			<if test="groupId != null">"GROUP_ID" = #{groupId}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from DB_DOC_XB_IDEA where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from DB_DOC_XB_IDEA where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
