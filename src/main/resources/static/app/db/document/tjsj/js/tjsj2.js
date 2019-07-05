@@ -30,7 +30,7 @@ var pageModule = function(){
                 	 }
                 	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'&leaderId='+leaderId+'&startdate='+startdate+'&enddate='+enddate+'&isFromChart=1&status='+status+'&frompage=0" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
                  }},
-                 {display:"批示指示内容",name:"",width:"25%",align:"left",paixu:false,title:false,render:function(rowdata){
+                 {display:"批示指示内容",name:"",width:"24%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var html1="";
                 	 $.each(rowdata.szpslist,function(i,item){
                 		 var createdTime="";
@@ -41,7 +41,7 @@ var pageModule = function(){
      				 });
                 	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.id+'\')" title="'+html1+'" style="cursor:pointer;">'+html1+'</div>';
                  }},
-                {display:"督办落实情况",name:"",width:"25%",align:"left",paixu:false,title:false,render:function(rowdata){
+                {display:"督办落实情况",name:"",width:"23%",align:"left",paixu:false,title:false,render:function(rowdata){
                	 var duban="";
                 	 if(rowdata.updateFlag=="1"){
                 		duban = '<label class="cuibanlabel">已更新</label>';
@@ -72,6 +72,7 @@ var pageModule = function(){
             height:"100%",
             checkbox: true,
             rownumberyon:true,
+            rownumberwidth:"50px",
             overflowx:false,
             pagesize: 6,
             pageyno:true,
@@ -132,9 +133,15 @@ var pageModule = function(){
 	var initfn = function(){
 		$.uniform.update($("input[name='documentStatus']").prop("checked",false));
 		$.uniform.update($("input[name='documentStatus']").prop("disabled",true));
-		$.uniform.update($("input[value='"+status+"']").prop("checked",true));
-		$.uniform.update($("input[value='"+status+"']").prop("disabled",false));
-		$("input[value='"+status+"']").parents('label').addClass('selectedRadio')
+		if(status==""){
+			$.uniform.update($($("input[name='documentStatus']")[0]).prop("checked",true));
+			$.uniform.update($($("input[name='documentStatus']")[0]).prop("disabled",false));
+			$($("input[name='documentStatus']")[0]).parents('label').addClass('selectedRadio')
+		}else{
+			$.uniform.update($("input[value='"+status+"']").prop("checked",true));
+			$.uniform.update($("input[value='"+status+"']").prop("disabled",false));
+			$("input[value='"+status+"']").parents('label').addClass('selectedRadio')
+		}
 	}
 	// 左侧下拉框
 	var initOption = function(){

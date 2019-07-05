@@ -80,7 +80,7 @@ var pageModule = function(){
 						`
 							<tr id="${id}">
 								<td>${i+1}</td>
-								<td title="${dwname}" ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','1','${state}')">${dwname}</font></td>
+								<td title="${dwname}" ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','','${state}')">${dwname}</font></td>
 								<td ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','1','${state}')">${blz}</font></td>
 								<td ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','2','${state}')">${bj}</font></td>
 								<td ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','3','${state}')">${ctls}</font></td>
@@ -103,7 +103,7 @@ var pageModule = function(){
 			success:function(data){
 				$("#tbody2").html('');
 				var ifclick = data.clickFlag;
-				var type = data.type;
+				var isLeaderType = data.type;
 				$.each(data.list,function(i){
 					var id = this.id;
 					var leaderid = this.leaderId;
@@ -115,10 +115,10 @@ var pageModule = function(){
 						`
 							<tr id="${id}">
 								<td>${i+1}</td>
-								<td><a name="all" ifclick="${ifclick}" type="${type}" id="${leaderid}">${dwname}</a></td>
-								<td><a name="1" ifclick="${ifclick}" type="${type}" id="${leaderid}">${blz}</a></td>
-								<td><a name="2" ifclick="${ifclick}" type="${type}" id="${leaderid}">${bj}</a></td>
-								<td><a name="3" ifclick="${ifclick}" type="${type}" id="${leaderid}">${ctls}</a></td>
+								<td><a name="all" ifclick="${ifclick}" isLeaderType="${isLeaderType}" id="${leaderid}">${dwname}</a></td>
+								<td><a name="1" ifclick="${ifclick}" isLeaderType="${isLeaderType}" id="${leaderid}">${blz}</a></td>
+								<td><a name="2" ifclick="${ifclick}" isLeaderType="${isLeaderType}" id="${leaderid}">${bj}</a></td>
+								<td><a name="3" ifclick="${ifclick}" isLeaderType="${isLeaderType}" id="${leaderid}">${ctls}</a></td>
 							</tr>
 						`
 					);
@@ -131,7 +131,7 @@ var pageModule = function(){
 					var leaderid = $(this).attr("id");
 					
 					var ifclick = $(this).attr("ifclick");
-					var type = $(this).attr("type");
+					var isLeaderType = $(this).attr("isLeaderType");
 					if(ifclick=="false"){			
 						$('#alertContent').text('您没有权限查看此数据!')
 						$("#alertInfo").modal("show");
@@ -152,7 +152,8 @@ var pageModule = function(){
 					gettop2().memory.leaderId = leaderid;
 					gettop2().memory.startdate = startdate;
 					gettop2().memory.enddate = enddate;*/
-					if(type==1){
+					console.log(isLeaderType)
+					if(isLeaderType==1){
 						window.location.href = "../../tjsj/html/tjsj2.html?status="+type+"&leaderId="+leaderid+"&startdate="+startdate+"&enddate="+enddate;
 					}else{
 						window.location.href = "../../tjsj/html/tjsj.html?status="+type+"&leaderId="+leaderid+"&startdate="+startdate+"&enddate="+enddate;
@@ -303,8 +304,6 @@ var pageModule = function(){
 			    
 			    var otherdata = data.otherdata;
 				myChart.on("click",function(o,n){
-					
-					console.log(otherdata)
 					var name = o.name;
 					var seriesIndex = o.seriesIndex;
 					var value = o.value;
@@ -314,8 +313,7 @@ var pageModule = function(){
 					var id = object.id;
 					var type = object.type;
 					var month = object.month;
-					var ytype = 0;
-					console.log(state);
+					var ytype = '0';
 					if(seriesIndex==0){
 						ytype = 1;
 					}else if(seriesIndex==1){
