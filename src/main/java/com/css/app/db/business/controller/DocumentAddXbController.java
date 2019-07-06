@@ -61,6 +61,7 @@ public class DocumentAddXbController {
 	 * 控制承办人详情页收集意见按钮显示
 	 * @param subId
 	 */
+	@ResponseBody
 	@RequestMapping("/showCollectIdeaButton")
 	public void showCollectIdeaButton(String subId) {
 		/**
