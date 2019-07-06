@@ -28,6 +28,10 @@ var isCbr = 0;//承办人标识
 var isSave = 0;//保存成功提示标识
 var ifShowEditBtn="0";//是否有编辑按钮
 var scanFilePath = "";//扫描件路径
+var showCollectIdeaButtonUrl={"url":"/app/db/addXbDeal/showCollectIdeaButton","dataType":"text"}; //是否显示意见收集
+
+
+
 
 var pageModule = function(){
 	$('#id').val(fileId);
@@ -48,6 +52,20 @@ var pageModule = function(){
 				}
 			}
 		})
+	}
+	//是否显示意见收集按钮
+	var showCollectIdeaButton=function(){
+		$ajax({
+			url:showCollectIdeaButtonUrl,
+			data:{infoId:fileId,subId:subId},
+			success:function(data){
+				if(data.result=="success"){
+					$("#yjsj").show();
+				}else{
+					$("#yjsj").hide();
+				}
+			}
+		});
 	}
 	
 	/* 按钮权限控制 */
@@ -531,7 +549,7 @@ var pageModule = function(){
 		if(fromMsg && (fromMsg == true || fromMsg == "true")){
 			$("#goback").hide();
 		}
-		
+				
 		//返回
 		$("#goback").click(function(){
 			if(fromMsg && fromMsg=="true"){
@@ -1028,6 +1046,7 @@ var pageModule = function(){
 			initcbfn();
 			initbjfn();
 			initother();
+			showCollectIdeaButton();
 			$(".scroller").css("height","100%");
 			$(".slimScrollDiv").css("height","100%");
 		},
@@ -1283,3 +1302,16 @@ $("#delfj").click(function(){
 		newbootbox.alert("请选中要删除的附件！"); 
 	}
 });
+
+//意见收集
+var showfn = function(infoId,subId){
+	newbootbox.newdialog({
+		id:"yijianDialog",
+		width:800,
+		height:600,
+		header:true,
+		title:"意见记录",
+		classed:"cjDialog",
+		url:"/app/db/document/djlr/html/yjjl.html?infoId="+infoId+"&subId="+subId
+	})
+}

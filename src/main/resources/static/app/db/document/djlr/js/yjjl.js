@@ -11,9 +11,20 @@ var pageModule = function(){
 		});
 		
 		$('#nameArea').hide();
-		//确定
-		$("#sure").click(function(){
+		
+		//关闭
+		$("#close").click(function(){
 			newbootbox.newdialogClose("yijianDialog");
+		});
+		
+		//提交
+		$("#tijiao").click(function(){
+			newbootbox.newdialogClose("yijianDialog");
+		});
+		
+		//清屏
+		$("#qp").click(function(){
+			$("#opinionContent").val("");
 		});
 		$('#canOrg').click(function(){
 			$('#timeLineTab').show()
