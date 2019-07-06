@@ -23,6 +23,7 @@ var status = getUrlParam("status");//统计图传过来的状态
 var leaderId = getUrlParam("leaderId");//统计图传过来的首长ID
 var startdate = getUrlParam2("startdate");
 var enddate = getUrlParam2("enddate");
+var isFromChart = getUrlParam("isFromChart");
 $("#id").val(fileId);
 var pageModule = function(){
 	console.log(fileFrom)
@@ -296,7 +297,6 @@ var pageModule = function(){
 					}else if((i+1)%3==0){
 						color = "#CCCCCC";
 					}
-					
 					li = `
 						<div class="newpanel-cont ${active}" color="${color}" subId=${subId};>
 							<div class="newpanel-inner">
@@ -310,6 +310,7 @@ var pageModule = function(){
 									<div class="newpanel-right-top">
 										<div class="nrt-date">
 											<font>${firstDate}</font>
+											<a style="float: right;" id="yjjl" onclick="showfn('${fileId}','${subId}')">意见记录</a>
 										</div>
 									</div>
 									
@@ -413,8 +414,8 @@ var pageModule = function(){
 				}
 			})
 		}
+		//意见记录事件
 		
-		 
 		
 		$ajax({
 			url:allReplyListUrl,
@@ -434,7 +435,6 @@ var pageModule = function(){
 			}
 		})
 	}
-	
 	//文件转办——转办记录
 	var initzbjlfn = function(){
 		$ajax({
@@ -724,7 +724,16 @@ var pageModule = function(){
 //跳转返回事件
 function skip(){
 	if(frompage==0){
-		window.location.href="/app/db/document/jcdb/html/main.html";
+		if(isFromChart=='1'){
+			var status = sessionStorage.getItem('status');
+			var leaderId = sessionStorage.getItem('leaderId');
+			var startdate = sessionStorage.getItem('startdate');
+			var enddate = sessionStorage.getItem('enddate');
+			window.location.href="/app/db/document/tjsj/html/tjsj2.html?fileFrom="+fileFrom+"&status="+status+"&leaderId="+leaderId+"&startdate="+startdate+"&enddate="+enddate;
+		}else{
+			window.location.href="/app/db/document/jcdb/html/main.html";
+		}
+//		window.location.href="/app/db/document/jcdb/html/main.html";
 	}else if(frompage==1){
 		var indexobject = gettop2().indexobject;
 		
@@ -829,7 +838,18 @@ function viewcont(teamId,subId){
 	    }
 	});
 }
-
+//意见记录事件
+var showfn = function(infoId,subId){
+	newbootbox.newdialog({
+		id:"yijianDialog",
+		width:800,
+		height:600,
+		header:true,
+		title:"意见记录",
+		classed:"cjDialog",
+		url:"/app/db/document/djlr/html/yjjl.html?infoId="+infoId+"&subId="+subId
+	})
+}
 //下载附件
 $("#downLoadfj").click(function(){
 	if($("#fjList").find("input[name=fjcheckbox]:checked").length>0){
