@@ -110,7 +110,8 @@
 			"CBR_FLAG",
 			"CHOOSE_STATUS",
 			"SHOW_TIME",
-			"VERSION_TIME"
+			"VERSION_TIME",
+			"IDEA_GROUP_ID"
 		)
 		values
 		(
@@ -129,7 +130,8 @@
 			#{cbrFlag},
 			#{chooseStatus},
 			#{chowTime},
-			#{versionTime}
+			#{versionTime},
+			#{ideaGroupId}
 		)
 	</insert>
 	<update id="updateShowFlag">
@@ -152,7 +154,8 @@
 			<if test="cbrFlag != null">"CBR_FLAG" = #{cbrFlag}, </if>
 			<if test="chooseStatus != null">"CHOOSE_STATUS" = #{chooseStatus},</if>
 			<if test="chowTime != null">"SHOW_TIME" = #{chowTime}, </if>
-			<if test="versionTime != null">"VERSION_TIME" = #{versionTime}</if>
+			<if test="versionTime != null">"VERSION_TIME" = #{versionTime},</if>
+			<if test="ideaGroupId != null">"IDEA_GROUP_ID" = #{ideaGroupId}</if>
 		</set>
 		where ID = #{id}
 	</update>

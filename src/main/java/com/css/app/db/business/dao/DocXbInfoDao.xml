@@ -10,16 +10,16 @@
 	<select id="queryList" resultType="com.css.app.db.business.entity.DocXbInfo">
 		select * from DB_DOC_XB_INFO 
 		<where>
-			<if test="subId != null and subId != null">
+			<if test="subId != null and subId != ''">
 			 	and SUB_ID = #{subId}
 			</if>
-			<if test="infoId != null and infoId != null">
+			<if test="infoId != null and infoId != ''">
 			 	and INFO_ID = #{infoId}
 			</if>
-			<if test="undertakerId != null and undertakerId != null">
+			<if test="undertakerId != null and undertakerId != ''">
 			 	and UNDERTAKER_ID = #{undertakerId}
 			</if>
-			<if test="receiverId != null and receiverId != null">
+			<if test="receiverId != null and receiverId != ''">
 			 	and RECEIVER_ID = #{receiverId}
 			</if>
 			<if test="offset != null and limit != null">

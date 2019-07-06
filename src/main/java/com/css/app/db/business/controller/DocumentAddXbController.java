@@ -109,9 +109,12 @@ public class DocumentAddXbController {
 		for (String userId : userIds.split(",")) {
 			map.put("undertakerId", CurrentUser.getUserId());
 			map.put("receiverId", userId);
+			map.put("infoId", infoId);
+			map.put("subId", subId);
 			List<DocXbInfo> docXbInfos = docXbInfoService.queryList(map);
 			if (docXbInfos != null && docXbInfos.size() > 0) {
 				Response.json("result","fail");
+				return;
 			}else {
 				DocXbInfo docXbInfo = new DocXbInfo();
 				docXbInfo.setInfoId(infoId);
@@ -170,25 +173,24 @@ public class DocumentAddXbController {
 		 */
 		//如果当前提交意见是承办人自己，那么相当于自己做协办人，DocXbInfo插入数据
 		JSONObject jsonObject = new JSONObject();
-		String userId = CurrentUser.getUserId();
-		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+//		String userId = CurrentUser.getUserId();
+//		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
 		/**
 		 * 分两种情况  文必须在承办人那里协办人才能提意见，此时文的状态必须是办理中  这里按钮已经控制
 		 * 1、承办人点击承办，文未送审批，文还在我这 没有反馈记录
 		 * 2、新一轮反馈开始，文又到我这了  反馈记录最新一条showFlag = "1"
-		 * 主办人发起提意见，都按照新一轮提议开始
 		 */
-		if (subDocInfo != null && StringUtils.equals(userId, subDocInfo.getUndertaker())) {
-			if (StringUtils.isNotBlank(feedBackIdea)) {
-				DocXbIdea docXbIdea = this.organizeDocXbIdea(feedBackIdea, infoId, subId);
-				this.productGroupId(docXbIdea, infoId, subId, true);
-				docXbIdeaService.save(docXbIdea);
-			}
-		}else {
-			DocXbIdea docXbIdea = this.organizeDocXbIdea(feedBackIdea, infoId, subId);
-			this.productGroupId(docXbIdea, infoId, subId, false);
-			docXbIdeaService.save(docXbIdea);
-		}
+//		if (subDocInfo != null && StringUtils.equals(userId, subDocInfo.getUndertaker())) {
+//			if (StringUtils.isNotBlank(feedBackIdea)) {
+		DocXbIdea docXbIdea = this.organizeDocXbIdea(feedBackIdea, infoId, subId);
+		this.productGroupId(docXbIdea, infoId, subId);
+		docXbIdeaService.save(docXbIdea);
+//			}
+//		}else {
+//			DocXbIdea docXbIdea = this.organizeDocXbIdea(feedBackIdea, infoId, subId);
+//			this.productGroupId(docXbIdea, infoId, subId);
+//			docXbIdeaService.save(docXbIdea);
+//		}
 		jsonObject.put("result", "success");
 		Response.json(jsonObject);
 	}
@@ -211,30 +213,56 @@ public class DocumentAddXbController {
 		return docXbIdea;
 	}
 	/**
+	 * 主办人提交意见前，看是否协办人已经提交意见；否则相反；
+	 * @param infoId
+	 * @param subId
+	 * @return
+	 */
+	private DocXbIdea isCommitIdea(String infoId, String subId) {
+		//查询当前协办人是否已经提交意见
+		return docXbIdeaService.queryLastNewData(subId, infoId);
+	}
+	/**
 	 * 提意见生成组ID
 	 * @param docXbInfo
 	 * @param infoId
 	 * @param subId
 	 * @param isUndertaker
 	 */
-	private void productGroupId(DocXbIdea docXbIdea,String infoId, String subId, boolean isUndertaker) {
+	private void productGroupId(DocXbIdea docXbIdea,String infoId, String subId) {
 		//主办人发起提议  生成新一轮提议组ID
-		if (isUndertaker) {
-			docXbIdea.setGroupId(UUID.randomUUID().toString());
-		}else {
-			List<ReplyExplain> replyExplains = replyExplainService.querySubLatestReply(infoId, subId);
-			if (replyExplains != null && replyExplains.size() > 0) {
-				String showFlag = replyExplains.get(0).getShowFlag();
-				if (StringUtils.equals("1", showFlag)) {
-					docXbIdea.setGroupId(UUID.randomUUID().toString());
-				}else {
-					//根据主办人ID，subId,infoId,查询最新一笔意见，取出组ID
-					DocXbIdea docXbIdea1 = docXbIdeaService.queryLastNewData(subId, infoId);
-					docXbIdea.setGroupId(docXbIdea1.getGroupId());
+		SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
+		if (subDocTracking != null) {
+			//主办人登录提交意见
+			if (StringUtils.equals(subDocTracking.getReceiverId(), CurrentUser.getUserId())) {
+				//第一轮审批
+				if (StringUtils.equals(subDocTracking.getTrackingType(), "1")) {
+					this.setGroupId(docXbIdea, infoId, subId);
 				}
 			}else {
-				docXbIdea.setGroupId(UUID.randomUUID().toString());
+				List<ReplyExplain> replyExplains = replyExplainService.querySubLatestReply(infoId, subId);
+				if (replyExplains != null && replyExplains.size() > 0) {
+					String showFlag = replyExplains.get(0).getShowFlag();
+					//新一轮审批
+					if (StringUtils.equals("1", showFlag) && StringUtils.equals(subDocTracking.getTrackingType(), "4")) {
+						this.setGroupId(docXbIdea, infoId, subId);
+					}
+				}
 			}
+		}
+	}
+	/**
+	 * 设置意见组ID
+	 * @param docXbIdea
+	 * @param infoId
+	 * @param subId
+	 */
+	private void setGroupId(DocXbIdea docXbIdea,String infoId, String subId) {
+		DocXbIdea commitIdea = this.isCommitIdea(infoId, subId);
+		if (commitIdea != null) {
+			docXbIdea.setGroupId(commitIdea.getGroupId());
+		}else {
+			docXbIdea.setGroupId(UUID.randomUUID().toString());
 		}
 	}
 	/**
@@ -244,10 +272,11 @@ public class DocumentAddXbController {
 	 */
 	@RequestMapping("/showIdeaRecord")
 	@ResponseBody
-	public void showIdeaRecord(String infoId, String subId) {
+	public void showIdeaRecord(String infoId, String subId, String ideaGroupId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("subId", subId);
 		map.put("infoId", infoId);
+		map.put("ideaGroupId", ideaGroupId);
 		List<DocXbIdea> docXbIdeas = docXbIdeaService.queryList(map);
 		if (docXbIdeas != null && docXbIdeas.size() > 0 ) {
 			Response.json(docXbIdeas);

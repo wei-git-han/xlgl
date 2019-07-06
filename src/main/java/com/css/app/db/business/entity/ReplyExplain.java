@@ -47,6 +47,8 @@ public class ReplyExplain implements Serializable {
 	private Date chowTime;
 	//临时反馈变成已发布的时间
 	private Date versionTime;
+	//意见组ID
+	private String ideaGroupId;
 
 	/**
 	 * 设置：唯一标识
@@ -191,6 +193,12 @@ public class ReplyExplain implements Serializable {
 	}
 	public void setVersionTime(Date versionTime) {
 		this.versionTime = versionTime;
+	}
+	public String getIdeaGroupId() {
+		return ideaGroupId;
+	}
+	public void setIdeaGroupId(String ideaGroupId) {
+		this.ideaGroupId = ideaGroupId;
 	}
 	
 }

@@ -25,6 +25,7 @@ import com.css.addbase.msg.MSGTipDefined;
 import com.css.addbase.msg.MsgTipUtil;
 import com.css.addbase.msg.entity.MsgTip;
 import com.css.addbase.msg.service.MsgTipService;
+import com.css.app.db.business.entity.DocXbIdea;
 import com.css.app.db.business.entity.DocXbInfo;
 import com.css.app.db.business.entity.DocumentBjjl;
 import com.css.app.db.business.entity.DocumentCbjl;
@@ -34,6 +35,7 @@ import com.css.app.db.business.entity.ReplyExplain;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.entity.SubDocTracking;
 import com.css.app.db.business.service.ApprovalOpinionService;
+import com.css.app.db.business.service.DocXbIdeaService;
 import com.css.app.db.business.service.DocXbInfoService;
 import com.css.app.db.business.service.DocumentBjjlService;
 import com.css.app.db.business.service.DocumentCbjlService;
@@ -98,6 +100,8 @@ public class SubDocInfoController {
 	private  String appId;	
 	@Value("${csse.dccb.appSecret}")
 	private  String clientSecret;
+	@Autowired
+	private DocXbIdeaService docXbIdeaService;
 	/**
 	 * 局内待办列表
 	 */
@@ -910,9 +914,16 @@ public class SubDocInfoController {
 		map.put("userId", loginUserId);
 		map.put("showFlag", "0");
 		ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
+		//查询意见表获取组ID
+		List<DocXbIdea> docXbIdeas = docXbIdeaService.queryList(map);
 		if(tempReply!=null) {
 			tempReply.setReVersion("1");
 			tempReply.setVersionTime(new Date());
+			if (docXbIdeas != null && docXbIdeas.size() > 0) {
+				String groupId = docXbIdeas.get(0).getGroupId();
+				tempReply.setIdeaGroupId(groupId);
+			}
+			//添加意见组ID
 			if(StringUtils.isNotBlank(status)) {
 				tempReply.setChooseStatus(status);
 			}

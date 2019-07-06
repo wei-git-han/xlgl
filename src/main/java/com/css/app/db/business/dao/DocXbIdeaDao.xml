@@ -9,9 +9,21 @@
 
 	<select id="queryList" resultType="com.css.app.db.business.entity.DocXbIdea">
 		select * from DB_DOC_XB_IDEA 
-		<if test="offset != null and limit != null">
-			limit #{offset}, #{limit}
-		</if>
+		<where>
+			<if test="infoId != null and infoId != ''">
+				and INFO_ID = #{infoId}
+			</if>
+			<if test="subId != null and subId != ''">
+				and SUB_ID = #{subId}
+			</if>
+			<if test="ideaGroupId != null and ideaGroupId != ''">
+				and GROUP_ID = #{ideaGroupId}
+			</if>
+			<if test="offset != null and limit != null">
+				limit #{offset}, #{limit} 
+			</if>
+		</where>
+		ORDER BY CREATED_TIME DESC
 	</select>
 	
  	<select id="queryTotal" resultType="int">

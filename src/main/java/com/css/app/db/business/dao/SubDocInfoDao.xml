@@ -97,10 +97,10 @@
 	</select>
 	
 	<select id="queryPersonList1" resultType="com.css.app.db.business.entity.SubDocInfo">
-		<!-- 文在我这 -->
+		<!-- 文在协办人这里 -->
 		WITH V_RESULT as(select SUB_ID from 
 		(select SUB_ID, row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num
-		from DB_SUB_DOC_TRACKING where 1=1 
+		from DB_DOC_XB_IDEA where 1=1 
 		<if test="loginUserId !=null and loginUserId !=''">
 			and RECEIVER_ID = #{loginUserId}
 		</if>)

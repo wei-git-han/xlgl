@@ -11,8 +11,10 @@ import java.util.Map;
 import com.css.app.db.business.dao.ApprovalOpinionDao;
 import com.css.app.db.business.dao.ReplyExplainDao;
 import com.css.app.db.business.entity.ApprovalOpinion;
+import com.css.app.db.business.entity.DocXbIdea;
 import com.css.app.db.business.entity.ReplyExplain;
 import com.css.app.db.business.service.ApprovalOpinionService;
+import com.css.app.db.business.service.DocXbIdeaService;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.UUIDUtils;
 
@@ -24,6 +26,8 @@ public class ApprovalOpinionServiceImpl implements ApprovalOpinionService {
 	private ApprovalOpinionDao approvalOpinionDao;
 	@Autowired
 	private ReplyExplainDao replyExplainDao;
+	@Autowired
+	private DocXbIdeaService docXbIdeaService;
 	
 	@Override
 	public ApprovalOpinion queryObject(String id){
@@ -64,6 +68,8 @@ public class ApprovalOpinionServiceImpl implements ApprovalOpinionService {
 		replyMap.put("subId", subId);
 		replyMap.put("showFlag", "0");
 		List<ReplyExplain> queryList = replyExplainDao.queryList(replyMap);
+		//查询意见表获取组ID
+		List<DocXbIdea> docXbIdeas = docXbIdeaService.queryList(replyMap);
 		if(queryList !=null && queryList.size()>0) {
 			replyTeamId = queryList.get(0).getTeamId();
 		}
@@ -77,6 +83,9 @@ public class ApprovalOpinionServiceImpl implements ApprovalOpinionService {
 		opinion.setUserName(CurrentUser.getUsername());
 		opinion.setCreatedTime(new Date());
 		opinion.setYjType(saveFlag);
+		if (docXbIdeas != null && docXbIdeas.size() > 0) {
+			opinion.setIdeaGroupId(docXbIdeas.get(0).getGroupId());
+		}
 		approvalOpinionDao.save(opinion);
 	}
 
