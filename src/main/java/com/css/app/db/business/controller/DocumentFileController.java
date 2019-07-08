@@ -118,6 +118,11 @@ public class DocumentFileController {
 					String formatId=documentFile.getFileServerFormatId();
 					if(StringUtils.isNotBlank(formatId)){
 						HTTPFile hf = new HTTPFile(formatId);
+						String fileName = documentFile.getFileName();
+						if(StringUtils.isNotBlank(fileName)) {
+							String substring = StringUtils.substring(fileName, 0,fileName.lastIndexOf("."));
+							hf.updateName(substring+".ofd");							
+						}
 						Response.json(hf.getAssginDownloadURL());
 					}
 				}
@@ -131,6 +136,11 @@ public class DocumentFileController {
 								if(StringUtils.isNotBlank(formatId)){
 									//获取版式文件的下载路径
 									httpFile = new HTTPFile(formatId);
+									String fileName = documentFile.getFileName();
+									if(StringUtils.isNotBlank(fileName)) {
+										String substring = StringUtils.substring(fileName, 0,fileName.lastIndexOf("."));
+											httpFile.updateName(substring+".ofd");
+									}
 									httpFiles.add(httpFile);
 								}
 							}
