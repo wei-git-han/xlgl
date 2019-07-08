@@ -17,6 +17,13 @@ var fileId=getUrlParam("fileId")||""; //主文件id
 $("#id").val(fileId);
 var scanFilePath = "";//扫描件路径
 var pageModule = function(){
+	//按钮显示
+	var initBtn = function(){
+		if(fileFrom="blfk"){
+			$('#saveAndAdd').hide();
+			$('#return').hide();
+		}
+	}
 	//请求各字典数据
 	var initdictionary = function(){
 		$ajax({
@@ -346,7 +353,7 @@ var pageModule = function(){
 		});
 		
 		
-		//扫描续传功能
+		/*//扫描续传功能
 		$("#scanKeepTransfer").click(function() {   	
 	    	$.ajax({
 	    		type: "post",
@@ -357,7 +364,7 @@ var pageModule = function(){
 					}
 				}
 	    	});
-	    });
+	    });*/
 		
 		
 		//选择首长
@@ -552,6 +559,7 @@ var pageModule = function(){
 	return{
 		//加载页面处理程序
 		initControl:function(){
+			initBtn();
 			initdictionary();
 			initdatafn();
 			initCqfn();

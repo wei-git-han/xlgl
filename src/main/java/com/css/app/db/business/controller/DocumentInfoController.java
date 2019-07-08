@@ -892,7 +892,7 @@ public class DocumentInfoController {
 				map.put("loginUserId", loginUserId);
 			}
 		}else {
-			if(StringUtils.equals("3", adminType) ||StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType)) {
+			if(!StringUtils.equals("3", adminType) && (StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType))) {
 				String loginOrgId = baseAppUserService.getBareauByUserId(loginUserId);
 				if(StringUtils.isNotBlank(loginOrgId)) {
 					orgId=loginOrgId;
