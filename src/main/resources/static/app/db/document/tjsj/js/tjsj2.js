@@ -122,11 +122,11 @@ var pageModule = function(){
 			grid.setparams({docStatus:status,leaderId:leaderId,startDate:startdate,endDate:enddate,typeId:$('#typeOption').val()});
 			grid.loadtable();
 		})
-		$(".fa-search").click(function(){
-			var value = $(".top-right-search input").val();
-			grid.setparams({search:value});
-			grid.loadtable();
-		})
+//		$(".fa-search").click(function(){
+//			var value = $(".top-right-search input").val();
+//			grid.setparams({search:value});
+//			grid.loadtable();
+//		})
 	}
 
 	
