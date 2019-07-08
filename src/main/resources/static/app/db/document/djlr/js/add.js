@@ -140,6 +140,8 @@ var pageModule = function(){
 				$("#jobContent").attr("disabled",true);
 				$("#banjianNumber").removeAttr("disabled");
 				$("#chaoqing").show();
+				$("#period").attr("disabled",true);
+				$("#period").val('');
 			}else if($(this).val() == "4"){
 				$ajax({
 					url:getlastPeriodUrl,
@@ -155,6 +157,7 @@ var pageModule = function(){
 				$("#chaoqing").show();
 			}else{
 				$("#period").attr("disabled",true);
+				$("#period").val('');
 				$("#chaoqing").hide();
 				$("#jobContent").removeAttr("disabled");
 				$("#banjianNumber").attr("disabled",true);
@@ -207,7 +210,7 @@ var pageModule = function(){
 		    	$("#securityClassification").val($("#securityId option:checked").text());
 		    	$("#urgencyDegree").val($("#urgencyId option:checked").text());
 			    var elementarry = ["docTypeId","docTypeName","docTitle","securityId","securityClassification",
-			    	"urgencyId","urgencyDegree","docCode","banjianNumber","userId","userName","applyTime","printDate","jobContent","remark","period","workableMatter"];
+			    	"urgencyId","urgencyDegree","docCode","banjianNumber","userId","userName","applyTime","printDate","jobContent","remark","period"];
 				var paramdata = getformdata(elementarry);
 				paramdata.id = $("#id").val();
 				//newbootbox.alert('正在保存，请稍候...',false);

@@ -25,9 +25,14 @@ var startdate = getUrlParam2("startdate");
 var enddate = getUrlParam2("enddate");
 var isFromChart = getUrlParam("isFromChart");
 var isDepart = getUrlParam("isDepart");
+var backData = {
+	status:status,
+	leaderId:leaderId,
+	startdate:startdate,
+	enddate:enddate
+}
 $("#id").val(fileId);
 var pageModule = function(){
-	console.log(fileFrom)
 	if(fileFrom=="djlr"){
 		$('.xgfileWrap').show()
 	}else{
@@ -761,7 +766,7 @@ function skip(){
 		}else if(fileFrom=="jndb"){ 
 			window.location.href="/app/db/document/jndb/html/jndb.html?fileFrom="+fileFrom;
 		}else if(fileFrom=="sztj"){ 
-			window.location.href="/app/db/document/tjsj/html/tjsj.html?fileFrom="+fileFrom+"&status="+status+"&leaderId="+leaderId+"&startdate="+startdate+"&enddate="+enddate;
+			window.location.href="/app/db/document/tjsj/html/tjsj.html?fileFrom="+fileFrom+"&status="+backData.status+"&leaderId="+backData.leaderId+"&startdate="+backData.startdate+"&enddate="+backData.enddate;
 		}else{ 
 			window.location.href="/app/db/document/grdb/html/grdb.html?fileFrom="+fileFrom;
 		}
@@ -857,7 +862,17 @@ $("#downLoadfj").click(function(){
 				checkId.push($(this).attr("checkId"));
 			}
 		})
-		window.location.href="/app/db/documentfile/downLoadFile?ids="+checkId.toString()+"&infoId="+fileId
+		if(checkId.length==1){
+			$.ajax({
+				url:'/app/db/documentfile/downLoadFile',
+				data:{ids:checkId[0],infoId:fileId},
+				success:function(data){
+					window.location.href = data
+				}
+			})
+		}else{
+			window.location.href="/app/db/documentfile/downLoadFile?ids="+checkId.toString()+"&infoId="+fileId
+		}
 	}else{
 		newbootbox.alert("请选中要下载的附件！"); 
 	}

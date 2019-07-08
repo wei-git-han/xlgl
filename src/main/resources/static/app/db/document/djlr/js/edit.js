@@ -275,7 +275,11 @@ var pageModule = function(){
 						if(addFlag){
 							window.location.href="/app/db/document/djlr/html/add.html";
 						}else if(returnSave){
-							window.location.href = "/app/db/document/djlr/html/djlr.html?fileFrom=djlr";
+					    	if(fileFrom=='blfk'){
+						    	window.location.href = "/app/db/document/blfk/html/blfk.html?fileFrom=blfk";
+					    	}else{
+						    	window.location.href = "/app/db/document/djlr/html/djlr.html?fileFrom=djlr";
+					    	}
 						}else{
 							setTimeout(function(){
 								newbootbox.alert("保存成功！").done(function(){
@@ -315,7 +319,11 @@ var pageModule = function(){
 			    	$("#commentForm").submit();
 			    },
 			    callback2:function(){
-			    	window.location.href = "/app/db/document/djlr/html/djlr.html?fileFrom=djlr";
+			    	if(fileFrom=='blfk'){
+				    	window.location.href = "/app/db/document/blfk/html/blfk.html?fileFrom=blfk";
+			    	}else{
+				    	window.location.href = "/app/db/document/djlr/html/djlr.html?fileFrom=djlr";
+			    	}
 			    }
 			});
 		})
