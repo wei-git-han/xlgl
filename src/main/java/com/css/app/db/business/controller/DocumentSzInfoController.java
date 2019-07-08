@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.msg.MSGTipDefined;
 import com.css.addbase.msg.MsgTipUtil;
 import com.css.addbase.msg.entity.MsgTip;
@@ -28,7 +27,6 @@ import com.css.app.db.business.service.DocumentCbjlService;
 import com.css.app.db.business.service.DocumentInfoService;
 import com.css.app.db.business.service.SubDocInfoService;
 import com.css.app.db.config.service.AdminSetService;
-import com.css.app.db.config.service.RoleSetService;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.Response;
 
@@ -48,10 +46,6 @@ public class DocumentSzInfoController {
 	private DocumentInfoService documentInfoService;
 	@Autowired
 	private DocumentCbjlService documentCbjlService;
-	@Autowired
-	private RoleSetService roleSetService;
-	@Autowired
-	private BaseAppOrganService baseAppOrganService;
 	@Autowired
 	private SubDocInfoService subDocInfoService;
 	@Autowired
