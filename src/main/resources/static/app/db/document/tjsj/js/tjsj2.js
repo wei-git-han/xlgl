@@ -182,6 +182,7 @@ function pszsnrAlert(id){
 		width:800,
 		height:600,
 		header:true,
+		theme:'black',
 		title:"批示详情",
 		classed:"cjDialog",
 		url:"/app/db/document/view/html/psDialog.html?fileId="+id
@@ -196,6 +197,7 @@ function dblsqkAlert(id){
 		height:600,
 		header:true,
 		title:"督办详情",
+		theme:'black',
 		classed:"cjDialog",
 		url:"/app/db/document/view/html/dblsqk.html?fileId="+id
 	})

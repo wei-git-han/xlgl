@@ -1090,6 +1090,8 @@ var newbootbox = {
 		var style = obj.style;
 		var url = obj.url;
 		var classed = obj.classed;
+		var theme = obj.theme;
+		var theme_color = '';
 		$(gettop2().document.body).find("#"+obj.id).remove();
 		var html="";
 		var styleHtml="";
@@ -1104,8 +1106,13 @@ var newbootbox = {
 		if(classed==null||typeof(classed)=="undefined"){
 			classed="";
 		};
+		if(theme==null||typeof(theme)=="undefined"){
+			theme="";
+		}else if(theme=='black'){
+			url+=url.indexOf('?')>-1?'&theme=black':'?theme=black'
+		};
 		$(gettop2().document.body).append(
-			'<div class="modal fade in newmodal '+classed+'" id="'+obj.id+'" tabindex="-1" aria-hidden="true" >'+
+			'<div class="modal fade in newmodal '+classed+' '+theme+'" id="'+obj.id+'" tabindex="-1" aria-hidden="true" >'+
 			'    <div class="modal-dialog" style="width:'+width+'">'+
 			'        <div class="modal-content">'+
 			'            <div class="modal-header"'+html+'>'+
@@ -1120,7 +1127,7 @@ var newbootbox = {
 			'</div>'
 		);
 		gettop2().showModal(obj.id);
-	},
+	}, 
 	newdialogClose:function(obj){
 		gettop2().hideModal(obj);
 	},
@@ -1964,4 +1971,8 @@ var showModal = function(obj){
 }
 var hideModal = function(obj){
 	$("#"+obj).modal("hide");
+}
+var theme = getUrlParam('theme')||'';
+if(theme =='black'){
+	$('body').addClass('body-black');
 }

@@ -1001,3 +1001,28 @@ table{
 .pslist{
 	word-break: break-all;
 }
+.black{
+	background-color: #243758;
+}
+.black .modal-content{
+	padding: 20px;
+	background: #243758;
+	border: 1px solid #515F78;
+	border-radius: 5px !important;
+}
+.black .modal-title {
+    color: #fff;
+}
+.black .modal-header{
+	background: #243758;
+}
+.body-black {
+	background: #243758;
+	color:#fff;
+}
+.body-black .line1{
+	color:#fff
+}
+.black .modal-body, .alertInfo .modal-body {
+    border-bottom: 1px solid #243758;
+}
