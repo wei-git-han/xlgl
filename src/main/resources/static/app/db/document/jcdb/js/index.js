@@ -358,8 +358,9 @@ var pageModule = function(){
 				    },
 				    legend: {
 				    	textStyle:{color: '#C8D3FF'},
-				        //orient : 'vertical',
-				        y : 'bottom',
+//				        orient : 'vertical',
+				        y : '75%',
+//				        bottom:'bottom',
 				        data:legend
 				    },
 				    calculable : false,
