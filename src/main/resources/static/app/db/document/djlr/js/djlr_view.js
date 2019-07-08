@@ -24,6 +24,7 @@ var leaderId = getUrlParam("leaderId");//统计图传过来的首长ID
 var startdate = getUrlParam2("startdate");
 var enddate = getUrlParam2("enddate");
 var isFromChart = getUrlParam("isFromChart");
+var isDepart = getUrlParam("isDepart");
 $("#id").val(fileId);
 var pageModule = function(){
 	console.log(fileFrom)
@@ -726,11 +727,18 @@ var pageModule = function(){
 function skip(){
 	if(frompage==0){
 		if(isFromChart=='1'){
-			var status = sessionStorage.getItem('status');
-			var leaderId = sessionStorage.getItem('leaderId');
-			var startdate = sessionStorage.getItem('startdate');
-			var enddate = sessionStorage.getItem('enddate');
-			window.location.href="/app/db/document/tjsj/html/tjsj2.html?fileFrom="+fileFrom+"&status="+status+"&leaderId="+leaderId+"&startdate="+startdate+"&enddate="+enddate;
+			if(isDepart=='0'){
+				var status = sessionStorage.getItem('status');
+				var leaderId = sessionStorage.getItem('leaderId');
+				var startdate = sessionStorage.getItem('startdate');
+				var enddate = sessionStorage.getItem('enddate');
+				window.location.href="/app/db/document/tjsj/html/tjsj2.html?fileFrom="+fileFrom+"&status="+status+"&leaderId="+leaderId+"&startdate="+startdate+"&enddate="+enddate;
+			}else{
+				var orgid = sessionStorage.getItem('orgid');
+				var month = sessionStorage.getItem('month')
+				var ytype = sessionStorage.getItem('ytype')
+				window.location.href="/app/db/document/jcdb/html/table2.html?orgid="+orgid+"&month="+month+"&ytype="+ytype;
+			}
 		}else{
 			window.location.href="/app/db/document/jcdb/html/main.html";
 		}
