@@ -60,6 +60,8 @@ jQuery(document).ready(function() {
 	var access_token = getUrlParam("access_token")||"";
 	if(page=="01"){
 		$("#iframe1").attr("src","/app/db/document/jcdb/html/main.html?access_token="+access_token)
+	}else{
+		$("#iframe1").attr("src","/app/db/document/jcdb/html/index.html?szFlag=1&access_token="+access_token)		
 	}
 	
 });
