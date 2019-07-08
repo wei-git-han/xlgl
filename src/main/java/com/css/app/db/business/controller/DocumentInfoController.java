@@ -321,7 +321,7 @@ public class DocumentInfoController {
 				PageHelper.startPage(page, pagesize);
 				infoList = documentInfoService.queryPersonList(map);
 			} else {
-				if(StringUtils.equals("3", adminType)||StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType)) {
+				if(!StringUtils.equals("3", adminType)&&(StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType))) {
 					String orgId = baseAppUserService.getBareauByUserId(loginUserId);
 					if(StringUtils.isNotBlank(orgId)) {
 						map.put("orgid", orgId);
@@ -445,7 +445,7 @@ public class DocumentInfoController {
 			}
 			infoList = documentInfoService.queryPersonList(map);
 		} else {
-			if(StringUtils.equals("3", adminType) || StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType)) {
+			if(!StringUtils.equals("3", adminType) &&( StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType))) {
 				String orgId = baseAppUserService.getBareauByUserId(loginUserId);
 				if(StringUtils.isNotBlank(orgId)) {
 					map.put("orgid", orgId);
