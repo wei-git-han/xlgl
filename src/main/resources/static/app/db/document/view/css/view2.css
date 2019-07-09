@@ -596,29 +596,16 @@ ul{
 	bottom:0px;
 	left:0;
 	right:0;
-	top:50%;
+	top:60%;
 	width:100%;
-	height:50%;
+	height:40%;
+	background:#E5EBF7;
+	padding:15px;
 	padding-top:5px;
+	border-top: 1px solid #D3E1FB;
 	padding-bottom: 0px;
 }
-.hrline{
-	width:100%;
-	height:1px;
-	background:#CDDDFB;
-	position: absolute;
-	top: 20px;
-}
-.yjsjstyle{
-	position:absolute;
-	left:50%;
-	top: 9px;
-	width:100px;
-	background:#DEE6F6;
-	color:#6699FF;
-	font-size:14px;
-	text-align:center;
-}
+
 
 /* 锟斤拷锟斤拷锟斤拷锟� */
 .sryj_title{
@@ -1001,6 +988,18 @@ ul{
 	background:#fff;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
 .ps_title{
 	width: 20px;
 	background:#FC4C4F;
@@ -1028,113 +1027,4 @@ ul{
 	width:100%;
 	height:42px;
 	text-align:right;
-}
-
-
-.xbUserLine{
-	height:30px;
-	line-height:30px;
-	font-size:15px;
-	color:#6699FF;
-	margin-bottom:5px;
-}
-.relativediv{
-	width:100%;
-	height:100%;
-	position: relative;
-}
-
-#opinionList>.timelinesheys{
-	position: relative;
-	padding-bottom:10px;
-}
-#opinionList>.timelinesheys::before{
-    content: '';
-    position: absolute;
-    top: 0px;
-    bottom: 0;
-    width: 1px;
-    background: #0099FF;
-    left: 20px;
-    margin-left: -10px;
-}
-#opinionList>.timelinesheys:last-child::before{
-   background: none;
-}
-
-#opinionList> .timelinesheys .timeline-user {
-    display: block;
-	margin:0 0 0 30px;
-}
-
-#opinionList > .timelinesheys .timeline-icon {
-    width: 18px;
-    height: 18px;
-    position: absolute;
-    background:url(../images/1.png) #EFEFEF no-repeat center center;
-    left: 24px;
-    top: 0;
-    margin: 0px 0 0 -22px;
-}
-
-#opinionList > .timelinesheys .timeline-icon1 {
-    width: 18px;
-    height: 18px;
-    position: absolute;
-    background:url(../images/2.png) #fff no-repeat center center;
-    left: 24px;
-    top: 0;
-    margin: 0px 0 0 -22px;
-}
-#opinionList > .timelinesheys .timeline-body {
-    margin: 10px 0px 0 30px;
-    padding: 10px;
-    position: relative;
-    background-color: #fff;
-    border-radius: 10px!important;
-    color:#333;
-    cursor:pointer
-}
-#opinionList > .timelinesheys .timeline-content {
-    font-size: 13px;
-	line-height: 25px;
-	word-break: break-all;
-	word-wrap: break-word;
-	padding-left: 10px;
-}
-.user{
-	color:#0099FF;
-	font-weight:700;
-}
-.createTime{
-	margin-right: 8px;
-	color: rgb(119, 119, 119);
-}
-
-.foot_btns{
-	width: 110px;
-	height: 35px;
-	border-radius:3px!important;
-	background:#6699FF;
-	border:0;
-	color:#fff;
-	font-size:15px;
-}
-.userName{
-	font-weight:700;
-	color:#6699FF;
-	font-size:15px;
-}
-
-.userName i{
-	color:#6699FF;
-}
-.content{
-	color:#555;
-	font-size:15px;
-}
-
-.opinionList{
-	padding-top: 0px;
-	border-radius: 4px !important;
 }

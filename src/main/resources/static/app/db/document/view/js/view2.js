@@ -34,50 +34,8 @@ var commitIdeaUrl={"url":"/app/db/addXbDeal/commitIdea","dataType":"text"}; //�
 
 
 
-var listUrl = {"url":"/app/db/document/view/data/opinion.json","dataType":"text"}; //意见记录list
-var teamId=getUrlParam("teamId");//
-var subId=getUrlParam("subId");//
-var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 
 var pageModule = function(){
-	
-	//意见记录
-	var initList = function(){
-		$ajax({
-			url:listUrl,
- 			data:{subId:subId,teamId:teamId},
-			success:function(data){
-				var html1= "";
-				var xbUser = [];
-				$.each(data,function(i,o){
-					var createTime = o.createTime;
-					var cbrList = o.cbrList;
-					html1=	'<div class="timelinesheys">'+
-							'	<div class="timeline-icon">'+
-							'		<i class="icontime"></i>'+
-							'	</div>'+
-							'	<div class="timeline-user">'+
-							'		<span class="createTime">'+createTime+'</span>'+
-							'	</div>'+
-							'	<div class="timeline-body">';
-							$.each(cbrList,function(i,item){
-								xbUser.push(item.userName);
-								html1 += '<div class="timeline-content">'+
-									        '	<div class="userName"><i class="fa fa-user"></i>&nbsp;'+item.userName+'</div>';
-								html1 += '	<div class="content">'+item.content+'</div>';
-								html1 += '</div>';
-							})
-							
-							html1 +='	</div>'+
-									'</div>'
-					$("#opinionList").append(html1);
-				})
-				$("#xbUser").html(xbUser.toString());
-			}
-		})
-	}
-	
-	
 	$('#id').val(fileId);
 	if(showFileButton=="true"){
 		$('.xgfileWrap').show()
@@ -166,7 +124,7 @@ var pageModule = function(){
 							if(data.isCheckUser){//显示办结、常态落实,输入框
 								$(".blfk_bottom").show(); //意见外大框
 								$(".newbottom").show(); //所有按钮的容器
-								$(".blfk_top").css({"bottom":"50%","height":"50%"});   //意见框上方元素样式控制
+								$(".blfk_top").css({"bottom":"40%","height":"58%"});   //意见框上方元素样式控制
 								$("#clear").show();
 								if(data.roleType=='3'){//是局长显示审批完成否则显示提交
 									$("#sptg").show();
@@ -190,7 +148,7 @@ var pageModule = function(){
 								if(data.isXBPerson && data.docStatus==9){
 									$(".blfk_bottom").show(); //意见外大框
 									$(".newbottom").show(); //所有按钮的容器
-									$(".blfk_top").css({"bottom":"50%","height":"50%"});   //意见框上方元素样式控制
+									$(".blfk_top").css({"bottom":"40%","height":"58%"});   //意见框上方元素样式控制
 									$("#clear").show();
 									$("#fasong").show();
 								}
@@ -347,7 +305,6 @@ var pageModule = function(){
 					content = o.content;
 					checkStatus = o.checkStatus;
 					checkStatusname = o.checkStatusName;
-					ideaGroupId = o.ideaGroupId;
 					if(checkStatus){
 						otherhtml = '<div class="nrt-cont-top-right">'+
 									'	<div class="nrt-cont-top-btn">'+
@@ -391,7 +348,6 @@ var pageModule = function(){
 					ld = o.userName;
 					content = o.opinionContent;
 					state = o.trackingType;
-					ideaGroupId = o.ideaGroupId;
 					if(state<3){
 						state = "审批通过";
 					}else{
@@ -437,14 +393,14 @@ var pageModule = function(){
 					'			<div class="newpanel-right-top">'+
 					'				<div class="nrt-date">'+
 					'					<font>'+firstDate+'</font>'+
-					'					<font class="pull-right yjjl" onclick="opinionView(\''+teamId+'\',\''+subId+'\',\''+ideaGroupId+'\')">意见记录</font>'+
+					'					<font class="pull-right yjjl" onclick="opinionView(\''+teamId+'\',\''+subId+'\')">意见记录</font>'+
 					'				</div>'+
 					'			</div>'+
 					'			<div class="newpanel-right-cent" id="'+id+'">'+
 					'				<div class="nrt-cont" style="border-color:'+color+'">'+
 					'					<div class="nrt-cont-top">'+
 					'						<div class="nrt-cont-top-left">'+
-					'							<div class="nrt-cont-top-title" onclick="viewcont(\''+teamId+'\',\''+subId+'\',\''+ideaGroupId+'\')">'+
+					'							<div class="nrt-cont-top-title" onclick="viewcont(\''+teamId+'\',\''+subId+'\')">'+
 					'								<i class="fa fa-user"></i>'+
 					'								<font>'+danwei+'-'+ld+'</font>'+
 					'							</div>'+
@@ -1141,7 +1097,6 @@ var pageModule = function(){
 	return{
 		//加载页面处理程序
 		initControl:function(){
-			initList();
 			ifcuibanfn();
 			showButton();
 			takeMenufn();
@@ -1244,11 +1199,11 @@ function removefn(id,el){
 	});
 }
 
-function viewcont(teamId,subId,ideaGroupId){
+function viewcont(teamId,subId){
 	$("#viewcont").modal("show");
 	$ajax({
 		url:replyByTeamIdUrl,
-		data:{subId:subId,teamId:teamId,ideaGroupId:ideaGroupId},
+		data:{subId:subId,teamId:teamId},
 	    success:function(data){
 	    	if(data && data.length>0){
 	    		$(".viewcontent").html("");
@@ -1436,7 +1391,7 @@ $("#fasong").click(function(){
 });
 
 //意见收集
-function opinionView(teamId,subId,ideaGroupId){ 
+function opinionView(teamId,subId){ 
 	newbootbox.newdialog({
 		id:"opinionDialog",
 		width:800,
@@ -1445,6 +1400,6 @@ function opinionView(teamId,subId,ideaGroupId){
 		title:"意见收集",
 		classed:"cjDialog",
 		style:{"padding":"0px"},
-		url:"/app/db/document/view/html/opinion.html?teamId="+teamId+"&subId="+subId+"&ideaGroupId="+ideaGroupId+"&fileFrom="+fileFrom
+		url:"/app/db/document/view/html/opinion.html?teamId="+teamId+"&subId="+subId+"&fileFrom="+fileFrom
 	})
 }

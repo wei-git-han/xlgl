@@ -853,13 +853,14 @@ function viewcont(teamId,subId,ideaGroupId){
 //意见记录事件
 var showfn = function(subId, ideaGroupId){
 	newbootbox.newdialog({
-		id:"yijianDialog",
+		id:"opinionDialog",
 		width:800,
 		height:600,
 		header:true,
-		title:"意见记录",
+		title:"意见收集",
 		classed:"cjDialog",
-		url:"/app/db/document/djlr/html/yjjl.html?subId="+subId+"&ideaGroupId="+ideaGroupId,
+		style:{"padding":"0px"},
+		url:"/app/db/document/djlr/html/yjjl.html?subId="+subId+"&ideaGroupId="+ideaGroupId+"&fileFrom="+fileFrom
 	})
 	
 //	url:"/app/db/document/view/html/psDialog.html?fileId="+id,
