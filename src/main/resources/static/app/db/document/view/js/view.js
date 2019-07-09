@@ -393,6 +393,7 @@ var pageModule = function(){
 					'			<div class="newpanel-right-top">'+
 					'				<div class="nrt-date">'+
 					'					<font>'+firstDate+'</font>'+
+					'					<font class="pull-right yjjl" onclick="opinionView(\''+teamId+'\',\''+subId+'\')">意见记录</font>'+
 					'				</div>'+
 					'			</div>'+
 					'			<div class="newpanel-right-cent" id="'+id+'">'+
@@ -1087,6 +1088,7 @@ var pageModule = function(){
         		header:true,
         		title:"意见记录",
         		classed:"cjDialog",
+        		style:{"padding":"0px"},
         		url:"/app/db/document/djlr/html/yjjl.html?infoId="+fileId+"&subId="+subId
         	})
         });
@@ -1387,3 +1389,17 @@ $("#fasong").click(function(){
 		});
 	}
 });
+
+//意见收集
+function opinionView(teamId,subId){ 
+	newbootbox.newdialog({
+		id:"opinionDialog",
+		width:800,
+		height:600,
+		header:true,
+		title:"意见收集",
+		classed:"cjDialog",
+		style:{"padding":"0px"},
+		url:"/app/db/document/view/html/opinion.html?teamId="+teamId+"&subId="+subId+"&fileFrom="+fileFrom
+	})
+}

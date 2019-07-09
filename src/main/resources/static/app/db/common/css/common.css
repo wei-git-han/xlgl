@@ -56,7 +56,10 @@ div.checker input {
 	height:100%;
 	position:relative;
 }
-
+.wh100{
+	width:100%;
+	height:100%;
+}
 /*闂佽法鍠愰弸濠氬箯閻戣姤鏅搁柡鍌樺�栫�氬綊鏌ㄩ悢鑽ょ獩閺夊牏鍋撶�氬綊鏌ㄩ悢鎯板闁规彃顑嗙�氬綊鏌ㄩ悢鍛婄伄闁瑰嚖鎷�*/
 .hideword {
 	display: block;
@@ -113,7 +116,7 @@ span.required,.error{
 	width: 400px;
 }
 .modal-header {
-	background-color: #1273AA;
+	background-color: #6699FF;
 	color: #fff;
 	padding: 10px;
 }

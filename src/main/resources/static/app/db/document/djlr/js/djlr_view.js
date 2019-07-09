@@ -310,7 +310,7 @@ var pageModule = function(){
 									<div class="newpanel-right-top">
 										<div class="nrt-date">
 											<font>${firstDate}</font>
-											<a style="float: right;" id="yjjl" onclick="showfn('${subId}')">意见记录</a>
+											<a style="float: right;" id="yjjl" onclick="showfn('${teamId}','${subId}')">意见记录</a>
 										</div>
 									</div>
 									
@@ -850,15 +850,16 @@ function viewcont(teamId,subId){
 	});
 }
 //意见记录事件
-var showfn = function(subId){
+var showfn = function(teamId,subId){ 
 	newbootbox.newdialog({
-		id:"yijianDialog",
+		id:"opinionDialog",
 		width:800,
 		height:600,
 		header:true,
-		title:"意见记录",
+		title:"意见收集",
 		classed:"cjDialog",
-		url:"/app/db/document/djlr/html/yjjl.html?subId="+subId,
+		style:{"padding":"0px"},
+		url:"/app/db/document/view/html/opinion.html?teamId="+teamId+"&subId="+subId+"&fileFrom="+fileFrom
 	})
 	
 //	url:"/app/db/document/view/html/psDialog.html?fileId="+id,
