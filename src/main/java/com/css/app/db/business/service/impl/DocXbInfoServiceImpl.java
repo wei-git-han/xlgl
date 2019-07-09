@@ -58,5 +58,4 @@ public class DocXbInfoServiceImpl implements DocXbInfoService {
 		DocXbInfoDao.deleteBySubIdAndReceiverId(subId, userId);
 		
 	}
-	
 }

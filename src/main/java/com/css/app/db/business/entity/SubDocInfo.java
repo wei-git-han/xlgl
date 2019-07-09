@@ -319,16 +319,17 @@ public class SubDocInfo implements Serializable {
 	public void setIdeaCount(Integer ideaCount) {
 		this.ideaCount = ideaCount;
 	}
-	public Integer getIsXBPerson() {
-		return isXBPerson;
-	}
-	public void setIsXBPerson(Integer isXBPerson) {
-		this.isXBPerson = isXBPerson;
-	}
 	public Integer getIdeaAddFlag() {
 		return ideaAddFlag;
 	}
 	public void setIdeaAddFlag(Integer ideaAddFlag) {
 		this.ideaAddFlag = ideaAddFlag;
 	}
+	public Integer getIsXBPerson() {
+		return isXBPerson;
+	}
+	public void setIsXBPerson(Integer isXBPerson) {
+		this.isXBPerson = isXBPerson;
+	}
+	
 }

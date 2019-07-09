@@ -305,6 +305,7 @@ var pageModule = function(){
 					content = o.content;
 					checkStatus = o.checkStatus;
 					checkStatusname = o.checkStatusName;
+					ideaGroupId = o.ideaGroupId;
 					if(checkStatus){
 						otherhtml = '<div class="nrt-cont-top-right">'+
 									'	<div class="nrt-cont-top-btn">'+
@@ -348,6 +349,7 @@ var pageModule = function(){
 					ld = o.userName;
 					content = o.opinionContent;
 					state = o.trackingType;
+					ideaGroupId = o.ideaGroupId;
 					if(state<3){
 						state = "审批通过";
 					}else{
@@ -393,14 +395,14 @@ var pageModule = function(){
 					'			<div class="newpanel-right-top">'+
 					'				<div class="nrt-date">'+
 					'					<font>'+firstDate+'</font>'+
-					'					<font class="pull-right yjjl" onclick="opinionView(\''+teamId+'\',\''+subId+'\')">意见记录</font>'+
+					'					<font class="pull-right yjjl" onclick="opinionView(\''+teamId+'\',\''+subId+'\',\''+ideaGroupId+'\')">意见记录</font>'+
 					'				</div>'+
 					'			</div>'+
 					'			<div class="newpanel-right-cent" id="'+id+'">'+
 					'				<div class="nrt-cont" style="border-color:'+color+'">'+
 					'					<div class="nrt-cont-top">'+
 					'						<div class="nrt-cont-top-left">'+
-					'							<div class="nrt-cont-top-title" onclick="viewcont(\''+teamId+'\',\''+subId+'\')">'+
+					'							<div class="nrt-cont-top-title" onclick="viewcont(\''+teamId+'\',\''+subId+'\',\''+ideaGroupId+'\')">'+
 					'								<i class="fa fa-user"></i>'+
 					'								<font>'+danwei+'-'+ld+'</font>'+
 					'							</div>'+
@@ -1199,11 +1201,11 @@ function removefn(id,el){
 	});
 }
 
-function viewcont(teamId,subId){
+function viewcont(teamId,subId,ideaGroupId){
 	$("#viewcont").modal("show");
 	$ajax({
 		url:replyByTeamIdUrl,
-		data:{subId:subId,teamId:teamId},
+		data:{subId:subId,teamId:teamId,ideaGroupId:ideaGroupId},
 	    success:function(data){
 	    	if(data && data.length>0){
 	    		$(".viewcontent").html("");
@@ -1391,7 +1393,7 @@ $("#fasong").click(function(){
 });
 
 //意见收集
-function opinionView(teamId,subId){ 
+function opinionView(teamId,subId,ideaGroupId){ 
 	newbootbox.newdialog({
 		id:"opinionDialog",
 		width:800,
@@ -1400,6 +1402,6 @@ function opinionView(teamId,subId){
 		title:"意见收集",
 		classed:"cjDialog",
 		style:{"padding":"0px"},
-		url:"/app/db/document/view/html/opinion.html?teamId="+teamId+"&subId="+subId+"&fileFrom="+fileFrom
+		url:"/app/db/document/view/html/opinion.html?teamId="+teamId+"&subId="+subId+"&ideaGroupId="+ideaGroupId+"&fileFrom="+fileFrom
 	})
 }

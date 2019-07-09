@@ -250,6 +250,12 @@ public class DocumentZbjlController {
 				subInfo.setUndertakerName("");
 				subInfo.setUndertakerPhone("");
 				subDocInfoService.update(subInfo);
+				//点击承办后在转办的时候，清空组意见组ID
+				SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
+				if (subDocTracking != null && StringUtils.isNotBlank(subDocTracking.getIdeaGroupId())) {
+					subDocTracking.setIdeaGroupId(null);
+					subDocTrackingService.update(subDocTracking);
+				}
 			}
 			//承办人未走流程转办，删除承办人当前临时反馈
 			Map<String, Object> map =new HashMap<>();

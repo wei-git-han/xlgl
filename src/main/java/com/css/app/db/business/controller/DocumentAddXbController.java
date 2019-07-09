@@ -22,10 +22,12 @@ import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.db.business.entity.DocXbIdea;
 import com.css.app.db.business.entity.DocXbInfo;
+import com.css.app.db.business.entity.ReplyExplain;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.entity.SubDocTracking;
 import com.css.app.db.business.service.DocXbIdeaService;
 import com.css.app.db.business.service.DocXbInfoService;
+import com.css.app.db.business.service.ReplyExplainService;
 import com.css.app.db.business.service.SubDocInfoService;
 import com.css.app.db.business.service.SubDocTrackingService;
 import com.css.base.utils.CurrentUser;
@@ -55,6 +57,8 @@ public class DocumentAddXbController {
 	private BaseAppUserService baseAppUserService;
 	@Autowired
 	private DocXbIdeaService docXbIdeaService;
+	@Autowired
+	private ReplyExplainService replyExplainService;
 	/**
 	 * 控制承办人详情页收集意见按钮显示
 	 * @param subId
@@ -103,10 +107,17 @@ public class DocumentAddXbController {
 	@RequestMapping("/addOrEditXbPerson")
 	@ResponseBody
 	public void addOrEditXbPerson(String userIds, String infoId, String subId) {
+		JSONObject jsonObject = new JSONObject();
 		List<DocXbInfo> docXbInfos = this.queryDocXbInfos(subId);
 		if (docXbInfos != null && docXbInfos.size() > 0) {
-			Response.json(docXbInfos);
+			jsonObject.put("docXbInfos", docXbInfos);
 		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		DocXbIdea docXbIdea = docXbIdeaService.queryLastNewData(subId, infoId);
+		if (docXbIdea != null) {
+			jsonObject.put("docXbIdeas", this.queryDocXbIdeas(infoId, subId, docXbIdea.getGroupId(), map));
+		}
+		Response.json(jsonObject);
 	}
 	
 	@RequestMapping("/addOrDeleteXbPerson")
@@ -328,25 +339,69 @@ public class DocumentAddXbController {
 		}
 	}*/
 	/**
-	 * 展示意见记录(局内所有人)
+	 * 展示意见记录(局内所有人，正式发布以后给所有人看，这个跟随本轮反馈是否发布来选择意见按钮的显示)
 	 * @param infoId
 	 * @param subId
 	 */
 	@RequestMapping("/showIdeaRecord")
 	@ResponseBody
-	public void showIdeaRecord(String infoId, String subId, String ideaGroupId) {
-		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
-		if (subDocInfo != null) {
-			subDocInfo.setIdeaAddFlag(null);
-			subDocInfoService.update(subDocInfo);
-		}
+	public void showIdeaRecord(String subId, String ideaGroupId) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		//登录人是协办人，文不在协办人这里
+//		map.put("receiverId", CurrentUser.getUserId());
+		try {
+			SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+			if (subDocInfo != null ) {
+				String infoId = subDocInfo.getInfoId();
+//				List<DocXbInfo> docXbInfos = docXbInfoService.queryList(map);
+//				SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
+//				if (docXbInfos == null) {
+					//协办人详情页意见展示筛选，只显示本轮意见
+//					DocXbIdea docXbIdea = docXbIdeaService.queryLastNewData(subId, infoId);
+//					if (docXbIdea != null) {
+				Response.json(this.queryDocXbIdeas(infoId, subId, ideaGroupId, map));
+//					}
+//				}
+			}
+		} catch (Exception e) {
+			logger.info("调用意见展示方法异常：{}", e);
+		}
+	}
+	@RequestMapping("/showCurrIdeaRecord")
+	@ResponseBody
+	public void showCurrIdeaRecord(String subId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+		String infoId = subDocInfo.getInfoId();
+//		subDocInfo.setIdeaAddFlag(null);
+//		subDocInfoService.update(subDocInfo);
+		SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
+		String userId = CurrentUser.getUserId();
+		//协办人详情页意见展示筛选，只显示本轮意见
+		if (subDocTracking != null && StringUtils.equals(subDocTracking.getReceiverId(), userId)) {
+			map.put("receiverId", userId);
+			ReplyExplain replyExplain = replyExplainService.queryLastNewData(infoId,subId);
+			if (replyExplain != null) {
+				String showFlag = replyExplain.getShowFlag();
+				if (StringUtils.equals(showFlag, "1")) {
+					map.clear();
+					Response.json(this.queryDocXbIdeas(infoId, subId, subDocTracking.getIdeaGroupId(), map));
+				}
+			}
+		}
+	}
+	/**
+	 * 查询意见记录
+	 * @param infoId
+	 * @param subId
+	 * @param ideaGroupId
+	 * @param map
+	 * @return
+	 */
+	private List<DocXbIdea> queryDocXbIdeas(String infoId, String subId, String ideaGroupId, Map<String, Object> map) {
 		map.put("subId", subId);
 		map.put("infoId", infoId);
 		map.put("ideaGroupId", ideaGroupId);
-		List<DocXbIdea> docXbIdeas = docXbIdeaService.queryList(map);
-		if (docXbIdeas != null && docXbIdeas.size() > 0 ) {
-			Response.json(docXbIdeas);
-		}
+		return docXbIdeaService.queryList(map);
 	}
 }

@@ -30,4 +30,5 @@ public interface DocXbInfoService {
 
 	void deleteBySubIdAndReceiverId(String subId, String userId);
 
+
 }

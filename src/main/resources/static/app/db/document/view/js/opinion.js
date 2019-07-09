@@ -1,35 +1,37 @@
-var listUrl = {"url":"/app/db/document/view/data/opinion.json","dataType":"text"}; //意见记录list
+//var listUrl = {"url":"/app/db/document/view/data/opinion.json","dataType":"text"}; //意见记录list
+var showIdeaRecordUrl = {"url":"/app/db/addXbDeal/showIdeaRecord","dataType":"text"}; //意见记录
 var teamId=getUrlParam("teamId");//
 var subId=getUrlParam("subId");//
+var ideaGroupId=getUrlParam("ideaGroupId");
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var opinionFlag=getUrlParam("opinionFlag")||""; //判断是从哪里进入的，talbe || 详情页 ,table页面进入需要请求后台方法
 var pageModule = function(){
 	//意见记录
 	var initList = function(){
 		$ajax({
-			url:listUrl,
- 			data:{subId:subId,teamId:teamId},
+			url:showIdeaRecordUrl,
+ 			data:{subId:subId,teamId:teamId,ideaGroupId:ideaGroupId},
 			success:function(data){
 				var html1= "";
 				var xbUser = [];
 				$.each(data,function(i,o){
-					var createTime = o.createTime;
-					var cbrList = o.cbrList;
+					var createdTime = o.createdTime;
+//					var cbrList = o.cbrList;
 					html1=	'<div class="timelinesheys">'+
 							'	<div class="timeline-icon">'+
 							'		<i class="icontime"></i>'+
 							'	</div>'+
 							'	<div class="timeline-user">'+
-							'		<span class="createTime">'+createTime+'</span>'+
+							'		<span class="createTime">'+createdTime+'</span>'+
 							'	</div>'+
 							'	<div class="timeline-body">';
-							$.each(cbrList,function(i,item){
-								xbUser.push(item.userName);
+//							$.each(cbrList,function(i,item){
+								xbUser.push(o.userName);
 								html1 += '<div class="timeline-content">'+
-									        '	<div class="userName"><i class="fa fa-user"></i>&nbsp;'+item.userName+'</div>';
-								html1 += '	<div class="content">'+item.content+'</div>';
+									        '	<div class="userName"><i class="fa fa-user"></i>&nbsp;'+o.userName+'</div>';
+								html1 += '	<div class="content">'+o.feedBackIdea+'</div>';
 								html1 += '</div>';
-							})
+//							})
 							
 							html1 +='	</div>'+
 									'</div>'

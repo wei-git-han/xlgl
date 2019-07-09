@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.css.app.db.business.entity.DocXbInfo;
 import com.css.app.db.business.entity.ReplyExplain;
 
 /**
@@ -41,4 +42,6 @@ public interface ReplyExplainService {
 	
 	//根据条件进行删除
 	void deleteByParam(Map<String, Object> map);
+
+	ReplyExplain queryLastNewData(String infoId, String subId);
 }

@@ -229,6 +229,7 @@ var pageModule = function(){
 					ld = o.cbrName;
 					content = o.content;
 					subId = o.subId;
+					ideaGroupId = o.ideaGroupId;
 					//edit = o.edit;
 					//if(edit==true){
 					//	edit = `<div class="nrt-cont-top-btn">
@@ -310,7 +311,7 @@ var pageModule = function(){
 									<div class="newpanel-right-top">
 										<div class="nrt-date">
 											<font>${firstDate}</font>
-											<a style="float: right;" id="yjjl" onclick="showfn('${subId}')">意见记录</a>
+											<a style="float: right;" id="yjjl" onclick="showfn('${subId}','${ideaGroupId}')">意见记录</a>
 										</div>
 									</div>
 									
@@ -318,7 +319,7 @@ var pageModule = function(){
 										<div class="nrt-cont" style="border-color:${color}">
 											<div class="nrt-cont-top">
 												<div class="nrt-cont-top-left">
-													<div class="nrt-cont-top-title" onclick="viewcont('${teamId}','${subId}')">
+													<div class="nrt-cont-top-title" onclick="viewcont('${teamId}','${subId}','${ideaGroupId}')">
 														<i class="fa fa-user"></i>
 														<font>${danwei}-${ld}</font>
 													</div>
@@ -819,11 +820,11 @@ function removefn(id,el){
 	});
 }
 
-function viewcont(teamId,subId){
+function viewcont(teamId,subId,ideaGroupId){
 	$("#viewcont").modal("show");
 	$ajax({
 		url:replyByTeamIdUrl,
-		data:{subId:subId,teamId:teamId},
+		data:{subId:subId,teamId:teamId,ideaGroupId:ideaGroupId},
 	    success:function(data){
 	    	if(data && data.length>0){
 	    		$(".viewcontent").html("");
@@ -850,7 +851,7 @@ function viewcont(teamId,subId){
 	});
 }
 //意见记录事件
-var showfn = function(subId){
+var showfn = function(subId, ideaGroupId){
 	newbootbox.newdialog({
 		id:"yijianDialog",
 		width:800,
@@ -858,7 +859,7 @@ var showfn = function(subId){
 		header:true,
 		title:"意见记录",
 		classed:"cjDialog",
-		url:"/app/db/document/djlr/html/yjjl.html?subId="+subId,
+		url:"/app/db/document/djlr/html/yjjl.html?subId="+subId+"&ideaGroupId="+ideaGroupId,
 	})
 	
 //	url:"/app/db/document/view/html/psDialog.html?fileId="+id,

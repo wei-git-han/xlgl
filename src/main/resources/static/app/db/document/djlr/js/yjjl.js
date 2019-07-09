@@ -1,41 +1,42 @@
-//var showIdeaRecordUrl = {"url":"/app/db/addXbDeal/showIdeaRecord","dataType":"text"}; //意见记录
-var listUrl = {"url":"/app/db/document/view/data/opinion.json","dataType":"text"}; //意见记录list
+var showCurrIdeaRecordUrl = {"url":"/app/db/addXbDeal/showCurrIdeaRecord","dataType":"text"}; //意见记录
 var userTree = {"url":"/app/base/user/tree","dataType":"text"}; //人员选择树
+//var showIdeaRecordUrl = {"url":"/app/db/addXbDeal/showIdeaRecord","dataType":"text"}; //意见记录
 var addOrDeleteXbPersonUrl = {"url":"/app/db/addXbDeal/addOrDeleteXbPerson","dataType":"text"}; //添加或者删除协办人
 var commitIdeaUrl={"url":"/app/db/addXbDeal/commitIdea","dataType":"text"}; //发送意见url
 var documentId=getUrlParam("documentId");//办件id
 var infoId=getUrlParam("infoId")||""; //主文件id
 var subId=getUrlParam("subId")||""; //文件来源
 var teamId=getUrlParam("teamId");//
+var ideaGroupId=getUrlParam("ideaGroupId");//
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var opinionFlag=getUrlParam("opinionFlag")||""; //判断是从哪里进入的，talbe || 详情页 ,table页面进入需要请求后台方法
 var pageModule = function(){
 	//意见记录
 	var initList = function(){
 		$ajax({
-			url:listUrl,
- 			data:{subId:subId,teamId:teamId},
+			url:showCurrIdeaRecordUrl,
+ 			data:{subId:subId,teamId:teamId,ideaGroupId:ideaGroupId},
 			success:function(data){
 				var html1= "";
 				var xbUser = [];
-				$.each(data,function(i,o){
-					var createTime = o.createTime;
-					var cbrList = o.cbrList;
+				$.each(data,function(i,item){
+					var createdTime = item.createdTime;
+					var cbrList = item.cbrList;
 					html1=	'<div class="timelinesheys">'+
 							'	<div class="timeline-icon">'+
 							'		<i class="icontime"></i>'+
 							'	</div>'+
 							'	<div class="timeline-user">'+
-							'		<span class="createTime">'+createTime+'</span>'+
+							'		<span class="createTime">'+createdTime+'</span>'+
 							'	</div>'+
 							'	<div class="timeline-body">';
-							$.each(cbrList,function(i,item){
+//							$.each(cbrList,function(i,item){
 								xbUser.push(item.userName);
 								html1 += '<div class="timeline-content">'+
 									        '	<div class="userName"><i class="fa fa-user"></i>&nbsp;'+item.userName+'</div>';
-								html1 += '	<div class="content">'+item.content+'</div>';
+								html1 += '	<div class="content">'+item.feedBackIdea+'</div>';
 								html1 += '</div>';
-							})
+//							})
 							
 							html1 +='	</div>'+
 									'</div>'

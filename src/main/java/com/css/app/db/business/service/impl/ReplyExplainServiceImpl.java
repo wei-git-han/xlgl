@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.css.app.db.business.dao.ReplyExplainDao;
+import com.css.app.db.business.entity.DocXbInfo;
 import com.css.app.db.business.entity.ReplyExplain;
 import com.css.app.db.business.entity.SubDocTracking;
 import com.css.app.db.business.service.ReplyExplainService;
@@ -110,6 +111,12 @@ public class ReplyExplainServiceImpl implements ReplyExplainService {
 	@Override
 	public void deleteByParam(Map<String, Object> map) {
 		replyExplainDao.deleteByParam(map);
+	}
+
+	@Override
+	public ReplyExplain queryLastNewData(String infoId, String subId) {
+		// TODO Auto-generated method stub
+		return replyExplainDao.queryLastNewData(infoId, subId);
 	}
 	
 }

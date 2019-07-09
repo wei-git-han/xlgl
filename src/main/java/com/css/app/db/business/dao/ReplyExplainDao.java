@@ -31,4 +31,6 @@ public interface ReplyExplainDao extends BaseDao<ReplyExplain> {
 	List<ReplyExplain> queryAllLatestOneReply(String infoId);
 	//根据条件进行删除
 	void deleteByParam(Map<String, Object> map);
+	
+	ReplyExplain queryLastNewData(String infoId, String subId);
 }

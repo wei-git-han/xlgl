@@ -26,7 +26,6 @@ import com.css.addbase.msg.MSGTipDefined;
 import com.css.addbase.msg.MsgTipUtil;
 import com.css.addbase.msg.entity.MsgTip;
 import com.css.addbase.msg.service.MsgTipService;
-import com.css.app.db.business.entity.DocXbIdea;
 import com.css.app.db.business.entity.DocXbInfo;
 import com.css.app.db.business.entity.DocumentBjjl;
 import com.css.app.db.business.entity.DocumentCbjl;
@@ -36,7 +35,6 @@ import com.css.app.db.business.entity.ReplyExplain;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.entity.SubDocTracking;
 import com.css.app.db.business.service.ApprovalOpinionService;
-import com.css.app.db.business.service.DocXbIdeaService;
 import com.css.app.db.business.service.DocXbInfoService;
 import com.css.app.db.business.service.DocumentBjjlService;
 import com.css.app.db.business.service.DocumentCbjlService;
@@ -101,8 +99,6 @@ public class SubDocInfoController {
 	private  String appId;	
 	@Value("${csse.dccb.appSecret}")
 	private  String clientSecret;
-	@Autowired
-	private DocXbIdeaService docXbIdeaService;
 	/**
 	 * 局内待办列表
 	 */
@@ -314,15 +310,29 @@ public class SubDocInfoController {
 	 * @param subDocInfo
 	 * @param loginUserId
 	 */
-	private void isXBPerson(SubDocInfo subDocInfo, String loginUserId) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("subId", subDocInfo.getId());
-		map.put("infoId", subDocInfo.getInfoId());
-		map.put("receiverId", loginUserId);
-		List<DocXbInfo> docXbInfos = docXbInfoService.queryList(map);
-		if (docXbInfos != null && docXbInfos.size() > 0) {
+	private boolean isXBPerson(SubDocInfo subDocInfo, String loginUserId) {
+//		Map<String, Object> map = new HashMap<>();
+//		map.put("subId", subDocInfo.getId());
+//		map.put("infoId", subDocInfo.getInfoId());
+//		map.put("receiverId", loginUserId);
+//		List<DocXbInfo> docXbInfos = docXbInfoService.queryList(map);
+//		if (docXbInfos != null && docXbInfos.size() > 0) {
+//			subDocInfo.setIsXBPerson(1);
+//		}
+		//当前是否为协办人且文不在他这里
+		Map<String, Object> hashMap = new HashMap<>();
+		hashMap.put("subId", subDocInfo.getId());
+		hashMap.put("infoId", subDocInfo.getInfoId());
+		hashMap.put("receiverId", loginUserId);
+		List<DocXbInfo> docXbInfos = docXbInfoService.queryList(hashMap);
+		SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subDocInfo.getId());
+		if(docXbInfos != null && docXbInfos.size() > 0 && subDocTracking != null 
+				&& !StringUtils.equals(loginUserId, subDocTracking.getReceiverId())) {
 			subDocInfo.setIsXBPerson(1);
+			return true;
 		}
+		subDocInfo.setIsXBPerson(0);
+		return false;
 	}
 
 	/**
@@ -468,15 +478,8 @@ public class SubDocInfoController {
 						isCheckUser=true;
 					}
 				}
-				//当前是否为协办人
-				Map<String, Object> hashMap = new HashMap<>();
-				hashMap.put("subId", subId);
-				hashMap.put("infoId", subDocInfo.getInfoId());
-				hashMap.put("receiverId", loginUserId);
-				List<DocXbInfo> docXbInfos = docXbInfoService.queryList(hashMap);
-				if(docXbInfos != null && docXbInfos.size() > 0) {
-					isXBPerson=true;
-				}
+				//当前是否为协办人且文不在他这里
+				isXBPerson = this.isXBPerson(subDocInfo, loginUserId);
 			}
 		}
 		JSONObject json=new JSONObject();
