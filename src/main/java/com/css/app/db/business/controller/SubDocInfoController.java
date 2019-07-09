@@ -1000,6 +1000,12 @@ public class SubDocInfoController {
 		//新一轮审批完成，生成下一轮意见组ID
 		if (StringUtils.equals("4", trackingType)) {
 			tracking.setIdeaGroupId(UUID.randomUUID().toString());
+		}else {
+			SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
+			if (subDocTracking != null) {
+				tracking.setIdeaGroupId(subDocTracking.getIdeaGroupId());
+			}
+			tracking.setIdeaGroupId(UUID.randomUUID().toString());
 		}
 		if(StringUtils.isNotBlank(status)) {
 			tracking.setPreviousStatus(Integer.parseInt(status));

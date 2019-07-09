@@ -72,7 +72,11 @@ var pageModule = function(){
                 	if(rowdata.isOverTreeMonth==1){
                 		csFlag = '<img src="../../../common/images/u301.png" class="titleimg" />';
                 	}
-               	 	return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../view/html/view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&docStatus='+docStatus+'&fileFrom=grdb" target="iframe1">'+cuiban+rowdata.docTitle+csFlag+'</a>'
+                	if(1 != rowdata.receiverIsMe && rowdata.isXBPerson == 1 ){
+                		return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../view/html/view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&docStatus='+docStatus+'&fileFrom=grdb" target="iframe1">'+cuiban+rowdata.docTitle+csFlag+'</a>'
+                	}else{
+                		return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../view/html/view2.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&docStatus='+docStatus+'&fileFrom=grdb" target="iframe1">'+cuiban+rowdata.docTitle+csFlag+'</a>'
+                	}
                 }},
                 {display:"紧急程度",name:"urgencyDegree",width:"5%",align:"center",paixu:false,render:function(rowdata){
                	 	return rowdata.urgencyDegree;
@@ -114,7 +118,7 @@ var pageModule = function(){
                 {display:"意见收集",name:"",width:"4%",align:"center",paixu:false,render:function(rowdata){
                	 var ideaCount="";
                	 if(rowdata.ideaCount){
-               		ideaCount = '<font style="cursor:pointer;" onclick="opinionView(\''+rowdata.id+'\',\''+rowdata.infoId+'\')">'+rowdata.ideaCount+'</font>';
+               		ideaCount = '<font style="cursor:pointer;" onclick="opinionView(\''+rowdata.infoId+'\',\''+rowdata.id+'\')">'+rowdata.ideaCount+'</font>';
                	 }else{
                		ideaCount = '-';
                	 }
@@ -417,7 +421,7 @@ function plspFn(ids, curRole){
 
 
 //意见收集
-function opinionView(teamId,subId){ 
+function opinionView(infoId,subId){ 
 	newbootbox.newdialog({
 		id:"opinionDialog",
 		width:800,
@@ -426,6 +430,6 @@ function opinionView(teamId,subId){
 		title:"意见收集",
 		classed:"cjDialog",
 		style:{"padding":"0px"},
-		url:"/app/db/document/view/html/opinion.html?teamId="+teamId+"&subId="+subId+"&opinionFlag=table"
+		url:"/app/db/document/view/html/opinion.html?infoId="+infoId+"&subId="+subId+"&opinionFlag=table"
 	})
 }

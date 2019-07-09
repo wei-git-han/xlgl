@@ -65,5 +65,11 @@ public class SubDocTrackingServiceImpl implements SubDocTrackingService {
 	public List<SubDocTracking> queryListBySubId(String subId) {
 		return subDocTrackingDao.queryListBySubId(subId);
 	}
+
+	@Override
+	public SubDocTracking queryNewRecord(String subId) {
+		// TODO Auto-generated method stub
+		return subDocTrackingDao.queryNewRecord(subId);
+	}
 	
 }

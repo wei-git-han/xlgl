@@ -3,6 +3,7 @@ var userTree = {"url":"/app/base/user/tree","dataType":"text"}; //人员选择�
 //var showIdeaRecordUrl = {"url":"/app/db/addXbDeal/showIdeaRecord","dataType":"text"}; //意见记录
 var addOrDeleteXbPersonUrl = {"url":"/app/db/addXbDeal/addOrDeleteXbPerson","dataType":"text"}; //添加或者删除协办人
 var commitIdeaUrl={"url":"/app/db/addXbDeal/commitIdea","dataType":"text"}; //发送意见url
+var addOrEditXbPersonUrl={"url":"/app/db/addXbDeal/addOrEditXbPerson","dataType":"text"}; //发送意见url
 var documentId=getUrlParam("documentId");//办件id
 var infoId=getUrlParam("infoId")||""; //主文件id
 var subId=getUrlParam("subId")||""; //文件来源
@@ -10,7 +11,20 @@ var teamId=getUrlParam("teamId");//
 var ideaGroupId=getUrlParam("ideaGroupId");//
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var opinionFlag=getUrlParam("opinionFlag")||""; //判断是从哪里进入的，talbe || 详情页 ,table页面进入需要请求后台方法
+var xbrIds = ""
 var pageModule = function(){
+	//编辑返回的树id
+	var returnTreeIds  = function(){
+		if(subId!=""){
+			$ajax({
+				url: addOrEditXbPersonUrl,
+				data:{subId:subId},
+				success:function(data){
+					xbrIds = data.success;
+				}
+			});
+		}
+	}
 	//意见记录
 	var initList = function(){
 		$ajax({
@@ -19,6 +33,11 @@ var pageModule = function(){
 			success:function(data){
 				var html1= "";
 				var xbUser = [];
+				if(data == ''){
+					$(".xbUserLine > span").hide();
+					$("#textarea").hide();
+					
+				}
 				$.each(data,function(i,item){
 					var createdTime = item.createdTime;
 					var cbrList = item.cbrList;
@@ -143,13 +162,23 @@ var pageModule = function(){
 					    }
 					}
 				});
-			}
+			}/*,
+			$("#tree_1").on("load_node.jstree", function(e,data) {
+				if(xbrIds != ""){
+					for(var i=0;i<xbrIds.length;i++){
+						$("#orgTree").jstree("select_node",xbrIds[i],true);
+					}
+				}else{
+					$("#orgTree").jstree("select_node","",true);
+				}
+			});*/
 		})
 	}
-
+	
 	return{
 		//加载页面处理程序
 		initControl:function(){
+			returnTreeIds();
 			initList();
 			initother();
 			initOrgTree()

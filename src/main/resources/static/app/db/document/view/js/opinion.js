@@ -1,7 +1,8 @@
 //var listUrl = {"url":"/app/db/document/view/data/opinion.json","dataType":"text"}; //意见记录list
 var showIdeaRecordUrl = {"url":"/app/db/addXbDeal/showIdeaRecord","dataType":"text"}; //意见记录
-var teamId=getUrlParam("teamId");//
+var infoId=getUrlParam("infoId");//
 var subId=getUrlParam("subId");//
+var teamId=getUrlParam("teamId");//
 var ideaGroupId=getUrlParam("ideaGroupId");
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var opinionFlag=getUrlParam("opinionFlag")||""; //判断是从哪里进入的，talbe || 详情页 ,table页面进入需要请求后台方法
@@ -10,7 +11,7 @@ var pageModule = function(){
 	var initList = function(){
 		$ajax({
 			url:showIdeaRecordUrl,
- 			data:{subId:subId,teamId:teamId,ideaGroupId:ideaGroupId},
+ 			data:{subId:subId,infoId:infoId,ideaGroupId:ideaGroupId},
 			success:function(data){
 				var html1= "";
 				var xbUser = [];

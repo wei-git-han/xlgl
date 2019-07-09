@@ -32,4 +32,6 @@ public interface SubDocTrackingService {
 
 	List<SubDocTracking> queryListBySubId(String subId);
 
+	SubDocTracking queryNewRecord(String subId);
+
 }

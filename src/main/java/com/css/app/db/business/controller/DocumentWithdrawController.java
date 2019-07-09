@@ -299,6 +299,8 @@ public class DocumentWithdrawController {
 			subDocInfo.setChooseStatus(null);
 			//意见记录清空
 			subDocInfo.setIdeaCount(null);
+			//清空意见记录
+			subDocInfo.setIdeaCount(null);
 			subDocInfoService.update(subDocInfo);
 		} else {
 			this.unifiedDealErrorLog(json, infoId, subId, "分支主记录表");
