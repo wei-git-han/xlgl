@@ -838,6 +838,9 @@ ul{
 .newpanel-right{margin-left:50px;margin-right:10px;}
 .nrt-date{font-size:14px;color:#fff;color:rgb(153, 153, 153);line-height:30px;}
 .newpanel-right-top{}
+.newpanel-right-top .yjjl{
+	cursor:pointer;
+}
 .newpanel-right-cent{}
 .nrt-cont{border-left:6px solid #00CCCC;padding:10px;margin-bottom:10px;background-color:rgba(255,255,255,0.3);background-color:rgba(0,0,0,0.05);}
 .nrt-cont-top{min-height:30px;}

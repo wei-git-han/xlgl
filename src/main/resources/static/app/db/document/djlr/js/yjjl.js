@@ -1,11 +1,53 @@
-var showIdeaRecordUrl = {"url":"/app/db/addXbDeal/showIdeaRecord","dataType":"text"}; //意见记录
+//var showIdeaRecordUrl = {"url":"/app/db/addXbDeal/showIdeaRecord","dataType":"text"}; //意见记录
+var listUrl = {"url":"/app/db/document/view/data/opinion.json","dataType":"text"}; //意见记录list
 var userTree = {"url":"/app/base/user/tree","dataType":"text"}; //人员选择树
 var addOrDeleteXbPersonUrl = {"url":"/app/db/addXbDeal/addOrDeleteXbPerson","dataType":"text"}; //添加或者删除协办人
 var commitIdeaUrl={"url":"/app/db/addXbDeal/commitIdea","dataType":"text"}; //发送意见url
 var documentId=getUrlParam("documentId");//办件id
 var infoId=getUrlParam("infoId")||""; //主文件id
 var subId=getUrlParam("subId")||""; //文件来源
+var teamId=getUrlParam("teamId");//
+var fileFrom=getUrlParam("fileFrom")||""; //文件来源
+var opinionFlag=getUrlParam("opinionFlag")||""; //判断是从哪里进入的，talbe || 详情页 ,table页面进入需要请求后台方法
 var pageModule = function(){
+	//意见记录
+	var initList = function(){
+		$ajax({
+			url:listUrl,
+ 			data:{subId:subId,teamId:teamId},
+			success:function(data){
+				var html1= "";
+				var xbUser = [];
+				$.each(data,function(i,o){
+					var createTime = o.createTime;
+					var cbrList = o.cbrList;
+					html1=	'<div class="timelinesheys">'+
+							'	<div class="timeline-icon">'+
+							'		<i class="icontime"></i>'+
+							'	</div>'+
+							'	<div class="timeline-user">'+
+							'		<span class="createTime">'+createTime+'</span>'+
+							'	</div>'+
+							'	<div class="timeline-body">';
+							$.each(cbrList,function(i,item){
+								xbUser.push(item.userName);
+								html1 += '<div class="timeline-content">'+
+									        '	<div class="userName"><i class="fa fa-user"></i>&nbsp;'+item.userName+'</div>';
+								html1 += '	<div class="content">'+item.content+'</div>';
+								html1 += '</div>';
+							})
+							
+							html1 +='	</div>'+
+									'</div>'
+					$(".timelinesview").append(html1);
+				})
+				$("#xbUser").html(xbUser.toString());
+			}
+		})
+	}
+	
+	
+	
 	var initother = function(){
 		$("#showInfo").click(function(){
 			$('#timeLineTab').hide()
@@ -103,47 +145,7 @@ var pageModule = function(){
 			}
 		})
 	}
-	//转办记录
-	var initList = function(){
-		$ajax({
-			url:showIdeaRecordUrl,
- 			data:{subId:subId,infoId:infoId},
-			success:function(data){
-				var html1= "";
-				$.each(data,function(i,o){
-					var zbr = o.zbr;
-					var zbFlag = o.zbFlag;
-					if($.trim(zbFlag) == "update"){
-						zbFlag = "修改承办人为：";
-						var setClass = "timeline-icon";
-					}else{
-						zbFlag = "发起转办,设置承办人为：";
-						var setClass = "timeline-icon1";
-					}
-					var zbTime = o.zbTime;
-					var cbrList = o.cbrList;
-					html1=	'<div class="timelinesheys">'+
-							'	<div class="'+setClass+'">'+
-							'		<i class="icontime"></i>'+
-							'	</div>'+
-							'	<div class="timeline-user">'+
-							'		<span class="user">'+zbr+'</span><span class="zbFlag">'+zbFlag+'</span><span class="zbTime">'+zbTime+'</span>'+
-							'	</div>'+
-							'	<div class="timeline-body">';
-							$.each(cbrList,function(i,item){
-									html1 += '<div class="timeline-content" title="">'+
-									         '	<div style="font-weight:700;">'+item.orgName+'</div>';
-									html1 += '	<div style="color:#555;">'+item.cbrName+'</div>';
-									html1 += '</div>';
-							})
-							
-							html1 +='	</div>'+
-									'</div>'
-					$(".timelinesview").append(html1);
-				})
-			}
-		})
-	}
+
 	return{
 		//加载页面处理程序
 		initControl:function(){

@@ -114,7 +114,7 @@ var pageModule = function(){
                 {display:"意见收集",name:"",width:"4%",align:"center",paixu:false,render:function(rowdata){
                	 var ideaCount="";
                	 if(rowdata.ideaCount){
-               		ideaCount = rowdata.ideaCount;
+               		ideaCount = '<font style="cursor:pointer;" onclick="opinionView(\''+rowdata.id+'\',\''+rowdata.infoId+'\')">'+rowdata.ideaCount+'</font>';
                	 }else{
                		ideaCount = '-';
                	 }
@@ -412,5 +412,20 @@ function plspFn(ids, curRole){
 		title:"审批",
 		classed:"cjDialog",
 		url:"/app/db/document/grdb/html/plsp.html?ids="+ids+"&curRole="+curRole
+	})
+}
+
+
+//意见收集
+function opinionView(teamId,subId){ 
+	newbootbox.newdialog({
+		id:"opinionDialog",
+		width:800,
+		height:600,
+		header:true,
+		title:"意见收集",
+		classed:"cjDialog",
+		style:{"padding":"0px"},
+		url:"/app/db/document/view/html/opinion.html?teamId="+teamId+"&subId="+subId+"&opinionFlag=table"
 	})
 }
