@@ -24,11 +24,13 @@ var subId=getUrlParam("subId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var fromMsg=getUrlParam("fromMsg")||false; //是否为消息进入
 var showFileButton = getUrlParam("showFileButton")||false
+var docStatus = getUrlParam("docStatus")||"" //文件办理状态
 var isCbr = 0;//承办人标识
 var isSave = 0;//保存成功提示标识
 var ifShowEditBtn="0";//是否有编辑按钮
 var scanFilePath = "";//扫描件路径
 var showCollectIdeaButtonUrl={"url":"/app/db/addXbDeal/showCollectIdeaButton","dataType":"text"}; //是否显示意见收集
+var commitIdeaUrl={"url":"/app/db/addXbDeal/commitIdea","dataType":"text"}; //发送意见url
 
 
 
@@ -53,6 +55,31 @@ var pageModule = function(){
 			}
 		})
 	}
+   //文件办理状态 判断显示
+//	var isShowDocStatus=function(){
+//		if(isCbr == 0){
+//			alert(docStatus)
+//			if(docStatus=="9" || docStatus==9){
+//				$("#shuru").show();
+//				$("#clear").show();
+//				$("#fasong").show();
+//				$("#sryj_center").show();
+//				$(".blfk_bottom").show(); //意见外大框
+//				$(".newbottom").show(); //所有按钮的容器
+//				$(".blfk_top").css({"bottom":"40%","height":"58%"});   //意见框上方元素样式控制
+//				$("#clear").show();
+//				$("#fanli").hide();
+//			}else{
+//				$("#shuru").hide();
+//				$("#clear").hide();
+//				$("#fasong").hide();
+//				$("#sryj_center").hide();
+//				$(".newbottom").hide(); //所有按钮的容器
+//			}
+//		}
+//	}
+	
+	
 	//是否显示意见收集按钮
 	var showCollectIdeaButton=function(){
 		$ajax({
@@ -116,6 +143,14 @@ var pageModule = function(){
 									$("#showfj").show();
 									$("#zhuanban").show();
 									isCbr = 1;
+								}
+							}else{
+								if(data.isXBPerson && data.docStatus==9){
+									$(".blfk_bottom").show(); //意见外大框
+									$(".newbottom").show(); //所有按钮的容器
+									$(".blfk_top").css({"bottom":"40%","height":"58%"});   //意见框上方元素样式控制
+									$("#clear").show();
+									$("#fasong").show();
 								}
 							}
 						}
@@ -478,14 +513,25 @@ var pageModule = function(){
 				if(data&&data.length>0){
 					$("#zbrecord").html("");
 					$.each(data,function(i,item){
-						$("#zbrecord").append(
-							'<div class="record">'+
-				            '	<label class="zbUser">转办人:</label>'+
-				            '	<div><span>'+item.orgName+'&nbsp;&nbsp;'+item.userName+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
-				            '	<label class="cbdw">承办单位/人:</label>'+
-				            '	<div>'+item.receiverNames+'</div>'+
-				            '</div>'
-			            )
+						if(item.isAddRecord == 1){
+							$("#zbrecord").append(
+									'<div class="record">'+
+									'	<label class="zbUser">承办人:</label>'+
+									'	<div><span>'+item.orgName+'&nbsp;&nbsp;'+item.userName+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
+									'	<label class="cbdw">增加协办人:</label>'+
+									'	<div>'+item.receiverNames+'</div>'+
+									'</div>'
+							)
+						}else{
+							$("#zbrecord").append(
+									'<div class="record">'+
+									'	<label class="zbUser">转办人:</label>'+
+									'	<div><span>'+item.orgName+'&nbsp;&nbsp;'+item.userName+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
+									'	<label class="cbdw">承办单位/人:</label>'+
+									'	<div>'+item.receiverNames+'</div>'+
+									'</div>'
+							)
+						}
 					});
 				}else{
 					$("#zbrecord").html('<div class="szqf zwCss">暂无转办记录！</div>');
@@ -608,6 +654,7 @@ var pageModule = function(){
 		
 		//承办
 		$("#chengban").click(function(){
+			$("#yjsj").show();
 			$ajax({
 				url:chengbanUrl,
 				data:{subId:subId},
@@ -814,7 +861,6 @@ var pageModule = function(){
 				url:"/app/db/document/view/html/fanli.html?subId="+subId+"&infoId="+fileId+"&fileFrom="+fileFrom+"&fromMsg="+fromMsg
 			})
 		});
-		
 		/*//办结
 		$("#banjie").click(function(){
 			newbootbox.oconfirm({
@@ -1031,6 +1077,19 @@ var pageModule = function(){
 				}
 			});
         });
+        
+        //意见收集
+        $("#yjsj").click(function(){
+        	newbootbox.newdialog({
+        		id:"yijianDialog",
+        		width:800,
+        		height:600,
+        		header:true,
+        		title:"意见记录",
+        		classed:"cjDialog",
+        		url:"/app/db/document/djlr/html/yjjl.html?infoId="+fileId+"&subId="+subId
+        	})
+        });
 	}
 		
 	return{
@@ -1046,6 +1105,7 @@ var pageModule = function(){
 			initcbfn();
 			initbjfn();
 			initother();
+//			isShowDocStatus();
 			showCollectIdeaButton();
 			$(".scroller").css("height","100%");
 			$(".slimScrollDiv").css("height","100%");
@@ -1303,15 +1363,27 @@ $("#delfj").click(function(){
 	}
 });
 
-//意见收集
-var showfn = function(infoId,subId){
-	newbootbox.newdialog({
-		id:"yijianDialog",
-		width:800,
-		height:600,
-		header:true,
-		title:"意见记录",
-		classed:"cjDialog",
-		url:"/app/db/document/djlr/html/yjjl.html?infoId="+infoId+"&subId="+subId
-	})
-}
+
+$("#fasong").click(function(){
+	if($("#replyContent").val() == ''){
+		newbootbox.alert("发送内容不允许为空！");
+	}else{
+		$ajax({
+			url:commitIdeaUrl,
+			data:{infoId:fileId,subId:subId,feedBackIdea:$("#replyContent").val()},
+			type: "GET",
+			success:function(data){
+				if(data.result == "success"){
+					newbootbox.alert("发送成功！").done(function(){
+						pageModule.takeMenufn()
+					});
+					$("#replyContent").val('');
+				}else{
+					newbootbox.alert("发送失败！").done(function(){
+						pageModule.takeMenufn()
+					});
+				}
+			}
+		});
+	}
+});

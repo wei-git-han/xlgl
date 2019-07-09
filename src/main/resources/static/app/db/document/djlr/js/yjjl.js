@@ -1,5 +1,7 @@
-var listUrl = {"url":"/app/db/documentinfo/showIdeaRecord","dataType":"text"}; //意见记录
+var showIdeaRecordUrl = {"url":"/app/db/addXbDeal/showIdeaRecord","dataType":"text"}; //意见记录
 var userTree = {"url":"/app/base/user/tree","dataType":"text"}; //人员选择树
+var addOrDeleteXbPersonUrl = {"url":"/app/db/addXbDeal/addOrDeleteXbPerson","dataType":"text"}; //添加或者删除协办人
+var commitIdeaUrl={"url":"/app/db/addXbDeal/commitIdea","dataType":"text"}; //发送意见url
 var documentId=getUrlParam("documentId");//办件id
 var infoId=getUrlParam("infoId")||""; //主文件id
 var subId=getUrlParam("subId")||""; //文件来源
@@ -19,6 +21,22 @@ var pageModule = function(){
 		
 		//提交
 		$("#tijiao").click(function(){
+			$ajax({
+				url:commitIdeaUrl,
+				data:{infoId:infoId,subId:subId,feedBackIdea:$("#opinionContent").val()},
+				type: "GET",
+				success:function(data){
+					if(data.result == "success"){
+						newbootbox.alert("发送成功！").done(function(){
+			    			pageModule.takeMenufn()
+						});
+					}else{
+						newbootbox.alert("发送失败！").done(function(){
+			    			pageModule.takeMenufn()
+						});
+					}
+				}
+			});
 			newbootbox.newdialogClose("yijianDialog");
 		});
 		
@@ -32,9 +50,27 @@ var pageModule = function(){
 		})
 		$('#sureOrg').click(function(){
 			var treeids = [];
-			var arry = $("#orgTree").jstree("get_checked");//获取选中人员
-			$('#timeLineTab').show()
-			$('#infoTab').hide()
+			var userIds = $("#orgTree").jstree("get_checked");//获取选中人员
+			
+			$.ajax({
+	 			url:addOrDeleteXbPersonUrl.url,
+	 			data:{userIds:userIds.toString(),subId:subId,infoId:infoId},
+	 			success:function(data){
+	 				newbootbox.newdialogClose("yijianDialog");
+	 				if(data.result  == "success"){
+	 					newbootbox.alert('协办人添加成功！');
+	 				}else{
+	 					newbootbox.alert('协办人添加失败！');			
+	 				}
+//	 				$("input[name=users]").click(function(){
+//	 					window.top.iframe1.window.pageModule.getUserData($(this).attr("personName"),$(this).attr("data"));
+//	 					newbootbox.newdialogClose("chooseszDialog");
+//	 				})
+	 				
+	 			}
+	 		});
+//			$('#timeLineTab').show()
+//			$('#infoTab').hide()
 		})
 	}
 	var initOrgTree = function() {
@@ -70,7 +106,7 @@ var pageModule = function(){
 	//转办记录
 	var initList = function(){
 		$ajax({
-			url:listUrl,
+			url:showIdeaRecordUrl,
  			data:{subId:subId,infoId:infoId},
 			success:function(data){
 				var html1= "";

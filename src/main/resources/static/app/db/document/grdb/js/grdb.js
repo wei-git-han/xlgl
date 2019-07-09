@@ -13,6 +13,8 @@ if(!window.top.memory){
 }
 var o = window.top.memory;
 
+var docStatus=0;
+
 var pageModule = function(){
 	var initgrid = function(){
         grid = $("#gridcont").createGrid({
@@ -23,6 +25,7 @@ var pageModule = function(){
                 {display:"局内状态",name:"statusName",width:"7%",align:"center",render:function(rowdata,n){
                 	var statusName="";
                	 	var bgColor="#FF6600";
+                	docStatus=rowdata.docStatus;
                	 	if(rowdata.docStatus==3){
 	               	 	statusName="退回修改";
 	               		bgColor="rgba(240, 96, 0, 1)";
@@ -47,7 +50,7 @@ var pageModule = function(){
                	 	}else if(rowdata.docStatus==9){
 	               	 	statusName="办理中";
 	               	 	bgColor="rgba(43, 170, 129, 1)";
-	           	 		if(1 != rowdata.receiverIsMe){
+	           	 		if(1 != rowdata.receiverIsMe && rowdata.isXBPerson != 1 ){
 	           	 			statusName=rowdata.dealUserName+"办理中";
 	           	 			bgColor="#33CC99";
 	           	 		}
@@ -60,7 +63,7 @@ var pageModule = function(){
                	 	}
   				  	return '<div title="'+statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+statusName+'</div>';
                 }},
-                {display:"文件标题",name:"docTitle",width:"13%",align:"left",render:function(rowdata){
+                {display:"文件标题",name:"docTitle",width:"10%",align:"left",render:function(rowdata){
                 	var cuiban="";
                 	if(rowdata.cuibanFlag=="1"){
                 		cuiban = '<label class="cuibanlabel">催办</label>';
@@ -69,7 +72,7 @@ var pageModule = function(){
                 	if(rowdata.isOverTreeMonth==1){
                 		csFlag = '<img src="../../../common/images/u301.png" class="titleimg" />';
                 	}
-               	 	return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../view/html/view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&fileFrom=grdb" target="iframe1">'+cuiban+rowdata.docTitle+csFlag+'</a>'
+               	 	return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../view/html/view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&docStatus='+docStatus+'&fileFrom=grdb" target="iframe1">'+cuiban+rowdata.docTitle+csFlag+'</a>'
                 }},
                 {display:"紧急程度",name:"urgencyDegree",width:"5%",align:"center",paixu:false,render:function(rowdata){
                	 	return rowdata.urgencyDegree;
@@ -85,7 +88,7 @@ var pageModule = function(){
 	    		     });
                	     return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.infoId+'\')" title="'+html1+'">'+html1+'</div>';
                 }},
-                {display:"本期局内反馈",name:"",width:"20%",align:"left",paixu:false,render:function(rowdata){
+                {display:"本期局内反馈",name:"",width:"19%",align:"left",paixu:false,render:function(rowdata){
 		           	var dbCont="";
 		           	if(rowdata.latestReply){
 		           		dbCont=rowdata.latestReply;
@@ -108,6 +111,15 @@ var pageModule = function(){
                 	 }
                 	 return updateTime;
                 }},
+                {display:"意见收集",name:"",width:"4%",align:"center",paixu:false,render:function(rowdata){
+               	 var ideaCount="";
+               	 if(rowdata.ideaCount){
+               		ideaCount = rowdata.ideaCount;
+               	 }else{
+               		ideaCount = '-';
+               	 }
+               	 return ideaCount;
+               }},
                 {display:"操作",name:"",width:"4%",align:"center",paixu:false,render:function(rowdata){
 	               	 var btnHtml="";
 	               	 if(rowdata.withdrawFlag == "1"){

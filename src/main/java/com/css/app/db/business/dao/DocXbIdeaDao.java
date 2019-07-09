@@ -16,6 +16,6 @@ import com.css.base.dao.BaseDao;
 @Mapper
 public interface DocXbIdeaDao extends BaseDao<DocXbIdea> {
 
-	DocXbIdea queryLastNewData();
+	DocXbIdea queryLastNewData(String subId, String infoId);
 	
 }

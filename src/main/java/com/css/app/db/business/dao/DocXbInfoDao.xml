@@ -37,7 +37,22 @@
 	</select>
 	
  	<select id="queryXbRecord" resultType="com.css.app.db.business.entity.DocXbInfo" parameterType="string">
-		select WM_CONCAT(RECEIVER_NAME) xieBanPersonNames,UNDERTAKER_NAME undertakerName, DEPT_NAME deptName, RECEIVER_DEPT_NAME receiverDeptName, CREATED_TIME createdTime  from DB_DOC_XB_INFO where INFO_ID = #{infoId}  group by UNDERTAKER_NAME, DEPT_NAME, CREATED_TIME, RECEIVER_DEPT_NAME
+<!-- 		select WM_CONCAT(RECEIVER_NAME) xieBanPersonNames,UNDERTAKER_NAME undertakerName, DEPT_NAME deptName, RECEIVER_DEPT_NAME receiverDeptName, CREATED_TIME createdTime  from DB_DOC_XB_INFO where INFO_ID = #{infoId}  group by UNDERTAKER_NAME, DEPT_NAME, CREATED_TIME, RECEIVER_DEPT_NAME
+ -->		
+ 		select
+	        WM_CONCAT(RECEIVER_NAME) xieBanPersonNames,
+	        UNDERTAKER_NAME undertakerName            ,
+	        DEPT_NAME deptName                        ,
+	        RECEIVER_DEPT_NAME receiverDeptName       ,
+	        to_date(CREATED_TIME,'yyyy-mm-dd HH24:mi:ss') CREATED_TIME 
+		from
+        	DB_DOC_XB_INFO
+        where INFO_ID = #{infoId} 
+		group by
+	        UNDERTAKER_NAME,
+	        DEPT_NAME ,
+	        to_date(CREATED_TIME,'yyyy-mm-dd HH24:mi:ss'),
+	        RECEIVER_DEPT_NAME
 	</select>
 	 
 	<insert id="save" parameterType="com.css.app.db.business.entity.DocXbInfo">
@@ -53,7 +68,7 @@
 			"RECEIVER_ID", 
 			"RECEIVER_NAME", 
 			"RECEIVER_DEPT_ID",
-			"RECEIVER_DEPT_NAME"
+			"RECEIVER_DEPT_NAME",
 			"CREATED_TIME"
 		)
 		values
@@ -93,6 +108,10 @@
 	
 	<delete id="delete">
 		delete from DB_DOC_XB_INFO where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBySubIdAndReceiverId">
+		delete from DB_DOC_XB_INFO where SUB_ID = #{0} AND RECEIVER_ID = #{1}
 	</delete>
 	
 	<delete id="deleteBatch">

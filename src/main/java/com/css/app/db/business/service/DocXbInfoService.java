@@ -27,4 +27,7 @@ public interface DocXbInfoService {
 	void deleteBatch(String[] ids);
 
 	List<DocXbInfo> queryXbRecord(String infoId);
+
+	void deleteBySubIdAndReceiverId(String subId, String userId);
+
 }

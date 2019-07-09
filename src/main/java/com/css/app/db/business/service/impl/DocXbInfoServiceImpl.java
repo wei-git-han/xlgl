@@ -52,5 +52,11 @@ public class DocXbInfoServiceImpl implements DocXbInfoService {
 		// TODO Auto-generated method stub
 		return DocXbInfoDao.queryXbRecord(infoId);
 	}
+
+	@Override
+	public void deleteBySubIdAndReceiverId(String subId, String userId) {
+		DocXbInfoDao.deleteBySubIdAndReceiverId(subId, userId);
+		
+	}
 	
 }

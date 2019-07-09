@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -228,7 +229,7 @@ public class SubDocInfoController {
 	public void personList(Integer page, Integer pagesize,String search, String docStatus){
 		String userId = CurrentUser.getUserId();
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("undertakerId", userId);
+		map.put("receiverId", userId);
 		List<DocXbInfo> docXbInfos = docXbInfoService.queryList(map);
 		List<SubDocInfo> subDocInfoList = null;
 		if (docXbInfos != null && docXbInfos.size() > 0) {
@@ -299,12 +300,31 @@ public class SubDocInfoController {
 				replyMap.put("infoId", subDocInfo.getInfoId());
 				List<ReplyExplain> queryList = replyExplainService.queryList(replyMap);
 				if(queryList!=null && queryList.size()>0) {
-					subDocInfo.setLatestReply(queryList.get(0).getReplyContent());
+					ReplyExplain replyExplain = queryList.get(0);
+					subDocInfo.setLatestReply(replyExplain.getReplyContent());
 				}
+				//判断是否为协办人
+				this.isXBPerson(subDocInfo, loginUserId);
 			}
 		}
 		return subDocInfoList;
 	}
+	/**
+	 * 判断当前用户是否为协办人
+	 * @param subDocInfo
+	 * @param loginUserId
+	 */
+	private void isXBPerson(SubDocInfo subDocInfo, String loginUserId) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("subId", subDocInfo.getId());
+		map.put("infoId", subDocInfo.getInfoId());
+		map.put("receiverId", loginUserId);
+		List<DocXbInfo> docXbInfos = docXbInfoService.queryList(map);
+		if (docXbInfos != null && docXbInfos.size() > 0) {
+			subDocInfo.setIsXBPerson(1);
+		}
+	}
+
 	/**
 	 * 计算首长批示时间到现在是否超过三月；
 	 * @param leaderTime
@@ -425,6 +445,7 @@ public class SubDocInfoController {
 		boolean isCheckUser=false;//是否是当前办理人
 		boolean isUndertaken=false;//是否已承办
 		boolean isUndertaker=false;//是否承办人
+		boolean isXBPerson=false;//是否承办人
 		String loginUserId = CurrentUser.getUserId();
 		//当前登录人的角色（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
 		String roleType = roleSetService.getRoleTypeByUserId(loginUserId);
@@ -447,7 +468,15 @@ public class SubDocInfoController {
 						isCheckUser=true;
 					}
 				}
-				
+				//当前是否为协办人
+				Map<String, Object> hashMap = new HashMap<>();
+				hashMap.put("subId", subId);
+				hashMap.put("infoId", subDocInfo.getInfoId());
+				hashMap.put("receiverId", loginUserId);
+				List<DocXbInfo> docXbInfos = docXbInfoService.queryList(hashMap);
+				if(docXbInfos != null && docXbInfos.size() > 0) {
+					isXBPerson=true;
+				}
 			}
 		}
 		JSONObject json=new JSONObject();
@@ -456,6 +485,7 @@ public class SubDocInfoController {
 		json.put("isCheckUser", isCheckUser);
 		json.put("isUndertaken", isUndertaken);
 		json.put("isUndertaker", isUndertaker);
+		json.put("isXBPerson", isXBPerson);
 		Response.json(json);
 	}
 	
@@ -476,9 +506,27 @@ public class SubDocInfoController {
 		}
 		subDocInfo.setDocStatus(DbDocStatusDefined.BAN_LI_ZHONG);
 		subDocInfoService.update(subDocInfo);
+		//生成本组意见，保存到局内流转记录表
+		this.productAndSaveGroupId(subId);
 		Response.json("result", "success");
 	}
-	
+	/**
+	 * 生成本轮意见组ID，供其他协办人使用
+	 * @param subId
+	 */
+	private void productAndSaveGroupId(String subId) {
+		SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
+		if (subDocTracking != null) {
+			if (StringUtils.equals("1", subDocTracking.getTrackingType()) 
+					&& StringUtils.equals(CurrentUser.getUserId(), subDocTracking.getReceiverId())) {
+				subDocTracking.setIdeaGroupId(UUID.randomUUID().toString());
+				subDocTrackingService.update(subDocTracking);
+			}
+		}else {
+			logger.info("根据subId：{}，查不到局内流转数据！", subId);
+		}
+	}
+
 	/**
 	 * 办结操作：有一个分支局状态为非办结状态，主文件则不标识为办结，其他分支局办结的标识均为建议办结。各分支局全部办结，则主文件为办结状态
 	 * @param infoId 主文件id
@@ -822,6 +870,8 @@ public class SubDocInfoController {
 			if(subDocInfo != null) {
 				subDocInfo.setDocStatus(DbDocStatusDefined.BAN_LI_ZHONG);
 				subDocInfo.setUpdateTime(new Date());
+				//清空意见数目
+				subDocInfo.setIdeaCount(0);
 				subDocInfoService.update(subDocInfo);
 			}
 			json.put("result", "success");
@@ -915,14 +965,14 @@ public class SubDocInfoController {
 		map.put("showFlag", "0");
 		ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
 		//查询意见表获取组ID
-		List<DocXbIdea> docXbIdeas = docXbIdeaService.queryList(map);
+//		List<DocXbIdea> docXbIdeas = docXbIdeaService.queryList(map);
 		if(tempReply!=null) {
 			tempReply.setReVersion("1");
 			tempReply.setVersionTime(new Date());
-			if (docXbIdeas != null && docXbIdeas.size() > 0) {
-				String groupId = docXbIdeas.get(0).getGroupId();
-				tempReply.setIdeaGroupId(groupId);
-			}
+//			if (docXbIdeas != null && docXbIdeas.size() > 0) {
+//				String groupId = docXbIdeas.get(0).getGroupId();
+//				tempReply.setIdeaGroupId(groupId);
+//			}
 			//添加意见组ID
 			if(StringUtils.isNotBlank(status)) {
 				tempReply.setChooseStatus(status);
@@ -944,6 +994,10 @@ public class SubDocInfoController {
 		tracking.setRecDeptName(deptName);
 		tracking.setSubId(subId);
 		tracking.setTrackingType(trackingType);
+		//新一轮审批完成，生成下一轮意见组ID
+		if (StringUtils.equals("4", trackingType)) {
+			tracking.setIdeaGroupId(UUID.randomUUID().toString());
+		}
 		if(StringUtils.isNotBlank(status)) {
 			tracking.setPreviousStatus(Integer.parseInt(status));
 		}

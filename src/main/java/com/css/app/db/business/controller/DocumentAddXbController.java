@@ -1,5 +1,7 @@
 package com.css.app.db.business.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -20,12 +22,10 @@ import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.db.business.entity.DocXbIdea;
 import com.css.app.db.business.entity.DocXbInfo;
-import com.css.app.db.business.entity.ReplyExplain;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.entity.SubDocTracking;
 import com.css.app.db.business.service.DocXbIdeaService;
 import com.css.app.db.business.service.DocXbInfoService;
-import com.css.app.db.business.service.ReplyExplainService;
 import com.css.app.db.business.service.SubDocInfoService;
 import com.css.app.db.business.service.SubDocTrackingService;
 import com.css.base.utils.CurrentUser;
@@ -53,8 +53,6 @@ public class DocumentAddXbController {
 	private BaseAppOrganService baseAppOrganService;
 	@Autowired
 	private BaseAppUserService baseAppUserService;
-	@Autowired
-	private ReplyExplainService replyExplainService;
 	@Autowired
 	private DocXbIdeaService docXbIdeaService;
 	/**
@@ -105,19 +103,33 @@ public class DocumentAddXbController {
 	@RequestMapping("/addOrEditXbPerson")
 	@ResponseBody
 	public void addOrEditXbPerson(String userIds, String infoId, String subId) {
+		List<DocXbInfo> docXbInfos = this.queryDocXbInfos(subId);
+		if (docXbInfos != null && docXbInfos.size() > 0) {
+			Response.json(docXbInfos);
+		}
+	}
+	
+	@RequestMapping("/addOrDeleteXbPerson")
+	@ResponseBody
+	@SuppressWarnings("unchecked")
+	public void addOrDeleteXbPerson(String userIds, String infoId, String subId) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		for (String userId : userIds.split(",")) {
-			map.put("undertakerId", CurrentUser.getUserId());
-			map.put("receiverId", userId);
-			map.put("infoId", infoId);
-			map.put("subId", subId);
-			List<DocXbInfo> docXbInfos = docXbInfoService.queryList(map);
-			if (docXbInfos != null && docXbInfos.size() > 0) {
-				Response.json("result","fail");
-				return;
-			}else {
-				DocXbInfo docXbInfo = new DocXbInfo();
+		Map<String, Object> dealCurrXBPersons = this.dealCurrXBPersons(subId, userIds);
+		List<String> userIdAdd = (List<String>)dealCurrXBPersons.get("userIdAdd");
+		List<String> userIdDelete = (List<String>)dealCurrXBPersons.get("userIdDelete");
+		if (userIdAdd != null && userIdAdd.size() > 0) {
+			DocXbInfo docXbInfo = null;
+			for (String userId : userIdAdd) {
+//				map.put("undertakerId", CurrentUser.getUserId());
+//				map.put("receiverId", userId);
+//				map.put("infoId", infoId);
+//				map.put("subId", subId);
+//				List<DocXbInfo> docXbInfos = docXbInfoService.queryList(map);
+//				if (docXbInfos != null && docXbInfos.size() > 0) {
+//					Response.json("result","fail");
+//				}else {
+				docXbInfo = new DocXbInfo();
+				docXbInfo.setId(UUID.randomUUID().toString());
 				docXbInfo.setInfoId(infoId);
 				docXbInfo.setSubId(subId);
 				docXbInfo.setUndertakerId(CurrentUser.getUserId());
@@ -141,7 +153,7 @@ public class DocumentAddXbController {
 					docXbInfo.setReceiverDeptId(organId);
 					organ = this.queryBaseAppOrgan(organId);
 					if (organ != null) {
-						docXbInfo.setReceiverDeptId(organ.getName());
+						docXbInfo.setReceiverDeptName(organ.getName());
 					}else {
 						logger.info("请在部门表配置部门ID：{}的部门数据！", organId);
 						return;
@@ -152,9 +164,64 @@ public class DocumentAddXbController {
 				}
 				docXbInfo.setCreatedTime(new Date());
 				docXbInfoService.save(docXbInfo);
-				Response.json("result","success");
+//				}
 			}
 		}
+		if (userIdDelete != null && userIdDelete.size() > 0) {
+			for (String userId : userIdDelete) {
+				docXbInfoService.deleteBySubIdAndReceiverId(subId, userId);
+			}
+		}
+		Response.json("result","success");
+	}
+	/**
+	 * 判断当前主办人是增加协办人还是删除协办人
+	 * @param subId
+	 * @param userIds
+	 * @return
+	 */
+	private Map<String, Object> dealCurrXBPersons(String subId, String userIds) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<String> userIdAdd = new ArrayList<>();
+		List<String> userIdDelete = new ArrayList<>();
+		List<DocXbInfo> docXbInfos = this.queryDocXbInfos(subId);
+		String[] userIdsSplit = userIds.split(",");
+		List<String> receiverIds = new ArrayList<>();
+		if (docXbInfos != null && docXbInfos.size() > 0) {
+			List<String> userIdsList = Arrays.asList(userIdsSplit);
+			//确定有木有删除协办人
+			for (DocXbInfo docXbInfo : docXbInfos) {
+				if (!userIdsList.contains(docXbInfo.getReceiverId())) {
+					userIdDelete.add(docXbInfo.getReceiverId());
+				}
+				receiverIds.add(docXbInfo.getReceiverId());
+			}
+			//确定有木有新增协办人
+			for (String userId : userIdsSplit) {
+				if (!receiverIds.contains(userId)) {
+					userIdAdd.add(userId);
+				}
+			}
+		}else {
+			//新文增加协办人
+			userIdAdd = Arrays.asList(userIdsSplit);
+		}
+		//清空当前map,以便使用同一个对象
+		map.clear();
+		map.put("userIdAdd", userIdAdd);
+		map.put("userIdDelete", userIdDelete);
+		return map;
+	}
+	/**
+	 * 查询当前文的所有协办人
+	 * @param subId
+	 * @return
+	 */
+	private List<DocXbInfo> queryDocXbInfos(String subId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		//查询当前文的所有协办人
+		map.put("subId", subId);
+		return docXbInfoService.queryList(map);
 	}
 	/**
 	 * 根据部门ID查询部门信息
@@ -184,7 +251,7 @@ public class DocumentAddXbController {
 //		if (subDocInfo != null && StringUtils.equals(userId, subDocInfo.getUndertaker())) {
 //			if (StringUtils.isNotBlank(feedBackIdea)) {
 		DocXbIdea docXbIdea = this.organizeDocXbIdea(feedBackIdea, infoId, subId);
-		this.productGroupId(docXbIdea, infoId, subId);
+		this.aquireGroupId(docXbIdea, infoId, subId);
 		docXbIdeaService.save(docXbIdea);
 //			}
 //		}else {
@@ -205,6 +272,7 @@ public class DocumentAddXbController {
 	private DocXbIdea organizeDocXbIdea(String feedBackIdea, String infoId, String subId) {
 		Date date = new Date();
 		DocXbIdea docXbIdea = new DocXbIdea();
+		docXbIdea.setId(UUID.randomUUID().toString());
 		docXbIdea.setInfoId(infoId);
 		docXbIdea.setSubId(subId);
 		docXbIdea.setUserId(CurrentUser.getUserId());
@@ -219,10 +287,10 @@ public class DocumentAddXbController {
 	 * @param subId
 	 * @return
 	 */
-	private DocXbIdea isCommitIdea(String infoId, String subId) {
+	/*private DocXbIdea isCommitIdea(String infoId, String subId) {
 		//查询当前协办人是否已经提交意见
 		return docXbIdeaService.queryLastNewData(subId, infoId);
-	}
+	}*/
 	/**
 	 * 提意见生成组ID
 	 * @param docXbInfo
@@ -230,26 +298,19 @@ public class DocumentAddXbController {
 	 * @param subId
 	 * @param isUndertaker
 	 */
-	private void productGroupId(DocXbIdea docXbIdea,String infoId, String subId) {
+	private void aquireGroupId(DocXbIdea docXbIdea,String infoId, String subId) {
 		//主办人发起提议  生成新一轮提议组ID
 		SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
+		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
 		if (subDocTracking != null) {
-			//主办人登录提交意见
-			if (StringUtils.equals(subDocTracking.getReceiverId(), CurrentUser.getUserId())) {
-				//第一轮审批
-				if (StringUtils.equals(subDocTracking.getTrackingType(), "1")) {
-					this.setGroupId(docXbIdea, infoId, subId);
-				}
-			}else {
-				List<ReplyExplain> replyExplains = replyExplainService.querySubLatestReply(infoId, subId);
-				if (replyExplains != null && replyExplains.size() > 0) {
-					String showFlag = replyExplains.get(0).getShowFlag();
-					//新一轮审批
-					if (StringUtils.equals("1", showFlag) && StringUtils.equals(subDocTracking.getTrackingType(), "4")) {
-						this.setGroupId(docXbIdea, infoId, subId);
-					}
-				}
-			}
+			//获取本轮意见组ID
+			String ideaGroupId = subDocTracking.getIdeaGroupId();
+			docXbIdea.setGroupId(ideaGroupId);
+		}
+		if (subDocInfo != null) {
+			subDocInfo.setIdeaCount(subDocInfo.getIdeaCount() == null || subDocInfo.getIdeaCount() == 0 ? 1 : subDocInfo.getIdeaCount()+1);
+			subDocInfo.setIdeaAddFlag(1);
+			subDocInfoService.update(subDocInfo);
 		}
 	}
 	/**
@@ -258,14 +319,14 @@ public class DocumentAddXbController {
 	 * @param infoId
 	 * @param subId
 	 */
-	private void setGroupId(DocXbIdea docXbIdea,String infoId, String subId) {
+	/*private void setGroupId(DocXbIdea docXbIdea,String infoId, String subId) {
 		DocXbIdea commitIdea = this.isCommitIdea(infoId, subId);
 		if (commitIdea != null) {
 			docXbIdea.setGroupId(commitIdea.getGroupId());
 		}else {
 			docXbIdea.setGroupId(UUID.randomUUID().toString());
 		}
-	}
+	}*/
 	/**
 	 * 展示意见记录(局内所有人)
 	 * @param infoId
@@ -274,6 +335,11 @@ public class DocumentAddXbController {
 	@RequestMapping("/showIdeaRecord")
 	@ResponseBody
 	public void showIdeaRecord(String infoId, String subId, String ideaGroupId) {
+		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+		if (subDocInfo != null) {
+			subDocInfo.setIdeaAddFlag(null);
+			subDocInfoService.update(subDocInfo);
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("subId", subId);
 		map.put("infoId", infoId);

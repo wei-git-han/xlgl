@@ -111,7 +111,8 @@ public class DocumentZbjlController {
 				documentZbjl.setOrgName(docXbInfo.getDeptName());
 				documentZbjl.setUserName(docXbInfo.getUndertakerName());
 				documentZbjl.setReceiverDeptName(docXbInfo.getReceiverDeptName());
-				documentZbjl.setUserName(docXbInfo.getXieBanPersonNames());
+				documentZbjl.setReceiverNames(docXbInfo.getXieBanPersonNames());
+				documentZbjl.setIsAddRecord(1);
 				zbjlList.add(documentZbjl);
 			}
 		}

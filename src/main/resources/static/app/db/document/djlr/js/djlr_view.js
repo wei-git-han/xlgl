@@ -310,7 +310,7 @@ var pageModule = function(){
 									<div class="newpanel-right-top">
 										<div class="nrt-date">
 											<font>${firstDate}</font>
-											<a style="float: right;" id="yjjl" onclick="showfn('${fileId}','${subId}')">意见记录</a>
+											<a style="float: right;" id="yjjl" onclick="showfn('${subId}')">意见记录</a>
 										</div>
 									</div>
 									
@@ -444,14 +444,25 @@ var pageModule = function(){
 				if(data&&data.length>0){
 					$("#zbrecord").html("");
 					$.each(data,function(i,item){
-						$("#zbrecord").append(
-							'<div class="record">'+
-				            '	<label class="zbUser">转办人:</label>'+
-				            '	<div><span>'+item.orgName+'&nbsp;&nbsp;'+item.userName+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
-				            '	<label class="cbdw">承办单位/人:</label>'+
-				            '	<div>'+item.receiverNames+'</div>'+
-				            '</div>'
-			            )
+						if(item.isAddRecord == 1){
+							$("#zbrecord").append(
+									'<div class="record">'+
+									'	<label class="zbUser">承办人:</label>'+
+									'	<div><span>'+item.orgName+'&nbsp;&nbsp;'+item.userName+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
+									'	<label class="cbdw">增加协办人:</label>'+
+									'	<div>'+item.receiverNames+'</div>'+
+									'</div>'
+							)
+						}else{
+							$("#zbrecord").append(
+									'<div class="record">'+
+									'	<label class="zbUser">转办人:</label>'+
+									'	<div><span>'+item.orgName+'&nbsp;&nbsp;'+item.userName+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
+									'	<label class="cbdw">承办单位/人:</label>'+
+									'	<div>'+item.receiverNames+'</div>'+
+									'</div>'
+							)
+						}
 					});
 				}else{
 					$("#zbrecord").html('<div class="szqf zwCss">暂无转办记录！</div>');
@@ -839,7 +850,7 @@ function viewcont(teamId,subId){
 	});
 }
 //意见记录事件
-var showfn = function(infoId,subId){
+var showfn = function(subId){
 	newbootbox.newdialog({
 		id:"yijianDialog",
 		width:800,
@@ -847,8 +858,10 @@ var showfn = function(infoId,subId){
 		header:true,
 		title:"意见记录",
 		classed:"cjDialog",
-		url:"/app/db/document/djlr/html/yjjl.html?infoId="+infoId+"&subId="+subId
+		url:"/app/db/document/djlr/html/yjjl.html?subId="+subId,
 	})
+	
+//	url:"/app/db/document/view/html/psDialog.html?fileId="+id,
 }
 //下载附件
 $("#downLoadfj").click(function(){

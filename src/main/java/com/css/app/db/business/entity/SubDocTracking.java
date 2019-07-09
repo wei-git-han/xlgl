@@ -46,6 +46,9 @@ public class SubDocTracking implements Serializable {
 	//转办前承办人id（撤回时用）
 	private String undertaker;
 
+	//协办人意见组ID
+	private String ideaGroupId;
+	
 	public Integer getPreviousStatus() {
 		return previousStatus;
 	}
@@ -213,5 +216,11 @@ public class SubDocTracking implements Serializable {
 	}
 	public void setUndertaker(String undertaker) {
 		this.undertaker = undertaker;
+	}
+	public String getIdeaGroupId() {
+		return ideaGroupId;
+	}
+	public void setIdeaGroupId(String ideaGroupId) {
+		this.ideaGroupId = ideaGroupId;
 	}
 }

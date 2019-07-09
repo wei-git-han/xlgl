@@ -9,9 +9,14 @@
 
 	<select id="queryList" resultType="com.css.app.db.business.entity.SubDocTracking">
 		select * from DB_SUB_DOC_TRACKING 
+		<where>
+		<if test="receiverId != null and receiverId != ''">
+			and RECEIVER_ID = #{receiverId}
+		</if>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
+		</where>
 	</select>
 	<select id="queryLatestRecord" resultType="com.css.app.db.business.entity.SubDocTracking">
 		select top 1 * from DB_SUB_DOC_TRACKING where SUB_ID=#{subId} order by CREATED_TIME desc
@@ -42,7 +47,8 @@
 			"TRACKING_TYPE", 
 			"REMARK",
 			"PREVIOUS_STATUS",
-			"UNDERTAKER"
+			"UNDERTAKER",
+			"IDEA_GROUP_ID"
 		)
 		values
 		(
@@ -60,7 +66,8 @@
 			#{trackingType}, 
 			#{remark},
 			#{previousStatus},
-			#{undertaker}
+			#{undertaker},
+			#{ideaGroupId}
 		)
 	</insert>
 	 
@@ -80,7 +87,8 @@
 			<if test="trackingType != null">"TRACKING_TYPE" = #{trackingType}, </if>
 			<if test="remark != null">"REMARK" = #{remark},</if>
 			<if test="previousStatus != null">"PREVIOUS_STATUS" = #{previousStatus},</if>
-			<if test="undertaker != null">"UNDERTAKER" = #{undertaker}</if>
+			<if test="undertaker != null">"UNDERTAKER" = #{undertaker},</if>
+			<if test="ideaGroupId != null">"IDEA_GROUP_ID" = #{ideaGroupId}</if>
 		</set>
 		where ID = #{id}
 	</update>

@@ -41,6 +41,8 @@ public class DocumentZbjl implements Serializable {
 	private String orgName;
 	//子分支主键
 	private String subId;
+	//是否添加协办记录
+	private Integer isAddRecord;
 
 	/**
 	 * 设置：唯一标识
@@ -191,5 +193,11 @@ public class DocumentZbjl implements Serializable {
 	 */
 	public String getSubId() {
 		return subId;
+	}
+	public Integer getIsAddRecord() {
+		return isAddRecord;
+	}
+	public void setIsAddRecord(Integer isAddRecord) {
+		this.isAddRecord = isAddRecord;
 	}
 }

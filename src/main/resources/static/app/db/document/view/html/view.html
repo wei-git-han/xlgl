@@ -202,8 +202,9 @@
 										            		<div class="pr100">
 									            				<input type="hidden" id="editRecordId" name="editRecordId" /><!-- 编辑的附件id -->
 									            				<input type="hidden" id="editTeamId" name="editTeamId" /><!-- 编辑的反馈的teamId -->
+																
 																<div class="sryj_title">
-																	<span class="pull-left css3" data="0">输入意见/反馈：</span>
+																	<span class="pull-left css3" data="0" id="shuru">输入意见/反馈：</span>
 																	
 																	<a class="pull-right changeStatus"  id="changewrite"  style="display:none;">
 															        	<img src='../../../common/images/u618.png' /> 切换为手写签批
@@ -216,6 +217,8 @@
 															        	<img src="../../../common/images/u619.png" /> 笔粗(<span id="penNum">0.5</span>)
 															        </span>
 																</div>
+																
+																
 																<div class="sryj_title2">
 																	<a class="pull-right" id="fanli">
 															        	范例
@@ -263,6 +266,7 @@
 						        				
 						        				<button class="ifShow" type="button" id="chengban">承办</button>
 								            	<button class="ifShow" type="button" id="zhuanban">转办</button>
+								            	<button class="ifShow" type="button" id="fasong">发送</button>
 						        				<button class="ifShow" type="button" id="clear">清屏</button>
 						        				
 						        				<!-- <div class="btn-group dropup ifShow" id="bjandls" style="display:inline-block;margin-top:-7px;" title="点击确认">
@@ -277,7 +281,7 @@
 														</li>
 													</ul>
 												</div> -->
-												<a style="margin-left:10%;font-size:16px;" id="yjsj" onclick="showfn('${fileId}','${subId}')">意见收集</a>
+												<a style="margin-left:10%;font-size:16px;" id="yjsj" >意见收集</a>
 						        				<div class="ifShow" id="ifaddfj" style="display:inline-block;vertical-align: top;margin-right: 20px;margin-top: 6px;float:right;">
 													<a class="filebutton addfjbtn" id="file1"><i class="fa fa-link"></i> 添加附件 </a>
 									                <div class="filelist"  name="file1">

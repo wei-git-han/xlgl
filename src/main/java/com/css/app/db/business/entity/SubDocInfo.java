@@ -38,6 +38,7 @@ public class SubDocInfo implements Serializable {
 	private String undertakerPhone;
 	//承办人提交选择的状态（1:办理中；2：办结；3：常态落实；）
 	private String chooseStatus;
+
 /*----------------------------以下字段只用来列表接收值用--------------start----------------------*/	
 	private String dealUserName;
 	//文件标题
@@ -63,9 +64,9 @@ public class SubDocInfo implements Serializable {
 	//最新反馈审批完成时间
 	private Date latestReplyTime;
 	//最新的首长名字
-	private String leaderName;
+//	private String leaderName;
 	//最新的首长批示
-	private String leaderContent;
+//	private String leaderContent;
 	//最新的首长批示时间
 	private String leaderTime;
 	//我是不是当前处理人
@@ -84,6 +85,10 @@ public class SubDocInfo implements Serializable {
 	private Integer isOverTreeMonth;
 	//意见统计条数
 	private Integer ideaCount;
+	//是否是协办人
+	private Integer isXBPerson;
+	//是否新增意见 1：新增
+	private Integer ideaAddFlag;
 	
 	/*----------------------------列表接收值---------end---------------------------*/	
 	/**
@@ -313,5 +318,17 @@ public class SubDocInfo implements Serializable {
 	}
 	public void setIdeaCount(Integer ideaCount) {
 		this.ideaCount = ideaCount;
+	}
+	public Integer getIsXBPerson() {
+		return isXBPerson;
+	}
+	public void setIsXBPerson(Integer isXBPerson) {
+		this.isXBPerson = isXBPerson;
+	}
+	public Integer getIdeaAddFlag() {
+		return ideaAddFlag;
+	}
+	public void setIdeaAddFlag(Integer ideaAddFlag) {
+		this.ideaAddFlag = ideaAddFlag;
 	}
 }

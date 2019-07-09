@@ -10,7 +10,9 @@ import java.util.Map;
 
 import com.css.app.db.business.dao.ReplyExplainDao;
 import com.css.app.db.business.entity.ReplyExplain;
+import com.css.app.db.business.entity.SubDocTracking;
 import com.css.app.db.business.service.ReplyExplainService;
+import com.css.app.db.business.service.SubDocTrackingService;
 import com.css.base.utils.UUIDUtils;
 
 
@@ -19,6 +21,8 @@ import com.css.base.utils.UUIDUtils;
 public class ReplyExplainServiceImpl implements ReplyExplainService {
 	@Autowired
 	private ReplyExplainDao replyExplainDao;
+	@Autowired
+	private SubDocTrackingService subDocTrackingService;
 	
 	@Override
 	public ReplyExplain queryObject(String id){
@@ -74,6 +78,11 @@ public class ReplyExplainServiceImpl implements ReplyExplainService {
 		reply.setCbrFlag(cbrFlag);
 		if(StringUtils.isNotBlank(checkStatus)) {
 			reply.setChooseStatus(checkStatus);
+		}
+		SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
+		if (subDocTracking != null) {
+			String ideaGroupId = subDocTracking.getIdeaGroupId();
+			reply.setIdeaGroupId(ideaGroupId);
 		}
 		replyExplainDao.save(reply);
 	}

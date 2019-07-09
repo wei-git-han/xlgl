@@ -50,7 +50,7 @@ public class DocXbIdeaServiceImpl implements DocXbIdeaService {
 	@Override
 	public DocXbIdea queryLastNewData(String subId, String infoId) {
 		// TODO Auto-generated method stub
-		return DocXbIdeaDao.queryLastNewData();
+		return DocXbIdeaDao.queryLastNewData(subId,infoId);
 	}
 	
 }

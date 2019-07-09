@@ -31,7 +31,7 @@
 	</select>
 	 
  	<select id="queryLastNewData" resultType="com.css.app.db.business.entity.DocXbIdea">
-		select * from DB_DOC_XB_IDEA where INFO_ID = #{infoId} and SUB_ID = #{subId}
+		select * from DB_DOC_XB_IDEA where INFO_ID = #{1} and SUB_ID = #{0} ORDER BY CREATED_TIME desc limit 1
 	</select>
 	
 	<insert id="save" parameterType="com.css.app.db.business.entity.DocXbIdea">
