@@ -301,10 +301,24 @@ public class SubDocInfoController {
 				}
 				//判断是否为协办人
 				this.isXBPerson(subDocInfo, loginUserId);
+				//是否承办人
+				this.isCBPerson(subDocInfo, loginUserId);
 			}
 		}
 		return subDocInfoList;
 	}
+	/**
+	 * 是否承办人
+	 * @param subDocInfo
+	 * @param loginUserId
+	 * @return
+	 */
+	private void isCBPerson(SubDocInfo subDocInfo, String loginUserId) {
+		if (StringUtils.equals(subDocInfo.getUndertaker(), loginUserId)) {
+			 subDocInfo.setIsCBPerson(1); 
+		}
+	}
+
 	/**
 	 * 判断当前用户是否为协办人
 	 * @param subDocInfo
@@ -1005,7 +1019,7 @@ public class SubDocInfoController {
 			if (subDocTracking != null) {
 				tracking.setIdeaGroupId(subDocTracking.getIdeaGroupId());
 			}
-			tracking.setIdeaGroupId(UUID.randomUUID().toString());
+//			tracking.setIdeaGroupId(UUID.randomUUID().toString());
 		}
 		if(StringUtils.isNotBlank(status)) {
 			tracking.setPreviousStatus(Integer.parseInt(status));

@@ -50,7 +50,9 @@ var pageModule = function(){
 			success:function(data){
 				var html1= "";
 				var xbUser = [];
-				$.each(data,function(i,o){
+				xbUser = data.userNames;
+				datas = data.docXbIdeas;
+				$.each(datas,function(i,o){
 					var createdTime = o.createdTime;
 //					var cbrList = o.cbrList;
 					html1=	'<div class="timelinesheys">'+
@@ -62,7 +64,7 @@ var pageModule = function(){
 							'	</div>'+
 							'	<div class="timeline-body">';
 //							$.each(cbrList,function(i,item){
-								xbUser.push(o.userName);
+//								xbUser.push(o.userName);
 								html1 += '<div class="timeline-content">'+
 									        '	<div class="userName"><i class="fa fa-user"></i>&nbsp;'+o.userName+'</div>';
 								html1 += '	<div class="content">'+o.feedBackIdea+'</div>';

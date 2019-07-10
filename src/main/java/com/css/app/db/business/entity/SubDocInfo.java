@@ -89,6 +89,8 @@ public class SubDocInfo implements Serializable {
 	private Integer isXBPerson;
 	//是否新增意见 1：新增
 	private Integer ideaAddFlag;
+	//是否主办人 1：主办人
+	private Integer isCBPerson;
 	
 	/*----------------------------列表接收值---------end---------------------------*/	
 	/**
@@ -330,6 +332,12 @@ public class SubDocInfo implements Serializable {
 	}
 	public void setIsXBPerson(Integer isXBPerson) {
 		this.isXBPerson = isXBPerson;
+	}
+	public Integer getIsCBPerson() {
+		return isCBPerson;
+	}
+	public void setIsCBPerson(Integer isCBPerson) {
+		this.isCBPerson = isCBPerson;
 	}
 	
 }

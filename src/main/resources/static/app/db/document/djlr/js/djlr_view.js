@@ -860,7 +860,7 @@ var showfn = function(subId, ideaGroupId){
 		title:"意见收集",
 		classed:"cjDialog",
 		style:{"padding":"0px"},
-		url:"/app/db/document/djlr/html/yjjl.html?subId="+subId+"&ideaGroupId="+ideaGroupId+"&fileFrom="+fileFrom
+		url:"/app/db/document/view/html/opinion.html?subId="+subId+"&ideaGroupId="+ideaGroupId+"&fileFrom="+fileFrom
 	})
 	
 //	url:"/app/db/document/view/html/psDialog.html?fileId="+id,

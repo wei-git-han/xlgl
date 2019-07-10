@@ -298,9 +298,9 @@ public class DocumentWithdrawController {
 			subDocInfo.setUndertakerPhone(null);
 			subDocInfo.setChooseStatus(null);
 			//意见记录清空
-			subDocInfo.setIdeaCount(null);
+			subDocInfo.setIdeaCount(0);
 			//清空意见记录
-			subDocInfo.setIdeaCount(null);
+			subDocInfo.setIdeaAddFlag(0);
 			subDocInfoService.update(subDocInfo);
 		} else {
 			this.unifiedDealErrorLog(json, infoId, subId, "分支主记录表");

@@ -11,7 +11,7 @@ var teamId=getUrlParam("teamId");//
 var ideaGroupId=getUrlParam("ideaGroupId");//
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var opinionFlag=getUrlParam("opinionFlag")||""; //判断是从哪里进入的，talbe || 详情页 ,table页面进入需要请求后台方法
-var xbrIds = ""
+var xbrIds ="";
 var pageModule = function(){
 	//编辑返回的树id
 	var returnTreeIds  = function(){
@@ -20,7 +20,7 @@ var pageModule = function(){
 				url: addOrEditXbPersonUrl,
 				data:{subId:subId},
 				success:function(data){
-					xbrIds = data.success;
+					xbrIds=data.success;
 				}
 			});
 		}
@@ -33,12 +33,15 @@ var pageModule = function(){
 			success:function(data){
 				var html1= "";
 				var xbUser = [];
-				if(data == ''){
+				if(data.result == ''){
 					$(".xbUserLine > span").hide();
 					$("#textarea").hide();
+//					$("#tishi").show();
 					
 				}
-				$.each(data,function(i,item){
+				xbUser = data.userNames;
+				datas = data.docXbIdeas;
+				$.each(datas,function(i,item){
 					var createdTime = item.createdTime;
 					var cbrList = item.cbrList;
 					html1=	'<div class="timelinesheys">'+
@@ -50,7 +53,6 @@ var pageModule = function(){
 							'	</div>'+
 							'	<div class="timeline-body">';
 //							$.each(cbrList,function(i,item){
-								xbUser.push(item.userName);
 								html1 += '<div class="timeline-content">'+
 									        '	<div class="userName"><i class="fa fa-user"></i>&nbsp;'+item.userName+'</div>';
 								html1 += '	<div class="content">'+item.feedBackIdea+'</div>';
@@ -162,16 +164,23 @@ var pageModule = function(){
 					    }
 					}
 				});
-			}/*,
-			$("#tree_1").on("load_node.jstree", function(e,data) {
-				if(xbrIds != ""){
-					for(var i=0;i<xbrIds.length;i++){
-						$("#orgTree").jstree("select_node",xbrIds[i],true);
-					}
-				}else{
-					$("#orgTree").jstree("select_node","",true);
-				}
-			});*/
+				$("#orgTree").on("load_node.jstree", function(e,data) {
+					/*if(xbrIds != ""){
+						for(var i=0;i<xbrIds.length;i++){
+							$("#orgTree").jstree("select_node",xbrIds[i],true);
+						}
+					}else{
+						$("#orgTree").jstree("select_node","",true);
+					}*/
+					if(xbrIds!=""){
+						var deptArrs = [];
+						deptArrs = xbrIds.split(",");
+						for(var i=0;i<deptArrs.length;i++){
+							$("#orgTree").jstree("select_node",deptArrs[i],true);
+						}
+					};
+				});
+			}
 		})
 	}
 	

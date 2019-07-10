@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -199,32 +201,40 @@ public class DocumentAddXbController {
 		List<String> userIdAdd = new ArrayList<>();
 		List<String> userIdDelete = new ArrayList<>();
 		List<DocXbInfo> docXbInfos = this.queryDocXbInfos(subId);
-		String[] userIdsSplit = userIds.split(",");
-		List<String> receiverIds = new ArrayList<>();
-		if (docXbInfos != null && docXbInfos.size() > 0) {
-			List<String> userIdsList = Arrays.asList(userIdsSplit);
-			//确定有木有删除协办人
-			for (DocXbInfo docXbInfo : docXbInfos) {
-				if (!userIdsList.contains(docXbInfo.getReceiverId())) {
+		if (StringUtils.isNotBlank(userIds)) {
+			String[] userIdsSplit = userIds.split(",");
+			List<String> receiverIds = new ArrayList<>();
+			if (docXbInfos != null && docXbInfos.size() > 0) {
+				List<String> userIdsList = Arrays.asList(userIdsSplit);
+				//确定有木有删除协办人
+				for (DocXbInfo docXbInfo : docXbInfos) {
+					if (!userIdsList.contains(docXbInfo.getReceiverId())) {
+						userIdDelete.add(docXbInfo.getReceiverId());
+					}
+					receiverIds.add(docXbInfo.getReceiverId());
+				}
+				//确定有木有新增协办人
+				for (String userId : userIdsSplit) {
+					if (!receiverIds.contains(userId)) {
+						userIdAdd.add(userId);
+					}
+				}
+			}else {
+				//新文增加协办人
+				userIdAdd = Arrays.asList(userIdsSplit);
+			}
+		}else {//如果不选择协办人，则代表此文此承办人删除之前添加的所有协办人
+			if (docXbInfos != null && docXbInfos.size() > 0) {
+				for (DocXbInfo docXbInfo : docXbInfos) {
 					userIdDelete.add(docXbInfo.getReceiverId());
 				}
-				receiverIds.add(docXbInfo.getReceiverId());
 			}
-			//确定有木有新增协办人
-			for (String userId : userIdsSplit) {
-				if (!receiverIds.contains(userId)) {
-					userIdAdd.add(userId);
-				}
-			}
-		}else {
-			//新文增加协办人
-			userIdAdd = Arrays.asList(userIdsSplit);
 		}
 		//清空当前map,以便使用同一个对象
 		map.clear();
 		map.put("userIdAdd", userIdAdd);
 		map.put("userIdDelete", userIdDelete);
-		return map;
+		return map ;
 	}
 	/**
 	 * 查询当前文的所有协办人
@@ -405,10 +415,37 @@ public class DocumentAddXbController {
 	 * @param map
 	 * @return
 	 */
-	private List<DocXbIdea> queryDocXbIdeas(String infoId, String subId, String ideaGroupId, Map<String, Object> map) {
+	private JSONObject queryDocXbIdeas(String infoId, String subId, String ideaGroupId, Map<String, Object> map) {
+		JSONObject jsonObject = new JSONObject();
 		map.put("subId", subId);
 		map.put("infoId", infoId);
 		map.put("ideaGroupId", ideaGroupId);
-		return docXbIdeaService.queryList(map);
+		List<DocXbIdea> docXbIdeas = docXbIdeaService.queryList(map);
+		Set<String> userNames = new HashSet<>();
+		if (docXbIdeas != null && docXbIdeas.size() > 0) {
+			for (int i = 0; i < docXbIdeas.size(); i++) {
+				DocXbIdea docXbIdea = docXbIdeas.get(i);
+				userNames.add(docXbIdea.getUserName());
+			}
+			jsonObject.put("userNames", userNames.toString().replace("[", "").replace("]", ""));
+			jsonObject.put("docXbIdeas", docXbIdeas);
+		}else {
+			jsonObject.put("result", "");
+		}
+		return jsonObject;
+	}
+	/**
+	 * 意见数按钮颜色控制
+	 * @param subId
+	 */
+	@RequestMapping("/buttonColor")
+	@ResponseBody
+	public void buttonColor(String subId) {
+		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+		if (subDocInfo != null) {
+			subDocInfo.setIdeaAddFlag(0);
+			subDocInfoService.update(subDocInfo);
+			Response.json("result","success");
+		}
 	}
 }

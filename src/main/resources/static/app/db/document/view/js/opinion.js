@@ -15,7 +15,12 @@ var pageModule = function(){
 			success:function(data){
 				var html1= "";
 				var xbUser = [];
-				$.each(data,function(i,o){
+				xbUser = data.userNames;
+				datas = data.docXbIdeas;
+				if(data.result == ''){
+					$(".xbUserLine").text("本轮反馈暂无意见！");
+				}
+				$.each(datas,function(i,o){
 					var createdTime = o.createdTime;
 //					var cbrList = o.cbrList;
 					html1=	'<div class="timelinesheys">'+
@@ -27,7 +32,7 @@ var pageModule = function(){
 							'	</div>'+
 							'	<div class="timeline-body">';
 //							$.each(cbrList,function(i,item){
-								xbUser.push(o.userName);
+//								xbUser.push(o.userName);
 								html1 += '<div class="timeline-content">'+
 									        '	<div class="userName"><i class="fa fa-user"></i>&nbsp;'+o.userName+'</div>';
 								html1 += '	<div class="content">'+o.feedBackIdea+'</div>';
@@ -45,10 +50,6 @@ var pageModule = function(){
 	
 	
 	var initother = function(){
-		if(opinionFlag=="table"){//如果是列表进来的调后台的方法
-			//
-		}
-		
 		//关闭
 		$("#close").click(function(){
 			newbootbox.newdialogClose("opinionDialog");

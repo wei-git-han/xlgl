@@ -32,6 +32,7 @@ public class DocXbIdea implements Serializable {
 	//
 	private String groupId;
 
+
 	/**
 	 * 设置：
 	 */
