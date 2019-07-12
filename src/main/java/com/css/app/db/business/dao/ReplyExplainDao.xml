@@ -33,8 +33,8 @@
 		<if test="cbrFlag != null and cbrFlag != ''">
 			and CBR_FLAG= #{cbrFlag}
 		</if>
-		<if test="ideaGroupId != null and ideaGroupId != ''">
-			and IDEA_GROUP_ID= #{ideaGroupId}
+		<if test="groupId != null and groupId != ''">
+			and IDEA_GROUP_ID= #{groupId}
 		</if>
 		<if test="chooseStatus != null and chooseStatus != ''">
 			and CHOOSE_STATUS= #{chooseStatus}

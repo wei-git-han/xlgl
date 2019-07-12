@@ -52,5 +52,11 @@ public class DocXbIdeaServiceImpl implements DocXbIdeaService {
 		// TODO Auto-generated method stub
 		return DocXbIdeaDao.queryLastNewData(subId,infoId);
 	}
+
+	@Override
+	public void deleteAllXBIdea(String subId, String ideaGroupId) {
+		DocXbIdeaDao.deleteAllXBIdea(subId, ideaGroupId );
+		
+	}
 	
 }

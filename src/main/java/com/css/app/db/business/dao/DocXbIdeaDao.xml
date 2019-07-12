@@ -16,8 +16,8 @@
 			<if test="subId != null and subId != ''">
 				and SUB_ID = #{subId}
 			</if>
-			<if test="ideaGroupId != null and ideaGroupId != ''">
-				and GROUP_ID = #{ideaGroupId}
+			<if test="groupId != null and groupId != ''">
+				and GROUP_ID = #{groupId}
 			</if>
 			<if test="offset != null and limit != null">
 				limit #{offset}, #{limit} 
@@ -44,7 +44,10 @@
 			"USER_NAME", 
 			"FEED_BACK_IDEA", 
 			"CREATED_TIME", 
-			"GROUP_ID"
+			"GROUP_ID",
+			"UNDERTAKER_ID",
+			"UNDERTAKER_NAME",
+			"IS_UNDERTAKER_FLAG"
 		)
 		values
 		(
@@ -55,7 +58,10 @@
 			#{userName}, 
 			#{feedBackIdea}, 
 			#{createdTime}, 
-			#{groupId}
+			#{groupId},
+			#{undertakerId},
+			#{undertakerName},
+			#{isUndertakerFlag}
 		)
 	</insert>
 	 
@@ -68,7 +74,10 @@
 			<if test="userName != null">"USER_NAME" = #{userName}, </if>
 			<if test="feedBackIdea != null">"FEED_BACK_IDEA" = #{feedBackIdea}, </if>
 			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
-			<if test="groupId != null">"GROUP_ID" = #{groupId}</if>
+			<if test="groupId != null">"GROUP_ID" = #{groupId},</if>
+			<if test="undertakerId != null">"UNDERTAKER_ID" = #{undertakerId},</if>
+			<if test="undertakerName != null">"UNDERTAKER_NAME" = #{undertakerName},</if>
+			<if test="isUndertakerFlag != null">"IS_UNDERTAKER_FLAG" = #{isUndertakerFlag}</if>
 		</set>
 		where ID = #{id}
 	</update>
@@ -77,11 +86,14 @@
 		delete from DB_DOC_XB_IDEA where ID = #{value}
 	</delete>
 	
+	
 	<delete id="deleteBatch">
 		delete from DB_DOC_XB_IDEA where ID in 
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
 		</foreach>
 	</delete>
-
+	<delete id="deleteAllXBIdea">
+		delete from DB_DOC_XB_IDEA where SUB_ID = #{0} AND GROUP_ID = #{1}
+	</delete>
 </mapper>

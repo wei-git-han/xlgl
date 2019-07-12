@@ -4,7 +4,7 @@ html,body{
 	background-color:#F1F4FA;
 	margin:0;
 	padding:0;
-	font-family:"Î¢ÈíÑÅºÚ";
+	font-family:"Î¢ï¿½ï¿½ï¿½Åºï¿½";
 }
 *{
 	box-sizing:border-box;
@@ -551,4 +551,7 @@ ul,p{
 .content{
 	color:#555;
 	font-size:15px;
+}
+.addbg{
+	background:url("../images/bg.png")  center  200px no-repeat!important;
 }

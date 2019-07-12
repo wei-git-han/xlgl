@@ -4,21 +4,21 @@ var getDataUrl = {"url":"/app/db/documentinfo/info","dataType":"json"};//右侧�
 var getSzpsListUrl = {"url":rootPath +"/documentszps/queryList","dataType":"text"}; //获取首长批示
 var zbjlDataUrl = {"url":"/app/db/documentzbjl/list","dataType":"json"}; //文件转办-转办记录list
 var getButtonParamUrl = {"url":"/app/db/subdocinfo/buttonParam","dataType":"json"}; //获取按钮显示控制参数
-var chengbanUrl = {"url":"/app/db/subdocinfo/undertakeOperation","dataType":"text"}; //承办地址
+//var chengbanUrl = {"url":"/app/db/subdocinfo/undertakeOperation","dataType":"text"}; //承办地址
 var saveUrl = {"url":"/app/db/replyexplain/save","dataType":"text"}; //办理反馈保存
-var finishUrl = {"url":"/app/db/subdocinfo/finishOperation","dataType":"text"}; //完成审批操作
-var returnUrl = {"url":"/app/db/subdocinfo/returnOperation","dataType":"text"}; //返回修改操作
-var luoShiUrl = {"url":"/app/db/subdocinfo/luoShiOperation","dataType":"text"}; //常态落实操作
-var banjieUrl = {"url":"/app/db/subdocinfo/banJieOperation","dataType":"text"}; //办结操作
+//var finishUrl = {"url":"/app/db/subdocinfo/finishOperation","dataType":"text"}; //完成审批操作
+//var returnUrl = {"url":"/app/db/subdocinfo/returnOperation","dataType":"text"}; //返回修改操作
+//var luoShiUrl = {"url":"/app/db/subdocinfo/luoShiOperation","dataType":"text"}; //常态落实操作
+//var banjieUrl = {"url":"/app/db/subdocinfo/banJieOperation","dataType":"text"}; //办结操作
 var bjDataUrl = {"url":"/app/db/documentinfo/getBanJieList","dataType":"text"}; //办结记录
-var delfjUrl = {"url":"/app/db/replyexplain/deleteAttch","dataType":"text"}; //删除办理反馈中的附件
+//var delfjUrl = {"url":"/app/db/replyexplain/deleteAttch","dataType":"text"}; //删除办理反馈中的附件
 var downLoadUrl= {"url":"/app/db/replyexplain/downLoad","dataType":"text"}; //下载办理反馈中的附件
 var subReplyListUrl = {"url":"/app/db/replyexplain/subReplyList","dataType":"text"}; //局内办理反馈list
 var replyByTeamIdUrl = {"url":"/app/db/replyexplain/getReplyByTeamId","dataType":"text"}; //获取某组办理反馈
 var cbDataUrl = {"url":"/app/db/documentinfo/getCuiBanlist","dataType":"text"}; //催办记录list
 var latestCuiBanUrl = {"url":"/app/db/documentinfo/getLatestCuiBan","dataType":"text"}; //获取最新的催办
 var uploadFileUrl = "/app/db/documentinfo/uploadFile";//文件上传
-var delFileUrl = {"url":"/app/db/documentfile/delete","dataType":"text"}; /*相关文件--删除附件*/
+//var delFileUrl = {"url":"/app/db/documentfile/delete","dataType":"text"}; /*相关文件--删除附件*/
 var fileId=getUrlParam("fileId")||""; //主文件id
 var subId=getUrlParam("subId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
@@ -29,7 +29,7 @@ var isCbr = 0;//承办人标识
 var isSave = 0;//保存成功提示标识
 var ifShowEditBtn="0";//是否有编辑按钮
 var scanFilePath = "";//扫描件路径
-var showCollectIdeaButtonUrl={"url":"/app/db/addXbDeal/showCollectIdeaButton","dataType":"text"}; //是否显示意见收集
+//var showCollectIdeaButtonUrl={"url":"/app/db/addXbDeal/showCollectIdeaButton","dataType":"text"}; //是否显示意见收集
 var commitIdeaUrl={"url":"/app/db/addXbDeal/commitIdea","dataType":"text"}; //发送意见url
 
 
@@ -81,7 +81,7 @@ var pageModule = function(){
 	
 	
 	//是否显示意见收集按钮
-	var showCollectIdeaButton=function(){
+	/*var showCollectIdeaButton=function(){
 		$ajax({
 			url:showCollectIdeaButtonUrl,
 			data:{infoId:fileId,subId:subId},
@@ -93,7 +93,7 @@ var pageModule = function(){
 				}
 			}
 		});
-	}
+	}*/
 	
 	/* 按钮权限控制 */
 	var showButton = function(){
@@ -516,12 +516,21 @@ var pageModule = function(){
 				if(data&&data.length>0){
 					$("#zbrecord").html("");
 					$.each(data,function(i,item){
-						if(item.isAddRecord == 1){
+						if(item.xbOperateFlag == 1){
 							$("#zbrecord").append(
 									'<div class="record">'+
 									'	<label class="zbUser">承办人:</label>'+
 									'	<div><span>'+item.orgName+'&nbsp;&nbsp;'+item.userName+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
 									'	<label class="cbdw">增加协办人:</label>'+
+									'	<div>'+item.receiverNames+'</div>'+
+									'</div>'
+							)
+						}else if(item.xbOperateFlag == 2 || item.xbOperateFlag == 3){
+							$("#zbrecord").append(
+									'<div class="record">'+
+									'	<label class="zbUser">承办人:</label>'+
+									'	<div><span>'+item.orgName+'&nbsp;&nbsp;'+item.userName+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
+									'	<label class="cbdw">修改协办人:</label>'+
 									'	<div>'+item.receiverNames+'</div>'+
 									'</div>'
 							)
@@ -618,7 +627,7 @@ var pageModule = function(){
         	}
 		});
 		
-		//送审
+/*		//送审
 		$("#tijiao").click(function(){
 			var cbrFlag="";  
 			if(isCbr && isCbr == 1){ //承办人
@@ -654,8 +663,8 @@ var pageModule = function(){
 				})
 			}
 		});
-		
-		//承办
+		*/
+		/*//承办
 		$("#chengban").click(function(){
 			$("#yjsj").show();
 			$ajax({
@@ -669,9 +678,9 @@ var pageModule = function(){
 					}
 				}
 			});
-		});
+		});*/
 		
-		//返回修改
+		/*//返回修改
 		$("#fhxg").click(function(){
 			var replyContent = $("#replyContent").val();
 			var imgFileId="";
@@ -718,9 +727,9 @@ var pageModule = function(){
 					}
 				}
 			});
-		});
+		});*/
 		
-		/*局长送审 */
+/*		局长送审 
 		$("#send").click(function(){
 			var cbrFlag="";
 			var replyContent = $("#replyContent").val();
@@ -781,9 +790,9 @@ var pageModule = function(){
 					url:"/app/db/document/view/html/tijiaoDialog.html?subId="+subId+"&infoId="+fileId+"&replyContent="+replyContent+"&cbrFlag="+cbrFlag+"&saveFlag="+saveFlag+"&fromMsg="+fromMsg
 				})
 			}
-		});
+		});*/
 		
-		
+/*		
 		//审批通过
 		$("#sptg").click(function(){
 			newbootbox.oconfirm({
@@ -837,9 +846,9 @@ var pageModule = function(){
 					});
 			 	}
 			});
-		});
+		});*/
 		
-		//转办
+		/*//转办
 		$("#zhuanban").click(function(){
 			newbootbox.newdialog({
 				id:"zhuanbanDialog",
@@ -850,9 +859,9 @@ var pageModule = function(){
 				classed:"cjDialog",
 				url:"/app/db/document/jndb/html/zhuanbandx.html?subId="+subId+"&infoId="+fileId+"&fileFrom="+fileFrom+"&fromMsg="+fromMsg
 			})
-		});
+		});*/
 		
-		//范例
+		/*//范例
 		$("#fanli").click(function(){
 			newbootbox.newdialog({
 				id:"fanliDialog",
@@ -863,7 +872,7 @@ var pageModule = function(){
 				classed:"cjDialog",
 				url:"/app/db/document/view/html/fanli.html?subId="+subId+"&infoId="+fileId+"&fileFrom="+fileFrom+"&fromMsg="+fromMsg
 			})
-		});
+		});*/
 		/*//办结
 		$("#banjie").click(function(){
 			newbootbox.oconfirm({
@@ -958,10 +967,10 @@ var pageModule = function(){
 		    }
 		});
 		
-		//办理反馈保存
+/*		//办理反馈保存
 		$("#save").click(function(){
 			$("#commentForm").submit();
-		});
+		});*/
 		
 		//催办
 		$("#cuiban").click(function(){
@@ -1094,6 +1103,168 @@ var pageModule = function(){
         		url:"/app/db/document/djlr/html/yjjl.html?infoId="+fileId+"&subId="+subId
         	})
         });
+        
+        
+      //下载附件
+        $("#downLoadfj").click(function(){
+        	if($("#fjList").find("input[name=fjcheckbox]:checked").length>0){
+        		var checkId = [];
+        		$("#fjList").find("input[name=fjcheckbox]").each(function(){
+        			if($(this).is(":checked")){
+        				checkId.push($(this).attr("checkId"));
+        			}
+        		})
+        		window.location.href="/app/db/documentfile/downLoadFile?ids="+checkId.toString()+"&infoId="+fileId
+        	}else{
+        		newbootbox.alert("请选中要下载的附件！"); 
+        	}
+        });
+
+        $("#form3").validate({
+            submitHandler: function() {
+            	$("#dialogzz").show();
+            	$("#dialogzz").css("display","table");
+        		var ajax_option ={
+        			type: "post",
+        			url:uploadFileUrl,//默认是form action
+        			success:function(data){
+        				$("#dialogzz").hide();
+        				if(data.result == "success"){
+        					newbootbox.alert('上传成功！').done(function(){
+        		        		$(".fileinput-filename").text("");
+        		    			$("#pdf").val("");
+        		    			$("#scanId").val(data.smjId);
+        		    			getFile(data.smjId);
+        		    			pageModule.takeMenufn()
+            				});
+        				}else{
+        					newbootbox.alert("上传失败！"); 
+        				}
+        			}
+        		}
+        		$('#form3').ajaxSubmit(ajax_option);
+           }
+        });
+        //扫描设置
+        $("#scanSet").click(function(){
+        	$(".smczcont").toggle();
+        });
+        //扫描新增
+        $("#addFj").click(function(){
+        	if($("#id").val() == "" || $("#id").val() == null || typeof($("#id").val()) == undefined){
+        		newbootbox.alert("请先保存要素信息再开始扫描！"); 
+        		return  false;
+        	} 
+        	$("#pdf").unbind("click");
+        	$("#pdf").unbind("change");
+        	$("#pdf").click();
+        	$("#pdf").change(function(){
+        		var fileNameArry = $(this).val().split("\\");
+        		var fileName;
+        		if(fileNameArry.length==1){
+        			fileName=fileNameArry[0];
+        		}else{
+        			fileName=fileNameArry[fileNameArry.length-1];
+        		}
+        		$(".fileinput-filename").text(fileName);
+        		var id=$("#id").val();
+        		$("#idpdf").val(id);
+        		$("#form3").submit();
+        	});
+        })
+
+        //扫描件表单提交
+        $("#smjForm").validate({
+        	submitHandler : function() {
+        		$("#infoId").val($("#id").val());
+        		var ajax_option = {
+        			type: "post",
+        			url : "/app/db/documentinfo/saveSmjPsFile",
+        			success : function(data) {
+        				if (data.result == "success") {
+        					newbootbox.alert("保存成功！").done(function(){
+        						getFile(data.scanId);
+        		    			pageModule.takeMenufn()
+        					});
+        				} 
+        			}
+        		}
+        		$('#smjForm').ajaxSubmit(ajax_option);
+        	}
+        });
+       /* //保存
+        $("#save").click(function(){
+        	$("#commentForm").submit();
+        })*/
+        //保存并新增
+        var addFlag =false;//此变量用来标识是不是保存并新增的操作，在submit中区分保存保存回调成功的跳转
+        $("#saveAndAdd").click(function(){
+        	addFlag=true;
+        	$("#commentForm").submit();
+        })
+        var getFile = function(clickfileId){
+        	$ajax({
+        		url:getFileUrl,
+        		data:{id:clickfileId},
+        		success:function(data){
+        			var downFormatIdUrl = data.downFormatIdUrl;
+        			if(downFormatIdUrl != null && downFormatIdUrl != ''){
+        				openOFDFile(downFormatIdUrl, "suwell",$("#suwell").width(),$("#suwell").height(), "showTablet");
+        			}else{//没有文件仅初始化插件
+        				suwell.ofdReaderInit("suwell",$("#suwell").width(),$("#suwell").height());
+        			}
+        		}
+        	});	
+        }
+        //删除附件
+       /* $("#delfj").click(function(){
+        	if($("#fjList").find("input[name=fjcheckbox]:checked").length>0){
+        		var checkId = [];
+        		$("#fjList").find("input[name=fjcheckbox]").each(function(){
+        			if($(this).is(":checked")){
+        				checkId.push($(this).attr("checkId"));
+        			}
+        		})
+        		$ajax({
+        			url:delFileUrl,
+        			data:{ids:checkId.toString()},
+        			success:function(data){
+        				if(data.result == "success" && data.url != ""){
+        					newbootbox.alert("删除成功！").done(function(){
+        		    			pageModule.takeMenufn()
+        					}); 
+        				}
+        			}
+        		})
+        	}else{
+        		newbootbox.alert("请选中要删除的附件！"); 
+        	}
+        });*/
+
+
+        $("#fasong").click(function(){
+        	if($("#replyContent").val() == ''){
+        		newbootbox.alert("发送内容不允许为空！");
+        	}else{
+        		$ajax({
+        			url:commitIdeaUrl,
+        			data:{infoId:fileId,subId:subId,feedBackIdea:$("#replyContent").val()},
+        			type: "GET",
+        			success:function(data){
+        				if(data.result == "success"){
+        					newbootbox.alert("发送成功！").done(function(){
+        						pageModule.takeMenufn()
+        					});
+        					$("#replyContent").val('');
+        				}else{
+        					newbootbox.alert("发送失败！").done(function(){
+        						pageModule.takeMenufn()
+        					});
+        				}
+        			}
+        		});
+        	}
+        });
 	}
 		
 	return{
@@ -1119,6 +1290,9 @@ var pageModule = function(){
 		},
 		takeMenufn:function(){
 			takeMenufn();
+		},
+		reload:function(){
+			window.location.reload();
 		}
 	};
 }();
@@ -1188,7 +1362,7 @@ function editfn(id,el,checkStatus){
 	}
 }
 
-function removefn(id,el){
+/*function removefn(id,el){
 	$ajax({
 		url:delfjUrl,
 		data:{id:id},
@@ -1199,7 +1373,7 @@ function removefn(id,el){
 	    	}
 	    }
 	});
-}
+}*/
 
 function viewcont(teamId,subId,ideaGroupId){
 	$("#viewcont").modal("show");
@@ -1231,166 +1405,7 @@ function viewcont(teamId,subId,ideaGroupId){
 	    }
 	});
 }
-//下载附件
-$("#downLoadfj").click(function(){
-	if($("#fjList").find("input[name=fjcheckbox]:checked").length>0){
-		var checkId = [];
-		$("#fjList").find("input[name=fjcheckbox]").each(function(){
-			if($(this).is(":checked")){
-				checkId.push($(this).attr("checkId"));
-			}
-		})
-		window.location.href="/app/db/documentfile/downLoadFile?ids="+checkId.toString()+"&infoId="+fileId
-	}else{
-		newbootbox.alert("请选中要下载的附件！"); 
-	}
-});
 
-$("#form3").validate({
-    submitHandler: function() {
-    	$("#dialogzz").show();
-    	$("#dialogzz").css("display","table");
-		var ajax_option ={
-			type: "post",
-			url:uploadFileUrl,//默认是form action
-			success:function(data){
-				$("#dialogzz").hide();
-				if(data.result == "success"){
-					newbootbox.alert('上传成功！').done(function(){
-		        		$(".fileinput-filename").text("");
-		    			$("#pdf").val("");
-		    			$("#scanId").val(data.smjId);
-		    			getFile(data.smjId);
-		    			pageModule.takeMenufn()
-    				});
-				}else{
-					newbootbox.alert("上传失败！"); 
-				}
-			}
-		}
-		$('#form3').ajaxSubmit(ajax_option);
-   }
-});
-//扫描设置
-$("#scanSet").click(function(){
-	$(".smczcont").toggle();
-});
-//扫描新增
-$("#addFj").click(function(){
-	if($("#id").val() == "" || $("#id").val() == null || typeof($("#id").val()) == undefined){
-		newbootbox.alert("请先保存要素信息再开始扫描！"); 
-		return  false;
-	} 
-	$("#pdf").unbind("click");
-	$("#pdf").unbind("change");
-	$("#pdf").click();
-	$("#pdf").change(function(){
-		var fileNameArry = $(this).val().split("\\");
-		var fileName;
-		if(fileNameArry.length==1){
-			fileName=fileNameArry[0];
-		}else{
-			fileName=fileNameArry[fileNameArry.length-1];
-		}
-		$(".fileinput-filename").text(fileName);
-		var id=$("#id").val();
-		$("#idpdf").val(id);
-		$("#form3").submit();
-	});
-})
-
-//扫描件表单提交
-$("#smjForm").validate({
-	submitHandler : function() {
-		$("#infoId").val($("#id").val());
-		var ajax_option = {
-			type: "post",
-			url : "/app/db/documentinfo/saveSmjPsFile",
-			success : function(data) {
-				if (data.result == "success") {
-					newbootbox.alert("保存成功！").done(function(){
-						getFile(data.scanId);
-		    			pageModule.takeMenufn()
-					});
-				} 
-			}
-		}
-		$('#smjForm').ajaxSubmit(ajax_option);
-	}
-});
-//保存
-$("#save").click(function(){
-	$("#commentForm").submit();
-})
-//保存并新增
-var addFlag =false;//此变量用来标识是不是保存并新增的操作，在submit中区分保存保存回调成功的跳转
-$("#saveAndAdd").click(function(){
-	addFlag=true;
-	$("#commentForm").submit();
-})
-var getFile = function(clickfileId){
-	$ajax({
-		url:getFileUrl,
-		data:{id:clickfileId},
-		success:function(data){
-			var downFormatIdUrl = data.downFormatIdUrl;
-			if(downFormatIdUrl != null && downFormatIdUrl != ''){
-				openOFDFile(downFormatIdUrl, "suwell",$("#suwell").width(),$("#suwell").height(), "showTablet");
-			}else{//没有文件仅初始化插件
-				suwell.ofdReaderInit("suwell",$("#suwell").width(),$("#suwell").height());
-			}
-		}
-	});	
-}
-//删除附件
-$("#delfj").click(function(){
-	if($("#fjList").find("input[name=fjcheckbox]:checked").length>0){
-		var checkId = [];
-		$("#fjList").find("input[name=fjcheckbox]").each(function(){
-			if($(this).is(":checked")){
-				checkId.push($(this).attr("checkId"));
-			}
-		})
-		$ajax({
-			url:delFileUrl,
-			data:{ids:checkId.toString()},
-			success:function(data){
-				if(data.result == "success" && data.url != ""){
-					newbootbox.alert("删除成功！").done(function(){
-		    			pageModule.takeMenufn()
-					}); 
-				}
-			}
-		})
-	}else{
-		newbootbox.alert("请选中要删除的附件！"); 
-	}
-});
-
-
-$("#fasong").click(function(){
-	if($("#replyContent").val() == ''){
-		newbootbox.alert("发送内容不允许为空！");
-	}else{
-		$ajax({
-			url:commitIdeaUrl,
-			data:{infoId:fileId,subId:subId,feedBackIdea:$("#replyContent").val()},
-			type: "GET",
-			success:function(data){
-				if(data.result == "success"){
-					newbootbox.alert("发送成功！").done(function(){
-						pageModule.takeMenufn()
-					});
-					$("#replyContent").val('');
-				}else{
-					newbootbox.alert("发送失败！").done(function(){
-						pageModule.takeMenufn()
-					});
-				}
-			}
-		});
-	}
-});
 
 function opinionView(teamId,subId,ideaGroupId){ 
 	newbootbox.newdialog({

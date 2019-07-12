@@ -31,7 +31,7 @@
 	</select>
 	 
  	<select id="queryNewRecord" resultType="com.css.app.db.business.entity.SubDocTracking" parameterType="string">
-		select * from DB_SUB_DOC_TRACKING where SUB_ID = #{subId} AND TRACKING_TYPE = '4' ORDER BY CREATED_TIME DESC LIMIT 1
+		select * from DB_SUB_DOC_TRACKING where SUB_ID = #{subId} ORDER BY CREATED_TIME DESC LIMIT 1
 	</select>
 	<insert id="save" parameterType="com.css.app.db.business.entity.SubDocTracking">
 		insert into DB_SUB_DOC_TRACKING

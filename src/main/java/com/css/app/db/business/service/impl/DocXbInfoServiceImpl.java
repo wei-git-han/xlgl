@@ -48,14 +48,19 @@ public class DocXbInfoServiceImpl implements DocXbInfoService {
 	}
 
 	@Override
-	public List<DocXbInfo> queryXbRecord(String infoId) {
+	public List<DocXbInfo> queryXbRecord(String infoId, String subId, String undertakerId) {
 		// TODO Auto-generated method stub
-		return DocXbInfoDao.queryXbRecord(infoId);
+		return DocXbInfoDao.queryXbRecord(infoId,subId,undertakerId);
 	}
 
 	@Override
-	public void deleteBySubIdAndReceiverId(String subId, String userId) {
-		DocXbInfoDao.deleteBySubIdAndReceiverId(subId, userId);
+	public void deleteBySubIdAndReceiverId(String subId, String userId, String ideaGroupId) {
+		DocXbInfoDao.deleteBySubIdAndReceiverId(subId, userId ,ideaGroupId);
 		
+	}
+
+	@Override
+	public void deleteAllXBRecord(String subId,String ideaGroupId) {
+		DocXbInfoDao.deleteAllXBRecord(subId, ideaGroupId);
 	}
 }

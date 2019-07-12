@@ -2,6 +2,8 @@ package com.css.app.db.business.dao;
 
 import com.css.app.db.business.entity.DocXbIdea;
 
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.css.base.dao.BaseDao;
@@ -17,5 +19,8 @@ import com.css.base.dao.BaseDao;
 public interface DocXbIdeaDao extends BaseDao<DocXbIdea> {
 
 	DocXbIdea queryLastNewData(String subId, String infoId);
+
+
+	void deleteAllXBIdea(String subId, String ideaGroupId);
 	
 }

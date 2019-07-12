@@ -33,37 +33,40 @@ var pageModule = function(){
 			success:function(data){
 				var html1= "";
 				var xbUser = [];
+				var cbUser = [];
+				xbUser = data.xieban;
+				cbUser = data.chenban;
+				datas = data.docXbIdeas;
 				if(data.result == ''){
 					$(".xbUserLine > span").hide();
 					$("#textarea").hide();
-//					$("#tishi").show();
-					
+					$("#addbg").addClass("addbg");
+				}else{
+					$.each(datas,function(i,item){
+						var createdTime = item.createdTime;
+						var cbrList = item.cbrList;
+						html1=	'<div class="timelinesheys">'+
+						'	<div class="timeline-icon">'+
+						'		<i class="icontime"></i>'+
+						'	</div>'+
+						'	<div class="timeline-user">'+
+						'		<span class="createTime">'+createdTime+'</span>'+
+						'	</div>'+
+						'	<div class="timeline-body">';
+	//						$.each(cbrList,function(i,item){
+						html1 += '<div class="timeline-content">'+
+						'	<div class="userName"><i class="fa fa-user"></i>&nbsp;'+item.userName+'</div>';
+						html1 += '	<div class="content">'+item.feedBackIdea+'</div>';
+						html1 += '</div>';
+	//						})
+						
+						html1 +='	</div>'+
+						'</div>'
+						$(".timelinesview").append(html1);
+					})
+					$("#xbUser").html(xbUser.toString());
+					$("#cbUser").html(cbUser.toString());
 				}
-				xbUser = data.userNames;
-				datas = data.docXbIdeas;
-				$.each(datas,function(i,item){
-					var createdTime = item.createdTime;
-					var cbrList = item.cbrList;
-					html1=	'<div class="timelinesheys">'+
-							'	<div class="timeline-icon">'+
-							'		<i class="icontime"></i>'+
-							'	</div>'+
-							'	<div class="timeline-user">'+
-							'		<span class="createTime">'+createdTime+'</span>'+
-							'	</div>'+
-							'	<div class="timeline-body">';
-//							$.each(cbrList,function(i,item){
-								html1 += '<div class="timeline-content">'+
-									        '	<div class="userName"><i class="fa fa-user"></i>&nbsp;'+item.userName+'</div>';
-								html1 += '	<div class="content">'+item.feedBackIdea+'</div>';
-								html1 += '</div>';
-//							})
-							
-							html1 +='	</div>'+
-									'</div>'
-					$(".timelinesview").append(html1);
-				})
-				$("#xbUser").html(xbUser.toString());
 			}
 		})
 	}
@@ -85,23 +88,27 @@ var pageModule = function(){
 		
 		//提交
 		$("#tijiao").click(function(){
-			$ajax({
-				url:commitIdeaUrl,
-				data:{infoId:infoId,subId:subId,feedBackIdea:$("#opinionContent").val()},
-				type: "GET",
-				success:function(data){
-					if(data.result == "success"){
-						newbootbox.alert("发送成功！").done(function(){
-			    			pageModule.takeMenufn()
-						});
-					}else{
-						newbootbox.alert("发送失败！").done(function(){
-			    			pageModule.takeMenufn()
-						});
+			if($("#opinionContent").val() == ''){
+				newbootbox.alert("请输入意见！");
+			}else{
+				$ajax({
+					url:commitIdeaUrl,
+					data:{infoId:infoId,subId:subId,feedBackIdea:$("#opinionContent").val()},
+					type: "GET",
+					success:function(data){
+						if(data.result == "success"){
+							newbootbox.alert("发送成功！").done(function(){
+								pageModule.takeMenufn()
+							});
+						}else{
+							newbootbox.alert("发送失败！").done(function(){
+								pageModule.takeMenufn()
+							});
+						}
 					}
-				}
-			});
-			newbootbox.newdialogClose("yijianDialog");
+				});
+				newbootbox.newdialogClose("yijianDialog");
+			}
 		});
 		
 		//清屏
@@ -122,7 +129,9 @@ var pageModule = function(){
 	 			success:function(data){
 	 				newbootbox.newdialogClose("yijianDialog");
 	 				if(data.result  == "success"){
-	 					newbootbox.alert('协办人添加成功！');
+	 					newbootbox.alert('协办人添加成功！').done(function(){
+	 						window.top.iframe1.pageModule.reload();
+	 					});
 	 				}else{
 	 					newbootbox.alert('协办人添加失败！');			
 	 				}

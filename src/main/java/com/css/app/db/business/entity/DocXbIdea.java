@@ -31,7 +31,12 @@ public class DocXbIdea implements Serializable {
 	private Date createdTime;
 	//
 	private String groupId;
-
+	//承办人ID
+	private String undertakerId;
+	//承办人名字
+	private String undertakerName;
+	//是否主办人提交的意见：0:不是主办人；1：是主办人
+	private String isUndertakerFlag;
 
 	/**
 	 * 设置：
@@ -128,5 +133,23 @@ public class DocXbIdea implements Serializable {
 	 */
 	public String getGroupId() {
 		return groupId;
+	}
+	public String getUndertakerId() {
+		return undertakerId;
+	}
+	public void setUndertakerId(String undertakerId) {
+		this.undertakerId = undertakerId;
+	}
+	public String getUndertakerName() {
+		return undertakerName;
+	}
+	public void setUndertakerName(String undertakerName) {
+		this.undertakerName = undertakerName;
+	}
+	public String getIsUndertakerFlag() {
+		return isUndertakerFlag;
+	}
+	public void setIsUndertakerFlag(String isUndertakerFlag) {
+		this.isUndertakerFlag = isUndertakerFlag;
 	}
 }

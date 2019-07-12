@@ -445,12 +445,21 @@ var pageModule = function(){
 				if(data&&data.length>0){
 					$("#zbrecord").html("");
 					$.each(data,function(i,item){
-						if(item.isAddRecord == 1){
+						if(item.xbOperateFlag == 1){
 							$("#zbrecord").append(
 									'<div class="record">'+
 									'	<label class="zbUser">承办人:</label>'+
 									'	<div><span>'+item.orgName+'&nbsp;&nbsp;'+item.userName+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
 									'	<label class="cbdw">增加协办人:</label>'+
+									'	<div>'+item.receiverNames+'</div>'+
+									'</div>'
+							)
+						}else if(item.xbOperateFlag == 2 || item.xbOperateFlag == 3){
+							$("#zbrecord").append(
+									'<div class="record">'+
+									'	<label class="zbUser">承办人:</label>'+
+									'	<div><span>'+item.orgName+'&nbsp;&nbsp;'+item.userName+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
+									'	<label class="cbdw">修改协办人:</label>'+
 									'	<div>'+item.receiverNames+'</div>'+
 									'</div>'
 							)

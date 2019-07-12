@@ -3,6 +3,7 @@ package com.css.app.db.business.dao;
 import com.css.app.db.business.entity.DocXbInfo;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -18,8 +19,12 @@ import com.css.base.dao.BaseDao;
 @Mapper
 public interface DocXbInfoDao extends BaseDao<DocXbInfo> {
 
-	List<DocXbInfo> queryXbRecord(String infoId);
+	List<DocXbInfo> queryXbRecord(String infoId, String subId, String undertakerId);
 
-	void deleteBySubIdAndReceiverId(String subId, String userId);
+	void deleteBySubIdAndReceiverId(String subId, String userId, String ideaGroupId);
+
+
+	void deleteAllXBRecord(String subId, String ideaGroupId);
+
 	
 }

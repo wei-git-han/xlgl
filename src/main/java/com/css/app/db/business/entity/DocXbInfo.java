@@ -39,8 +39,27 @@ public class DocXbInfo implements Serializable {
 	private String receiverDeptName;
 	//创建时间
 	private Date createdTime;
+	//创建时间
+	private Integer publishFlag;
+	
+	public String getReceiverNames() {
+		return receiverNames;
+	}
+	public void setReceiverNames(String receiverNames) {
+		this.receiverNames = receiverNames;
+	}
+	public String getReceiverIds() {
+		return receiverIds;
+	}
+	public void setReceiverIds(String receiverIds) {
+		this.receiverIds = receiverIds;
+	}
 	//每个部门ID所有协办人名字
-	private String xieBanPersonNames;
+	private String receiverNames;
+	//每个部门ID所有协办人名字
+	private String receiverIds;
+	//每个部门ID所有协办人名字
+	private String groupId;
 
 	/**
 	 * 设置：唯一标识
@@ -186,10 +205,17 @@ public class DocXbInfo implements Serializable {
 	public Date getCreatedTime() {
 		return createdTime;
 	}
-	public String getXieBanPersonNames() {
-		return xieBanPersonNames;
+
+	public String getGroupId() {
+		return groupId;
 	}
-	public void setXieBanPersonNames(String xieBanPersonNames) {
-		this.xieBanPersonNames = xieBanPersonNames;
+	public void setGroupId(String groupId) {
+		this.groupId = groupId;
+	}
+	public Integer getPublishFlag() {
+		return publishFlag;
+	}
+	public void setPublishFlag(Integer publishFlag) {
+		this.publishFlag = publishFlag;
 	}
 }

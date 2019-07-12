@@ -26,6 +26,7 @@ import com.css.addbase.msg.MSGTipDefined;
 import com.css.addbase.msg.MsgTipUtil;
 import com.css.addbase.msg.entity.MsgTip;
 import com.css.addbase.msg.service.MsgTipService;
+import com.css.app.db.business.entity.DocXbIdea;
 import com.css.app.db.business.entity.DocXbInfo;
 import com.css.app.db.business.entity.DocumentBjjl;
 import com.css.app.db.business.entity.DocumentCbjl;
@@ -35,6 +36,7 @@ import com.css.app.db.business.entity.ReplyExplain;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.entity.SubDocTracking;
 import com.css.app.db.business.service.ApprovalOpinionService;
+import com.css.app.db.business.service.DocXbIdeaService;
 import com.css.app.db.business.service.DocXbInfoService;
 import com.css.app.db.business.service.DocumentBjjlService;
 import com.css.app.db.business.service.DocumentCbjlService;
@@ -91,6 +93,8 @@ public class SubDocInfoController {
 	private DocumentSzpsService documentSzpsService;
 	@Autowired
 	private DocXbInfoService docXbInfoService;
+	@Autowired
+	private DocXbIdeaService docXbIdeaService;
 	@Autowired
 	private MsgTipService msgService;
 	@Autowired
@@ -226,6 +230,7 @@ public class SubDocInfoController {
 		String userId = CurrentUser.getUserId();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("receiverId", userId);
+		map.put("publishFlag", "0");
 		List<DocXbInfo> docXbInfos = docXbInfoService.queryList(map);
 		List<SubDocInfo> subDocInfoList = null;
 		if (docXbInfos != null && docXbInfos.size() > 0) {
@@ -513,8 +518,10 @@ public class SubDocInfoController {
 	@ResponseBody
 	@RequestMapping("/undertakeOperation")
 	public void undertakeOperation(String subId){
+		String undertaker = null;
 		//获取文件
 		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+		undertaker = subDocInfo.getUndertaker();
 		subDocInfo.setUndertaker(CurrentUser.getUserId());
 		subDocInfo.setUndertakerName(CurrentUser.getUsername());
 		BaseAppUser appUser = baseAppUserService.queryObject(CurrentUser.getUserId());
@@ -524,23 +531,61 @@ public class SubDocInfoController {
 		subDocInfo.setDocStatus(DbDocStatusDefined.BAN_LI_ZHONG);
 		subDocInfoService.update(subDocInfo);
 		//生成本组意见，保存到局内流转记录表
-		this.productAndSaveGroupId(subId);
+		this.productAndSaveGroupId(subId, undertaker);
 		Response.json("result", "success");
 	}
 	/**
 	 * 生成本轮意见组ID，供其他协办人使用
 	 * @param subId
+	 * @param undertaker 
 	 */
-	private void productAndSaveGroupId(String subId) {
+	private void productAndSaveGroupId(String subId, String undertaker) {
 		SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
 		if (subDocTracking != null) {
 			if (StringUtils.equals("1", subDocTracking.getTrackingType()) 
 					&& StringUtils.equals(CurrentUser.getUserId(), subDocTracking.getReceiverId())) {
-				subDocTracking.setIdeaGroupId(UUID.randomUUID().toString());
+				String ideaGroupId = subDocTracking.getIdeaGroupId();
+				if (StringUtils.isNotBlank(ideaGroupId)) {
+					subDocTracking.setIdeaGroupId(ideaGroupId);
+					this.updateCurrCBPerson(subId, ideaGroupId);
+				}else {
+					subDocTracking.setIdeaGroupId(UUID.randomUUID().toString());
+				}
 				subDocTrackingService.update(subDocTracking);
 			}
 		}else {
 			logger.info("根据subId：{}，查不到局内流转数据！", subId);
+		}
+	}
+	/**
+	 * 更新当前协办人的主办人
+	 * @param subId
+	 * @param ideaGroupId
+	 * @param undertaker 
+	 */
+	private void updateCurrCBPerson(String subId, String ideaGroupId) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("subId", subId);
+//		map.put("groupId", ideaGroupId);
+		List<DocXbInfo> docXbInfos = docXbInfoService.queryList(map);
+		for (DocXbInfo docXbInfo : docXbInfos) {
+			docXbInfo.setUndertakerId(CurrentUser.getUserId());
+			docXbInfo.setDeptId(CurrentUser.getDepartmentId());
+			BaseAppOrgan baseAppOrgan = baseAppOrganService.queryObject(CurrentUser.getDepartmentId());
+			if (baseAppOrgan != null) {
+				docXbInfo.setDeptName(baseAppOrgan.getName());
+			}
+			docXbInfo.setUndertakerName(CurrentUser.getUsername());
+			docXbInfoService.update(docXbInfo);
+		}
+		map.put("groupId", ideaGroupId);
+		List<DocXbIdea> docXbIdeas = docXbIdeaService.queryList(map);
+		if (docXbIdeas.size() > 0) {
+			for (DocXbIdea docXbIdea : docXbIdeas) {
+				docXbIdea.setUndertakerId(CurrentUser.getUserId());
+				docXbIdea.setUndertakerName(CurrentUser.getUsername());
+				docXbIdeaService.update(docXbIdea);
+			}
 		}
 	}
 
@@ -1019,7 +1064,6 @@ public class SubDocInfoController {
 			if (subDocTracking != null) {
 				tracking.setIdeaGroupId(subDocTracking.getIdeaGroupId());
 			}
-//			tracking.setIdeaGroupId(UUID.randomUUID().toString());
 		}
 		if(StringUtils.isNotBlank(status)) {
 			tracking.setPreviousStatus(Integer.parseInt(status));

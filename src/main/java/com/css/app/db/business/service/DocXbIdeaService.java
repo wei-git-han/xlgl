@@ -27,4 +27,6 @@ public interface DocXbIdeaService {
 	void deleteBatch(String[] ids);
 
 	DocXbIdea queryLastNewData(String subId, String infoId);
+
+	void deleteAllXBIdea(String subId, String ideaGroupId);
 }

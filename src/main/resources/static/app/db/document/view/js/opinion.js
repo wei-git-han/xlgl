@@ -15,7 +15,9 @@ var pageModule = function(){
 			success:function(data){
 				var html1= "";
 				var xbUser = [];
-				xbUser = data.userNames;
+				var cbUser = [];
+				xbUser = data.xieban;
+				cbUser = data.chenban;
 				datas = data.docXbIdeas;
 				if(data.result == ''){
 					$(".xbUserLine").text("本轮反馈暂无意见！");
@@ -44,6 +46,8 @@ var pageModule = function(){
 					$(".timelinesview").append(html1);
 				})
 				$("#xbUser").html(xbUser.toString());
+				$("#cbUser").html(cbUser.toString());
+				
 			}
 		})
 	}

@@ -22,6 +22,13 @@
 			<if test="receiverId != null and receiverId != ''">
 			 	and RECEIVER_ID = #{receiverId}
 			</if>
+			<if test="groupId != null and groupId != ''">
+			 	and GROUP_ID = #{groupId}
+			</if>
+			<if test="publishFlag != null and publishFlag != ''">
+			 	and PUBLISH_FLAG = #{publishFlag}
+			</if>
+			ORDER BY CREATED_TIME DESC
 			<if test="offset != null and limit != null">
 				limit #{offset}, #{limit}
 			</if>
@@ -36,23 +43,36 @@
 		select * from DB_DOC_XB_INFO where SUB_ID = #{0} and INFO_ID = {1} and UNDERTAKER_ID = #{2} ORDER BY FEED_BACK_TIME
 	</select>
 	
- 	<select id="queryXbRecord" resultType="com.css.app.db.business.entity.DocXbInfo" parameterType="string">
-<!-- 		select WM_CONCAT(RECEIVER_NAME) xieBanPersonNames,UNDERTAKER_NAME undertakerName, DEPT_NAME deptName, RECEIVER_DEPT_NAME receiverDeptName, CREATED_TIME createdTime  from DB_DOC_XB_INFO where INFO_ID = #{infoId}  group by UNDERTAKER_NAME, DEPT_NAME, CREATED_TIME, RECEIVER_DEPT_NAME
- -->		
- 		select
-	        WM_CONCAT(RECEIVER_NAME) xieBanPersonNames,
-	        UNDERTAKER_NAME undertakerName            ,
+ 	<select id="queryXbRecord" resultType="com.css.app.db.business.entity.DocXbInfo">		
+	 	SELECT	
+			INFO_ID infoId,
+			SUB_ID subId,
+			UNDERTAKER_NAME undertakerName,
+			UNDERTAKER_ID undertakerId,
+			DEPT_ID deptId,
+			WM_CONCAT(RECEIVER_ID) receiverIds,
+	        WM_CONCAT(RECEIVER_NAME) receiverNames,
 	        DEPT_NAME deptName                        ,
 	        RECEIVER_DEPT_NAME receiverDeptName       ,
-	        to_date(CREATED_TIME,'yyyy-mm-dd HH24:mi:ss') CREATED_TIME 
-		from
-        	DB_DOC_XB_INFO
-        where INFO_ID = #{infoId} 
-		group by
+	        RECEIVER_DEPT_ID receiverDeptId       
+	        <!-- to_date(CREATED_TIME,'yyyy-mm-dd HH24:mi:ss') createdTime -->
+		FROM
+	        DB_DOC_XB_INFO
+		WHERE
+	        INFO_ID       = #{0}
+	    AND SUB_ID        = #{1}
+	    AND UNDERTAKER_ID = #{2}
+	    AND PUBLISH_FLAG = '0'
+		GROUP BY
 	        UNDERTAKER_NAME,
-	        DEPT_NAME ,
-	        to_date(CREATED_TIME,'yyyy-mm-dd HH24:mi:ss'),
-	        RECEIVER_DEPT_NAME
+	        UNDERTAKER_ID,
+	        DEPT_ID,
+	        DEPT_NAME,
+	        <!-- to_date(CREATED_TIME,'yyyy-mm-dd HH24:mi:ss'), -->
+	        RECEIVER_DEPT_NAME,
+	        RECEIVER_DEPT_ID,
+	        INFO_ID,
+	        SUB_ID
 	</select>
 	 
 	<insert id="save" parameterType="com.css.app.db.business.entity.DocXbInfo">
@@ -69,7 +89,9 @@
 			"RECEIVER_NAME", 
 			"RECEIVER_DEPT_ID",
 			"RECEIVER_DEPT_NAME",
-			"CREATED_TIME"
+			"CREATED_TIME",
+			"GROUP_ID",
+			"PUBLISH_FLAG"
 		)
 		values
 		(
@@ -84,7 +106,9 @@
 			#{receiverName}, 
 			#{receiverDeptId},
 			#{receiverDeptName},
-			#{createdTime}
+			#{createdTime},
+			#{groupId},
+			#{publishFlag}
 		)
 	</insert>
 	 
@@ -101,7 +125,9 @@
 			<if test="receiverName != null">"RECEIVER_NAME" = #{receiverName}, </if>
 			<if test="receiverDeptId != null">"RECEIVER_DEPT_ID" = #{receiverDeptId}, </if>
 			<if test="receiverDeptName != null">"RECEIVER_DEPT_NAME" = #{receiverDeptName}, </if>
-			<if test="createdTime != null">"CREATED_TIME" = #{createdTime} </if>
+			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
+			<if test="groupId != null">"GROUP_ID" = #{groupId},</if>
+			<if test="publishFlag != null">"PUBLISH_FLAG" = #{publishFlag}</if>
 		</set>
 		where ID = #{id}
 	</update>
@@ -111,7 +137,7 @@
 	</delete>
 	
 	<delete id="deleteBySubIdAndReceiverId">
-		delete from DB_DOC_XB_INFO where SUB_ID = #{0} AND RECEIVER_ID = #{1}
+		delete from DB_DOC_XB_INFO where SUB_ID = #{0} AND RECEIVER_ID = #{1} and GROUP_ID = #{2}
 	</delete>
 	
 	<delete id="deleteBatch">
@@ -121,4 +147,8 @@
 		</foreach>
 	</delete>
 
+	<delete id="deleteAllXBRecord">
+		delete from DB_DOC_XB_INFO where SUB_ID = #{0} AND GROUP_ID = #{1}
+	</delete>
+	
 </mapper>
