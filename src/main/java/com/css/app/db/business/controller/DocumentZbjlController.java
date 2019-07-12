@@ -21,10 +21,12 @@ import com.css.addbase.msg.MSGTipDefined;
 import com.css.addbase.msg.MsgTipUtil;
 import com.css.addbase.msg.entity.MsgTip;
 import com.css.addbase.msg.service.MsgTipService;
+//import com.css.app.db.business.entity.DocXbInfo;
 import com.css.app.db.business.entity.DocumentInfo;
 import com.css.app.db.business.entity.DocumentZbjl;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.entity.SubDocTracking;
+//import com.css.app.db.business.service.DocXbInfoService;
 import com.css.app.db.business.service.DocumentInfoService;
 import com.css.app.db.business.service.DocumentZbjlService;
 import com.css.app.db.business.service.ReplyExplainService;
@@ -74,6 +76,8 @@ public class DocumentZbjlController {
 	private  String appId;	
 	@Value("${csse.dccb.appSecret}")
 	private  String clientSecret;
+//	@Autowired
+//	private DocXbInfoService docXbInfoService;
 	
 	/**
 	 * 转办记录
@@ -87,11 +91,32 @@ public class DocumentZbjlController {
 			Map<String, Object> map = new HashMap<>();
 			map.put("infoId", infoId);
 			zbjlList = documentZbjlService.queryList(map);
+//			this.addXbRecord(zbjlList, infoId);
 		}
 		Response.json(zbjlList);
 	}
-	
-	
+	/**
+	 * 主办人添加协办记录在转办记录中
+	 * @param zbjlList
+	 * @param infoId
+	 */
+//	private void addXbRecord(List<DocumentZbjl> zbjlList, String infoId) {
+//		//查询协办记录，显示在转办记录中
+//		List<DocXbInfo> docXbInfos = docXbInfoService.queryXbRecord(infoId);
+//		DocumentZbjl documentZbjl = null;
+//		if (docXbInfos != null && docXbInfos != null) {
+//			for (DocXbInfo docXbInfo : docXbInfos) {
+//				documentZbjl = new DocumentZbjl();
+//				documentZbjl.setCreatedTime(docXbInfo.getCreatedTime());
+//				documentZbjl.setOrgName(docXbInfo.getDeptName());
+//				documentZbjl.setUserName(docXbInfo.getUndertakerName());
+//				documentZbjl.setReceiverDeptName(docXbInfo.getReceiverDeptName());
+//				documentZbjl.setReceiverNames(docXbInfo.getXieBanPersonNames());
+//				documentZbjl.setIsAddRecord(1);
+//				zbjlList.add(documentZbjl);
+//			}
+//		}
+//	}
 	/**
 	 * 保存部转办信息
 	 * @param infoId 主文件id
@@ -176,6 +201,7 @@ public class DocumentZbjlController {
 	@RequestMapping("/subZbSave")
 	public void subZbSave(String infoId,String subId,String userId,String userName) {
 		JSONObject json=new JSONObject();
+		String loginUserId=CurrentUser.getUserId();
 		if(StringUtils.isNotBlank(infoId) && StringUtils.isNotBlank(subId)) {
 			SubDocInfo subInfo = subDocInfoService.queryObject(subId);
 			//添加转办记录
@@ -201,7 +227,6 @@ public class DocumentZbjlController {
 			documentZbjlService.save(zbjl);
 			//添加流转记录
 			SubDocTracking tracking = new SubDocTracking();
-			String loginUserId=CurrentUser.getUserId();
 			String loginUserName=CurrentUser.getUsername();
 			String loginUserDeptId=CurrentUser.getDepartmentId();
 			String loginUserDeptName=CurrentUser.getOrgName();
@@ -217,14 +242,32 @@ public class DocumentZbjlController {
 			tracking.setTrackingType("1");
 			tracking.setPreviousStatus(subInfo.getDocStatus());
 			tracking.setUndertaker(subInfo.getUndertaker());
+			if (subId != null ) {
+				//承办人点击转办，清空当前未发布的所有意见以及协办人
+				if (StringUtils.equals(loginUserId, subInfo.getUndertaker())) {
+					//文在承办人这里，承办人点击转办，局内流转记录最新一笔肯定是trackingType in (1,4),此刻肯定会有新的组ID生成
+					SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
+					if (subDocTracking != null) {
+						//承办人点击转办后将这轮意见组ID带过去
+						tracking.setIdeaGroupId(subDocTracking.getIdeaGroupId());
+					}
+				}
+			}
 			subDocTrackingService.save(tracking);
 			//改变文件状态 ，文件状态为待落实
 			if(subInfo != null) {
+//				Map<String, Object> map = new HashMap<>();
 				subInfo.setDocStatus(DbDocStatusDefined.DAI_LUO_SHI);
 				subInfo.setUndertaker("");
 				subInfo.setUndertakerName("");
 				subInfo.setUndertakerPhone("");
 				subDocInfoService.update(subInfo);
+//				//点击承办后在转办的时候，清空组意见组ID
+//				SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
+//				if (subDocTracking != null && StringUtils.isNotBlank(subDocTracking.getIdeaGroupId())) {
+//					subDocTracking.setIdeaGroupId("");
+//					subDocTrackingService.update(subDocTracking);
+//				}
 			}
 			//承办人未走流程转办，删除承办人当前临时反馈
 			Map<String, Object> map =new HashMap<>();

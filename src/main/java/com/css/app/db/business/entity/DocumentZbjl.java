@@ -41,6 +41,8 @@ public class DocumentZbjl implements Serializable {
 	private String orgName;
 	//子分支主键
 	private String subId;
+	//主办人操作协办人标记；0：修改协办人；1：增加协办人；
+	private Integer xbOperateFlag;
 
 	/**
 	 * 设置：唯一标识
@@ -191,5 +193,11 @@ public class DocumentZbjl implements Serializable {
 	 */
 	public String getSubId() {
 		return subId;
+	}
+	public Integer getXbOperateFlag() {
+		return xbOperateFlag;
+	}
+	public void setXbOperateFlag(Integer xbOperateFlag) {
+		this.xbOperateFlag = xbOperateFlag;
 	}
 }

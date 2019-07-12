@@ -41,4 +41,6 @@ public interface ReplyExplainService {
 	
 	//根据条件进行删除
 	void deleteByParam(Map<String, Object> map);
+
+	ReplyExplain queryLastNewData(String infoId, String subId);
 }

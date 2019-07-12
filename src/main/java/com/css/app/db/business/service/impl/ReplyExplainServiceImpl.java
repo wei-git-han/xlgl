@@ -9,8 +9,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.css.app.db.business.dao.ReplyExplainDao;
+import com.css.app.db.business.entity.DocXbInfo;
 import com.css.app.db.business.entity.ReplyExplain;
+import com.css.app.db.business.entity.SubDocTracking;
 import com.css.app.db.business.service.ReplyExplainService;
+import com.css.app.db.business.service.SubDocTrackingService;
 import com.css.base.utils.UUIDUtils;
 
 
@@ -19,6 +22,8 @@ import com.css.base.utils.UUIDUtils;
 public class ReplyExplainServiceImpl implements ReplyExplainService {
 	@Autowired
 	private ReplyExplainDao replyExplainDao;
+	@Autowired
+	private SubDocTrackingService subDocTrackingService;
 	
 	@Override
 	public ReplyExplain queryObject(String id){
@@ -75,6 +80,11 @@ public class ReplyExplainServiceImpl implements ReplyExplainService {
 		if(StringUtils.isNotBlank(checkStatus)) {
 			reply.setChooseStatus(checkStatus);
 		}
+		SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
+		if (subDocTracking != null) {
+			String ideaGroupId = subDocTracking.getIdeaGroupId();
+			reply.setIdeaGroupId(ideaGroupId);
+		}
 		replyExplainDao.save(reply);
 	}
 
@@ -101,6 +111,12 @@ public class ReplyExplainServiceImpl implements ReplyExplainService {
 	@Override
 	public void deleteByParam(Map<String, Object> map) {
 		replyExplainDao.deleteByParam(map);
+	}
+
+	@Override
+	public ReplyExplain queryLastNewData(String infoId, String subId) {
+		// TODO Auto-generated method stub
+		return replyExplainDao.queryLastNewData(infoId, subId);
 	}
 	
 }

@@ -99,5 +99,11 @@ public class SubDocInfoServiceImpl implements SubDocInfoService {
 		subDocInfoDao.updateSubDocInfoById(subDocInfo);
 		
 	}
+
+	@Override
+	public List<SubDocInfo> queryPersonList1(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return subDocInfoDao.queryPersonList1(map);
+	}
 	
 }

@@ -4,6 +4,8 @@ var deptUrl= {"url":"/app/db/document/grdb/data/deptTree.json","dataType":"text"
 var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text"};//高级搜索--人员树
 var chehuiUrl = {"url":"/app/db/withdraw/juInnnerWithdraw","dataType":"text"};//撤回url
 var currUserRoleTypeUrl = {"url":"/app/db/subdocinfo/currUserRoleType","dataType":"text"};//获取当前用户的角色类型
+var buttonColorUrl={"url":"/app/db/addXbDeal/buttonColor","dataType":"text"}; //发送意见url
+
 var grid = null;
 var total=0;//列表中，数据的总条数
 var currentUserRole = "6";
@@ -12,6 +14,8 @@ if(!window.top.memory){
 	window.top.memory = {};
 }
 var o = window.top.memory;
+
+var docStatus=0;
 
 var pageModule = function(){
 	var initgrid = function(){
@@ -23,6 +27,7 @@ var pageModule = function(){
                 {display:"局内状态",name:"statusName",width:"7%",align:"center",render:function(rowdata,n){
                 	var statusName="";
                	 	var bgColor="#FF6600";
+                	docStatus=rowdata.docStatus;
                	 	if(rowdata.docStatus==3){
 	               	 	statusName="退回修改";
 	               		bgColor="rgba(240, 96, 0, 1)";
@@ -47,7 +52,7 @@ var pageModule = function(){
                	 	}else if(rowdata.docStatus==9){
 	               	 	statusName="办理中";
 	               	 	bgColor="rgba(43, 170, 129, 1)";
-	           	 		if(1 != rowdata.receiverIsMe){
+	           	 		if(1 != rowdata.receiverIsMe && rowdata.isXBPerson != 1 ){
 	           	 			statusName=rowdata.dealUserName+"办理中";
 	           	 			bgColor="#33CC99";
 	           	 		}
@@ -60,7 +65,7 @@ var pageModule = function(){
                	 	}
   				  	return '<div title="'+statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+statusName+'</div>';
                 }},
-                {display:"文件标题",name:"docTitle",width:"13%",align:"left",render:function(rowdata){
+                {display:"文件标题",name:"docTitle",width:"10%",align:"left",render:function(rowdata){
                 	var cuiban="";
                 	if(rowdata.cuibanFlag=="1"){
                 		cuiban = '<label class="cuibanlabel">催办</label>';
@@ -69,7 +74,11 @@ var pageModule = function(){
                 	if(rowdata.isOverTreeMonth==1){
                 		csFlag = '<img src="../../../common/images/u301.png" class="titleimg" />';
                 	}
-               	 	return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../view/html/view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&fileFrom=grdb" target="iframe1">'+cuiban+rowdata.docTitle+csFlag+'</a>'
+                	if(1 != rowdata.receiverIsMe && rowdata.isXBPerson == 1 ){
+                		return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../view/html/view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&docStatus='+docStatus+'&fileFrom=grdb" target="iframe1">'+cuiban+rowdata.docTitle+csFlag+'</a>'
+                	}else{
+                		return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../view/html/view2.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&docStatus='+docStatus+'&fileFrom=grdb" target="iframe1">'+cuiban+rowdata.docTitle+csFlag+'</a>'
+                	}
                 }},
                 {display:"紧急程度",name:"urgencyDegree",width:"5%",align:"center",paixu:false,render:function(rowdata){
                	 	return rowdata.urgencyDegree;
@@ -85,7 +94,7 @@ var pageModule = function(){
 	    		     });
                	     return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.infoId+'\')" title="'+html1+'">'+html1+'</div>';
                 }},
-                {display:"本期局内反馈",name:"",width:"20%",align:"left",paixu:false,render:function(rowdata){
+                {display:"本期局内反馈",name:"",width:"19%",align:"left",paixu:false,render:function(rowdata){
 		           	var dbCont="";
 		           	if(rowdata.latestReply){
 		           		dbCont=rowdata.latestReply;
@@ -108,6 +117,19 @@ var pageModule = function(){
                 	 }
                 	 return updateTime;
                 }},
+                {display:"意见收集",name:"",width:"4%",align:"center",paixu:false,render:function(rowdata){
+               	 var ideaCount="";
+               	 var fontColor="";
+               	 if(rowdata.ideaAddFlag==1 && rowdata.isCBPerson == 1){
+               		fontColor = "color:#f00;"
+               	 }
+               	 if(rowdata.ideaCount){
+               		ideaCount = '<font style="cursor:pointer;'+fontColor+'" id="'+rowdata.id+'" onclick="opinionView(\''+rowdata.infoId+'\',\''+rowdata.id+'\',\''+rowdata.isCBPerson+'\')">'+rowdata.ideaCount+'</font>';
+               	 }else{
+               		ideaCount = '-';
+               	 }
+               	 return ideaCount;
+               }},
                 {display:"操作",name:"",width:"4%",align:"center",paixu:false,render:function(rowdata){
 	               	 var btnHtml="";
 	               	 if(rowdata.withdrawFlag == "1"){
@@ -385,8 +407,8 @@ function chehuiDoc(id, infoId){
 	    			}
 	    		}
 	    	});	
-	    	}
-	    })
+	    }
+	})
 }
 
 
@@ -400,5 +422,30 @@ function plspFn(ids, curRole){
 		title:"审批",
 		classed:"cjDialog",
 		url:"/app/db/document/grdb/html/plsp.html?ids="+ids+"&curRole="+curRole
+	})
+}
+
+
+//意见收集
+function opinionView(infoId, subId, isCBPerson){ 
+	if(isCBPerson == 1){
+		$ajax({
+			url:buttonColorUrl,
+			data:{subId:subId,infoId:infoId},
+			success:function(data){
+				
+			}
+		});	
+		$("#"+subId).css("color","#333");
+	}
+	newbootbox.newdialog({
+		id:"opinionDialog",
+		width:800,
+		height:600,
+		header:true,
+		title:"意见收集",
+		classed:"cjDialog",
+		style:{"padding":"0px"},
+		url:"/app/db/document/view/html/opinion.html?infoId="+infoId+"&subId="+subId+"&opinionFlag=table"
 	})
 }

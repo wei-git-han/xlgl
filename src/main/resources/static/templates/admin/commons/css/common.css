@@ -1,6 +1,6 @@
 html,body{
 	background-color:ffffff;
-	/* font-family:"微软雅黑"; */
+	/* font-family:"寰蒋闆呴粦"; */
 }
 *{
 	border-radius:0px
@@ -88,7 +88,7 @@ html,body{
 .table_portlet .portlet_inner{
 	width:100%;height:100%;padding:10px;
 }
-/*readonly元素 hover属性*/
+/*readonly鍏冪礌 hover灞炴��*/
 input[readonly]{
 	cursor: pointer !important;
 	background: inherit !important;
@@ -118,7 +118,7 @@ table-striped>tbody>tr:nth-of-type(odd) {
    
 
 .modal-header {
-    background-color: #1273AA;
+    background-color: #6699FF;
     color: #fff;
     padding: 10px;
 }
@@ -138,7 +138,7 @@ table-striped>tbody>tr:nth-of-type(odd) {
 .divrelative{
 	position:relative;
 }
-/* 人员选择树图标位置*/
+/* 浜哄憳閫夋嫨鏍戝浘鏍囦綅缃�*/
 .userpic {
     position: absolute;
     top: 0px;
@@ -161,14 +161,14 @@ table-striped>tbody>tr:nth-of-type(odd) {
 }
 
 
-.form-control[disabled], fieldset[disabled] .form-control {/*所有表单元素设置了readonly或者disabled以后，添加此class设置鼠标划过是箭头*/
+.form-control[disabled], fieldset[disabled] .form-control {/*鎵�鏈夎〃鍗曞厓绱犺缃簡readonly鎴栬�卍isabled浠ュ悗锛屾坊鍔犳class璁剧疆榧犳爣鍒掕繃鏄澶�*/
     cursor: default;
     background-color: #eeeeee;
 }
-.addpointer, .form-control[readonly]{   /*所有表单元素设置了readonly或者disabled以后，添加此class设置鼠标划过是小手*/
+.addpointer, .form-control[readonly]{   /*鎵�鏈夎〃鍗曞厓绱犺缃簡readonly鎴栬�卍isabled浠ュ悗锛屾坊鍔犳class璁剧疆榧犳爣鍒掕繃鏄皬鎵�*/
 	cursor: pointer!important;
 }
-/********弹出框样式*******/
+/********寮瑰嚭妗嗘牱寮�*******/
 .bootbox-body{
 	color:#000;
 	line-height:130px;

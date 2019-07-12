@@ -114,6 +114,8 @@ public class ReplyExplainController {
 					json.put("danwei", subDocInfo.getSubDeptName());
 					json.put("firstDate", firstDate);
 					json.put("teamId", teamId);
+					//意见组ID
+					json.put("ideaGroupId", replyExplain.getIdeaGroupId());
 					json.put("content",replyExplain.getReplyContent());
 					json.put("updateTime",replyExplain.getCreatedTime());
 					//编辑的显示条件：1、当前反馈未正式发布2.登录人为当前处理人3.非待落实状态
@@ -191,6 +193,7 @@ public class ReplyExplainController {
 					JSONObject json=new JSONObject();
 					String teamId=replyExplain.getTeamId();
 					Date firstDate = null;
+					String ideaGroupId = null;
 					Map<String, Object> replyMap =new HashMap<>();
 					replyMap.put("subId", subId);
 					replyMap.put("teamId", teamId);
@@ -199,12 +202,17 @@ public class ReplyExplainController {
 					List<ReplyExplain> list = replyExplainService.queryList(replyMap);
 					if(list !=null && list.size()>0) {
 						firstDate = list.get(0).getCreatedTime();
+						ideaGroupId = list.get(0).getIdeaGroupId();
 						json.put("cbrId", list.get(list.size()-1).getUserId());
 						json.put("cbrName", list.get(list.size()-1).getUserName());
 					}
 					json.put("danwei", subDocInfo.getSubDeptName());
 					json.put("firstDate", firstDate);
 					json.put("subId", subId);
+					json.put("teamId", teamId);
+					
+					//意见组ID
+					json.put("ideaGroupId", ideaGroupId);
 					json.put("teamId", teamId);
 					json.put("content",replyExplain.getReplyContent());
 					json.put("updateTime",replyExplain.getCreatedTime());

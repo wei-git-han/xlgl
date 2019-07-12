@@ -12,6 +12,9 @@
 		<if test="organid != null">
 		    and ORGANID = #{organid}
 		</if>
+		<if test="userId != null">
+		    and USER_ID = #{userId}
+		</if>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>

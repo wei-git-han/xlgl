@@ -16,6 +16,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.db.business.entity.ApprovalOpinion;
+import com.css.app.db.business.entity.DocXbIdea;
+import com.css.app.db.business.entity.DocXbInfo;
 import com.css.app.db.business.entity.DocumentBjjl;
 import com.css.app.db.business.entity.DocumentInfo;
 import com.css.app.db.business.entity.DocumentZbjl;
@@ -24,6 +26,8 @@ import com.css.app.db.business.entity.ReplyExplain;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.entity.SubDocTracking;
 import com.css.app.db.business.service.ApprovalOpinionService;
+import com.css.app.db.business.service.DocXbIdeaService;
+import com.css.app.db.business.service.DocXbInfoService;
 import com.css.app.db.business.service.DocumentBjjlService;
 import com.css.app.db.business.service.DocumentInfoService;
 import com.css.app.db.business.service.DocumentZbjlService;
@@ -65,6 +69,10 @@ public class DocumentWithdrawController {
 	private DocumentInfoService documentInfoService;
 	@Autowired
 	private BaseAppUserService baseAppUserService;
+	@Autowired
+	private DocXbInfoService docXbInfoService;
+	@Autowired
+	private DocXbIdeaService docXbIdeaService;
 
 	/**
 	 * 在局内待办菜单内增加局管理员超级撤回功能
@@ -289,7 +297,11 @@ public class DocumentWithdrawController {
 			subDocInfo.setUndertakerName(null);
 			subDocInfo.setUndertakerPhone(null);
 			subDocInfo.setChooseStatus(null);
-			subDocInfoService.updateSubDocInfoById(subDocInfo);
+			//意见记录清空
+			subDocInfo.setIdeaCount(0);
+			//清空意见记录
+			subDocInfo.setIdeaAddFlag(0);
+			subDocInfoService.update(subDocInfo);
 		} else {
 			this.unifiedDealErrorLog(json, infoId, subId, "分支主记录表");
 			json.put("result", "fail");
@@ -332,6 +344,22 @@ public class DocumentWithdrawController {
 			this.unifiedDealErrorLog(json, infoId, subId, "督办基本信息表");
 			json.put("result", "fail");
 			return json;
+		}
+		//删除对应协办人记录
+		Map<String, Object> map =new HashMap<>();
+		map.put("infoId", infoId);
+		map.put("subId", subId);
+		List<DocXbInfo> docXbInfos = docXbInfoService.queryList(map);
+		if (docXbInfos != null && docXbInfos.size() > 0) {
+			for (DocXbInfo docXbInfo : docXbInfos) {
+				docXbInfoService.delete(docXbInfo.getId());
+			}
+		}
+		List<DocXbIdea> docXbIdeas = docXbIdeaService.queryList(map);
+		if (docXbIdeas != null && docXbIdeas.size() > 0) {
+			for (DocXbIdea docXbIdea : docXbIdeas) {
+				docXbIdeaService.delete(docXbIdea.getId());
+			}
 		}
 		json.put("result", "success");
 		return json;

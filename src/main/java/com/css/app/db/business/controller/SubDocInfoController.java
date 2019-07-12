@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,8 @@ import com.css.addbase.msg.MSGTipDefined;
 import com.css.addbase.msg.MsgTipUtil;
 import com.css.addbase.msg.entity.MsgTip;
 import com.css.addbase.msg.service.MsgTipService;
+import com.css.app.db.business.entity.DocXbIdea;
+import com.css.app.db.business.entity.DocXbInfo;
 import com.css.app.db.business.entity.DocumentBjjl;
 import com.css.app.db.business.entity.DocumentCbjl;
 import com.css.app.db.business.entity.DocumentInfo;
@@ -33,6 +36,8 @@ import com.css.app.db.business.entity.ReplyExplain;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.entity.SubDocTracking;
 import com.css.app.db.business.service.ApprovalOpinionService;
+import com.css.app.db.business.service.DocXbIdeaService;
+import com.css.app.db.business.service.DocXbInfoService;
 import com.css.app.db.business.service.DocumentBjjlService;
 import com.css.app.db.business.service.DocumentCbjlService;
 import com.css.app.db.business.service.DocumentInfoService;
@@ -86,6 +91,10 @@ public class SubDocInfoController {
 	private DocumentReadService documentReadService;
 	@Autowired
 	private DocumentSzpsService documentSzpsService;
+	@Autowired
+	private DocXbInfoService docXbInfoService;
+	@Autowired
+	private DocXbIdeaService docXbIdeaService;
 	@Autowired
 	private MsgTipService msgService;
 	@Autowired
@@ -218,6 +227,30 @@ public class SubDocInfoController {
 	@ResponseBody
 	@RequestMapping("/personList")
 	public void personList(Integer page, Integer pagesize,String search, String docStatus){
+		String userId = CurrentUser.getUserId();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("receiverId", userId);
+		map.put("publishFlag", "0");
+		List<DocXbInfo> docXbInfos = docXbInfoService.queryList(map);
+		List<SubDocInfo> subDocInfoList = null;
+		if (docXbInfos != null && docXbInfos.size() > 0) {
+			//协办人身份
+			subDocInfoList = this.unifiedDealPersonList(page,pagesize,search,docStatus,"1");
+		}else {
+			subDocInfoList = this.unifiedDealPersonList(page,pagesize,search,docStatus,"2");
+		}
+		GwPageUtils pageUtil = new GwPageUtils(subDocInfoList);
+		Response.json(pageUtil);
+	}
+	/**
+	 * 统一处理个人待办数据查询
+	 * @param page
+	 * @param pagesize
+	 * @param search
+	 * @param docStatus
+	 * @return
+	 */
+	private List<SubDocInfo> unifiedDealPersonList(Integer page, Integer pagesize,String search, String docStatus,String flag) {
 		Map<String, Object> map = new HashMap<>();
 		String loginUserId=CurrentUser.getUserId();
 		if(StringUtils.isNotBlank(loginUserId)) {
@@ -235,9 +268,16 @@ public class SubDocInfoController {
 		}
 		//查询列表数据
 		PageHelper.startPage(page, pagesize);
-		List<SubDocInfo> subDocInfoList = subDocInfoService.queryPersonList(map);
-		for (SubDocInfo subDocInfo : subDocInfoList) {
-			/*是否已读---暂时去掉改为本局最新反馈，不能删，随时会换回来
+		List<SubDocInfo> subDocInfoList = null;
+		if (StringUtils.equals("1", flag)) {
+			subDocInfoList = subDocInfoService.queryPersonList1(map);
+		}
+		if (StringUtils.equals("2", flag)) {
+			subDocInfoList = subDocInfoService.queryPersonList(map);
+		}
+		if (subDocInfoList != null && subDocInfoList.size() > 0) {
+			for (SubDocInfo subDocInfo : subDocInfoList) {
+				/*是否已读---暂时去掉改为本局最新反馈，不能删，随时会换回来
 			Map<String, Object> readMap = new HashMap<>();
 			readMap.put("userId", loginUserId);
 			readMap.put("infoId", subDocInfo.getInfoId());
@@ -245,28 +285,75 @@ public class SubDocInfoController {
 			if(list.size()==0 && StringUtils.isNotBlank(subDocInfo.getLatestReply())) {
 				subDocInfo.setUpdateFlag("1");
 			}*/
-			//首长批示
-			Map<String, Object> szpsMap = new HashMap<>();
-			szpsMap.put("infoId", subDocInfo.getInfoId());
-			List<DocumentSzps> szpsList = documentSzpsService.queryList(szpsMap);
-			subDocInfo.setSzpslist(szpsList);
-			//是否批示超过3个月
-			this.isOverTreeMonth(subDocInfo.getLeaderTime(), subDocInfo);
-			//是否显示撤回按钮
-			this.isShowWithdrawButton(subDocInfo);
-			//本局最新反馈
-			subDocInfo.setLatestReply("");
-			Map<String, Object> replyMap = new HashMap<>();
-			replyMap.put("subId", subDocInfo.getId());
-			replyMap.put("infoId", subDocInfo.getInfoId());
-			List<ReplyExplain> queryList = replyExplainService.queryList(replyMap);
-			if(queryList!=null && queryList.size()>0) {
-				subDocInfo.setLatestReply(queryList.get(0).getReplyContent());
+				//首长批示
+				Map<String, Object> szpsMap = new HashMap<>();
+				szpsMap.put("infoId", subDocInfo.getInfoId());
+				List<DocumentSzps> szpsList = documentSzpsService.queryList(szpsMap);
+				subDocInfo.setSzpslist(szpsList);
+				//是否批示超过3个月
+				this.isOverTreeMonth(subDocInfo.getLeaderTime(), subDocInfo);
+				//是否显示撤回按钮
+				this.isShowWithdrawButton(subDocInfo);
+				//本局最新反馈
+				subDocInfo.setLatestReply("");
+				Map<String, Object> replyMap = new HashMap<>();
+				replyMap.put("subId", subDocInfo.getId());
+				replyMap.put("infoId", subDocInfo.getInfoId());
+				List<ReplyExplain> queryList = replyExplainService.queryList(replyMap);
+				if(queryList!=null && queryList.size()>0) {
+					ReplyExplain replyExplain = queryList.get(0);
+					subDocInfo.setLatestReply(replyExplain.getReplyContent());
+				}
+				//判断是否为协办人
+				this.isXBPerson(subDocInfo, loginUserId);
+				//是否承办人
+				this.isCBPerson(subDocInfo, loginUserId);
 			}
 		}
-		GwPageUtils pageUtil = new GwPageUtils(subDocInfoList);
-		Response.json(pageUtil);
+		return subDocInfoList;
 	}
+	/**
+	 * 是否承办人
+	 * @param subDocInfo
+	 * @param loginUserId
+	 * @return
+	 */
+	private void isCBPerson(SubDocInfo subDocInfo, String loginUserId) {
+		if (StringUtils.equals(subDocInfo.getUndertaker(), loginUserId)) {
+			 subDocInfo.setIsCBPerson(1); 
+		}
+	}
+
+	/**
+	 * 判断当前用户是否为协办人
+	 * @param subDocInfo
+	 * @param loginUserId
+	 */
+	private boolean isXBPerson(SubDocInfo subDocInfo, String loginUserId) {
+//		Map<String, Object> map = new HashMap<>();
+//		map.put("subId", subDocInfo.getId());
+//		map.put("infoId", subDocInfo.getInfoId());
+//		map.put("receiverId", loginUserId);
+//		List<DocXbInfo> docXbInfos = docXbInfoService.queryList(map);
+//		if (docXbInfos != null && docXbInfos.size() > 0) {
+//			subDocInfo.setIsXBPerson(1);
+//		}
+		//当前是否为协办人且文不在他这里
+		Map<String, Object> hashMap = new HashMap<>();
+		hashMap.put("subId", subDocInfo.getId());
+		hashMap.put("infoId", subDocInfo.getInfoId());
+		hashMap.put("receiverId", loginUserId);
+		List<DocXbInfo> docXbInfos = docXbInfoService.queryList(hashMap);
+		SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subDocInfo.getId());
+		if(docXbInfos != null && docXbInfos.size() > 0 && subDocTracking != null 
+				&& !StringUtils.equals(loginUserId, subDocTracking.getReceiverId())) {
+			subDocInfo.setIsXBPerson(1);
+			return true;
+		}
+		subDocInfo.setIsXBPerson(0);
+		return false;
+	}
+
 	/**
 	 * 计算首长批示时间到现在是否超过三月；
 	 * @param leaderTime
@@ -387,6 +474,7 @@ public class SubDocInfoController {
 		boolean isCheckUser=false;//是否是当前办理人
 		boolean isUndertaken=false;//是否已承办
 		boolean isUndertaker=false;//是否承办人
+		boolean isXBPerson=false;//是否承办人
 		String loginUserId = CurrentUser.getUserId();
 		//当前登录人的角色（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
 		String roleType = roleSetService.getRoleTypeByUserId(loginUserId);
@@ -409,7 +497,8 @@ public class SubDocInfoController {
 						isCheckUser=true;
 					}
 				}
-				
+				//当前是否为协办人且文不在他这里
+				isXBPerson = this.isXBPerson(subDocInfo, loginUserId);
 			}
 		}
 		JSONObject json=new JSONObject();
@@ -418,6 +507,7 @@ public class SubDocInfoController {
 		json.put("isCheckUser", isCheckUser);
 		json.put("isUndertaken", isUndertaken);
 		json.put("isUndertaker", isUndertaker);
+		json.put("isXBPerson", isXBPerson);
 		Response.json(json);
 	}
 	
@@ -428,8 +518,10 @@ public class SubDocInfoController {
 	@ResponseBody
 	@RequestMapping("/undertakeOperation")
 	public void undertakeOperation(String subId){
+		String undertaker = null;
 		//获取文件
 		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+		undertaker = subDocInfo.getUndertaker();
 		subDocInfo.setUndertaker(CurrentUser.getUserId());
 		subDocInfo.setUndertakerName(CurrentUser.getUsername());
 		BaseAppUser appUser = baseAppUserService.queryObject(CurrentUser.getUserId());
@@ -438,9 +530,65 @@ public class SubDocInfoController {
 		}
 		subDocInfo.setDocStatus(DbDocStatusDefined.BAN_LI_ZHONG);
 		subDocInfoService.update(subDocInfo);
+		//生成本组意见，保存到局内流转记录表
+		this.productAndSaveGroupId(subId, undertaker);
 		Response.json("result", "success");
 	}
-	
+	/**
+	 * 生成本轮意见组ID，供其他协办人使用
+	 * @param subId
+	 * @param undertaker 
+	 */
+	private void productAndSaveGroupId(String subId, String undertaker) {
+		SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
+		if (subDocTracking != null) {
+			if (StringUtils.equals("1", subDocTracking.getTrackingType()) 
+					&& StringUtils.equals(CurrentUser.getUserId(), subDocTracking.getReceiverId())) {
+				String ideaGroupId = subDocTracking.getIdeaGroupId();
+				if (StringUtils.isNotBlank(ideaGroupId)) {
+					subDocTracking.setIdeaGroupId(ideaGroupId);
+					this.updateCurrCBPerson(subId, ideaGroupId);
+				}else {
+					subDocTracking.setIdeaGroupId(UUID.randomUUID().toString());
+				}
+				subDocTrackingService.update(subDocTracking);
+			}
+		}else {
+			logger.info("根据subId：{}，查不到局内流转数据！", subId);
+		}
+	}
+	/**
+	 * 更新当前协办人的主办人
+	 * @param subId
+	 * @param ideaGroupId
+	 * @param undertaker 
+	 */
+	private void updateCurrCBPerson(String subId, String ideaGroupId) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("subId", subId);
+//		map.put("groupId", ideaGroupId);
+		List<DocXbInfo> docXbInfos = docXbInfoService.queryList(map);
+		for (DocXbInfo docXbInfo : docXbInfos) {
+			docXbInfo.setUndertakerId(CurrentUser.getUserId());
+			docXbInfo.setDeptId(CurrentUser.getDepartmentId());
+			BaseAppOrgan baseAppOrgan = baseAppOrganService.queryObject(CurrentUser.getDepartmentId());
+			if (baseAppOrgan != null) {
+				docXbInfo.setDeptName(baseAppOrgan.getName());
+			}
+			docXbInfo.setUndertakerName(CurrentUser.getUsername());
+			docXbInfoService.update(docXbInfo);
+		}
+		map.put("groupId", ideaGroupId);
+		List<DocXbIdea> docXbIdeas = docXbIdeaService.queryList(map);
+		if (docXbIdeas.size() > 0) {
+			for (DocXbIdea docXbIdea : docXbIdeas) {
+				docXbIdea.setUndertakerId(CurrentUser.getUserId());
+				docXbIdea.setUndertakerName(CurrentUser.getUsername());
+				docXbIdeaService.update(docXbIdea);
+			}
+		}
+	}
+
 	/**
 	 * 办结操作：有一个分支局状态为非办结状态，主文件则不标识为办结，其他分支局办结的标识均为建议办结。各分支局全部办结，则主文件为办结状态
 	 * @param infoId 主文件id
@@ -784,6 +932,8 @@ public class SubDocInfoController {
 			if(subDocInfo != null) {
 				subDocInfo.setDocStatus(DbDocStatusDefined.BAN_LI_ZHONG);
 				subDocInfo.setUpdateTime(new Date());
+				//清空意见数目
+				subDocInfo.setIdeaCount(0);
 				subDocInfoService.update(subDocInfo);
 			}
 			json.put("result", "success");
@@ -876,9 +1026,16 @@ public class SubDocInfoController {
 		map.put("userId", loginUserId);
 		map.put("showFlag", "0");
 		ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
+		//查询意见表获取组ID
+//		List<DocXbIdea> docXbIdeas = docXbIdeaService.queryList(map);
 		if(tempReply!=null) {
 			tempReply.setReVersion("1");
 			tempReply.setVersionTime(new Date());
+//			if (docXbIdeas != null && docXbIdeas.size() > 0) {
+//				String groupId = docXbIdeas.get(0).getGroupId();
+//				tempReply.setIdeaGroupId(groupId);
+//			}
+			//添加意见组ID
 			if(StringUtils.isNotBlank(status)) {
 				tempReply.setChooseStatus(status);
 			}
@@ -899,6 +1056,15 @@ public class SubDocInfoController {
 		tracking.setRecDeptName(deptName);
 		tracking.setSubId(subId);
 		tracking.setTrackingType(trackingType);
+		//新一轮审批完成，生成下一轮意见组ID
+		if (StringUtils.equals("4", trackingType)) {
+			tracking.setIdeaGroupId(UUID.randomUUID().toString());
+		}else {
+			SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
+			if (subDocTracking != null) {
+				tracking.setIdeaGroupId(subDocTracking.getIdeaGroupId());
+			}
+		}
 		if(StringUtils.isNotBlank(status)) {
 			tracking.setPreviousStatus(Integer.parseInt(status));
 		}

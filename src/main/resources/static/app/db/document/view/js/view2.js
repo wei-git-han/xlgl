@@ -34,54 +34,8 @@ var commitIdeaUrl={"url":"/app/db/addXbDeal/commitIdea","dataType":"text"}; //�
 
 
 
-//var listUrl = {"url":"/app/db/document/view/data/opinion.json","dataType":"text"}; //意见记录list
-var showCurrIdeaRecordUrl = {"url":"/app/db/addXbDeal/showCurrIdeaRecord","dataType":"text"}; //意见记录
-var teamId=getUrlParam("teamId");//
-var subId=getUrlParam("subId");//
-var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 
 var pageModule = function(){
-	
-	//意见记录
-	var initList = function(){
-		$ajax({
-			url:showCurrIdeaRecordUrl,
- 			data:{subId:subId},
-			success:function(data){
-				var html1= "";
-				var xbUser = [];
-				xbUser = data.userNames;
-				datas = data.docXbIdeas;
-				$("#opinionList").html('');
-				$.each(datas,function(i,o){
-					var createdTime = o.createdTime;
-//					var cbrList = o.cbrList;
-					html1=	'<div class="timelinesheys">'+
-							'	<div class="timeline-icon">'+
-							'		<i class="icontime"></i>'+
-							'	</div>'+
-							'	<div class="timeline-user">'+
-							'		<span class="createTime">'+createdTime+'</span>'+
-							'	</div>'+
-							'	<div class="timeline-body">';
-//							$.each(cbrList,function(i,item){
-//								xbUser.push(o.userName);
-								html1 += '<div class="timeline-content">'+
-									        '	<div class="userName"><i class="fa fa-user"></i>&nbsp;'+o.userName+'</div>';
-								html1 += '	<div class="content">'+o.feedBackIdea+'</div>';
-								html1 += '</div>';
-//							})
-							
-							html1 +='	</div>'+
-									'</div>'
-					$("#opinionList").append(html1);
-				})
-				$("#xbUser").html(xbUser.toString());
-			}
-		})
-	}
-	
-	
 	$('#id').val(fileId);
 	if(showFileButton=="true"){
 		$('.xgfileWrap').show()
@@ -170,7 +124,7 @@ var pageModule = function(){
 							if(data.isCheckUser){//显示办结、常态落实,输入框
 								$(".blfk_bottom").show(); //意见外大框
 								$(".newbottom").show(); //所有按钮的容器
-								$(".blfk_top").css({"bottom":"50%","height":"50%"});   //意见框上方元素样式控制
+								$(".blfk_top").css({"bottom":"40%","height":"58%"});   //意见框上方元素样式控制
 								$("#clear").show();
 								if(data.roleType=='3'){//是局长显示审批完成否则显示提交
 									$("#sptg").show();
@@ -194,7 +148,7 @@ var pageModule = function(){
 								if(data.isXBPerson && data.docStatus==9){
 									$(".blfk_bottom").show(); //意见外大框
 									$(".newbottom").show(); //所有按钮的容器
-									$(".blfk_top").css({"bottom":"50%","height":"50%"});   //意见框上方元素样式控制
+									$(".blfk_top").css({"bottom":"40%","height":"58%"});   //意见框上方元素样式控制
 									$("#clear").show();
 									$("#fasong").show();
 								}
@@ -775,7 +729,7 @@ var pageModule = function(){
 			});
 		});
 		
-		/*局长送审 */
+		//局长送审 
 		$("#send").click(function(){
 			var cbrFlag="";
 			var replyContent = $("#replyContent").val();
@@ -919,7 +873,7 @@ var pageModule = function(){
 				url:"/app/db/document/view/html/fanli.html?subId="+subId+"&infoId="+fileId+"&fileFrom="+fileFrom+"&fromMsg="+fromMsg
 			})
 		});
-		/*//办结
+		//办结
 		$("#banjie").click(function(){
 			newbootbox.oconfirm({
 			 	title:"提示",
@@ -964,7 +918,7 @@ var pageModule = function(){
 			 	}
 			});
 		});
-		*/
+		
 		//办理反馈-添加附件
 		var o1 = $("#file1").createfile({
 			//initdata:filedata1,
@@ -1149,6 +1103,32 @@ var pageModule = function(){
         		url:"/app/db/document/djlr/html/yjjl.html?infoId="+fileId+"&subId="+subId
         	})
         });
+        
+        
+      //下载附件
+       $("#downLoadfj").click(function(){
+        	if($("#fjList").find("input[name=fjcheckbox]:checked").length>0){
+        		var checkId = [];
+        		$("#fjList").find("input[name=fjcheckbox]").each(function(){
+        			if($(this).is(":checked")){
+        				checkId.push($(this).attr("checkId"));
+        			}
+        		})
+        		if(checkId.length==1){
+        			$.ajax({
+        				url:'/app/db/documentfile/downLoadFile',
+        				data:{ids:checkId[0],infoId:fileId},
+        				success:function(data){
+        					window.location.href = data
+        				}
+        			})
+        		}else{
+        			window.location.href="/app/db/documentfile/downLoadFile?ids="+checkId.toString()+"&infoId="+fileId
+        		}
+        	}else{
+        		newbootbox.alert("请选中要下载的附件！"); 
+        	}
+        });
 
         $("#form3").validate({
             submitHandler: function() {
@@ -1222,10 +1202,6 @@ var pageModule = function(){
         		$('#smjForm').ajaxSubmit(ajax_option);
         	}
         });
-        //保存
-        $("#save").click(function(){
-        	$("#commentForm").submit();
-        })
         //保存并新增
         var addFlag =false;//此变量用来标识是不是保存并新增的操作，在submit中区分保存保存回调成功的跳转
         $("#saveAndAdd").click(function(){
@@ -1283,24 +1259,23 @@ var pageModule = function(){
         			success:function(data){
         				if(data.result == "success"){
         					newbootbox.alert("发送成功！").done(function(){
-        						initList();
-        						//pageModule.takeMenufn();
+        						pageModule.takeMenufn()
         					});
         					$("#replyContent").val('');
         				}else{
-        					newbootbox.alert("发送失败！");
+        					newbootbox.alert("发送失败！").done(function(){
+        						pageModule.takeMenufn()
+        					});
         				}
         			}
         		});
         	}
         });
-        
 	}
 		
 	return{
 		//加载页面处理程序
 		initControl:function(){
-			initList();
 			ifcuibanfn();
 			showButton();
 			takeMenufn();
@@ -1436,33 +1411,8 @@ function viewcont(teamId,subId,ideaGroupId){
 	    }
 	});
 }
-//下载附件
-$("#downLoadfj").click(function(){
-	if($("#fjList").find("input[name=fjcheckbox]:checked").length>0){
-		var checkId = [];
-		$("#fjList").find("input[name=fjcheckbox]").each(function(){
-			if($(this).is(":checked")){
-				checkId.push($(this).attr("checkId"));
-			}
-		})
-		if(checkId.length==1){
-			$.ajax({
-				url:'/app/db/documentfile/downLoadFile',
-				data:{ids:checkId[0],infoId:fileId},
-				success:function(data){
-					window.location.href = data
-				}
-			})
-		}else{
-			window.location.href="/app/db/documentfile/downLoadFile?ids="+checkId.toString()+"&infoId="+fileId
-		}
-	}else{
-		newbootbox.alert("请选中要下载的附件！"); 
-	}
-});
 
 
-//意见收集
 function opinionView(teamId,subId,ideaGroupId){ 
 	newbootbox.newdialog({
 		id:"opinionDialog",

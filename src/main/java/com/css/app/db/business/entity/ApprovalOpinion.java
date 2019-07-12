@@ -35,6 +35,8 @@ public class ApprovalOpinion implements Serializable {
 	private String replyTeamId;
 	//手写签批标识
 	private String yjType;
+	//意见组ID
+	private String ideaGroupId;
 	/**
 	 * 设置：唯一标识
 	 */
@@ -136,5 +138,11 @@ public class ApprovalOpinion implements Serializable {
 	}
 	public void setYjType(String yjType) {
 		this.yjType = yjType;
+	}
+	public String getIdeaGroupId() {
+		return ideaGroupId;
+	}
+	public void setIdeaGroupId(String ideaGroupId) {
+		this.ideaGroupId = ideaGroupId;
 	}	
 }

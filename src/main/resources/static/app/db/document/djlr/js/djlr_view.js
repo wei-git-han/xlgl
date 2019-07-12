@@ -235,6 +235,7 @@ var pageModule = function(){
 					ld = o.cbrName;
 					content = o.content;
 					subId = o.subId;
+					ideaGroupId = o.ideaGroupId;
 					//edit = o.edit;
 					//if(edit==true){
 					//	edit = `<div class="nrt-cont-top-btn">
@@ -303,7 +304,6 @@ var pageModule = function(){
 					}else if((i+1)%3==0){
 						color = "#CCCCCC";
 					}
-					
 					li = `
 						<div class="newpanel-cont ${active}" color="${color}" subId=${subId};>
 							<div class="newpanel-inner">
@@ -317,6 +317,7 @@ var pageModule = function(){
 									<div class="newpanel-right-top">
 										<div class="nrt-date">
 											<font>${firstDate}</font>
+											<a style="float: right;" id="yjjl" onclick="showfn('${subId}','${ideaGroupId}')">意见记录</a>
 										</div>
 									</div>
 									
@@ -324,7 +325,7 @@ var pageModule = function(){
 										<div class="nrt-cont" style="border-color:${color}">
 											<div class="nrt-cont-top">
 												<div class="nrt-cont-top-left">
-													<div class="nrt-cont-top-title" onclick="viewcont('${teamId}','${subId}')">
+													<div class="nrt-cont-top-title" onclick="viewcont('${teamId}','${subId}','${ideaGroupId}')">
 														<i class="fa fa-user"></i>
 														<font>${danwei}-${ld}</font>
 													</div>
@@ -420,8 +421,8 @@ var pageModule = function(){
 				}
 			})
 		}
+		//意见记录事件
 		
-		 
 		
 		$ajax({
 			url:allReplyListUrl,
@@ -441,7 +442,6 @@ var pageModule = function(){
 			}
 		})
 	}
-	
 	//文件转办——转办记录
 	var initzbjlfn = function(){
 		$ajax({
@@ -451,14 +451,34 @@ var pageModule = function(){
 				if(data&&data.length>0){
 					$("#zbrecord").html("");
 					$.each(data,function(i,item){
-						$("#zbrecord").append(
-							'<div class="record">'+
-				            '	<label class="zbUser">转办人:</label>'+
-				            '	<div><span>'+item.orgName+'&nbsp;&nbsp;'+item.userName+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
-				            '	<label class="cbdw">承办单位/人:</label>'+
-				            '	<div>'+item.receiverNames+'</div>'+
-				            '</div>'
-			            )
+						if(item.xbOperateFlag == 1){
+							$("#zbrecord").append(
+									'<div class="record">'+
+									'	<label class="zbUser">承办人:</label>'+
+									'	<div><span>'+item.orgName+'&nbsp;&nbsp;'+item.userName+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
+									'	<label class="cbdw">增加协办人:</label>'+
+									'	<div>'+item.receiverNames+'</div>'+
+									'</div>'
+							)
+						}else if(item.xbOperateFlag == 2 || item.xbOperateFlag == 3){
+							$("#zbrecord").append(
+									'<div class="record">'+
+									'	<label class="zbUser">承办人:</label>'+
+									'	<div><span>'+item.orgName+'&nbsp;&nbsp;'+item.userName+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
+									'	<label class="cbdw">修改协办人:</label>'+
+									'	<div>'+item.receiverNames+'</div>'+
+									'</div>'
+							)
+						}else{
+							$("#zbrecord").append(
+									'<div class="record">'+
+									'	<label class="zbUser">转办人:</label>'+
+									'	<div><span>'+item.orgName+'&nbsp;&nbsp;'+item.userName+'</span><span class="zbDate">'+item.createdTime+'</span></div>'+
+									'	<label class="cbdw">承办单位/人:</label>'+
+									'	<div>'+item.receiverNames+'</div>'+
+									'</div>'
+							)
+						}
 					});
 				}else{
 					$("#zbrecord").html('<div class="szqf zwCss">暂无转办记录！</div>');
@@ -822,11 +842,11 @@ function removefn(id,el){
 	});
 }
 
-function viewcont(teamId,subId){
+function viewcont(teamId,subId,ideaGroupId){
 	$("#viewcont").modal("show");
 	$ajax({
 		url:replyByTeamIdUrl,
-		data:{subId:subId,teamId:teamId},
+		data:{subId:subId,teamId:teamId,ideaGroupId:ideaGroupId},
 	    success:function(data){
 	    	if(data && data.length>0){
 	    		$(".viewcontent").html("");
@@ -852,7 +872,21 @@ function viewcont(teamId,subId){
 	    }
 	});
 }
-
+//意见记录事件
+var showfn = function(subId, ideaGroupId){
+	newbootbox.newdialog({
+		id:"opinionDialog",
+		width:800,
+		height:600,
+		header:true,
+		title:"意见收集",
+		classed:"cjDialog",
+		style:{"padding":"0px"},
+		url:"/app/db/document/view/html/opinion.html?subId="+subId+"&ideaGroupId="+ideaGroupId+"&fileFrom="+fileFrom
+	})
+	
+//	url:"/app/db/document/view/html/psDialog.html?fileId="+id,
+}
 //下载附件
 $("#downLoadfj").click(function(){
 	if($("#fjList").find("input[name=fjcheckbox]:checked").length>0){
