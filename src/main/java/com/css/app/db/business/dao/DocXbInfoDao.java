@@ -20,11 +20,5 @@ import com.css.base.dao.BaseDao;
 public interface DocXbInfoDao extends BaseDao<DocXbInfo> {
 
 	List<DocXbInfo> queryXbRecord(String infoId, String subId, String undertakerId);
-
-	void deleteBySubIdAndReceiverId(String subId, String userId, String ideaGroupId);
-
-
-	void deleteAllXBRecord(String subId, String ideaGroupId);
-
 	
 }

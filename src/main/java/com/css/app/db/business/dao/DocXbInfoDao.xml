@@ -22,9 +22,6 @@
 			<if test="receiverId != null and receiverId != ''">
 			 	and RECEIVER_ID = #{receiverId}
 			</if>
-			<if test="groupId != null and groupId != ''">
-			 	and GROUP_ID = #{groupId}
-			</if>
 			<if test="publishFlag != null and publishFlag != ''">
 			 	and PUBLISH_FLAG = #{publishFlag}
 			</if>
@@ -90,7 +87,6 @@
 			"RECEIVER_DEPT_ID",
 			"RECEIVER_DEPT_NAME",
 			"CREATED_TIME",
-			"GROUP_ID",
 			"PUBLISH_FLAG"
 		)
 		values
@@ -107,7 +103,6 @@
 			#{receiverDeptId},
 			#{receiverDeptName},
 			#{createdTime},
-			#{groupId},
 			#{publishFlag}
 		)
 	</insert>
@@ -126,7 +121,6 @@
 			<if test="receiverDeptId != null">"RECEIVER_DEPT_ID" = #{receiverDeptId}, </if>
 			<if test="receiverDeptName != null">"RECEIVER_DEPT_NAME" = #{receiverDeptName}, </if>
 			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
-			<if test="groupId != null">"GROUP_ID" = #{groupId},</if>
 			<if test="publishFlag != null">"PUBLISH_FLAG" = #{publishFlag}</if>
 		</set>
 		where ID = #{id}
@@ -136,19 +130,11 @@
 		delete from DB_DOC_XB_INFO where ID = #{value}
 	</delete>
 	
-	<delete id="deleteBySubIdAndReceiverId">
-		delete from DB_DOC_XB_INFO where SUB_ID = #{0} AND RECEIVER_ID = #{1} and GROUP_ID = #{2}
-	</delete>
-	
 	<delete id="deleteBatch">
 		delete from DB_DOC_XB_INFO where ID in 
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
 		</foreach>
-	</delete>
-
-	<delete id="deleteAllXBRecord">
-		delete from DB_DOC_XB_INFO where SUB_ID = #{0} AND GROUP_ID = #{1}
 	</delete>
 	
 </mapper>

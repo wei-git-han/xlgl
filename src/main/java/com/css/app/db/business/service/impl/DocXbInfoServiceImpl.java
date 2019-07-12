@@ -53,14 +53,4 @@ public class DocXbInfoServiceImpl implements DocXbInfoService {
 		return DocXbInfoDao.queryXbRecord(infoId,subId,undertakerId);
 	}
 
-	@Override
-	public void deleteBySubIdAndReceiverId(String subId, String userId, String ideaGroupId) {
-		DocXbInfoDao.deleteBySubIdAndReceiverId(subId, userId ,ideaGroupId);
-		
-	}
-
-	@Override
-	public void deleteAllXBRecord(String subId,String ideaGroupId) {
-		DocXbInfoDao.deleteAllXBRecord(subId, ideaGroupId);
-	}
 }
