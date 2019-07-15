@@ -343,6 +343,7 @@ public class SubDocInfoController {
 		hashMap.put("subId", subDocInfo.getId());
 		hashMap.put("infoId", subDocInfo.getInfoId());
 		hashMap.put("receiverId", loginUserId);
+		hashMap.put("publishFlag", "0");
 		List<DocXbInfo> docXbInfos = docXbInfoService.queryList(hashMap);
 		SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subDocInfo.getId());
 		if(docXbInfos != null && docXbInfos.size() > 0 && subDocTracking != null 
@@ -425,7 +426,7 @@ public class SubDocInfoController {
 			map.put("search", search);
 		}
 		int[] arr= {0,0,0,0,0,0,0,0};
-		List<SubDocInfo> subDocInfoList = subDocInfoService.queryPersonList(map);
+		List<SubDocInfo> subDocInfoList = subDocInfoService.queryPersonList1(map);
 		if(subDocInfoList != null && subDocInfoList.size()>0) {
 			arr[0]=subDocInfoList.size();
 			for (SubDocInfo subDocInfo : subDocInfoList) {

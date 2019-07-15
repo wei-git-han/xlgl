@@ -97,10 +97,18 @@
 		<if test="loginUserId !=null and loginUserId !=''">
 			and RECEIVER_ID = #{loginUserId}
 		</if>)
+		where num =1),
+		
+		V_RESULT1 as(select SUB_ID from 
+		(select SUB_ID, row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num
+		from DB_DOC_XB_INFO where 1=1 
+		<if test="loginUserId !=null and loginUserId !=''">
+			and RECEIVER_ID = #{loginUserId}
+		</if>) 
 		where num =1)
-			
+		
 		select t.*,c.under_depts,d.* from DB_DOCUMENT_INFO t
-		left join DB_SUB_DOC_INFO  dadi on t.id=dadi.INFO_ID inner join V_RESULT a on dadi.id= a.sub_id
+		left join DB_SUB_DOC_INFO  dadi on t.id=dadi.INFO_ID inner join (select * from V_RESULT union select * from V_RESULT1) a on dadi.id= a.sub_id
 		left join (select s.INFO_ID,s.USER_NAME as leader_name,s.LEADER_COMMENT as leader_content,s.CREATED_TIME as leader_time,
         row_number() over(partition by s.info_id order by b.sort asc) as dNum from DB_DOCUMENT_SZPS s inner join DB_ROLE_SET b on s.USER_ID=b.USER_ID order by b.sort asc
 		) d on t.id = d.info_id
