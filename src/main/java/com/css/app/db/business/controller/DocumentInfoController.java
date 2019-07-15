@@ -579,7 +579,7 @@ public class DocumentInfoController {
 		if(documentInfo != null) {
 			Integer status = documentInfo.getStatus();
 			String cuibanFlag = documentInfo.getCuibanFlag();
-			if(StringUtils.equals("1", adminType)||StringUtils.equals("3", adminType)) {
+			if(StringUtils.equals("0", adminType) || StringUtils.equals("1", adminType)||StringUtils.equals("3", adminType)) {
 				if(status<2) {
 					zhuanBanBtn=true;
 					banjieBtn=true;
