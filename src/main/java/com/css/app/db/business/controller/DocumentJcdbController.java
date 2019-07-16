@@ -423,9 +423,15 @@ public class DocumentJcdbController {
 						map.clear();
 						map.put("startDate",text);
 						map.put("endDate",this.acquireCurrDate(LocalDate.now()));
-					}else {
+					}else if(StringUtils.equals("1", documentDic.getValue())) {
 						map.clear();
-						map.put("year", documentDic.getText());
+						map.put("yearOrMonth", this.acquireCurrDate(LocalDate.now()).substring(0, 5));//2019年
+					}else if(StringUtils.equals("2", documentDic.getValue())){
+						map.clear();
+						map.put("yearOrMonth", this.acquireCurrDate(LocalDate.now()).substring(0, 8));//2019年07月
+					}else {
+						logger.info("配置表配置项value值不符合约定，value：{}", documentDic.getValue());
+						return;
 					}
 				}
 			}else {
@@ -613,10 +619,10 @@ public class DocumentJcdbController {
 		try {
 			//年
 			if (StringUtils.equals("1", operateFlag)) {
-				defaultTime = this.acquireCurrDate(null).substring(0, 4);
+				defaultTime = this.acquireCurrDate(null).substring(0, 5);
 			}else if (StringUtils.equals("2", operateFlag)){
 				//月
-				defaultTime = this.acquireCurrDate(null).substring(0, 7);
+				defaultTime = this.acquireCurrDate(null).substring(0, 8);
 			}else {
 				defaultTime = setTime;
 			}
@@ -669,16 +675,16 @@ public class DocumentJcdbController {
 		int month = currdate.getMonthValue();
 		int day = currdate.getDayOfMonth();
 		DateTimeFormatter dateTimeFormatter = null;
-		if (currDate == null) {
-			dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-			String monthStr = null;
-			if (month < 10) {
-				monthStr = "0" + month;
-			}
-			currDate = LocalDate.parse(year+"-"+monthStr+"-"+day, dateTimeFormatter);
-		}else {
-			dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy年MM月dd");
+//		if (currDate == null) {
+		dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy年MM月dd日");
+		String monthStr = null;
+		if (month < 10) {
+			monthStr = "0" + month;
 		}
+		currDate = LocalDate.parse(year+"年"+monthStr+"月"+day+"日", dateTimeFormatter);
+		/*}else {
+			dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy年MM月dd日");
+		}*/
 		return currDate.format(dateTimeFormatter);
 	}
 }

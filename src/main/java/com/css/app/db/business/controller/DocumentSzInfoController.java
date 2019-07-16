@@ -295,6 +295,9 @@ public class DocumentSzInfoController {
 			jo.put("blzt", documentInfo.getStatus());
 			jo.put("jwbjh", documentInfo.getBanjianNumber());
 			jo.put("title", documentInfo.getDocTitle());
+			jo.put("period", documentInfo.getPeriod());
+			jo.put("printDate", documentInfo.getPrintDate());
+			jo.put("lssx", documentInfo.getJobContent());
 			String sz=documentInfo.getSzReadIds();
 			if(StringUtils.isNotBlank(documentInfo.getLeaderName())) {
 				jo.put("pszsmr", documentInfo.getLeaderName()+" " +(documentInfo.getLeaderTime()==null?"":documentInfo.getLeaderTime())+"批示：" +documentInfo.getLeaderContent());
@@ -303,7 +306,6 @@ public class DocumentSzInfoController {
 				jo.put("pszsmr", "");				
 			}
 			//szpsCont=rowdata.leaderName+":"+rowdata.leaderContent+" "+rowdata.leaderTime.substring(0,16)
-			
 			if(documentInfo.getFirstZbTime()!=null) {				
 				jo.put("update",sdf.format(documentInfo.getFirstZbTime()) );
 			}else {

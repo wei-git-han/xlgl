@@ -7,7 +7,11 @@ var url6 = {"url":"/app/db/documentjcdb/isShouZhang","dataType":"text"};
 var showBtn = true;
 var groupid=null;
 var grid = null;
-var sptitle = '批示指示内容';
+var spData ={
+	type:1,
+	title:'督办落实情况',
+	title2:'军委办件号'
+};
 var pageModule = function(){
 	var initmenu = function(menuid){
 		$ajax({
@@ -61,11 +65,29 @@ var pageModule = function(){
 					
 					var id = $(this).attr("id");
 					if(id=="3"||id=="5"){
-						sptitle = '工作分工内容'
+						 spData ={
+							type:3,
+							title:'工作分工内容',
+							title2:'印发时间'
+						}
 					}else if(id=="6"){
-						sptitle = '落实情况'
+						spData = {
+							type:2,
+							title:'落实事项',
+							title2:'印发时间'
+						}
+					}else if(id=="4"){
+						spData ={
+							type:4,
+							title:'批示指示内容',
+							title2:'期数'
+						}
 					}else{
-						sptitle = '批示指示内容'
+						spData = {
+							type:1,
+							title:'批示指示内容',
+							title2:'军委办件号'
+						}
 					}
 					groupid = id
 					initgrid()
@@ -88,6 +110,19 @@ var pageModule = function(){
 		
         grid = $("#gridcont").createGrid({
                     columns:[	
+		            			{display:spData.title2,name:"jwbjh",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+		                       		var title =''
+		                       		if(spData.type==3 || spData.type==2){
+		                       			if(rowdata.printDate && rowdata.printDate!="" && rowdata.printDate!="null" && rowdata.printDate!=null){
+		                					title= rowdata.printDate.substring(0,16);
+		            	               	}
+		                       		}else if(spData.type==4){
+		                       			title = rowdata.period||'';
+		                       		}else{
+		                				title=` <font title="${rowdata.jwbjh}" style="cursor:pointer;" >${rowdata.jwbjh}</font>`
+		                       		}
+		            				return title
+		            			}},
                     			{display:"状态",name:"blzt",width:"8%",align:"center",paixu:false,render:function(rowdata,n){
                     				var button1;
                     				if(rowdata.blzt==1){
@@ -99,11 +134,6 @@ var pageModule = function(){
                     				}
                     				return button1;
                     			}},
-                    			{display:"军委办件号",name:"jwbjh",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
-	                               	var cuiban =
-                    				title=` <font title="${rowdata.jwbjh}" style="cursor:pointer;" >${rowdata.jwbjh}</font>`
-                    					return title
-                    			}},
                     			{display:"文件标题",name:"title",width:"18%",align:"left",paixu:false,render:function(rowdata,n){
                     				var cuiban = '',title="";
 	                            	var CuibanFlag = rowdata.CuibanFlag;
@@ -113,9 +143,27 @@ var pageModule = function(){
                     				title=`${cuiban} <font class="title" title="${rowdata.title}" onclick="viewpage('${rowdata.id}','${rowdata.id}','${rowdata.id}')" style="cursor:pointer;text-decoration: underline;" >${rowdata.title}</font>`;
                     				return title
                     			}},
-                    			{display:sptitle,name:"pszsmr",width:"18%",align:"left",paixu:false,render:function(rowdata,n){
-                    				var str = `<font class="pszsmr" style="cursor:pointer" title="${rowdata.pszsmr}" onclick="pszsnrAlert('${rowdata.id}')" >${rowdata.pszsmr}</font>`;
-                    				return str
+                    			{display:spData.title,name:"pszsmr",width:"18%",align:"left",paixu:false,render:function(rowdata,n){
+                    				var str =''
+                    				var str2 = "";
+		                       		if(spData.type==1 || spData.type == 4){
+		                       			str = rowdata.pszsmr
+                    					if(str.length>50){
+                    						str2 = str.substr(0,50)+".."
+                    					}else{
+                    						str2 = str
+                    					}
+		                       			str = `<font class="pszsmr" style="cursor:pointer" title="${str}" onclick="pszsnrAlert('${rowdata.id}')" >${str2}</font>`;
+		                       		}else {
+		                       			str = rowdata.lssx
+                    					if(str.length>50){
+                    						str2 = str.substr(0,50)+".."
+                    					}else{
+                    						str2 = str
+                    					}
+		                       			str = '<font title="'+str+'" >'+str2+'</font>';
+		                       		}
+                    				return str;
                     			}},
                       			{display:"督办落实情况",name:"dblsqk",width:"18%",align:"left",paixu:false,render:function(rowdata,n){
                       				var gengxin = "";

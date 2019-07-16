@@ -240,8 +240,8 @@
 			(case when ddi.STATUS='3' then count(ddi.STATUS) else 0 end ) as ctls
 		         from(
 		             select ps.user_id,ps.user_name,ps.info_id,db.status, row_number() over(partition by ps.user_name,ps.info_id order by ps.CREATED_TIME) as num from "DB_DOCUMENT_SZPS" ps left join "DB_DOCUMENT_INFO" db on ps.info_id=db.id where db.status>0 
-		             <if test="year !=null and year !=''">
-		             	and to_char(db.CREATED_TIME) like '%'||#{year}||'%'
+		             <if test="yearOrMonth !=null and yearOrMonth !=''">
+		             	and ps.CREATED_TIME like '%'||#{yearOrMonth}||'%'
 		             </if>
 		             <if test="startDate != null and startDate != ''">
 						and ps.CREATED_TIME >= #{startDate} 

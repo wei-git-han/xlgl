@@ -534,6 +534,13 @@ var pageModule = function(){
 						$(this).html($(this).html()+'...');
 					}
 				});
+            	$(".gzfgnr").each(function(){
+					var maxwidth = 68;
+					if($(this).text().length > maxwidth){
+						$(this).text($(this).text().substring(0,maxwidth));
+						$(this).html($(this).html()+'...');
+					}
+				});
             	$(".dblsqk span").each(function(){
 					var maxwidth = 68;
 					if($(this).text().length > maxwidth){
