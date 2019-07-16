@@ -18,5 +18,7 @@ import com.css.base.dao.BaseDao;
 public interface DocumentDicDao extends BaseDao<DocumentDic> {
 	
 	List<DocumentDic> queryDicByType(String dicType);
+
+	DocumentDic queryIdAndDicType(String id, String docType);
 	
 }

@@ -1,6 +1,8 @@
 package com.css.app.db.business.controller;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -8,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,13 +24,14 @@ import com.css.addbase.appconfig.service.BaseAppConfigService;
 import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.addbase.constant.AppConstant;
-import com.css.app.db.business.dto.LeaderStatisticsDto;
 import com.css.app.db.business.entity.BaseTreeObject;
 import com.css.app.db.business.entity.DocumentInfo;
 import com.css.app.db.business.entity.DocumentSzps;
 import com.css.app.db.business.service.DocumentInfoService;
 import com.css.app.db.business.service.DocumentSzpsService;
+import com.css.app.db.config.entity.DocumentDic;
 import com.css.app.db.config.service.AdminSetService;
+import com.css.app.db.config.service.DocumentDicService;
 import com.css.app.db.config.service.RoleSetService;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.DateUtil;
@@ -49,6 +54,7 @@ import dm.jdbc.util.StringUtil;
 @Controller
 @RequestMapping("/app/db/documentjcdb")
 public class DocumentJcdbController {
+	private final Logger logger = LoggerFactory.getLogger(DocumentJcdbController.class);
 	@Autowired
 	private DocumentInfoService documentInfoService;
 	@Autowired
@@ -61,6 +67,8 @@ public class DocumentJcdbController {
 	private DocumentSzpsService documentSzpsService;
 	@Autowired
 	private BaseAppUserService baseAppUserService;
+	@Autowired
+	private DocumentDicService documentDicService;
 
 	
 	/**
@@ -401,15 +409,35 @@ public class DocumentJcdbController {
 			json.put("type", "0");
 		}
 		Map<String, Object> map = new HashMap<>();
-		if(StringUtil.isEmpty(year)) {
+		/*if(StringUtil.isEmpty(year)) {
 			year=DateUtil.getCurrentYear()+"";
+		}*/
+		//初始化走默认时间配置
+		try {
+			if (StringUtils.isBlank(startDate) && StringUtils.isBlank(endDate)) {
+				DocumentDic documentDic = this.queryDocumentDic();
+				if (documentDic != null) {
+					String text = documentDic.getText();
+					if (StringUtils.equals("3", documentDic.getValue())) {
+						//传时间默认到至当前日期
+						map.clear();
+						map.put("startDate",text);
+						map.put("endDate",this.acquireCurrDate(LocalDate.now()));
+					}else {
+						map.clear();
+						map.put("year", documentDic.getText());
+					}
+				}
+			}else {
+				map.clear();
+				map.put("startDate",startDate);
+				map.put("endDate",endDate);
+			}
+			json.put("list", documentInfoService.queryLeaderStatistics(map));
+			Response.json(json);
+		} catch (Exception e) {
+			logger.info("调用统计图当前首长批示落实统计查询方法异常：{}", e);
 		}
-		map.put("year", year);
-		map.put("startDate",startDate);
-		map.put("endDate",endDate);
-		List<LeaderStatisticsDto> list = documentInfoService.queryLeaderStatistics(map);
-		json.put("list", list);
-		Response.json(json);
 	}
 	
 	/**
@@ -572,5 +600,85 @@ public class DocumentJcdbController {
 			baseTreeObjects.add(baseTreeObject);
 		}
 		Response.json(baseTreeObjects);
+	}
+	/**
+	 * 设置首长批示默认查询时间
+	 * @param operateFlag
+	 * @param setTime
+	 */
+	@ResponseBody
+	@RequestMapping("/setDefaultApprovelTime")
+	public void setDefaultApprovelTime(String operateFlag, String setTime) {
+		String defaultTime = null;
+		try {
+			//年
+			if (StringUtils.equals("1", operateFlag)) {
+				defaultTime = this.acquireCurrDate(null).substring(0, 4);
+			}else if (StringUtils.equals("2", operateFlag)){
+				//月
+				defaultTime = this.acquireCurrDate(null).substring(0, 7);
+			}else {
+				defaultTime = setTime;
+			}
+			if (StringUtils.isNotBlank(defaultTime)) {
+				//保存时间配置
+				DocumentDic documentDic = this.queryDocumentDic();
+				if (documentDic != null) {
+					documentDic.setText(defaultTime);
+					documentDic.setValue(operateFlag);//操作类型：1-年；2-月；3-年月日
+					documentDicService.update(documentDic);
+					Response.json("result","success");
+				}else {
+					logger.info("根据ID：{}，dicType：{}查不到相关批示时间配置。","014","leader_idea_time_conf");
+					Response.json("result","fail");
+				}
+			}else {
+				Response.json("result","fail");
+			}
+		} catch (Exception e) {
+			logger.info("调用首长批示时间设置方法异常：{}",e);
+			Response.json("result","fail");
+		}
+	}
+	/**
+	 * 查询首长批示已经设置好的时间，返回给前端
+	 */
+	@ResponseBody
+	@RequestMapping("/getDefaultApprovelTime")
+	public void getDefaultApprovelTime() {
+		DocumentDic documentDic =  this.queryDocumentDic();
+		if (documentDic != null) {
+			Response.json(documentDic);
+		}
+	}
+	/**
+	 * 查询首长批示时间设置值
+	 * @return
+	 */
+	private DocumentDic queryDocumentDic() {
+		return documentDicService.queryIdAndDicType("014","leader_idea_time_conf");
+	}
+	/**
+	 * 获取当前日期的字符串类型yyyy年xx月zz日
+	 * @return
+	 * @throws Exception
+	 */
+	private String acquireCurrDate(LocalDate currDate) throws Exception{
+		LocalDate currdate = LocalDate.now();
+		int year = currdate.getYear();
+		int month = currdate.getMonthValue();
+		int day = currdate.getDayOfMonth();
+		DateTimeFormatter dateTimeFormatter = null;
+		if (currDate == null) {
+			dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			String monthStr = null;
+			if (month < 10) {
+				monthStr = "0" + month;
+			}
+			currDate = LocalDate.parse(year+"-"+monthStr+"-"+day, dateTimeFormatter);
+		}else {
+			dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy年MM月dd");
+		}
+		return currDate.format(dateTimeFormatter);
 	}
 }

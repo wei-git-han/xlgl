@@ -51,5 +51,11 @@ public class DocumentDicServiceImpl implements DocumentDicService {
 	public List<DocumentDic> queryDicByType(String dicType) {
 		return documentDicDao.queryDicByType(dicType);
 	}
+
+	@Override
+	public DocumentDic queryIdAndDicType(String id, String docType) {
+		// TODO Auto-generated method stub
+		return documentDicDao.queryIdAndDicType(id, docType);
+	}
 	
 }

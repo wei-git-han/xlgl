@@ -7,6 +7,7 @@ var url6 = {"url":"/app/db/documentjcdb/isShouZhang","dataType":"text"};
 var showBtn = true;
 var groupid=null;
 var grid = null;
+var sptitle = '批示指示内容';
 var pageModule = function(){
 	var initmenu = function(menuid){
 		$ajax({
@@ -59,8 +60,17 @@ var pageModule = function(){
 					$(this).addClass("active");
 					
 					var id = $(this).attr("id");
-					grid.setparams({id:id});
-					grid.loadtable();
+					if(id=="3"||id=="5"){
+						sptitle = '工作分工内容'
+					}else if(id=="6"){
+						sptitle = '落实情况'
+					}else{
+						sptitle = '批示指示内容'
+					}
+					groupid = id
+					initgrid()
+//					grid.setparams({id:id});
+//					grid.loadtable();
 				})
 			}
 		})
@@ -103,7 +113,7 @@ var pageModule = function(){
                     				title=`${cuiban} <font class="title" title="${rowdata.title}" onclick="viewpage('${rowdata.id}','${rowdata.id}','${rowdata.id}')" style="cursor:pointer;text-decoration: underline;" >${rowdata.title}</font>`;
                     				return title
                     			}},
-                    			{display:"批示指示内容",name:"pszsmr",width:"18%",align:"left",paixu:false,render:function(rowdata,n){
+                    			{display:sptitle,name:"pszsmr",width:"18%",align:"left",paixu:false,render:function(rowdata,n){
                     				var str = `<font class="pszsmr" style="cursor:pointer" title="${rowdata.pszsmr}" onclick="pszsnrAlert('${rowdata.id}')" >${rowdata.pszsmr}</font>`;
                     				return str
                     			}},

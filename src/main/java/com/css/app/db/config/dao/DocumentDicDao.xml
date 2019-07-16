@@ -30,6 +30,10 @@
 		select count(*) from DB_DOCUMENT_DIC 
 	</select>
 	 
+ 	<select id="queryIdAndDicType" resultType="com.css.app.db.config.entity.DocumentDic">
+		select * from DB_DOCUMENT_DIC WHERE ID=#{0} AND DIC_TYPE = #{1}
+	</select>
+	
 	<insert id="save" parameterType="com.css.app.db.config.entity.DocumentDic">
 		insert into DB_DOCUMENT_DIC
 		(

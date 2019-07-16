@@ -27,4 +27,6 @@ public interface DocumentDicService {
 	void deleteBatch(String[] ids);
 	
 	List<DocumentDic> queryDicByType(String dicType);
+
+	DocumentDic queryIdAndDicType(String id, String docType);
 }
