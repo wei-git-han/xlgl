@@ -69,7 +69,7 @@ public class SubDocInfo implements Serializable {
 //	private String leaderContent;
 	//最新的首长批示时间
 	private String leaderTime;
-	//我是不是当前处理人
+	//我是不是当前处理人(1.文在我这2.文在承办人我为协办人)
 	private Integer receiverIsMe;
 	//承办单位/人
 	private String underDepts;

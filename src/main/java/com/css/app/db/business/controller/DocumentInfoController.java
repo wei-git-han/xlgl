@@ -886,14 +886,14 @@ public class DocumentInfoController {
 		if (!StringUtils.equals("0", adminType) && !StringUtils.equals("1", adminType) && !StringUtils.equals("2", adminType) && !StringUtils.equals("3", adminType)
 				&& !StringUtils.equals(DbDefined.ROLE_1, roleType) && !StringUtils.equals(DbDefined.ROLE_3, roleType)) {
 			orgId=null;
-			if(StringUtils.equals(DbDefined.ROLE_5, roleType)) {
+			if(StringUtils.equals(DbDefined.ROLE_5, roleType)) {//处长
 				map.put("deptId", CurrentUser.getDepartmentId());
 			}else {
-				map.put("loginUserId", loginUserId);
+				map.put("loginUserId", loginUserId);//个人（普通参谋）
 			}
 		}else {
 			if(!StringUtils.equals("0", adminType) && !StringUtils.equals("3", adminType) && (StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType))) {
-				String loginOrgId = baseAppUserService.getBareauByUserId(loginUserId);
+				String loginOrgId = baseAppUserService.getBareauByUserId(loginUserId);//局管理员或局长获取局id
 				if(StringUtils.isNotBlank(loginOrgId)) {
 					orgId=loginOrgId;
 				}

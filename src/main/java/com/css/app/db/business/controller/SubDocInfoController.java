@@ -347,7 +347,7 @@ public class SubDocInfoController {
 		List<DocXbInfo> docXbInfos = docXbInfoService.queryList(hashMap);
 		SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subDocInfo.getId());
 		if(docXbInfos != null && docXbInfos.size() > 0 && subDocTracking != null 
-				&& !StringUtils.equals(loginUserId, subDocTracking.getReceiverId())) {
+				&& StringUtils.equals(subDocInfo.getUndertaker(), subDocTracking.getReceiverId())) {
 			subDocInfo.setIsXBPerson(1);
 			return true;
 		}
@@ -1088,7 +1088,7 @@ public class SubDocInfoController {
 			map.put("loginUserId", loginUserId);
 		}
 		map.put("receiver", "receiver");
-		List<SubDocInfo> subDocInfoList = subDocInfoService.queryPersonList(map);
+		List<SubDocInfo> subDocInfoList = subDocInfoService.queryPersonList1(map);
 		if(subDocInfoList !=null && subDocInfoList.size()>0) {
 			grdbNum=subDocInfoList.size();
 		}

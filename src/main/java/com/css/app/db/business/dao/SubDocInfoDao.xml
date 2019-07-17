@@ -148,7 +148,14 @@
 			where 1=1 
 			<if test="loginUserId !=null and loginUserId !=''">
 				and RECEIVER_ID = #{loginUserId}
-			</if> and num = 1 and DOC_STATUS &lt; 10)as e on a.ID = e.SUB_ID 
+			</if> and num = 1 and DOC_STATUS &lt; 10
+			union
+             (
+             select SUB_ID ,RECEIVER_NAME deal_user_name,1 as receiver_is_me from DB_DOC_XB_INFO nn inner join DB_SUB_DOC_INFO kk on nn.SUB_ID=kk.ID
+             where 1 = 1 AND nn.PUBLISH_FLAG = '0'
+					and nn.RECEIVER_ID = #{loginUserId} and #{loginUserId}!=nn.UNDERTAKER_ID and kk.DOC_STATUS = 9
+			  )				
+			)as e on a.ID = e.SUB_ID 
 		<!-- left join (select SUB_ID, count(0) as ideaCount from DB_DOC_XB_IDEA group by SUB_ID) p on p.SUB_ID = a.SUB_ID  -->
 		where 1=1	
 		<if test="search != null and search != ''">

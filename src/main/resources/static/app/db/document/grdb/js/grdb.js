@@ -74,7 +74,7 @@ var pageModule = function(){
                 	if(rowdata.isOverTreeMonth==1){
                 		csFlag = '<img src="../../../common/images/u301.png" class="titleimg" />';
                 	}
-                	if(1 != rowdata.receiverIsMe && rowdata.isXBPerson == 1 ){
+                	if(rowdata.isXBPerson == 1 ){
                 		return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../view/html/view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&docStatus='+docStatus+'&fileFrom=grdb" target="iframe1">'+cuiban+rowdata.docTitle+csFlag+'</a>'
                 	}else{
                 		return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../view/html/view2.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&docStatus='+docStatus+'&fileFrom=grdb" target="iframe1">'+cuiban+rowdata.docTitle+csFlag+'</a>'
