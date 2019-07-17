@@ -1,8 +1,23 @@
 var id = getUrlParam2("id");
 var saveUrl = {"url":rootPath +"/adminset/saveOrUpdate","dataType":"text"};  //保存
 var editInfo = {"url":rootPath +"/adminset/info","dataType":"text"}; //编辑数据
-var userTree = {"url":"/app/base/user/tree","dataType":"text"}; //部门树
+//获取某人的管理员类型（0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员）
+var getUserAdminTypeUrl = {"url":rootPath +"/adminset/getAuthor","dataType":"text"};
+var userTree; //部门树
 var pageModule = function(){
+	var initrolefn = function(){
+		$ajax({
+			url:getUserAdminTypeUrl,
+			async:false,
+			success:function(data){
+				if(data=="2"){
+					userTree = {"url":"/app/base/user/tree","dataType":"text"}; //部门树
+				}else{
+					userTree = {"url":"/app/base/user/allTree","dataType":"text"}; //人员选择树
+				}
+			}
+		})
+	}
 	
 	var initdatafn = function(){
 		if(id!="" && !!id){
@@ -62,6 +77,7 @@ var pageModule = function(){
 	return{
 		//加载页面处理程序
 		initControl:function(){
+			initrolefn();
 			initdatafn();
 			initother();
 		}

@@ -12,12 +12,14 @@ var pageModule = function(){
 					$("#szsz").show();
 					$("#zdwh").show();
 					$("#fkfl").show(); //反馈范例...
+					$("#sjsz").show();
 				}else if (data=="0"||data=="1"){//超级管理员或部管理员
 					$('#departAdmin').show();
 					$('#juAdmin').show();
 					$("#szsz").show();
 					$("#zdwh").show();
 					$("#fkfl").show(); //反馈范例...
+					$("#sjsz").show();
 				}else{ //局管理员
 					$('#juAdmin').show();
 					$("#jssz").show();
