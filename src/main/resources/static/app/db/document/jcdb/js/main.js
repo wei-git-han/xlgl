@@ -9,7 +9,7 @@ var groupid=null;
 var grid = null;
 var spData ={
 	type:1,
-	title:'督办落实情况',
+	title:'批示指示内容',
 	title2:'军委办件号'
 };
 var pageModule = function(){

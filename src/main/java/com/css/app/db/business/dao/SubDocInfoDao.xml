@@ -100,24 +100,36 @@
 		<!-- 文在我这 -添加协办人：文不在协办人这里-->
 		WITH V_RESULT as(select SUB_ID from 
 		(select SUB_ID, row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num
-		from DB_SUB_DOC_TRACKING where 1=1 
+		from DB_SUB_DOC_TRACKING mm where 1=1 
 		<if test="loginUserId !=null and loginUserId !=''">
-			and RECEIVER_ID = #{loginUserId}
-		</if>) 
-		where num =1),
-		
-		V_RESULT1 as(select SUB_ID from 
-		(select SUB_ID, row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num
-		from DB_DOC_XB_INFO where 1=1 
-		<if test="loginUserId !=null and loginUserId !=''">
-			and RECEIVER_ID = #{loginUserId}
-		</if>) 
+			and mm.RECEIVER_ID = #{loginUserId}
+		 </if>
+		or EXISTS
+             (
+             select SUB_ID from DB_DOC_XB_INFO nn
+             where 1 = 1 AND nn.PUBLISH_FLAG = '0' AND mm.SUB_ID = nn.SUB_ID 
+             	<if test="loginUserId !=null and loginUserId !=''">
+					and nn.RECEIVER_ID = #{loginUserId}
+				</if>
+             	<if test="loginUserId !=null and loginUserId !=''">
+					and mm.RECEIVER_ID != #{loginUserId}
+				</if>
+			  ) 
+		 )                    
 		where num =1)
-		select * from (
+		
+		<!-- V_RESULT1 as(select SUB_ID from 
+		(select SUB_ID, row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num
+		from DB_DOC_XB_INFO where 1=1 AND PUBLISH_FLAG = '0'
+		<if test="loginUserId !=null and loginUserId !=''">
+			and RECEIVER_ID != #{loginUserId}
+		</if>) 
+		where num =1) -->
+		<!-- select * from ( -->
 		select *  from DB_SUB_DOC_INFO a inner join v_result b on a.ID = b.SUB_ID 
-		UNION 
-		select *  from DB_SUB_DOC_INFO r inner join v_result1 q on r.ID = q.SUB_ID 
-		) a
+		<!-- UNION 
+		select *  from DB_SUB_DOC_INFO a inner join v_result1 q on a.ID = q.SUB_ID 
+		) a -->
 		<!-- 主文件要素 -->	
 		left join DB_DOCUMENT_INFO c on a.INFO_ID=c.ID
 		<!-- 当前处理人 -->

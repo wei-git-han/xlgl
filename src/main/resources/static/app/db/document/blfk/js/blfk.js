@@ -817,7 +817,15 @@ var pageModule = function(){
 		
 		//补录
 		$("#edit").click(function(){
-			var datas=grid.getcheckrow();
+			if($("#gridcont3").is(":visible")){
+				var datas=grid3.getcheckrow();
+			}else if($("#gridcont2").is(":visible")){
+				var datas=grid2.getcheckrow();
+			}else if($("#gridcont4").is(":visible")){
+				var datas=grid4.getcheckrow();
+			}else{
+				var datas=grid.getcheckrow();
+			}
 			var ids=[];
 			if(datas.length==1){
 				$(datas).each(function(i){
@@ -913,7 +921,7 @@ function refreshgrid(){
 		pageModule.initgrid3();
 	}else if($("#gridcont2").is(":visible")){
 		pageModule.initgrid2();
-	}else if(("#gridcont4").is(":visible")){
+	}else if($("#gridcont4").is(":visible")){
 		pageModule.initgrid4();
 	}else{
 		pageModule.initgrid();

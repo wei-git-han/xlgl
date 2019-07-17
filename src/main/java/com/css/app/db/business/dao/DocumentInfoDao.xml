@@ -101,7 +101,7 @@
 		
 		V_RESULT1 as(select SUB_ID from 
 		(select SUB_ID, row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num
-		from DB_DOC_XB_INFO where 1=1 
+		from DB_DOC_XB_INFO where 1=1 AND PUBLISH_FLAG = '0'
 		<if test="loginUserId !=null and loginUserId !=''">
 			and RECEIVER_ID = #{loginUserId}
 		</if>) 

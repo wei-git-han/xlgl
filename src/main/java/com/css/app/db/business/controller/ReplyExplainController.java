@@ -44,7 +44,6 @@ import cn.com.css.filestore.impl.HTTPFile;
 @Controller
 @RequestMapping("/app/db/replyexplain")
 public class ReplyExplainController {
-	private final Logger logger = LoggerFactory.getLogger(ReplyExplainController.class);
 	@Autowired
 	private ReplyExplainService replyExplainService;
 	@Autowired

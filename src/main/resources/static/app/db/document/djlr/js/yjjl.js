@@ -129,11 +129,11 @@ var pageModule = function(){
 	 			success:function(data){
 	 				newbootbox.newdialogClose("yijianDialog");
 	 				if(data.result  == "success"){
-	 					newbootbox.alert('协办人添加成功！').done(function(){
+	 					newbootbox.alert('协办人保存成功！').done(function(){
 	 						window.top.iframe1.pageModule.reload();
 	 					});
 	 				}else{
-	 					newbootbox.alert('协办人添加失败！');			
+	 					newbootbox.alert('协办人保存失败！');			
 	 				}
 //	 				$("input[name=users]").click(function(){
 //	 					window.top.iframe1.window.pageModule.getUserData($(this).attr("personName"),$(this).attr("data"));

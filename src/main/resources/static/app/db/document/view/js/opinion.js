@@ -20,7 +20,8 @@ var pageModule = function(){
 				cbUser = data.chenban;
 				datas = data.docXbIdeas;
 				if(data.result == ''){
-					$(".xbUserLine").text("本轮反馈暂无意见！");
+					$("#xbUserLine1").text("本轮反馈暂无意见！");
+					$("#xbUserLine2").hide();
 				}
 				$.each(datas,function(i,o){
 					var createdTime = o.createdTime;
