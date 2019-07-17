@@ -550,7 +550,9 @@ var pageModule = function(){
 		$("#goback").click(function(){
 			if(fromMsg && fromMsg=="true"){
 			}else{
-				window.top.blfkfn();
+				if(np2==0){
+					window.top.blfkfn();
+				}
 				skip();
 			}
 		});
@@ -597,7 +599,9 @@ var pageModule = function(){
 							if(fromMsg && fromMsg=="true"){
 								//windowClose();
 							}else{
-								window.top.blfkfn();
+								if(np2==0){
+									window.top.blfkfn();
+								}
 							}
 						});
 					}
@@ -632,7 +636,9 @@ var pageModule = function(){
 							if(fromMsg && fromMsg=="true"){
 								windowClose();
 							}else{
-								window.top.blfkfn();
+								if(np2==0){
+									window.top.blfkfn();
+								}
 							}
 						});
 					}
@@ -661,7 +667,9 @@ var pageModule = function(){
 	 								if(fromMsg && fromMsg=="true"){
 	 									windowClose();
 	 								}else{
-	 									window.top.blfkfn();
+	 									if(np2==0){
+	 										window.top.blfkfn();
+	 									}
 										skip();
 	 								}
 	 							});
@@ -690,7 +698,9 @@ var pageModule = function(){
 	 								if(fromMsg && fromMsg=="true"){
 	 									windowClose();
 	 								}else{
-	 									window.top.blfkfn();
+	 									if(np2==0){
+	 										window.top.blfkfn();
+	 									}
 										skip();
 	 								}
 	 							});
