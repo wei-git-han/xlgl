@@ -79,7 +79,7 @@
 		<choose>
 			<when test="sort == 'desc'">order by t.BANJIAN_NUMBER desc</when>
 			<when test="sort == 'asc'"> order by t.BANJIAN_NUMBER ASC</when>
-			<otherwise>order by t.STATUS asc,t.CREATED_TIME desc</otherwise>
+			<otherwise>order by t.STATUS asc,t.FIRST_ZB_TIME,t.CREATED_TIME desc</otherwise>
 		</choose>
 		
 		<if test="offset != null and limit != null">
