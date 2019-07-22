@@ -482,11 +482,17 @@
 			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
 			<if test="remark != null">"REMARK" = #{remark},</if>
 			<if test="status != null">"STATUS" = #{status},</if>
-			<if test="finishTime != null">"FINISH_TIME" = #{finishTime},</if>
+			<choose>
+				<when test="finishTime == null">"FINISH_TIME" = null,</when>
+				<otherwise>"FINISH_TIME" = #{finishTime},</otherwise>
+			</choose>
 			<if test="latestReply != null">"LATEST_REPLY" = #{latestReply},</if>
 			<if test="latestSubDept != null">"LATEST_SUB_DEPT" = #{latestSubDept},</if>
 			<if test="latestUndertaker != null">"LATEST_UNDERTAKER" = #{latestUndertaker},</if>
-			<if test="latestReplyTime != null">"LATEST_REPLY_TIME" = #{latestReplyTime}</if>
+			<choose>
+				<when test="latestReplyTime == null">"LATEST_REPLY_TIME" = null</when>
+				<otherwise>"LATEST_REPLY_TIME" = #{latestReplyTime}</otherwise>
+			</choose>
 		</set>
 		where ID = #{id}
 	</update>
