@@ -611,9 +611,10 @@ ul{
 }
 .yjsjstyle{
 	position:absolute;
-	left:43%;
+	left:50%;
 	top: 9px;
 	width:100px;
+	margin-left:-50px;
 	background:#DEE6F6;
 	color:#6699FF;
 	font-size:14px;
