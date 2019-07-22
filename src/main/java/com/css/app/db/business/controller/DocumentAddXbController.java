@@ -102,8 +102,6 @@ public class DocumentAddXbController {
 	}
 	/**
 	 * 添加或者编辑协办人
-	 * @param userIds 协办人IDS
-	 * @param infoId 文ID
 	 * @param subId 分支ID
 	 */
 	@RequestMapping("/addOrEditXbPerson")
@@ -232,7 +230,6 @@ public class DocumentAddXbController {
 	}
 	/**
 	 * 主办人操作协办人记录在转办记录
-	 * @param userIds
 	 * @param infoId
 	 * @param editXbPersonFlag
 	 */
@@ -265,8 +262,6 @@ public class DocumentAddXbController {
 	 * @param subId
 	 * @param userIds
 	 * @param editXbPersonFlag 
-	 * @param ideaGroupId 
-	 * @param ideaGroupId 
 	 * @return
 	 */
 	private Map<String, Object> dealCurrXBPersons(String subId, String userIds, Integer editXbPersonFlag) {
@@ -321,7 +316,6 @@ public class DocumentAddXbController {
 	/**
 	 * 查询当前文的组协办人
 	 * @param subId
-	 * @param ideaGroupId 
 	 * @return
 	 */
 	private List<DocXbInfo> queryDocXbInfos(String subId) {
@@ -414,11 +408,9 @@ public class DocumentAddXbController {
 	}*/
 	/**
 	 * 提意见生成组ID
-	 * @param docXbInfo
 	 * @param infoId
 	 * @param subId
 	 * @param userId 
-	 * @param isUndertaker
 	 */
 	private void aquireGroupId(DocXbIdea docXbIdea,String infoId, String subId, String userId) {
 		//主办人发起提议  生成新一轮提议组ID
@@ -465,7 +457,6 @@ public class DocumentAddXbController {
 	}*/
 	/**
 	 * 展示意见记录(局内所有人，正式发布以后给所有人看，这个跟随本轮反馈是否发布来选择意见按钮的显示)
-	 * @param infoId
 	 * @param subId
 	 */
 	@RequestMapping("/showIdeaRecord")
@@ -530,8 +521,6 @@ public class DocumentAddXbController {
 	 * @param ideaGroupId
 	 * @param map
 	 * @param undertaker 
-	 * @param undertakerName 
-	 * @param undertakerName 
 	 * @return
 	 */
 	private JSONObject queryDocXbIdeas(String infoId, String subId, String ideaGroupId, Map<String, Object> map, String undertaker) {
