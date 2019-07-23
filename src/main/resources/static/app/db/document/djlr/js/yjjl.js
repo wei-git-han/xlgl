@@ -41,7 +41,7 @@ var pageModule = function(){
 					$(".xbUserLine > span").hide();
 					$("#textarea").hide();
 					$("#addbg").addClass("addbg");
-				}else if(xbUser == '' || cbUser == null ){
+				}else if(xbUser == '' || cbUser == '' ){
                     $(".xbUserLine > span").hide();
                     $("#textarea").hide();
                     $("#addbg").addClass("addbg");
