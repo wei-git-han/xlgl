@@ -1,5 +1,5 @@
 var showCurrIdeaRecordUrl = {"url":"/app/db/addXbDeal/showCurrIdeaRecord","dataType":"text"}; //意见记录
-var userTree = {"url":"/app/base/user/tree","dataType":"text"}; //人员选择树
+var userTree = {"url":"/app/base/user/treePart","dataType":"text"}; //人员选择树不显示承办人
 //var showIdeaRecordUrl = {"url":"/app/db/addXbDeal/showIdeaRecord","dataType":"text"}; //意见记录
 var addOrDeleteXbPersonUrl = {"url":"/app/db/addXbDeal/addOrDeleteXbPerson","dataType":"text"}; //添加或者删除协办人
 var commitIdeaUrl={"url":"/app/db/addXbDeal/commitIdea","dataType":"text"}; //发送意见url
@@ -41,6 +41,10 @@ var pageModule = function(){
 					$(".xbUserLine > span").hide();
 					$("#textarea").hide();
 					$("#addbg").addClass("addbg");
+				}else if(xbUser == '' || cbUser == null ){
+                    $(".xbUserLine > span").hide();
+                    $("#textarea").hide();
+                    $("#addbg").addClass("addbg");
 				}else{
 					$.each(datas,function(i,item){
 						var createdTime = item.createdTime;

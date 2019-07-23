@@ -531,30 +531,38 @@ public class DocumentAddXbController {
 		List<DocXbIdea> docXbIdeas = docXbIdeaService.queryList(map);
 		map.put("groupId", null);
 		map.put("publishFlag", "0");
-//		List<DocXbInfo> docXbInfos = docXbInfoService.queryList(map);
+		List<DocXbInfo> docXbInfos = docXbInfoService.queryList(map);
 		Set<String> userNames = new HashSet<>();
 		String chenban = null;
-		if (docXbIdeas.size() > 0) {
-			for (DocXbIdea docXbIdea : docXbIdeas) {
-				if (!StringUtils.equals(docXbIdea.getUserId(), docXbIdea.getUndertakerId()) 
-						/*&& !StringUtils.equals(docXbIdea.getIsUndertakerFlag(), "1")*/) {
+		/*if (docXbIdeas.size() < 0) {
+			*//*for (DocXbIdea docXbIdea : docXbIdeas) {
+				if (!StringUtils.equals(docXbIdea.getUserId(), docXbIdea.getUndertakerId())
+						*//**//*&& !StringUtils.equals(docXbIdea.getIsUndertakerFlag(), "1")*//**//*) {
 					userNames.add(docXbIdea.getUserName());
 				}
-			}
-		}
-		/*if (docXbInfos.size() > 0) {
+			}*//*
+			logger.info("根据subId:{}, infoId:{},ideaGroupId:{}查不到承、协办人意见数据",subId,infoId,ideaGroupId);
+			jsonObject.put("result", "");
+			return jsonObject;
+		}*/
+		if (docXbInfos.size() > 0) {
+			chenban = docXbInfos.get(0).getUndertakerName();
 			for (DocXbInfo docXbInfo : docXbInfos) {
 				userNames.add(docXbInfo.getReceiverName());
 			}
-		}*/
+		}else {
+			logger.info("根据subId:{}, infoId:{}查不到承、协办人数据",subId,infoId);
+			/*jsonObject.put("result", "");
+			return jsonObject;*/
+		}
 		
-		if (docXbIdeas.size() > 0) {
+		/*if (docXbIdeas.size() > 0) {
 			chenban = docXbIdeas.get(0).getUndertakerName();
 		}else {
 			logger.info("根据subId:{}, infoId:{},ideaGroupId:{}查不到承、协办人意见数据",subId,infoId,ideaGroupId);
 			jsonObject.put("result", "");
 			return jsonObject;
-		}
+		}*/
 		jsonObject.put("chenban", chenban);
 		jsonObject.put("xieban", userNames.toString().replace("[", "").replace("]", ""));
 		jsonObject.put("docXbIdeas", docXbIdeas);
