@@ -541,12 +541,23 @@ public class DocumentAddXbController {
 		}*/
 		if (docXbInfos.size() > 0) {
 			if (this.queryReplyExplain(map, ideaGroupId)) {
-				chenban = docXbIdeas.get(0).getUndertakerName();
+				if (docXbIdeas.size() > 0) {
+					chenban = docXbIdeas.get(0).getUndertakerName();
+					for (DocXbIdea docXbIdea : docXbIdeas) {
+						if (!StringUtils.equals(docXbIdea.getUserId(), docXbIdea.getUndertakerId())) {
+							userNames.add(docXbIdea.getUserName());
+						}
+					}
+				} else {
+					logger.info("根据subId:{}, infoId:{},ideaGroupId:{}查不到承、协办人意见数据",subId,infoId,ideaGroupId);
+//					jsonObject.put("result", "");
+//					return jsonObject;
+				}
 			} else {
 				chenban = docXbInfos.get(0).getUndertakerName();
-			}
-			for (DocXbInfo docXbInfo : docXbInfos) {
-				userNames.add(docXbInfo.getReceiverName());
+                for (DocXbInfo docXbInfo : docXbInfos) {
+                    userNames.add(docXbInfo.getReceiverName());
+                }
 			}
 		}else {
 			logger.info("根据subId:{}, infoId:{}查不到承、协办人数据",subId,infoId);
