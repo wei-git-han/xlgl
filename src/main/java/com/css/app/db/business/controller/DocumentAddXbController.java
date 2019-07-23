@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import com.css.app.db.business.entity.*;
+import com.css.app.db.business.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +24,6 @@ import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
-import com.css.app.db.business.entity.DocXbIdea;
-import com.css.app.db.business.entity.DocXbInfo;
-import com.css.app.db.business.entity.DocumentZbjl;
-import com.css.app.db.business.entity.SubDocInfo;
-import com.css.app.db.business.entity.SubDocTracking;
-import com.css.app.db.business.service.DocXbIdeaService;
-import com.css.app.db.business.service.DocXbInfoService;
-import com.css.app.db.business.service.DocumentZbjlService;
-import com.css.app.db.business.service.SubDocInfoService;
-import com.css.app.db.business.service.SubDocTrackingService;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.Response;
 import com.css.base.utils.StringUtils;
@@ -61,6 +53,8 @@ public class DocumentAddXbController {
 	private DocXbIdeaService docXbIdeaService;
 	@Autowired
 	private DocumentZbjlService documentZbjlService;
+	@Autowired
+	private ReplyExplainService replyExplainService;
 	/**
 	 * 控制承办人详情页收集意见按钮显示
 	 * @param subId
@@ -546,7 +540,11 @@ public class DocumentAddXbController {
 			return jsonObject;
 		}*/
 		if (docXbInfos.size() > 0) {
-			chenban = docXbInfos.get(0).getUndertakerName();
+			if (this.queryReplyExplain(map, ideaGroupId)) {
+				chenban = docXbIdeas.get(0).getUndertakerName();
+			} else {
+				chenban = docXbInfos.get(0).getUndertakerName();
+			}
 			for (DocXbInfo docXbInfo : docXbInfos) {
 				userNames.add(docXbInfo.getReceiverName());
 			}
@@ -568,6 +566,23 @@ public class DocumentAddXbController {
 		jsonObject.put("docXbIdeas", docXbIdeas);
 		return jsonObject;
 	}
+	/**
+	 * 查询本轮反馈是否已发布
+	 * @param map
+	 * @param ideaGroupId
+	 */
+	private boolean queryReplyExplain(Map<String, Object> map, String ideaGroupId) {
+		map.put("groupId", ideaGroupId);
+		List<ReplyExplain> replyExplains = replyExplainService.queryList(map);
+		if (replyExplains.size() > 0) {
+			ReplyExplain replyExplain = replyExplains.get(0);
+			if (StringUtils.equals(replyExplain.getShowFlag(), "1")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * 意见数按钮颜色控制
 	 * @param subId
