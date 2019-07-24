@@ -22,7 +22,7 @@ var pageModule = function(){
 				if(data.result != 'success'){
 					$("#xbUserLine1").text("本轮反馈暂无意见！");
 					$("#xbUserLine2").hide();
-				}else if(xbUser == '' || cbUser == 'null'){
+				}else if(datas.length <= 0){
                     $("#xbUserLine1").text("本轮反馈暂无意见！");
 					$("#xbUserLine2").hide();
 				}else{

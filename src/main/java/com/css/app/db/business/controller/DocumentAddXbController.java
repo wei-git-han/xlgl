@@ -134,57 +134,7 @@ public class DocumentAddXbController {
 			editXbPersonFlag = (Integer)dealCurrXBPersons.get("editXbPersonFlag");
 			boolean flag = (boolean)dealCurrXBPersons.get("flag");
 			if (userIdAdd != null && userIdAdd.size() > 0) {
-				DocXbInfo docXbInfo;
-				for (String userId : userIdAdd) {
-//				map.put("undertakerId", CurrentUser.getUserId());
-//				map.put("receiverId", userId);
-//				map.put("infoId", infoId);
-//				map.put("subId", subId);
-//				List<DocXbInfo> docXbInfos = docXbInfoService.queryList(map);
-//				if (docXbInfos != null && docXbInfos.size() > 0) {
-//					Response.json("result","fail");
-//				}else {
-					docXbInfo = new DocXbInfo();
-					docXbInfo.setId(UUID.randomUUID().toString());
-					docXbInfo.setInfoId(infoId);
-					docXbInfo.setSubId(subId);
-					docXbInfo.setUndertakerId(CurrentUser.getUserId());
-					docXbInfo.setUndertakerName(CurrentUser.getUsername());
-					docXbInfo.setDeptId(CurrentUser.getDepartmentId());
-					BaseAppOrgan organ = this.queryBaseAppOrgan(CurrentUser.getDepartmentId());
-					if (organ != null) {
-						docXbInfo.setDeptName(organ.getName());
-					}else {
-						logger.info("请在部门表配置部门ID：{}的部门数据！", CurrentUser.getDepartmentId());
-						continue;
-					}
-					docXbInfo.setReceiverId(userId);
-					map.clear();
-					map.put("userId", userId);
-					List<BaseAppUser> baseAppUsers = baseAppUserService.queryList(map);
-					if (baseAppUsers != null && baseAppUsers.size() > 0 ) {
-						BaseAppUser baseAppUser = baseAppUsers.get(0);
-						docXbInfo.setReceiverName(baseAppUser.getTruename());
-						String organId = baseAppUser.getOrganid();
-						//去掉重复部门ID
-						docXbInfo.setReceiverDeptId(organId);
-						organ = this.queryBaseAppOrgan(organId);
-						if (organ != null) {
-							docXbInfo.setReceiverDeptName(organ.getName());
-						}else {
-							logger.info("请在部门表配置部门ID：{}的部门数据！", organId);
-							continue;
-						}
-					}else {
-						logger.info("在人员表查不到人员ID：{}的数据！", userId);
-						continue;
-					}
-					docXbInfo.setCreatedTime(new Date());
-//					docXbInfo.setGroupId(ideaGroupId);
-					docXbInfo.setPublishFlag(0);
-					docXbInfoService.save(docXbInfo);
-//				}
-				}
+				this.saveDocXbInfo(userIdAdd,infoId,subId,map);
 			}
 			if (userIdDelete != null && userIdDelete.size() > 0) {
 				this.dealXbPerson(map,infoId,subId,userIdDelete,1);
@@ -198,6 +148,66 @@ public class DocumentAddXbController {
 		Response.json("result","success");
 	}
 
+	/**
+	 *
+	 * @param userIdAdd 添加的协办人IDS
+	 * @param infoId 文ID
+	 * @param subId 分局ID
+	 * @param map map
+	 */
+	private void saveDocXbInfo(List<String> userIdAdd, String infoId, String subId, Map<String, Object> map){
+		DocXbInfo docXbInfo;
+		for (String userId : userIdAdd) {
+//				map.put("undertakerId", CurrentUser.getUserId());
+//				map.put("receiverId", userId);
+//				map.put("infoId", infoId);
+//				map.put("subId", subId);
+//				List<DocXbInfo> docXbInfos = docXbInfoService.queryList(map);
+//				if (docXbInfos != null && docXbInfos.size() > 0) {
+//					Response.json("result","fail");
+//				}else {
+			docXbInfo = new DocXbInfo();
+			docXbInfo.setId(UUID.randomUUID().toString());
+			docXbInfo.setInfoId(infoId);
+			docXbInfo.setSubId(subId);
+			docXbInfo.setUndertakerId(CurrentUser.getUserId());
+			docXbInfo.setUndertakerName(CurrentUser.getUsername());
+			docXbInfo.setDeptId(CurrentUser.getDepartmentId());
+			BaseAppOrgan organ = this.queryBaseAppOrgan(CurrentUser.getDepartmentId());
+			if (organ != null) {
+				docXbInfo.setDeptName(organ.getName());
+			}else {
+				logger.info("请在部门表配置部门ID：{}的部门数据！", CurrentUser.getDepartmentId());
+				continue;
+			}
+			docXbInfo.setReceiverId(userId);
+			map.clear();
+			map.put("userId", userId);
+			List<BaseAppUser> baseAppUsers = baseAppUserService.queryList(map);
+			if (baseAppUsers != null && baseAppUsers.size() > 0 ) {
+				BaseAppUser baseAppUser = baseAppUsers.get(0);
+				docXbInfo.setReceiverName(baseAppUser.getTruename());
+				String organId = baseAppUser.getOrganid();
+				//去掉重复部门ID
+				docXbInfo.setReceiverDeptId(organId);
+				organ = this.queryBaseAppOrgan(organId);
+				if (organ != null) {
+					docXbInfo.setReceiverDeptName(organ.getName());
+				}else {
+					logger.info("请在部门表配置部门ID：{}的部门数据！", organId);
+					continue;
+				}
+			}else {
+				logger.info("在人员表查不到人员ID：{}的数据！", userId);
+				continue;
+			}
+			docXbInfo.setCreatedTime(new Date());
+//			docXbInfo.setGroupId(ideaGroupId);
+			docXbInfo.setPublishFlag(0);
+			docXbInfoService.save(docXbInfo);
+//			}
+		}
+	}
 	/**
 	 * 统一处理主办人编辑协办人
 	 * @param map map
@@ -525,7 +535,7 @@ public class DocumentAddXbController {
 		map.put("publishFlag", "0");
 		List<DocXbInfo> docXbInfos = docXbInfoService.queryList(map);
 		Set<String> userNames = new HashSet<>();
-		String chenban = null;
+		String chenban = "";
 		/*if (docXbIdeas.size() < 0) {
 			*//*for (DocXbIdea docXbIdea : docXbIdeas) {
 				if (!StringUtils.equals(docXbIdea.getUserId(), docXbIdea.getUndertakerId())
@@ -557,6 +567,25 @@ public class DocumentAddXbController {
 			}
 		}else {
 			logger.info("根据subId:{}, infoId:{}查不到承、协办人数据",subId,infoId);
+			if (docXbIdeas.size() > 0) {
+				if (this.queryReplyExplain(map, ideaGroupId)) {
+					chenban = docXbIdeas.get(0).getUndertakerName();
+					for (DocXbIdea docXbIdea : docXbIdeas) {
+						if (!StringUtils.equals(docXbIdea.getUserId(), docXbIdea.getUndertakerId())) {
+							userNames.add(docXbIdea.getUserName());
+						}
+					}
+				}else {
+					if (docXbIdeas.size() > 0) {
+						chenban = docXbIdeas.get(0).getUndertakerName();
+//						for (DocXbIdea docXbIdea : docXbIdeas) {
+//							if (!StringUtils.equals(docXbIdea.getUserId(), docXbIdea.getUndertakerId())) {
+//								userNames.add(docXbIdea.getUserName());
+//							}
+//						}
+					}
+				}
+			}
 			/*jsonObject.put("result", "");
 			return jsonObject;*/
 		}
