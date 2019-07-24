@@ -471,7 +471,7 @@ public class DocumentAddXbController {
 					//协办人详情页意见展示筛选，只显示本轮意见
 //					DocXbIdea docXbIdea = docXbIdeaService.queryLastNewData(subId, infoId);
 //					if (docXbIdea != null) {
-					Response.json(this.queryDocXbIdeas(infoId, subId, ideaGroupId, map, undertaker));
+					Response.json(this.queryDocXbIdeas(infoId, subId, ideaGroupId, map));
 //					}
 //				}
 				}
@@ -488,7 +488,7 @@ public class DocumentAddXbController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
 		String infoId = subDocInfo.getInfoId();
-		String undertaker = subDocInfo.getUndertaker();
+//		String undertaker = subDocInfo.getUndertaker();
 //		subDocInfo.setIdeaAddFlag(null);
 //		subDocInfoService.update(subDocInfo);
 		SubDocTracking subDocTracking = subDocTrackingService.queryNewRecord(subId);
@@ -501,7 +501,7 @@ public class DocumentAddXbController {
 //				String showFlag = replyExplain.getShowFlag();
 //				if (StringUtils.equals(showFlag, "1")) {
 //					map.clear();
-					Response.json(this.queryDocXbIdeas(infoId, subId, subDocTracking.getIdeaGroupId(), map, undertaker));
+					Response.json(this.queryDocXbIdeas(infoId, subId, subDocTracking.getIdeaGroupId(), map));
 //				}
 //			}
 		}else {
@@ -514,10 +514,9 @@ public class DocumentAddXbController {
 	 * @param subId
 	 * @param ideaGroupId
 	 * @param map
-	 * @param undertaker 
 	 * @return
 	 */
-	private JSONObject queryDocXbIdeas(String infoId, String subId, String ideaGroupId, Map<String, Object> map, String undertaker) {
+	private JSONObject queryDocXbIdeas(String infoId, String subId, String ideaGroupId, Map<String, Object> map) {
 		JSONObject jsonObject = new JSONObject();
 		map.put("subId", subId);
 		map.put("infoId", infoId);
