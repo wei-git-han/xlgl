@@ -111,7 +111,7 @@ public class DocumentAddXbController {
 					stringBuffer.append(",");
 				}
 				Response.json("success", stringBuffer.toString());
-				}
+			}
 		}
 //		Map<String, Object> map = new HashMap<String, Object>();
 //		DocXbIdea docXbIdea = docXbIdeaService.queryLastNewData(subId, infoId);
@@ -134,7 +134,7 @@ public class DocumentAddXbController {
 			editXbPersonFlag = (Integer)dealCurrXBPersons.get("editXbPersonFlag");
 			boolean flag = (boolean)dealCurrXBPersons.get("flag");
 			if (userIdAdd != null && userIdAdd.size() > 0) {
-				DocXbInfo docXbInfo = null;
+				DocXbInfo docXbInfo;
 				for (String userId : userIdAdd) {
 //				map.put("undertakerId", CurrentUser.getUserId());
 //				map.put("receiverId", userId);
@@ -187,45 +187,44 @@ public class DocumentAddXbController {
 				}
 			}
 			if (userIdDelete != null && userIdDelete.size() > 0) {
-				for (String userId : userIdDelete) {
-					map.clear();
-					map.put("infoId", infoId);
-					map.put("subId", subId);
-					map.put("receiverId", userId);
-					List<DocXbInfo> docXbInfos = docXbInfoService.queryList(map);
-					if (docXbInfos.size() > 0) {
-						for (DocXbInfo docXbInfo : docXbInfos) {
-							docXbInfo.setPublishFlag(1);
-							docXbInfoService.update(docXbInfo);
-						}
-					}
-				}
+				this.dealXbPerson(map,infoId,subId,userIdDelete,1);
 			}
 			if (flag) {
-				String[] splitUserIds = userIds.split(",");
-				for (String  receiverId: splitUserIds) {
-					map.clear();
-					map.put("infoId", infoId);
-					map.put("subId", subId);
-					map.put("receiverId", receiverId);
-					List<DocXbInfo> docXbInfos = docXbInfoService.queryList(map);
-					if (docXbInfos.size() > 0) {
-						for (DocXbInfo docXbInfo : docXbInfos) {
-							docXbInfo.setPublishFlag(0);
-							docXbInfoService.update(docXbInfo);
-						}
-					}
-				}
+				this.dealXbPerson(map,infoId,subId,Arrays.asList(userIds.split(",")),0);
 			}
 		}
 		//编辑协办人或者增加协办人之后，记录在转办记录
 		this.saveXBPersonOperate(infoId,subId,editXbPersonFlag);
 		Response.json("result","success");
 	}
+
+	/**
+	 * 统一处理主办人编辑协办人
+	 * @param map map
+	 * @param infoId 文ID
+	 * @param subId 分局ID
+	 * @param receiverIds 接收人IDS
+	 */
+	private void dealXbPerson(Map<String, Object> map, String infoId, String subId,
+							  List<String> receiverIds, Integer receiverStatus){
+		for (String  receiverId: receiverIds) {
+			map.clear();
+			map.put("infoId", infoId);
+			map.put("subId", subId);
+			map.put("receiverId", receiverId);
+			List<DocXbInfo> docXbInfos = docXbInfoService.queryList(map);
+			if (docXbInfoService.queryList(map).size() > 0) {
+				for (DocXbInfo docXbInfo : docXbInfos) {
+					docXbInfo.setPublishFlag(receiverStatus);
+					docXbInfoService.update(docXbInfo);
+				}
+			}
+		}
+	}
 	/**
 	 * 主办人操作协办人记录在转办记录
-	 * @param infoId
-	 * @param editXbPersonFlag
+	 * @param infoId 文ID
+	 * @param editXbPersonFlag 协办人编辑标志
 	 */
 	private void saveXBPersonOperate(String infoId, String subId, Integer editXbPersonFlag) {
 		String undertakerId = CurrentUser.getUserId();
@@ -253,13 +252,13 @@ public class DocumentAddXbController {
 	}
 	/**
 	 * 判断当前主办人是增加协办人还是删除协办人
-	 * @param subId
-	 * @param userIds
-	 * @param editXbPersonFlag 
-	 * @return
+	 * @param subId 分局ID
+	 * @param userIds 用户IDs
+	 * @param editXbPersonFlag 协办人编辑标志
+	 * @return 返回值
 	 */
 	private Map<String, Object> dealCurrXBPersons(String subId, String userIds, Integer editXbPersonFlag) {
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		List<String> userIdDelete = new ArrayList<>();
 		List<String> userIdAdd = new ArrayList<>();
 		boolean flag = false;
@@ -309,11 +308,11 @@ public class DocumentAddXbController {
 	}
 	/**
 	 * 查询当前文的组协办人
-	 * @param subId
-	 * @return
+	 * @param subId 分局ID
+	 * @return 返回值
 	 */
 	private List<DocXbInfo> queryDocXbInfos(String subId) {
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		//查询当前文的所有协办人
 		map.put("subId", subId);
 //		SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
@@ -321,11 +320,11 @@ public class DocumentAddXbController {
 	}
 	/**
 	 * 查询当前文的所有协办人
-	 * @param subId
-	 * @return
+	 * @param subId 分局ID
+	 * @return 返回值
 	 */
 	private List<DocXbInfo> queryDocXbInfos(String subId, String publishFlag) {
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		//查询当前文的所有协办人
 		map.put("subId", subId);
 		map.put("publishFlag",publishFlag);
@@ -334,8 +333,8 @@ public class DocumentAddXbController {
 	}
 	/**
 	 * 根据部门ID查询部门信息
-	 * @param orgId
-	 * @return
+	 * @param orgId 机构ID
+	 * @return 返回值
 	 */
 	private BaseAppOrgan queryBaseAppOrgan(String orgId) {
 		return baseAppOrganService.queryObject(orgId);
@@ -373,10 +372,10 @@ public class DocumentAddXbController {
 	}
 	/**
 	 * 统一组织意见对象数据
-	 * @param feedBackIdea
-	 * @param infoId
-	 * @param subId
-	 * @return
+	 * @param feedBackIdea 反馈意见
+	 * @param infoId 文ID
+	 * @param subId 分局ID
+	 * @return 返回值
 	 */
 	private DocXbIdea organizeDocXbIdea(String feedBackIdea, String infoId, String subId) {
 		Date date = new Date();
@@ -402,15 +401,15 @@ public class DocumentAddXbController {
 	}*/
 	/**
 	 * 提意见生成组ID
-	 * @param infoId
-	 * @param subId
-	 * @param userId 
+	 * @param infoId 文ID
+	 * @param subId 分局ID
+	 * @param userId 当前用户ID
 	 */
 	private void aquireGroupId(DocXbIdea docXbIdea,String infoId, String subId, String userId) {
 		//主办人发起提议  生成新一轮提议组ID
 		SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
 		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
-		String ideaGroupId = null;
+		String ideaGroupId;
 		if (subDocTracking != null) {
 			//获取本轮意见组ID
 			ideaGroupId = subDocTracking.getIdeaGroupId();
@@ -451,7 +450,7 @@ public class DocumentAddXbController {
 	}*/
 	/**
 	 * 展示意见记录(局内所有人，正式发布以后给所有人看，这个跟随本轮反馈是否发布来选择意见按钮的显示)
-	 * @param subId
+	 * @param subId 分局ID
 	 */
 	@RequestMapping("/showIdeaRecord")
 	@ResponseBody
@@ -464,7 +463,7 @@ public class DocumentAddXbController {
 				SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
 				if (subDocInfo != null ) {
 					String infoId = subDocInfo.getInfoId();
-					String undertaker = subDocInfo.getUndertaker();
+//					String undertaker = subDocInfo.getUndertaker();
 //				List<DocXbInfo> docXbInfos = docXbInfoService.queryList(map);
 //				SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
 //				if (docXbInfos == null) {
@@ -485,7 +484,7 @@ public class DocumentAddXbController {
 	@RequestMapping("/showCurrIdeaRecord")
 	@ResponseBody
 	public void showCurrIdeaRecord(String subId) {
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
 		String infoId = subDocInfo.getInfoId();
 //		String undertaker = subDocInfo.getUndertaker();
@@ -510,11 +509,11 @@ public class DocumentAddXbController {
 	}
 	/**
 	 * 查询意见记录
-	 * @param infoId
-	 * @param subId
-	 * @param ideaGroupId
-	 * @param map
-	 * @return
+	 * @param infoId 文ID
+	 * @param subId 分局ID
+	 * @param ideaGroupId 意见组ID
+	 * @param map map集合
+	 * @return 返回值
 	 */
 	private JSONObject queryDocXbIdeas(String infoId, String subId, String ideaGroupId, Map<String, Object> map) {
 		JSONObject jsonObject = new JSONObject();
@@ -578,9 +577,8 @@ public class DocumentAddXbController {
 
 	/**
 	 * 获取主办人和协办人名字
-	 * @param docXbInfos
-	 * @param chenban
-	 * @param userNames
+	 * @param docXbInfos 主、协办人关系数据
+	 * @param userNames 当前文的所有协办人
 	 */
 	private String acquireCBAndXBPersn(List<DocXbInfo> docXbInfos, Set<String> userNames){
 		for (DocXbInfo docXbInfo : docXbInfos) {
@@ -590,24 +588,22 @@ public class DocumentAddXbController {
 	}
 	/**
 	 * 查询本轮反馈是否已发布
-	 * @param map
-	 * @param ideaGroupId
+	 * @param map map集合
+	 * @param ideaGroupId 意见组ID
 	 */
 	private boolean queryReplyExplain(Map<String, Object> map, String ideaGroupId) {
 		map.put("groupId", ideaGroupId);
 		List<ReplyExplain> replyExplains = replyExplainService.queryList(map);
 		if (replyExplains.size() > 0) {
 			ReplyExplain replyExplain = replyExplains.get(0);
-			if (StringUtils.equals(replyExplain.getShowFlag(), "1")) {
-				return true;
-			}
+			return StringUtils.equals(replyExplain.getShowFlag(), "1");
 		}
 		return false;
 	}
 
 	/**
 	 * 意见数按钮颜色控制
-	 * @param subId
+	 * @param subId 分局ID
 	 */
 	@RequestMapping("/buttonColor")
 	@ResponseBody
