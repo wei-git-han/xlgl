@@ -549,14 +549,12 @@ public class DocumentAddXbController {
 					}
 				} else {
 					logger.info("根据subId:{}, infoId:{},ideaGroupId:{}查不到承、协办人意见数据",subId,infoId,ideaGroupId);
+					chenban = this.acquireCBAndXBPersn(docXbInfos,userNames);
 //					jsonObject.put("result", "");
 //					return jsonObject;
 				}
 			} else {
-				chenban = docXbInfos.get(0).getUndertakerName();
-                for (DocXbInfo docXbInfo : docXbInfos) {
-                    userNames.add(docXbInfo.getReceiverName());
-                }
+				chenban = this.acquireCBAndXBPersn(docXbInfos,userNames);
 			}
 		}else {
 			logger.info("根据subId:{}, infoId:{}查不到承、协办人数据",subId,infoId);
@@ -571,10 +569,24 @@ public class DocumentAddXbController {
 			jsonObject.put("result", "");
 			return jsonObject;
 		}*/
+		jsonObject.put("result", "success");
 		jsonObject.put("chenban", chenban);
 		jsonObject.put("xieban", userNames.toString().replace("[", "").replace("]", ""));
 		jsonObject.put("docXbIdeas", docXbIdeas);
 		return jsonObject;
+	}
+
+	/**
+	 * 获取主办人和协办人名字
+	 * @param docXbInfos
+	 * @param chenban
+	 * @param userNames
+	 */
+	private String acquireCBAndXBPersn(List<DocXbInfo> docXbInfos, Set<String> userNames){
+		for (DocXbInfo docXbInfo : docXbInfos) {
+			userNames.add(docXbInfo.getReceiverName());
+		}
+		return docXbInfos.get(0).getUndertakerName();
 	}
 	/**
 	 * 查询本轮反馈是否已发布
