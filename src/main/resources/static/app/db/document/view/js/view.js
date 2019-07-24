@@ -50,7 +50,8 @@ var pageModule = function(){
 			success:function(data){
 				var html1= "";
 				var xbUser = [];
-				xbUser = data.userNames;
+				$("#chenban").text(data.chenban);
+				$("#xieban").text(data.xieban);
 				datas = data.docXbIdeas;
 				$("#opinionList").html('');
 				$.each(datas,function(i,o){
