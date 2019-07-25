@@ -19,36 +19,40 @@ var pageModule = function(){
 				xbUser = data.xieban;
 				cbUser = data.chenban;
 				datas = data.docXbIdeas;
-				if(data.result == ''){
+				if(data.result != 'success'){
 					$("#xbUserLine1").text("本轮反馈暂无意见！");
 					$("#xbUserLine2").hide();
+				}else if(datas.length <= 0){
+                    $("#xbUserLine1").text("本轮反馈暂无意见！");
+					$("#xbUserLine2").hide();
+				}else{
+                    $.each(datas,function(i,o){
+                        var createdTime = o.createdTime;
+    //					var cbrList = o.cbrList;
+                        html1=	'<div class="timelinesheys">'+
+                                '	<div class="timeline-icon">'+
+                                '		<i class="icontime"></i>'+
+                                '	</div>'+
+                                '	<div class="timeline-user">'+
+                                '		<span class="createTime">'+createdTime+'</span>'+
+                                '	</div>'+
+                                '	<div class="timeline-body">';
+    //							$.each(cbrList,function(i,item){
+    //								xbUser.push(o.userName);
+                                    html1 += '<div class="timeline-content">'+
+                                                '	<div class="userName"><i class="fa fa-user"></i>&nbsp;'+o.userName+'</div>';
+                                    html1 += '	<div class="content">'+o.feedBackIdea+'</div>';
+                                    html1 += '</div>';
+    //							})
+
+                                html1 +='	</div>'+
+                                        '</div>'
+                        $(".timelinesview").append(html1);
+                    })
+                    console.log(xbUser);
+                    $("#xbUser").html(xbUser.toString());
+                    $("#cbUser").html(cbUser.toString());
 				}
-				$.each(datas,function(i,o){
-					var createdTime = o.createdTime;
-//					var cbrList = o.cbrList;
-					html1=	'<div class="timelinesheys">'+
-							'	<div class="timeline-icon">'+
-							'		<i class="icontime"></i>'+
-							'	</div>'+
-							'	<div class="timeline-user">'+
-							'		<span class="createTime">'+createdTime+'</span>'+
-							'	</div>'+
-							'	<div class="timeline-body">';
-//							$.each(cbrList,function(i,item){
-//								xbUser.push(o.userName);
-								html1 += '<div class="timeline-content">'+
-									        '	<div class="userName"><i class="fa fa-user"></i>&nbsp;'+o.userName+'</div>';
-								html1 += '	<div class="content">'+o.feedBackIdea+'</div>';
-								html1 += '</div>';
-//							})
-							
-							html1 +='	</div>'+
-									'</div>'
-					$(".timelinesview").append(html1);
-				})
-				$("#xbUser").html(xbUser.toString());
-				$("#cbUser").html(cbUser.toString());
-				
 			}
 		})
 	}

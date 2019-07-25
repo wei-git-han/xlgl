@@ -112,6 +112,26 @@ public class BaseAppUserController {
 		}
 	}
 	/**
+	 * 获取当前登录人所在部门的人员树指定不显示的人员
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/treePart")
+	@ResponseBody
+	public Object getUserTreePart() {
+		String organId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
+		List<BaseAppOrgan> organs = baseAppOrganService.queryList(null);
+		List<BaseAppUser> users = baseAppUserService.queryList(null);
+		String[] hideUserIds = {CurrentUser.getUserId()};
+		if (StringUtils.isNotEmpty(organId)) {
+			JSONObject list=  OrgUtil.getUserTree(organs, users, organId, null,null,hideUserIds,null);
+			return list;
+		} else {
+			JSONObject list=  OrgUtil.getUserTree(organs, users, organId, null,null,hideUserIds,null);
+			return list;
+		}
+	}
+	/**
 	 * 根据业务配置筛选人员树
 	 * @return
 	 */
