@@ -125,7 +125,7 @@ public class DocumentAddXbController {
 	@SuppressWarnings("unchecked")
 	public void addOrDeleteXbPerson(String userIds, String infoId, String subId) {
 		Integer editXbPersonFlag = 0; //1：新增协办人；0：默认值；2：修改协办人；3：全部删除协办人
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
 		if (subDocTracking != null) {
 			Map<String, Object> dealCurrXBPersons = this.dealCurrXBPersons(subId, userIds, editXbPersonFlag);
@@ -239,26 +239,41 @@ public class DocumentAddXbController {
 	private void saveXBPersonOperate(String infoId, String subId, Integer editXbPersonFlag) {
 		String undertakerId = CurrentUser.getUserId();
 		List<DocXbInfo> docXbInfos = docXbInfoService.queryXbRecord(infoId,subId,undertakerId);
-		for (DocXbInfo docXbInfo : docXbInfos) {
-			DocumentZbjl documentZbjl = new DocumentZbjl();
-			documentZbjl.setInfoId(infoId);
-			documentZbjl.setUserId(docXbInfo.getUndertakerId());
-			documentZbjl.setUserName(docXbInfo.getUndertakerName());
-			documentZbjl.setDeptId(docXbInfo.getDeptId());
-			documentZbjl.setDeptName(docXbInfo.getDeptName());
-			if (!editXbPersonFlag.equals(3)) {
-				documentZbjl.setReceiverIds(docXbInfo.getReceiverIds());
-				documentZbjl.setReceiverNames(docXbInfo.getReceiverNames());
-				documentZbjl.setReceiverDeptId(docXbInfo.getReceiverDeptId());
-				documentZbjl.setReceiverDeptName(docXbInfo.getReceiverDeptName());
+		if (docXbInfos.size() > 0) {
+			for (DocXbInfo docXbInfo : docXbInfos) {
+				this.saveDocumentZbjl(infoId,subId,docXbInfo,editXbPersonFlag);
 			}
-			SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
-			documentZbjl.setOrgName(subDocInfo.getSubDeptName());
-			documentZbjl.setSubId(subId);
-			documentZbjl.setCreatedTime(new Date());
-			documentZbjl.setXbOperateFlag(editXbPersonFlag);
-			documentZbjlService.save(documentZbjl);
+		} else {
+			this.saveDocumentZbjl(infoId,subId,null,editXbPersonFlag);
 		}
+	}
+
+	/**
+	 *
+	 * @param infoId 文件ID
+	 * @param subId 分局ID
+	 * @param docXbInfo 协办信息
+	 * @param editXbPersonFlag 编辑协办人标记
+	 */
+	private void saveDocumentZbjl(String infoId, String subId, DocXbInfo docXbInfo, Integer editXbPersonFlag){
+		DocumentZbjl documentZbjl = new DocumentZbjl();
+		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+		documentZbjl.setInfoId(infoId);
+		documentZbjl.setUserId(CurrentUser.getUserId());
+		documentZbjl.setUserName(CurrentUser.getUsername());
+		documentZbjl.setDeptId(docXbInfo != null ? docXbInfo.getDeptId() : subDocInfo.getSubDeptId());
+		documentZbjl.setDeptName(docXbInfo != null ? docXbInfo.getDeptName(): subDocInfo.getSubDeptName());
+		if (!editXbPersonFlag.equals(3)) {
+			documentZbjl.setReceiverIds(docXbInfo != null ? docXbInfo.getReceiverIds() : null);
+			documentZbjl.setReceiverNames(docXbInfo != null ? docXbInfo.getReceiverNames() : null);
+			documentZbjl.setReceiverDeptId(docXbInfo != null ? docXbInfo.getReceiverDeptId() : null);
+			documentZbjl.setReceiverDeptName(docXbInfo != null ? docXbInfo.getReceiverDeptName() : null);
+		}
+		documentZbjl.setOrgName(subDocInfo.getSubDeptName());
+		documentZbjl.setSubId(subId);
+		documentZbjl.setCreatedTime(new Date());
+		documentZbjl.setXbOperateFlag(editXbPersonFlag);
+		documentZbjlService.save(documentZbjl);
 	}
 	/**
 	 * 判断当前主办人是增加协办人还是删除协办人
