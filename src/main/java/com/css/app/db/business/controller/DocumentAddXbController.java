@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import com.css.app.db.business.entity.*;
 import com.css.app.db.business.service.*;
+import org.omg.CORBA.OBJ_ADAPTER;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,14 +105,14 @@ public class DocumentAddXbController {
 		SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
 		if (subDocTracking != null) {
 			List<DocXbInfo> docXbInfos = this.queryDocXbInfos(subId, "0");
+			StringBuffer stringBuffer = new StringBuffer();
 			if (docXbInfos != null && docXbInfos.size() > 0) {
-				StringBuffer stringBuffer = new StringBuffer();
 				for (DocXbInfo docXbInfo : docXbInfos) {
 					stringBuffer.append(docXbInfo.getReceiverId());
 					stringBuffer.append(",");
 				}
-				Response.json("success", stringBuffer.toString());
 			}
+			Response.json("success", stringBuffer.toString());
 		}
 //		Map<String, Object> map = new HashMap<String, Object>();
 //		DocXbIdea docXbIdea = docXbIdeaService.queryLastNewData(subId, infoId);
@@ -119,7 +120,7 @@ public class DocumentAddXbController {
 //			jsonObject.put("docXbIdeas", this.queryDocXbIdeas(infoId, subId, docXbIdea.getGroupId(), map));
 //		}
 	}
-	
+
 	@RequestMapping("/addOrDeleteXbPerson")
 	@ResponseBody
 	@SuppressWarnings("unchecked")

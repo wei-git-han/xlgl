@@ -50,8 +50,11 @@ var pageModule = function(){
 			success:function(data){
 				var html1= "";
 				var xbUser = [];
-				$("#chenban").text(data.chenban);
-				$("#xieban").text(data.xieban);
+				var texts = "承办人："+data.chenban+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;协办人："+data.xieban;
+
+//				$("#chenban").text(data.chenban);
+				$("#xieban").html(texts);
+				$("#xieban").attr('title',data.xieban);
 				datas = data.docXbIdeas;
 				$("#opinionList").html('');
 				$.each(datas,function(i,o){

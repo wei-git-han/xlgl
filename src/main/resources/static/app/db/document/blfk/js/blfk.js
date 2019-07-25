@@ -14,6 +14,8 @@ if(fileFrom && fileFrom == "jcdb"){
 	if(ytype){
 		$("input[value="+ytype+"]").attr("checked",true);
 	}
+}else　if(fileFrom=='blfk'){
+    $('#goback').hide()
 }
 
 var grid = null;
@@ -973,3 +975,6 @@ function dblsqkAlert(id){
 		url:"/app/db/document/view/html/dblsqk.html?fileId="+id+"&fileFrom="+fileFrom
 	})
 }
+$("#goback").click(function(){
+    window.location.href = "../../jcdb/html/index.html"
+});

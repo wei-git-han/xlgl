@@ -26,10 +26,10 @@ html,body{background:url("../image/u1.png");height:100%;}
 .left-cent{width:100%;position:absolute;top:50px;left:0;bottom:0;}
 .menu{list-style:none;padding:0;margin:0;}
 .menu li{display:block;padding:0;margin:0;margin-bottom:10px;}
-.menu li>a{height:40px;line-height:40px;display:block;padding:0 10px;position:relative;color:#fff;background:#1E376E;font-size:16px;}
-.menu li.active a,.menu li a:hover{background:#6699FF;}
+.menu li>a{height:40px;line-height:40px;display:block;padding:0 10px;position:relative;color:#fff;background:rgba(00,00,00,0.15);font-size:16px;}
+.menu li.active a,.menu li a:hover{background: #6699FF;}
 .menu li>a>i{position:absolute;top:15px;right:5px;}
-.menu li>a font{float:left;}
+.menu li>a font{float:left; font-size:18px;}
 .menu li>a font:nth-child(2){max-width:190px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
 .right-top{width:100%;height:65px;position:absolute;top:0;left:0;padding-left:20px;padding-right:10px;}
 .right-cent{width:100%;position:absolute;top:65px;left:0;bottom:0;padding:0 10px 10px 10px;}
@@ -47,7 +47,7 @@ html,body{background:url("../image/u1.png");height:100%;}
 .table-striped > tbody > tr:nth-of-type(2n+1) {background-color: transparent;}
 
 #gridcont_content,#gridcont_tablepage{background-color:transparent!important;}
-#gridcont_content td{font-size:16px;height:100px;max-height:100px;color:#fff;text-align:left;padding:15px 8px 5px;word-break:break-all;word-wrap:break-word;vertical-align: top;text-overflow: ellipsis;
+#gridcont_content td{font-size:16px;height:100px;max-height:100px;color:#fff;text-align:left;padding:15px 22px 5px;word-break:break-all;word-wrap:break-word;vertical-align: top;text-overflow: ellipsis;
 overflow: hidden;border-right:1px solid #65779f;
 white-space: normal;}
 #gridcont_tablepage1{display:none;}
@@ -95,6 +95,6 @@ white-space: normal;}
 .nc-left-group-cont-cont{font-size:14px;color:#fff;max-height:100px;white-space: initial;}
 .right-search{color:#fff;padding-top:10px;}
 .right-search .radio-list{padding:10px;border-radius:10px!important;border:1px solid #6578A0;}
-.right-left-button{position:absolute;top:50%;left:0;z-index:100;}
-.right-left-button .btn{padding:20px 5px;color:#999;background:#1F3667;}
+.right-left-button{position:absolute;top:50%;left:0;z-index:100; }
+.right-left-button .btn{padding:20px 5px;color:#999;background: #5F 7A 7A;}
 .right-left-button .btn .fa-chevron-right{display:none;}

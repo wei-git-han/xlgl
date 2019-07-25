@@ -533,7 +533,25 @@ public class SubDocInfoController {
 		subDocInfoService.update(subDocInfo);
 		//生成本组意见，保存到局内流转记录表
 		this.productAndSaveGroupId(subId, undertaker);
+		this.currUserIsXBPerson(subId);
 		Response.json("result", "success");
+	}
+	/**
+	 * 如果当前主办人也是协办人，则默删除当前文的协办人
+	 * @param subId
+	 */
+	private void currUserIsXBPerson(String subId) {
+		String userId = CurrentUser.getUserId();
+		Map<String, Object> hashMap = new HashMap<>();
+		hashMap.put("receiverId", userId);
+		hashMap.put("subId", subId);
+		hashMap.put("publishFlag", "0");
+		List<DocXbInfo> docXbInfos = docXbInfoService.queryList(hashMap);
+		if (docXbInfos.size() > 0) {
+			DocXbInfo docXbInfo = docXbInfos.get(0);
+			docXbInfo.setPublishFlag(1);
+			docXbInfoService.update(docXbInfo);
+		}
 	}
 	/**
 	 * 生成本轮意见组ID，供其他协办人使用
@@ -543,8 +561,7 @@ public class SubDocInfoController {
 	private void productAndSaveGroupId(String subId, String undertaker) {
 		SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
 		if (subDocTracking != null) {
-			if (StringUtils.equals("1", subDocTracking.getTrackingType()) 
-					&& StringUtils.equals(CurrentUser.getUserId(), subDocTracking.getReceiverId())) {
+			if (StringUtils.equals(CurrentUser.getUserId(), subDocTracking.getReceiverId())) {
 				String ideaGroupId = subDocTracking.getIdeaGroupId();
 				if (StringUtils.isNotBlank(ideaGroupId)) {
 					subDocTracking.setIdeaGroupId(ideaGroupId);

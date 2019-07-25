@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.css.app.db.business.entity.*;
+import com.css.app.db.business.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -22,16 +24,7 @@ import com.css.addbase.msg.MsgTipUtil;
 import com.css.addbase.msg.entity.MsgTip;
 import com.css.addbase.msg.service.MsgTipService;
 //import com.css.app.db.business.entity.DocXbInfo;
-import com.css.app.db.business.entity.DocumentInfo;
-import com.css.app.db.business.entity.DocumentZbjl;
-import com.css.app.db.business.entity.SubDocInfo;
-import com.css.app.db.business.entity.SubDocTracking;
 //import com.css.app.db.business.service.DocXbInfoService;
-import com.css.app.db.business.service.DocumentInfoService;
-import com.css.app.db.business.service.DocumentZbjlService;
-import com.css.app.db.business.service.ReplyExplainService;
-import com.css.app.db.business.service.SubDocInfoService;
-import com.css.app.db.business.service.SubDocTrackingService;
 import com.css.app.db.config.service.AdminSetService;
 import com.css.app.db.util.DbDocStatusDefined;
 import com.css.base.utils.CurrentUser;
@@ -76,8 +69,8 @@ public class DocumentZbjlController {
 	private  String appId;	
 	@Value("${csse.dccb.appSecret}")
 	private  String clientSecret;
-//	@Autowired
-//	private DocXbInfoService docXbInfoService;
+	@Autowired
+	private DocXbInfoService docXbInfoService;
 	
 	/**
 	 * 转办记录
@@ -189,7 +182,24 @@ public class DocumentZbjlController {
 		}		
 		Response.json(json);
 	}
-	
+
+	/**
+	 * 承办人放弃承办身份点击转办，恢复之前协办人身份
+	 * @param subId 分局ID
+	 */
+	private void currUserIsXBPerson(String subId) {
+		String userId = CurrentUser.getUserId();
+		Map<String, Object> hashMap = new HashMap<>();
+		hashMap.put("receiverId", userId);
+		hashMap.put("subId", subId);
+		hashMap.put("publishFlag", "1");
+		List<DocXbInfo> docXbInfos = docXbInfoService.queryList(hashMap);
+		if (docXbInfos.size() > 0) {
+			DocXbInfo docXbInfo = docXbInfos.get(0);
+			docXbInfo.setPublishFlag(0);
+			docXbInfoService.update(docXbInfo);
+		}
+	}
 	/**
 	 * 局内转办
 	 * @param infoId 主记录id
@@ -268,6 +278,8 @@ public class DocumentZbjlController {
 //					subDocTracking.setIdeaGroupId("");
 //					subDocTrackingService.update(subDocTracking);
 //				}
+				//承办人点击转办，恢复原来默认删除的协办人
+				this.currUserIsXBPerson(subInfo.getId());
 			}
 			//承办人未走流程转办，删除承办人当前临时反馈
 			Map<String, Object> map =new HashMap<>();

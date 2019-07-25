@@ -792,7 +792,7 @@ function skip(){
 		}else if(fileFrom == "grdb"){//文件来源于个人待办
 			window.location.href="/app/db/document/grdb/html/grdb.html?fileFrom="+fileFrom;
 		}else if(fileFrom=="blfk" || fileFrom=="jcdb"){  //文件来源于办理反馈
-			window.location="/app/db/document/blfk/html/blfk.html?fileFrom=blfk";
+			window.location="/app/db/document/blfk/html/blfk.html?fileFrom="+fileFrom;
 		}else if(fileFrom=="jndb"){ 
 			window.location.href="/app/db/document/jndb/html/jndb.html?fileFrom="+fileFrom;
 		}else if(fileFrom=="sztj"){ 
