@@ -10,7 +10,7 @@ var pageModule = function(){
 	var initgrid = function(){
         grid = $("#gridcont").createGrid({
             columns:[
-            	{display:"状态",name:"",width:"6%",align:"center",render:function(rowdata,n){
+            	{display:"状态",name:"",width:"9%",align:"center",render:function(rowdata,n){
     				var button1;
     				if(rowdata.status==1){
     					button1 = '<button type="button" class="btn btn-info table-button1">办理中</button>';
@@ -21,7 +21,7 @@ var pageModule = function(){
     				}
     				return button1;
                  }},
-                 {display:"文件标题",name:"",width:"16%",align:"left",title:false,render:function(rowdata){
+                 {display:"文件标题",name:"",width:"14%",align:"left",title:false,render:function(rowdata){
                 	 var cuiban="";
                  	 if(rowdata.cuibanFlag=="1"){
                  		 cuiban = '<label class="table-label2">催办</label>';
@@ -59,7 +59,7 @@ var pageModule = function(){
                	 }
                	 return '';
                 }},
-                {display:"反馈时间",name:"",width:"9%",align:"center",paixu:false,render:function(rowdata){
+                {display:"反馈时间",name:"",width:"11%",align:"left",paixu:false,render:function(rowdata){
                	 if(rowdata.latestReplyTime && !!rowdata.latestReplyTime){
                		 return rowdata.latestReplyTime.substring(0,16);
                	 }
@@ -71,7 +71,7 @@ var pageModule = function(){
             checkbox: true,
             rownumberyon:true,
             overflowx:false,
-            pagesize: 6,
+            pagesize: 7,
             rownumberwidth:"50px",
             pageyno:true,
             paramobj:{docStatus:status,orgId:orgId},
