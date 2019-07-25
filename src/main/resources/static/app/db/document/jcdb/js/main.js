@@ -123,7 +123,7 @@ var pageModule = function(){
 		                       		}
 		            				return title
 		            			}},
-                    			{display:"状态",name:"blzt",width:"8%",align:"center",paixu:false,render:function(rowdata,n){
+                    			{display:"状态",name:"blzt",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
                     				var button1;
                     				if(rowdata.blzt==1){
                     					button1 = '<button type="button" class="btn btn-info table-button1">办理中</button>';
@@ -134,7 +134,7 @@ var pageModule = function(){
                     				}
                     				return button1;
                     			}},
-                    			{display:"文件标题",name:"title",width:"18%",align:"left",paixu:false,render:function(rowdata,n){
+                    			{display:"文件标题",name:"title",width:"15%",align:"left",paixu:false,render:function(rowdata,n){
                     				var cuiban = '',title="";
 	                            	var CuibanFlag = rowdata.CuibanFlag;
 	                            	if(CuibanFlag==1){
@@ -143,7 +143,7 @@ var pageModule = function(){
                     				title=`${cuiban} <font class="title" title="${rowdata.title}" onclick="viewpage('${rowdata.id}','${rowdata.id}','${rowdata.id}')" style="cursor:pointer;text-decoration: underline;" >${rowdata.title}</font>`;
                     				return title
                     			}},
-                    			{display:spData.title,name:"pszsmr",width:"18%",align:"left",paixu:false,render:function(rowdata,n){
+                    			{display:spData.title,name:"pszsmr",width:"15%",align:"left",paixu:false,render:function(rowdata,n){
                     				var str =''
                     				var str2 = "";
 		                       		if(spData.type==1 || spData.type == 4){
@@ -165,7 +165,7 @@ var pageModule = function(){
 		                       		}
                     				return str;
                     			}},
-                      			{display:"督办落实情况",name:"dblsqk",width:"18%",align:"left",paixu:false,render:function(rowdata,n){
+                      			{display:"督办落实情况",name:"dblsqk",width:"20%",align:"left",paixu:false,render:function(rowdata,n){
                       				var gengxin = "";
                   					if(rowdata.gengxin=='1'){
                   						gengxin = '<label class="table-label">已更新</label>';
@@ -177,14 +177,14 @@ var pageModule = function(){
 /*                    			{display:"转办时间",name:"zbdate",width:"8%",align:"center",paixu:false,render:function(rowdata,n){
                     				return rowdata.zbdate||'';
                     			}},*/
-                    			{display:"承办单位/人",name:"cbdwry",width:"8%",align:"center",paixu:false,render:function(rowdata,n){
+                    			{display:"承办单位/人",name:"cbdwry",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
                     				var title=`<font class="cbdw" title="${rowdata.cbdwry}">${rowdata.cbdwry}</font>`;
                     				return title
                     			}},
-                    			{display:"更新时间",name:"update",width:"8%",align:"center",paixu:true,render:function(rowdata,n){
+                    			{display:"更新时间",name:"update",width:"10%",align:"center",paixu:true,render:function(rowdata,n){
                     				return rowdata.update||'';
                     			}},
-                      			{display:"操作",name:"cz",width:"8%",align:"center",paixu:false,render:function(rowdata,n){
+                      			{display:"操作",name:"cz",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
                     				var button2 = '';
                     				if(rowdata.blzt==1&&showBtn){
                     					if(rowdata.other==1){
@@ -354,7 +354,7 @@ var pageModule = function(){
                     paramobj:{month:'all',id:groupid,isMain:'1'},
                     overflowx:false,
                     rownumberwidth:"50px",
-                    pagesize: 6,
+                    pagesize: 7,
                     url: url1,
                     loadafter:function(data){
                     	var count2 = data.count2;
