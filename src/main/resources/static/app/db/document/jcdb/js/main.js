@@ -134,7 +134,7 @@ var pageModule = function(){
                     				}
                     				return button1;
                     			}},
-                    			{display:"文件标题",name:"title",width:"15%",align:"left",paixu:false,render:function(rowdata,n){
+                    			{display:"文件标题",name:"title",width:"10%",align:"left",paixu:false,render:function(rowdata,n){
                     				var cuiban = '',title="";
 	                            	var CuibanFlag = rowdata.CuibanFlag;
 	                            	if(CuibanFlag==1){
@@ -184,7 +184,7 @@ var pageModule = function(){
                     			{display:"更新时间",name:"update",width:"10%",align:"center",paixu:true,render:function(rowdata,n){
                     				return rowdata.update||'';
                     			}},
-                      			{display:"操作",name:"cz",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+                      			{display:"操作",name:"cz",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
                     				var button2 = '';
                     				if(rowdata.blzt==1&&showBtn){
                     					if(rowdata.other==1){

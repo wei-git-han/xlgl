@@ -12,7 +12,7 @@ var pageModule = function(){
 	var initgrid = function(){
         grid = $("#gridcont").createGrid({
             columns:[
-            	{display:"状态",name:"",width:"6%",align:"center",render:function(rowdata,n){
+            	{display:"状态",name:"",width:"9%",align:"center",render:function(rowdata,n){
     				var button1;
     				if(rowdata.status==1){
     					button1 = '<button type="button" class="btn btn-info table-button1">办理中</button>';
@@ -61,7 +61,7 @@ var pageModule = function(){
                	 }
                	 return '';
                 }},
-                {display:"反馈时间",name:"",width:"9%",align:"center",paixu:false,render:function(rowdata){
+                {display:"反馈时间",name:"",width:"9%",align:"left",paixu:false,render:function(rowdata){
                	 if(rowdata.latestReplyTime && !!rowdata.latestReplyTime){
                		 return rowdata.latestReplyTime.substring(0,16);
                	 }
@@ -74,7 +74,7 @@ var pageModule = function(){
             rownumberyon:true,
             rownumberwidth:"50px",
             overflowx:false,
-            pagesize: 6,
+            pagesize: 7,
             pageyno:true,
             paramobj:{docStatus:status,leaderId:leaderId,startDate:startdate,endDate:enddate},
             loadafter:function(data){
