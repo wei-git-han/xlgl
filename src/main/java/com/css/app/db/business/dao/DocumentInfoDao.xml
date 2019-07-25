@@ -220,6 +220,9 @@
 		<if test="type !=null and type !=''">
 			and db.DOC_TYPE_ID=#{type}
 		</if>
+		<if test="yearOrMonth !=null and yearOrMonth !=''">
+			and ps.CREATED_TIME like '%'||#{yearOrMonth}||'%'
+		</if>
 		<if test="startDate !=null and startDate !=''">
 		    and ps.CREATED_TIME >= #{startDate}
 		</if>

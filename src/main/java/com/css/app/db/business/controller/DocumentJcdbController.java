@@ -497,37 +497,66 @@ public class DocumentJcdbController {
 	@RequestMapping("/leaderStatisticsList")
 	public void leaderStatisticsList(Integer page, Integer pagesize,String year,String startDate,String endDate,String docStatus,String leaderId,String typeId) {
 		Map<String, Object> map = new HashMap<>();
-		if(StringUtil.isEmpty(year)) {
+		/*if(StringUtil.isEmpty(year)) {
 			year=DateUtil.getCurrentYear()+"";
 		}
 		map.put("year", year);
 		map.put("startDate",startDate);
-		map.put("endDate",endDate);
-		if(StringUtils.isNotBlank(docStatus)) {
-			if(!StringUtils.equals("all", docStatus)) {
-				map.put("status", docStatus);
+		map.put("endDate",endDate);*/
+		try {
+			if (StringUtils.isBlank(startDate) && StringUtils.isBlank(endDate)) {
+                DocumentDic documentDic = this.queryDocumentDic();
+                if (documentDic != null) {
+                    String text = documentDic.getText();
+                    if (StringUtils.equals("3", documentDic.getValue())) {
+                        //传时间默认到至当前日期
+                        map.clear();
+                        map.put("startDate",text);
+                        map.put("endDate",this.acquireCurrDate(LocalDate.now()));
+                    }else if(StringUtils.equals("1", documentDic.getValue())) {
+                        map.clear();
+                        map.put("yearOrMonth", this.acquireCurrDate(LocalDate.now()).substring(0, 5));//2019年
+                    }else if(StringUtils.equals("2", documentDic.getValue())){
+                        map.clear();
+                        map.put("yearOrMonth", this.acquireCurrDate(LocalDate.now()).substring(0, 8));//2019年07月
+                    }else {
+                        logger.info("配置表配置项value值不符合约定，value：{}", documentDic.getValue());
+                        return;
+                    }
+                }
+            }else {
+                map.clear();
+                map.put("startDate",startDate);
+                map.put("endDate",endDate);
+            }
+			if(StringUtils.isNotBlank(docStatus)) {
+				if(!StringUtils.equals("all", docStatus)) {
+					map.put("status", docStatus);
+				}
 			}
+			if(StringUtils.isNotBlank(typeId)) {
+				map.put("type",typeId);
+			}
+			map.put("leaderId", leaderId);
+			PageHelper.startPage(page, pagesize);
+			List<DocumentInfo> list = documentInfoService.queryStatisticsList(map);
+			GwPageUtils pageUtil = new GwPageUtils(list);
+			for (DocumentInfo info : list) {
+				/*
+				//未读，最新反馈字段有值则标识为已更新
+				if(StringUtils.isNotBlank(info.getLatestReply())) {
+					info.setUpdateFlag("1");
+				}*/
+				//首长批示
+				Map<String, Object> szpsMap = new HashMap<>();
+				szpsMap.put("infoId", info.getId());
+				List<DocumentSzps> szpsList = documentSzpsService.queryList(szpsMap);
+				info.setSzpslist(szpsList);
+			}
+			Response.json(pageUtil);
+		} catch (Exception e) {
+			logger.info("调用统计图首长批示落实统计详情页查询方法异常：{}", e);
 		}
-		if(StringUtils.isNotBlank(typeId)) {
-			map.put("type",typeId);
-		}
-		map.put("leaderId", leaderId);
-		PageHelper.startPage(page, pagesize);
-		List<DocumentInfo> list = documentInfoService.queryStatisticsList(map);
-		GwPageUtils pageUtil = new GwPageUtils(list);
-		for (DocumentInfo info : list) {
-			/*
-			//未读，最新反馈字段有值则标识为已更新
-			if(StringUtils.isNotBlank(info.getLatestReply())) {
-				info.setUpdateFlag("1");
-			}*/
-			//首长批示
-			Map<String, Object> szpsMap = new HashMap<>();
-			szpsMap.put("infoId", info.getId());
-			List<DocumentSzps> szpsList = documentSzpsService.queryList(szpsMap);
-			info.setSzpslist(szpsList);
-		}
-		Response.json(pageUtil);
 	}
 	
 	//返回值为1：首长，返回值为2：超级管理员、部管理员、即是部管理员又是局管理员，返回值为3：局管理员或局长，返回值为""：其他人员
