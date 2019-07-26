@@ -36,6 +36,7 @@ var pageModule = function(){
 				var cbUser = [];
 				xbUser = data.xieban;
 				cbUser = data.chenban;
+				$("#xieBanPersons").attr('title',xbUser);
 				datas = data.docXbIdeas;
 				if(data.result == ''){
 					$(".xbUserLine > span").hide();
