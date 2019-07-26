@@ -35,7 +35,7 @@ var pageModule = function(){
                      }
 //                	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'&leaderId='+leaderId+'&startdate='+startdate+'&enddate='+enddate+'&isFromChart=1&status='+status+'&isDepart=0&frompage=0" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
                  }},
-                 {display:"批示指示内容",name:"",width:"24%",align:"left",paixu:false,title:false,render:function(rowdata){
+                 {display:"批示指示内容",name:"",width:"22%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var html1="";
                 	 $.each(rowdata.szpslist,function(i,item){
                 		 var createdTime="";
@@ -66,7 +66,7 @@ var pageModule = function(){
                	 }
                	 return '';
                 }},
-                {display:"反馈时间",name:"",width:"9%",align:"left",paixu:false,render:function(rowdata){
+                {display:"反馈时间",name:"",width:"11%",align:"left",paixu:false,render:function(rowdata){
                	 if(rowdata.latestReplyTime && !!rowdata.latestReplyTime){
                		 return rowdata.latestReplyTime.substring(0,16);
                	 }
