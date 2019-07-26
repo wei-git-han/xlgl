@@ -28,7 +28,12 @@ var pageModule = function(){
                  	 if(rowdata.cuibanFlag=="1"){
                  		 cuiban = '<label class="table-label2">催办</label>';
                 	 }
-                	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'&leaderId='+leaderId+'&startdate='+startdate+'&enddate='+enddate+'&isFromChart=1&status='+status+'&isDepart=0&frompage=0" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
+                	 if(rowdata.docTitle.length > 26){
+                        return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'&startdate='+''+'&enddate='+''+'&isFromChart=1&status='+status+'&isDepart=1&frompage=0" target="iframe1">'+cuiban+rowdata.docTitle.substring(0,26)+'...</a>'
+                     }else{
+                        return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'&startdate='+''+'&enddate='+''+'&isFromChart=1&status='+status+'&isDepart=1&frompage=0" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
+                     }
+//                	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'&leaderId='+leaderId+'&startdate='+startdate+'&enddate='+enddate+'&isFromChart=1&status='+status+'&isDepart=0&frompage=0" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
                  }},
                  {display:"批示指示内容",name:"",width:"24%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var html1="";

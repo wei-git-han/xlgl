@@ -26,9 +26,14 @@ var pageModule = function(){
                  	 if(rowdata.cuibanFlag=="1"){
                  		 cuiban = '<label class="table-label2">催办</label>';
                 	 }
-                	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'&startdate='+''+'&enddate='+''+'&isFromChart=1&status='+status+'&isDepart=1&frompage=0" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
+                	 if(rowdata.docTitle.length > 26){
+                	    return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'&startdate='+''+'&enddate='+''+'&isFromChart=1&status='+status+'&isDepart=1&frompage=0" target="iframe1">'+cuiban+rowdata.docTitle.substring(0,26)+'...</a>'
+                	 }else{
+                	    return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'&startdate='+''+'&enddate='+''+'&isFromChart=1&status='+status+'&isDepart=1&frompage=0" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
+                	 }
+
                  }},
-                 {display:"批示指示内容",name:"",width:"24%",align:"left",paixu:false,title:false,render:function(rowdata){
+                 {display:"批示指示内容",name:"",width:"23%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var html1="";
                 	 $.each(rowdata.szpslist,function(i,item){
                 		 var createdTime="";
@@ -59,7 +64,7 @@ var pageModule = function(){
                	 }
                	 return '';
                 }},
-                {display:"反馈时间",name:"",width:"11%",align:"left",paixu:false,render:function(rowdata){
+                {display:"反馈时间",name:"",width:"12%",align:"left",paixu:false,render:function(rowdata){
                	 if(rowdata.latestReplyTime && !!rowdata.latestReplyTime){
                		 return rowdata.latestReplyTime.substring(0,16);
                	 }
