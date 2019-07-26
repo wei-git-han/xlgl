@@ -12,7 +12,6 @@ import java.util.UUID;
 
 import com.css.app.db.business.entity.*;
 import com.css.app.db.business.service.*;
-import org.omg.CORBA.OBJ_ADAPTER;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
