@@ -134,7 +134,7 @@ var pageModule = function(){
                     				}
                     				return button1;
                     			}},
-                    			{display:"文件标题",name:"title",width:"10%",align:"left",paixu:false,render:function(rowdata,n){
+                    			{display:"文件标题",name:"title",width:"15%",align:"left",paixu:false,render:function(rowdata,n){
                     				var cuiban = '',title="";
 	                            	var CuibanFlag = rowdata.CuibanFlag;
 	                            	if(CuibanFlag==1){
@@ -165,7 +165,7 @@ var pageModule = function(){
 		                       		}
                     				return str;
                     			}},
-                      			{display:"督办落实情况",name:"dblsqk",width:"20%",align:"left",paixu:false,render:function(rowdata,n){
+                      			{display:"督办落实情况",name:"dblsqk",width:"15%",align:"left",paixu:false,render:function(rowdata,n){
                       				var gengxin = "";
                   					if(rowdata.gengxin=='1'){
                   						gengxin = '<label class="table-label">已更新</label>';
