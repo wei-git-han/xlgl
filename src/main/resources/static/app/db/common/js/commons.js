@@ -234,7 +234,17 @@ function initselect(id,arry){
 	});
 	$("#"+id).append(html);
 }
-
+function initselect1(id,arry){
+	$("#"+id).html("");
+	var html = "";
+	$.each(arry,function(i){
+		if(($.trim(arry[i].text)).indexOf("请选择")==-1){
+			html+='<option value='+arry[i].value+'>'+arry[i].text+'</option>';
+		}
+	});
+	html+='<option selected="selected" style="display:none" value="0">请选择</option>';
+	$("#"+id).append(html);
+}
 
 function initselect_DOC(id,arry,checkedId){
 	var html = "";

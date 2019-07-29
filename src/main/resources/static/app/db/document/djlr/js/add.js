@@ -45,7 +45,7 @@ var pageModule = function(){
 			data:{dicType:"all"},
 			success:function(data){
 				if(data.code!=500){//&&data.security_classification!="" && data.security_classification!=null && typeof(data.security_classification)!=undefined){
-					initselect("docTypeId",data.document_type);
+					initselect1("docTypeId",data.document_type);
 					initselect("securityId",data.security_classification);
 					initselect("urgencyId",data.urgency_degree);
 				}
@@ -225,6 +225,11 @@ var pageModule = function(){
 						var psszId = $("#psszId").val();
 						var leaderComment=$("#cqcontent").val();
 						var createdTime=$("#cqDate").val();
+                        var docTypeId=$("#docTypeId").val();
+                        if(docTypeId=='0'){
+                            newbootbox.alert('请选择类别！');
+                            return;
+                        }
 						if($.trim(leaderComment) != "" && $.trim(leaderComment) != null){
 							if($.trim(psszName) == "" || $.trim(psszName) == null){
 								newbootbox.alert('请选择首长！');
@@ -390,7 +395,10 @@ var pageModule = function(){
 				if($("#docTitle").val() == "" || $("#docTitle").val() == null || typeof($("#docTitle").val()) == undefined){
 					newbootbox.alertInfo("请先填写文件标题！"); 
 					return;
-				} 
+				} else if($("#docTypeId").val() == "0"){
+				    newbootbox.alertInfo("请选择类别！");
+                    return;
+				}
 				$("#commentForm").submit();
 			} 
 			var fileId = $("#id").val();
@@ -538,7 +546,8 @@ var pageModule = function(){
 			}
 		});
 	}
-	
+
+
 	return{
 		//加载页面处理程序
 		initControl:function(){
