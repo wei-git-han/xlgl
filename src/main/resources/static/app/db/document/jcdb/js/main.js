@@ -184,7 +184,7 @@ var pageModule = function(){
                     			{display:"更新时间",name:"update",width:"10%",align:"center",paixu:true,render:function(rowdata,n){
                     				return rowdata.update||'';
                     			}},
-                      			{display:"操作",name:"cz",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
+                      			{display:"操作",name:"cz",width:"12%",align:"center",paixu:false,render:function(rowdata,n){
                     				var button2 = '';
                     				if(rowdata.blzt==1&&showBtn){
                     					if(rowdata.other==1){

@@ -44,7 +44,7 @@ html,body{background:url("../image/u1.png");height:100%;}
 .table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th, 
 .table-bordered > tfoot > tr > td, .table-bordered > tfoot > tr > th, 
 .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {border:none;}
-.table-striped > tbody > tr:nth-of-type(2n+1) {background-color: transparent;}
+.table-striped   tr:nth-of-type(2n+1) {background-color: transparent;}
 
 #gridcont_content,#gridcont_tablepage{background-color:transparent!important;}
 #gridcont_content td{font-size:16px;height:100px;max-height:100px;color:#fff;text-align:left;padding:15px 22px 5px;word-break:break-all;word-wrap:break-word;vertical-align: top;text-overflow: ellipsis;
