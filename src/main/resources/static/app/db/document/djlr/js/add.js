@@ -213,6 +213,11 @@ var pageModule = function(){
 			    	"urgencyId","urgencyDegree","docCode","banjianNumber","userId","userName","applyTime","printDate","jobContent","remark","period"];
 				var paramdata = getformdata(elementarry);
 				paramdata.id = $("#id").val();
+                var docTypeId=$("#docTypeId").val();
+                if(docTypeId=='0'){
+                    newbootbox.alert('请选择类别！');
+                    return;
+                }
 				//newbootbox.alert('正在保存，请稍候...',false);
 				$.ajax({
 					url:updateUrl.url,
@@ -225,11 +230,6 @@ var pageModule = function(){
 						var psszId = $("#psszId").val();
 						var leaderComment=$("#cqcontent").val();
 						var createdTime=$("#cqDate").val();
-                        var docTypeId=$("#docTypeId").val();
-                        if(docTypeId=='0'){
-                            newbootbox.alert('请选择类别！');
-                            return;
-                        }
 						if($.trim(leaderComment) != "" && $.trim(leaderComment) != null){
 							if($.trim(psszName) == "" || $.trim(psszName) == null){
 								newbootbox.alert('请选择首长！');
