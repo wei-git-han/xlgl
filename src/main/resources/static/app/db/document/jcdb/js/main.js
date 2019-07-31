@@ -143,7 +143,7 @@ var pageModule = function(){
                     				title=`${cuiban} <font class="title" title="${rowdata.title}" onclick="viewpage('${rowdata.id}','${rowdata.id}','${rowdata.id}')" style="cursor:pointer;text-decoration: underline;" >${rowdata.title}</font>`;
                     				return title
                     			}},
-                    			{display:spData.title,name:"pszsmr",width:"17%",align:"left",paixu:false,render:function(rowdata,n){
+                    			{display:spData.title,name:"pszsmr",width:"16%",align:"left",paixu:false,render:function(rowdata,n){
                     				var str =''
                     				var str2 = "";
 		                       		if(spData.type==1 || spData.type == 4){
@@ -177,11 +177,11 @@ var pageModule = function(){
 /*                    			{display:"转办时间",name:"zbdate",width:"8%",align:"center",paixu:false,render:function(rowdata,n){
                     				return rowdata.zbdate||'';
                     			}},*/
-                    			{display:"承办单位/人",name:"cbdwry",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
+                    			{display:"承办单位/人",name:"cbdwry",width:"10%",align:"left",paixu:false,render:function(rowdata,n){
                     				var title=`<font class="cbdw" title="${rowdata.cbdwry}">${rowdata.cbdwry}</font>`;
                     				return title
                     			}},
-                    			{display:"更新时间",name:"update",width:"8%",align:"center",paixu:true,render:function(rowdata,n){
+                    			{display:"更新时间",name:"update",width:"9%",align:"center",paixu:true,render:function(rowdata,n){
                     			    var value = rowdata.update;
                     			    if(typeof(value)!="undefined"&&value!=null&&$.trim(value)!=""){
                                         value = value.substr(0,10)+'<br>'+value.substr(11,5);
