@@ -165,7 +165,7 @@ var pageModule = function(){
 		                       		}
                     				return str;
                     			}},
-                      			{display:"督办落实情况",name:"dblsqk",width:"18%",align:"left",paixu:false,render:function(rowdata,n){
+                      			{display:"督办落实情况",name:"dblsqk",width:"17%",align:"left",paixu:false,render:function(rowdata,n){
                       				var gengxin = "";
                   					if(rowdata.gengxin=='1'){
                   						gengxin = '<label class="table-label">已更新</label>';
@@ -181,7 +181,7 @@ var pageModule = function(){
                     				var title=`<font class="cbdw" title="${rowdata.cbdwry}">${rowdata.cbdwry}</font>`;
                     				return title
                     			}},
-                    			{display:"更新时间",name:"update",width:"8%",align:"center",paixu:true,render:function(rowdata,n){
+                    			{display:"更新时间",name:"update",width:"9%",align:"center",paixu:true,render:function(rowdata,n){
                     			    var value = rowdata.update;
                     			    if(typeof(value)!="undefined"&&value!=null&&$.trim(value)!=""){
                                         value = value.substr(0,10)+'<br>'+value.substr(11,5);
