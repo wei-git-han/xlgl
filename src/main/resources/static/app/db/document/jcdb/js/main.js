@@ -134,7 +134,7 @@ var pageModule = function(){
                     				}
                     				return button1;
                     			}},
-                    			{display:"文件标题",name:"title",width:"15%",align:"left",paixu:false,render:function(rowdata,n){
+                    			{display:"文件标题",name:"title",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
                     				var cuiban = '',title="";
 	                            	var CuibanFlag = rowdata.CuibanFlag;
 	                            	if(CuibanFlag==1){
