@@ -134,7 +134,7 @@ var pageModule = function(){
                     				}
                     				return button1;
                     			}},
-                    			{display:"文件标题",name:"title",width:"16.5%",align:"left",paixu:false,render:function(rowdata,n){
+                    			{display:"文件标题",name:"title",width:"16%",align:"left",paixu:false,render:function(rowdata,n){
                     				var cuiban = '',title="";
 	                            	var CuibanFlag = rowdata.CuibanFlag;
 	                            	if(CuibanFlag==1){
@@ -181,7 +181,7 @@ var pageModule = function(){
                     				var title=`<font class="cbdw" title="${rowdata.cbdwry}">${rowdata.cbdwry}</font>`;
                     				return title
                     			}},
-                    			{display:"更新时间",name:"update",width:"7.5%",align:"center",paixu:true,render:function(rowdata,n){
+                    			{display:"更新时间",name:"update",width:"8%",align:"center",paixu:true,render:function(rowdata,n){
                     			    var value = rowdata.update;
                     			    if(typeof(value)!="undefined"&&value!=null&&$.trim(value)!=""){
                                         value = value.substr(0,10)+'<br>'+value.substr(11,5);
