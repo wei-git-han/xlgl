@@ -224,7 +224,7 @@ public class DocumentSzInfoController {
 			if("0".equals(state)) {
 				
 				map.put("state2", "0");
-				map.put("latestreply", "0");
+				map.put("latestReply", "0");
 				map.put("isnotuserid", userid);
 			}else {
 				map.put("state", state);
