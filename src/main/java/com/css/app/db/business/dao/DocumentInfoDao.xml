@@ -71,7 +71,7 @@
 			and t.FIRST_ZB_TIME &lt;= #{zbEndDate}
 		</if>
 		<if test="latestReply != null and latestReply != ''">
-				and t.LATEST_REPLY !=''  
+				and (t.LATEST_REPLY !='' or t.LATEST_REPLY is not null)
 		</if>
 		<if test="isnotuserid != null">
 			and (t.sz_read_ids not like '%'||#{isnotuserid}||'%' or t.sz_read_ids is null)

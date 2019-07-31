@@ -182,7 +182,11 @@ var pageModule = function(){
                     				return title
                     			}},
                     			{display:"更新时间",name:"update",width:"10%",align:"center",paixu:true,render:function(rowdata,n){
-                    				return rowdata.update||'';
+                    			    var value = rowdata.update;
+                    			    if(typeof(value)!="undefined"&&value!=null&&$.trim(value)!=""){
+                                        value = value.substr(0,10)+'<br>'+value.substr(11,5);
+                    			    }
+                    				return value||'';
                     			}},
                       			{display:"操作",name:"cz",width:"12%",align:"center",paixu:false,render:function(rowdata,n){
                     				var button2 = '';
