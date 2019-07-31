@@ -327,7 +327,7 @@
 				and STATUS > #{status2}
 			</if>
 			<if test="latestreply != null and latestreply != ''">
-				and LATEST_REPLY !=''  
+				and LATEST_REPLY !='' and and LATEST_REPLY is not null  
 			</if>
 			<if test="isnotuserid != null">
 			and (sz_read_ids not like '%'||#{isnotuserid}||'%' or sz_read_ids is null)
