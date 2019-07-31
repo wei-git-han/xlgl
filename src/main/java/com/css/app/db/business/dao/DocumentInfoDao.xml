@@ -327,7 +327,7 @@
 				and STATUS > #{status2}
 			</if>
 			<if test="latestreply != null and latestreply != ''">
-				and LATEST_REPLY !='' and and LATEST_REPLY is not null  
+				and LATEST_REPLY !=''
 			</if>
 			<if test="isnotuserid != null">
 			and (sz_read_ids not like '%'||#{isnotuserid}||'%' or sz_read_ids is null)
@@ -337,7 +337,7 @@
 	<if test="type != null and type != ''">
 				and dic.VALUE=#{type}
 			</if>
-	order by dic.SORT asc
+	order by dic.value asc
 	</select>
 	
 	
