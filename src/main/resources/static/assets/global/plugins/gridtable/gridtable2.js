@@ -600,9 +600,12 @@ function createtable(obj){
 		if(getvalue(obj.checkbox,"checkbox") == true){
 			contwidth=contwidth-checkwidth;
 		}
+
 		if(getvalue(obj.rownumberyon,"rownumberyon")==true){
 			if(obj.rownumberwidth==null||typeof(obj.rownumberwidth)=="undefined"){
 				contwidth = contwidth-numberwidth;
+			}else{
+			    contwidth = contwidth-50;
 			}
 		}
 
