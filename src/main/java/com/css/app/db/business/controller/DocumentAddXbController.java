@@ -140,7 +140,7 @@ public class DocumentAddXbController {
 		Integer editXbPersonFlag = 0; //1：新增协办人；0：默认值；2：修改协办人；3：全部删除协办人
 		Map<String, Object> map = new HashMap<>();
 		List<String> userIdAdd = null;
-		Set<String> userIdsXB = new HashSet<>();
+		Set<String> userIdsXB = null;
 		try {
 			SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
 			if (subDocTracking != null) {
@@ -172,8 +172,10 @@ public class DocumentAddXbController {
 		}
 //		//消息推送
 		try {
-			if (userIdsXB.size() > 0) {
+			if (userIdsXB != null && userIdsXB.size() > 0) {
 				this.sendMsg(userIdsXB, infoId, subId);
+			} else {
+				logger.info("要推送的协办人ID:{}", userIdsXB);
 			}
 		} catch (Exception e) {
 			logger.info("协办消息推送异常：{}", e);
@@ -193,9 +195,15 @@ public class DocumentAddXbController {
 		MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_ADDXB_MSG_TITLE);
 		if (msg != null) {
 			String msgUrl = msg.getMsgRedirect()+"&fileId="+infoId+"&subId="+subId+"&docStatus=9";
+			logger.info(userIds.toString());
 			for (String userId : userIds) {
-				msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId,
-						appId,clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "","true");
+				try {
+					msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId,
+                            appId,clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "","true");
+				} catch (Exception e) {
+					logger.info("发送消息的用户ID：{}", userId);
+					continue;
+				}
 			}
 		}
 	}
@@ -385,6 +393,8 @@ public class DocumentAddXbController {
 				//新文增加协办人
 				userIdAdd = Arrays.asList(userIdsSplit);
 				editXbPersonFlag = 1;
+				userIdsXB.addAll(userIdAdd);
+
 			}
 			//查询要发送消息的协办人ID
 

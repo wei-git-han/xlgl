@@ -125,9 +125,13 @@ var pageModule = function(){
 			$('#infoTab').hide()
 		})
 		$('#sureOrg').click(function(){
-			var treeids = [];
-			var userIds = $("#orgTree").jstree("get_checked");//获取选中人员
-			
+			var node = $("#orgTree").jstree("get_bottom_selected",true);//获取选中人员
+			var userIds = [];
+			$.each(node,function(i,v){
+                if(v.type==1){
+                    userIds.push(v.id)
+                }
+			})
 			$.ajax({
 	 			url:addOrDeleteXbPersonUrl.url,
 	 			data:{userIds:userIds.toString(),subId:subId,infoId:infoId},
