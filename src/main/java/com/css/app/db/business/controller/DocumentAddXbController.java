@@ -139,11 +139,12 @@ public class DocumentAddXbController {
 	public void addOrDeleteXbPerson(String userIds, String infoId, String subId) {
 		Integer editXbPersonFlag = 0; //1：新增协办人；0：默认值；2：修改协办人；3：全部删除协办人
 		Map<String, Object> map = new HashMap<>();
+		List<String> userIdAdd = null;
 		try {
 			SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
 			if (subDocTracking != null) {
                 Map<String, Object> dealCurrXBPersons = this.dealCurrXBPersons(subId, userIds, editXbPersonFlag);
-                List<String> userIdAdd = (List<String>)dealCurrXBPersons.get("userIdAdd");
+                userIdAdd = (List<String>)dealCurrXBPersons.get("userIdAdd");
                 List<String> userIdDelete = (List<String>)dealCurrXBPersons.get("userIdDelete");
                 editXbPersonFlag = (Integer)dealCurrXBPersons.get("editXbPersonFlag");
                 boolean flag = (boolean)dealCurrXBPersons.get("flag");
@@ -166,8 +167,8 @@ public class DocumentAddXbController {
 		}
 		//消息推送
 		try {
-			if (StringUtils.isNotBlank(userIds)) {
-                this.sendMsg(userIds, infoId, subId);
+			if (userIdAdd != null && userIdAdd.size() > 0) {
+                this.sendMsg(userIdAdd, infoId, subId);
             } else {
                 logger.info("前端页面传来协办人ID:{}", userIds);
             }
@@ -184,12 +185,12 @@ public class DocumentAddXbController {
 	 * @param infoId 文ID
 	 * @param subId 分局ID
 	 */
-	private void sendMsg(String userIds,String infoId,String subId) {
+	private void sendMsg(List<String> userIds, String infoId, String subId) {
 		// 发送消息提醒
 		MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_ADDXB_MSG_TITLE);
 		if (msg != null) {
 			String msgUrl = msg.getMsgRedirect()+"&fileId="+infoId+"&subId="+subId+"&docStatus=9";
-			for (String userId : userIds.split(",")) {
+			for (String userId : userIds) {
 				msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId,
 						appId,clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "","true");
 			}
