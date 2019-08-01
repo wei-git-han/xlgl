@@ -140,7 +140,7 @@ public class DocumentAddXbController {
 		Integer editXbPersonFlag = 0; //1：新增协办人；0：默认值；2：修改协办人；3：全部删除协办人
 		Map<String, Object> map = new HashMap<>();
 		List<String> userIdAdd = null;
-		Set<String> userIdsXB = null;
+		Set<String> userIdsXB = new HashSet<>();
 		try {
 			SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
 			if (subDocTracking != null) {
