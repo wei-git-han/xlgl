@@ -170,7 +170,7 @@ public class DocumentAddXbController {
 			if (userIdAdd != null && userIdAdd.size() > 0) {
                 this.sendMsg(userIdAdd, infoId, subId);
             } else {
-                logger.info("前端页面传来协办人ID:{}", userIds);
+                logger.info("新增协办人ID:{}", userIdAdd);
             }
 		} catch (Exception e) {
 			logger.info("协办消息推送异常：{}", e);
