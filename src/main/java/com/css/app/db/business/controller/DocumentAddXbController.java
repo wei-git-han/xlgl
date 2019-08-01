@@ -167,11 +167,29 @@ public class DocumentAddXbController {
 		}
 		//消息推送
 		try {
+			List<String> userIdsXB = new ArrayList<>();
+			List<DocXbInfo> docXbInfos = this.queryDocXbInfos(subId, "1");
 			if (userIdAdd != null && userIdAdd.size() > 0) {
-                this.sendMsg(userIdAdd, infoId, subId);
+				//查询之前此文删除的协办人
+				if (StringUtils.isNotBlank(userIds) && docXbInfos.size() > 0) {
+					String[] userIdsSplit = userIds.split(",");
+					List<String> userIdsList = Arrays.asList(userIdsSplit);
+					for (DocXbInfo docXbInfo: docXbInfos) {
+						if (userIdsList.contains(docXbInfo.getReceiverId())) {
+							userIdAdd.add(docXbInfo.getReceiverId());
+						}
+					}
+				}else {
+					logger.info("前端传来协办人ID:{}，之前删除协办人数据：{}", userIds, docXbInfos.toString());
+				}
+				userIdsXB.addAll(userIdAdd);
             } else {
                 logger.info("新增协办人ID:{}", userIdAdd);
+				for (DocXbInfo docXbInfo: docXbInfos) {
+					userIdsXB.add(docXbInfo.getReceiverId());
+				}
             }
+			this.sendMsg(userIdsXB, infoId, subId);
 		} catch (Exception e) {
 			logger.info("协办消息推送异常：{}", e);
 		} finally {
