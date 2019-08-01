@@ -360,7 +360,7 @@ public class DocumentAddXbController {
 					}
 				}
 				userIdsXB.addAll(userIdAdd);
-				if (userIdsList.containsAll(userIdAdd)) {
+				if (userIdsList.containsAll(receiverIds)) {
 					flag = true;
 					//排除掉之前已经添加的协办人
 					for (DocXbInfo docXbInfo : docXbInfos) {
@@ -368,8 +368,19 @@ public class DocumentAddXbController {
 							userIdsXB.add(docXbInfo.getReceiverId());
 						}
 					}
+					editXbPersonFlag = 2;
 				}
-				editXbPersonFlag = 2;
+				if (receiverIds.containsAll(userIdsList)) {
+					flag = true;
+					for (String userId : userIdsList) {
+						for (DocXbInfo docXbInfo : docXbInfos) {
+							if (StringUtils.equals(userId, docXbInfo.getReceiverId()) && 1 == docXbInfo.getPublishFlag()) {
+								userIdsXB.add(docXbInfo.getReceiverId());
+							}
+						}
+					}
+					editXbPersonFlag = 2;
+				}
 			}else {
 				//新文增加协办人
 				userIdAdd = Arrays.asList(userIdsSplit);
