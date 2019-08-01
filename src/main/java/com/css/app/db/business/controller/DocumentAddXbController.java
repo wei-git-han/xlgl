@@ -10,11 +10,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import com.css.addbase.msg.MSGTipDefined;
+import com.css.addbase.msg.MsgTipUtil;
+import com.css.addbase.msg.entity.MsgTip;
+import com.css.addbase.msg.service.MsgTipService;
 import com.css.app.db.business.entity.*;
 import com.css.app.db.business.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -55,6 +60,14 @@ public class DocumentAddXbController {
 	private DocumentZbjlService documentZbjlService;
 	@Autowired
 	private ReplyExplainService replyExplainService;
+	@Autowired
+	private MsgTipService msgService;
+	@Autowired
+	private MsgTipUtil msgUtil;
+	@Value("${csse.dccb.appId}")
+	private  String appId;
+	@Value("${csse.dccb.appSecret}")
+	private  String clientSecret;
 	/**
 	 * 控制承办人详情页收集意见按钮显示
 	 * @param subId
@@ -126,26 +139,61 @@ public class DocumentAddXbController {
 	public void addOrDeleteXbPerson(String userIds, String infoId, String subId) {
 		Integer editXbPersonFlag = 0; //1：新增协办人；0：默认值；2：修改协办人；3：全部删除协办人
 		Map<String, Object> map = new HashMap<>();
-		SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
-		if (subDocTracking != null) {
-			Map<String, Object> dealCurrXBPersons = this.dealCurrXBPersons(subId, userIds, editXbPersonFlag);
-			List<String> userIdAdd = (List<String>)dealCurrXBPersons.get("userIdAdd");
-			List<String> userIdDelete = (List<String>)dealCurrXBPersons.get("userIdDelete");
-			editXbPersonFlag = (Integer)dealCurrXBPersons.get("editXbPersonFlag");
-			boolean flag = (boolean)dealCurrXBPersons.get("flag");
-			if (userIdAdd != null && userIdAdd.size() > 0) {
-				this.saveDocXbInfo(userIdAdd,infoId,subId,map);
-			}
-			if (userIdDelete != null && userIdDelete.size() > 0) {
-				this.dealXbPerson(map,infoId,subId,userIdDelete,1);
-			}
-			if (flag) {
-				this.dealXbPerson(map,infoId,subId,Arrays.asList(userIds.split(",")),0);
+		try {
+			SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
+			if (subDocTracking != null) {
+                Map<String, Object> dealCurrXBPersons = this.dealCurrXBPersons(subId, userIds, editXbPersonFlag);
+                List<String> userIdAdd = (List<String>)dealCurrXBPersons.get("userIdAdd");
+                List<String> userIdDelete = (List<String>)dealCurrXBPersons.get("userIdDelete");
+                editXbPersonFlag = (Integer)dealCurrXBPersons.get("editXbPersonFlag");
+                boolean flag = (boolean)dealCurrXBPersons.get("flag");
+                if (userIdAdd != null && userIdAdd.size() > 0) {
+                    this.saveDocXbInfo(userIdAdd,infoId,subId,map);
+                }
+                if (userIdDelete != null && userIdDelete.size() > 0) {
+                    this.dealXbPerson(map,infoId,subId,userIdDelete,1);
+                }
+                if (flag) {
+                    this.dealXbPerson(map,infoId,subId,Arrays.asList(userIds.split(",")),0);
+                }
+            }
+			//编辑协办人或者增加协办人之后，记录在转办记录
+			this.saveXBPersonOperate(infoId,subId,editXbPersonFlag);
+		} catch (Exception e) {
+			logger.info("编辑协办人异常：{}", e);
+			Response.json("result","fail");
+			return;
+		}
+		//消息推送
+		try {
+			if (StringUtils.isNotBlank(userIds)) {
+                this.sendMsg(userIds, infoId, subId);
+            } else {
+                logger.info("前端页面传来协办人ID:{}", userIds);
+            }
+		} catch (Exception e) {
+			logger.info("协办消息推送异常：{}", e);
+		} finally {
+			Response.json("result","success");
+		}
+	}
+
+	/**
+	 * 消息推送
+	 * @param userIds 协办人IDS
+	 * @param infoId 文ID
+	 * @param subId 分局ID
+	 */
+	private void sendMsg(String userIds,String infoId,String subId) {
+		// 发送消息提醒
+		MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_ADDXB_MSG_TITLE);
+		if (msg != null) {
+			String msgUrl = msg.getMsgRedirect()+"&fileId="+infoId+"&subId="+subId+"&docStatus=9";
+			for (String userId : userIds.split(",")) {
+				msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId,
+						appId,clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "","true");
 			}
 		}
-		//编辑协办人或者增加协办人之后，记录在转办记录
-		this.saveXBPersonOperate(infoId,subId,editXbPersonFlag);
-		Response.json("result","success");
 	}
 
 	/**
@@ -480,7 +528,7 @@ public class DocumentAddXbController {
 	@RequestMapping("/showIdeaRecord")
 	@ResponseBody
 	public void showIdeaRecord(String subId, String ideaGroupId) {
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		//登录人是协办人，文不在协办人这里
 //		map.put("receiverId", CurrentUser.getUserId());
 		try {
@@ -538,7 +586,7 @@ public class DocumentAddXbController {
 	 * @param subId 分局ID
 	 * @param ideaGroupId 意见组ID
 	 * @param map map集合
-	 * @return 返回值
+	 * @return JSONObject
 	 */
 	private JSONObject queryDocXbIdeas(String infoId, String subId, String ideaGroupId, Map<String, Object> map) {
 		JSONObject jsonObject = new JSONObject();
