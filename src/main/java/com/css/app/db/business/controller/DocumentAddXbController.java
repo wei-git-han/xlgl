@@ -140,22 +140,27 @@ public class DocumentAddXbController {
 		Integer editXbPersonFlag = 0; //1：新增协办人；0：默认值；2：修改协办人；3：全部删除协办人
 		Map<String, Object> map = new HashMap<>();
 		List<String> userIdAdd = null;
+		Set<String> userIdsXB = null;
 		try {
 			SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
 			if (subDocTracking != null) {
                 Map<String, Object> dealCurrXBPersons = this.dealCurrXBPersons(subId, userIds, editXbPersonFlag);
                 userIdAdd = (List<String>)dealCurrXBPersons.get("userIdAdd");
                 List<String> userIdDelete = (List<String>)dealCurrXBPersons.get("userIdDelete");
+				userIdsXB = (Set<String>)dealCurrXBPersons.get("userIdsXB");
                 editXbPersonFlag = (Integer)dealCurrXBPersons.get("editXbPersonFlag");
                 boolean flag = (boolean)dealCurrXBPersons.get("flag");
                 if (userIdAdd != null && userIdAdd.size() > 0) {
                     this.saveDocXbInfo(userIdAdd,infoId,subId,map);
+//					userIdsXB.addAll(userIdAdd);
+//					this.sendMsg(userIdsXB, infoId, subId);
                 }
                 if (userIdDelete != null && userIdDelete.size() > 0) {
                     this.dealXbPerson(map,infoId,subId,userIdDelete,1);
                 }
                 if (flag) {
                     this.dealXbPerson(map,infoId,subId,Arrays.asList(userIds.split(",")),0);
+//					this.sendMsg(userIdsXB, infoId, subId);
                 }
             }
 			//编辑协办人或者增加协办人之后，记录在转办记录
@@ -165,31 +170,11 @@ public class DocumentAddXbController {
 			Response.json("result","fail");
 			return;
 		}
-		//消息推送
+//		//消息推送
 		try {
-			List<String> userIdsXB = new ArrayList<>();
-			List<DocXbInfo> docXbInfos = this.queryDocXbInfos(subId, "1");
-			if (userIdAdd != null && userIdAdd.size() > 0) {
-				//查询之前此文删除的协办人
-				if (StringUtils.isNotBlank(userIds) && docXbInfos.size() > 0) {
-					String[] userIdsSplit = userIds.split(",");
-					List<String> userIdsList = Arrays.asList(userIdsSplit);
-					for (DocXbInfo docXbInfo: docXbInfos) {
-						if (userIdsList.contains(docXbInfo.getReceiverId())) {
-							userIdAdd.add(docXbInfo.getReceiverId());
-						}
-					}
-				}else {
-					logger.info("前端传来协办人ID:{}，之前删除协办人数据：{}", userIds, docXbInfos.toString());
-				}
-				userIdsXB.addAll(userIdAdd);
-            } else {
-                logger.info("新增协办人ID:{}", userIdAdd);
-				for (DocXbInfo docXbInfo: docXbInfos) {
-					userIdsXB.add(docXbInfo.getReceiverId());
-				}
-            }
-			this.sendMsg(userIdsXB, infoId, subId);
+			if (userIdsXB.size() > 0) {
+				this.sendMsg(userIdsXB, infoId, subId);
+			}
 		} catch (Exception e) {
 			logger.info("协办消息推送异常：{}", e);
 		} finally {
@@ -203,7 +188,7 @@ public class DocumentAddXbController {
 	 * @param infoId 文ID
 	 * @param subId 分局ID
 	 */
-	private void sendMsg(List<String> userIds, String infoId, String subId) {
+	private void sendMsg(Set<String> userIds, String infoId, String subId) {
 		// 发送消息提醒
 		MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_ADDXB_MSG_TITLE);
 		if (msg != null) {
@@ -353,6 +338,7 @@ public class DocumentAddXbController {
 		Map<String, Object> map = new HashMap<>();
 		List<String> userIdDelete = new ArrayList<>();
 		List<String> userIdAdd = new ArrayList<>();
+		Set<String> userIdsXB = new HashSet<>();
 		boolean flag = false;
 		List<DocXbInfo> docXbInfos = this.queryDocXbInfos(subId);
 		if (StringUtils.isNotBlank(userIds)) {
@@ -373,8 +359,15 @@ public class DocumentAddXbController {
 						userIdAdd.add(userId);
 					}
 				}
+				userIdsXB.addAll(userIdAdd);
 				if (userIdsList.containsAll(userIdAdd)) {
 					flag = true;
+					//排除掉之前已经添加的协办人
+					for (DocXbInfo docXbInfo : docXbInfos) {
+						if (1 == docXbInfo.getPublishFlag()) {
+							userIdsXB.add(docXbInfo.getReceiverId());
+						}
+					}
 				}
 				editXbPersonFlag = 2;
 			}else {
@@ -382,6 +375,8 @@ public class DocumentAddXbController {
 				userIdAdd = Arrays.asList(userIdsSplit);
 				editXbPersonFlag = 1;
 			}
+			//查询要发送消息的协办人ID
+
 		}else {//如果不选择协办人，则代表此文此承办人删除之前添加的所有协办人
 			if (docXbInfos != null && docXbInfos.size() > 0) {
 				for (DocXbInfo docXbInfo : docXbInfos) {
@@ -396,6 +391,7 @@ public class DocumentAddXbController {
 		map.put("userIdDelete", userIdDelete);
 		map.put("editXbPersonFlag", editXbPersonFlag);
 		map.put("flag", flag);
+		map.put("userIdsXB", userIdsXB);
 		return map ;
 	}
 	/**
