@@ -707,10 +707,14 @@ public class DocumentJcdbController {
 //		if (currDate == null) {
 		dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy年MM月dd日");
 		String monthStr = null;
+		String dayStr = null;
 		if (month < 10) {
 			monthStr = "0" + month;
 		}
-		currDate = LocalDate.parse(year+"年"+monthStr+"月"+day+"日", dateTimeFormatter);
+		if (day < 10) {
+			dayStr = "0" + day;
+		}
+		currDate = LocalDate.parse(year+"年"+monthStr+"月"+dayStr+"日", dateTimeFormatter);
 		/*}else {
 			dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy年MM月dd日");
 		}*/
