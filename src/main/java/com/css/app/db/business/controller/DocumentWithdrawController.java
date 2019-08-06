@@ -103,7 +103,7 @@ public class DocumentWithdrawController {
 	public void juInnnerWithdraw(String subId, String infoId) {
 		JSONObject json=new JSONObject();
 		//執行撤回操作
-		json = this.juInnnerTransactional(subId, infoId,json);
+		this.juInnnerTransactional(subId, infoId,json);
 		Response.json(json);
 	}
 	
@@ -294,9 +294,9 @@ public class DocumentWithdrawController {
 			subDocInfo.setDocStatus(1);
 			subDocInfo.setUndertaker("");
 			subDocInfo.setUpdateTime(null);
-			subDocInfo.setUndertakerName(null);
-			subDocInfo.setUndertakerPhone(null);
-			subDocInfo.setChooseStatus(null);
+			subDocInfo.setUndertakerName("");
+			subDocInfo.setUndertakerPhone("");
+			subDocInfo.setChooseStatus("");
 			//意见记录清空
 			subDocInfo.setIdeaCount(0);
 			//清空意见记录
