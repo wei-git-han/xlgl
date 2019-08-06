@@ -108,9 +108,14 @@ var pageModule = function(){
 				boolean isUndertaken=false;//是否已承办
 				boolean isUndertaker=false;//是否承办人*/
 				if(data.docStatus<10){//文件为办理中
-					if(data.docStatus==1 && "jndb"==fileFrom){
-						$(".newbottom").show(); 
-						$("#zhuanban").show();
+					if("jndb"==fileFrom){
+                        if(data.docStatus==1){
+                            $(".newbottom").show();
+                            $("#zhuanban").show();
+                        }else if(data.docStatus==9){
+                            $(".newbottom").hide()
+                            $(".blfk_bottom").hide();
+                        }
 					}else{
 						if(data.docStatus==5 && data.isCheckUser){//承办、转办按钮显示，输入框相关不显示
 							$(".newbottom").show(); //所有按钮的容器
@@ -155,8 +160,8 @@ var pageModule = function(){
 							}
 						}
 					}
+
 				}
-					
 			}
 		});	
 	}
