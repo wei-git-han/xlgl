@@ -8,7 +8,7 @@
 	</select>
 
 	<select id="queryList" resultType="com.css.addbase.apporgan.entity.BaseAppUser">
-		select * from BASE_APP_USER WHERE 1= 1
+		select * from BASE_APP_USER WHERE 1= 1 and ISDELETE = '0'
 		<if test="organid != null">
 		    and ORGANID = #{organid}
 		</if>
