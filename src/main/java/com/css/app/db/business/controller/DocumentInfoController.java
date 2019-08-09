@@ -338,7 +338,7 @@ public class DocumentInfoController {
 				List<DocumentRead> list = documentReadService.queryList(readMap);
 				
 				//未读，最新反馈字段有值则标识为已更新
-				if(list.size()==0 && StringUtils.isNotBlank(info.getLatestReply())) {
+				if(list.size()==0 && StringUtils.isNotEmpty(info.getLatestReply())) {
 					info.setUpdateFlag("1");
 				}
 				//是否批示超过3个月
