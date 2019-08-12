@@ -488,7 +488,6 @@ public class DocumentJcdbController {
 	 * @param year 年份
 	 * @param startDate 开始截取时间
 	 * @param endDate 结束截取时间
-	 * @param search 搜索参数
 	 * @author:zhangyw
 	 * @date:2019年6月24日
 	 * @Version v1.0
@@ -710,9 +709,14 @@ public class DocumentJcdbController {
 		String dayStr = null;
 		if (month < 10) {
 			monthStr = "0" + month;
+		} else {
+			monthStr = month+"";
 		}
+
 		if (day < 10) {
 			dayStr = "0" + day;
+		} else {
+			dayStr = day+"";
 		}
 		currDate = LocalDate.parse(year+"年"+monthStr+"月"+dayStr+"日", dateTimeFormatter);
 		/*}else {
