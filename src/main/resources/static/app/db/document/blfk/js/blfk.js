@@ -141,7 +141,7 @@ var pageModule = function(){
                 	if(rowdata.isOverTreeMonth==1){
                 		csFlag = '<img src="../../../common/images/u301.png" class="titleimg"/>';
                 	}
-                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+rowdata.docTitle+csFlag+'</a>'
+                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+'<span class="tabletitle2">'+rowdata.docTitle+csFlag+'</span></a>'
                  }},
                  {display:"批示指示内容",name:"",width:"26%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var html1="";
@@ -205,7 +205,7 @@ var pageModule = function(){
 						$(this).html($(this).html()+'...');
 					}
 				});
-            	$(".tabletitle").each(function(){
+            	$(".tabletitle2").each(function(){
 					var maxwidth = 46;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
@@ -260,7 +260,7 @@ var pageModule = function(){
                  	if(rowdata.isOverTreeMonth==1){
                  		csFlag = '<img src="../../../common/images/u301.png" class="titleimg" />';
                  	}
-                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+rowdata.docTitle+csFlag+'</a>'
+                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+'<span class="tabletitle2">'+rowdata.docTitle+csFlag+'</span></a>'
                  }},
                  {display:"工作分工内容",name:"",width:"21%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 return '<div class="gzfgnr" title="'+rowdata.jobContent+'">'+rowdata.jobContent+'</div>';
@@ -316,7 +316,7 @@ var pageModule = function(){
 						$(this).html($(this).html()+'...');
 					}
 				});
-            	$(".tabletitle").each(function(){
+            	$(".tabletitle2").each(function(){
 					var maxwidth = 46;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
@@ -368,7 +368,7 @@ var pageModule = function(){
                   	if(rowdata.isOverTreeMonth==1){
                   		csFlag = '<img src="../../../common/images/u301.png" class="titleimg"/>';
                   	}
-                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+rowdata.docTitle+csFlag+'</a>'
+                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+'<span class="tabletitle2">'+rowdata.docTitle+csFlag+'</span></a>'
                  }},
                  {display:"批示指示内容",name:"",width:"26%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 var html1="";
@@ -432,7 +432,7 @@ var pageModule = function(){
 						$(this).html($(this).html()+'...');
 					}
 				});
-            	$(".tabletitle").each(function(){
+            	$(".tabletitle2").each(function(){
 					var maxwidth = 55;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
@@ -487,7 +487,7 @@ var pageModule = function(){
                  	if(rowdata.isOverTreeMonth==1){
                  		csFlag = '<img src="../../../common/images/u301.png" class="titleimg" />';
                  	}
-                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+rowdata.docTitle+csFlag+'</a>'
+                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+'<span class="tabletitle2">'+rowdata.docTitle+csFlag+'</span></a>'
                  }},
                  {display:"落实事项",name:"",width:"21%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 return '<div class="gzfgnr" title="'+rowdata.jobContent+'">'+rowdata.jobContent+'</div>';
@@ -550,7 +550,7 @@ var pageModule = function(){
 						$(this).html($(this).html()+'...');
 					}
 				});
-            	$(".tabletitle").each(function(){
+            	$(".tabletitle2").each(function(){
 					var maxwidth = 46;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
