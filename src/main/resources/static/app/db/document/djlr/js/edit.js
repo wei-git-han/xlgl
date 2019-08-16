@@ -17,9 +17,12 @@ var fileId=getUrlParam("fileId")||""; //主文件id
 $("#id").val(fileId);
 var scanFilePath = "";//扫描件路径
 var pageModule = function(){
+	if(fileFrom=='blfk'){
+		$('#newTitle').text('办理反馈')
+	}
 	//按钮显示
 	var initBtn = function(){
-		if(fileFrom="blfk"){
+		if(fileFrom=="blfk"){
 			$('#saveAndAdd').hide();
 			$('#return').hide();
 		}

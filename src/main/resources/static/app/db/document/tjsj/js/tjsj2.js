@@ -29,9 +29,9 @@ var pageModule = function(){
                  		 cuiban = '<label class="table-label2">催办</label>';
                 	 }
                 	 if(rowdata.docTitle.length > 26){
-                        return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'&startdate='+''+'&enddate='+''+'&isFromChart=1&status='+status+'&isDepart=1&frompage=0" target="iframe1">'+cuiban+rowdata.docTitle.substring(0,26)+'...</a>'
+                        return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'&startdate='+''+'&enddate='+''+'&isFromChart=1&status='+status+'&isDepart=1&frompage=0" target="iframe1">'+cuiban+'<span class="tabletitle2">'+rowdata.docTitle+'</span></a>'
                      }else{
-                        return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'&startdate='+''+'&enddate='+''+'&isFromChart=1&status='+status+'&isDepart=1&frompage=0" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
+                        return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'&startdate='+''+'&enddate='+''+'&isFromChart=1&status='+status+'&isDepart=1&frompage=0" target="iframe1">'+cuiban+'<span class="tabletitle2">'+rowdata.docTitle+'</span></a>'
                      }
 //                	 return '<a title="'+rowdata.docTitle+'" class="table-title" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'&leaderId='+leaderId+'&startdate='+startdate+'&enddate='+enddate+'&isFromChart=1&status='+status+'&isDepart=0&frompage=0" target="iframe1">'+cuiban+rowdata.docTitle+'</a>'
                  }},
@@ -100,7 +100,7 @@ var pageModule = function(){
 						$(this).html($(this).html()+'...');
 					}
 				});
-            	$(".table-title").each(function(){
+            	$(".table-title2").each(function(){
 					var maxwidth = 42;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));

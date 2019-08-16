@@ -75,9 +75,9 @@ var pageModule = function(){
                 		csFlag = '<img src="../../../common/images/u301.png" class="titleimg" />';
                 	}
                 	if(rowdata.isXBPerson == 1 ){
-                		return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../view/html/view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&docStatus='+docStatus+'&fileFrom=grdb" target="iframe1">'+cuiban+rowdata.docTitle+csFlag+'</a>'
+                		return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../view/html/view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&docStatus='+docStatus+'&fileFrom=grdb" target="iframe1">'+cuiban+'<span class="tabletitle2">'+rowdata.docTitle+csFlag+'</span></a>'
                 	}else{
-                		return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../view/html/view2.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&docStatus='+docStatus+'&fileFrom=grdb" target="iframe1">'+cuiban+rowdata.docTitle+csFlag+'</a>'
+                		return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../view/html/view2.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&docStatus='+docStatus+'&fileFrom=grdb" target="iframe1">'+cuiban+'<span class="tabletitle2">'+rowdata.docTitle+csFlag+'</span></a>'
                 	}
                 }},
                 {display:"紧急程度",name:"urgencyDegree",width:"5%",align:"center",paixu:false,render:function(rowdata){
@@ -162,7 +162,7 @@ var pageModule = function(){
 						$(this).html($(this).html()+'...');
 					}
 				});
-            	$(".tabletitle").each(function(){
+            	$(".tabletitle2").each(function(){
 					var maxwidth = 47;
 					if($(this).text().length > maxwidth){
 						$(this).text($(this).text().substring(0,maxwidth));
