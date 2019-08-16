@@ -546,9 +546,11 @@ public class DocumentInfoController {
 	public void update(DocumentInfo documentInfo){
 		String uuid="";
 		JSONObject jo=new JSONObject();
-		if (StringUtils.isNotBlank(documentInfo.getId())) {
+		String id = documentInfo.getId();
+		if (StringUtils.isNotBlank(id)) {
 			jo.put("id",documentInfo.getId());
-			documentInfoService.update(documentInfo);
+			//更新操作
+			documentInfoService.update(this.organizeDocumentInfo(documentInfo));
 		} else {
 			uuid=UUIDUtils.random();
 			documentInfo.setId(uuid);
@@ -558,7 +560,84 @@ public class DocumentInfoController {
 		}
 		Response.json(jo);
 	}
-	
+
+	/**
+	 *
+	 * @param documentInfo 主文数据
+	 * @return DocumentInfo
+	 */
+	private DocumentInfo organizeDocumentInfo(DocumentInfo documentInfo) {
+		DocumentInfo documentInfo1 = documentInfoService.queryObject(documentInfo.getId());
+		String docTypeId = documentInfo.getDocTypeId();
+		String docTypeName = documentInfo.getDocTypeName();
+		String docTitle = documentInfo.getDocTitle();
+		String securityId = documentInfo.getSecurityId();
+		String securityClassification = documentInfo.getSecurityClassification();
+		String urgencyId = documentInfo.getUrgencyId();
+		String urgencyDegree = documentInfo.getUrgencyDegree();
+		String docCode = documentInfo.getDocCode();
+		String banjianNumber = documentInfo.getBanjianNumber();
+		String userId = documentInfo.getUserId();
+		String userName = documentInfo.getUserName();
+		String applyTime = documentInfo.getApplyTime();
+		String printDate = documentInfo.getPrintDate();
+		String jobContent = documentInfo.getJobContent();
+		String remark = documentInfo.getRemark();
+		String period = documentInfo.getPeriod();
+		if (StringUtils.isNotBlank(docTypeId)) {
+			documentInfo1.setDocTypeId(docTypeId);
+		}
+		if (StringUtils.isNotBlank(docTypeName)) {
+			documentInfo1.setDocTypeName(docTypeName);
+		}
+		if (StringUtils.isNotBlank(docTitle)) {
+			documentInfo1.setDocTitle(docTitle);
+		}
+		if (StringUtils.isNotBlank(securityId)) {
+			documentInfo1.setSecurityId(securityId);
+		}
+		if (StringUtils.isNotBlank(securityClassification)) {
+			documentInfo1.setSecurityClassification(securityClassification);
+		}
+		if (StringUtils.isNotBlank(urgencyId)) {
+			documentInfo1.setUrgencyId(urgencyId);
+		}
+		if (StringUtils.isNotBlank(urgencyDegree)) {
+			documentInfo1.setUrgencyId(urgencyDegree);
+		}
+		if (StringUtils.isNotBlank(docCode)) {
+			documentInfo1.setDocCode(docCode);
+		}
+		if (StringUtils.isNotBlank(banjianNumber)) {
+			documentInfo1.setBanjianNumber(banjianNumber);
+		}
+		if (StringUtils.isNotBlank(userId)) {
+			documentInfo1.setUserId(userId);
+		}
+		if (StringUtils.isNotBlank(userName)) {
+			documentInfo1.setUserName(userName);
+		}
+		if (StringUtils.isNotBlank(userId)) {
+			documentInfo1.setUserId(userId);
+		}
+		if (StringUtils.isNotBlank(applyTime)) {
+			documentInfo1.setApplyTime(applyTime);
+		}
+		if (StringUtils.isNotBlank(printDate)) {
+			documentInfo1.setPrintDate(printDate);
+		}
+		if (StringUtils.isNotBlank(jobContent)) {
+			documentInfo1.setJobContent(jobContent);
+		}
+		if (StringUtils.isNotBlank(remark)) {
+			documentInfo1.setRemark(remark);
+		}
+		if (StringUtils.isNotBlank(period)) {
+			documentInfo1.setPeriod(period);
+		}
+		return documentInfo1;
+	}
+
 	/**
 	 * 按钮显示参数
 	 * @param id 主文件id
