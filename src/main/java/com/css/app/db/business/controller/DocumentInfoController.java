@@ -603,7 +603,7 @@ public class DocumentInfoController {
 			documentInfo1.setUrgencyId(urgencyId);
 		}
 		if (StringUtils.isNotBlank(urgencyDegree)) {
-			documentInfo1.setUrgencyId(urgencyDegree);
+			documentInfo1.setUrgencyDegree(urgencyDegree);
 		}
 		if (StringUtils.isNotBlank(docCode)) {
 			documentInfo1.setDocCode(docCode);
@@ -616,9 +616,6 @@ public class DocumentInfoController {
 		}
 		if (StringUtils.isNotBlank(userName)) {
 			documentInfo1.setUserName(userName);
-		}
-		if (StringUtils.isNotBlank(userId)) {
-			documentInfo1.setUserId(userId);
 		}
 		if (StringUtils.isNotBlank(applyTime)) {
 			documentInfo1.setApplyTime(applyTime);
