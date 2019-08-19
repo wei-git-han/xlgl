@@ -28,7 +28,7 @@ if(!window.top.memory){
 	window.top.memory = {};
 }
 var o = window.top.memory;
-
+console.log(o)
 var pageModule = function(){
 	//左侧菜单树
 	var leftMenufn = function(){
@@ -105,6 +105,7 @@ var pageModule = function(){
 				if(o.value!="" && o.value!=null &&　o.value!="null" && o.value!="undefined"){
 					$("#classType li").removeClass("active");
 					$("#classType li[value="+o.value+"]").addClass("active");
+					$("#classType li[value="+o.value+"]").click()
 				}				
 			}
 		});	
