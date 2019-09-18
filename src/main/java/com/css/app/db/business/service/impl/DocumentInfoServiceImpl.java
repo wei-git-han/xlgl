@@ -180,4 +180,9 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 	public void updateDocumentInfoById(DocumentInfo documentInfo) {
 		documentInfoDao.updateDocumentInfoById(documentInfo);
 	}
+
+	@Override
+	public List<DocumentInfo> queryReplyList(Map<String, Object> map) {
+		return documentInfoDao.queryReplyList(map);
+	}
 }

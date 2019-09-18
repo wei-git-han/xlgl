@@ -45,4 +45,6 @@ public interface DocumentInfoDao extends BaseDao<DocumentInfo> {
 	
 	List<DocumentInfo> queryStatisticsList(Map<String, Object> map);
 	
+	List<DocumentInfo> queryReplyList(Map<String, Object> map);
+	
 }

@@ -261,7 +261,7 @@ public class DocumentInfoController {
 					map.put("loginUserId", loginUserId);
 					map.put("hasUpdate", status);
 				}else {
-					map.put("state", status);
+					map.put("status", status);
 				}
 			}
 			
@@ -328,7 +328,7 @@ public class DocumentInfoController {
 					}
 				}
 				PageHelper.startPage(page, pagesize);
-				infoList = documentInfoService.queryList(map);
+				infoList = documentInfoService.queryReplyList(map);
 			}
 			for (DocumentInfo info : infoList) {
 				//是否已读
@@ -396,7 +396,7 @@ public class DocumentInfoController {
 		}else if(!StringUtils.isEmpty(month)) {
 			dateStr = LocalDate.now().withMonth(Integer.parseInt(month)).format(DateTimeFormatter.ISO_LOCAL_DATE).substring(0,7);
 		}
-		int [] arr = {0,0,0,0,0};
+		int [] arr = {0,0,0,0,0,0};
 		String loginUserId=CurrentUser.getUserId();
 		//当前登录人的管理员类型(0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员)
 		String adminType = adminSetService.getAdminTypeByUserId(loginUserId);		
@@ -451,13 +451,18 @@ public class DocumentInfoController {
 					map.put("orgid", orgId);
 				}
 			}
-			infoList = documentInfoService.queryList(map);
+			infoList = documentInfoService.queryReplyList(map);
 		}
 		arr[0]=infoList.size();
 		for (DocumentInfo info : infoList) {
 			Integer restatus = info.getStatus();
+			String latestReply = info.getLatestReply();
 			if(1==restatus) {
-				arr[1]+=1;
+				if(StringUtils.isNotEmpty(latestReply)) {
+					arr[1]+=1;
+				}else {
+					arr[4]+=1;
+				}
 			}
 			if(2==restatus){
 				arr[2]+=1;
@@ -471,7 +476,7 @@ public class DocumentInfoController {
 			readMap.put("infoId", info.getId());
 			List<DocumentRead> list = documentReadService.queryList(readMap);
 			if(list.size()==0 && StringUtils.isNotBlank(info.getLatestReply())) {
-				arr[4]+=1;
+				arr[5]+=1;
 			}
 		}
 		Response.json(arr);

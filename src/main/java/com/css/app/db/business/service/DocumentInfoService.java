@@ -53,4 +53,6 @@ public interface DocumentInfoService {
 	List<DocumentInfo> queryStatisticsList(Map<String, Object> map);
 
 	void updateDocumentInfoById(DocumentInfo documentInfo);
+	
+	List<DocumentInfo> queryReplyList(Map<String, Object> map);
 }

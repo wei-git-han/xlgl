@@ -14,7 +14,6 @@ var pageModule = function(){
 					window.location.href="error.html";
 				}else{
 					$.each(data, function(i, item) {
-						console.log(i+"---------"+item);
 						if(i==0){
 							//var str = item.defaultPage.indexOf('?')>-1?"&":"?";
 							$("#iframe1").attr("src","/app/db/document/jcdb/html/index.html?menuId=005");

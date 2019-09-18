@@ -28,7 +28,6 @@ if(!window.top.memory){
 	window.top.memory = {};
 }
 var o = window.top.memory;
-console.log(o)
 var pageModule = function(){
 	//左侧菜单树
 	var leftMenufn = function(){
@@ -121,7 +120,11 @@ var pageModule = function(){
                 	var statusName="";
                	 	var bgColor="";
                	 	if(rowdata.status==1){
-	               	 	statusName="办理中";
+	               	 	if(rowdata.latestReply){//包括空格''
+	           	 			statusName="办理中";
+	           	 		}else{
+	           	 			statusName="未反馈";
+	           	 		}  
 	               		bgColor="#2BAA81";
             	 	}else if(rowdata.status==2){
 	               	 	statusName="已办结";
@@ -241,7 +244,11 @@ var pageModule = function(){
                 	var statusName="";
                	 	var bgColor="";
                	 	if(rowdata.status==1){
-	               	 	statusName="办理中";
+               	 		if(rowdata.latestReply != null){
+               	 			statusName="办理中";
+               	 		}else{
+               	 			statusName="未反馈";
+               	 		}               	 	
 	               		bgColor="#2BAA81";
             	 	}else if(rowdata.status==2){
 	               	 	statusName="已办结";
@@ -349,7 +356,11 @@ var pageModule = function(){
                 	var statusName="";
                	 	var bgColor="";
                	 	if(rowdata.status==1){
-	               	 	statusName="办理中";
+	               	 	if(rowdata.latestReply != null){
+	           	 			statusName="办理中";
+	           	 		}else{
+	           	 			statusName="未反馈";
+	           	 		}  
 	               		bgColor="#2BAA81";
             	 	}else if(rowdata.status==2){
 	               	 	statusName="已办结";
@@ -468,7 +479,11 @@ var pageModule = function(){
                 	var statusName="";
                	 	var bgColor="";
                	 	if(rowdata.status==1){
-	               	 	statusName="办理中";
+	               	 	if(rowdata.latestReply != null){
+	           	 			statusName="办理中";
+	           	 		}else{
+	           	 			statusName="未反馈";
+	           	 		}  
 	               		bgColor="#2BAA81";
             	 	}else if(rowdata.status==2){
 	               	 	statusName="已办结";
