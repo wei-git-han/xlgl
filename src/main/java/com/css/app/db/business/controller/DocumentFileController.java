@@ -2,6 +2,7 @@ package com.css.app.db.business.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -170,7 +171,7 @@ public class DocumentFileController {
 		ZipOutputStream zipOutputStream = null;
 		try {
 			//设置zip包名中文乱码问题
-			zipFileName = new String(zipFileName.getBytes(),"ISO-8859-1");
+			zipFileName = new String(zipFileName.getBytes(), StandardCharsets.ISO_8859_1);
 			httpServletResponse.setContentType("application/octet-stream");
 			httpServletResponse.setHeader("Content-Disposition", "attachment;filename="+zipFileName);
 			zipOutputStream = new ZipOutputStream(httpServletResponse.getOutputStream());
