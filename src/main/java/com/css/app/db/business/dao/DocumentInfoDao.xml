@@ -104,18 +104,12 @@
 				and CREATED_TIME &lt;= #{psEndDate} 
 			</if>) where num=1) v on t.id=v.info_Id 
         </if>	
-		<if test="orgid != null and orgid != ''" >
+		<if test="orgId != null and orgId != ''" >
 			left join DB_SUB_DOC_INFO  dadi on t.id=dadi.INFO_ID
 		</if>
-		 where (d.dNum = 1 or d.dNum is null) 
-		 <if test="orgid != null and orgid != '' ">
-			and dadi.SUB_DEPT_ID=#{orgid}
-		</if>
-		<if test='docStatus == "1"'>
-			and t.STATUS=0
-		</if>
-		<if test='docStatus == "2"'>
-			and t.STATUS &gt; 0
+		 where (d.dNum = 1 or d.dNum is null) and t.STATUS &gt; 0
+		 <if test="orgId != null and orgId != '' ">
+			and dadi.SUB_DEPT_ID=#{orgId}
 		</if>
 		<if test="hasUpdate != null"> 
 			and t.LATEST_REPLY !='' and t.LATEST_REPLY is not null and t.id not in(select INFO_ID from DB_DOCUMENT_READ where USER_ID=#{loginUserId})
@@ -159,12 +153,6 @@
 		</if>
 		<if test="zbEndDate != null and zbEndDate != ''">
 			and t.FIRST_ZB_TIME &lt;= #{zbEndDate}
-		</if>
-		<if test="latestReply != null and latestReply != ''">
-				and (t.LATEST_REPLY !='' or t.LATEST_REPLY is not null)
-		</if>
-		<if test="isnotuserid != null">
-			and (t.sz_read_ids not like '%'||#{isnotuserid}||'%' or t.sz_read_ids is null)
 		</if>
 		order by t.STATUS asc, decode(t.LATEST_REPLY, null,2,1),IFNULL(t.LATEST_REPLY_TIME, '') desc, IFNULL(t.FIRST_ZB_TIME, '') desc, t.CREATED_TIME desc		
 		<if test="offset != null and limit != null">
@@ -208,13 +196,7 @@
 				and CREATED_TIME &lt;= #{psEndDate} 
 			</if>) where num=1) v on t.id=v.info_Id
         </if>	 
-        where (d.dNum = 1 or d.dNum is null) 
-		<if test='docStatus == "1"'>
-			and t.STATUS=0
-		</if>
-		<if test='docStatus == "2"'>
-			and t.STATUS &gt; 0
-		</if>
+        where (d.dNum = 1 or d.dNum is null) and t.STATUS &gt; 0
 		<if test="hasUpdate != null"> 
 			and t.LATEST_REPLY !='' and t.LATEST_REPLY is not null and t.id not in(select INFO_ID from DB_DOCUMENT_READ where USER_ID=#{loginUserId})
 		</if>
@@ -257,9 +239,6 @@
 		</if>
 		<if test="zbEndDate != null and zbEndDate != ''">
 			and t.FIRST_ZB_TIME &lt;= #{zbEndDate}
-		</if>
-		<if test="isnotuserid != null">
-			and (t.sz_read_ids not like '%'||#{isnotuserid}||'%' or t.sz_read_ids is null)
 		</if>
 		order by t.STATUS asc,decode(t.LATEST_REPLY, null,2,1),IFNULL(t.LATEST_REPLY_TIME, '') desc, IFNULL(t.FIRST_ZB_TIME, '') desc, t.CREATED_TIME desc
 		<if test="offset != null and limit != null">

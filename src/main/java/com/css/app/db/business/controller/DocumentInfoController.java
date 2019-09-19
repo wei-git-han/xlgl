@@ -250,10 +250,9 @@ public class DocumentInfoController {
 			//当前登录人的角色（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
 			String roleType = roleSetService.getRoleTypeByUserId(loginUserId);
 			Map<String, Object> map = new HashMap<>();
-			map.put("docStatus", "2");
 			map.put("type", typeId);
 			map.put("search", search);
-			map.put("orgid", orgid);
+			map.put("orgId", orgid);
 			map.put("year", dateStr);
 			map.put("title", title);
 			if(StringUtils.isNotBlank(status)) {
@@ -324,7 +323,7 @@ public class DocumentInfoController {
 				if(!StringUtils.equals("3", adminType)&& !StringUtils.equals("0", adminType) &&(StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType))) {
 					String orgId = baseAppUserService.getBareauByUserId(loginUserId);
 					if(StringUtils.isNotBlank(orgId)) {
-						map.put("orgid", orgId);
+						map.put("orgId", orgId);
 					}
 				}
 				PageHelper.startPage(page, pagesize);
@@ -404,10 +403,9 @@ public class DocumentInfoController {
 		String roleType = roleSetService.getRoleTypeByUserId(loginUserId);
 		List<DocumentInfo> infoList =null;
 		Map<String, Object> map = new HashMap<>();
-		map.put("docStatus", "2");
 		map.put("search", search);
 		map.put("type", typeId);
-		map.put("orgid", orgid);
+		map.put("orgId", orgid);
 		map.put("year", dateStr);
 		map.put("title", title);
 		if(StringUtils.equals("1", typeId)||StringUtils.equals("2", typeId)||StringUtils.equals("4", typeId)) {
@@ -448,7 +446,7 @@ public class DocumentInfoController {
 			if(!StringUtils.equals("0", adminType) && !StringUtils.equals("3", adminType) &&( StringUtils.equals("2", adminType)|| StringUtils.equals(DbDefined.ROLE_3, roleType))) {
 				String orgId = baseAppUserService.getBareauByUserId(loginUserId);
 				if(StringUtils.isNotBlank(orgId)) {
-					map.put("orgid", orgId);
+					map.put("orgId", orgId);
 				}
 			}
 			infoList = documentInfoService.queryReplyList(map);
