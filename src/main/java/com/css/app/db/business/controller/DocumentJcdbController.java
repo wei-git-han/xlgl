@@ -97,22 +97,24 @@ public class DocumentJcdbController {
 		double  bj=0;
 		double  ctls=0;
 		double  total=0;
-		// sum(blz+bj+ctls) as total,sum(blz) as blz,sum(bj) as bj,sum(ctls) as ctls 
+		double  wfk =0;
+		// sum(blz+bj+ctls) as total,sum(blz) as blz,sum(bj) as bj,sum(ctls) as ctls
 		if (infoList!=null&&infoList.size()>0) {
 			Map<String, Object> map2=infoList.get(0);
 			if(map2!=null) {
-				blz= (long) map2.get("blz");
+				int wfkCount = this.queryWfkCount(null, year);
+				blz= (long) map2.get("blz") - wfkCount;
 				bj= (long) map2.get("bj");
 				ctls= (long) map2.get("ctls");
 				total= (long) map2.get("total");
+				wfk= wfkCount;
 			}
-			
 		}
-		
 		jo.put("blz", blz);
 		jo.put("bj", bj);
 		jo.put("ctls", ctls);
 		jo.put("total", total);
+		jo.put("wfk", wfk);
 		jo.put("year", year);
 		if(total>0) {
 			jo.put("wcl", (bj+ctls)*100/total);
@@ -160,9 +162,28 @@ public class DocumentJcdbController {
 			for (Map<String, Object> map2 : infoList) {
 				String danweiid=(String) map2.get("ID");
 				JSONObject jo=new JSONObject();
-				jo.put("blz", (long) map2.get("blz"));
 				jo.put("bj", (long) map2.get("bj"));
 				jo.put("ctls", (long) map2.get("ctls"));
+				//对结果进行二级过滤：针对办理中拆分：办理中+未反馈
+				//未反馈量
+				int wfkCount = this.queryWfkCount(danweiid, year);
+				//各局完成比率  办结+常态落实/总数
+				long total = (long) map2.get("blz") + (long) map2.get("bj") + (long) map2.get("ctls");
+				if (total == 0) {
+					jo.put("wcl", "0%");
+				} else {
+					long bjAddCtls = (long) map2.get("bj") + (long) map2.get("ctls");
+					if (bjAddCtls == 0) {
+						jo.put("wcl", "0%");
+					} else {
+						double wcl =(int)(((double) bjAddCtls / total) * 10000 + 0.5) * 100 / 10000.0;
+						jo.put("wcl", wcl+"%");
+					}
+				}
+				//增加未反馈
+				jo.put("wfk",wfkCount);
+				//原办理中数据-未反馈量 = 现办理中数据
+				jo.put("blz", (long) map2.get("blz") - (long)wfkCount);
 				jo.put("id",danweiid);
 				jo.put("dwname", (String) map2.get("dwname"));
 				
@@ -189,12 +210,20 @@ public class DocumentJcdbController {
 				
 			}
 		}
-		
-		
-		
-		
 		Response.json(ja);
 	}
+
+	/**
+	 *  根据每局ID 查出办理中未反馈数据量
+	 *
+	 * @param year 年
+	 * @param danweiid 直接部门ID
+	 * @return int
+	 */
+	private int queryWfkCount(String danweiid, String year) {
+		return documentInfoService.queryDocumentWfk(danweiid, year);
+	}
+
 	/**
 	 * {
 	"legend":["办理中","办结","常态落实"],
@@ -240,6 +269,7 @@ public class DocumentJcdbController {
 		JSONArray blzdata=new JSONArray();
 		JSONArray bjdata=new JSONArray();
 		JSONArray ctlsdata=new JSONArray();
+		JSONArray wfkdata=new JSONArray();
 		JSONArray legend=new JSONArray();
 		//JSONArray otherdata=new JSONArray();
 		JSONObject jo=new JSONObject();
@@ -280,9 +310,11 @@ public class DocumentJcdbController {
 					//授权--------end
 					//otherdata.add(jo);
 					xdata.add((String) map2.get("dwname"));
-					blzdata.add((long) map2.get("blz"));
 					bjdata.add((long) map2.get("bj"));
 					ctlsdata.add((long) map2.get("ctls"));
+					int wfkCount = queryWfkCount(danweiid, year);
+					blzdata.add((long) map2.get("blz") - wfkCount);
+					wfkdata.add(wfkCount);
 				}
 				
 			}
@@ -295,10 +327,8 @@ public class DocumentJcdbController {
 		jo2.put("blzdata", blzdata);
 		jo2.put("bjdata", bjdata);
 		jo2.put("ctlsdata", ctlsdata);
+		jo2.put("wfkdata", wfkdata);
 		jo2.put("otherdata", jo3);
-		
-		
-		
 		Response.json(jo2);
 	}
 	//documentDicService.queryDicByType(DbDicTypeDefined.DOCUMENT_TYPE)

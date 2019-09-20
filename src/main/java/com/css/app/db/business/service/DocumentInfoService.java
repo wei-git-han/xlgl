@@ -55,4 +55,6 @@ public interface DocumentInfoService {
 	void updateDocumentInfoById(DocumentInfo documentInfo);
 	
 	List<DocumentInfo> queryReplyList(Map<String, Object> map);
+
+    int queryDocumentWfk(String danweiid, String year);
 }

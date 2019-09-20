@@ -12,12 +12,13 @@ var pageModule = function(){
 		$ajax({
 			url:url1,
 			success:function(data){
-				
+				console.log(data)
 				var year = data.year;
 				var total = data.total;
 				var blz = data.blz;
 				var bj = data.bj;
 				var ctls = data.ctls;
+				var wfk = data.wfk;
 				var wcl = data.wcl;
 				wcl=wcl.toFixed(2,10)+"%";
 				$("#year").html(year);
@@ -50,7 +51,14 @@ var pageModule = function(){
 				}else{
 					$("#ctls").html(ctls);
 				}
-				
+				$("#wfk").attr("title",wfk);
+				if(wfk>9999){
+					$("#wfk").html("9999+");
+				}else{
+					$("#wfk").html(wfk);
+				}
+
+
 				$("#wcl").html(wcl);
 				
 			}
@@ -72,6 +80,8 @@ var pageModule = function(){
 					var blz = this.blz;
 					var bj = this.bj;
 					var ctls = this.ctls;
+					var wfk = this.wfk;
+					var wcl = this.wcl;
 					var state = this.state;
 					var type = this.type;
 					var month_ = month;
@@ -84,6 +94,8 @@ var pageModule = function(){
 								<td ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','1','${state}')">${blz}</font></td>
 								<td ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','2','${state}')">${bj}</font></td>
 								<td ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','3','${state}')">${ctls}</font></td>
+								<td ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','4','${state}')">${wfk}</font></td>
+								<td ><font style="cursor:pointer">${wcl}</font></td>
 							</tr>
 						`
 					);
@@ -199,6 +211,7 @@ var pageModule = function(){
 				var blzdata = data.blzdata
 				var bjdata = data.bjdata
 				var ctlsdata = data.ctlsdata
+				var wfkdata = data.wfkdata
 				//var myChart = echarts.init(document.getElementById('chart1'));
 			    var myChart = ec.init(document.getElementById('chart1'));
 			    myChart.setOption({
@@ -298,7 +311,24 @@ var pageModule = function(){
 				            type:'bar',
 				            barWidth:10,
 				            data:ctlsdata
-				        }
+				        },
+						{
+							name:'未反馈',
+							itemStyle:{
+								normal: {
+									color : (function (){
+										var zrColor = require('zrender/tool/color');
+										return zrColor.getLinearGradient(
+											0, 0, 0, 200,
+											[[0, '#EDBBBC'],[1, '#99D587']]
+										)
+									})()
+								}
+							},
+							type:'bar',
+							barWidth:10,
+							data:wfkdata
+						}
 				    ]
 			    });
 			    
@@ -320,6 +350,8 @@ var pageModule = function(){
 						ytype = 2;
 					}else if(seriesIndex==2){
 						ytype = 3;
+					}else if(seriesIndex==3){
+						ytype = 4;
 					}
 					if(state!=0){
 						topage(id,type,month,ytype,state);

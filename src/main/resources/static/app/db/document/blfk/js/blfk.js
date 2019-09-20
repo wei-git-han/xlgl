@@ -120,7 +120,7 @@ var pageModule = function(){
                 	var statusName="";
                	 	var bgColor="";
                	 	if(rowdata.status==1){
-	               	 	if(rowdata.latestReply){//包括空格''
+	               	 	if(rowdata.latestReply != '' && rowdata.latestReply != null){
 	           	 			statusName="办理中";
 	           	 		}else{
 	           	 			statusName="未反馈";
@@ -244,7 +244,7 @@ var pageModule = function(){
                 	var statusName="";
                	 	var bgColor="";
                	 	if(rowdata.status==1){
-               	 		if(rowdata.latestReply != null){
+               	 	if(rowdata.latestReply != '' && rowdata.latestReply != null){
                	 			statusName="办理中";
                	 		}else{
                	 			statusName="未反馈";
@@ -356,7 +356,7 @@ var pageModule = function(){
                 	var statusName="";
                	 	var bgColor="";
                	 	if(rowdata.status==1){
-	               	 	if(rowdata.latestReply != null){
+               	 	if(rowdata.latestReply != '' && rowdata.latestReply != null){
 	           	 			statusName="办理中";
 	           	 		}else{
 	           	 			statusName="未反馈";
@@ -479,7 +479,7 @@ var pageModule = function(){
                 	var statusName="";
                	 	var bgColor="";
                	 	if(rowdata.status==1){
-	               	 	if(rowdata.latestReply != null){
+               	 	if(rowdata.latestReply != '' && rowdata.latestReply != null){
 	           	 			statusName="办理中";
 	           	 		}else{
 	           	 			statusName="未反馈";
