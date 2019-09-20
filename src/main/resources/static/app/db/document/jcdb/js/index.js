@@ -320,7 +320,7 @@ var pageModule = function(){
 										var zrColor = require('zrender/tool/color');
 										return zrColor.getLinearGradient(
 											0, 0, 0, 200,
-											[[0, '#EDBBBC'],[1, '#99D587']]
+											[[0, '#99D587'],[1, '#2C3B68']]
 										)
 									})()
 								}

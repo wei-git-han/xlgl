@@ -322,6 +322,7 @@ public class DocumentJcdbController {
 		legend.add("办理中");
 		legend.add("已办结");
 		legend.add("常态落实");
+		legend.add("未反馈");
 		jo2.put("legend",legend);
 		jo2.put("xdata", xdata);
 		jo2.put("blzdata", blzdata);

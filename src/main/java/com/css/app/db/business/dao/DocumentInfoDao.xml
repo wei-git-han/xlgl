@@ -299,7 +299,17 @@
 			and ps.USER_ID=#{leaderId}
 		</if>
 		<if test="status !=null and status !=''">
-			and db.status=#{status}
+			<choose>
+                <when test="status == 1">
+                    and db.STATUS=1 and db.LATEST_REPLY is not null and (db.LATEST_REPLY !='' or db.LATEST_REPLY =' ')
+                </when>
+                 <when test="status == 4">
+                    and db.STATUS=1 and (db.LATEST_REPLY is null or (db.LATEST_REPLY ='' and db.LATEST_REPLY !=' '))
+                </when>
+                <otherwise>
+                   and db.STATUS=#{status}
+                </otherwise>
+            </choose>
 		</if>
 		<if test="type !=null and type !=''">
 			and db.DOC_TYPE_ID=#{type}
