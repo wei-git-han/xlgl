@@ -164,24 +164,28 @@ public class DocumentJcdbController {
 			for (Map<String, Object> map2 : infoList) {
 				String danweiid=(String) map2.get("ID");
 				JSONObject jo=new JSONObject();
-				jo.put("blz", (long) map2.get("blz"));
 				jo.put("bj", (long) map2.get("bj"));
 				jo.put("ctls", (long) map2.get("ctls"));
-				//增加未反馈
-				jo.put("wfk", (long) map2.get("wfk"));
+				//对结果进行二级过滤：针对办理中拆分：办理中+未反馈
+				//未反馈量
+				int wfkCount = this.queryWfkCount(danweiid);
 				//各局完成比率  办结+常态落实/总数
-				long total = (long) map2.get("blz") + (long) map2.get("bj") + (long) map2.get("ctls") + (long) map2.get("wfk");
+				long total = (long) map2.get("blz") + (long) map2.get("bj") + (long) map2.get("ctls");
 				if (total == 0) {
-					jo.put("wcl", "100%");
+					jo.put("wcl", "0%");
 				} else {
 					long bjAddCtls = (long) map2.get("bj") + (long) map2.get("ctls");
 					if (bjAddCtls == 0) {
 						jo.put("wcl", "0%");
 					} else {
-					double wcl =(int)(((double) bjAddCtls / total) * 10000 + 0.5) / 10000.0;
-					jo.put("wcl", wcl * 100 +"%");
+						double wcl =(int)(((double) bjAddCtls / total) * 10000 + 0.5) * 100 / 10000.0;
+						jo.put("wcl", wcl+"%");
 					}
 				}
+				//增加未反馈
+				jo.put("wfk",wfkCount);
+				//原办理中数据-未反馈量 = 现办理中数据
+				jo.put("blz", (long) map2.get("blz") - (long)wfkCount);
 				jo.put("id",danweiid);
 				jo.put("dwname", (String) map2.get("dwname"));
 				
@@ -210,6 +214,16 @@ public class DocumentJcdbController {
 		}
 		Response.json(ja);
 	}
+
+	/**
+	 *  根据每局ID 查出办理中未反馈数据量
+	 * @param danweiid 直接部门ID
+	 * @return int
+	 */
+	private int queryWfkCount(String danweiid) {
+		return documentInfoService.queryDocumentWfk(danweiid);
+	}
+
 	/**
 	 * {
 	"legend":["办理中","办结","常态落实"],
@@ -296,10 +310,11 @@ public class DocumentJcdbController {
 					//授权--------end
 					//otherdata.add(jo);
 					xdata.add((String) map2.get("dwname"));
-					blzdata.add((long) map2.get("blz"));
 					bjdata.add((long) map2.get("bj"));
 					ctlsdata.add((long) map2.get("ctls"));
-					wfkdata.add((long) map2.get("wfk"));
+					int wfkCount = queryWfkCount(danweiid);
+					blzdata.add((long) map2.get("blz") - wfkCount);
+					wfkdata.add(wfkCount);
 				}
 				
 			}

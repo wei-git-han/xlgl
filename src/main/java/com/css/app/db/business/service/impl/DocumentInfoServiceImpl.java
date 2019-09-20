@@ -185,4 +185,9 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 	public List<DocumentInfo> queryReplyList(Map<String, Object> map) {
 		return documentInfoDao.queryReplyList(map);
 	}
+
+	@Override
+	public int queryDocumentWfk(String danweiid) {
+		return documentInfoDao.queryDocumentWfk(danweiid);
+	}
 }

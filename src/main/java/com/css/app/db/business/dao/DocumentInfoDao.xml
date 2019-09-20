@@ -53,7 +53,17 @@
 			and to_char(t.FIRST_ZB_TIME) like '%'||#{year}||'%'
 		</if>
 		<if test="state != null and state != ''">
-			and t.STATUS=#{state}
+		<choose>
+			<when test="state == 1">
+				and t.STATUS=#{state} and t.LATEST_REPLY is not null and t.LATEST_REPLY != ''
+			</when>
+			<when test="state == 4">
+				and t.STATUS ='1' and (t.LATEST_REPLY is  null or t.LATEST_REPLY = '')
+			</when>
+			<otherwise>
+				and t.STATUS=#{state}
+			</otherwise>
+		</choose>
 		</if>
 		<if test="type != null">
 			and t.DOC_TYPE_ID=#{type}
@@ -360,17 +370,15 @@
 		org.NAME as dwname,
 		isnull(shu.blz,0) as blz,
         isnull(shu.bj,0)  as bj,
-        isnull(shu.ctls,0) as ctls,
-        isnull(shu.wfk,0) as wfk
+        isnull(shu.ctls,0) as ctls
 		 from BASE_APP_ORGAN org
 		left join
 	(
-		select d.SUB_DEPT_ID as id,d.SUB_DEPT_NAME as dwname,sum(blz) as blz,sum(bj) as bj,sum(ctls) as ctls, sum(wfk) as wfk from (
+		select d.SUB_DEPT_ID as id,d.SUB_DEPT_NAME as dwname,sum(blz) as blz,sum(bj) as bj,sum(ctls) as ctls from (
 			select dadi.SUB_DEPT_ID ,dadi.SUB_DEPT_NAME ,
 	        (case when ddi.STATUS='1' then count(ddi.STATUS) else 0 end ) as blz,
 	        (case when ddi.STATUS='2' then count(ddi.STATUS) else 0 end ) as bj,
-	        (case when ddi.STATUS='3' then count(ddi.STATUS) else 0 end ) as ctls,
-	        (case when ddi.STATUS='4' then count(ddi.STATUS) else 0 end ) as wfk
+	        (case when ddi.STATUS='3' then count(ddi.STATUS) else 0 end ) as ctls
 
 	        from DB_DOCUMENT_INFO  ddi
 			left join (select SUB_DEPT_ID,SUB_DEPT_NAME,INFO_ID,CREATED_TIME,DOC_STATUS
@@ -385,7 +393,10 @@
 			)d  GROUP by d.SUB_DEPT_ID,d.SUB_DEPT_NAME
 	)shu on org.id=shu.id where org.PARENT_ID='root'
 	</select>
-	
+	<select id="queryDocumentWfk" resultType="int">
+		select count(a.id) from DB_DOCUMENT_INFO a, DB_SUB_DOC_INFO b where a.ID = b.INFO_ID and a.STATUS = '1' and (a.LATEST_REPLY is  null or a.LATEST_REPLY  = '') and b.SUB_DEPT_ID = #{danweiid} and a.FIRST_ZB_TIME is not null
+	</select>
+
 	<select id="queryListByDicType" resultType="map">
 	select dic.TEXT as name,dic.value as type,ifnull(shu.num,0) as num
 		 from DB_DOCUMENT_DIC dic
