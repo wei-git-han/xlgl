@@ -123,6 +123,7 @@ var pageModule = function(){
 					var blz = this.blzCount;
 					var bj = this.ybjCount;
 					var ctls = this.ctlsCount;
+					var wfk = this.wfkCount;
 					$("#tbody2").append(
 						`
 							<tr id="${id}">
@@ -131,6 +132,7 @@ var pageModule = function(){
 								<td><a name="1" ifclick="${ifclick}" isLeaderType="${isLeaderType}" id="${leaderid}">${blz}</a></td>
 								<td><a name="2" ifclick="${ifclick}" isLeaderType="${isLeaderType}" id="${leaderid}">${bj}</a></td>
 								<td><a name="3" ifclick="${ifclick}" isLeaderType="${isLeaderType}" id="${leaderid}">${ctls}</a></td>
+								<td><a name="4" ifclick="${ifclick}" isLeaderType="${isLeaderType}" id="${leaderid}">${wfk}</a></td>
 							</tr>
 						`
 					);
@@ -320,7 +322,7 @@ var pageModule = function(){
 										var zrColor = require('zrender/tool/color');
 										return zrColor.getLinearGradient(
 											0, 0, 0, 200,
-											[[0, '#EDBBBC'],[1, '#99D587']]
+											[[0, '#99D587'],[1, '#99D587']]
 										)
 									})()
 								}

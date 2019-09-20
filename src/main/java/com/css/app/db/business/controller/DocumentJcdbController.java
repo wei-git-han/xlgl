@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.css.app.db.business.dto.LeaderStatisticsDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -471,13 +472,31 @@ public class DocumentJcdbController {
 				map.put("startDate",startDate);
 				map.put("endDate",endDate);
 			}
-			json.put("list", documentInfoService.queryLeaderStatistics(map));
+			List<LeaderStatisticsDto> leaderStatisticsDtos = documentInfoService.queryLeaderStatistics(map);
+			leaderStatisticsDtos.forEach(leaderStatisticsDto -> {
+				String leaderId = leaderStatisticsDto.getLeaderId();
+				map.put("leaderId", leaderId);
+				//现办理中 = 原办理中 - 未反馈
+				int wfkLeaderStatistics = this.queryWfkLeaderStatistics(map);
+				leaderStatisticsDto.setBlzCount(leaderStatisticsDto.getBlzCount() - wfkLeaderStatistics);
+				leaderStatisticsDto.setWfkCount(wfkLeaderStatistics);
+			});
+			json.put("list", leaderStatisticsDtos);
 			Response.json(json);
 		} catch (Exception e) {
 			logger.info("调用统计图当前首长批示落实统计查询方法异常：{}", e);
 		}
 	}
-	
+
+	/**
+	 *  首长批示统计  增加未反馈数据统计
+	 * @param map 参数
+	 * @return 统计数
+	 */
+	private int queryWfkLeaderStatistics(Map<String, Object> map) {
+		return documentInfoService.queryWfkLeaderStatistics(map);
+	}
+
 	/**
 	 * @description:首长端统计报表点击本年度办理情况和全年督办落实情况跳转页查询
 	 * @author:zhangyw

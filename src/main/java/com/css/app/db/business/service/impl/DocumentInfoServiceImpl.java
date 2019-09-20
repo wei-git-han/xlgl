@@ -190,4 +190,9 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 	public int queryDocumentWfk(String danweiid, String year) {
 		return documentInfoDao.queryDocumentWfk(danweiid, year);
 	}
+
+	@Override
+	public int queryWfkLeaderStatistics(Map<String, Object> map) {
+		return documentInfoDao.queryWfkLeaderStatistics(map);
+	}
 }

@@ -22,6 +22,8 @@ public class LeaderStatisticsDto implements Serializable{
 	private Integer ybjCount;
 	//常态落实数量
 	private Integer ctlsCount;
+	//常态落实数量
+	private Integer wfkCount;
 	
 	public String getLeaderId() {
 		return leaderId;
@@ -54,4 +56,11 @@ public class LeaderStatisticsDto implements Serializable{
 		this.ctlsCount = ctlsCount;
 	}
 
+	public Integer getWfkCount() {
+		return wfkCount;
+	}
+
+	public void setWfkCount(Integer wfkCount) {
+		this.wfkCount = wfkCount;
+	}
 }
