@@ -355,8 +355,7 @@ public class DocumentInfoController {
 
 	/**
 	 * 计算首长批示时间到现在是否查过三月；
-	 * @param leaderTime
-	 * @param subDocInfo
+	 * @param info 文流转主表数据
 	 */
 	private void isOverTreeMonth(DocumentInfo info) {
 		String leaderTime = info.getLeaderTime();
