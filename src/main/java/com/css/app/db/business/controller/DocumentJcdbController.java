@@ -176,8 +176,10 @@ public class DocumentJcdbController {
 					if (bjAddCtls == 0) {
 						jo.put("wcl", "0%");
 					} else {
-						double wcl =(int)(((double) bjAddCtls / total) * 10000 + 0.5) * 100 / 10000.0;
-						jo.put("wcl", wcl+"%");
+						double wclDouble =(int)(((double) bjAddCtls / total) * 100 + 0.5);
+						String wclStr= wclDouble + "";
+						String wcl = wclStr.substring(0, wclStr.lastIndexOf("."));
+						jo.put("wcl", wcl + "%");
 					}
 				}
 				//增加未反馈
