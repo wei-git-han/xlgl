@@ -53,7 +53,17 @@
 			and to_char(t.FIRST_ZB_TIME) like '%'||#{year}||'%'
 		</if>
 		<if test="state != null and state != ''">
-			and t.STATUS=#{state}
+			<choose>
+                <when test="state == 1">
+                    and t.STATUS=1 and t.LATEST_REPLY is not null and (t.LATEST_REPLY !='' or t.LATEST_REPLY =' ')
+                </when>
+                 <when test="state == 4">
+                    and t.STATUS=1 and (t.LATEST_REPLY is null or (t.LATEST_REPLY ='' and t.LATEST_REPLY !=' '))
+                </when>
+                <otherwise>
+                   and t.STATUS=#{state}
+                </otherwise>
+            </choose>
 		</if>
 		<if test="type != null">
 			and t.DOC_TYPE_ID=#{type}
@@ -79,7 +89,7 @@
 		<choose>
 			<when test="sort == 'desc'">order by t.BANJIAN_NUMBER desc</when>
 			<when test="sort == 'asc'"> order by t.BANJIAN_NUMBER ASC</when>
-			<otherwise>order by t.STATUS asc,IFNULL(t.LATEST_REPLY_TIME, '') desc, IFNULL(t.FIRST_ZB_TIME, '') desc, t.CREATED_TIME desc</otherwise>
+			<otherwise>order by t.STATUS asc,decode(t.LATEST_REPLY, null,2,1),IFNULL(t.LATEST_REPLY_TIME, '') desc, IFNULL(t.FIRST_ZB_TIME, '') desc, t.CREATED_TIME desc</otherwise>
 		</choose>
 		
 		<if test="offset != null and limit != null">
@@ -129,10 +139,10 @@
 		<if test="status != null and status != ''">
 			<choose>
                 <when test="status == 1">
-                    and t.STATUS=#{status} and t.LATEST_REPLY is not null
+                    and t.STATUS=1 and t.LATEST_REPLY is not null and (t.LATEST_REPLY !='' or t.LATEST_REPLY =' ')
                 </when>
                  <when test="status == 4">
-                    and t.STATUS=1 and t.LATEST_REPLY is null
+                    and t.STATUS=1 and (t.LATEST_REPLY is null or (t.LATEST_REPLY ='' and t.LATEST_REPLY !=' '))
                 </when>
                 <otherwise>
                    and t.STATUS=#{status}
@@ -215,10 +225,10 @@
 		<if test="status != null and status != ''">
 			<choose>
                 <when test="status == 1">
-                    and t.STATUS=#{status} and t.LATEST_REPLY is not null
+                    and t.STATUS=1 and t.LATEST_REPLY is not null and (t.LATEST_REPLY !='' or t.LATEST_REPLY =' ')
                 </when>
                  <when test="status == 4">
-                    and t.STATUS=1 and t.LATEST_REPLY is null
+                    and t.STATUS=1 and (t.LATEST_REPLY is null or (t.LATEST_REPLY ='' and t.LATEST_REPLY !=' '))
                 </when>
                 <otherwise>
                    and t.STATUS=#{status}
@@ -441,6 +451,7 @@
 	<select id="queryListByDicStutas" resultType="map">
 	select ddi.DOC_TYPE_ID,
 	        (case when ddi.STATUS='1' then count(ddi.STATUS) else 0 end ) as blz,
+	        (case when ddi.STATUS='1' then count(ddi.STATUS) else 0 end ) as wfk,
 	        (case when ddi.STATUS='2' then count(ddi.STATUS) else 0 end ) as bj,
 	        (case when ddi.STATUS='3' then count(ddi.STATUS) else 0 end ) as ctls
 	         
