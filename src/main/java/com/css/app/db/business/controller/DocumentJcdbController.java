@@ -97,7 +97,8 @@ public class DocumentJcdbController {
 		double  bj=0;
 		double  ctls=0;
 		double  total=0;
-		// sum(blz+bj+ctls) as total,sum(blz) as blz,sum(bj) as bj,sum(ctls) as ctls 
+		double  wfk =0;
+		// sum(blz+bj+ctls) as total,sum(blz) as blz,sum(bj) as bj,sum(ctls) as ctls
 		if (infoList!=null&&infoList.size()>0) {
 			Map<String, Object> map2=infoList.get(0);
 			if(map2!=null) {
@@ -105,6 +106,8 @@ public class DocumentJcdbController {
 				bj= (long) map2.get("bj");
 				ctls= (long) map2.get("ctls");
 				total= (long) map2.get("total");
+				wfk= (long) map2.get("wfk");
+
 			}
 			
 		}
@@ -113,6 +116,7 @@ public class DocumentJcdbController {
 		jo.put("bj", bj);
 		jo.put("ctls", ctls);
 		jo.put("total", total);
+		jo.put("wfk", wfk);
 		jo.put("year", year);
 		if(total>0) {
 			jo.put("wcl", (bj+ctls)*100/total);
@@ -163,6 +167,21 @@ public class DocumentJcdbController {
 				jo.put("blz", (long) map2.get("blz"));
 				jo.put("bj", (long) map2.get("bj"));
 				jo.put("ctls", (long) map2.get("ctls"));
+				//增加未反馈
+				jo.put("wfk", (long) map2.get("wfk"));
+				//各局完成比率  办结+常态落实/总数
+				long total = (long) map2.get("blz") + (long) map2.get("bj") + (long) map2.get("ctls") + (long) map2.get("wfk");
+				if (total == 0) {
+					jo.put("wcl", "100%");
+				} else {
+					long bjAddCtls = (long) map2.get("bj") + (long) map2.get("ctls");
+					if (bjAddCtls == 0) {
+						jo.put("wcl", "0%");
+					} else {
+					double wcl =(int)(((double) bjAddCtls / total) * 10000 + 0.5) / 10000.0;
+					jo.put("wcl", wcl * 100 +"%");
+					}
+				}
 				jo.put("id",danweiid);
 				jo.put("dwname", (String) map2.get("dwname"));
 				
@@ -189,10 +208,6 @@ public class DocumentJcdbController {
 				
 			}
 		}
-		
-		
-		
-		
 		Response.json(ja);
 	}
 	/**
@@ -240,6 +255,7 @@ public class DocumentJcdbController {
 		JSONArray blzdata=new JSONArray();
 		JSONArray bjdata=new JSONArray();
 		JSONArray ctlsdata=new JSONArray();
+		JSONArray wfkdata=new JSONArray();
 		JSONArray legend=new JSONArray();
 		//JSONArray otherdata=new JSONArray();
 		JSONObject jo=new JSONObject();
@@ -283,6 +299,7 @@ public class DocumentJcdbController {
 					blzdata.add((long) map2.get("blz"));
 					bjdata.add((long) map2.get("bj"));
 					ctlsdata.add((long) map2.get("ctls"));
+					wfkdata.add((long) map2.get("wfk"));
 				}
 				
 			}
@@ -295,10 +312,8 @@ public class DocumentJcdbController {
 		jo2.put("blzdata", blzdata);
 		jo2.put("bjdata", bjdata);
 		jo2.put("ctlsdata", ctlsdata);
+		jo2.put("wfkdata", wfkdata);
 		jo2.put("otherdata", jo3);
-		
-		
-		
 		Response.json(jo2);
 	}
 	//documentDicService.queryDicByType(DbDicTypeDefined.DOCUMENT_TYPE)

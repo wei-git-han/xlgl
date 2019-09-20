@@ -336,11 +336,12 @@
 
 	<!--根据年度获取每个状态的数量   CREATED_TIME暂为年度时间-->
 	<select id="queryListByYear" resultType="map">
-	select sum(blz+bj+ctls) as total,sum(blz) as blz,sum(bj) as bj,sum(ctls) as ctls from (
+	select sum(blz+bj+ctls) as total,sum(blz) as blz,sum(bj) as bj,sum(ctls) as ctls, sum(wfk) as wfk from (
 		select 
          (case when ddi.STATUS='1' then count(ddi.STATUS) else 0 end ) as blz,
 	        (case when ddi.STATUS='2' then count(ddi.STATUS) else 0 end ) as bj,
-	        (case when ddi.STATUS='3' then count(ddi.STATUS) else 0 end ) as ctls       
+	        (case when ddi.STATUS='3' then count(ddi.STATUS) else 0 end ) as ctls,
+	        (case when ddi.STATUS='4' then count(ddi.STATUS) else 0 end ) as wfk
         from DB_DOCUMENT_INFO  ddi
 		where 1=1 and FIRST_ZB_TIME is not null
 		<if test="year != null">
@@ -354,20 +355,23 @@
 	</select>
 		<!--根据年度获取每个状态的数量   CREATED_TIME暂为年度时间-->
 	<select id="queryListByOrgYear" resultType="map">
-	select org.ID,org.NAME as dwname,
+	select
+		org.ID,
+		org.NAME as dwname,
 		isnull(shu.blz,0) as blz,
         isnull(shu.bj,0)  as bj,
-        isnull(shu.ctls,0) as ctls
+        isnull(shu.ctls,0) as ctls,
+        isnull(shu.wfk,0) as wfk
 		 from BASE_APP_ORGAN org
 		left join
-	
 	(
-		select d.SUB_DEPT_ID as id,d.SUB_DEPT_NAME as dwname,sum(blz) as blz,sum(bj) as bj,sum(ctls) as ctls from (
+		select d.SUB_DEPT_ID as id,d.SUB_DEPT_NAME as dwname,sum(blz) as blz,sum(bj) as bj,sum(ctls) as ctls, sum(wfk) as wfk from (
 			select dadi.SUB_DEPT_ID ,dadi.SUB_DEPT_NAME ,
 	        (case when ddi.STATUS='1' then count(ddi.STATUS) else 0 end ) as blz,
 	        (case when ddi.STATUS='2' then count(ddi.STATUS) else 0 end ) as bj,
-	        (case when ddi.STATUS='3' then count(ddi.STATUS) else 0 end ) as ctls
-	        
+	        (case when ddi.STATUS='3' then count(ddi.STATUS) else 0 end ) as ctls,
+	        (case when ddi.STATUS='4' then count(ddi.STATUS) else 0 end ) as wfk
+
 	        from DB_DOCUMENT_INFO  ddi
 			left join (select SUB_DEPT_ID,SUB_DEPT_NAME,INFO_ID,CREATED_TIME,DOC_STATUS
 	                          from DB_SUB_DOC_INFO)  dadi
