@@ -56,5 +56,5 @@ public interface DocumentInfoService {
 	
 	List<DocumentInfo> queryReplyList(Map<String, Object> map);
 
-    int queryDocumentWfk(String danweiid);
+    int queryDocumentWfk(String danweiid, String year);
 }

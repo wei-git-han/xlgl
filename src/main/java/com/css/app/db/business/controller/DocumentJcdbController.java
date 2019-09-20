@@ -102,16 +102,14 @@ public class DocumentJcdbController {
 		if (infoList!=null&&infoList.size()>0) {
 			Map<String, Object> map2=infoList.get(0);
 			if(map2!=null) {
-				blz= (long) map2.get("blz");
+				int wfkCount = this.queryWfkCount(null, year);
+				blz= (long) map2.get("blz") - wfkCount;
 				bj= (long) map2.get("bj");
 				ctls= (long) map2.get("ctls");
 				total= (long) map2.get("total");
-				wfk= (long) map2.get("wfk");
-
+				wfk= wfkCount;
 			}
-			
 		}
-		
 		jo.put("blz", blz);
 		jo.put("bj", bj);
 		jo.put("ctls", ctls);
@@ -168,7 +166,7 @@ public class DocumentJcdbController {
 				jo.put("ctls", (long) map2.get("ctls"));
 				//对结果进行二级过滤：针对办理中拆分：办理中+未反馈
 				//未反馈量
-				int wfkCount = this.queryWfkCount(danweiid);
+				int wfkCount = this.queryWfkCount(danweiid, year);
 				//各局完成比率  办结+常态落实/总数
 				long total = (long) map2.get("blz") + (long) map2.get("bj") + (long) map2.get("ctls");
 				if (total == 0) {
@@ -217,11 +215,13 @@ public class DocumentJcdbController {
 
 	/**
 	 *  根据每局ID 查出办理中未反馈数据量
+	 *
+	 * @param year 年
 	 * @param danweiid 直接部门ID
 	 * @return int
 	 */
-	private int queryWfkCount(String danweiid) {
-		return documentInfoService.queryDocumentWfk(danweiid);
+	private int queryWfkCount(String danweiid, String year) {
+		return documentInfoService.queryDocumentWfk(danweiid, year);
 	}
 
 	/**
@@ -312,7 +312,7 @@ public class DocumentJcdbController {
 					xdata.add((String) map2.get("dwname"));
 					bjdata.add((long) map2.get("bj"));
 					ctlsdata.add((long) map2.get("ctls"));
-					int wfkCount = queryWfkCount(danweiid);
+					int wfkCount = queryWfkCount(danweiid, year);
 					blzdata.add((long) map2.get("blz") - wfkCount);
 					wfkdata.add(wfkCount);
 				}

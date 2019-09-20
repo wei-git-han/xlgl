@@ -10,6 +10,8 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.css.base.dao.BaseDao;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.security.access.method.P;
 
 /**
  * 督办基本信息表
@@ -47,5 +49,5 @@ public interface DocumentInfoDao extends BaseDao<DocumentInfo> {
 	
 	List<DocumentInfo> queryReplyList(Map<String, Object> map);
 
-    int queryDocumentWfk(String danweiid);
+    int queryDocumentWfk(@Param("danweiid") String danweiid, @Param("year") String year);
 }

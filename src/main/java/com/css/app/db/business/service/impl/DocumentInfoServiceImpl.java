@@ -187,7 +187,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 	}
 
 	@Override
-	public int queryDocumentWfk(String danweiid) {
-		return documentInfoDao.queryDocumentWfk(danweiid);
+	public int queryDocumentWfk(String danweiid, String year) {
+		return documentInfoDao.queryDocumentWfk(danweiid, year);
 	}
 }
