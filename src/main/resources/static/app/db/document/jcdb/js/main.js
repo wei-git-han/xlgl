@@ -1,9 +1,11 @@
+var url0 = {"url":"/app/db/documentszinfo/homeListNum","dataType":"text"};
 var url1 = {"url":"/app/db/documentszinfo/homelist","dataType":"text"};
 var url2 = {"url":"/app/db/documentszinfo/grouplist","dataType":"text"};
 var url3 = {"url":"/app/db/documentszinfo/read","dataType":"text"};
 var url4 = {"url":"/app/db/documentszinfo/press","dataType":"text"};
 var url5 = {"url":"/app/db/documentszinfo/AllreadByType","dataType":"text"};
 var url6 = {"url":"/app/db/documentjcdb/isShouZhang","dataType":"text"};
+
 var showBtn = true;
 var groupid=null;
 var grid = null;
@@ -126,7 +128,12 @@ var pageModule = function(){
                     			{display:"状态",name:"blzt",width:"10%",align:"center",paixu:false,render:function(rowdata,n){
                     				var button1;
                     				if(rowdata.blzt==1){
-                    					button1 = '<button type="button" class="btn btn-info table-button1" style="width:100%;" >办理中</button>';
+                    					if(rowdata.latestReply != '' && rowdata.latestReply != null){//包括空格''
+                    						button1 = '<button type="button" class="btn btn-info table-button1" style="width:100%;" >办理中</button>';
+                	           	 		}else{
+                	           	 			button1 = '<button type="button" class="btn btn-info table-button1" style="width:100%;" >未反馈</button>';
+                	           	 		}
+                    					
                     				}else if(rowdata.blzt==3){
                     					button1 = '<button type="button" class="btn btn-info table-button2" style="width:100%;" >常态落实</button>';
                     				}else{
@@ -361,21 +368,7 @@ var pageModule = function(){
                     pagesize: 7,
                     url: url1,
                     loadafter:function(data){
-                    	var count2 = data.count2;
-                    	var count3 = data.count3;
-                    	var count4 = data.count4;
-                    	var count5 = data.count5;
-                    	var count1 = count2+count3+count4;
-                    	if(count1>0){count1="("+count1+")"}else{count1="(0)"};
-                    	if(count2>0){count2="("+count2+")"}else{count2="(0)"};
-                    	if(count3>0){count3="("+count3+")"}else{count3="(0)"};
-                    	if(count4>0){count4="("+count4+")"}else{count4="(0)"};
-                    	if(count5>0){count5="("+count5+")"}else{count5="(0)"};
-                    	$("#count1").html(count1);
-                    	$("#count2").html(count2);
-                    	$("#count3").html(count3);
-                    	$("#count4").html(count4);
-                    	$("#count5").html(count5);
+                    	getTableCount();
                     	Metronic.initSlimScroll(".scroller");
                     	$(".dblsqk").each(function(){
         					var maxwidth = 46;
@@ -420,7 +413,22 @@ var pageModule = function(){
 	
 	
 	
-	
+	var getTableCount = function(){
+		$ajax({
+			url:url0,
+			data:{month:'all',id:groupid,isMain:'1'},
+			success:function(data){
+				$.each(data,function(i,v){
+					if(v>0){
+						$("#count"+i).html("("+v+")")
+					}else{
+						$("#count"+i).html("(0)")
+					}
+
+				})
+			}
+		})
+	}
 	var initother = function(){
 		$("#fasong").click(function(){
 			var textarea = $("#textarea").val();

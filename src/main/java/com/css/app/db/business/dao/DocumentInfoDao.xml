@@ -18,16 +18,16 @@
         <if test="leaderId !=null and leaderId !=''">
         inner join (select info_id from (select info_id,row_number() over(partition by info_id order by created_time) as num from DB_DOCUMENT_SZPS where USER_ID=#{leaderId}
 	        <if test="psStartDate != null and psStartDate != ''">
-				and CREATED_TIME >= #{psStartDate} 
+				and CREATED_TIME >= #{psStartDate}
 			</if>
 			<if test="psEndDate != null and psEndDate != ''">
-				and CREATED_TIME &lt;= #{psEndDate} 
-			</if>) where num=1) v on t.id=v.info_Id 
-        </if>	
+				and CREATED_TIME &lt;= #{psEndDate}
+			</if>) where num=1) v on t.id=v.info_Id
+        </if>
 		<if test="orgid != null and orgid != ''" >
 			left join DB_SUB_DOC_INFO  dadi on t.id=dadi.INFO_ID
 		</if>
-		 where (d.dNum = 1 or d.dNum is null) 
+		 where (d.dNum = 1 or d.dNum is null)
 		 <if test="orgid != null and orgid != '' ">
 			and dadi.SUB_DEPT_ID=#{orgid}
 		</if>
@@ -37,7 +37,7 @@
 		<if test='docStatus == "2"'>
 			and t.STATUS &gt; 0
 		</if>
-		<if test="hasUpdate != null"> 
+		<if test="hasUpdate != null">
 			and t.LATEST_REPLY !='' and t.LATEST_REPLY is not null and t.id not in(select INFO_ID from DB_DOCUMENT_READ where USER_ID=#{loginUserId})
 		</if>
 		<if test="search != null and search != ''">
@@ -53,26 +53,26 @@
 			and to_char(t.FIRST_ZB_TIME) like '%'||#{year}||'%'
 		</if>
 		<if test="state != null and state != ''">
-		<choose>
-			<when test="state == 1">
-				and t.STATUS=#{state} and t.LATEST_REPLY is not null and t.LATEST_REPLY != ''
-			</when>
-			<when test="state == 4">
-				and t.STATUS ='1' and (t.LATEST_REPLY is  null or t.LATEST_REPLY = '')
-			</when>
-			<otherwise>
-				and t.STATUS=#{state}
-			</otherwise>
-		</choose>
+			<choose>
+                <when test="state == 1">
+                    and t.STATUS=1 and t.LATEST_REPLY is not null and (t.LATEST_REPLY !='' or t.LATEST_REPLY =' ')
+                </when>
+                 <when test="state == 4">
+                    and t.STATUS=1 and (t.LATEST_REPLY is null or (t.LATEST_REPLY ='' and t.LATEST_REPLY !=' '))
+                </when>
+                <otherwise>
+                   and t.STATUS=#{state}
+                </otherwise>
+            </choose>
 		</if>
 		<if test="type != null">
 			and t.DOC_TYPE_ID=#{type}
 		</if>
 		<if test="startDate != null and startDate != ''">
-			and d.leader_time>= #{startDate} 
+			and d.leader_time>= #{startDate}
 		</if>
 		<if test="endDate != null and endDate != ''">
-			and d.leader_time &lt;= #{endDate} 
+			and d.leader_time &lt;= #{endDate}
 		</if>
 		<if test="zbStartDate != null and zbStartDate != ''">
 			and t.FIRST_ZB_TIME>= #{zbStartDate}
@@ -89,14 +89,14 @@
 		<choose>
 			<when test="sort == 'desc'">order by t.BANJIAN_NUMBER desc</when>
 			<when test="sort == 'asc'"> order by t.BANJIAN_NUMBER ASC</when>
-			<otherwise>order by t.STATUS asc,IFNULL(t.LATEST_REPLY_TIME, '') desc, IFNULL(t.FIRST_ZB_TIME, '') desc, t.CREATED_TIME desc</otherwise>
+			<otherwise>order by t.STATUS asc,decode(t.LATEST_REPLY, null,2,1),IFNULL(t.LATEST_REPLY_TIME, '') desc, IFNULL(t.FIRST_ZB_TIME, '') desc, t.CREATED_TIME desc</otherwise>
 		</choose>
-		
+
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
 	</select>
-	
+
 	<select id="queryReplyList" resultType="com.css.app.db.business.entity.DocumentInfo">
 		select t.*,c.under_depts,d.* from DB_DOCUMENT_INFO t
 		left join (
@@ -108,12 +108,12 @@
         <if test="leaderId !=null and leaderId !=''">
         inner join (select info_id from (select info_id,row_number() over(partition by info_id order by created_time) as num from DB_DOCUMENT_SZPS where USER_ID=#{leaderId}
 	        <if test="psStartDate != null and psStartDate != ''">
-				and CREATED_TIME >= #{psStartDate} 
+				and CREATED_TIME >= #{psStartDate}
 			</if>
 			<if test="psEndDate != null and psEndDate != ''">
-				and CREATED_TIME &lt;= #{psEndDate} 
-			</if>) where num=1) v on t.id=v.info_Id 
-        </if>	
+				and CREATED_TIME &lt;= #{psEndDate}
+			</if>) where num=1) v on t.id=v.info_Id
+        </if>
 		<if test="orgId != null and orgId != ''" >
 			left join DB_SUB_DOC_INFO  dadi on t.id=dadi.INFO_ID
 		</if>
@@ -121,7 +121,7 @@
 		 <if test="orgId != null and orgId != '' ">
 			and dadi.SUB_DEPT_ID=#{orgId}
 		</if>
-		<if test="hasUpdate != null"> 
+		<if test="hasUpdate != null">
 			and t.LATEST_REPLY !='' and t.LATEST_REPLY is not null and t.id not in(select INFO_ID from DB_DOCUMENT_READ where USER_ID=#{loginUserId})
 		</if>
 		<if test="search != null and search != ''">
@@ -139,10 +139,10 @@
 		<if test="status != null and status != ''">
 			<choose>
                 <when test="status == 1">
-                    and t.STATUS=#{status} and t.LATEST_REPLY is not null
+                    and t.STATUS=1 and t.LATEST_REPLY is not null and (t.LATEST_REPLY !='' or t.LATEST_REPLY =' ')
                 </when>
                  <when test="status == 4">
-                    and t.STATUS=1 and t.LATEST_REPLY is null
+                    and t.STATUS=1 and (t.LATEST_REPLY is null or (t.LATEST_REPLY ='' and t.LATEST_REPLY !=' '))
                 </when>
                 <otherwise>
                    and t.STATUS=#{status}
@@ -153,10 +153,10 @@
 			and t.DOC_TYPE_ID=#{type}
 		</if>
 		<if test="startDate != null and startDate != ''">
-			and d.leader_time>= #{startDate} 
+			and d.leader_time>= #{startDate}
 		</if>
 		<if test="endDate != null and endDate != ''">
-			and d.leader_time &lt;= #{endDate} 
+			and d.leader_time &lt;= #{endDate}
 		</if>
 		<if test="zbStartDate != null and zbStartDate != ''">
 			and t.FIRST_ZB_TIME>= #{zbStartDate}
@@ -164,16 +164,16 @@
 		<if test="zbEndDate != null and zbEndDate != ''">
 			and t.FIRST_ZB_TIME &lt;= #{zbEndDate}
 		</if>
-		order by t.STATUS asc, decode(t.LATEST_REPLY, null,2,1),IFNULL(t.LATEST_REPLY_TIME, '') desc, IFNULL(t.FIRST_ZB_TIME, '') desc, t.CREATED_TIME desc		
+		order by t.STATUS asc, decode(t.LATEST_REPLY, null,2,1),IFNULL(t.LATEST_REPLY_TIME, '') desc, IFNULL(t.FIRST_ZB_TIME, '') desc, t.CREATED_TIME desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
 	</select>
-	
+
 	<select id="queryPersonList" resultType="com.css.app.db.business.entity.DocumentInfo">
-		WITH V_RESULT as(select SUB_ID from 
+		WITH V_RESULT as(select SUB_ID from
 		(select SUB_ID, row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num
-		from DB_SUB_DOC_TRACKING where 1=1 
+		from DB_SUB_DOC_TRACKING where 1=1
 		<if test="deptId !=null and deptId !=''">
 			and REC_DEPT_ID = #{deptId}
 		</if>
@@ -181,15 +181,15 @@
 			and RECEIVER_ID = #{loginUserId}
 		</if>)
 		where num =1),
-		
-		V_RESULT1 as(select SUB_ID from 
+
+		V_RESULT1 as(select SUB_ID from
 		(select SUB_ID, row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num
 		from DB_DOC_XB_INFO where 1=1 AND PUBLISH_FLAG = '0'
 		<if test="loginUserId !=null and loginUserId !=''">
 			and RECEIVER_ID = #{loginUserId}
-		</if>) 
+		</if>)
 		where num =1)
-		
+
 		select t.*,c.under_depts,d.* from DB_DOCUMENT_INFO t
 		left join DB_SUB_DOC_INFO  dadi on t.id=dadi.INFO_ID inner join (select * from V_RESULT union select * from V_RESULT1) a on dadi.id= a.sub_id
 		left join (select s.INFO_ID,s.USER_NAME as leader_name,s.LEADER_COMMENT as leader_content,s.CREATED_TIME as leader_time,
@@ -200,14 +200,14 @@
         <if test="leaderId !=null and leaderId !=''">
         	inner join (select info_id from (select info_id,row_number() over(partition by info_id order by created_time) as num from DB_DOCUMENT_SZPS where USER_ID=#{leaderId}
         	<if test="psStartDate != null and psStartDate != ''">
-				and CREATED_TIME >= #{psStartDate} 
+				and CREATED_TIME >= #{psStartDate}
 			</if>
 			<if test="psEndDate != null and psEndDate != ''">
-				and CREATED_TIME &lt;= #{psEndDate} 
+				and CREATED_TIME &lt;= #{psEndDate}
 			</if>) where num=1) v on t.id=v.info_Id
-        </if>	 
+        </if>
         where (d.dNum = 1 or d.dNum is null) and t.STATUS &gt; 0
-		<if test="hasUpdate != null"> 
+		<if test="hasUpdate != null">
 			and t.LATEST_REPLY !='' and t.LATEST_REPLY is not null and t.id not in(select INFO_ID from DB_DOCUMENT_READ where USER_ID=#{loginUserId})
 		</if>
 		<if test="search != null and search != ''">
@@ -225,10 +225,10 @@
 		<if test="status != null and status != ''">
 			<choose>
                 <when test="status == 1">
-                    and t.STATUS=#{status} and t.LATEST_REPLY is not null
+                    and t.STATUS=1 and t.LATEST_REPLY is not null and (t.LATEST_REPLY !='' or t.LATEST_REPLY =' ')
                 </when>
                  <when test="status == 4">
-                    and t.STATUS=1 and t.LATEST_REPLY is null
+                    and t.STATUS=1 and (t.LATEST_REPLY is null or (t.LATEST_REPLY ='' and t.LATEST_REPLY !=' '))
                 </when>
                 <otherwise>
                    and t.STATUS=#{status}
@@ -239,10 +239,10 @@
 			and t.DOC_TYPE_ID=#{type}
 		</if>
 		<if test="startDate != null and startDate != ''">
-			and d.leader_time>= #{startDate} 
+			and d.leader_time>= #{startDate}
 		</if>
 		<if test="endDate != null and endDate != ''">
-			and d.leader_time &lt;= #{endDate} 
+			and d.leader_time &lt;= #{endDate}
 		</if>
 		<if test="zbStartDate != null and zbStartDate != ''">
 			and t.FIRST_ZB_TIME>= #{zbStartDate}
@@ -256,7 +256,7 @@
 		</if>
 	</select>
 	<select id="queryDicByType" resultType="com.css.app.db.config.entity.DocumentDic">
-		select dic.*,nvl(s.num,0) hasUpdateNum from DB_DOCUMENT_DIC dic	
+		select dic.*,nvl(s.num,0) hasUpdateNum from DB_DOCUMENT_DIC dic
 		left join(select DOC_TYPE_ID, count(1) as num
 		from "DB_DOCUMENT_INFO" t
 		<if test="orgId != null and orgId != '' ">
@@ -264,20 +264,20 @@
 		</if>
 		<if test="deptId !=null and deptId !=''">
 			left join DB_SUB_DOC_INFO a on t.ID=a.INFO_ID
-			inner join ((select SUB_ID from 
+			inner join ((select SUB_ID from
 			(select SUB_ID, row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num
 			from DB_SUB_DOC_TRACKING where REC_DEPT_ID = #{deptId})
 			where num =1)
-			union( select SUB_ID from DB_DOC_XB_INFO nn where nn.PUBLISH_FLAG = '0' and nn.RECEIVER_ID = #{loginUserId} and #{loginUserId}!=nn.UNDERTAKER_ID and nn.RECEIVER_DEPT_ID = #{deptId}) 
+			union( select SUB_ID from DB_DOC_XB_INFO nn where nn.PUBLISH_FLAG = '0' and nn.RECEIVER_ID = #{loginUserId} and #{loginUserId}!=nn.UNDERTAKER_ID and nn.RECEIVER_DEPT_ID = #{deptId})
 			) b on a.ID = b.SUB_ID
 		</if>
 		<if test="loginUserId !=null and loginUserId !=''">
 			left join DB_SUB_DOC_INFO a on t.ID=a.INFO_ID
-			inner join ((select SUB_ID from 
+			inner join ((select SUB_ID from
 			(select SUB_ID, row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num
 			from DB_SUB_DOC_TRACKING where RECEIVER_ID = #{loginUserId})
 			where num =1)
-			union( select SUB_ID from DB_DOC_XB_INFO nn where nn.PUBLISH_FLAG = '0' and nn.RECEIVER_ID = #{loginUserId} and #{loginUserId} != nn.UNDERTAKER_ID) 
+			union( select SUB_ID from DB_DOC_XB_INFO nn where nn.PUBLISH_FLAG = '0' and nn.RECEIVER_ID = #{loginUserId} and #{loginUserId} != nn.UNDERTAKER_ID)
 			) b on a.ID = b.SUB_ID
 		</if>
 		where t.LATEST_REPLY !='' and t.LATEST_REPLY is not null
@@ -287,7 +287,7 @@
 		<if test="year != null">
 			and to_char(t.FIRST_ZB_TIME) like '%'||#{year}||'%'
 		</if>
-		and t.id not in ( select INFO_ID from DB_DOCUMENT_READ where USER_ID=#{userId}) group by t.DOC_TYPE_ID )s	
+		and t.id not in ( select INFO_ID from DB_DOCUMENT_READ where USER_ID=#{userId}) group by t.DOC_TYPE_ID )s
 		on dic.value = s.DOC_TYPE_ID
 		where dic.DIC_TYPE = #{docType} order by value asc
 	</select>
@@ -299,7 +299,17 @@
 			and ps.USER_ID=#{leaderId}
 		</if>
 		<if test="status !=null and status !=''">
-			and db.status=#{status}
+			<choose>
+                <when test="status == 1">
+                    and db.STATUS=1 and db.LATEST_REPLY is not null and (db.LATEST_REPLY !='' or db.LATEST_REPLY =' ')
+                </when>
+                 <when test="status == 4">
+                    and db.STATUS=1 and (db.LATEST_REPLY is null or (db.LATEST_REPLY ='' and db.LATEST_REPLY !=' '))
+                </when>
+                <otherwise>
+                   and db.STATUS=#{status}
+                </otherwise>
+            </choose>
 		</if>
 		<if test="type !=null and type !=''">
 			and db.DOC_TYPE_ID=#{type}
@@ -323,57 +333,61 @@
 	<!-- 统计图首长批示查询 -->
 	<select id="queryLeaderStatistics" resultType="com.css.app.db.business.dto.LeaderStatisticsDto">
 	 select b.user_id as leaderId, b.user_name as leaderName,nvl(t.blzCount, 0) as blzCount,nvl(t.ybjCount, 0) as ybjCount,nvl(t.ctlsCount, 0) as ctlsCount
-     from  DB_ROLE_SET b  
-	 left join (select shu.user_id as leaderId,shu.user_name as leaderName,isnull(sum(shu.blz), 0) as blzCount,isnull(sum(shu.bj), 0) as ybjCount,isnull(sum(shu.ctls), 0) as ctlsCount  
+     from  DB_ROLE_SET b
+	 left join (select shu.user_id as leaderId,shu.user_name as leaderName,isnull(sum(shu.blz), 0) as blzCount,isnull(sum(shu.bj), 0) as ybjCount,isnull(sum(shu.ctls), 0) as ctlsCount
 		from (select ddi.user_id,ddi.user_name,
 			(case when ddi.STATUS='1' then count(ddi.STATUS) else 0 end ) as blz,
 			(case when ddi.STATUS='2' then count(ddi.STATUS) else 0 end ) as bj,
 			(case when ddi.STATUS='3' then count(ddi.STATUS) else 0 end ) as ctls
 		         from(
-		             select ps.user_id,ps.user_name,ps.info_id,db.status, row_number() over(partition by ps.user_name,ps.info_id order by ps.CREATED_TIME) as num from "DB_DOCUMENT_SZPS" ps left join "DB_DOCUMENT_INFO" db on ps.info_id=db.id where db.status>0 
+		             select ps.user_id,ps.user_name,ps.info_id,db.status, row_number() over(partition by ps.user_name,ps.info_id order by ps.CREATED_TIME) as num from "DB_DOCUMENT_SZPS" ps left join "DB_DOCUMENT_INFO" db on ps.info_id=db.id where db.status>0
 		             <if test="yearOrMonth !=null and yearOrMonth !=''">
 		             	and ps.CREATED_TIME like '%'||#{yearOrMonth}||'%'
 		             </if>
 		             <if test="startDate != null and startDate != ''">
-						and ps.CREATED_TIME >= #{startDate} 
+						and ps.CREATED_TIME >= #{startDate}
 					 </if>
 					 <if test="endDate != null and endDate != ''">
-						and ps.CREATED_TIME &lt;= #{endDate} 
+						and ps.CREATED_TIME &lt;= #{endDate}
 					 </if>
 		             )  ddi where num = '1' group by ddi.user_id,ddi.user_name,ddi.STATUS
 	         )shu  group by shu.user_id,shu.user_name) t on b.USER_ID=t.leaderId where b.ROLE_FLAG ='1' order by b.sort asc
 	</select>
 
 	<select id="queryWfkLeaderStatistics" resultType="int">
-		select
-			count(a.ID)
-		from
-			DB_DOCUMENT_INFO a,
-			DB_DOCUMENT_SZPS b,
-			DB_ROLE_SET c
-		where a.ID = b.INFO_ID
-		and b.USER_ID = c.USER_ID
-		and c.ROLE_FLAG ='1'
-		and a.STATUS = '1'
-		and (a.LATEST_REPLY is null or a.LATEST_REPLY = '')
+        select count(0) from(
+            select
+            ps.user_id  ,
+            ps.user_name,
+            ps.info_id  ,
+            db.status   ,
+            row_number() over(partition by ps.user_name, ps.info_id order by ps.CREATED_TIME) as num
+        from
+        DB_DOCUMENT_SZPS ps left join DB_DOCUMENT_INFO db
+        on
+        ps.info_id=db.id
+        where
+        db.STATUS=1 and (db.LATEST_REPLY is null or (db.LATEST_REPLY ='' and db.LATEST_REPLY !=' '))
 		<if test="leaderId !=null and leaderId !=''">
-			and b.USER_ID = #{leaderId}
+			and ps.USER_ID = #{leaderId}
 		</if>
 		<if test="yearOrMonth !=null and yearOrMonth !=''">
-			and b.CREATED_TIME like '%'||#{yearOrMonth}||'%'
+			and ps.CREATED_TIME like '%'||#{yearOrMonth}||'%'
 		</if>
 		<if test="startDate != null and startDate != ''">
-			and b.CREATED_TIME >= #{startDate}
+			and ps.CREATED_TIME >= #{startDate}
 		</if>
 		<if test="endDate != null and endDate != ''">
-			and b.CREATED_TIME &lt;= #{endDate}
+			and ps.CREATED_TIME &lt;= #{endDate}
 		</if>
+        )
+        where num = 1
 	</select>
 
 	<!--根据年度获取每个状态的数量   CREATED_TIME暂为年度时间-->
 	<select id="queryListByYear" resultType="map">
 	select sum(blz+bj+ctls) as total,sum(blz) as blz,sum(bj) as bj,sum(ctls) as ctls from (
-		select 
+		select
          (case when ddi.STATUS='1' then count(ddi.STATUS) else 0 end ) as blz,
 	        (case when ddi.STATUS='2' then count(ddi.STATUS) else 0 end ) as bj,
 	        (case when ddi.STATUS='3' then count(ddi.STATUS) else 0 end ) as ctls
@@ -382,8 +396,8 @@
 		<if test="year != null">
 			and to_char(ddi.FIRST_ZB_TIME) like '%'||#{year}||'%'
 		</if>
-		
-		
+
+
 		group by ddi.STATUS
 		order by ddi.STATUS asc
 		)
@@ -439,10 +453,10 @@
 	select dic.TEXT as name,dic.value as type,ifnull(shu.num,0) as num
 		 from DB_DOCUMENT_DIC dic
 		left join
-	
+
 	(
 			select DOC_TYPE_ID,count(DOC_TYPE_ID) as num
-	        from DB_DOCUMENT_INFO  
+	        from DB_DOCUMENT_INFO
 			where 1=1 and FIRST_ZB_TIME is not null
 			<if test="search != null and search != ''">
 				and (DOC_TITLE like '%'||#{search}||'%' or BANJIAN_NUMBER  like '%'||#{search}||'%')
@@ -460,40 +474,41 @@
 			and (sz_read_ids not like '%'||#{isnotuserid}||'%' or sz_read_ids is null)
 			</if>
 			GROUP by DOC_TYPE_ID
-	)shu on dic.value=shu.DOC_TYPE_ID where dic.DIC_TYPE='document_type' 
+	)shu on dic.value=shu.DOC_TYPE_ID where dic.DIC_TYPE='document_type'
 	<if test="type != null and type != ''">
 				and dic.VALUE=#{type}
 			</if>
 	order by dic.value asc
 	</select>
-	
-	
-	
+
+
+
 	<select id="queryListByDicStu" resultType="map">
 	select  dic.TEXT as name,
         isnull(sum(shu.bj +shu.ctls), 0)          as bj  ,
         isnull(sum(shu.blz+shu.bj+shu.ctls), 0) as total
 		 from DB_DOCUMENT_DIC dic
 		left join
-	
+
 	(
 			select ddi.DOC_TYPE_ID,
 	        (case when ddi.STATUS='1' then count(ddi.STATUS) else 0 end ) as blz,
 	        (case when ddi.STATUS='2' then count(ddi.STATUS) else 0 end ) as bj,
 	        (case when ddi.STATUS='3' then count(ddi.STATUS) else 0 end ) as ctls
-	        
+
 	        from DB_DOCUMENT_INFO  ddi where  ddi.FIRST_ZB_TIME is not null
 	        <if test="search != null and search != ''">
 			and (ddi.DOC_TITLE like '%'||#{search}||'%' or ddi.BANJIAN_NUMBER  like '%'||#{search}||'%')
 			</if>
 			group by ddi.DOC_TYPE_ID,ddi.STATUS
-			
-	)shu on dic.value=shu.DOC_TYPE_ID where dic.DIC_TYPE='document_type' group by dic.DIC_TYPE,dic.text  
+
+	)shu on dic.value=shu.DOC_TYPE_ID where dic.DIC_TYPE='document_type' group by dic.DIC_TYPE,dic.text
 	</select>
-	
+
 	<select id="queryListByDicStutas" resultType="map">
 	select ddi.DOC_TYPE_ID,
 	        (case when ddi.STATUS='1' then count(ddi.STATUS) else 0 end ) as blz,
+	        (case when ddi.STATUS='1' then count(ddi.STATUS) else 0 end ) as wfk,
 	        (case when ddi.STATUS='2' then count(ddi.STATUS) else 0 end ) as bj,
 	        (case when ddi.STATUS='3' then count(ddi.STATUS) else 0 end ) as ctls
 	         
@@ -502,13 +517,13 @@
 	        and ddi.DOC_TYPE_ID=#{type}
 			group by ddi.DOC_TYPE_ID,ddi.STATUS 
 	</select>
-	
-	
-	
+
+
+
  	<select id="queryTotal" resultType="int">
 		select count(*) from DB_DOCUMENT_INFO 
 	</select>
-	 
+
  	<select id="getMaxSecurity" resultType="java.lang.String">
  	SELECT TEXT FROM DB_DOCUMENT_DIC WHERE DIC_TYPE='SECURITY_CLASSIFICATION' AND VALUE=(
 	SELECT MAX(SECURITY_ID) FROM DB_DOCUMENT_INFO WHERE ID IN
@@ -587,9 +602,9 @@
 			#{period}
 		)
 	</insert>
-	 
+
 	<update id="update" parameterType="com.css.app.db.business.entity.DocumentInfo">
-		update DB_DOCUMENT_INFO 
+		update DB_DOCUMENT_INFO
 		<set>
 			<if test="docTitle != null">"DOC_TITLE" = #{docTitle}, </if>
 			<if test="securityId != null">"SECURITY_ID" = #{securityId}, </if>
@@ -641,9 +656,9 @@
 	<delete id="delete">
 		delete from DB_DOCUMENT_INFO where ID = #{value}
 	</delete>
-	
+
 	<delete id="deleteBatch">
-		delete from DB_DOCUMENT_INFO where ID in 
+		delete from DB_DOCUMENT_INFO where ID in
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
 		</foreach>

@@ -64,8 +64,8 @@ public class DocumentSzInfoController {
 	{"id":"01","name":"军委主席重要批示","count":"10"},
 	{"id":"02","name":"军委主席重要批示","count":"10"},
 	{"id":"03","name":"军委主席重要批示","count":"10"}
-]
-
+	]
+	注：数字统计的是首长未读的
 	 */
 	@ResponseBody
 	@RequestMapping("/grouplist")
@@ -92,80 +92,68 @@ public class DocumentSzInfoController {
 				
 			}
 		}
-		//jo2.put("valdata", valdata);
 		Response.json(valdata);
 	}
 	
-	
-	/**
-	 * 列表查询
-	 * type//属于六大指标的类型
-	 * orgid//单位id
-	 * 
-	 * 
-	 * "total":100,
-		"page":1,
-		"rows":[       
-					{
-						"id":"01",
-						"blzt":"0",
-						"jwbjh":"【2019】办01",
-						"title":"关于十九大讲话的学习安排的报告",
-						"pszsmr":"此文件十分重要，需要在5月份前办理完成，希望一处主办。",
-						"dblsqk":"此文件十分重要，需要在5月份前办理完成，希望一处主办。",
-						"cbdwry":"计划局/李丽(3716688)",
-						"update":"2018-4-10 12:00",
-						"zbdate":"2018-4-10 12:00",
-						"other":0
-					}]
-	 * 
-	 */
 	@ResponseBody
-	@RequestMapping("/list")
-	public void list(Integer page, Integer pagesize,String search,String type,String orgid){
-		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	@RequestMapping("/homeListNum")
+	public void homelist(String search,String id ,String month,String year,String orgid,String isMain){
+		long [] arr = {0,0,0,0,0,0};
+		SimpleDateFormat sdf3=new SimpleDateFormat("yyyy");
 		String userid=CurrentUser.getUserId();
+		String agentLeagerId = adminSetService.getAgentLeagerId(userid);//挂接首长id
+		if(StringUtils.isNotBlank(agentLeagerId)) {
+			userid=agentLeagerId;
+		}
 		Map<String, Object> map = new HashMap<>();
-		map.put("offset", ((page - 1) * pagesize));
-		map.put("limit", pagesize);
-		
-		
 		map.put("search", search);
 		map.put("docStatus", "2");
-		map.put("type", type);
-		map.put("orgid", orgid);
-		//PageHelper.startPage(page, pagesize);
-		List<DocumentInfo> infoList = documentInfoService.queryList(map);
-		map.remove("offset");
-		map.remove("limit");
-		JSONObject jo=new JSONObject();
-		JSONArray ja=new JSONArray();
-		for (DocumentInfo documentInfo : infoList) {
-			jo=new JSONObject();
-			jo.put("id", documentInfo.getId());
-			jo.put("blzt", documentInfo.getStatus());
-			jo.put("jwbjh", documentInfo.getBanjianNumber());
-			jo.put("title", documentInfo.getDocTitle());
-			jo.put("pszsmr",documentInfo.getJobContent() );
-			jo.put("dblsqk","" );
-			jo.put("cbdwry","" );
-			jo.put("update",sdf.format(documentInfo.getCreatedTime()) );
-			jo.put("zbdate",sdf.format(documentInfo.getCreatedTime()) );
-			String sz=documentInfo.getSzReadIds();
-			if(StringUtils.isEmpty(sz)||!(sz).contains(userid)) {
-				jo.put("other","0");
-			}else {				
-				jo.put("other","1");
+		map.put("type", id);
+		if(StringUtil.isEmpty(isMain)&&StringUtil.isEmpty(year)) {
+			int mon=Calendar.MONTH+1;
+			year=sdf3.format(new Date());
+			if(StringUtil.isEmpty(month)) {				
+				year+="-"+(mon<10?"0"+mon:mon+"");
+			}else if(!StringUtil.equals("all", month)){
+				year+="-"+month;
 			}
-			ja.add(jo);
 		}
-		infoList = documentInfoService.queryList(map);
-		JSONObject jo2=new JSONObject();
-		jo2.put("total",infoList==null?0:infoList.size());
-		jo2.put("page",page);
-		jo2.put("rows",ja);
-		//GwPageUtils pageUtil = new GwPageUtils(infoList);
-		Response.json(jo2);
+		map.put("orgid", orgid);
+		map.put("year", year);
+		List<DocumentInfo> infoList = documentInfoService.queryList(map);		
+		if(StringUtils.isNotBlank(id)) {			
+			map = new HashMap<>();
+			map.put("type", id);
+			map.put("search", search);
+			map.put("isnotuserid", userid);
+			map.put("status2", "0");
+			map.put("latestreply", "0");
+			List<Map<String, Object>> genxinList = documentInfoService.queryListByDicType(map);
+			if (genxinList!=null&&genxinList.size()>0) {
+				for (Map<String, Object> map2 : genxinList) {
+					arr[5]=(long) map2.get("num");
+				}
+			}
+		}
+		arr[0]=infoList.size();
+		for (DocumentInfo info : infoList) {
+			Integer restatus = info.getStatus();
+			String latestReply = info.getLatestReply();
+			if(1==restatus) {
+				if(StringUtils.isNotEmpty(latestReply)) {
+					arr[1]+=1;
+				}else {
+					arr[4]+=1;
+				}
+			}
+			if(2==restatus){
+				arr[2]+=1;
+			}
+			if(3==restatus){
+				arr[3]+=1;
+			}
+		}
+		Response.json(arr);
 	}
 	
 	/**
@@ -205,7 +193,7 @@ public class DocumentSzInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/homelist")
-	public void homelist(Integer page, Integer pagesize,String search,String id ,String state,String month,String year,String orgid,String isMain,String sorttype){
+	public void homelist(Integer page, Integer pagesize,String search,String id ,String state,String month,String year,String orgid,String isMain){
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		//SimpleDateFormat sdf2=new SimpleDateFormat("yyyy年MM月dd日");
 		SimpleDateFormat sdf3=new SimpleDateFormat("yyyy");
@@ -218,12 +206,9 @@ public class DocumentSzInfoController {
 		Map<String, Object> map = new HashMap<>();
 		map.put("search", search);
 		map.put("docStatus", "2");
-		map.put("jz", "1");
 		map.put("type", id);
 		if(StringUtils.isNotBlank(state)) {
-			if("0".equals(state)) {
-				
-				map.put("state2", "0");
+			if("5".equals(state)) {
 				map.put("latestReply", "0");
 				map.put("isnotuserid", userid);
 			}else {
@@ -241,22 +226,16 @@ public class DocumentSzInfoController {
 		}
 		map.put("orgid", orgid);
 		map.put("year", year);
-		map.put("sorttype", sorttype);
-		//PageHelper.startPage(page, pagesize);
 		map.put("offset", ((page - 1) * pagesize));
 		map.put("limit", pagesize);
-		List<DocumentInfo> infoList = documentInfoService.queryList(map);
-		
-		
+		List<DocumentInfo> infoList = documentInfoService.queryList(map);		
 		map.remove("offset");
 		map.remove("limit");
 		List<DocumentInfo> infoallList = documentInfoService.queryList(map);
-		JSONObject numjo=new JSONObject();
-		if(StringUtils.isNotBlank(id)) {
-			
+		if(StringUtils.isNotBlank(id)) {			
 			map = new HashMap<>();
 			map.put("type", id);
-			List<Map<String, Object>> infoMap = documentInfoService.queryListByDicStutas(map);
+			/*List<Map<String, Object>> infoMap = documentInfoService.queryListByDicStutas(map);
 			long blz=0;
 			long bj=0;
 			long ctls=0;
@@ -270,7 +249,8 @@ public class DocumentSzInfoController {
 				jo2.put("count2", blz);
 				jo2.put("count3", bj);
 				jo2.put("count4", ctls);
-			}
+				jo2.put("count5", 0);
+			}*/
 			map.put("search", search);
 			map.put("isnotuserid", userid);
 			map.put("status2", "0");
@@ -278,14 +258,32 @@ public class DocumentSzInfoController {
 			List<Map<String, Object>> genxinList = documentInfoService.queryListByDicType(map);
 			if (genxinList!=null&&genxinList.size()>0) {
 				for (Map<String, Object> map2 : genxinList) {
-					jo2.put("count5", (long) map2.get("num"));
+					jo2.put("count6", (long) map2.get("num"));
 					
 				}
 			}
 		}
-		
-		
-	
+		int blz=0;
+		int wfk=0;
+		int bj=0;
+		int ctls=0;
+		for (DocumentInfo info : infoallList) {
+			Integer restatus = info.getStatus();
+			String latestReply = info.getLatestReply();
+			if(1==restatus) {
+				if(StringUtils.isNotEmpty(latestReply)) {
+					blz+=1;
+				}else {
+					wfk+=1;
+				}
+			}
+			if(2==restatus){
+				bj+=1;
+			}
+			if(3==restatus){
+				ctls+=1;
+			}
+		}
 		JSONObject jo=new JSONObject();
 		JSONArray ja=new JSONArray();
 		Map<String, Object> danweimap = new HashMap<>();
@@ -298,7 +296,10 @@ public class DocumentSzInfoController {
 			jo.put("period", documentInfo.getPeriod());
 			jo.put("printDate", documentInfo.getPrintDate());
 			jo.put("lssx", documentInfo.getJobContent());
+			jo.put("lssx", documentInfo.getJobContent());
 			String sz=documentInfo.getSzReadIds();
+			String latestReply = documentInfo.getLatestReply();
+			jo.put("latestReply",latestReply);
 			if(StringUtils.isNotBlank(documentInfo.getLeaderName())) {
 				jo.put("pszsmr", documentInfo.getLeaderName()+" " +(documentInfo.getLeaderTime()==null?"":documentInfo.getLeaderTime())+"批示：" +documentInfo.getLeaderContent());
 				//jo.put("pszsmr", "");				
@@ -325,9 +326,9 @@ public class DocumentSzInfoController {
 				jo.put("other","2");//不显示催办和是否已读按钮
 				//jo.put("other","1" );//是否催办    1显示      0不显示
 				jo.put("CuibanFlag","0" );//是否催办    1显示      0不显示
-			}else if(StringUtils.isBlank(documentInfo.getLatestReply())&&StringUtils.equals("0", documentInfo.getCuibanFlag())){//无局长意见也无催办操作时,显示催办按钮
+			}else if(StringUtils.isBlank(latestReply)&&StringUtils.equals("0", documentInfo.getCuibanFlag())){//无局长意见也无催办操作时,显示催办按钮
 				jo.put("other","1");//显示催办按钮
-			}else if(StringUtils.isBlank(documentInfo.getLatestReply())&&StringUtils.equals("1", documentInfo.getCuibanFlag())){//无局长意见有催办操作时,显示催办按钮
+			}else if(StringUtils.isBlank(latestReply)&&StringUtils.equals("1", documentInfo.getCuibanFlag())){//无局长意见有催办操作时,显示催办按钮
 				jo.put("other","2");//不显示催办和确认按钮
 			}else {//办理中   有局长意见
 				if(StringUtils.isEmpty(sz)||!(sz).contains(userid)) {
@@ -349,16 +350,15 @@ public class DocumentSzInfoController {
 			String gengxin="0";
 			String cbdw=documentInfo.getLatestSubDept()==null?"":documentInfo.getLatestSubDept();
 			String cbry=documentInfo.getLatestUndertaker()==null?"":documentInfo.getLatestUndertaker();
-			String cont=documentInfo.getLatestReply()==null?"":documentInfo.getLatestReply();
 			
 			//LATEST_REPLY
-			if((StringUtils.isEmpty(sz)||!(sz).contains(userid))&&StringUtils.isNotBlank(cont)) {//有局长审批意见,但sz不包含该首长userid,显示已更新
+			if((StringUtils.isEmpty(sz)||!(sz).contains(userid))&&StringUtils.isNotBlank(latestReply)) {//有局长审批意见,但sz不包含该首长userid,显示已更新
 				gengxin="1";//已更新显示
 			}
 			
 			
 			jo.put("gengxin",gengxin);//已更新显示
-			jo.put("dblsqk",StringUtils.isBlank(cont)?"":cont);
+			jo.put("dblsqk",StringUtils.isBlank(latestReply)?"":latestReply);
 			if("".equals(cbdw)) {
 				jo.put("cbdwry","");
 				yijianjo.put("dw","");
@@ -372,14 +372,12 @@ public class DocumentSzInfoController {
 				cbry=StringUtils.isBlank(cbry)?"":cbry;
 				yijianjo.put("dw",cbdw);
 				yijianjo.put("ry", cbry);
-				yijianjo.put("cont", StringUtils.isBlank(cont)?"":cont);
+				yijianjo.put("cont", StringUtils.isBlank(latestReply)?"":latestReply);
 				yijianjo.put("dwry", StringUtils.isBlank(cbdw)?"":cbdw+"-"+cbry+":");
 				yijianja.add(yijianjo);
 				jo.put("cbdwry",StringUtils.isBlank(cbdw)?"":(cbdw+"/"+cbry));	
 				
-			}
-			
-			
+			}			
 			jo.put("array",yijianja);//
 			jo.put("miji",documentInfo.getSecurityClassification());
 			jo.put("tbdw","新增");
@@ -387,11 +385,13 @@ public class DocumentSzInfoController {
 			ja.add(jo);
 		}
 		
-		
+		jo2.put("count2", blz);
+		jo2.put("count3", bj);
+		jo2.put("count4", ctls);
+		jo2.put("count5", wfk);
 		jo2.put("total",infoallList==null?0:infoallList.size());
 		jo2.put("page",page);
 		jo2.put("rows",ja);
-		jo2.put("num",numjo);
 		//GwPageUtils pageUtil = new GwPageUtils(infoList);
 		//Response.json(pageUtil);
 		Response.json(jo2);
