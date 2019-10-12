@@ -646,7 +646,18 @@ var pageModule = function(){
 						return;
 					}
 				}
-				
+				//-------------------gkt
+				var replyContent=$("#replyContent").val();
+				var len = replyContent.split(" ").join("").length;
+				if(replyContent == "" || replyContent== null || replyContent == "undefined"){
+					newbootbox.alert("反馈不能为空！");
+					return;
+				}
+		    	if(len===0){
+					newbootbox.alert("反馈不能全是空格！");
+					return;
+				}
+		    	//----------------gkt
 				newbootbox.newdialog({
 					id:"statusDialog",
 					width:550,
@@ -738,6 +749,17 @@ var pageModule = function(){
 		$("#send").click(function(){
 			var cbrFlag="";
 			var replyContent = $("#replyContent").val();
+			//----------------gkt
+			var len = replyContent.split(" ").join("").length;
+	    	if(replyContent == "" || replyContent== null || replyContent == "undefined"){
+				newbootbox.alert("反馈不能为空！");
+				return;
+			}
+	    	if(len===0){
+				newbootbox.alert("反馈不能全是空格！");
+				return;
+			}
+	    	//----------------gkt
 			if(isCbr && isCbr == 1){ //承办人
 				cbrFlag="1";
 				if(replyContent !="" && !!replyContent){
@@ -855,6 +877,19 @@ var pageModule = function(){
 		
 		//转办
 		$("#zhuanban").click(function(){
+			//----------------gkt
+			if(!$("#replyContent").is(':hidden')){  // 显示是判断
+				var replyContent=$("#replyContent").val();
+		    	var len = replyContent.split(" ").join("").length;
+		    	if(replyContent == "" || replyContent== null || replyContent == "undefined"){
+					newbootbox.alert("反馈不能为空！");
+					return;
+				}
+		    	if(len===0){
+					newbootbox.alert("反馈不能全是空格！");
+					return;
+				}
+			}
 			newbootbox.newdialog({
 				id:"zhuanbanDialog",
 				width:800,
@@ -864,6 +899,7 @@ var pageModule = function(){
 				classed:"cjDialog",
 				url:"/app/db/document/jndb/html/zhuanbandx.html?subId="+subId+"&infoId="+fileId+"&fileFrom="+fileFrom+"&fromMsg="+fromMsg
 			})
+			//----------------gkt
 		});
 		
 		//范例
@@ -939,10 +975,17 @@ var pageModule = function(){
 		$("#commentForm").validate({
 		    submitHandler: function() {
 		    	var replyContent=$("#replyContent").val();
+		    	//----------------gkt
+		    	var len = replyContent.split(" ").join("").length;
 		    	if(replyContent == "" || replyContent== null || replyContent == "undefined"){
 					newbootbox.alert("反馈不能为空！");
 					return;
 				}
+		    	if(len===0){
+					newbootbox.alert("反馈不能全是空格！");
+					return;
+				}
+		    	//----------------gkt
 		    	$("#editTeamId").val($(".isEditbtn").attr("data"));
 		    	var ajax_option = {
 					url : saveUrl.url,// 默认是form action
