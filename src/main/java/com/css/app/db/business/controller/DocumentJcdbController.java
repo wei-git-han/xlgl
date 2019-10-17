@@ -111,7 +111,7 @@ public class DocumentJcdbController {
 				wfk= wfkCount;
 			}
 		}
-		jo.put("blz", blz);
+		jo.put("blz", blz < 0 ? 0 : blz);
 		jo.put("bj", bj);
 		jo.put("ctls", ctls);
 		jo.put("total", total);
@@ -186,7 +186,8 @@ public class DocumentJcdbController {
 				//增加未反馈
 				jo.put("wfk",wfkCount);
 				//原办理中数据-未反馈量 = 现办理中数据
-				jo.put("blz", (long) map2.get("blz") - (long)wfkCount);
+				long blz = (long) map2.get("blz") - (long) wfkCount;
+				jo.put("blz", blz < 0 ? 0 : blz);
 				jo.put("id",danweiid);
 				jo.put("dwname", (String) map2.get("dwname"));
 				
@@ -316,7 +317,8 @@ public class DocumentJcdbController {
 					bjdata.add((long) map2.get("bj"));
 					ctlsdata.add((long) map2.get("ctls"));
 					int wfkCount = queryWfkCount(danweiid, year);
-					blzdata.add((long) map2.get("blz") - wfkCount);
+					long blz = (long) map2.get("blz") - wfkCount;
+					blzdata.add(blz < 0 ? 0 : blz);
 					wfkdata.add(wfkCount);
 				}
 				

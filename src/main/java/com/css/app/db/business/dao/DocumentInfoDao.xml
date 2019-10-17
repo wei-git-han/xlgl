@@ -436,14 +436,14 @@
 		select
 			count(a.id)
 		from
-		DB_DOCUMENT_INFO a, DB_SUB_DOC_INFO b
-		where a.ID = b.INFO_ID
-		and a.STATUS = '1'
-		and (a.LATEST_REPLY is  null or a.LATEST_REPLY  = '')
-		and a.FIRST_ZB_TIME is not null
+		DB_DOCUMENT_INFO a
 		<if test="danweiid != null and danweiid != ''">
+			inner join DB_SUB_DOC_INFO b on a.ID = b.INFO_ID
 			and b.SUB_DEPT_ID = #{danweiid}
 		</if>
+		where a.STATUS = '1'
+		and (a.LATEST_REPLY is  null or a.LATEST_REPLY  = '')
+		and a.FIRST_ZB_TIME is not null
 		<if test="year != null and year != ''">
 			and to_char(a.CREATED_TIME) like '%'||#{year}||'%'
 		</if>
