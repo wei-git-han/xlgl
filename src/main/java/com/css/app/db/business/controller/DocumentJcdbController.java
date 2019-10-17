@@ -476,6 +476,7 @@ public class DocumentJcdbController {
 
 
 			List<LeaderStatisticsDto> leaderStatisticsDtos = documentInfoService.queryLeaderStatistics(map);
+
 			leaderStatisticsDtos.forEach(leaderStatisticsDto -> {
 				String leaderId = leaderStatisticsDto.getLeaderId();
 				map.put("leaderId", leaderId);
