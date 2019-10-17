@@ -139,10 +139,10 @@
 		<if test="status != null and status != ''">
 			<choose>
                 <when test="status == 1">
-                    and t.STATUS=1 and t.LATEST_REPLY is not null and (t.LATEST_REPLY !='' or t.LATEST_REPLY =' ')
+                    and t.STATUS=1 and t.LATEST_REPLY is not null and (t.LATEST_REPLY !='' or t.LATEST_REPLY !=' ')
                 </when>
                  <when test="status == 4">
-                    and t.STATUS=1 and (t.LATEST_REPLY is null or (t.LATEST_REPLY ='' and t.LATEST_REPLY !=' '))
+                    and t.STATUS=1 and (t.LATEST_REPLY is null or t.LATEST_REPLY ='' or t.LATEST_REPLY ==' ')
                 </when>
                 <otherwise>
                    and t.STATUS=#{status}
