@@ -473,6 +473,8 @@ public class DocumentJcdbController {
 				map.put("startDate",startDate);
 				map.put("endDate",endDate);
 			}
+
+
 			List<LeaderStatisticsDto> leaderStatisticsDtos = documentInfoService.queryLeaderStatistics(map);
 			leaderStatisticsDtos.forEach(leaderStatisticsDto -> {
 				String leaderId = leaderStatisticsDto.getLeaderId();
