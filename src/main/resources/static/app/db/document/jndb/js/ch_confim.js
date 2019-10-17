@@ -19,6 +19,9 @@ var pageModule = function(){
 		 					newbootbox.newdialogClose("ch_confim");
 		 					newbootbox.alertInfo('撤回失败！');
 		 				}
+		 				window.top.jndbfn();
+						window.top.grdbfn();
+						window.top.blfkfn();
 		 			}
 		 		});	
 			}else{

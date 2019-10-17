@@ -402,8 +402,8 @@ var pageModule = function(){
 				        {
 				            name:'落实事项',
 				            type:'pie',
-				            center:['50%', '40%'],
-				            radius : ['30%', '50%'],
+				            center:['50%', '42%'],
+				            radius : ['30%', '48%'],
 				            itemStyle : {
 							    normal: {
 							        label:{
