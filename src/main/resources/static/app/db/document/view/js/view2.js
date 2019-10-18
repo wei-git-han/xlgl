@@ -647,16 +647,16 @@ var pageModule = function(){
 					}
 				}
 				//-------------------gkt
-				var replyContent=$("#replyContent").val();
-				var len = replyContent.split(" ").join("").length;
-				if(replyContent == "" || replyContent== null || replyContent == "undefined"){
-					newbootbox.alert("反馈不能为空！");
-					return;
-				}
-		    	if(len===0){
-					newbootbox.alert("反馈不能全是空格！");
-					return;
-				}
+//				var replyContent=$("#replyContent").val();
+//				var len = replyContent.split(" ").join("").length;
+//				if(replyContent == "" || replyContent== null || replyContent == "undefined"){
+//					newbootbox.alert("反馈不能为空！");
+//					return;
+//				}
+//		    	if(len===0){
+//					newbootbox.alert("反馈不能全是空格！");
+//					return;
+//				}
 		    	//----------------gkt
 				newbootbox.newdialog({
 					id:"statusDialog",
@@ -750,15 +750,15 @@ var pageModule = function(){
 			var cbrFlag="";
 			var replyContent = $("#replyContent").val();
 			//----------------gkt
-			var len = replyContent.split(" ").join("").length;
-	    	if(replyContent == "" || replyContent== null || replyContent == "undefined"){
-				newbootbox.alert("反馈不能为空！");
-				return;
-			}
-	    	if(len===0){
-				newbootbox.alert("反馈不能全是空格！");
-				return;
-			}
+//			var len = replyContent.split(" ").join("").length;
+//	    	if(replyContent == "" || replyContent== null || replyContent == "undefined"){
+//				newbootbox.alert("反馈不能为空！");
+//				return;
+//			}
+//	    	if(len===0){
+//				newbootbox.alert("反馈不能全是空格！");
+//				return;
+//			}
 	    	//----------------gkt
 			if(isCbr && isCbr == 1){ //承办人
 				cbrFlag="1";
@@ -878,18 +878,18 @@ var pageModule = function(){
 		//转办
 		$("#zhuanban").click(function(){
 			//----------------gkt
-			if(!$("#replyContent").is(':hidden')){  // 显示是判断
-				var replyContent=$("#replyContent").val();
-		    	var len = replyContent.split(" ").join("").length;
-		    	if(replyContent == "" || replyContent== null || replyContent == "undefined"){
-					newbootbox.alert("反馈不能为空！");
-					return;
-				}
-		    	if(len===0){
-					newbootbox.alert("反馈不能全是空格！");
-					return;
-				}
-			}
+//			if(!$("#replyContent").is(':hidden')){  // 显示是判断
+//				var replyContent=$("#replyContent").val();
+//		    	var len = replyContent.split(" ").join("").length;
+//		    	if(replyContent == "" || replyContent== null || replyContent == "undefined"){
+//					newbootbox.alert("反馈不能为空！");
+//					return;
+//				}
+//		    	if(len===0){
+//					newbootbox.alert("反馈不能全是空格！");
+//					return;
+//				}
+//			}
 			newbootbox.newdialog({
 				id:"zhuanbanDialog",
 				width:800,
@@ -976,15 +976,15 @@ var pageModule = function(){
 		    submitHandler: function() {
 		    	var replyContent=$("#replyContent").val();
 		    	//----------------gkt
-		    	var len = replyContent.split(" ").join("").length;
+//		    	var len = replyContent.split(" ").join("").length;
 		    	if(replyContent == "" || replyContent== null || replyContent == "undefined"){
 					newbootbox.alert("反馈不能为空！");
 					return;
 				}
-		    	if(len===0){
-					newbootbox.alert("反馈不能全是空格！");
-					return;
-				}
+//		    	if(len===0){
+//					newbootbox.alert("反馈不能全是空格！");
+//					return;
+//				}
 		    	//----------------gkt
 		    	$("#editTeamId").val($(".isEditbtn").attr("data"));
 		    	var ajax_option = {
