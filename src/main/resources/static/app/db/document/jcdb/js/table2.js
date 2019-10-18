@@ -14,6 +14,9 @@ var pageModule = function(){
     				var button1;
     				if(rowdata.status==1){
     					button1 = '<button type="button" class="btn btn-info table-button1">办理中</button>';
+						if( rowdata.latestReply==""){
+							button1 = '<button type="button" class="btn btn-info table-button1">未反馈</button>';
+						}
     				}else if(rowdata.status==3){
     					button1 = '<button type="button" class="btn btn-info table-button2">常态落实</button>';
     				}else{

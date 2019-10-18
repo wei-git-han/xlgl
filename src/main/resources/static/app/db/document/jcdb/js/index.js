@@ -392,8 +392,8 @@ var pageModule = function(){
 				    },
 				    legend: {
 				    	textStyle:{color: '#C8D3FF'},
-//				        orient : 'vertical',
-				        y : '75%',
+				        // orient : 'vertical',
+				             y : '75%',
 //				        bottom:'bottom',
 				        data:legend
 				    },
@@ -412,7 +412,8 @@ var pageModule = function(){
 							        	textStyle:{
 							        		fontWeight:"bold"
 							        	}
-							        }
+							        },
+									labelLine:{show:true,length:20},
 							    },
 				            },
 				            data:valdata

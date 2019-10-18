@@ -484,6 +484,7 @@ public class DocumentJcdbController {
 				map.put("leaderId", leaderId);
 				//现办理中 = 原办理中 - 未反馈
 				int wfkLeaderStatistics = this.queryWfkLeaderStatistics(map);
+				Integer blzCount1 = leaderStatisticsDto.getBlzCount();
 				int blzCount = leaderStatisticsDto.getBlzCount() - wfkLeaderStatistics;
 				leaderStatisticsDto.setBlzCount(blzCount < 0 ? 0 : blzCount);
 				leaderStatisticsDto.setWfkCount(wfkLeaderStatistics);
