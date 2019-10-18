@@ -402,6 +402,9 @@ var pageModule = function(){
 				        {
 				            name:'落实事项',
 				            type:'pie',
+				            //解决遮挡问题
+				            minAngle:20,
+				            avoidLabelOverlap:true,
 				            center:['50%', '42%'],
 				            radius : ['30%', '48%'],
 				            itemStyle : {
