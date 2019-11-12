@@ -16,4 +16,4 @@ include 'api'
 include 'services:webservice'
 */
 
-rootProject.name = 'zf_one_number_app'
+rootProject.name = 'db_app'
