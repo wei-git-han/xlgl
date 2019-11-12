@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.css.base.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -142,19 +143,19 @@ public class ExportController{
 			}											
 			exportDataMap.put("banjianNumber", documentInfo.getBanjianNumber()==null?"":documentInfo.getBanjianNumber());// 军 委办件号：
 			exportDataMap.put("docCode", documentInfo.getDocCode()==null?"":documentInfo.getDocCode());//文件号：
-			exportDataMap.put("docTitle", documentInfo.getDocTitle());// 文件标题
+			exportDataMap.put("docTitle", documentInfo.getDocTitle().replace("<","&lt;").replace(">","&gt;"));// 文件标题
 			exportDataMap.put("printDate", documentInfo.getPrintDate()==null?"":documentInfo.getPrintDate());// 印发时间
 			exportDataMap.put("jobContent", documentInfo.getJobContent()==null?"":documentInfo.getJobContent());// 工作分工内容
 			exportDataMap.put("status", statusName);// 办理状态 (0:还未转办1：办理中；2：办结：3：常态落实）
-			exportDataMap.put("leaderComment", commentBuilder.toString());// 批示指示内容
-			exportDataMap.put("replyComment", replyBuilder.toString());// 督办落实情况
-			exportDataMap.put("subInfoComment", subInfoBuilder.toString());// 承办单位人员
+			exportDataMap.put("leaderComment", StringUtils.isNotBlank(commentBuilder.toString().replace("\tnull","")) ? commentBuilder.toString().replace("<","&lt;").replace(">","&gt;") : "");// 批示指示内容
+			exportDataMap.put("replyComment",  StringUtils.isNotBlank(replyBuilder.toString().replace("\tnull","")) ? replyBuilder.toString().replace("<","&lt;").replace(">","&gt;") : "");// 督办落实情况
+			exportDataMap.put("subInfoComment",  StringUtils.isNotBlank(subInfoBuilder.toString().replace("\tnull","")) ? subInfoBuilder.toString().replace("<","&lt;").replace(">","&gt;") : "");// 承办单位人员
 			exportDataMap.put("period", documentInfo.getPeriod());// 期数
 			exportDataMap.put("security",security);//秘籍
 			exportDataLis.add(exportDataMap);
 		}
 
-		InputStream is = null;
+		InputStream is = null; 
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		try {
 			String docTypeId = documentInfo.getDocTypeId();

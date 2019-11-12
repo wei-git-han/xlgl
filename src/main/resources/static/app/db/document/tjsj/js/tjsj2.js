@@ -14,9 +14,12 @@ var pageModule = function(){
             columns:[
             	{display:"状态",name:"",width:"9%",align:"center",render:function(rowdata,n){
     				var button1;
-    				if(rowdata.status==1){
-    					button1 = '<button type="button" class="btn btn-info table-button1">办理中</button>';
-    				}else if(rowdata.status==3){
+					if(rowdata.status==1){
+						button1 = '<button type="button" class="btn btn-info table-button1">办理中</button>';
+						if( rowdata.latestReply==""){
+							button1 = '<button type="button" class="btn btn-info table-button1">未反馈</button>';
+						}
+    				else if(rowdata.status==3){
     					button1 = '<button type="button" class="btn btn-info table-button2">常态落实</button>';
     				}else{
     					button1 = '<button type="button" class="btn btn-info table-button2">已办结</button>';

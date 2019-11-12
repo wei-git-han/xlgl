@@ -392,8 +392,8 @@ var pageModule = function(){
 				    },
 				    legend: {
 				    	textStyle:{color: '#C8D3FF'},
-//				        orient : 'vertical',
-				        y : '75%',
+				        // orient : 'vertical',
+				             y : '75%',
 //				        bottom:'bottom',
 				        data:legend
 				    },
@@ -402,8 +402,11 @@ var pageModule = function(){
 				        {
 				            name:'落实事项',
 				            type:'pie',
-				            center:['50%', '40%'],
-				            radius : ['30%', '50%'],
+				            //解决遮挡问题
+				            minAngle:20,
+				            avoidLabelOverlap:true,
+				            center:['50%', '42%'],
+				            radius : ['30%', '48%'],
 				            itemStyle : {
 							    normal: {
 							        label:{
@@ -412,7 +415,8 @@ var pageModule = function(){
 							        	textStyle:{
 							        		fontWeight:"bold"
 							        	}
-							        }
+							        },
+									labelLine:{show:true,length:20},
 							    },
 				            },
 				            data:valdata

@@ -11,7 +11,6 @@ var startdate = getUrlParam2("startdate");
 var enddate = getUrlParam2("enddate");
 
 /*alert(JSON.stringify(gettop2().memory))*/
-
 var pageModule = function(){
 	var initgrid = function(){
         grid = $("#gridcont").createGrid({
@@ -22,6 +21,10 @@ var pageModule = function(){
                	 	if(rowdata.status==1){
 	               	 	statusName="办理中";
 	               		bgColor="#2BAA81";
+	               		if( rowdata.latestReply==""){
+							statusName="未反馈";
+							bgColor="#2BAA81";
+						}
             	 	}else if(rowdata.status==2){
 	               	 	statusName="已办结";
 	               		bgColor="#BCBCBC";

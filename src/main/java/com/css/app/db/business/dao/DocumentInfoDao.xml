@@ -55,10 +55,10 @@
 		<if test="state != null and state != ''">
 			<choose>
                 <when test="state == 1">
-                    and t.STATUS=1 and t.LATEST_REPLY is not null and (t.LATEST_REPLY !='' or t.LATEST_REPLY =' ')
+                    and t.STATUS=1 and ifnull(length(t.LATEST_REPLY), 0) > 0
                 </when>
                  <when test="state == 4">
-                    and t.STATUS=1 and (t.LATEST_REPLY is null or (t.LATEST_REPLY ='' and t.LATEST_REPLY !=' '))
+                    and t.STATUS=1 and ifnull(length(t.LATEST_REPLY), 0) = 0
                 </when>
                 <otherwise>
                    and t.STATUS=#{state}
@@ -139,10 +139,10 @@
 		<if test="status != null and status != ''">
 			<choose>
                 <when test="status == 1">
-                    and t.STATUS=1 and t.LATEST_REPLY is not null and t.LATEST_REPLY !=''
+                    and t.STATUS=1 and  ifnull(length(t.LATEST_REPLY), 0) > 0
                 </when>
                  <when test="status == 4">
-                    and t.STATUS=1 and (t.LATEST_REPLY is null or t.LATEST_REPLY ='')
+                    and t.STATUS=1 and  ifnull(length(t.LATEST_REPLY), 0) = 0
                 </when>
                 <otherwise>
                    and t.STATUS=#{status}
@@ -301,10 +301,10 @@
 		<if test="status !=null and status !=''">
 			<choose>
                 <when test="status == 1">
-                    and db.STATUS=1 and db.LATEST_REPLY is not null and (db.LATEST_REPLY !='' or db.LATEST_REPLY =' ')
+                    and db.STATUS=1 and ifnull(length(db.LATEST_REPLY), 0) > 0
                 </when>
                  <when test="status == 4">
-                    and db.STATUS=1 and (db.LATEST_REPLY is null or (db.LATEST_REPLY ='' and db.LATEST_REPLY !=' '))
+                    and db.STATUS=1 and  ifnull(length(db.LATEST_REPLY), 0) = 0
                 </when>
                 <otherwise>
                    and db.STATUS=#{status}
@@ -367,7 +367,7 @@
         on
         ps.info_id=db.id
         where
-        db.STATUS=1 and (db.LATEST_REPLY is null or (db.LATEST_REPLY ='' and db.LATEST_REPLY !=' '))
+        db.STATUS=1 and ifnull(length(db.LATEST_REPLY), 0) = 0
 		<if test="leaderId !=null and leaderId !=''">
 			and ps.USER_ID = #{leaderId}
 		</if>
@@ -436,14 +436,13 @@
 		select
 			count(a.id)
 		from
-		DB_DOCUMENT_INFO a, DB_SUB_DOC_INFO b
-		where a.ID = b.INFO_ID
-		and a.STATUS = '1'
-		and (a.LATEST_REPLY is  null or a.LATEST_REPLY  = '')
-		and a.FIRST_ZB_TIME is not null
+		DB_DOCUMENT_INFO a
 		<if test="danweiid != null and danweiid != ''">
+			inner join DB_SUB_DOC_INFO b on a.ID = b.INFO_ID
 			and b.SUB_DEPT_ID = #{danweiid}
 		</if>
+		where a.STATUS = '1'
+		and ifnull(length(a.LATEST_REPLY), 0) = 0
 		<if test="year != null and year != ''">
 			and to_char(a.CREATED_TIME) like '%'||#{year}||'%'
 		</if>
