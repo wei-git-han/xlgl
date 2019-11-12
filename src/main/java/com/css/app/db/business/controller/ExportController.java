@@ -155,7 +155,7 @@ public class ExportController{
 			exportDataLis.add(exportDataMap);
 		}
 
-		InputStream is = null;
+		InputStream is = null; 
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		try {
 			String docTypeId = documentInfo.getDocTypeId();
