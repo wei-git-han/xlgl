@@ -558,7 +558,7 @@ var pageModule = function(){
 			nowYear--;
 			$("#nowYear").html(nowYear);
 			initother(nowYear);
-			inittable2($(".newDateVal").val(),$(".datee2").val(),nowYear);
+			inittable2($("#startdate").val(),$("#enddate").val(),nowYear);
 			initpage(nowYear);
 		})
 		$("#nextYear").click(function () {
@@ -568,11 +568,11 @@ var pageModule = function(){
 			nowYear++;
 			$("#nowYear").html(nowYear);
 			initother(nowYear);
-			inittable2($(".newDateVal").val(),$(".datee2").val(),nowYear);
+			inittable2($("#startdate").val(),$("#enddate").val(),nowYear);
 			initpage(nowYear);
 		})
 		initother(nowYear);
-		inittable2($(".newDateVal").val(),$(".datee2").val(),nowYear);
+		inittable2($("#startdate").val(),$("#enddate").val(),nowYear);
 		initpage(nowYear);
 	}
 
@@ -619,6 +619,7 @@ var pageModule = function(){
 			o1 = setTimeout(function(){
 				var startdate = $("#startdate").val();
 				var enddate = $("#enddate").val();
+				debugger
 				/*if(startdate.length==10){startdate = startdate.substr(0,4)+"-"+startdate.substr(5,2)+"-"+startdate.substr(8,2);}
 				if(enddate.length==10){enddate = enddate.substr(0,4)+"-"+enddate.substr(5,2)+"-"+enddate.substr(8,2);}*/
 				inittable2(startdate, enddate, nowYear);
