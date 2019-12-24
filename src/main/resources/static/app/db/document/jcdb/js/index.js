@@ -7,6 +7,7 @@ var url6 = {"url":"/app/db/documentjcdb/orglist5","dataType":"text"};
 var url7 = {"url":"/app/db/documentjcdb/isShouZhang","dataType":"text"};
 var nowYear = new Date().getFullYear();
 var maxYear = new Date().getFullYear();
+var minYear = 2017;
 $("#nowYear").html(nowYear);
 var pageModule = function(){
 	var inittopfn = function(nowYear){
@@ -187,6 +188,7 @@ var pageModule = function(){
 		    	initchart1(ec,year);
 		    	initchart2(ec,year);
 		    	initchart3(ec,year);
+				setPage();
 		    }
 		);
 	}
@@ -555,10 +557,13 @@ var pageModule = function(){
 	var initchoice = function(){
 		//新加的功能，添加年份选择
 		$("#lastYear").click(function () {
+			if(minYear>=nowYear){
+				return
+			}
 			nowYear--;
 			$("#nowYear").html(nowYear);
 			initother(nowYear);
-			inittable2($(".newDateVal").val(),$(".datee2").val(),nowYear);
+			inittable2($("#startdate").val(),$("#enddate").val(),nowYear);
 			initpage(nowYear);
 		})
 		$("#nextYear").click(function () {
@@ -568,39 +573,39 @@ var pageModule = function(){
 			nowYear++;
 			$("#nowYear").html(nowYear);
 			initother(nowYear);
-			inittable2($(".newDateVal").val(),$(".datee2").val(),nowYear);
+			inittable2($("#startdate").val(),$("#enddate").val(),nowYear);
 			initpage(nowYear);
 		})
 		initother(nowYear);
-		inittable2($(".newDateVal").val(),$(".datee2").val(),nowYear);
+		inittable2($("#startdate").val(),$("#enddate").val(),nowYear);
 		initpage(nowYear);
 	}
 
 	var initother = function(nowYear){
 		inittopfn(nowYear);
-		var newdate = new Date();
-		var newyear = newdate.getFullYear();
-		var newmonth = newdate.getMonth();
-		var comparemonth = newdate.getMonth()+1;
-		if(comparemonth == 1){
-			newmonth = 12;
-			newyear= parseInt(newyear)-1;
-		}
-		if(newmonth<10){
-			newmonth = "0"+newmonth;
-		}
-		$(".newDateVal").val(newyear+"年"+newmonth+"月"+"01日"); //new
-		var month = newdate.format("MM");
-		$(".bs-select").val(month);
-		$(".bs-select").selectpicker({
-		    iconBase: "fa",
-		    tickIcon: "fa-check"
-		});
-		$("#select").change(function(){
-			var month = this.value;
-			inittable(month,nowYear);
-		})
-		inittable(month,nowYear);
+		// var newdate = new Date();
+		// var newyear = newdate.getFullYear();
+		// var newmonth = newdate.getMonth();
+		// var comparemonth = newdate.getMonth()+1;
+		// if(comparemonth == 1){
+		// 	newmonth = 12;
+		// 	newyear= parseInt(newyear)-1;
+		// }
+		// if(newmonth<10){
+		// 	newmonth = "0"+newmonth;
+		// }
+		// $(".newDateVal").val(newyear+"年"+newmonth+"月"+"01日"); //new
+		// var month = newdate.format("MM");
+		// $(".bs-select").val(month);
+		// $(".bs-select").selectpicker({
+		//     iconBase: "fa",
+		//     tickIcon: "fa-check"
+		// });
+		// $("#select").change(function(){
+		// 	var month = this.value;
+		// 	inittable(month,nowYear);
+		// })
+		inittable('all',nowYear);
 		$("#listbutton").unbind('click').click(function(){
 			window.location.href = "main.html";
 		});
@@ -646,6 +651,23 @@ var pageModule = function(){
 
 }();
 
+// 选择年限图标显示处理
+var setPage = function(){
+	if(nowYear>=maxYear){
+		$('#next2').show()
+		$('#next1').hide()
+	}else{
+		$('#next1').show()
+		$('#next2').hide()
+	}
+	if(minYear>=nowYear){
+		$('#pre2').show()
+		$('#pre1').hide()
+	}else{
+		$('#pre1').show()
+		$('#pre2').hide()
+	}
+}
 var topage = function(orgid,type,month,ytype,state){
 /*	alert(orgid);
 	alert(type);
