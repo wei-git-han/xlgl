@@ -555,34 +555,29 @@ var pageModule = function(){
 
 	}
 	var initchoice = function(){
-		//新加的功能，添加年份选择
-		$("#lastYear").click(function () {
-			if(minYear>=nowYear){
-				return
-			}
-			nowYear--;
-			$("#nowYear").html(nowYear);
-			initother(nowYear);
-			inittable2($("#startdate").val(),$("#enddate").val(),nowYear);
-			initpage(nowYear);
-		})
-		$("#nextYear").click(function () {
-			if(nowYear>=maxYear){
-				return
-			}
-			nowYear++;
-			$("#nowYear").html(nowYear);
-			initother(nowYear);
-			inittable2($("#startdate").val(),$("#enddate").val(),nowYear);
-			initpage(nowYear);
-		})
-		initother(nowYear);
 		inittable2($("#startdate").val(),$("#enddate").val(),nowYear);
 		initpage(nowYear);
+        inittopfn(nowYear);
+        inittable('all',nowYear);
 	}
-
-	var initother = function(nowYear){
-		inittopfn(nowYear);
+	var initother = function(){
+        //新加的功能，添加年份选择
+        $("#lastYear").click(function () {
+            if(minYear>=nowYear){
+                return
+            }
+            nowYear--;
+            $("#nowYear").html(nowYear);
+            initchoice()
+        })
+        $("#nextYear").click(function () {
+            if(nowYear>=maxYear){
+                return
+            }
+            nowYear++;
+            $("#nowYear").html(nowYear);
+            initchoice()
+        })
 		// var newdate = new Date();
 		// var newyear = newdate.getFullYear();
 		// var newmonth = newdate.getMonth();
@@ -605,7 +600,7 @@ var pageModule = function(){
 		// 	var month = this.value;
 		// 	inittable(month,nowYear);
 		// })
-		inittable('all',nowYear);
+
 		$("#listbutton").unbind('click').click(function(){
 			window.location.href = "main.html";
 		});
@@ -644,8 +639,10 @@ var pageModule = function(){
 	return{
 		//加载页面处理程序
 		initControl:function(){
+            initother();
 			initchoice();
 			initguazaishouzhang();
+
 		}
 	}
 
