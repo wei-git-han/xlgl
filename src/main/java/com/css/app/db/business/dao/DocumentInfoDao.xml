@@ -472,9 +472,12 @@
 			<if test="isnotuserid != null">
 			and (sz_read_ids not like '%'||#{isnotuserid}||'%' or sz_read_ids is null)
 			</if>
+			<if test="year != null">
+				and to_char(CREATED_TIME) like '%'||#{year}||'%'
+			</if>
 			GROUP by DOC_TYPE_ID
 	)shu on dic.value=shu.DOC_TYPE_ID where dic.DIC_TYPE='document_type'
-	<if test="type != null and type != ''">
+			<if test="type != null and type != ''">
 				and dic.VALUE=#{type}
 			</if>
 	order by dic.value asc
@@ -497,7 +500,10 @@
 
 	        from DB_DOCUMENT_INFO  ddi where  ddi.FIRST_ZB_TIME is not null
 	        <if test="search != null and search != ''">
-			and (ddi.DOC_TITLE like '%'||#{search}||'%' or ddi.BANJIAN_NUMBER  like '%'||#{search}||'%')
+				and (ddi.DOC_TITLE like '%'||#{search}||'%' or ddi.BANJIAN_NUMBER  like '%'||#{search}||'%')
+			</if>
+			<if test="year != null">
+				and to_char(ddi.CREATED_TIME) like '%'||#{year}||'%'
 			</if>
 			group by ddi.DOC_TYPE_ID,ddi.STATUS
 
