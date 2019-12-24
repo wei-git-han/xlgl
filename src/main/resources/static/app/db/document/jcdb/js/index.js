@@ -1,50 +1,46 @@
-var url1 = {"url":"/app/db/documentjcdb/list","dataType":"text"};
-var url2 = {"url":"/app/db/documentjcdb/orglist","dataType":"text"};
-var url3 = {"url":"/app/db/documentjcdb/orglist2","dataType":"text"};
-var url4 = {"url":"/app/db/documentjcdb/orglist3","dataType":"text"};
-var url5 = {"url":"/app/db/documentjcdb/orglist4","dataType":"text"};
+var url1 = {"url":"/app/db/documentjcdb/list","dataType":"text"};   //  头部数量的接口
+var url2 = {"url":"/app/db/documentjcdb/orglist","dataType":"text"}; //  办理情况
+var url3 = {"url":"/app/db/documentjcdb/orglist2","dataType":"text"};   // 落实情况
+var url4 = {"url":"/app/db/documentjcdb/orglist3","dataType":"text"};    //完成率图
+var url5 = {"url":"/app/db/documentjcdb/orglist4","dataType":"text"};   //
 var url6 = {"url":"/app/db/documentjcdb/orglist5","dataType":"text"};
 var url7 = {"url":"/app/db/documentjcdb/isShouZhang","dataType":"text"};
-
+var nowYear = new Date().getFullYear();
+var maxYear = new Date().getFullYear();
+$("#nowYear").html(nowYear);
 var pageModule = function(){
-	var inittopfn = function(){
-		
+	var inittopfn = function(nowYear){
 		$ajax({
 			url:url1,
+			data:{year:nowYear},
 			success:function(data){
-				console.log(data)
-				var year = data.year;
 				var total = data.total;
 				var blz = data.blz;
 				var bj = data.bj;
 				var ctls = data.ctls;
 				var wfk = data.wfk;
 				var wcl = data.wcl;
-				wcl=wcl.toFixed(2,10)+"%";
-				$("#year").html(year);
-				
+				if(wcl !="0%"){
+					wcl=wcl.toFixed(2,10)+"%";
+				}
 				$("#total").attr("title",total);
-				
 				if(total>9999){
 					$("#total").html("9999+");
 				}else{
 					$("#total").html(total);
 				}
-				
 				$("#blz").attr("title",blz);
 				if(blz>9999){
 					$("#blz").html("9999+");
 				}else{
 					$("#blz").html(blz);
 				}
-				
 				$("#bj").attr("title",bj);
 				if(bj>9999){
 					$("#bj").html("9999+");
 				}else{
 					$("#bj").html(bj);
 				}
-				
 				$("#ctls").attr("title",ctls);
 				if(ctls>9999){
 					$("#ctls").html("9999+");
@@ -57,21 +53,15 @@ var pageModule = function(){
 				}else{
 					$("#wfk").html(wfk);
 				}
-
-
 				$("#wcl").html(wcl);
-				
 			}
 		});
-		
 	}
-	
-	
-	var inittable = function(month){
+	var inittable = function(month,year){
 		month='all';
 		$ajax({
 			url:url2,
-			data:{month:month},
+			data:{month:month,year:year},
 			success:function(data){
 				$("#tbody").html('');
 				$.each(data,function(i){
@@ -105,13 +95,12 @@ var pageModule = function(){
 				})
 			}
 		});
-		
+
 	}
-	
-	var inittable2 = function(startdate,enddate){
+	var inittable2 = function(startdate,enddate,year){
 		$ajax({
 			url:url6,
-			data:{startDate:startdate,endDate:enddate},
+			data:{startDate:startdate,endDate:enddate,year:year},
 			success:function(data){
 				$("#tbody2").html('');
 				var ifclick = data.clickFlag;
@@ -137,16 +126,16 @@ var pageModule = function(){
 						`
 					);
 				});
-				
+
 				$("#tbody2 tr a").unbind("click");
 				$("#tbody2 tr a").click(function(){
-					
+
 					var type = $(this).attr("name");//0 全部 ，1办理中，2已 办结 ，3常态落实
 					var leaderid = $(this).attr("id");
-					
+
 					var ifclick = $(this).attr("ifclick");
 					var isLeaderType = $(this).attr("isLeaderType");
-					if(ifclick=="false"){			
+					if(ifclick=="false"){
 						$('#alertContent').text('您没有权限查看此数据!')
 						$("#alertInfo").modal("show");
 				        setTimeout(function(){
@@ -154,7 +143,7 @@ var pageModule = function(){
 						},1000)
 						return;
 					}
-					
+
 					var startdate = $("#startdate").val();
 					var enddate = $("#enddate").val();
 					sessionStorage.setItem('status',type);
@@ -175,14 +164,12 @@ var pageModule = function(){
 				})
 			}
 		});
-		
-		
+
+
 	}
-	
-	
-	var initpage = function(){
+	var initpage = function(year){
 		require.config({
-		    paths:{ 
+		    paths:{
 		        echarts:'../js/echarts',
 		        'echarts/chart/bar' : '../js/echarts-map',
 		        'echarts/chart/line': '../js/echarts-map',
@@ -197,16 +184,16 @@ var pageModule = function(){
 		        'echarts/chart/map'
 		    ],
 		    function (ec) {
-		    	initchart1(ec);
-		    	initchart2(ec);
-		    	initchart3(ec);
+		    	initchart1(ec,year);
+		    	initchart2(ec,year);
+		    	initchart3(ec,year);
 		    }
 		);
 	}
-	
-	var initchart1 = function(ec){
+	var initchart1 = function(ec,year){
 		$ajax({
 			url:url3,
+			data:{year:year},
 			success:function(data){
 				var legend = data.legend;
 				var xdata = data.xdata;
@@ -240,7 +227,7 @@ var pageModule = function(){
 				        		lineStyle:{color: '#C8D3FF', width: 1, type: 'solid'}
 				        	},
 				        	axisTick:{
-				        		lineStyle:{color: '#C8D3FF', width: 1} 
+				        		lineStyle:{color: '#C8D3FF', width: 1}
 				        	},
 				        	axisLabel:{
 				        		rotate:40,
@@ -333,13 +320,13 @@ var pageModule = function(){
 						}
 				    ]
 			    });
-			    
+
 			    var otherdata = data.otherdata;
 				myChart.on("click",function(o,n){
 					var name = o.name;
 					var seriesIndex = o.seriesIndex;
 					var value = o.value;
-					
+
 					var object = otherdata[name];
 					var state = object.state;
 					var id = object.id;
@@ -358,17 +345,17 @@ var pageModule = function(){
 					if(state!=0){
 						topage(id,type,month,ytype,state);
 					}
-					
+
 				})
 			}
 		});
-		
+
 	}
-	
-	var initchart2 = function(ec){
-		
+	var initchart2 = function(ec,year){
+
 		$ajax({
 			url:url4,
+			data:{year:year},
 			success:function(data){
 				var legend = data.legend;
 				var valdata = data.valdata;
@@ -425,15 +412,15 @@ var pageModule = function(){
 				});
 			}
 		});
-		
+
 	}
-	
-	var initchart3 = function(ec){
-		
+	var initchart3 = function(ec,year){
+
 		$ajax({
 			url:url5,
+			data:{year:year},
 			success:function(data){
-				
+
 				var xdata = data.xdata;
 				var wcldata = data.wcldata;
 				var array1 =[
@@ -560,54 +547,66 @@ var pageModule = function(){
 				        }
 				    ]
 			    });
-				
+
 			}
 		});
-		
+
 	}
-	
-	var initother = function(){
+	var initchoice = function(){
+		//新加的功能，添加年份选择
+		$("#lastYear").click(function () {
+			nowYear--;
+			$("#nowYear").html(nowYear);
+			initother(nowYear);
+			inittable2($(".newDateVal").val(),$(".datee2").val(),nowYear);
+			initpage(nowYear);
+		})
+		$("#nextYear").click(function () {
+			if(nowYear>=maxYear){
+				return
+			}
+			nowYear++;
+			$("#nowYear").html(nowYear);
+			initother(nowYear);
+			inittable2($(".newDateVal").val(),$(".datee2").val(),nowYear);
+			initpage(nowYear);
+		})
+		initother(nowYear);
+		inittable2($(".newDateVal").val(),$(".datee2").val(),nowYear);
+		initpage(nowYear);
+	}
+
+	var initother = function(nowYear){
+		inittopfn(nowYear);
 		var newdate = new Date();
 		var newyear = newdate.getFullYear();
 		var newmonth = newdate.getMonth();
 		var comparemonth = newdate.getMonth()+1;
-		
 		if(comparemonth == 1){
 			newmonth = 12;
 			newyear= parseInt(newyear)-1;
 		}
-		
 		if(newmonth<10){
 			newmonth = "0"+newmonth;
 		}
-		
-		
 		$(".newDateVal").val(newyear+"年"+newmonth+"月"+"01日"); //new
-		
 		var month = newdate.format("MM");
 		$(".bs-select").val(month);
-		
-		
 		$(".bs-select").selectpicker({
 		    iconBase: "fa",
 		    tickIcon: "fa-check"
 		});
 		$("#select").change(function(){
 			var month = this.value;
-			inittable(month);
+			inittable(month,nowYear);
 		})
-		
-		inittable(month);
-		
-		$("#listbutton").click(function(){
+		inittable(month,nowYear);
+		$("#listbutton").unbind('click').click(function(){
 			window.location.href = "main.html";
 		});
-		
-		$("#calendar_btn").click(function(){
+		$("#calendar_btn").unbind('click').click(function(){
 			$("#clocker").toggle();
 		});
-		
-		
 		var o1 = false;
 		$(".date-picker").datepicker({
 		    language:"zh-CN",
@@ -618,18 +617,14 @@ var pageModule = function(){
 			$("#clocker").hide();
 			if(o1){clearTimeout(o1)};
 			o1 = setTimeout(function(){
-				
 				var startdate = $("#startdate").val();
 				var enddate = $("#enddate").val();
 				/*if(startdate.length==10){startdate = startdate.substr(0,4)+"-"+startdate.substr(5,2)+"-"+startdate.substr(8,2);}
 				if(enddate.length==10){enddate = enddate.substr(0,4)+"-"+enddate.substr(5,2)+"-"+enddate.substr(8,2);}*/
-				inittable2(startdate,enddate);
-				
+				inittable2(startdate, enddate, nowYear);
+
 			},100);
-			
 		});
-		
-		
 	}
 	var initguazaishouzhang = function(){
 		$ajax({
@@ -644,14 +639,11 @@ var pageModule = function(){
 	return{
 		//加载页面处理程序
 		initControl:function(){
-			initpage();
-			initother();
-			inittable2($(".newDateVal").val(),$(".datee2").val());
-			inittopfn();
+			initchoice();
 			initguazaishouzhang();
 		}
 	}
-	
+
 }();
 
 var topage = function(orgid,type,month,ytype,state){
@@ -691,5 +683,4 @@ var topage = function(orgid,type,month,ytype,state){
 			window.location.href = "/app/db/document/blfk/html/blfk.html?fileFrom=jcdb&ifmenu=false&orgid="+orgid+"&month="+month+"&ytype="+ytype;
 		}
 	}
-	
 }
