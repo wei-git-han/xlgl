@@ -1,6 +1,7 @@
 package com.css.addbase.orgservice;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -122,11 +123,12 @@ public class ImportOrganUtil {
 			baseAppUser.setAccount(userInfo.getAccount());
 			baseAppUser.setTruename(userInfo.getFullname());
 			baseAppUser.setMobile(userInfo.getMobile());
-			baseAppUser.setOrganid(userInfo.getOrganId());
-			baseAppUser.setSort(userInfo.getOrderId());
 			baseAppUser.setSex(userInfo.getSex());
 			baseAppUser.setTelephone(userInfo.getTel());
 			baseAppUser.setIsdelete(userInfo.getIsDelete());
+			Map<String,String> map=(Map<String, String>) userInfo.getRelations().get(0);
+			baseAppUser.setOrganid(map.get(organId));
+			baseAppUser.setSort(Integer.parseInt(map.get("orderId")));
 			if(baseAppUsertemp!=null){
 				baseAppUserService.update(baseAppUser);
 			}else{
