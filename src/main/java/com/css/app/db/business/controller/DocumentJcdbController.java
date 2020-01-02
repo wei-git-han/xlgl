@@ -451,7 +451,8 @@ public class DocumentJcdbController {
 		//初始化走默认时间配置
 		try {
 			if (StringUtils.isBlank(startDate) && StringUtils.isBlank(endDate)) {
-				DocumentDic documentDic = this.queryDocumentDic();
+				// 需求更改：不再从配置表里获取时间段，直接从前端获取年份
+				/*DocumentDic documentDic = this.queryDocumentDic();
 				if (documentDic != null) {
 					String text = documentDic.getText();
 					if (StringUtils.equals("3", documentDic.getValue())) {
@@ -469,7 +470,9 @@ public class DocumentJcdbController {
 						logger.info("配置表配置项value值不符合约定，value：{}", documentDic.getValue());
 						return;
 					}
-				}
+				}*/
+				map.clear();
+				map.put("yearOrMonth", year);//2019年
 			}else {
 				map.clear();
 				map.put("startDate",startDate);

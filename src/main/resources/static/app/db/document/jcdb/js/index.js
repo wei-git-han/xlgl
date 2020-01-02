@@ -6,7 +6,11 @@ var url5 = {"url":"/app/db/documentjcdb/orglist4","dataType":"text"};   //
 var url6 = {"url":"/app/db/documentjcdb/orglist5","dataType":"text"};
 var url7 = {"url":"/app/db/documentjcdb/isShouZhang","dataType":"text"};
 var nowYear = new Date().getFullYear();
+var nowMonth = new Date().getMonth();
 var maxYear = new Date().getFullYear();
+if(nowMonth<2){
+	nowYear--;
+}
 var minYear = 2017;
 $("#nowYear").html(nowYear);
 var pageModule = function(){
