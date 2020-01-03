@@ -235,15 +235,17 @@ public class DocumentInfoController {
 	@ResponseBody
 	@RequestMapping("/replyList")
 	public void replyList(Integer page, Integer pagesize,String search,String status,String typeId,
-			String orgid,String month,String startDate,String endDate,String initFlag,String title,String leaderId,String period,String psStartDate,String psEndDate){
+			String orgid,String month,String startDate,String endDate,String initFlag,String title,String leaderId,String period,String psStartDate,String psEndDate,String year){
 		List<DocumentInfo> infoList =null;
 		if(!StringUtils.equals("1", initFlag)) {//initFlag为1 为导出页的初始化加载
 			String loginUserId=CurrentUser.getUserId();
 			String dateStr = null;
-			if(!StringUtils.isEmpty(month) && StringUtil.equals("all", month)) {
-				dateStr = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE).substring(0,4);
+			if(StringUtils.isNotBlank(year)) {
+				dateStr = year;
+			}else if(!StringUtils.isEmpty(month) && StringUtil.equals("all", month)) {
+				dateStr = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE).substring(0,4);//2020
 			}else if(!StringUtils.isEmpty(month)) {
-				dateStr = LocalDate.now().withMonth(Integer.parseInt(month)).format(DateTimeFormatter.ISO_LOCAL_DATE).substring(0,7);
+				dateStr = LocalDate.now().withMonth(Integer.parseInt(month)).format(DateTimeFormatter.ISO_LOCAL_DATE).substring(0,7);//2020-01
 			}
 			//当前登录人的管理员类型(0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员)
 			String adminType = adminSetService.getAdminTypeByUserId(loginUserId);			
@@ -387,9 +389,11 @@ public class DocumentInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/replyNums")
-	public void replyNums(String search,String typeId,String orgid,String month,String title,String leaderId,String period,String psStartDate,String psEndDate) {
+	public void replyNums(String search,String typeId,String orgid,String month,String title,String leaderId,String period,String psStartDate,String psEndDate, String year) {
 		String dateStr = null;
-		if(!StringUtils.isEmpty(month) && StringUtil.equals("all", month)) {
+		if(StringUtils.isNotBlank(year)) {
+			dateStr = year;
+		}else if(!StringUtils.isEmpty(month) && StringUtil.equals("all", month)) {
 			dateStr = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE).substring(0,4);
 		}else if(!StringUtils.isEmpty(month)) {
 			dateStr = LocalDate.now().withMonth(Integer.parseInt(month)).format(DateTimeFormatter.ISO_LOCAL_DATE).substring(0,7);

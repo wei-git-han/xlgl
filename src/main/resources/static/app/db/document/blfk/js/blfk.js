@@ -8,6 +8,7 @@ var batchReadUrl = {"url":"/app/db/documentinfo/batchRead","dataType":"text"};//
 var getUserAdminTypeUrl = {"url":"/app/db/adminset/getAuthor","dataType":"text"};//获取管理员类型
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var orgid=getUrlParam("orgid")||""; //统计图传过来的机构
+var nowYear = getUrlParam("nowYear");//“统计报表”页面上的“年度”
 var month=getUrlParam("month")||""; //统计图传过来的月份
 var ytype=getUrlParam("ytype")||""; //统计图传过来的办理状态
 if(fileFrom && fileFrom == "jcdb"){
@@ -192,7 +193,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 10,
             pageyno:true,
-            paramobj:{page:o.pagesize1,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val(),psStartDate:$("#startDate").val(),psEndDate:$("#endDate").val()},
+            paramobj:{page:o.pagesize1,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val(),psStartDate:$("#startDate").val(),psEndDate:$("#endDate").val(),year:nowYear},
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
@@ -307,7 +308,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 10,
             pageyno:true,
-            paramobj:{page:o.pagesize2,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val()},
+            paramobj:{page:o.pagesize2,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),year:nowYear},
             loadafter:function(data){
             	total=data.total;
             	$(".dblsqk span").each(function(){
@@ -427,7 +428,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 10,
             pageyno:true,
-            paramobj:{page:o.pagesize3,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val(),psStartDate:$("#startDate").val(),psEndDate:$("#endDate").val(),period:$("#period").val()},
+            paramobj:{page:o.pagesize3,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val(),psStartDate:$("#startDate").val(),psEndDate:$("#endDate").val(),period:$("#period").val(),year:nowYear},
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
@@ -542,7 +543,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 10,
             pageyno:true,
-            paramobj:{page:o.pagesize4,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val(),psStartDate:$("#startDate").val(),psEndDate:$("#endDate").val()},
+            paramobj:{page:o.pagesize4,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val(),psStartDate:$("#startDate").val(),psEndDate:$("#endDate").val(),year:nowYear},
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
@@ -591,7 +592,7 @@ var pageModule = function(){
 	var numsListfn = function(){
 		$ajax({
 			url:numsList,
-			data:{search:$("#searchVal").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val(),psStartDate:$("#startDate").val(),psEndDate:$("#endDate").val(),period:$("#period").val(),status:$("input[name='documentStatus']:checked").val()},
+			data:{search:$("#searchVal").val(),typeId:$("#classType li.active").attr("value"),orgid:orgid,month:month,title:$("#title").val(),leaderId:$("#leaderId").val(),psStartDate:$("#startDate").val(),psEndDate:$("#endDate").val(),period:$("#period").val(),status:$("input[name='documentStatus']:checked").val(),year:nowYear},
 			success:function(data){
 				$.each(data,function(i,item){
 					var id = "grdb"+i;

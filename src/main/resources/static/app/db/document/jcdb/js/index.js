@@ -162,9 +162,9 @@ var pageModule = function(){
 					gettop2().memory.enddate = enddate;*/
 					console.log(isLeaderType)
 					if(isLeaderType==1){
-						window.location.href = "../../tjsj/html/tjsj2.html?status="+type+"&leaderId="+leaderid+"&startdate="+startdate+"&enddate="+enddate;
+						window.location.href = "../../tjsj/html/tjsj2.html?status="+type+"&leaderId="+leaderid+"&startdate="+startdate+"&enddate="+enddate+"&nowYear="+nowYear;
 					}else{
-						window.location.href = "../../tjsj/html/tjsj.html?status="+type+"&leaderId="+leaderid+"&startdate="+startdate+"&enddate="+enddate;
+						window.location.href = "../../tjsj/html/tjsj.html?status="+type+"&leaderId="+leaderid+"&startdate="+startdate+"&enddate="+enddate+"&nowYear="+nowYear;
 					}
 				})
 			}
@@ -686,7 +686,7 @@ var topage = function(orgid,type,month,ytype,state){
 		sessionStorage.setItem('orgid',orgid);
 		sessionStorage.setItem('month',month);
 		sessionStorage.setItem('ytype',ytype);
-		window.location.href = "/app/db/document/jcdb/html/table2.html?orgid="+orgid+"&month="+month+"&ytype="+ytype;
+		window.location.href = "/app/db/document/jcdb/html/table2.html?orgid="+orgid+"&month="+month+"&ytype="+ytype+"&nowYear="+nowYear;
 	}else{
 		if(state==3){
 			$('#alertContent').text('仅支持点击查看本单位数据!')
@@ -703,7 +703,7 @@ var topage = function(orgid,type,month,ytype,state){
 			},1000)
 			return;
 		}else{
-			window.location.href = "/app/db/document/blfk/html/blfk.html?fileFrom=jcdb&ifmenu=false&orgid="+orgid+"&month="+month+"&ytype="+ytype;
+			window.location.href = "/app/db/document/blfk/html/blfk.html?fileFrom=jcdb&ifmenu=false&orgid="+orgid+"&month="+month+"&ytype="+ytype+"&nowYear="+nowYear;
 		}
 	}
 }

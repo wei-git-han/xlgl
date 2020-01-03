@@ -9,6 +9,7 @@ var status = getUrlParam("status");//统计图传过来的状态
 var leaderId = getUrlParam("leaderId");//统计图传过来的首长ID
 var startdate = getUrlParam2("startdate");
 var enddate = getUrlParam2("enddate");
+var nowYear = getUrlParam("nowYear");//“统计报表”页面上的“年度”
 
 /*alert(JSON.stringify(gettop2().memory))*/
 var pageModule = function(){
@@ -86,7 +87,7 @@ var pageModule = function(){
             overflowx:false,
             pagesize: 10,
             pageyno:true,
-            paramobj:{docStatus:status,leaderId:leaderId,startDate:startdate,endDate:enddate},
+            paramobj:{docStatus:status,leaderId:leaderId,startDate:startdate,endDate:enddate,year:nowYear},
             loadafter:function(data){
             	total=data.total;
             	$("input[name='documentStatus']:checked").parents("label").find("font").text(total);

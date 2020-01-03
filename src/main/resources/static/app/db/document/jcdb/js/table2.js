@@ -5,6 +5,7 @@ var total=0;//列表中，数据的总条数
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var status = getUrlParam("ytype")||"";//统计图传过来的状态
 var orgId = getUrlParam("orgid");//统计图部门
+var nowYear = getUrlParam("nowYear");//“统计报表”页面上的“年度”
 
 var pageModule = function(){
 	var initgrid = function(){
@@ -82,7 +83,7 @@ var pageModule = function(){
             pagesize: 7,
             rownumberwidth:"50px",
             pageyno:true,
-            paramobj:{docStatus:status,orgId:orgId},
+            paramobj:{docStatus:status,orgId:orgId,year:nowYear},
             loadafter:function(data){
             	total=data.total;
             	$("input[name='documentStatus']:checked").parents("label").find("font").text(total);
