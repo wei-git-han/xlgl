@@ -1,6 +1,5 @@
-server:
-
-  port: 11008
+﻿server:
+  port: 11013
 app:
   ConnectTimeout: 100
   ReadTimeout: 5000
@@ -10,9 +9,9 @@ spring.profiles.include: url
  
 druid:
     dbType: dm
-    url: jdbc:dm://${csse.dmdba.url}/ZF_MINISTRY_APP_DB
-    username: ZF_MINISTRY_APP_DB
-    password: QNKN1ReWghEU95X/pZmu4rWzAlA3t9ayTeqNTdUILuj3eyQsU1V4S543u0dPyoOFbxbMMWrtn7S+dAAo5Ed9LQ==
+    url: jdbc:dm://${csse.dmdba.url}/LJ_MINISTRY_APP_DB
+    username: LJ_MINISTRY_APP_DB
+    password: password01
     initial-size: 1
     min-idle: 1
     max-active: 10 
@@ -20,8 +19,8 @@ druid:
     test-on-borrow: true
     testWhileIdle: true
     validationQuery: select 1 from DUAL 
-    filters: config
-    connectionProperties: config.decrypt=true;config.decrypt.key=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIfduBXAcGaEuALCIFq8PUfhUdVfu+fJSb05UY8+de5qbHxK/hs0BEpzlinf9VXEZV6tifsclqVqD7ljrO0BBO8CAwEAAQ==
+    #filters: config
+    #connectionProperties: config.decrypt=true;config.decrypt.key=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIfduBXAcGaEuALCIFq8PUfhUdVfu+fJSb05UY8+de5qbHxK/hs0BEpzlinf9VXEZV6tifsclqVqD7ljrO0BBO8CAwEAAQ==
 
 mybatis.configuration.mapUnderscoreToCamelCase: true
 
@@ -32,9 +31,30 @@ logging:
     com: 
       css: debug
 
+pagehelper:
+    helperDialect: mysql
+    reasonable: true
+    supportMethodsArguments: true
+    params: count=countSql
 spring:
   application:
     name: legacycpk.csse.zbfzbbgt_zyyy
+  redis: 
+    host: 172.16.4.3
+    port: 6379
+    timeout: 3000
+    lettuce: 
+      pool: 
+#连接池最大链接数
+        max-active: -1
+#连接池最大阻塞等待时间
+        max-wait: -1
+#连接池最大空闲连接数 
+        max-idle: 8
+#连接池最小空闲连接数 
+        min-idle: 3 
+ 
+ 
 eureka:
   instance:
     prefer-ip-address: true
@@ -52,20 +72,14 @@ eureka:
       maxFileSize: 1024MB
       maxRequestSize: 1024MB
 
-pagehelper:
-    helperDialect: mysql
-    reasonable: true
-    supportMethodsArguments: true
-    params: count=countSql
-
 #单点登录配置（新）
 csse:
   mircoservice:
     oauth2:
       client:
         accessTokenUri: ${csse.mircoservice.zuul}/api/uaa/oauth/token
-        clientId: ${csse.dccb.appId}
-        clientSecret: ${csse.dccb.appSecret}
+        clientId: ${csse.qxj.appId}
+        clientSecret: ${csse.qxj.appSecret}
     fileservice:
       servers: http://172.16.2.100:7003
       tempDirPath: c:/temp/storetemp/
@@ -92,8 +106,8 @@ msg:
     
 #文件服务配置
 css.oauth2.accessTokenUri: ${csse.mircoservice.zuul}/api/uaa/oauth/token
-css.oauth2.clientId: ${csse.dccb.appId}
-css.oauth2.clientSecret: ${csse.dccb.appSecret}
+css.oauth2.clientId: ${csse.qxj.appId}
+css.oauth2.clientSecret: ${csse.qxj.appSecret}
 
 #文件服务地址配置
 css.fileService.host: ${csse.fileservice.domain}
@@ -128,8 +142,8 @@ csse.dmdba.url: 172.16.2.100:5236
 
 #文件服务----------------------------------start
 #文件服务的clientId,与公文处理应用进行共用；
-csse.dccb.appId: legacycpk.csse.zbfzbbgt_zyyy_app1a_gwcl
-csse.dccb.appSecret: 2C0DB8B2-C752-4f63-AA9E-919BE5B8233A
+csse.qxj.appId: legacycpk.csse.zbfzb_zyyy_app13m_qxjgl
+csse.qxj.appSecret: 3ea2013a-8dc9-43b5-a426-3f3887e769f0
 #文件服务所在的服务器ip或域名
 csse.fileservice.domain: 172.16.2.100
 #文件服务端口
@@ -141,8 +155,22 @@ filePath: D:/download/
 #文件服务----------------------------------end
 
 #本war的所有应用日志输出路径
-csse.log.path: c:/temp/storetemp/zf_one_number_app.log
+csse.log.path: c:/temp/storetemp/qxj_app.log
 #短信接口地址
 csse.mircoservice.smsUrl: http://192.168.0.55:50005/v1.0/plan
 #语音预定会议室 
 voicePreMeetUrl: http://localhost:8768
+
+
+
+#spring.redis.host: 127.0.0.1
+#spring.redis.port: 6379
+#spring.redis.password: foobared
+#spring.redis.timeout: 10000
+#spring.redis.database: 0
+#
+#spring.redis.pool.maxActive: 50
+#spring.redis.pool.maxWait: 3000
+#spring.redis.pool.maxIdle: 20
+#spring.redis.pool.minIdle: 50
+
