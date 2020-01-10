@@ -126,9 +126,11 @@ public class ImportOrganUtil {
 			baseAppUser.setSex(userInfo.getSex());
 			baseAppUser.setTelephone(userInfo.getTel());
 			baseAppUser.setIsdelete(userInfo.getIsDelete());
-			Map map=(Map) userInfo.getRelations().get(0);
-			baseAppUser.setOrganid((String)map.get("organId"));
-			baseAppUser.setSort((int)map.get("orderId"));
+			if(userInfo.getRelations() != null) {
+				Map map=(Map) userInfo.getRelations().get(0);
+				baseAppUser.setOrganid((String)map.get("organId"));
+				baseAppUser.setSort((int)map.get("orderId"));
+			}
 			if(baseAppUsertemp!=null){
 				baseAppUserService.update(baseAppUser);
 			}else{

@@ -388,13 +388,18 @@
 	<select id="queryListByYear" resultType="map">
 	select sum(blz+bj+ctls) as total,sum(blz) as blz,sum(bj) as bj,sum(ctls) as ctls from (
 		select
-         (case when ddi.STATUS='1' then count(ddi.STATUS) else 0 end ) as blz,
+         	(case when ddi.STATUS='1' then count(ddi.STATUS) else 0 end ) as blz,
 	        (case when ddi.STATUS='2' then count(ddi.STATUS) else 0 end ) as bj,
 	        (case when ddi.STATUS='3' then count(ddi.STATUS) else 0 end ) as ctls
         from DB_DOCUMENT_INFO  ddi
+		left join(select s.INFO_ID,s.USER_NAME as leader_name,s.LEADER_COMMENT as leader_content,s.CREATED_TIME as leader_time,
+			row_number() over(partition by s.info_id order by b.sort asc) as dNum from DB_DOCUMENT_SZPS s inner join DB_ROLE_SET b
+			on s.USER_ID=b.USER_ID order by b.sort asc) d
+		on ddi.id = d.info_id and (d.dNum = 1 or d.dNum is null)
 		where 1=1 and FIRST_ZB_TIME is not null
 		<if test="year != null">
-			and to_char(ddi.FIRST_ZB_TIME) like '%'||#{year}||'%'
+			and case when d.leader_time is not null and d.leader_time != '' then to_char(d.leader_time) else
+			to_char(ddi.FIRST_ZB_TIME) end like '%'||#{year}||'%'
 		</if>
 
 
@@ -423,9 +428,14 @@
 			left join (select SUB_DEPT_ID,SUB_DEPT_NAME,INFO_ID,CREATED_TIME,DOC_STATUS
 	                          from DB_SUB_DOC_INFO)  dadi
 			on ddi.id=dadi.INFO_ID
+			left join(select s.INFO_ID,s.USER_NAME as leader_name,s.LEADER_COMMENT as leader_content,s.CREATED_TIME as leader_time,
+				row_number() over(partition by s.info_id order by b.sort asc) as dNum from DB_DOCUMENT_SZPS s inner join DB_ROLE_SET b
+				on s.USER_ID=b.USER_ID order by b.sort asc) d
+			on ddi.id = d.info_id and (d.dNum = 1 or d.dNum is null)
 			where 1=1 and ddi.FIRST_ZB_TIME is not null
 			<if test="year != null">
-				and to_char(dadi.CREATED_TIME) like '%'||#{year}||'%'
+				and case when d.leader_time is not null and d.leader_time != '' then to_char(d.leader_time) else
+				to_char(dadi.CREATED_TIME) end like '%'||#{year}||'%'
 			</if>
 			group by ddi.STATUS,dadi.SUB_DEPT_ID,dadi.SUB_DEPT_NAME
 			order by ddi.STATUS asc
