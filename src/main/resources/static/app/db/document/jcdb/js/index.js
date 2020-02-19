@@ -15,6 +15,29 @@ var minYear = 2017;
 $("#nowYear").html(nowYear);
 var pageModule = function(){
 	var inittopfn = function(nowYear){
+		//设置‘年度’位置的悬浮窗
+		var titlecontent = '点击<img src="../image/pre.png" alt="" style="vertical-align: bottom"><img src="../image/next.png" alt="" style="vertical-align: bottom">支持查询其他年度统计信息';
+		$("#divTitle").popover({
+			trigger:'manual',
+			placement:'bottom',
+			html:'true',
+			content:titlecontent,
+			animation:true
+		}).on("mouseenter",function(){
+			var that = this;
+			$(this).popover("show")
+			$(this).siblings(".popover").on("mouseleave",function(){
+				$(that).popover('hide')
+			})
+		}).on("mouseleave",function(){
+			var that = this;
+			setTimeout(function(){
+				if(!$(".popover:hover").length){
+					$(that).popover("hide")
+				}
+			},100)
+		})
+		//
 		$ajax({
 			url:url1,
 			data:{year:nowYear},
