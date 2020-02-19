@@ -58,10 +58,10 @@ public class RemindAdministrationController {
 	
 	
 	/**
-	 * 信息
+	 * 详情信息
 	 */
 	@ResponseBody
-	@RequestMapping("/info/{id}")
+	@RequestMapping("/info")
 	public void info(@PathVariable("id") String id){
 		RemindAdministration remindAdministration = remindAdministrationService.queryObject(id);
 		Response.json("remindAdministration", remindAdministration);
