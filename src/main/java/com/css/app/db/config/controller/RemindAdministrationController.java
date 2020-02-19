@@ -40,18 +40,14 @@ public class RemindAdministrationController {
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	public void list(){
+	public void list(String type){
 		JSONObject result = new JSONObject(true);
 		JSONArray ja = new JSONArray();
 		Map<String, Object> map = new HashMap<>();
 		//查询列表数据
 		List<RemindAdministration> remindAdministrationList = remindAdministrationService.queryList(map);
 		for (RemindAdministration remindAdministration : remindAdministrationList) {
-			if(remindAdministration.getType().equals("1")) {
-				result.put("insideNo", remindAdministration);
-			}else if(remindAdministration.getType().equals("2")) {
-				result.put("noFeedback", remindAdministration);
-			}else if(remindAdministration.getType().equals("3")) {
+			if(remindAdministration.getType().equals(type)) {
 				ja.add(remindAdministration);
 			}
 		}
