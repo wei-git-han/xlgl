@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.db.config.dao.RemindAdministrationDao">
+
+	<select id="queryObject" resultType="com.css.app.db.config.entity.RemindAdministration">
+		select * from REMIND_ADMINISTRATION where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.db.config.entity.RemindAdministration">
+		select * from REMIND_ADMINISTRATION 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from REMIND_ADMINISTRATION 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.db.config.entity.RemindAdministration">
+		insert into REMIND_ADMINISTRATION
+		(
+			"id", 
+			"REMIND_ROLE", 
+			"REMIND_TIME", 
+			"REMIND_CONTENT", 
+			"STATE", 
+			"CREATOR_ID", 
+			"CREATOR", 
+			"CREATED_TIME", 
+			"REMARK"
+		)
+		values
+		(
+			#{id}, 
+			#{remindRole}, 
+			#{remindTime}, 
+			#{remindContent}, 
+			#{state}, 
+			#{creatorId}, 
+			#{creator}, 
+			#{createdTime}, 
+			#{remark}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.db.config.entity.RemindAdministration">
+		update REMIND_ADMINISTRATION 
+		<set>
+			<if test="remindRole != null">"REMIND_ROLE" = #{remindRole}, </if>
+			<if test="remindTime != null">"REMIND_TIME" = #{remindTime}, </if>
+			<if test="remindContent != null">"REMIND_CONTENT" = #{remindContent}, </if>
+			<if test="state != null">"STATE" = #{state}, </if>
+			<if test="creatorId != null">"CREATOR_ID" = #{creatorId}, </if>
+			<if test="creator != null">"CREATOR" = #{creator}, </if>
+			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
+			<if test="remark != null">"REMARK" = #{remark}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from REMIND_ADMINISTRATION where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from REMIND_ADMINISTRATION where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
