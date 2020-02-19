@@ -34,6 +34,8 @@ var pageModule = function() {
 			url: tableUrl
 			
 		});
+	}
+	var initgridright = function() {
 		grid1 = $("#gridcont1").createGrid({
 			columns: [
 				  {display: "提醒角色",name:"remindRole",width: "15%",align: "left",render: function(rowdata,n){
@@ -193,6 +195,9 @@ var pageModule = function() {
 		},
 		initgrid:function(){
 			initgrid();
+		},
+		initgridright:function(){
+			initgridright();
 		}
 	}
 
@@ -231,45 +236,13 @@ var remindeditfn = function(id,Role,Time,Content,type){
 	})
 }
 //删除
-var delfn = function(){
-	var datas = grid.getcheckrow();
-	var ids=[];
-	if(datas.length < 1) {
-		newbootbox.alertInfo("请选择要删除的数据！");
-	} else {
-		$(datas).each(function(i){
-			ids[i]=this.id;
-		});
-		newbootbox.confirm({
-			 title: "提示",
-		     message: "是否要进行删除操作？",
-		     callback1:function(){
-		    	 $ajax({
-					url: delUrl,
-					type: "GET",
-					data: {"ids":ids.toString()},
-					success: function(data) {
-						if(data.result == "success") {
-							newbootbox.alertInfo('删除成功！').done(function(){
-								grid3.refresh();
-							});
-						}else{
-							newbootbox.alertInfo("删除失败！");
-						}
-					}
-				})
-		     }
-		});
-	}
-}
-//管理提醒删除
-var reminddelfn = function(id){
+var delfn = function(id){
 	newbootbox.confirm({
 		 title: "提示",
 	     message: "是否要进行删除操作？",
 	     callback1:function(){
 	    	 $ajax({
-				url: reminddelUrl,
+				url: delUrl,
 				type: "GET",
 				data: {"ids":id},
 				success: function(data) {
@@ -284,6 +257,38 @@ var reminddelfn = function(id){
 			})
 	     }
 	});
+}
+//管理提醒删除
+var reminddelfn = function(id){
+	var datas = grid3.getcheckrow();
+	var ids=[];
+	if(datas.length < 1) {
+		newbootbox.alertInfo("请选择要删除的数据！");
+	} else {
+		$(datas).each(function(i){
+			ids[i]=this.id;
+		});
+		newbootbox.confirm({
+			 title: "提示",
+		     message: "是否要进行删除操作？",
+		     callback1:function(){
+		    	 $ajax({
+					url: reminddelUrl,
+					type: "GET",
+					data: {"ids":JSON.stringify(ids)},
+					success: function(data) {
+						if(data.msg == "success") {
+							newbootbox.alertInfo('删除成功！').done(function(){
+								grid3.refresh();
+							});
+						}else{
+							newbootbox.alertInfo("删除失败！");
+						}
+					}
+				})
+		     }
+		});
+	}
 }
 //初始化列表开关
 var initBootSwitch= function(){
@@ -306,10 +311,15 @@ var initBootSwitch= function(){
 }
 var tabClick = function(flag){
 	setTimeout(function(){
-//			grid1.refresh();
+//		grid1.refresh();
 //		grid2.refresh();
 //		grid3.refresh();
-		pageModule.initgrid();
+		if(flag == 2){
+			pageModule.initgridright()
+		}else{
+			pageModule.initgrid();
+		}
+		
 	},10)
 //	if(flag == 1){
 //		$("#content1").show()

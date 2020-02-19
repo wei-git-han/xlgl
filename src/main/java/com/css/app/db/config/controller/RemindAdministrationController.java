@@ -47,7 +47,7 @@ public class RemindAdministrationController {
 		//查询列表数据
 		List<RemindAdministration> remindAdministrationList = remindAdministrationService.queryList(map);
 		for (RemindAdministration remindAdministration : remindAdministrationList) {
-			if(remindAdministration.getType().equals(type)) {
+			if(remindAdministration.getType() !=null &&remindAdministration.getType().equals(type) ) {
 				ja.add(remindAdministration);
 			}
 		}
@@ -62,7 +62,7 @@ public class RemindAdministrationController {
 	 */
 	@ResponseBody
 	@RequestMapping("/info")
-	public void info(@PathVariable("id") String id){
+	public void info(String id){
 		RemindAdministration remindAdministration = remindAdministrationService.queryObject(id);
 		Response.json("remindAdministration", remindAdministration);
 	}
@@ -72,7 +72,7 @@ public class RemindAdministrationController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public void save(@RequestBody RemindAdministration remindAdministration){
+	public void save(RemindAdministration remindAdministration){
 		remindAdministration.setId(UUIDUtils.random());
 		remindAdministrationService.save(remindAdministration);
 		
@@ -84,7 +84,7 @@ public class RemindAdministrationController {
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	public void update(@RequestBody RemindAdministration remindAdministration){
+	public void update(RemindAdministration remindAdministration){
 		remindAdministrationService.update(remindAdministration);
 		
 		Response.ok();
@@ -95,7 +95,7 @@ public class RemindAdministrationController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	public void delete(@RequestBody String[] ids){
+	public void delete(String[] ids){
 		remindAdministrationService.deleteBatch(ids);
 		
 		Response.ok();

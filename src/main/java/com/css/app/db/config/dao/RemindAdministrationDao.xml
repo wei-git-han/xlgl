@@ -29,7 +29,8 @@
 			"CREATOR_ID", 
 			"CREATOR", 
 			"CREATED_TIME", 
-			"REMARK"
+			"REMARK",
+			"TYPE"
 		)
 		values
 		(
@@ -41,7 +42,8 @@
 			#{creatorId}, 
 			#{creator}, 
 			#{createdTime}, 
-			#{remark}
+			#{remark},
+			#{type}
 		)
 	</insert>
 	 
@@ -50,12 +52,8 @@
 		<set>
 			<if test="remindRole != null">"REMIND_ROLE" = #{remindRole}, </if>
 			<if test="remindTime != null">"REMIND_TIME" = #{remindTime}, </if>
-			<if test="remindContent != null">"REMIND_CONTENT" = #{remindContent}, </if>
 			<if test="state != null">"STATE" = #{state}, </if>
-			<if test="creatorId != null">"CREATOR_ID" = #{creatorId}, </if>
-			<if test="creator != null">"CREATOR" = #{creator}, </if>
-			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
-			<if test="remark != null">"REMARK" = #{remark}</if>
+			<if test="remindContent != null">"REMIND_CONTENT" = #{remindContent}</if>
 		</set>
 		where id = #{id}
 	</update>

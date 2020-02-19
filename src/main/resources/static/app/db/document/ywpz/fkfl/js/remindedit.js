@@ -14,7 +14,7 @@ var pageModule = function(){
 				url:editInfo,
 				data:{id:id},
 				success:function(data){
-					setformdata(data);
+					setformdata(data.remindAdministration);
 				}
 			})
 //			setformdata({
@@ -32,7 +32,7 @@ var pageModule = function(){
 		});
 		$("#save").click(function(){
 			var remindRole = $("#remindRole").val();
-			var remindTime = $("#remindTime").val();
+			var remindTime = $("#remindTime").val()?$("#remindTime").val():"每日九点";
 			var remindContent = $("#remindContent").val();
 			$ajax({
 				url:id?editUrl:saveUrl,
@@ -40,9 +40,9 @@ var pageModule = function(){
 				type: "GET",
 				success:function(data){
 					newbootbox.newdialogClose("addDialog");
-					if(data.result == "success") {
+					if(data.msg == "success") {
 						newbootbox.alertInfo('保存成功！').done(function(){
-							window.top.iframe1.window.iframe100.window.pageModule.initgrid();
+							window.top.iframe1.window.iframe100.window.pageModule.initgridright();
 						});
 					}else{
 						newbootbox.alertInfo("保存失败！");
