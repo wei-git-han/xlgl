@@ -33,6 +33,8 @@ public class RemindAdministration implements Serializable {
 	private Date createdTime;
 	//备注
 	private String remark;
+	//区分局内未转办，未承办或未反馈，催填提醒
+	private String type;
 
 	/**
 	 * 设置：
@@ -142,4 +144,11 @@ public class RemindAdministration implements Serializable {
 	public String getRemark() {
 		return remark;
 	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	
 }
