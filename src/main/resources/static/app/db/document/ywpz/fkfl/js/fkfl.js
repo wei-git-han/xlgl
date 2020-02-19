@@ -1,4 +1,7 @@
 var grid = null;
+var grid1 = null;
+var grid2 = null;
+var grid3 = null;
 var tableUrl = {"url":rootPath +"/dbexpdeedbackset/list","dataType":"text"}; //表格list
 var delUrl = {"url":rootPath +"/dbexpdeedbackset/delete","dataType":"text"}; //删除---待完善
 var pageModule = function() {
@@ -25,6 +28,93 @@ var pageModule = function() {
 			checkbox: true,
 			rownumberyon: true,
 			overflowx: false,
+            pagesize: 15,
+			url: tableUrl
+			
+		});
+		grid1 = $("#gridcont1").createGrid({
+			columns: [
+				  {display: "提醒角色",name:"orgName",width: "15%",align: "left",render: function(rowdata,n){
+					  return rowdata.expName;   
+				  }},
+				  {display: "提醒时间",name:"deptName",width: "15%",align: "left",render: function(rowdata,n){
+					  return rowdata.expName;   
+				  }}, 
+				  {display: "提醒内容",name:"deptName",width: "30%",align: "left",render: function(rowdata,n){
+					  return rowdata.expName;   
+				  }}, 
+//				  {display:"状态",name:"flag",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
+//                  	var checkedMark = ""
+//                   	return '<div class="switch"><input class="leaveSwitch" data-clickid="'+rowdata.id+'" name="status" type="checkbox" '+checkedMark+'></div>'; 
+//                   }},
+//                   {display:"操作",name:"",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
+//                    	return '<button type="button" class="btn btn-xs btn-icon QBlackFont" onclick="editfn(\''+rowdata.id+'\')"  title="编辑">编辑</button>';
+//                    }},
+				 ],
+			width: "100%",
+			height: "100%",
+			checkbox: true,
+			rownumberyon: true,
+			overflowx: false,
+			pageyno:false,
+            pagesize: 15,
+			url: tableUrl
+			
+		});
+		grid2 = $("#gridcont2").createGrid({
+			columns: [
+				  {display: "提醒角色",name:"orgName",width: "15%",align: "left",render: function(rowdata,n){
+					  return rowdata.expName;   
+				  }},
+				  {display: "提醒时间",name:"deptName",width: "15%",align: "left",render: function(rowdata,n){
+					  return rowdata.expContent;   
+				  }}, 
+				  {display: "提醒内容",name:"deptName",width: "30%",align: "left",render: function(rowdata,n){
+					  return rowdata.expContent;   
+				  }}, 
+				  {display:"状态",name:"flag",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
+                	var checkedMark = (rowdata.deductionVacationDay==1)?"":"checked"
+                 	return '<div class="switch"><input class="leaveSwitch" data-clickid="'+rowdata.id+'" name="status" type="checkbox" '+checkedMark+'></div>'; 
+                 }},
+                 {display:"操作",name:"",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
+                  	return '<button type="button" class="btn btn-xs btn-icon QBlackFont" onclick="editfn(\''+rowdata.id+'\')"  title="编辑">编辑</button>';
+                  }}
+				 ],
+			width: "100%",
+			height: "100%",
+			checkbox: true,
+			rownumberyon: true,
+			overflowx: false,
+			pageyno:false,
+            pagesize: 15,
+			url: tableUrl
+			
+		});
+		grid3 = $("#gridcont3").createGrid({
+			columns: [
+				  {display: "提醒角色",name:"orgName",width: "15%",align: "left",render: function(rowdata,n){
+					  return rowdata.expName;   
+				  }},
+				  {display: "提醒时间",name:"deptName",width: "15%",align: "left",render: function(rowdata,n){
+					  return rowdata.expContent;   
+				  }}, 
+				  {display: "提醒内容",name:"deptName",width: "30%",align: "left",render: function(rowdata,n){
+					  return rowdata.expContent;   
+				  }}, 
+				  {display:"状态",name:"flag",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
+                	var checkedMark = (rowdata.deductionVacationDay==1)?"":"checked"
+                 	return '<div class="switch"><input class="leaveSwitch" data-clickid="'+rowdata.id+'" name="status" type="checkbox" '+checkedMark+'></div>'; 
+                 }},
+                 {display:"操作",name:"",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
+                  	return '<button type="button" class="btn btn-xs btn-icon QBlackFont" onclick="editfn(\''+rowdata.id+'\')"  title="编辑">编辑</button>';
+                  }}
+				 ],
+			width: "100%",
+			height: "100%",
+			checkbox: true,
+			rownumberyon: true,
+			overflowx: false,
+			pageyno:false,
             pagesize: 15,
 			url: tableUrl
 			

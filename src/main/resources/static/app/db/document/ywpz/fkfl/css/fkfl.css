@@ -48,3 +48,17 @@ td span{
 	background:#5498EB;
 	padding:4px 5px;color:#fff;
 }
+.remindBox{
+	margin-top: 30px;
+}
+.remindlist{
+	margin-bottom: 50px;
+}
+.remindtext{
+	font-size: 16px;
+	font-weight: 900;
+	border-left: 4px solid #6699FF;
+	text-indent: 2px;
+	line-height: 18px;
+	height: 18px
+}
