@@ -13,14 +13,15 @@
 		<link rel="stylesheet" type="text/css"  href="../../../../../../assets/global/plugins/uniform/css/uniform.default.css" />
 		<link rel="stylesheet" type="text/css"  href="../../../../../../assets/global/css/components.css" id="style_components" />
 		<link rel="stylesheet" type="text/css"  href="../../../../../../assets/global/css/plugins.css" />
+		<link rel="stylesheet" type="text/css"  href="../../../../../../assets/global/plugins/bootstrap-switch/css/bootstrap-switch.css"></link>
 		<link rel="stylesheet" type="text/css"  href="../../../../common/css/common.css" />
 		<link rel="stylesheet" type="text/css"  href=".././css/fkfl.css" />
 	</head>
 	<body>
 		<div class="pr100">
 			<ul class = "nav nav-pills" role="tablist" style="border-bottom: 1px solid #76ACEF;">
-				<li role="presentation" class="active"><a href="#content1" data-toggle="tab">范例管理</a></li>
-				<li role="presentation"><a href="#content2" data-toggle="tab">提醒管理</a></li>
+				<li role="presentation" onclick="tabClick()" class="active"><a href="#content1" data-toggle="tab">范例管理</a></li>
+				<li role="presentation" onclick="tabClick()"><a href="#content2" data-toggle="tab">提醒管理</a></li>
 			</ul>		
 			<div class="tab-content" style="position:absolute;left:0;top:45px;right:0;bottom:0;">
 				<div role="tabpanel" class="tab-pane active" id="content1"  style="width:100%;height:100%">
@@ -38,23 +39,29 @@
 						</div>
 					</div>	
 				</div>
-				<div role="tabpanel" class="tab-pane pr100" id="content2">
+				<div role="tabpanel" class="tab-pane" id="content2" style="width:100%;height:100%">
 					<ul class="remindBox">
 						<li class="remindlist">
 							<div class="remindtext">局内未转办提醒设置</div>
-							<div class="pr100" style="height:auto">
+							<div class="pr100" style="height:100px">
 								<div id="gridcont1"></div>
 							</div>
 						</li>
 						<li class="remindlist">
 							<div class="remindtext">为承办或为反馈设置</div>
-							<div class="pr100" style="height:auto">
+							<div class="pr100" style="height:100px">
 								<div id="gridcont2"></div>
 							</div>
 						</li>
 						<li class="remindlist">
-							<div class="remindtext">催填提醒设置</div>
-							<div class="pr100" style="height:auto">
+							<div class="remindtext" style="position:relative">
+								催填提醒设置
+								<div style="position:absolute;right:5px;top:-5px;">
+									<button type="button" class="btn btn-primary btn-sm" onclick="remindeditfn('','','','',3)">增加</button>
+									<button type="button" class="btn btn-primary btn-sm">删除</button>
+								</div>
+							</div>
+							<div class="pr100" style="height:300px">
 								<div id="gridcont3"></div>
 							</div>
 						</li>
@@ -68,6 +75,7 @@
 		<script type="text/javascript" src="../../../../../../assets/global/plugins/jquery-migrate.min.js"></script>
 		<script type="text/javascript" src="../../../../../../assets/global/plugins/jquery-ui/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="../../../../../../assets/global/plugins/bootstrap/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../../../../../../assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
 		<script type="text/javascript" src="../../../../../../assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 		<script type="text/javascript" src="../../../../../../assets/global/plugins/uniform/jquery.uniform.min.js"></script>
 		<script type="text/javascript" src="../../../../../../assets/global/plugins/gridtable/gridtable.js"></script>
