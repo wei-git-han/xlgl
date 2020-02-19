@@ -16,6 +16,8 @@ import com.css.base.utils.PageUtils;
 import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 import com.css.base.utils.Response;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.css.app.db.config.entity.RemindAdministration;
 import com.css.app.db.config.service.RemindAdministrationService;
 
@@ -38,15 +40,24 @@ public class RemindAdministrationController {
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	public void list(Integer page, Integer limit){
+	public void list(){
+		JSONObject result = new JSONObject(true);
+		JSONArray ja = new JSONArray();
 		Map<String, Object> map = new HashMap<>();
-		PageHelper.startPage(page, limit);
-		
 		//查询列表数据
 		List<RemindAdministration> remindAdministrationList = remindAdministrationService.queryList(map);
+		for (RemindAdministration remindAdministration : remindAdministrationList) {
+			if(remindAdministration.getType().equals("1")) {
+				result.put("insideNo", remindAdministration);
+			}else if(remindAdministration.getType().equals("2")) {
+				result.put("noFeedback", remindAdministration);
+			}else if(remindAdministration.getType().equals("3")) {
+				ja.add(remindAdministration);
+			}
+		}
+		result.put("rows", ja);
 		
-		PageUtils pageUtil = new PageUtils(remindAdministrationList);
-		Response.json("page",pageUtil);
+		Response.json(result);
 	}
 	
 	
