@@ -25,6 +25,8 @@ var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var fromMsg=getUrlParam("fromMsg")||false; //是否为消息进入
 var showFileButton = getUrlParam("showFileButton")||false
 var docStatus = getUrlParam("docStatus")||"" //文件办理状态
+var docTypeName = getUrlParam2("docTypeName");//类别
+var jobContent = getUrlParam2("jobContent");//任务分工内容
 var isCbr = 0;//承办人标识
 var isSave = 0;//保存成功提示标识
 var ifShowEditBtn="0";//是否有编辑按钮
@@ -239,24 +241,39 @@ var pageModule = function(){
 	
 	//批示信息
 	var initps = function(){
-		$ajax({
-			url:getSzpsListUrl,
-			data:{infoId:fileId},
-			success:function(data){
-				if(data&&data.length>0){
-					$(".psMain").html("");
-					$.each(data,function(i,item){
-						$(".psMain").append(
-							'<div class="psrecord">'+
-				            '	<div class="pslist"><span>'+item.userName+'&nbsp;&nbsp;'+item.createdTime+'&nbsp;&nbsp;批示：</span><span>'+item.leaderComment+'</span></div>'+
-				            '</div>'
-			            )
-					});
-				}else{
-					$(".line3").html("");
-				}
-			}
-		});	
+		if(docTypeName == "重要决策部署分工"||docTypeName == "部领导批示指示"||docTypeName == "部内重要工作分工"){
+			if(jobContent&&jobContent!=''&&jobContent!='undefined'){
+	   			$(".ps_title").html("任务分工");
+				$(".psMain").html("");
+				$(".psMain").append(
+					'<div class="psrecord">'+
+		            '	<div  class="pslist">'+ jobContent+'</div>'+
+		            '</div>'
+	            )
+	   		 }else{
+	   			$(".line3").html("");
+	   		 }
+		 }else{
+				$ajax({
+					url:getSzpsListUrl,
+					data:{infoId:fileId},
+					success:function(data){
+						if(data&&data.length>0){
+							$(".psMain").html("");
+							$.each(data,function(i,item){
+								$(".psMain").append(
+									'<div class="psrecord">'+
+						            '	<div class="pslist"><span>'+item.userName+'&nbsp;&nbsp;'+item.createdTime+'&nbsp;&nbsp;批示：</span><span>'+item.leaderComment+'</span></div>'+
+						            '</div>'
+					            )
+							});
+						}else{
+							$(".line3").html("");
+						}
+					}
+				});	
+		 }
+
 	}
 	
 	/*公文信息*/

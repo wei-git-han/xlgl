@@ -75,24 +75,31 @@ var pageModule = function(){
                 		csFlag = '<img src="../../../common/images/u301.png" class="titleimg" />';
                 	}
                 	if(rowdata.isXBPerson == 1 ){
-                		return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../view/html/view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&docStatus='+docStatus+'&fileFrom=grdb" target="iframe1">'+cuiban+'<span class="tabletitle2">'+rowdata.docTitle+csFlag+'</span></a>'
+                		return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../view/html/view.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&docStatus='+docStatus+'&fileFrom=grdb'+'&docTypeName='+rowdata.docTypeName+'&jobContent='+rowdata.jobContent+'" target="iframe1">'+cuiban+'<span class="tabletitle2">'+rowdata.docTitle+csFlag+'</span></a>'
                 	}else{
-                		return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../view/html/view2.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&docStatus='+docStatus+'&fileFrom=grdb" target="iframe1">'+cuiban+'<span class="tabletitle2">'+rowdata.docTitle+csFlag+'</span></a>'
+                		return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../view/html/view2.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&docStatus='+docStatus+'&fileFrom=grdb'+'&docTypeName='+rowdata.docTypeName+'&jobContent='+rowdata.jobContent+'" target="iframe1">'+cuiban+'<span class="tabletitle2">'+rowdata.docTitle+csFlag+'</span></a>'
                 	}
                 }},
                 {display:"紧急程度",name:"urgencyDegree",width:"5%",align:"center",paixu:false,render:function(rowdata){
                	 	return rowdata.urgencyDegree;
                 }},
-                {display:"批示指示内容",name:"",width:"20%",align:"left",paixu:false,render:function(rowdata){
-                	 var html1="";
-               	 	 $.each(rowdata.szpslist,function(i,item){
-	               		 var createdTime="";
-	               		 if(item.createdTime!="" && item.createdTime!=null){
-	               			 createdTime= item.createdTime.substring(0,16);
-	               		 }
-	               		html1+=item.userName+'&nbsp;&nbsp;'+createdTime+'批示：'+item.leaderComment+'&nbsp;&nbsp;&nbsp;'
-	    		     });
-               	     return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.infoId+'\')" title="'+html1+'">'+html1+'</div>';
+                {display:"批示指示/任务分工内容",name:"",width:"20%",align:"left",paixu:false,render:function(rowdata){
+	               	 var contentText = '';
+	            	 if(rowdata.docTypeName == "重要决策部署分工"||rowdata.docTypeName == "部领导批示指示"||rowdata.docTypeName == "部内重要工作分工"){
+	            		 contentText = rowdata.jobContent?rowdata.jobContent:"";
+	            	 }else{
+	                	 var html1="";
+	               	 	 $.each(rowdata.szpslist,function(i,item){
+		               		 var createdTime="";
+		               		 if(item.createdTime!="" && item.createdTime!=null){
+		               			 createdTime= item.createdTime.substring(0,16);
+		               		 }
+		               		html1+=item.userName+'&nbsp;&nbsp;'+createdTime+'批示：'+item.leaderComment+'&nbsp;&nbsp;&nbsp;'
+		    		     });
+	                	 contentText = '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.infoId+'\')" title="'+html1+'">'+html1+'</div>';
+	            	 }
+	
+	            	 return contentText;
                 }},
                 {display:"本期局内反馈",name:"",width:"19%",align:"left",paixu:false,render:function(rowdata){
 		           	var dbCont="";

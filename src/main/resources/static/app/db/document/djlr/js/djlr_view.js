@@ -25,6 +25,8 @@ var startdate = getUrlParam2("startdate");
 var enddate = getUrlParam2("enddate");
 var isFromChart = getUrlParam("isFromChart");
 var isDepart = getUrlParam("isDepart");
+var docTypeName = getUrlParam2("docTypeName");//类别
+var jobContent = getUrlParam2("jobContent");//任务分工内容
 var backData = {
 	status:status,
 	leaderId:leaderId,
@@ -164,6 +166,19 @@ var pageModule = function(){
 	
 	//批示信息
 	var initps = function(){
+   	 if(docTypeName == "重要决策部署分工"||docTypeName == "部领导批示指示"||docTypeName == "部内重要工作分工"){
+   		 if(jobContent&&jobContent!=''&&jobContent!='undefined'){
+   			$(".ps_title").html("任务分工");
+			$(".psMain").html("");
+			$(".psMain").append(
+				'<div class="psrecord">'+
+	            '	<div  class="pslist">'+ jobContent+'</div>'+
+	            '</div>'
+            )
+   		 }else{
+   			$(".line3").html("");
+   		 }
+	 }else{
 		$ajax({
 			url:getSzpsListUrl,
 			data:{infoId:fileId},
@@ -182,6 +197,8 @@ var pageModule = function(){
 				}
 			}
 		});	
+	 }
+
 	}
 	
 	/*公文信息*/

@@ -35,12 +35,12 @@ var pageModule = function(){
    				  	 return '<div title="'+documentStatusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+documentStatusName+'</div>';
                  }},
                  {display:"文件标题",name:"",width:"15%",align:"left",render:function(rowdata){
-                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle" href="djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+rowdata.docTitle+'</a>'
+                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle" href="djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'&docTypeName='+rowdata.docTypeName+'&jobContent='+rowdata.jobContent+'" target="iframe1">'+rowdata.docTitle+'</a>'
                  }},
                  {display:"紧急程度",name:"",width:"4%",align:"center",paixu:false,render:function(rowdata){
                 	 return rowdata.urgencyDegree;
                  }},
-                 {display:"批示指示内容",name:"",width:"25%",align:"left",paixu:false,title:false,render:function(rowdata){
+                 {display:"批示指示/任务分工内容",name:"",width:"25%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 /*var szpsCont="";
                 	 var leaderTime1="";
                 	 if(rowdata.leaderTime!="" && rowdata.leaderTime!=null){
@@ -50,15 +50,22 @@ var pageModule = function(){
                 		 szpsCont=rowdata.leaderName+" "+leaderTime1+"批示："+rowdata.leaderContent
                 	 }
                 	 return '<div class="zspsnr"  onclick="pszsnrAlert(\''+rowdata.id+'\')" title="'+szpsCont+'">'+szpsCont+'</div>';*/
-                	 var html1="";
-                	 $.each(rowdata.szpslist,function(i,item){
-                		 var createdTime="";
-                		 if(item.createdTime!="" && item.createdTime!=null){
-                			 createdTime= item.createdTime.substring(0,16);
-                		 }
-                		 html1+=item.userName+'&nbsp;&nbsp;'+createdTime+'批示：'+item.leaderComment+'&nbsp;&nbsp;&nbsp;'
-     				 });
-                	 return '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.id+'\')" title="'+html1+'">'+html1+'</div>';
+                	 var contentText = '';
+                	 if(rowdata.docTypeName == "重要决策部署分工"||rowdata.docTypeName == "部领导批示指示"||rowdata.docTypeName == "部内重要工作分工"){
+                		 contentText = rowdata.jobContent?rowdata.jobContent:"";
+                	 }else{
+                		 var html1="";
+	                	 $.each(rowdata.szpslist,function(i,item){
+	                		 var createdTime="";
+	                		 if(item.createdTime!="" && item.createdTime!=null){
+	                			 createdTime= item.createdTime.substring(0,16);
+	                		 }
+	                		 html1+=item.userName+'&nbsp;&nbsp;'+createdTime+'批示：'+item.leaderComment+'&nbsp;&nbsp;&nbsp;'
+	     				 });
+	                	 contentText = '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.id+'\')" title="'+html1+'">'+html1+'</div>';
+                	 }
+
+                	 return contentText;
                  }},
                  {display:"承办单位/人",name:"",width:"20%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 return '<div class="cbdw" title="'+rowdata.underDepts+'">'+rowdata.underDepts+'</div>'
