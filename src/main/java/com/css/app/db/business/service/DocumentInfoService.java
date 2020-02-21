@@ -59,4 +59,6 @@ public interface DocumentInfoService {
     int queryDocumentWfk(String danweiid, String year);
 
 	int queryWfkLeaderStatistics(Map<String, Object> map);
+	int queryDocumentWfk2(String danweiid, String year);
+	
 }

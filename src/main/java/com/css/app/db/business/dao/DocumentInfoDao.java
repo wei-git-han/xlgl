@@ -52,4 +52,7 @@ public interface DocumentInfoDao extends BaseDao<DocumentInfo> {
     int queryDocumentWfk(@Param("danweiid") String danweiid, @Param("year") String year);
 
     int queryWfkLeaderStatistics(Map<String, Object> map);
+    
+    int queryDocumentWfk2(@Param("danweiid") String danweiid, @Param("year") String year);
+    
 }

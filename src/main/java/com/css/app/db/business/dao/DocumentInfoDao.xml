@@ -679,4 +679,20 @@
 		</foreach>
 	</delete>
 
+
+<select id="queryDocumentWfk2" resultType="int">
+		select
+			count(a.id)
+		from
+		DB_DOCUMENT_INFO a
+		<if test="danweiid != null and danweiid != ''">
+			inner join DB_SUB_DOC_INFO b on a.ID = b.INFO_ID
+			and b.SUB_DEPT_ID = #{danweiid}
+		</if>
+		where (b.DOC_STATUS=1 or b.DOC_STATUS =5)
+		<if test="year != null and year != ''">
+			and to_char(a.CREATED_TIME) like '%'||#{year}||'%'
+		</if>
+	</select>
+
 </mapper>

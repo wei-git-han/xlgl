@@ -167,7 +167,7 @@ public class DocumentJcdbController {
 				jo.put("ctls", (long) map2.get("ctls"));
 				//对结果进行二级过滤：针对办理中拆分：办理中+未反馈
 				//未反馈量
-				int wfkCount = this.queryWfkCount(danweiid, year);
+				int wfkCount = this.queryWfkCount2(danweiid, year);
 				//各局完成比率  办结+常态落实/总数
 				long total = (long) map2.get("blz") + (long) map2.get("bj") + (long) map2.get("ctls");
 				if (total == 0) {
@@ -226,6 +226,17 @@ public class DocumentJcdbController {
 	 */
 	private int queryWfkCount(String danweiid, String year) {
 		return documentInfoService.queryDocumentWfk(danweiid, year);
+	}
+	
+	/**
+	 *  根据每局ID 查出办理中未反馈数据量
+	 *
+	 * @param year 年
+	 * @param danweiid 直接部门ID
+	 * @return int
+	 */
+	private int queryWfkCount2(String danweiid, String year) {
+		return documentInfoService.queryDocumentWfk2(danweiid, year);
 	}
 
 	/**

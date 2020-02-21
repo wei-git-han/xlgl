@@ -52,8 +52,8 @@
 		<set>
 			<if test="remindRole != null">"REMIND_ROLE" = #{remindRole}, </if>
 			<if test="remindTime != null">"REMIND_TIME" = #{remindTime}, </if>
-			<if test="state != null">"STATE" = #{state}, </if>
-			<if test="remindContent != null">"REMIND_CONTENT" = #{remindContent}</if>
+			<if test="remindContent != null">"REMIND_CONTENT" = #{remindContent},</if>
+			<if test="state != null">"STATE" = #{state}</if>
 		</set>
 		where id = #{id}
 	</update>
