@@ -8,9 +8,9 @@ var url7 = {"url":"/app/db/documentjcdb/isShouZhang","dataType":"text"};
 var nowYear = new Date().getFullYear();
 var nowMonth = new Date().getMonth();
 var maxYear = new Date().getFullYear();
-if(nowMonth<2){
-	nowYear--;
-}
+//if(nowMonth<2){
+//	nowYear--;
+//}//改成默认当前年份
 var minYear = 2017;
 $("#nowYear").html(nowYear);
 var pageModule = function(){

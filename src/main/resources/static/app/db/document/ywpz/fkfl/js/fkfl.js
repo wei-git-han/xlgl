@@ -6,6 +6,7 @@ var tableUrl = {"url":rootPath +"/dbexpdeedbackset/list","dataType":"text"}; //�
 var delUrl = {"url":rootPath +"/dbexpdeedbackset/delete","dataType":"text"}; //删除---待完善
 var remindTableUrl = {"url":"/remindadministration/list","dataType":"text"}; //提示提醒表格list
 var reminddelUrl = {"url":"/remindadministration/delete","dataType":"text"}; //提示提醒删除---待完善
+var editSwitchUrl = {"url":"/remindadministration/update","dataType":"text"};  //修改开关
 var pageModule = function() {
 	var initgrid = function() {
 		grid = $("#gridcont").createGrid({
@@ -48,7 +49,7 @@ var pageModule = function() {
 					  return rowdata.remindContent;   
 				  }}, 
 				  {display:"状态",name:"flag",width:"15%",align:"center",render:function(rowdata,n){
-                  	var checkedMark = ""
+                  	var checkedMark = (rowdata.state=='true')?"checked":""
                    	return '<div class="switch"><input class="leaveSwitch" data-clickid="'+rowdata.id+'" name="status" type="checkbox" '+checkedMark+'></div>'; 
                    }},
                    {display:"操作",name:"do",width:"15%",align:"center",render:function(rowdata,n){
@@ -81,7 +82,7 @@ var pageModule = function() {
 					  return rowdata.remindContent;   
 				  }}, 
 				  {display:"状态",name:"flag",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
-                	var checkedMark = ""
+					  var checkedMark = (rowdata.state=='true')?"checked":""
                  	return '<div class="switch"><input class="leaveSwitch" data-clickid="'+rowdata.id+'" name="status" type="checkbox" '+checkedMark+'></div>'; 
                  }},
                  {display:"操作",name:"",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
@@ -114,7 +115,7 @@ var pageModule = function() {
 					  return rowdata.remindContent;   
 				  }}, 
 				  {display:"状态",name:"flag",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
-                	var checkedMark = ""
+					  var checkedMark = (rowdata.state=='true')?"checked":""
                  	return '<div class="switch"><input class="leaveSwitch" data-clickid="'+rowdata.id+'" name="status" type="checkbox" '+checkedMark+'></div>'; 
                  }},
                  {display:"操作",name:"",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
@@ -300,12 +301,13 @@ var initBootSwitch= function(){
    		size:"mini",
    		animate:"false",
    		onSwitchChange:function(event,state){
-//   			$ajax({
-//    			url:{"url":"/app/qxjgl/dicvocationsort/update","dataType":"text"},
-//    			data:{id:$(event.target).data("clickid"),deductionVacationDay:state?"0":"1"},
-//    			success:function(data){
-//    			}
-//    		});
+			$ajax({
+				url:editSwitchUrl,
+				data:{id:$(event.target).data("clickid"),state:state?"true":"false"},
+				type: "GET",
+				success:function(data){
+				}
+			});
    		}
    	})
 }
