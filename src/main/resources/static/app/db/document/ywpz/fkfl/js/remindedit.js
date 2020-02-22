@@ -45,6 +45,7 @@ var pageModule = function(){
 //				remindContent : content
 //			});
 		}else{
+			setformdata({remindTime:"9:00"});
 			$("#remindRole").val("承办人");
 		}
 
