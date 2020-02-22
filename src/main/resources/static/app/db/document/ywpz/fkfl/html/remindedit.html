@@ -104,6 +104,8 @@
 				defaultTime:'09:00',
 			}).on('show',function(){
 				$(".table-condensed").children("thead").css("opacity","0")
+				$(".datetimepicker-hours").css("position","relative")
+				$(".datetimepicker-hours").css("top","-15px")
 			}).on('hide',function(time){
 				var time = $("#remindTime").val()+":00";
 				$("#remindTime").val(time)
