@@ -30,7 +30,7 @@ var pageModule = function(){
 		}
 		$("#remindTime").append(html);
 		if(id!="" && !!id){
-			$("#remindRole").attr("disabled",true);
+//			$("#remindRole").attr("disabled",true);
 			$ajax({
 				url:editInfo,
 				data:{id:id},
@@ -43,6 +43,8 @@ var pageModule = function(){
 //				remindTime : time,
 //				remindContent : content
 //			});
+		}else{
+			$("#remindRole").val("承办人");
 		}
 
 		console.log(role,time,content)
