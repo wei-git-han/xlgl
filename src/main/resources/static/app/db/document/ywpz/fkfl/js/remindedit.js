@@ -2,7 +2,7 @@ var id = getUrlParam2("id");
 var role = getUrlParam2("role");
 var time = getUrlParam2("time");
 var content = getUrlParam2("content");
-var type = getUrlParam2("type");
+var type = getUrlParam2("type");//1局内未转办提醒设置，2为承办或为反馈设置，3催填提醒设置
 var saveUrl = {"url":"/remindadministration/save","dataType":"text"};  //保存
 var editUrl = {"url":"/remindadministration/update","dataType":"text"};  //修改
 var editInfo = {"url":"/remindadministration/info","dataType":"text"}; //编辑数据
@@ -10,6 +10,7 @@ var editInfo = {"url":"/remindadministration/info","dataType":"text"}; //编辑�
 var pageModule = function(){
 	var initdatafn = function(){
 		if(id!="" && !!id){
+			$("#remindRole").attr("disabled",true);
 			$ajax({
 				url:editInfo,
 				data:{id:id},

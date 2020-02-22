@@ -276,7 +276,7 @@ var reminddelfn = function(id){
 		    	 $ajax({
 					url: reminddelUrl,
 					type: "GET",
-					data: {"ids":JSON.stringify(ids)},
+					data: {"ids":ids.join(",")},
 					success: function(data) {
 						if(data.msg == "success") {
 							newbootbox.alertInfo('删除成功！').done(function(){
