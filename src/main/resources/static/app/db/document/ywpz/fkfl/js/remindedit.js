@@ -9,6 +9,26 @@ var editInfo = {"url":"/remindadministration/info","dataType":"text"}; //编辑�
 
 var pageModule = function(){
 	var initdatafn = function(){
+//		$("#remindTime").datetimepicker({
+//			format: 'HH:mm',
+//			language:"zh",
+//			autoclose: true,
+//			startView: 1,
+//			minView:0,
+//			maxView:0,
+//		}).on('show',function(){
+//			
+//		})
+		$("#remindTime").html("");
+		var html = "";
+		for(var i = 0;i<25;i++){
+			if(i == 9){
+				html+='<option value="'+i+':00" selected>'+i+':00</option>';
+			}else{
+				html+='<option value="'+i+':00">'+i+':00</option>';
+			}
+		}
+		$("#remindTime").append(html);
 		if(id!="" && !!id){
 			$("#remindRole").attr("disabled",true);
 			$ajax({
@@ -33,7 +53,7 @@ var pageModule = function(){
 		});
 		$("#save").click(function(){
 			var remindRole = $("#remindRole").val();
-			var remindTime = $("#remindTime").val()?$("#remindTime").val():"每日九点";
+			var remindTime = $("#remindTime").val()?$("#remindTime").val():"9:00";
 			var remindContent = $("#remindContent").val();
 			$ajax({
 				url:id?editUrl:saveUrl,
