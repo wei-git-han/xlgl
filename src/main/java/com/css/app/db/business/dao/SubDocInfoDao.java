@@ -39,5 +39,12 @@ public interface SubDocInfoDao extends BaseDao<SubDocInfo> {
 	SubDocInfo querySubDocInfoBySubIdAndInfoId(String subId, String infoId);
 
 	void updateSubDocInfoById(SubDocInfo subDocInfo);
+	List<SubDocInfo> queryTmingTaskList(Map<String, Object> map);
+	List<SubDocInfo> NoFeedbackTmingTaskList();
+	List<SubDocInfo> firstNoFeedbackTmingTaskList();
+	List<SubDocInfo> notTransferredTmingTaskList();
+	
+	
+	
 	
 }

@@ -105,5 +105,20 @@ public class SubDocInfoServiceImpl implements SubDocInfoService {
 		// TODO Auto-generated method stub
 		return subDocInfoDao.queryPersonList1(map);
 	}
-	
+	@Override
+	public List<SubDocInfo> queryTmingTaskList(Map<String, Object> map){
+		return subDocInfoDao.queryTmingTaskList(map);
+	}
+	@Override
+	public List<SubDocInfo> NoFeedbackTmingTaskList(){
+		return subDocInfoDao.NoFeedbackTmingTaskList();
+	}
+	@Override
+	public List<SubDocInfo> firstNoFeedbackTmingTaskList(){
+		return subDocInfoDao.firstNoFeedbackTmingTaskList();
+	}
+	@Override
+	public List<SubDocInfo> notTransferredTmingTaskList(){
+		return subDocInfoDao.notTransferredTmingTaskList();
+	}
 }

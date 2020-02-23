@@ -1,25 +1,23 @@
 package com.css.app.db.config.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.stereotype.Controller;
 
-import com.css.base.utils.PageUtils;
-import com.css.base.utils.UUIDUtils;
-import com.github.pagehelper.PageHelper;
-import com.css.base.utils.Response;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.css.app.db.config.entity.RemindAdministration;
 import com.css.app.db.config.service.RemindAdministrationService;
+import com.css.base.utils.CurrentUser;
+import com.css.base.utils.Response;
+import com.css.base.utils.UUIDUtils;
 
 
 /**
@@ -73,7 +71,12 @@ public class RemindAdministrationController {
 	@ResponseBody
 	@RequestMapping("/save")
 	public void save(RemindAdministration remindAdministration){
+		String userId = CurrentUser.getUserId();
+		String username = CurrentUser.getUsername();
 		remindAdministration.setId(UUIDUtils.random());
+		remindAdministration.setCreatorId(userId);
+		remindAdministration.setCreator(username);
+		remindAdministration.setCreatedTime(new Date());
 		remindAdministrationService.save(remindAdministration);
 		
 		Response.ok();
@@ -100,5 +103,5 @@ public class RemindAdministrationController {
 		
 		Response.ok();
 	}
-	
+
 }

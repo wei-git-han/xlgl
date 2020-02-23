@@ -48,4 +48,9 @@ public interface SubDocInfoService {
 	void updateSubDocInfoById(SubDocInfo subDocInfo);
 
 	List<SubDocInfo> queryPersonList1(Map<String, Object> map);
+
+	List<SubDocInfo> queryTmingTaskList(Map<String, Object> map);
+	List<SubDocInfo> NoFeedbackTmingTaskList();
+	List<SubDocInfo> firstNoFeedbackTmingTaskList();
+	List<SubDocInfo> notTransferredTmingTaskList();
 }

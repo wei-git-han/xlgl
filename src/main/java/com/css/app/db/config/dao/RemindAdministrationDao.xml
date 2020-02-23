@@ -9,6 +9,10 @@
 
 	<select id="queryList" resultType="com.css.app.db.config.entity.RemindAdministration">
 		select * from REMIND_ADMINISTRATION 
+		where 1=1
+		<if test="state != null">
+			and state = #{state}
+		</if>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
