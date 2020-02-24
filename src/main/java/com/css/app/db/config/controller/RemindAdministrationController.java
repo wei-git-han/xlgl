@@ -42,6 +42,7 @@ public class RemindAdministrationController {
 		JSONObject result = new JSONObject(true);
 		JSONArray ja = new JSONArray();
 		Map<String, Object> map = new HashMap<>();
+		map.put("type", type);
 		//查询列表数据
 		List<RemindAdministration> remindAdministrationList = remindAdministrationService.queryList(map);
 		for (RemindAdministration remindAdministration : remindAdministrationList) {
