@@ -292,7 +292,7 @@
 	</select>
 	
 	<select id="firstNoFeedbackTmingTaskList"  resultType="com.css.app.db.business.entity.SubDocInfo">
-	 select b.* as SUB_ID from db_sub_doc_info b 
+	 select b.*  from db_sub_doc_info b 
 	 left join DB_REPLY_EXPLAIN c on b.id = c.SUB_ID 
  	 where c.RE_VERSION =1 and  b.DOC_STATUS =9
 	</select>
