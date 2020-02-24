@@ -128,7 +128,6 @@ public class RemindAdministrationTimingTask {
 							
 						}
 					}
-//					System.out.println("测试定时任务消息提醒--------催填--------------------");
 				}
 			}else if(remindAdministration.getType().equals("2")) {//未反馈和首轮未反馈
 				String remindTime = remindAdministration.getRemindTime();
@@ -143,7 +142,6 @@ public class RemindAdministrationTimingTask {
 						MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_CUIBAN_MSG_TITLE);
 						this.setMsg(msg, subDocInfo.getUndertaker(), subDocInfo.getInfoId(), subDocInfo.getId(),remindAdministration.getRemindContent());
 					}
-//					System.out.println("测试定时任务消息提醒--------未反馈--------------------");
 				}
 			}else if(remindAdministration.getType().equals("1")) {//局未转办
 				String remindTime = remindAdministration.getRemindTime();
@@ -153,7 +151,6 @@ public class RemindAdministrationTimingTask {
 						MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_BU_ZHUANBAN_MSG_TITLE);
 						this.setMsg(msg, subDocInfo.getUndertaker(), subDocInfo.getInfoId(), subDocInfo.getId(),remindAdministration.getRemindContent());
 					}
-//					System.out.println("测试定时任务消息提醒--------局转办--------------------");
 				}
 			
 			}
