@@ -187,7 +187,7 @@ public class DocumentInfoController {
 		map.put("search", search);
 		map.put("docStatus", documentStatus);
 		PageHelper.startPage(page, pagesize);
-		List<DocumentInfo> infoList = documentInfoService.queryList(map);
+		List<DocumentInfo> infoList = documentInfoService.queryNewList(map);
 		for (DocumentInfo documentInfo : infoList) {
 			Map<String, Object> szpsMap = new HashMap<>();
 			szpsMap.put("infoId", documentInfo.getId());

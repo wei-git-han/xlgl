@@ -199,4 +199,9 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 	public int queryWfkLeaderStatistics(Map<String, Object> map) {
 		return documentInfoDao.queryWfkLeaderStatistics(map);
 	}
+
+	@Override
+	public List<DocumentInfo> queryNewList(Map<String, Object> map) {
+		return documentInfoDao.queryNewList(map);
+	}
 }
