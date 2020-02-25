@@ -14,6 +14,7 @@ var getlastPeriodUrl ={"url":"/app/db/documentinfo/lastInfo","dataType":"json"};
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var scanFilePath = "";//扫描件路径
 var addcqFlag="";//此变量用来标识是不是自动保存的操作，在submit中区分保存回调
+var loginUserId = ""//登录人Id
 var pageModule = function(){
 	 /*带入录入人*/
 	var makeLoginUser = function(){
@@ -22,10 +23,20 @@ var pageModule = function(){
 			success:function(data){
 				$("#userId").val(data.userId);
 				$("#userName").val(data.userName);
+				//登记录入同账号类别记忆功能
+				loginUserId = data.userId
+				if(getCookie('docTypeArr')){
+					var docTypeArr = JSON.parse(getCookie('docTypeArr'))
+					docTypeArr.map(function(item){
+						if(item.userId == data.userId){
+							$("#docTypeId").val(item.docTypeId);
+							$("#docTypeName").val(item.docTypeName)
+						}
+					});
+				}
 			}
 		})
 	}
-	
 	var initUserTree = function(){
 		$("#userName").createSelecttree({
 			url :UserTreeUrl,
@@ -177,6 +188,18 @@ var pageModule = function(){
 				$(".seteee").attr("disabled",true);
 				$(".setdis").removeAttr("disabled");
 			}
+			//登记录入同账号类别记忆功能
+			var docTypeArr = []
+			if(getCookie('docTypeArr')){
+				docTypeArr = getCookie('docTypeArr');
+				docTypeArr = JSON.parse(docTypeArr).filter(function(item){
+					item.userId != loginUserId
+				});
+			}
+			docTypeArr.push({
+				userId: loginUserId,docTypeId: $(this).val(),docTypeName: $("#docTypeId option:checked").text()
+			})
+			document.cookie = 'docTypeArr='+JSON.stringify(docTypeArr);
 		});
 		
 		//扫描设置
@@ -601,4 +624,11 @@ var psLoad = function(psFileId, psPath){
 	}
 }
 
-
+var getCookie = function(name){
+	var arr,reg = new RegExp("(^|)"+name+"=([^;]*)(;|$)");
+	if(arr = document.cookie.match(reg)){
+		return unescape(arr[2]);
+	}else{
+		return null
+	}
+}
