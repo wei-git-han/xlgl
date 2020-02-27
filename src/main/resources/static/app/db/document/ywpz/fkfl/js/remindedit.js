@@ -66,9 +66,9 @@ var pageModule = function(){
 					id:id,
 					remindRole:remindRole,
 					remindTime:remindTime,
-					remindContent:remindContent,
+					remindContent:remindContent?remindContent:"请尽快填写本轮办理反馈",
 					type:type,
-					state:state?state:"false"
+					state:state?state:"true"
 				},
 				type: "GET",
 				success:function(data){

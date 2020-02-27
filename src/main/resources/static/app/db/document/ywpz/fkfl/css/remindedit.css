@@ -87,5 +87,11 @@ body {
 .newpage24{
 	color:#999999;
 }
+.dropdown-menu {
+	min-width: 210px;
+}
+.datetimepicker table {
+    margin: 0 auto;
+}
 
 
