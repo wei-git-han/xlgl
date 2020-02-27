@@ -280,7 +280,7 @@
 	</delete>
 	
 	<select id="queryTmingTaskList" resultType="com.css.app.db.business.entity.SubDocInfo">
-	  select b.* from db_sub_doc_info b 
+	  select distinct b.* from db_sub_doc_info b 
 	  left join DB_REPLY_EXPLAIN c on b.id = c.SUB_ID 
 	  where  
 	  b.DOC_STATUS =9  and c.re_version=1 and c.show_flag=1
@@ -292,14 +292,14 @@
 	</select>
 	
 	<select id="firstNoFeedbackTmingTaskList"  resultType="com.css.app.db.business.entity.SubDocInfo">
-	 select b.*  from db_sub_doc_info b 
+	 select distinct b.*  from db_sub_doc_info b 
 	 left join DB_REPLY_EXPLAIN c on b.id = c.SUB_ID 
- 	 where c.RE_VERSION =1 and  b.DOC_STATUS =9
+ 	 where c.RE_VERSION =0 and  b.DOC_STATUS =9
 	</select>
 	<select id="notTransferredTmingTaskList"  resultType="com.css.app.db.business.entity.SubDocInfo">
 	 select a.id,a.INFO_ID,b.user_id as  UNDERTAKER from db_sub_doc_info a
 	 left join DB_ADMIN_SET b on a.SUB_DEPT_ID = b.org_id
- 	 where DOC_STATUS = 1
+ 	 where a.DOC_STATUS = 1 and b.ADMIN_TYPE= 2
 	</select>
 	
 

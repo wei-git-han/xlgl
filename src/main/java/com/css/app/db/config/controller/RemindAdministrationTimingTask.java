@@ -50,12 +50,14 @@ public class RemindAdministrationTimingTask {
 
 	/**
 	 * 启动程序时默认启动定时同步
+	 * 300000代表项目启动5分钟后开始启动定时程序
+	 * 1200000代表每隔20分钟定时程序扫描一次数据
 	 */
 	public RemindAdministrationTimingTask() {
 		if (timer == null) {
 			timer = new Timer();
 		}
-		timer.scheduleAtFixedRate(getInstance(), 3600000, 3600000);
+		timer.scheduleAtFixedRate(getInstance(), 300000, 1200000);
 	}
 
 	/**
@@ -133,7 +135,7 @@ public class RemindAdministrationTimingTask {
 							}
 						}
 					}
-				} else if (remindAdministration.getType().equals("2")) {// 未反馈和首轮未反馈
+				} else if (remindAdministration.getType().equals("2")) {// 未承办和首轮未反馈
 					String remindTime = remindAdministration.getRemindTime();
 					if (remindTime.equals(newDate)) {
 						List<SubDocInfo> firstNoFeedbackTmingTaskList = subDocInfoService
