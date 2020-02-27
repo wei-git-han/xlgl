@@ -93,5 +93,11 @@ body {
 .datetimepicker table {
     margin: 0 auto;
 }
+.datetimepicker{
+	width:50%
+}
+.table-condensed{
+	width:100%	
+}
 
 
