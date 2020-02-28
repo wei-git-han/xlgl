@@ -63,6 +63,8 @@ public class SubDocInfo implements Serializable {
 	private String latestUndertaker;
 	//最新反馈审批完成时间
 	private Date latestReplyTime;
+	//工作分工内容
+	private String jobContent;
 	//最新的首长名字
 //	private String leaderName;
 	//最新的首长批示
@@ -338,6 +340,12 @@ public class SubDocInfo implements Serializable {
 	}
 	public void setIsCBPerson(Integer isCBPerson) {
 		this.isCBPerson = isCBPerson;
+	}
+	public String getJobContent() {
+		return jobContent;
+	}
+	public void setJobContent(String jobContent) {
+		this.jobContent = jobContent;
 	}
 	
 }
