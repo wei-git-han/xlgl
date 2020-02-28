@@ -435,7 +435,7 @@
 			where 1=1 and ddi.FIRST_ZB_TIME is not null
 			<if test="year != null">
 				and case when d.leader_time is not null and d.leader_time != '' then to_char(d.leader_time) else
-				to_char(dadi.CREATED_TIME) end like '%'||#{year}||'%'
+				to_char(ddi.CREATED_TIME) end like '%'||#{year}||'%'
 			</if>
 			group by ddi.STATUS,dadi.SUB_DEPT_ID,dadi.SUB_DEPT_NAME
 			order by ddi.STATUS asc
@@ -680,8 +680,8 @@
 	</delete>
 
 
-<select id="queryDocumentWfk2" resultType="int">
-		select
+	<select id="queryDocumentWfk2" resultType="int">
+	<!-- 		select
 			count(a.id)
 		from
 		DB_DOCUMENT_INFO a
@@ -692,7 +692,28 @@
 		where (b.DOC_STATUS=1 or b.DOC_STATUS =5)
 		<if test="year != null and year != ''">
 			and to_char(a.CREATED_TIME) like '%'||#{year}||'%'
+		</if> -->
+		select count(cu) from (
+           select c.id, count(d.id) as cu
+           from
+           (select b.id from DB_DOCUMENT_INFO a
+			inner join 
+			DB_SUB_DOC_INFO b on a.ID = b.INFO_ID
+			left join(select s.INFO_ID,s.USER_NAME as leader_name,s.LEADER_COMMENT as leader_content,s.CREATED_TIME as leader_time,
+				row_number() over(partition by s.info_id order by f.sort asc) as dNum from DB_DOCUMENT_SZPS s inner join DB_ROLE_SET f
+				on s.USER_ID=f.USER_ID order by f.sort asc) e
+			on a.id = e.info_id and (e.dNum = 1 or e.dNum is null)
+			where 1=1
+		<if test="danweiid != null and danweiid != ''">
+			and b.SUB_DEPT_ID = #{danweiid}
+		</if>                  
+       	<if test="year != null and year != ''">
+       	and case when e.leader_time is not null and e.leader_time != '' then to_char(e.leader_time) else
+         to_char(a.CREATED_TIME) end like '%'||#{year}||'%'
 		</if>
+            ) c
+            left join (select SUB_ID,id from DB_REPLY_EXPLAIN where SHOW_FLAG=1 )d
+            on d.sub_Id = c.id group by c.id) where cu=0
 	</select>
 	
 	
