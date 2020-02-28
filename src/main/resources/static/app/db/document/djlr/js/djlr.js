@@ -52,7 +52,7 @@ var pageModule = function(){
                 	 return '<div class="zspsnr"  onclick="pszsnrAlert(\''+rowdata.id+'\')" title="'+szpsCont+'">'+szpsCont+'</div>';*/
                 	 var contentText = '';
                 	 if(rowdata.docTypeName == "重要决策部署分工"||rowdata.docTypeName == "部领导批示指示"||rowdata.docTypeName == "部内重要工作分工"){
-                		 contentText = rowdata.jobContent?rowdata.jobContent:"";
+                		 contentText = rowdata.jobContent?('<div title="' + rowdata.jobContent + '">'+rowdata.jobContent+'</div>'):"";
                 	 }else{
                 		 var html1="";
 	                	 $.each(rowdata.szpslist,function(i,item){
