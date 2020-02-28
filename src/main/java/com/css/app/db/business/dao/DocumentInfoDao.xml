@@ -430,7 +430,7 @@
 			on ddi.id=dadi.INFO_ID
 			left join(select s.INFO_ID,s.USER_NAME as leader_name,s.LEADER_COMMENT as leader_content,s.CREATED_TIME as leader_time,
 				row_number() over(partition by s.info_id order by b.sort asc) as dNum from DB_DOCUMENT_SZPS s inner join DB_ROLE_SET b
-				on s.USER_ID=b.USER_ID order by b.sort asc) d
+				on s.USER_ID=b.USER_ID and s.CREATED_TIME like '%'||year(now())||'%' order by b.sort asc) d
 			on ddi.id = d.info_id and (d.dNum = 1 or d.dNum is null)
 			where 1=1 and ddi.FIRST_ZB_TIME is not null
 			<if test="year != null">
@@ -701,7 +701,7 @@
 			DB_SUB_DOC_INFO b on a.ID = b.INFO_ID
 			left join(select s.INFO_ID,s.USER_NAME as leader_name,s.LEADER_COMMENT as leader_content,s.CREATED_TIME as leader_time,
 				row_number() over(partition by s.info_id order by f.sort asc) as dNum from DB_DOCUMENT_SZPS s inner join DB_ROLE_SET f
-				on s.USER_ID=f.USER_ID order by f.sort asc) e
+				on s.USER_ID=f.USER_ID and s.CREATED_TIME like '%'||year(now())||'%' order by f.sort asc) e
 			on a.id = e.info_id and (e.dNum = 1 or e.dNum is null)
 			where 1=1
 		<if test="danweiid != null and danweiid != ''">
