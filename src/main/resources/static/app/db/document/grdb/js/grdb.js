@@ -86,7 +86,8 @@ var pageModule = function(){
                 {display:"批示指示/任务分工",name:"",width:"20%",align:"left",paixu:false,render:function(rowdata){
 	               	 var contentText = '';
 	            	 if(rowdata.docTypeName == "重要决策部署分工"||rowdata.docTypeName == "部领导批示指示"||rowdata.docTypeName == "部内重要工作分工"){
-	            		 contentText = rowdata.jobContent?rowdata.jobContent:"";
+	            		 //contentText = rowdata.jobContent?rowdata.jobContent:"";
+	            		 contentText = rowdata.jobContent?('<div title="' + rowdata.jobContent + '">'+rowdata.jobContent+'</div>'):"";
 	            	 }else{
 	                	 var html1="";
 	               	 	 $.each(rowdata.szpslist,function(i,item){
