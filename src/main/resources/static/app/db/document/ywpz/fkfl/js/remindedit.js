@@ -10,26 +10,10 @@ var editInfo = {"url":"/remindadministration/info","dataType":"text"}; //编辑�
 
 var pageModule = function(){
 	var initdatafn = function(){
-//		$("#datetimepicker").datetimepicker({
-//			format: 'HH:mm',
-//			language:"zh",
-////			autoclose: true,
-////			startView: 1,
-////			minView:0,
-////			maxView:0,
-//		}).on('show',function(){
-//			
-//		})
-//		$("#remindTime").html("");
-//		var html = "";
-//		for(var i = 0;i<25;i++){
-//			if(i == 9){
-//				html+='<option value="'+i+':00" selected>'+i+':00</option>';
-//			}else{
-//				html+='<option value="'+i+':00">'+i+':00</option>';
-//			}
-//		}
-//		$("#remindTime").append(html);
+		console.log(type)
+		if(type == 3){
+			$("#showFlag").show()
+		}
 		if(id!="" && !!id){
 //			$("#remindRole").attr("disabled",true);
 			$ajax({
@@ -49,27 +33,45 @@ var pageModule = function(){
 			$("#remindRole").val("承办人");
 		}
 
-		console.log(role,time,content)
 	}
 	var initother = function(){
 		$("#quxiao").click(function(){
 			newbootbox.newdialogClose("addDialog");
 		});
 		$("#save").click(function(){
+			if(type == 3&&($("#remindTime").val() == ""||$("#startTime").val() == ""||$("#endTime").val() == "")){
+				newbootbox.alertInfo("请填写提醒时间！");
+				return
+			}
 			var remindRole = $("#remindRole").val();
 			var remindTime = $("#remindTime").val()?$("#remindTime").val():"9:00";
 			var remindContent = $("#remindContent").val();
 			var state = $("#state").val();
-			$ajax({
-				url:id?editUrl:saveUrl,
-				data:{
+			var obj = {};
+			if(type == 3){
+				obj = {
+						id:id,
+						remindRole:remindRole,
+						remindTime:remindTime,
+						remindContent:remindContent?remindContent:"请尽快填写本轮办理反馈",
+						type:type,
+						state:state?state:"false",
+						startTime:$("#startTime").val(),
+						endTime:$("#endTime").val()
+					}
+			}else{
+				obj = {
 					id:id,
 					remindRole:remindRole,
 					remindTime:remindTime,
 					remindContent:remindContent?remindContent:"请尽快填写本轮办理反馈",
 					type:type,
 					state:state?state:"false"
-				},
+				}
+			}
+			$ajax({
+				url:id?editUrl:saveUrl,
+				data:obj,
 				type: "GET",
 				success:function(data){
 					newbootbox.newdialogClose("addDialog");

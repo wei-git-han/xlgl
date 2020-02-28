@@ -119,7 +119,7 @@ var pageModule = function() {
                  	return '<div class="switch"><input class="leaveSwitch" data-clickid="'+rowdata.id+'" name="status" type="checkbox" '+checkedMark+'></div>'; 
                  }},
                  {display:"操作",name:"",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
-                  	return '<span class="remindedit" onclick="remindeditfn(\''+rowdata.id+'\',\''+rowdata.remindRole+'\',\''+rowdata.remindTime+'\',\''+rowdata.remindContent+'\','+1+')"  title="编辑">编辑</span>';
+                  	return '<span class="remindedit" onclick="remindeditfn(\''+rowdata.id+'\',\''+rowdata.remindRole+'\',\''+rowdata.remindTime+'\',\''+rowdata.remindContent+'\','+3+')"  title="编辑">编辑</span>';
                   }}
 				 ],
 		width: "100%",
