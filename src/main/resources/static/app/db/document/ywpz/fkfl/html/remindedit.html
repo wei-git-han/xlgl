@@ -33,8 +33,30 @@
 					                    <div class="clearfix"></div>
 							        </div>
 							        <input type="hidden" id="state" name="state" />
+							        <div class="form-group" id="showFlag" style="display:none">
+							       		<label class="col-xs-2 control-label">提醒时段<span class="startStyle">*</span></label>
+							            <div class="col-xs-10">
+					                        <div style="width:48%;float:left" class="input-group date" id="datetimepicker1" data-target-input="nearest">
+					                        	<input readonly type="text" class ="form-control" id="startTime" name="startTime" data-target="#datetimepicker1"/>
+					                        	<span class="input-group-addon">
+					                        		<span class="glyphicon glyphicon-calendar"></span>
+					                        	</span>
+					                        </div>
+					                        <div style="width:4%;float:left" class="dateDivText">至</div>
+					                        <div style="width:48%;float:left" class="input-group date" id="datetimepicker2" data-target-input="nearest">
+					                        	<input readonly type="text" class ="form-control" id="endTime" name="endTime" data-target="#datetimepicker2"/>
+					                        	<span class="input-group-addon">
+					                        		<span class="glyphicon glyphicon-calendar"></span>
+					                        	</span>
+					                        </div>
+					                        <!-- <select class="form-control" id="remindTime" name="remindTime" required="required">
+							                    <option value="">请选择(默认每日九点)</option>
+							                </select> -->
+					                    </div>
+					                    <div class="clearfix"></div>
+							        </div>							        
 							        <div class="form-group">
-							       		<label class="col-xs-2 control-label">提醒时间</label>
+							       		<label class="col-xs-2 control-label">提醒时间<span class="startStyle">*</span></label>
 							            <div class="col-xs-10">
 					                        <div class="input-group date" id="datetimepicker" data-target-input="nearest">
 					                        	<input readonly type="text" class ="form-control" id="remindTime" name="remindTime" data-target="#datetimepicker"/>
@@ -108,6 +130,59 @@
 			}).on('hide',function(time){
 				var time = $("#remindTime").val()+":00";
 				$("#remindTime").val(time)
+			})
+			
+			
+			$("#startTime").datetimepicker({
+				format: 'yyyy-mm-dd',
+				language:"zh-CN",
+				bootcssVer:false,
+				autoclose: true,
+				startView: 4,
+				minuteStep:5,
+				minView:2,
+				maxView:4,
+				keyboardNavigation: false,
+				startDate: new Date(),
+				initialDate: new Date(),
+			}).on('show',function(){
+				$(".table-condensed").children("thead").css("opacity","1")
+				$(".datetimepicker-hours").css("position","initial")
+				$(".datetimepicker-hours").css("top","0")
+			}).on('hide',function(time){
+			}).on('changeDate',function(data){
+				console.log(data,"0011")
+				if(data){
+					$("#endTime").datetimepicker('setStartDate',new Date(data.date))
+				}else{
+					$("#endTime").datetimepicker('setStartDate',null)
+				}
+			})
+			
+			$("#endTime").datetimepicker({
+				format: 'yyyy-mm-dd',
+				language:"zh-CN",
+				bootcssVer:false,
+				autoclose: true,
+				startView: 4,
+				minuteStep:5,
+				minView:2,
+				maxView:4,
+				keyboardNavigation: false,
+				startDate: new Date(),
+				initialDate: new Date(),
+			}).on('show',function(){
+				$(".table-condensed").children("thead").css("opacity","1")
+				$(".datetimepicker-hours").css("position","initial")
+				$(".datetimepicker-hours").css("top","0")
+			}).on('hide',function(time){
+			}).on('changeDate',function(data){
+				console.log(data,"0011")
+				if(data){
+					$("#startTime").datetimepicker('setEndDate',new Date(data.date))
+				}else{
+					$("#startTime").datetimepicker('setEndDate',null)
+				}
 			})
 		})
 	</script>

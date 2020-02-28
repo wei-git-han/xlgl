@@ -67,3 +67,8 @@ td span{
 	color: #6699FF;
 	cursor: pointer;
 }
+.reminddisabled{
+	pointer-events:none;
+	color: #ccc;
+	cursor: pointer;
+}

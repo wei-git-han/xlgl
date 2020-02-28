@@ -115,11 +115,13 @@ var pageModule = function() {
 					  return rowdata.remindContent;   
 				  }}, 
 				  {display:"状态",name:"flag",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
-					  var checkedMark = (rowdata.state=='true')?"checked":""
-                 	return '<div class="switch"><input class="leaveSwitch" data-clickid="'+rowdata.id+'" name="status" type="checkbox" '+checkedMark+'></div>'; 
+					  var checkedMark = (rowdata.state=='true')?"checked":"";
+					  var disabled = (rowdata.edit != 'false')?"":"disabled";
+                 	return '<div class="switch"><input '+disabled+' class="leaveSwitch" data-clickid="'+rowdata.id+'" name="status" type="checkbox" '+checkedMark+'></div>'; 
                  }},
                  {display:"操作",name:"",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
-                  	return '<span class="remindedit" onclick="remindeditfn(\''+rowdata.id+'\',\''+rowdata.remindRole+'\',\''+rowdata.remindTime+'\',\''+rowdata.remindContent+'\','+1+')"  title="编辑">编辑</span>';
+                	 var className = (rowdata.edit != 'false')?"remindedit":"reminddisabled";
+                  	return '<span class='+className+' onclick="remindeditfn(\''+rowdata.id+'\',\''+rowdata.remindRole+'\',\''+rowdata.remindTime+'\',\''+rowdata.remindContent+'\','+3+')"  title="编辑">编辑</span>';
                   }}
 				 ],
 		width: "100%",

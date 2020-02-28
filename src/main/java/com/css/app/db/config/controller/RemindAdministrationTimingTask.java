@@ -1,5 +1,7 @@
 package com.css.app.db.config.controller;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,9 +51,7 @@ public class RemindAdministrationTimingTask {
 	private String clientSecret;
 
 	/**
-	 * 启动程序时默认启动定时同步
-	 * 300000代表项目启动5分钟后开始启动定时程序
-	 * 1200000代表每隔20分钟定时程序扫描一次数据
+	 * 启动程序时默认启动定时同步 300000代表项目启动5分钟后开始启动定时程序 1200000代表每隔20分钟定时程序扫描一次数据
 	 */
 	public RemindAdministrationTimingTask() {
 		if (timer == null) {
@@ -121,16 +121,19 @@ public class RemindAdministrationTimingTask {
 		if (queryList != null && queryList.size() > 0) {
 			for (RemindAdministration remindAdministration : queryList) {
 				if (remindAdministration.getType().equals("3")) {// 催填提醒
-					String remindTime = remindAdministration.getRemindTime();
-					if (remindTime.equals(newDate)) {
-						List<SubDocInfo> queryTmingTaskList = subDocInfoService.queryTmingTaskList(map);
-						if (queryTmingTaskList != null && queryTmingTaskList.size() > 0) {
-							for (SubDocInfo subDocInfo : queryTmingTaskList) {
-								if (StringUtils.isNotBlank(subDocInfo.getUndertaker())) {
-									MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_CUIBAN_MSG_TITLE);
-									this.setMsg(msg, subDocInfo.getUndertaker(), subDocInfo.getInfoId(),
-											subDocInfo.getId(), remindAdministration.getRemindContent());
+					boolean b = getTime(remindAdministration.getStartTime(), remindAdministration.getEndTime());
+					if (b) {// 在规定的时间范围内才发送
+						String remindTime = remindAdministration.getRemindTime();
+						if (remindTime.equals(newDate)) {
+							List<SubDocInfo> queryTmingTaskList = subDocInfoService.queryTmingTaskList(map);
+							if (queryTmingTaskList != null && queryTmingTaskList.size() > 0) {
+								for (SubDocInfo subDocInfo : queryTmingTaskList) {
+									if (StringUtils.isNotBlank(subDocInfo.getUndertaker())) {
+										MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_CUIBAN_MSG_TITLE);
+										this.setMsg(msg, subDocInfo.getUndertaker(), subDocInfo.getInfoId(),
+												subDocInfo.getId(), remindAdministration.getRemindContent());
 
+									}
 								}
 							}
 						}
@@ -192,6 +195,36 @@ public class RemindAdministrationTimingTask {
 						msg.getGroupRedirect(), "", "true");
 			}
 		}
+	}
+
+	public boolean getTime(String sTime, String eTime) {
+		Date date = new Date();
+		DateFormat dateFormat = DateFormat.getDateInstance();
+		String nowDate = dateFormat.format(date);// 当前时间
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date now;
+		Date start = null;
+		Date end = null;
+		try {
+			now = simpleDateFormat.parse(nowDate);
+			if (!StringUtils.isEmpty(sTime)) {
+				start = simpleDateFormat.parse(sTime);
+			}
+			if (!StringUtils.isEmpty(eTime)) {
+				end = simpleDateFormat.parse(eTime);
+			}
+			long nowTime = now.getTime();
+			long startTime = start.getTime();
+			long endTime = end.getTime();
+			if (nowTime >= startTime && nowTime <= endTime) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 }

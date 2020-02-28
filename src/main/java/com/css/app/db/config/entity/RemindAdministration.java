@@ -35,6 +35,13 @@ public class RemindAdministration implements Serializable {
 	private String remark;
 	//区分局内未转办，未承办或未反馈，催填提醒
 	private String type;
+	
+	//催填提醒开始时间
+	private String startTime;
+	//催填提醒结束时间
+	private String endTime;
+	//是否可编辑，true为可编辑false为否
+	private String edit;
 
 	/**
 	 * 设置：
@@ -150,5 +157,29 @@ public class RemindAdministration implements Serializable {
 	public void setType(String type) {
 		this.type = type;
 	}
+	public String getStartTime() {
+		return startTime;
+	}
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+	public String getEndTime() {
+		return endTime;
+	}
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+	public String getEdit() {
+		return edit;
+	}
+	public void setEdit(String edit) {
+		this.edit = edit;
+	}
+	
+	
+	
+	
+	
+	
 	
 }
