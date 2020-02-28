@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.druid.pool.GetConnectionTimeoutException;
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -44,56 +45,59 @@ public class RemindAdministrationController {
 	@RequestMapping("/list")
 	public void list(String type) {
 		JSONObject result = new JSONObject(true);
-		JSONObject jsonObject = new JSONObject(true);
 		JSONArray ja = new JSONArray();
 		Map<String, Object> map = new HashMap<>();
 		map.put("type", type);
-		Date date = new Date();// Fri Feb 28 10:34:27 CST 2020
-		DateFormat dateFormat = DateFormat.getDateInstance();
-		//String nowDate = dateFormat.format(date);// 当前时间
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		Date now;
-		Date start = null;
-		Date end = null;
 		// 查询列表数据
 		List<RemindAdministration> remindAdministrationList = remindAdministrationService.queryList(map);
 		for (RemindAdministration remindAdministration : remindAdministrationList) {
 			if (remindAdministration.getType() != null && remindAdministration.getType().equals(type)) {
-				ja.add(remindAdministration);
-			}
-			try {
-				if ("3".equals(type)) {// 只有催填提醒才会比较开始时间和结束时间
-					//now = simpleDateFormat.parse(simpleDateFormat.format(date));//2020-02-28 01:59:34
-					if (!StringUtils.isEmpty(remindAdministration.getStartTime())) {
-						String sTime = remindAdministration.getStartTime() + " " + remindAdministration.getRemindTime()
-								+ ":00";
-						start = simpleDateFormat.parse(sTime);
-					}
-					if (!StringUtils.isEmpty(remindAdministration.getEndTime())) {
-						String eTime = remindAdministration.getEndTime() + " " + remindAdministration.getRemindTime()
-								+ ":00";
-						end = simpleDateFormat.parse(eTime);
-					}
-					long nowTime = date.getTime();
-					long startTime = start.getTime();
-					long endTime = end.getTime();
-					if (nowTime >= startTime && nowTime <= endTime) {
-						jsonObject.put("edit", true);
-						ja.add(jsonObject);
+				if ("3".equals(type)) {
+					boolean b = getTime(remindAdministration.getStartTime(), remindAdministration.getEndTime(),
+							remindAdministration.getRemindTime());
+					if (b) {
+						remindAdministration.setEdit("true");
 					} else {
-						jsonObject.put("edit", false);
-						ja.add(jsonObject);
+						remindAdministration.setEdit("false");
 					}
 				}
-			} catch (ParseException e) {
-				e.printStackTrace();
+				ja.add(remindAdministration);
 			}
-
 		}
 
 		result.put("rows", ja);
 
 		Response.json(result);
+	}
+
+	public boolean getTime(String startTime, String endTime, String remindTime) {
+		Date date = new Date();
+		DateFormat dateFormat = DateFormat.getDateInstance();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		Date now;
+		Date start = null;
+		Date end = null;
+		try {
+			if (!StringUtils.isEmpty(startTime)) {
+				String sTime = startTime + " " + remindTime + ":00";
+				start = simpleDateFormat.parse(sTime);
+			}
+			if (!StringUtils.isEmpty(endTime)) {
+				String eTime = endTime + " " + remindTime + ":00";
+				end = simpleDateFormat.parse(eTime);
+			}
+			long nowTime = date.getTime();
+			long startTime1 = start.getTime();
+			long endTime1 = end.getTime();
+			if (nowTime >= startTime1 && nowTime <= endTime1) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	/**

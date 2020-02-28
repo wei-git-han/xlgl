@@ -40,6 +40,8 @@ public class RemindAdministration implements Serializable {
 	private String startTime;
 	//催填提醒结束时间
 	private String endTime;
+	
+	private String edit;
 
 	/**
 	 * 设置：
@@ -167,6 +169,14 @@ public class RemindAdministration implements Serializable {
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
+	public String getEdit() {
+		return edit;
+	}
+	public void setEdit(String edit) {
+		this.edit = edit;
+	}
+	
+	
 	
 	
 	
