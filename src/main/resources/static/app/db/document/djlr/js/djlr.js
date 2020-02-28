@@ -40,7 +40,7 @@ var pageModule = function(){
                  {display:"紧急程度",name:"",width:"4%",align:"center",paixu:false,render:function(rowdata){
                 	 return rowdata.urgencyDegree;
                  }},
-                 {display:"批示指示/任务分工内容",name:"",width:"25%",align:"left",paixu:false,title:false,render:function(rowdata){
+                 {display:"批示指示/任务分工",name:"",width:"25%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 /*var szpsCont="";
                 	 var leaderTime1="";
                 	 if(rowdata.leaderTime!="" && rowdata.leaderTime!=null){
