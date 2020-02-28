@@ -62,7 +62,7 @@ public class RemindAdministrationController {
 			}
 			try {
 				if ("3".equals(type)) {// 只有催填提醒才会比较开始时间和结束时间
-					now = simpleDateFormat.parse(simpleDateFormat.format(date));
+					//now = simpleDateFormat.parse(simpleDateFormat.format(date));//2020-02-28 01:59:34
 					if (!StringUtils.isEmpty(remindAdministration.getStartTime())) {
 						String sTime = remindAdministration.getStartTime() + " " + remindAdministration.getRemindTime()
 								+ ":00";
@@ -73,7 +73,7 @@ public class RemindAdministrationController {
 								+ ":00";
 						end = simpleDateFormat.parse(eTime);
 					}
-					long nowTime = now.getTime();
+					long nowTime = date.getTime();
 					long startTime = start.getTime();
 					long endTime = end.getTime();
 					if (nowTime >= startTime && nowTime <= endTime) {
