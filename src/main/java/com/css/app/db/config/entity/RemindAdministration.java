@@ -40,7 +40,7 @@ public class RemindAdministration implements Serializable {
 	private String startTime;
 	//催填提醒结束时间
 	private String endTime;
-	
+	//是否可编辑，true为可编辑false为否
 	private String edit;
 
 	/**
