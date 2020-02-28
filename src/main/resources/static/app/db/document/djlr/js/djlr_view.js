@@ -166,7 +166,7 @@ var pageModule = function(){
 	
 	//批示信息
 	var initps = function(){
-   	 if(docTypeName == "重要决策部署分工"||docTypeName == "部领导批示指示"||docTypeName == "部内重要工作分工"){
+   	 if(docTypeName == "重要决策部署分工"||docTypeName == "其他重要工作"||docTypeName == "部内重要工作分工"){
    		 if(jobContent&&jobContent!=''&&jobContent!='undefined'){
    			$(".ps_title").html("任务分工");
 			$(".psMain").html("");
