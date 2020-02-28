@@ -44,6 +44,7 @@ public class RemindAdministrationController {
 	@RequestMapping("/list")
 	public void list(String type) {
 		JSONObject result = new JSONObject(true);
+		JSONObject jsonObject = new JSONObject(true);
 		JSONArray ja = new JSONArray();
 		Map<String, Object> map = new HashMap<>();
 		map.put("type", type);
@@ -77,9 +78,11 @@ public class RemindAdministrationController {
 					long startTime = start.getTime();
 					long endTime = end.getTime();
 					if (nowTime >= startTime && nowTime <= endTime) {
-						result.put("edit", true);
+						jsonObject.put("edit", true);
+						ja.add(jsonObject);
 					} else {
-						result.put("edit", false);
+						jsonObject.put("edit", false);
+						ja.add(jsonObject);
 					}
 				}
 			} catch (ParseException e) {
