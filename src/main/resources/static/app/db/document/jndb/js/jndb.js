@@ -82,7 +82,7 @@ var pageModule = function(){
                 	 var contentText = '';
                 	 if(rowdata.docTypeName == "重要决策部署分工"||rowdata.docTypeName == "其他重要工作"||rowdata.docTypeName == "部内重要工作分工"){
                 		 //contentText = rowdata.jobContent?rowdata.jobContent:"";
-                		 contentText = rowdata.jobContent?('<div title="' + rowdata.jobContent + '">'+rowdata.jobContent+'</div>'):"";
+                		 contentText = rowdata.jobContent?('<div style="cursor: initial;" class="zspsnr" title="' + rowdata.jobContent + '">'+rowdata.jobContent+'</div>'):"";
                 	 }else{
                     	 var html1="";
                     	 $.each(rowdata.szpslist,function(i,item){
