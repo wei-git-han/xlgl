@@ -3,7 +3,6 @@ package com.css.app.db.config.controller;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,10 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.css.addbase.msg.MSGTipDefined;
 import com.css.addbase.msg.MsgTipUtil;
-import com.css.addbase.msg.entity.MsgTip;
-import com.css.addbase.msg.service.MsgTipService;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.service.SubDocInfoService;
 import com.css.app.db.config.entity.RemindAdministration;
@@ -41,8 +37,6 @@ public class RemindAdministrationTimingTask {
 	private RemindAdministrationService remindAdministrationService;
 	@Autowired
 	private SubDocInfoService subDocInfoService;
-	@Autowired
-	private MsgTipService msgService;
 	@Autowired
 	private MsgTipUtil msgUtil;
 	@Value("${csse.dccb.appId}")
@@ -129,10 +123,8 @@ public class RemindAdministrationTimingTask {
 							if (queryTmingTaskList != null && queryTmingTaskList.size() > 0) {
 								for (SubDocInfo subDocInfo : queryTmingTaskList) {
 									if (StringUtils.isNotBlank(subDocInfo.getUndertaker())) {
-										MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_CUIBAN_MSG_TITLE);
-										this.setMsg(msg, subDocInfo.getUndertaker(), subDocInfo.getInfoId(),
-												subDocInfo.getId(), remindAdministration.getRemindContent());
-
+										String msgUrl = "/app/db/document/grdb/html/grdb.html?fileFrom=grdb";
+										this.setMsg(subDocInfo.getUndertaker(), msgUrl, remindAdministration.getRemindContent());
 									}
 								}
 							}
@@ -145,17 +137,15 @@ public class RemindAdministrationTimingTask {
 								.firstNoFeedbackTmingTaskList();
 						if (firstNoFeedbackTmingTaskList != null && firstNoFeedbackTmingTaskList.size() > 0) {
 							for (SubDocInfo subDocInfo : firstNoFeedbackTmingTaskList) {
-								MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_CUIBAN_MSG_TITLE);
-								this.setMsg(msg, subDocInfo.getUndertaker(), subDocInfo.getInfoId(), subDocInfo.getId(),
-										remindAdministration.getRemindContent());
+								String msgUrl = "/app/db/document/grdb/html/grdb.html?fileFrom=grdb";
+								this.setMsg(subDocInfo.getUndertaker(), msgUrl, remindAdministration.getRemindContent());
 							}
 						}
 						List<SubDocInfo> noFeedbackTmingTaskList = subDocInfoService.NoFeedbackTmingTaskList();
 						if (noFeedbackTmingTaskList != null && noFeedbackTmingTaskList.size() > 0) {
 							for (SubDocInfo subDocInfo : noFeedbackTmingTaskList) {
-								MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_CUIBAN_MSG_TITLE);
-								this.setMsg(msg, subDocInfo.getUndertaker(), subDocInfo.getInfoId(), subDocInfo.getId(),
-										remindAdministration.getRemindContent());
+								String msgUrl = "/app/db/document/grdb/html/grdb.html?fileFrom=grdb";
+								this.setMsg(subDocInfo.getUndertaker(), msgUrl, remindAdministration.getRemindContent());
 							}
 						}
 					}
@@ -165,9 +155,8 @@ public class RemindAdministrationTimingTask {
 						List<SubDocInfo> notTransferredTmingTaskList = subDocInfoService.notTransferredTmingTaskList();
 						if (notTransferredTmingTaskList != null && notTransferredTmingTaskList.size() > 0) {
 							for (SubDocInfo subDocInfo : notTransferredTmingTaskList) {
-								MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_BU_ZHUANBAN_MSG_TITLE);
-								this.setMsg(msg, subDocInfo.getUndertaker(), subDocInfo.getInfoId(), subDocInfo.getId(),
-										remindAdministration.getRemindContent());
+								String msgUrl = "/app/db/document/jndb/html/jndb.html?fileFrom=jndb";
+								this.setMsg(subDocInfo.getUndertaker(), msgUrl, remindAdministration.getRemindContent());
 							}
 						}
 					}
@@ -187,13 +176,9 @@ public class RemindAdministrationTimingTask {
 		return format;
 	}
 
-	private void setMsg(MsgTip msg, String userId, String infoId, String subId, String content) {
-		if (msg != null) {
-			String msgUrl = msg.getMsgRedirect() + "&fileId=" + infoId + "&subId=" + subId;
-			if (StringUtils.isNotBlank(userId)) {
-				msgUtil.sendMsg(msg.getMsgTitle(), content, msgUrl, userId, appId, clientSecret, msg.getGroupName(),
-						msg.getGroupRedirect(), "", "true");
-			}
+	private void setMsg(String userId, String msgUrl, String content) {
+		if (userId != null) {
+			msgUtil.sendMsg("督查催办", content, msgUrl, userId, appId, clientSecret, "督办","", "", "true");
 		}
 	}
 
