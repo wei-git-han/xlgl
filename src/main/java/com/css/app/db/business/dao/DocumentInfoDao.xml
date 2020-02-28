@@ -134,7 +134,7 @@
 			and t.PERIOD like '%'||#{period}||'%'
 		</if>
 		<if test="year != null">
-			and to_char(t.FIRST_ZB_TIME) like '%'||#{year}||'%'
+			and to_char(t.CREATED_TIME) like '%'||#{year}||'%'
 		</if>
 		<if test="status != null and status != ''">
 			<choose>
@@ -220,7 +220,7 @@
 			and t.PERIOD like '%'||#{period}||'%'
 		</if>
 		<if test="year != null">
-			and to_char(t.FIRST_ZB_TIME) like '%'||#{year}||'%'
+			and to_char(t.CREATED_TIME) like '%'||#{year}||'%'
 		</if>
 		<if test="status != null and status != ''">
 			<choose>
