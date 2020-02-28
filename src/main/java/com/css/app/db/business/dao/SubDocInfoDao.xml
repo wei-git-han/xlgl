@@ -26,7 +26,7 @@
 		) c on a.info_id = c.info_id
 		left join (select distinct info_id,listagg(sub_dept_name || nvl2(DECODE(undertaker_name,'',null,'NULL',null,undertaker_name),'/' || undertaker_name || nvl2(DECODE(undertaker_phone,'',null,'NULL',null,undertaker_phone),'('||undertaker_phone||')',null),null), ',') within group(order by h.sort,created_time desc) over(partition by info_id) under_depts from DB_SUB_DOC_INFO g inner join BASE_APP_ORGAN h
         on g.sub_dept_id=h.id) e on a.INFO_ID = e.info_id
-		where (num = 1 or num is null) and a.DOC_STATUS  !='10' 
+		where (num = 1 or num is null) and a.DOC_STATUS  &lt; 10
 		<if test="orgId != null and orgId != ''">
 		   and a.SUB_DEPT_ID = #{orgId}
 		</if>
@@ -89,7 +89,7 @@
 		<if test="receiver!= null and receiver != ''">
 		   and e.receiver_is_me = 1
 		</if>			
-		 and c.STATUS=1 and (dNum = 1 or dNum is null) 
+		 and c.STATUS=1 and (dNum = 1 or dNum is null) and a.DOC_STATUS  &lt; 10
 		 order by e.receiver_is_me nulls last, a.DOC_STATUS, a.CREATED_TIME desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
@@ -171,7 +171,7 @@
 		<if test="receiver!= null and receiver != ''">
 		   and e.receiver_is_me = 1
 		</if>			
-		 and c.STATUS=1 and (dNum = 1 or dNum is null) 
+		 and c.STATUS=1 and (dNum = 1 or dNum is null) and a.DOC_STATUS  &lt; 10
 		 order by e.receiver_is_me nulls last, a.DOC_STATUS, a.CREATED_TIME desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
