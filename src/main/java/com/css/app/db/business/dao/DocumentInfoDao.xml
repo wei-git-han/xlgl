@@ -726,13 +726,18 @@
         	DB_DOCUMENT_INFO t
        		left join (
                 select
-                        s.INFO_ID                         ,
-                        s.USER_NAME                                                   as leader_name   ,
-                        s.LEADER_COMMENT                                              as leader_content,
-                        s.CREATED_TIME                                                as leader_time   
-                      
+                        s.INFO_ID                     ,
+                        s.USER_NAME             as leader_name   ,
+                        s.LEADER_COMMENT      as leader_content,
+                        s.CREATED_TIME     as leader_time   ,
+                 row_number() over(partition by s.info_id order by b.sort asc) as dNum
                 from
                         DB_DOCUMENT_SZPS s
+                inner join DB_ROLE_SET b
+                on
+                        s.USER_ID=b.USER_ID
+                order by
+                        b.sort asc
                
         	) d on t.id = d.info_id
 			left join (
@@ -749,6 +754,8 @@
                 from
                         DB_SUB_DOC_INFO a
         )  c on t.id = c.info_id
+        
+         where (d.dNum = 1 or d.dNum is null)
 		<if test='docStatus == "1"'>
 			and t.STATUS=0
 		</if>
