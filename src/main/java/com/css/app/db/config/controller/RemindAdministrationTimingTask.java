@@ -57,8 +57,7 @@ public class RemindAdministrationTimingTask {
 		if (timer == null) {
 			timer = new Timer();
 		}
-		timer.scheduleAtFixedRate(getInstance(), 0, 1200000);
-//		timer.scheduleAtFixedRate(getInstance(), 300000, 1200000);
+		timer.scheduleAtFixedRate(getInstance(), 180000, 1200000);
 	}
 
 	/**
