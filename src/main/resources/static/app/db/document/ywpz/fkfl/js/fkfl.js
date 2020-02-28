@@ -108,10 +108,10 @@ var pageModule = function() {
 				  {display: "提醒角色",name:"remindRole",width: "15%",align: "left",render: function(rowdata,n){
 					  return rowdata.remindRole;   
 				  }},
-				  {display: "提醒时间",name:"remindTime",width: "15%",align: "left",render: function(rowdata,n){
-					  return rowdata.remindTime;   
+				  {display: "提醒时间",name:"remindTime",width: "20%",align: "left",render: function(rowdata,n){
+					  return rowdata.remindTime+"("+rowdata.startTime+"至"+rowdata.endTime+")";   
 				  }}, 
-				  {display: "提醒内容",name:"remindContent",width: "40%",align: "left",render: function(rowdata,n){
+				  {display: "提醒内容",name:"remindContent",width: "35%",align: "left",render: function(rowdata,n){
 					  return rowdata.remindContent;   
 				  }}, 
 				  {display:"状态",name:"flag",width:"15%",align:"center",paixu:false,render:function(rowdata,n){
