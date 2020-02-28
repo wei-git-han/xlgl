@@ -51,7 +51,7 @@ public class RemindAdministrationTimingTask {
 		if (timer == null) {
 			timer = new Timer();
 		}
-		timer.scheduleAtFixedRate(getInstance(), 300000, 1200000);
+		timer.scheduleAtFixedRate(getInstance(), 180000, 1200000);
 	}
 
 	/**
@@ -198,7 +198,7 @@ public class RemindAdministrationTimingTask {
 			if (!StringUtils.isEmpty(eTime)) {
 				end = simpleDateFormat.parse(eTime);
 			}
-			long nowTime = now.getTime();
+			long nowTime = date.getTime();
 			long startTime = start.getTime();
 			long endTime = end.getTime();
 			if (nowTime >= startTime && nowTime <= endTime) {
