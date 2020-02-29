@@ -31,6 +31,7 @@ var pageModule = function(){
 						if(item.userId == data.userId){
 							$("#docTypeId").val(item.docTypeId);
 							$("#docTypeName").val(item.docTypeName)
+							$("#docTypeId").change();
 						}
 					});
 				}
