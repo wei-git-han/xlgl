@@ -46,6 +46,7 @@ import com.css.app.db.business.service.DocumentSzpsService;
 import com.css.app.db.business.service.ReplyExplainService;
 import com.css.app.db.business.service.SubDocInfoService;
 import com.css.app.db.business.service.SubDocTrackingService;
+import com.css.app.db.config.service.AdminSetService;
 import com.css.app.db.config.service.RoleSetService;
 import com.css.app.db.util.DbDefined;
 import com.css.app.db.util.DbDocStatusDefined;
@@ -102,6 +103,8 @@ public class SubDocInfoController {
 	private String appId;
 	@Value("${csse.dccb.appSecret}")
 	private String clientSecret;
+	@Autowired
+	private AdminSetService adminSetService;
 
 	/**
 	 * 局内待办列表
@@ -1215,7 +1218,7 @@ public class SubDocInfoController {
 		}
 		Response.json("jndbNum", jndbNum);
 	}
-	
+
 	/**
 	 * 督办app待办角标数
 	 */
@@ -1223,6 +1226,7 @@ public class SubDocInfoController {
 	@ResponseBody
 	@RequestMapping("/dbNumSum")
 	public void dbNumSum() {
+		int dbNumSum = 0;
 		// 个人待办
 		int grdbNum = 0;
 		Map<String, Object> personalMap = new HashMap<>();
@@ -1248,7 +1252,14 @@ public class SubDocInfoController {
 		if (subDocInfoList != null && subDocInfoList.size() > 0) {
 			jndbNum = subDocInfoList.size();
 		}
-		Response.json("dbNumSum", grdbNum + jndbNum);
+		// adminType（0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员）
+		String adminType = adminSetService.getAdminTypeByUserId(CurrentUser.getUserId());
+		if (StringUtils.equals("1", adminType)) {
+			dbNumSum = grdbNum;
+		} else if (StringUtils.equals("2", adminType)) {
+			dbNumSum = grdbNum + jndbNum;
+		}
+		Response.json("dbNumSum", dbNumSum);
 
 	}
 
