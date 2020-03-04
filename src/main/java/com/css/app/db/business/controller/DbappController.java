@@ -36,7 +36,7 @@ public class DbappController {
 
     @ResponseBody
     @RequestMapping("/dbNumSum")
-    public void dbNumSum(){
+    public void dbNumSum() {
         int dbNumSum = 0;
         // 个人待办
         int grdbNum = 0;
