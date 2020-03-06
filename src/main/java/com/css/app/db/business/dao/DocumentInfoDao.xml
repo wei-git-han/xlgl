@@ -420,8 +420,8 @@
 		 from BASE_APP_ORGAN org
 		left join
 	(
-		select d.SUB_DEPT_ID as id,d.SUB_DEPT_NAME as dwname,sum(blz) as blz,sum(bj) as bj,sum(ctls) as ctls from (
-			select dadi.SUB_DEPT_ID ,dadi.SUB_DEPT_NAME ,
+		select d.SUB_DEPT_ID as id,sum(blz) as blz,sum(bj) as bj,sum(ctls) as ctls from (
+			select dadi.SUB_DEPT_ID ,
 	        (case when ddi.STATUS='1' then count(ddi.STATUS) else 0 end ) as blz,
 	        (case when ddi.STATUS='2' then count(ddi.STATUS) else 0 end ) as bj,
 	        (case when ddi.STATUS='3' then count(ddi.STATUS) else 0 end ) as ctls
@@ -439,9 +439,9 @@
 				and case when d.leader_time is not null and d.leader_time != '' then to_char(d.leader_time) else
 				to_char(ddi.CREATED_TIME) end like '%'||#{year}||'%'
 			</if>
-			group by ddi.STATUS,dadi.SUB_DEPT_ID,dadi.SUB_DEPT_NAME
+			group by ddi.STATUS,dadi.SUB_DEPT_ID
 			order by ddi.STATUS asc
-			)d  GROUP by d.SUB_DEPT_ID,d.SUB_DEPT_NAME
+			)d  GROUP by d.SUB_DEPT_ID
 	)shu on org.id=shu.id where org.PARENT_ID='root'
 	</select>
 	<select id="queryDocumentWfk" resultType="int">
