@@ -89,7 +89,7 @@ public class RemindAdministrationController {
 			long nowTime = date.getTime();
 			long startTime1 = start.getTime();
 			long endTime1 = end.getTime();
-			if (nowTime >= startTime1 && nowTime <= endTime1) {
+			if (nowTime <= endTime1) {
 				return true;
 			} else {
 				return false;
