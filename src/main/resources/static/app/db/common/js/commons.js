@@ -1,4 +1,4 @@
-﻿﻿﻿/*
+﻿/*
  js验证的时候用
  * */
 var css={
@@ -1440,14 +1440,14 @@ function createTitlecontent(obj){
 	
 	create();
 }
-var changToNumUrl = {"url":"/api/gwcl/todo"}; 
+var changToNumUrl = {"url":"/app/db/app/dbNumSum"};
 //更新桌面代办数量
 function changToNum(){
 		$ajax({
 			url:changToNumUrl,
 			success:function(data){
 			if(navigator.userAgent.indexOf('OfficeBrowser')>=0){	
-				gettop2().__set_todo_count__(data.count);
+				gettop2().__set_todo_count__(data.dbNumSum);
 			   }
 			}
 		});

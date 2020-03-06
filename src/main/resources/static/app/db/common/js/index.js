@@ -102,7 +102,8 @@ function blfkfn(){
 		success:function(data){
 			if(data.blfkNum > 0 && data.blfkNum != null && data.total != "" && typeof(data.blfkNum) != undefined){
 				$(".blfk_num").show();
-				$('.blfk_num').text(data.blfkNum);
+//				$('.blfk_num').text(data.blfkNum);
+				$('.blfk_num').text("");
 			}else{
 				$(".blfk_num").hide();
 				$('.blfk_num').text("");

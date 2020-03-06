@@ -269,7 +269,7 @@ var pageModule = function(){
                  	if(rowdata.isOverTreeMonth==1){
                  		csFlag = '<img src="../../../common/images/u301.png" class="titleimg" />';
                  	}
-                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+'<span class="tabletitle2">'+rowdata.docTitle+csFlag+'</span></a>'
+                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'&docTypeName='+rowdata.docTypeName+'&jobContent='+rowdata.jobContent+'" target="iframe1">'+cuiban+'<span class="tabletitle2">'+rowdata.docTitle+csFlag+'</span></a>'
                  }},
                  {display:"工作分工内容",name:"",width:"21%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 return '<div class="gzfgnr" title="'+rowdata.jobContent+'">'+rowdata.jobContent+'</div>';
@@ -504,7 +504,7 @@ var pageModule = function(){
                  	if(rowdata.isOverTreeMonth==1){
                  		csFlag = '<img src="../../../common/images/u301.png" class="titleimg" />';
                  	}
-                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+'<span class="tabletitle2">'+rowdata.docTitle+csFlag+'</span></a>'
+                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'&docTypeName='+rowdata.docTypeName+'&jobContent='+rowdata.jobContent+'" target="iframe1">'+cuiban+'<span class="tabletitle2">'+rowdata.docTitle+csFlag+'</span></a>'
                  }},
                  {display:"落实事项",name:"",width:"21%",align:"left",paixu:false,title:false,render:function(rowdata){
                 	 return '<div class="gzfgnr" title="'+rowdata.jobContent+'">'+rowdata.jobContent+'</div>';

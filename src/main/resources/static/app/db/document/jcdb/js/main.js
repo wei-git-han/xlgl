@@ -147,7 +147,7 @@ var pageModule = function(){
 	                            	if(CuibanFlag==1){
 	                            		 cuiban = '<label class="table-label2">催办</label>';
 	                            	}
-                    				title=`${cuiban} <font class="title" title="${rowdata.title}" onclick="viewpage('${rowdata.id}','${rowdata.id}','${rowdata.id}')" style="cursor:pointer;text-decoration: underline;" >${rowdata.title}</font>`;
+                    				title=`${cuiban} <font class="title" title="${rowdata.title}" onclick="viewpage('${rowdata.id}','${rowdata.id}','${rowdata.id}','${rowdata.lssx}')" style="cursor:pointer;text-decoration: underline;" >${rowdata.title}</font>`;
                     				return title
                     			}},
                     			{display:spData.title,name:"pszsmr",width:"17%",align:"left",paixu:false,render:function(rowdata,n){
@@ -580,8 +580,9 @@ var cbfn = function(ids){
 	$("#viewcont").modal("show");
 }
 
-var viewpage = function(fileId,subId,fileFrom){
-	window.location.href = "../../djlr/html/djlr_view.html?fileId="+fileId+"&frompage=0";//frompage放在最后
+var viewpage = function(fileId,subId,fileFrom,jobContent){
+	var docTypeName = (spData.title == "工作分工内容"||spData.title == "落实事项")?"其他重要工作":""
+	window.location.href = "../../djlr/html/djlr_view.html?fileId="+fileId+'&docTypeName='+docTypeName+'&jobContent='+jobContent+"&frompage=0";//frompage放在最后
 }
 
 //批示指示内容弹出框

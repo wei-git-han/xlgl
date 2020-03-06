@@ -5,8 +5,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -51,7 +53,7 @@ public class RemindAdministrationTimingTask {
 		if (timer == null) {
 			timer = new Timer();
 		}
-		timer.scheduleAtFixedRate(getInstance(), 180000, 1200000);
+		timer.scheduleAtFixedRate(getInstance(), 1800000, 3600000);
 	}
 
 	/**
@@ -108,6 +110,7 @@ public class RemindAdministrationTimingTask {
 	 * 提醒消息业务代码
 	 */
 	public void timingTask() {
+		Set<String> set = new HashSet<String>();// 防止给同一个人重复发送消息
 		Map<String, Object> map = new HashMap<>();
 		map.put("state", "true");
 		String newDate = this.getNewDate();
@@ -122,9 +125,12 @@ public class RemindAdministrationTimingTask {
 							List<SubDocInfo> queryTmingTaskList = subDocInfoService.queryTmingTaskList(map);
 							if (queryTmingTaskList != null && queryTmingTaskList.size() > 0) {
 								for (SubDocInfo subDocInfo : queryTmingTaskList) {
-									if (StringUtils.isNotBlank(subDocInfo.getUndertaker())) {
+									if (StringUtils.isNotBlank(subDocInfo.getUndertaker())
+											&& !set.contains(subDocInfo.getUndertaker())) {
+										set.add(subDocInfo.getUndertaker());
 										String msgUrl = "/app/db/document/grdb/html/grdb.html?fileFrom=grdb";
-										this.setMsg(subDocInfo.getUndertaker(), msgUrl, remindAdministration.getRemindContent());
+										this.setMsg(subDocInfo.getUndertaker(), msgUrl,
+												remindAdministration.getRemindContent());
 									}
 								}
 							}
@@ -137,15 +143,25 @@ public class RemindAdministrationTimingTask {
 								.firstNoFeedbackTmingTaskList();
 						if (firstNoFeedbackTmingTaskList != null && firstNoFeedbackTmingTaskList.size() > 0) {
 							for (SubDocInfo subDocInfo : firstNoFeedbackTmingTaskList) {
-								String msgUrl = "/app/db/document/grdb/html/grdb.html?fileFrom=grdb";
-								this.setMsg(subDocInfo.getUndertaker(), msgUrl, remindAdministration.getRemindContent());
+								if (StringUtils.isNotBlank(subDocInfo.getUndertaker())
+										&& !set.contains(subDocInfo.getUndertaker())) {
+									set.add(subDocInfo.getUndertaker());
+									String msgUrl = "/app/db/document/grdb/html/grdb.html?fileFrom=grdb";
+									this.setMsg(subDocInfo.getUndertaker(), msgUrl,
+											remindAdministration.getRemindContent());
+								}
 							}
 						}
 						List<SubDocInfo> noFeedbackTmingTaskList = subDocInfoService.NoFeedbackTmingTaskList();
 						if (noFeedbackTmingTaskList != null && noFeedbackTmingTaskList.size() > 0) {
 							for (SubDocInfo subDocInfo : noFeedbackTmingTaskList) {
-								String msgUrl = "/app/db/document/grdb/html/grdb.html?fileFrom=grdb";
-								this.setMsg(subDocInfo.getUndertaker(), msgUrl, remindAdministration.getRemindContent());
+								if (StringUtils.isNotBlank(subDocInfo.getUndertaker())
+										&& !set.contains(subDocInfo.getUndertaker())) {
+									set.add(subDocInfo.getUndertaker());
+									String msgUrl = "/app/db/document/grdb/html/grdb.html?fileFrom=grdb";
+									this.setMsg(subDocInfo.getUndertaker(), msgUrl,
+											remindAdministration.getRemindContent());
+								}
 							}
 						}
 					}
@@ -155,8 +171,13 @@ public class RemindAdministrationTimingTask {
 						List<SubDocInfo> notTransferredTmingTaskList = subDocInfoService.notTransferredTmingTaskList();
 						if (notTransferredTmingTaskList != null && notTransferredTmingTaskList.size() > 0) {
 							for (SubDocInfo subDocInfo : notTransferredTmingTaskList) {
-								String msgUrl = "/app/db/document/jndb/html/jndb.html?fileFrom=jndb";
-								this.setMsg(subDocInfo.getUndertaker(), msgUrl, remindAdministration.getRemindContent());
+								if (StringUtils.isNotBlank(subDocInfo.getUndertaker())
+										&& !set.contains(subDocInfo.getUndertaker())) {
+									set.add(subDocInfo.getUndertaker());
+									String msgUrl = "/app/db/document/jndb/html/jndb.html?fileFrom=jndb";
+									this.setMsg(subDocInfo.getUndertaker(), msgUrl,
+											remindAdministration.getRemindContent());
+								}
 							}
 						}
 					}
@@ -165,7 +186,7 @@ public class RemindAdministrationTimingTask {
 
 			}
 		}
-
+		set.clear();// 清空set集合，以备下次扫描使用
 	}
 
 	private String getNewDate() {
@@ -178,7 +199,7 @@ public class RemindAdministrationTimingTask {
 
 	private void setMsg(String userId, String msgUrl, String content) {
 		if (userId != null) {
-			msgUtil.sendMsg("督查催办", content, msgUrl, userId, appId, clientSecret, "督办","", "", "true");
+			msgUtil.sendMsg("督查催办", content, msgUrl, userId, appId, clientSecret, "督办", "", "", "true");
 		}
 	}
 
