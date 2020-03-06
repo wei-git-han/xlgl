@@ -211,7 +211,7 @@ var remindeditfn = function(id,Role,Time,Content,type){
 		header:true,
 		title:title,
 		classed:"cjDialog",
-		url:"/app/db/document/ywpz/fkfl/html/remindedit.html?id="+id+"&role="+Role+"&time="+Time+"&content="+Content+"&type="+type
+		url:"/app/db/document/ywpz/txgl/html/remindedit.html?id="+id+"&role="+Role+"&time="+Time+"&content="+Content+"&type="+type
 	})
 }
 //删除
