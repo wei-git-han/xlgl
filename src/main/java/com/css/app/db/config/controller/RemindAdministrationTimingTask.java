@@ -110,7 +110,6 @@ public class RemindAdministrationTimingTask {
 	 * 提醒消息业务代码
 	 */
 	public void timingTask() {
-		Set<String> set = new HashSet<String>();// 防止给同一个人重复发送消息
 		Map<String, Object> map = new HashMap<>();
 		map.put("state", "true");
 		String newDate = this.getNewDate();
@@ -125,9 +124,7 @@ public class RemindAdministrationTimingTask {
 							List<SubDocInfo> queryTmingTaskList = subDocInfoService.queryTmingTaskList(map);
 							if (queryTmingTaskList != null && queryTmingTaskList.size() > 0) {
 								for (SubDocInfo subDocInfo : queryTmingTaskList) {
-									if (StringUtils.isNotBlank(subDocInfo.getUndertaker())
-											&& !set.contains(subDocInfo.getUndertaker())) {
-										set.add(subDocInfo.getUndertaker());
+									if (StringUtils.isNotBlank(subDocInfo.getUndertaker())) {
 										String msgUrl = "/app/db/document/grdb/html/grdb.html?fileFrom=grdb";
 										this.setMsg(subDocInfo.getUndertaker(), msgUrl,
 												remindAdministration.getRemindContent());
@@ -143,9 +140,7 @@ public class RemindAdministrationTimingTask {
 								.firstNoFeedbackTmingTaskList();
 						if (firstNoFeedbackTmingTaskList != null && firstNoFeedbackTmingTaskList.size() > 0) {
 							for (SubDocInfo subDocInfo : firstNoFeedbackTmingTaskList) {
-								if (StringUtils.isNotBlank(subDocInfo.getUndertaker())
-										&& !set.contains(subDocInfo.getUndertaker())) {
-									set.add(subDocInfo.getUndertaker());
+								if (StringUtils.isNotBlank(subDocInfo.getUndertaker())) {
 									String msgUrl = "/app/db/document/grdb/html/grdb.html?fileFrom=grdb";
 									this.setMsg(subDocInfo.getUndertaker(), msgUrl,
 											remindAdministration.getRemindContent());
@@ -155,9 +150,7 @@ public class RemindAdministrationTimingTask {
 						List<SubDocInfo> noFeedbackTmingTaskList = subDocInfoService.NoFeedbackTmingTaskList();
 						if (noFeedbackTmingTaskList != null && noFeedbackTmingTaskList.size() > 0) {
 							for (SubDocInfo subDocInfo : noFeedbackTmingTaskList) {
-								if (StringUtils.isNotBlank(subDocInfo.getUndertaker())
-										&& !set.contains(subDocInfo.getUndertaker())) {
-									set.add(subDocInfo.getUndertaker());
+								if (StringUtils.isNotBlank(subDocInfo.getUndertaker())) {
 									String msgUrl = "/app/db/document/grdb/html/grdb.html?fileFrom=grdb";
 									this.setMsg(subDocInfo.getUndertaker(), msgUrl,
 											remindAdministration.getRemindContent());
@@ -171,9 +164,7 @@ public class RemindAdministrationTimingTask {
 						List<SubDocInfo> notTransferredTmingTaskList = subDocInfoService.notTransferredTmingTaskList();
 						if (notTransferredTmingTaskList != null && notTransferredTmingTaskList.size() > 0) {
 							for (SubDocInfo subDocInfo : notTransferredTmingTaskList) {
-								if (StringUtils.isNotBlank(subDocInfo.getUndertaker())
-										&& !set.contains(subDocInfo.getUndertaker())) {
-									set.add(subDocInfo.getUndertaker());
+								if (StringUtils.isNotBlank(subDocInfo.getUndertaker())) {
 									String msgUrl = "/app/db/document/jndb/html/jndb.html?fileFrom=jndb";
 									this.setMsg(subDocInfo.getUndertaker(), msgUrl,
 											remindAdministration.getRemindContent());
@@ -186,7 +177,6 @@ public class RemindAdministrationTimingTask {
 
 			}
 		}
-		set.clear();// 清空set集合，以备下次扫描使用
 	}
 
 	private String getNewDate() {

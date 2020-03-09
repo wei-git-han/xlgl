@@ -283,29 +283,27 @@
 	</delete>
 	
 	<select id="queryTmingTaskList" resultType="com.css.app.db.business.entity.SubDocInfo">
-	  select distinct b.undertaker from db_sub_doc_info b 
-	  left join DB_REPLY_EXPLAIN c on b.id = c.SUB_ID 
-	  where  
-	  b.DOC_STATUS =9  and c.re_version=1 and c.show_flag=1
+	   select distinct a.undertaker from DB_SUB_DOC_INFO a left join DB_DOCUMENT_INFO b on a.INFO_ID = b.ID where b.status=1 and a.DOC_STATUS =9 and a.first_reply=1
 	</select>
 	
 	<select id="NoFeedbackTmingTaskList"  resultType="com.css.app.db.business.entity.SubDocInfo">
-	 select distinct f.RECEIVER_ID as UNDERTAKER from db_sub_doc_info b left join DB_SUB_DOC_TRACKING  f on
-	 f.sub_id=b.id where b.DOC_STATUS =5 and f.TRACKING_TYPE =1
+	 select distinct b.RECEIVER_ID as UNDERTAKER from DB_SUB_DOC_INFO a inner join (select SUB_ID,RECEIVER_ID from (select SUB_ID,RECEIVER_ID,
+	row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num from DB_SUB_DOC_TRACKING) where num=1) b on a.id=b.sub_id
+	left join DB_DOCUMENT_INFO c on a.INFO_ID = c.ID where c.status=1 and a.DOC_STATUS =5
 	</select>
 	
 	<select id="firstNoFeedbackTmingTaskList"  resultType="com.css.app.db.business.entity.SubDocInfo">
-	 select distinct b.UNDERTAKER  from db_sub_doc_info b 
-	 left join DB_REPLY_EXPLAIN c on b.id = c.SUB_ID 
- 	 where c.RE_VERSION =0 and  b.DOC_STATUS =9 and b.UNDERTAKER not in(
- 	 select distinct f.RECEIVER_ID as UNDERTAKER from db_sub_doc_info b left join DB_SUB_DOC_TRACKING  f on
-	 f.sub_id=b.id where b.DOC_STATUS =5 and f.TRACKING_TYPE =1
- 	 )
+	 select distinct a.undertaker from DB_SUB_DOC_INFO a left join DB_DOCUMENT_INFO b on a.INFO_ID = b.ID
+	 where b.status=1 and a.DOC_STATUS =9 and (a.first_reply !=1 or a.first_reply is null) and a.UNDERTAKER not in(
+ 	 select distinct b.RECEIVER_ID as UNDERTAKER from DB_SUB_DOC_INFO a inner join (select SUB_ID,RECEIVER_ID from (select SUB_ID,RECEIVER_ID,
+	row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num from DB_SUB_DOC_TRACKING) where num=1) b on a.id=b.sub_id
+	left join DB_DOCUMENT_INFO c on a.INFO_ID = c.ID where c.status=1 and a.DOC_STATUS =5)
 	</select>
 	<select id="notTransferredTmingTaskList"  resultType="com.css.app.db.business.entity.SubDocInfo">
 	 select distinct b.user_id as  UNDERTAKER from db_sub_doc_info a
 	 left join DB_ADMIN_SET b on a.SUB_DEPT_ID = b.org_id
- 	 where a.DOC_STATUS = 1 and b.ADMIN_TYPE= 2
+	 left join DB_DOCUMENT_INFO c on a.info_id=c.id
+ 	 where c.status=1 and a.DOC_STATUS = 1 and b.ADMIN_TYPE= 2
 	</select>
 	
 
