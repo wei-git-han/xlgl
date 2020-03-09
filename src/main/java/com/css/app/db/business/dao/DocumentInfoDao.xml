@@ -705,7 +705,7 @@
 				row_number() over(partition by s.info_id order by f.sort asc) as dNum from DB_DOCUMENT_SZPS s inner join DB_ROLE_SET f
 				on s.USER_ID=f.USER_ID order by f.sort asc) e
 			on a.id = e.info_id and (e.dNum = 1 or e.dNum is null)
-			where 1=1
+			where 1=1 and a.status=1
 		<if test="danweiid != null and danweiid != ''">
 			and b.SUB_DEPT_ID = #{danweiid}
 		</if>                  

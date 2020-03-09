@@ -151,7 +151,10 @@ public class DocumentJcdbController {
 		}
 		map.put("year", year);
 		//按年统计各局数据
+		long startTime= System.currentTimeMillis();
 		List<Map<String, Object>> infoList = documentInfoService.queryListByOrgYear(map);
+		long endTime= System.currentTimeMillis();
+		System.out.println("----------------按年统计各局数据:"+(endTime-startTime));
 		String orgId="";
 		String szorgid=getSzOrgid();//获取首长的部门id
 		String role=getNewRoleType();//返回值为1：首长，返回值为2：超级管理员、部管理员、即是部管理员又是局管理员，返回值为3：局管理员或局长，返回值为""：其他人员
@@ -167,7 +170,10 @@ public class DocumentJcdbController {
 				jo.put("ctls", (long) map2.get("ctls"));
 				//对结果进行二级过滤：针对办理中拆分：办理中+未反馈
 				//未反馈量
+				long start= System.currentTimeMillis();
 				int wfkCount = this.queryWfkCount2(danweiid, year);
+				long end= System.currentTimeMillis();
+				System.out.println("----------------未反馈:"+(end-start));
 				//各局完成比率  办结+常态落实/总数
 				long total = (long) map2.get("blz") + (long) map2.get("bj") + (long) map2.get("ctls");
 				if (total == 0) {

@@ -38,6 +38,8 @@ public class SubDocInfo implements Serializable {
 	private String undertakerPhone;
 	//承办人提交选择的状态（1:办理中；2：办结；3：常态落实；）
 	private String chooseStatus;
+	//当前局是否正式反馈过
+	private Integer firstReply;
 
 /*----------------------------以下字段只用来列表接收值用--------------start----------------------*/	
 	private String dealUserName;
@@ -347,5 +349,12 @@ public class SubDocInfo implements Serializable {
 	public void setJobContent(String jobContent) {
 		this.jobContent = jobContent;
 	}
-	
+
+	public Integer getFirstReply() {
+		return firstReply;
+	}
+
+	public void setFirstReply(Integer firstReply) {
+		this.firstReply = firstReply;
+	}
 }

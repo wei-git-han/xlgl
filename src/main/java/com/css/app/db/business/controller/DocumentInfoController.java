@@ -747,7 +747,7 @@ public class DocumentInfoController {
 		JSONObject json= new JSONObject();
 		DocumentInfo info = documentInfoService.queryObject(id);
 		//取最后办结或落实的局的主文件(正常系统中只会有一个分支文件的状态大于11，导入的会有多个)
-		//文件局内状态（1:待转办；3：退回修改；5：待落实；7：待审批；9：办理中；10：建议办结；11：建议落实；12：办结；1:3：常态落实）
+		//文件局内状态（1:待转办；3：退回修改；5：待落实；7：待审批；9：办理中；10：建议办结；11：建议落实；12：办结；13：常态落实）
 		List<SubDocInfo> lastEndSubInfos = subDocInfoService.queryLastEndSubInfo(id);
 		//添加办结记录
 		DocumentBjjl newBjjl=new DocumentBjjl();

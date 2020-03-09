@@ -607,7 +607,6 @@ public class SubDocInfoController {
 	 * 
 	 * @param subId
 	 * @param ideaGroupId
-	 * @param undertaker
 	 */
 	private void updateCurrCBPerson(String subId, String ideaGroupId) {
 		Map<String, Object> map = new HashMap<>();
@@ -694,6 +693,8 @@ public class SubDocInfoController {
 				}
 			}
 		}
+		//标识本局已有正式反馈
+		subInfo.setFirstReply(1);
 		subInfo.setUpdateTime(new Date());
 		subDocInfoService.update(subInfo);
 		// 添加办结记录
@@ -745,6 +746,8 @@ public class SubDocInfoController {
 				}
 			}
 		}
+		//本局已有正式反馈-标识为1
+		subInfo.setFirstReply(1);
 		subInfo.setUpdateTime(new Date());
 		subDocInfoService.update(subInfo);
 		// 办结落实记录
@@ -792,7 +795,7 @@ public class SubDocInfoController {
 	/**
 	 * 批量送审批（含保存意见）
 	 * 
-	 * @param subId
+	 * @param subIds
 	 *            分支主id
 	 * @param userName
 	 *            接收人
@@ -958,9 +961,9 @@ public class SubDocInfoController {
 	/**
 	 * 完成批量审批操作
 	 * 
-	 * @param subId
+	 * @param subIds
 	 *            分支主id
-	 * @param replyContent
+	 * @param content
 	 *            意见内容
 	 */
 	@ResponseBody
@@ -975,7 +978,7 @@ public class SubDocInfoController {
 					// 查詢局內文流转记录最新一笔-判断当前文是否需要本人审批，否则拒绝掉
 					SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
 					if (StringUtils.equals(currUserId, subDocTracking.getReceiverId())) {
-						this.finishApprovalUnifiedDeal(subId, json, subDocInfo.getInfoId(), content, null);
+						this.finishApprovalUnifiedDeal(subId, json, subDocInfo.getInfoId(), content, "0");
 					} else {
 						logger.info("当前文的局ID：{}，由{}正在审批中。", subId, subDocTracking.getReceiverName());
 						continue;
@@ -1034,6 +1037,8 @@ public class SubDocInfoController {
 				subDocInfo.setUpdateTime(new Date());
 				// 清空意见数目
 				subDocInfo.setIdeaCount(0);
+				//本局已有正式反馈-标识为1
+				subDocInfo.setFirstReply(1);
 				subDocInfoService.update(subDocInfo);
 			}
 			json.put("result", "success");

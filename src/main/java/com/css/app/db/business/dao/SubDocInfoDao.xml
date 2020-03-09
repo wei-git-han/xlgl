@@ -217,7 +217,8 @@
 			"UNDERTAKER_PHONE",
 			"CHOOSE_STATUS",
 			"IDEA_COUNT",
-			"IDEA_ADD_FLAG"
+			"IDEA_ADD_FLAG",
+			"FIRST_REPLY"
 		)
 		values
 		(
@@ -233,7 +234,8 @@
 			#{undertakerPhone},
 			#{chooseStatus},
 			#{ideaCount},
-			#{ideaAddFlag}
+			#{ideaAddFlag},
+			#{firstReply}
 		)
 	</insert>
 	 
@@ -254,7 +256,8 @@
 			<if test="undertakerPhone != null">"UNDERTAKER_PHONE" = #{undertakerPhone},</if>
 			<if test="chooseStatus != null">"CHOOSE_STATUS" = #{chooseStatus},</if>
 			<if test="ideaCount != null">"IDEA_COUNT" = #{ideaCount},</if>
-			<if test="ideaAddFlag != null">"IDEA_ADD_FLAG" = #{ideaAddFlag}</if>
+			<if test="ideaAddFlag != null">"IDEA_ADD_FLAG" = #{ideaAddFlag},</if>
+			<if test="firstReply != null">"FIRST_REPLY" = #{firstReply}</if>
 		</set>
 		where ID = #{id}
 	</update>
