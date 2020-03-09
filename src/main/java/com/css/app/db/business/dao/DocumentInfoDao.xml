@@ -695,7 +695,23 @@
 		<if test="year != null and year != ''">
 			and to_char(a.CREATED_TIME) like '%'||#{year}||'%'
 		</if> -->
-		select count(cu) from (
+
+
+		select count(a.id) from DB_SUB_DOC_INFO a left join DB_DOCUMENT_INFO b on a.INFO_ID = b.ID
+		left join(select s.INFO_ID,s.CREATED_TIME as leader_time,
+		row_number() over(partition by s.info_id order by f.sort asc) as dNum from DB_DOCUMENT_SZPS s inner join DB_ROLE_SET f
+		on s.USER_ID=f.USER_ID order by f.sort asc) e on b.id = e.info_id and (e.dNum = 1 or e.dNum is null)
+		where b.status=1 and (a.first_reply !=1 or a.first_reply is null)
+		<if test="danweiid != null and danweiid != ''">
+			and a.SUB_DEPT_ID = #{danweiid}
+		</if>
+		<if test="year != null and year != ''">
+			and case when e.leader_time is not null and e.leader_time != '' then to_char(e.leader_time) else
+			to_char(b.CREATED_TIME) end like '%'||#{year}||'%'
+		</if>
+
+
+		<!--select count(cu) from (
            select c.id, count(d.id) as cu
            from
            (select b.id from DB_DOCUMENT_INFO a
@@ -715,9 +731,9 @@
 		</if>
             ) c
             left join (select SUB_ID,id from DB_REPLY_EXPLAIN where SHOW_FLAG=1 )d
-            on d.sub_Id = c.id group by c.id) where cu=0
+            on d.sub_Id = c.id group by c.id) where cu=0-->
 	</select>
-	
+
 	
 	 <select id="queryNewList" resultType="com.css.app.db.business.entity.DocumentInfo">
 		select
