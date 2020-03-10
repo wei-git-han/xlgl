@@ -53,7 +53,7 @@ public class RemindAdministrationTimingTask {
 		if (timer == null) {
 			timer = new Timer();
 		}
-		timer.scheduleAtFixedRate(getInstance(), 1800000, 3600000);
+		timer.scheduleAtFixedRate(getInstance(), 120000, 60000);
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class RemindAdministrationTimingTask {
 	public void timingTask() {
 		Map<String, Object> map = new HashMap<>();
 		map.put("state", "true");
-		String newDate = this.getNewDate();
+       		String newDate = this.getNewDate();
 		List<RemindAdministration> queryList = remindAdministrationService.queryList(map);
 		if (queryList != null && queryList.size() > 0) {
 			for (RemindAdministration remindAdministration : queryList) {
@@ -181,9 +181,8 @@ public class RemindAdministrationTimingTask {
 
 	private String getNewDate() {
 		Date toDay = new Date();
-		SimpleDateFormat f = new SimpleDateFormat("HH");
+		SimpleDateFormat f = new SimpleDateFormat("HH:mm");
 		String format = f.format(toDay);
-		format = format + ":00";
 		return format;
 	}
 
