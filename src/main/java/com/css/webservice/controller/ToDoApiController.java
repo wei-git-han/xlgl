@@ -61,13 +61,7 @@ public class ToDoApiController {
         if (subDocInfoList != null && subDocInfoList.size() > 0) {
             jndbNum = subDocInfoList.size();
         }
-        // adminType（0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员）
-        String adminType = adminSetService.getAdminTypeByUserId(CurrentUser.getUserId());
-        if (StringUtils.equals("1", adminType)) {
-            dbNumSum = grdbNum;
-        } else if (StringUtils.equals("2", adminType)) {
-            dbNumSum = grdbNum + jndbNum;
-        }
+        dbNumSum = grdbNum + jndbNum;
         Response.json("dbNumSum", dbNumSum);
     }
 

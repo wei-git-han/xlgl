@@ -53,6 +53,7 @@ var pageModule = function(){
 					success:function(data){
 						newbootbox.newdialogClose("zhuanbanDialog");
 						if(data.result=="success"){
+							changToNum()
 							newbootbox.alert("转办成功！").done(function(){
 								if(fromMsg && fromMsg == "true"){
 									windowClose();

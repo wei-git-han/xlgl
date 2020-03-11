@@ -748,6 +748,7 @@ var pageModule = function(){
 				type: "GET",
 				success:function(data){
 					if(data.result == "success"){
+						changToNum()
 						newbootbox.alert("已返回承办人！").done(function(){
 							window.location.reload();
 							if(fromMsg && fromMsg=="true"){
@@ -876,6 +877,7 @@ var pageModule = function(){
 						type: "GET",
 						success:function(data){
 							if(data.result == "success"){
+								changToNum()
 								newbootbox.alert("审批完成！").done(function(){
 									window.location.reload();
 									if(fromMsg && fromMsg=="true"){

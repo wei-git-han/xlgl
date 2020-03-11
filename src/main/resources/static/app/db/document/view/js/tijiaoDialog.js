@@ -60,6 +60,7 @@ var pageModule = function(){
 						success:function(data){
 							newbootbox.newdialogClose("tijiaoDialog");
 							if(data.result=="success"){
+								changToNum()
 								newbootbox.alert("提交成功！").done(function(){
 									if(fromMsg && fromMsg == "true"){
 										windowClose();
