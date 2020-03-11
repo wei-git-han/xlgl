@@ -1440,7 +1440,7 @@ function createTitlecontent(obj){
 	
 	create();
 }
-var changToNumUrl = {"url":"/app/db/app/dbNumSum"};
+var changToNumUrl = {"url":"/api/db/todo"};
 //更新桌面代办数量
 function changToNum(){
 		$ajax({

@@ -1,4 +1,13 @@
-package com.css.app.db.business.controller;
+package com.css.webservice.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.db.business.entity.SubDocInfo;
@@ -8,21 +17,10 @@ import com.css.app.db.util.DbDocStatusDefined;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.Response;
 import com.css.base.utils.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-@Controller
-@RequestMapping("/app/db/app")
-public class DbappController {
-    private final Logger logger = LoggerFactory.getLogger(DbappController.class);
+@RestController
+@RequestMapping("/api")
+public class ToDoApiController {
     @Autowired
     private AdminSetService adminSetService;
     @Autowired
@@ -35,7 +33,7 @@ public class DbappController {
      */
 
     @ResponseBody
-    @RequestMapping("/dbNumSum")
+    @RequestMapping("/db/todo")
     public void dbNumSum() {
         int dbNumSum = 0;
         // 个人待办
@@ -72,5 +70,6 @@ public class DbappController {
         }
         Response.json("dbNumSum", dbNumSum);
     }
+
 
 }

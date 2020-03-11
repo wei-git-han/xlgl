@@ -1225,50 +1225,6 @@ public class SubDocInfoController {
 	}
 
 	/**
-	 * 督办app待办角标数
-	 */
-
-	@ResponseBody
-	@RequestMapping("/dbNumSum")
-	public void dbNumSum() {
-		int dbNumSum = 0;
-		// 个人待办
-		int grdbNum = 0;
-		Map<String, Object> personalMap = new HashMap<>();
-		String loginUserId = CurrentUser.getUserId();
-		if (StringUtils.isNotBlank(loginUserId)) {
-			personalMap.put("loginUserId", loginUserId);
-		}
-		personalMap.put("receiver", "receiver");
-		List<SubDocInfo> subDocInfoPersonalList = subDocInfoService.queryPersonList1(personalMap);
-		if (subDocInfoPersonalList != null && subDocInfoPersonalList.size() > 0) {
-			grdbNum = subDocInfoPersonalList.size();
-		}
-		// 局内待办
-		int jndbNum = 0;
-		Map<String, Object> jumap = new HashMap<>();
-		String orgId = baseAppUserService.getBareauByUserId(loginUserId);
-		if (StringUtils.isNotBlank(orgId)) {
-			jumap.put("orgId", orgId);
-		}
-		jumap.put("docStatus", DbDocStatusDefined.DAI_ZHUAN_BAN);
-		// 查询列表数据
-		List<SubDocInfo> subDocInfoList = subDocInfoService.queryList(jumap);
-		if (subDocInfoList != null && subDocInfoList.size() > 0) {
-			jndbNum = subDocInfoList.size();
-		}
-		// adminType（0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员）
-		String adminType = adminSetService.getAdminTypeByUserId(CurrentUser.getUserId());
-		if (StringUtils.equals("1", adminType)) {
-			dbNumSum = grdbNum;
-		} else if (StringUtils.equals("2", adminType)) {
-			dbNumSum = grdbNum + jndbNum;
-		}
-		Response.json("dbNumSum", dbNumSum);
-
-	}
-
-	/**
 	 * @description:获取当前用户角色类型
 	 * @date:2019年6月24日
 	 * @Version v1.0
