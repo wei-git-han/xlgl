@@ -1,20 +1,25 @@
 package com.css.app.db.config.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import com.css.addbase.msg.MsgTipUtil;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.service.SubDocInfoService;
 import com.css.app.db.config.entity.RemindAdministration;
 import com.css.app.db.config.service.RemindAdministrationService;
 import com.css.base.utils.Response;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * 提醒消息定时任务
@@ -108,8 +113,10 @@ public class RemindAdministrationTimingTask {
 		if (queryList != null && queryList.size() > 0) {
 			for (RemindAdministration remindAdministration : queryList) {
 				if (remindAdministration.getType().equals("3")) {// 催填提醒
-					boolean b = getTime(remindAdministration.getStartTime(), remindAdministration.getEndTime());
+					System.out.println("进催填提醒---------------------------");
+					boolean b = this.getMinusTime(remindAdministration.getStartTime(), remindAdministration.getEndTime());
 					if (b) {// 在规定的时间范围内才发送
+						System.out.println("催填提醒---------------------------");
 						String remindTime = remindAdministration.getRemindTime();
 						boolean minute= this.getMinusDate(remindTime);
 						if (minute) {
@@ -126,6 +133,7 @@ public class RemindAdministrationTimingTask {
 						}
 					}
 				} else if (remindAdministration.getType().equals("2")) {// 未承办和首轮未反馈
+					System.out.println("未承办或首轮未反馈---------------------------");
 					String remindTime = remindAdministration.getRemindTime();
 					boolean minute= this.getMinusDate(remindTime);
 					if (minute) {
@@ -152,6 +160,7 @@ public class RemindAdministrationTimingTask {
 						}
 					}
 				} else if (remindAdministration.getType().equals("1")) {// 局未转办
+					System.out.println("局未转办---------------------------");
 					String remindTime = remindAdministration.getRemindTime();
 					boolean minute= this.getMinusDate(remindTime);
 					if (minute) {
@@ -185,12 +194,19 @@ public class RemindAdministrationTimingTask {
 			return false;
 		}
 		int minute = 0;
-		long curTime = (new Date()).getTime();
-		SimpleDateFormat format  = new SimpleDateFormat("HH:mm");
+		SimpleDateFormat format  = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		SimpleDateFormat dayformat  = new SimpleDateFormat("yyyy-MM-dd");
+		String curDay = dayformat.format(new Date());
+		String remindDate=curDay+" "+remind;
+		System.out.println("配置时间："+remindDate);
+		String curDate = format.format(new Date());
+		System.out.println("当前时间："+curDate);
 		try {
-			long remindTime = format.parse(remind).getTime();
+			long remindTime = format.parse(remindDate).getTime();
+			long curTime = format.parse(curDate).getTime();
 			long  minusTime = curTime - remindTime;
 			minute = (int) minusTime/(1000*60);
+			System.out.println("当前时间减配置时间所插分钟数："+minute);
 			if(minute<10){
 				return true;
 			}
@@ -200,18 +216,18 @@ public class RemindAdministrationTimingTask {
 		return false;
 
 	}
-
 	private void setMsg(String userId, String msgUrl, String content) {
 		if (userId != null) {
 			msgUtil.sendMsg("督查催办", content, msgUrl, userId, appId, clientSecret, "督办", "", "", "true");
 		}
 	}
 
-	public boolean getTime(String sTime, String eTime) {
+	private boolean getMinusTime(String sTime, String eTime) {
+		System.out.println("配置开始时间："+sTime+"配置结束时间："+eTime);
 		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateInstance();
-		String nowDate = dateFormat.format(date);// 当前时间
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String nowDate = simpleDateFormat.format(date);
+		System.out.println("当前时间："+nowDate);
 		Date now;
 		Date start = null;
 		Date end = null;
@@ -223,10 +239,10 @@ public class RemindAdministrationTimingTask {
 			if (!StringUtils.isEmpty(eTime)) {
 				end = simpleDateFormat.parse(eTime);
 			}
-			long nowTime = date.getTime();
+			long nowTime = now.getTime();
 			long startTime = start.getTime();
 			long endTime = end.getTime();
-			if (nowTime >= startTime && nowTime <= endTime) {
+			if (nowTime>=startTime && nowTime <= endTime) {
 				return true;
 			} else {
 				return false;
