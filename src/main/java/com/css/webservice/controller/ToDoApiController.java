@@ -62,7 +62,10 @@ public class ToDoApiController {
             jndbNum = subDocInfoList.size();
         }
         dbNumSum = grdbNum + jndbNum;
-        Response.json("dbNumSum", dbNumSum);
+        Map<String, Object> value = new HashMap<String, Object>();
+        value.put("result", "success");
+        value.put("count", dbNumSum);
+        Response.json(value);
     }
 
 

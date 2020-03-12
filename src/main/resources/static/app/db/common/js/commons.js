@@ -1447,7 +1447,7 @@ function changToNum(){
 			url:changToNumUrl,
 			success:function(data){
 			if(navigator.userAgent.indexOf('OfficeBrowser')>=0){	
-				gettop2().__set_todo_count__(data.dbNumSum);
+				gettop2().__set_todo_count__(data.count);
 			   }
 			}
 		});
