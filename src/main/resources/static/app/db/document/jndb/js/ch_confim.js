@@ -22,6 +22,7 @@ var pageModule = function(){
 		 				window.top.jndbfn();
 						window.top.grdbfn();
 						window.top.blfkfn();
+						changToNum()
 		 			}
 		 		});	
 			}else{

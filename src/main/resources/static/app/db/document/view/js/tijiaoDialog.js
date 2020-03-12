@@ -91,6 +91,7 @@ var pageModule = function(){
 										window.top.jndbfn();
 										window.top.grdbfn();
 										window.top.blfkfn();
+										changToNum()
 										$("#iframe1",window.top.document).attr("src","/app/db/document/grdb/html/grdb.html");
 									}
 								});
