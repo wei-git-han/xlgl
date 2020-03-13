@@ -29,7 +29,7 @@ var pageModule = function(){
 //				remindContent : content
 //			});
 		}else{
-			setformdata({remindTime:"9:00"});
+			setformdata({remindTime:"09:00"});
 			$("#remindRole").val("承办人");
 		}
 
@@ -44,7 +44,7 @@ var pageModule = function(){
 				return
 			}
 			var remindRole = $("#remindRole").val();
-			var remindTime = $("#remindTime").val()?$("#remindTime").val():"9:00";
+			var remindTime = $("#remindTime").val()?$("#remindTime").val():"09:00";
 			var remindContent = $("#remindContent").val();
 			var state = $("#state").val();
 			var obj = {};
