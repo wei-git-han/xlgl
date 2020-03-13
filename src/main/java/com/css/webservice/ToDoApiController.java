@@ -46,7 +46,6 @@ public class ToDoApiController {
             Response.json(value);
             return;
         }
-        String[] ids = userMenuIds.split(",");
         if(userMenuIds.contains("002")) {
         	int  grdbNum= getPersonTodoCount(loginUserId);
     		dbNumSum = dbNumSum+grdbNum;
