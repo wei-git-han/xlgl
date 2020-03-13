@@ -44,7 +44,7 @@ public class RemindAdministrationTimingTask {
 	private String clientSecret;
 
 	/**
-	 * 启动程序时默认启动定时同步 120000代表项目启动2分钟后开始启动定时程序 300000代表每隔1分钟定时程序扫描一次数据
+	 * 启动程序时默认启动定时同步 120000代表项目启动2分钟后开始启动定时程序 600000代表每隔10分钟定时程序扫描一次数据
 	 */
 	public RemindAdministrationTimingTask() {
 		if (timer == null) {
@@ -206,8 +206,8 @@ public class RemindAdministrationTimingTask {
 			long curTime = format.parse(curDate).getTime();
 			long  minusTime = curTime - remindTime;
 			minute = (int) minusTime/(1000*60);
-			System.out.println("当前时间减配置时间所插分钟数："+minute);
-			if(minute<10){
+			System.out.println("当前时间减配置时间所差分钟数："+minute);
+			if(minute<10 && minute>=0){
 				return true;
 			}
 		} catch (ParseException e) {
