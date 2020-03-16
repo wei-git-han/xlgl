@@ -272,8 +272,8 @@ var reminddelfn = function(id){
 //初始化列表开关
 var initBootSwitch= function(){
    	$('.leaveSwitch').bootstrapSwitch({
-   		onText:"ON",
-   		offText:"OFF",
+   		onText:"开",
+   		offText:"关",
    		onColor:"success",
    		offColor:"danger",
    		size:"mini",
