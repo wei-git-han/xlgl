@@ -67,6 +67,7 @@ var pageModule = function(){
 								}
 								window.top.blfkfn();
 								window.top.jndbfn();
+								window.top.grdbfn()
 							}
 						});
 					}else{
