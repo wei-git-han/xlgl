@@ -235,7 +235,7 @@ public class DocumentInfoController {
 	@ResponseBody
 	@RequestMapping("/replyList")
 	public void replyList(Integer page, Integer pagesize,String search,String status,String typeId,
-			String orgid,String month,String startDate,String endDate,String initFlag,String title,String leaderId,String period,String psStartDate,String psEndDate,String year){
+			String orgid,String month,String startDate,String endDate,String initFlag,String title,String leaderId,String period,String psStartDate,String psEndDate,String year,String jnType){
 		List<DocumentInfo> infoList =null;
 		if(!StringUtils.equals("1", initFlag)) {//initFlag为1 为导出页的初始化加载
 			String loginUserId=CurrentUser.getUserId();
@@ -257,6 +257,7 @@ public class DocumentInfoController {
 			map.put("orgId", orgid);
 			map.put("year", dateStr);
 			map.put("title", title);
+			map.put("jnType",jnType);
 			if(StringUtils.isNotBlank(status)) {
 				if(StringUtils.equals("update", status)) {
 					map.put("loginUserId", loginUserId);
