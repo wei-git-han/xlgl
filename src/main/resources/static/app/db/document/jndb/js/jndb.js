@@ -19,6 +19,7 @@ var o = window.top.memory;
 
 var pageModule = function(){
 	var initgrid = function(){
+		var tableparamobj = {};
 		var columns = [
 			            {display:"军委办件号",name:"banjianNumber",width:"6%",align:"left",title:true,render:function(rowdata,n){
 			           	 return rowdata.banjianNumber;
@@ -122,6 +123,8 @@ var pageModule = function(){
 			           	 return rowdata.createdTime.substring(0,16);
 			        }}
 			)
+			tableList = {"url":"/app/db/documentinfo/replyList","dataType":"text"};//办理反馈打开table数据
+			tableparamobj = {page:o.pagesize1,search:$("#searchVal").val(),status:$("input[name='documentStatus']:checked").val(),jnType:ytype,typeId:"",orgid:orgid,month:month,title:"",leaderId:"",psStartDate:"",psEndDate:"",year:nowYear}
 		}else　if(fileFrom=='jndb'){
 			columns.push(
 					{display:"转办时间",name:"createdTime",width:"5%",align:"center",render:function(rowdata){
@@ -137,6 +140,7 @@ var pageModule = function(){
 		           	 return caozuo;
 		            }}
 			)
+			tableparamobj = {page:o.pagesize,search:$("#searchVal").val(),docStatus:$("input[name='documentStatus']:checked").val()}
 		    $('#goback').hide();
 		}
         grid = $("#gridcont").createGrid({
@@ -148,7 +152,7 @@ var pageModule = function(){
             overflowx:true,
             pagesize: 10,
             pageyno:true,
-            paramobj:{page:o.pagesize,search:$("#searchVal").val(),docStatus:$("input[name='documentStatus']:checked").val()},
+            paramobj:tableparamobj,
             loadafter:function(data){
             	total=data.total;
             	$(".zspsnr").each(function(){
