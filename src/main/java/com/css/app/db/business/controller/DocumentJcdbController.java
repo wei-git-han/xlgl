@@ -175,11 +175,11 @@ public class DocumentJcdbController {
 				long end= System.currentTimeMillis();
 				System.out.println("----------------未反馈:"+(end-start));
 				//各局完成比率  办结+常态落实/总数
-				long total = (long) map2.get("blz") + (long) map2.get("bj") + (long) map2.get("ctls");
+				long total = (long) map2.get("blz") + (long) map2.get("bj") + (long) map2.get("ctls")+wfkCount;
 				if (total == 0) {
 					jo.put("wcl", "0%");
 				} else {
-					long bjAddCtls = (long) map2.get("bj") + (long) map2.get("ctls");
+					long bjAddCtls = (long) map2.get("blz") + wfkCount;
 					if (bjAddCtls == 0) {
 						jo.put("wcl", "0%");
 					} else {
@@ -192,7 +192,7 @@ public class DocumentJcdbController {
 				//增加未反馈
 				jo.put("wfk",wfkCount);
 				//原办理中数据-未反馈量 = 现办理中数据
-				long blz = (long) map2.get("blz") - (long) wfkCount;
+				long blz = (long) map2.get("blz");
 				jo.put("blz", blz < 0 ? 0 : blz);
 				jo.put("id",danweiid);
 				jo.put("dwname", (String) map2.get("dwname"));

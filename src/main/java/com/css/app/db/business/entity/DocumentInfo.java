@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.netflix.discovery.converters.jackson.builder.StringInterningAmazonInfoBuilder;
+
 
 
 /**
@@ -85,6 +87,16 @@ public class DocumentInfo implements Serializable {
 	private List<DocumentSzps> szpslist;
 	//超期三个月
 	private Integer isOverTreeMonth;
+	
+	private String docStatus;
+	
+	
+	public String getDocStatus() {
+		return docStatus;
+	}
+	public void setDocStatus(String docStatus) {
+		this.docStatus = docStatus;
+	}
 	/**
 	 * 设置：唯一标识
 	 */

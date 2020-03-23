@@ -350,6 +350,7 @@ public class DocumentInfoController {
 				szpsMap.put("infoId", info.getId());
 				List<DocumentSzps> szpsList = documentSzpsService.queryList(szpsMap);
 				info.setSzpslist(szpsList);
+				info.setUnderDepts(info.getLatestSubDept()+"/"+info.getLatestUndertaker());
 			}
 		}
 		GwPageUtils pageUtil = new GwPageUtils(infoList);
