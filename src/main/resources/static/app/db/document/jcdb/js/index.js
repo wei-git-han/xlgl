@@ -726,7 +726,8 @@ var topage = function(orgid,type,month,ytype,state){
 			},1000)
 			return;
 		}else{
-			window.location.href = "/app/db/document/blfk/html/blfk.html?fileFrom=jcdb&ifmenu=false&orgid="+orgid+"&month="+month+"&ytype="+ytype+"&nowYear="+nowYear;
+			//window.location.href = "/app/db/document/blfk/html/blfk.html?fileFrom=jcdb&ifmenu=false&orgid="+orgid+"&month="+month+"&ytype="+ytype+"&nowYear="+nowYear;
+			window.location.href = "/app/db/document/jndb/html/jndb.html?fileFrom=jcdb&ifmenu=false&orgid="+orgid+"&month="+month+"&ytype="+ytype+"&nowYear="+nowYear;
 		}
 	}
 }

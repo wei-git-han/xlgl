@@ -1385,6 +1385,8 @@ function skip(){
 			window.location="/app/db/document/blfk/html/blfk.html?fileFrom=blfk";
 		}else if(fileFrom=="jndb"){  //文件来源于局内待办
 			window.location="/app/db/document/jndb/html/jndb.html?fileFrom=jndb";
+		}else if(fileFrom=="jcdb"){  //文件来源于统计报表打开的局内待办
+			window.location="/app/db/document/jndb/html/jndb.html?fileFrom=jcdb";
 		}else{ 
 			window.location.href="/app/db/document/grdb/html/grdb.html?fileFrom=grdb";
 		}

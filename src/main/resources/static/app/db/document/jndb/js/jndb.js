@@ -5,6 +5,10 @@ var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text
 var chehuiUrl = {"url":"/app/db/withdraw/juAdministratorWithdraw","dataType":"text"};//撤回url
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var fromMsg=getUrlParam("fromMsg")||false; //是否为消息进入
+var orgid=getUrlParam("orgid")||""; //统计图传过来的机构
+var nowYear = getUrlParam("nowYear");//“统计报表”页面上的“年度”
+var month=getUrlParam("month")||""; //统计图传过来的月份
+var ytype=getUrlParam("ytype")||""; //统计图传过来的办理状态
 var grid = null;
 var total=0;//列表中，数据的总条数
 
@@ -15,115 +19,128 @@ var o = window.top.memory;
 
 var pageModule = function(){
 	var initgrid = function(){
+		var columns = [
+			            {display:"军委办件号",name:"banjianNumber",width:"6%",align:"left",title:true,render:function(rowdata,n){
+			           	 return rowdata.banjianNumber;
+			            }},
+			            {display:"局内状态",name:"statusName",width:"8%",align:"center",render:function(rowdata,n){
+			            	var statusName="";
+			          	 	var bgColor="";
+			          	 	if(rowdata.docStatus==1){
+			              	 	statusName="待转办";
+			              		bgColor="rgba(240, 96, 0, 1)";
+			       	 	}else if(rowdata.docStatus==3){
+			              	 	statusName="退回修改";
+			              		bgColor="rgba(240, 96, 0, 1)";
+			          	 		if(rowdata.dealUserName){
+			          	 			statusName="待"+rowdata.dealUserName+"修改";
+			          	 			bgColor="#FF8C40";
+			          	 		}
+			          	 	}else if(rowdata.docStatus==5){
+			              	 	statusName="待落实";
+			              	 	bgColor="rgba(240, 96, 0, 1)";
+			          	 		if(rowdata.dealUserName){
+			          	 			statusName="待"+rowdata.dealUserName+"落实";
+			          	 			bgColor="#FF8C40";
+			          	 		}
+			          	 	}else if(rowdata.docStatus==7){
+			              	 	statusName="待审批";
+			              	 	bgColor="rgba(60, 123, 255, 1)";
+			          	 		if(rowdata.dealUserName){
+			          	 			statusName="待"+rowdata.dealUserName+"审批";
+			          	 			bgColor="#6699FF";
+			          	 		}
+			          	 	}else if(rowdata.docStatus==9){
+			              	 	statusName="办理中";
+			              	 	bgColor="rgba(43, 170, 129, 1)";
+			          	 		if(rowdata.dealUserName){
+			          	 			statusName=rowdata.dealUserName+"办理中";
+			          	 			bgColor="#33CC99";
+			          	 		}
+			          	 	}else if(rowdata.docStatus==10){
+			              	 	statusName="建议办结";
+			              	 	bgColor="rgba(153, 153, 153, 1)";
+			          	 	}else if(rowdata.docStatus==11){
+			              	 	statusName="常态落实";
+			              	 	bgColor="rgba(153, 153, 153, 1)";
+			          	 	}   				  	
+			          	 	return '<div title="'+statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+statusName+'</div>';
+			            }},
+			            {display:"文件标题",name:"docTitle",width:"15%",align:"left",title:false,render:function(rowdata){
+			           	 var cuiban="";
+			            	 if(rowdata.cuibanFlag=="1"){
+			            		 cuiban = '<label class="cuibanlabel">催办</label>';
+			           	 }
+			            	//isOverTreeMonth
+			            	var csFlag = "";
+			           	if(rowdata.isOverTreeMonth==1){
+			           		csFlag = '<img src="../../../common/images/u301.png" class="titleimg" />';
+			           	}
+			           	 return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../view/html/view2.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&fileFrom='+fileFrom+'&showFileButton=true'+'&docTypeName='+rowdata.docTypeName+'&jobContent='+rowdata.jobContent+'" target="iframe1">'+cuiban+'<span class="tabletitle2">'+rowdata.docTitle+csFlag+'</span></a>'
+			            }},
+			            {display:"紧急程度",name:"urgencyDegree",width:"5%",align:"center",paixu:false,render:function(rowdata){
+			           	 return rowdata.urgencyDegree;
+			            }},
+			            {display:"批示指示/任务分工",name:"",width:"20%",align:"left",paixu:false,title:false,render:function(rowdata){
+			           	 var contentText = '';
+			           	 if(rowdata.docTypeName == "重要决策部署分工"||rowdata.docTypeName == "其他重要工作"||rowdata.docTypeName == "部内重要工作分工"){
+			           		 //contentText = rowdata.jobContent?rowdata.jobContent:"";
+			           		 contentText = rowdata.jobContent?('<div style="cursor: initial;" class="zspsnr" title="' + rowdata.jobContent + '">'+rowdata.jobContent+'</div>'):"";
+			           	 }else{
+			               	 var html1="";
+			               	 $.each(rowdata.szpslist,function(i,item){
+			               		 var createdTime="";
+			               		 if(item.createdTime!="" && item.createdTime!=null){
+			               			 createdTime= item.createdTime.substring(0,16);
+			               		 }
+			               		 html1+=item.userName+'&nbsp;&nbsp;'+createdTime+'批示：'+item.leaderComment+'&nbsp;&nbsp;&nbsp;'
+			    				 });
+			               	 contentText = '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.infoId+'\')" title="'+html1+'">'+html1+'</div>';
+			           	 }
+			
+			           	 return contentText;
+			
+			            }},
+			            {display:"本期局内反馈",name:"",width:"20%",align:"left",paixu:false,title:false,render:function(rowdata){
+			           	 var dbCont="";
+			           	 if(rowdata.latestReply){
+			           		dbCont=rowdata.latestReply;
+			           	 }	 
+			           	 return '<div class="dblsqk" onclick="dblsqkAlert(\''+rowdata.infoId+'\')" title="'+dbCont+'"><span>'+dbCont+'</span></div>';
+			            }},
+			            {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,title:false,render:function(rowdata){
+			           	 return '<div class="cbdw" title="'+rowdata.underDepts+'">'+rowdata.underDepts+'</div>'
+			            }},
+			            {display:"类别",name:"docTypeName",width:"7%",align:"left",paixu:false,render:function(rowdata){
+			           	 return rowdata.docTypeName;
+			            }}
+			       ]
+		if(fileFrom && fileFrom == "jcdb"){
+			$('#filterBox').hide();
+			columns.push(
+					{display:"转办时间",name:"createdTime",width:"9%",align:"center",render:function(rowdata){
+			           	 return rowdata.createdTime.substring(0,16);
+			        }}
+			)
+		}else　if(fileFrom=='jndb'){
+			columns.push(
+					{display:"转办时间",name:"createdTime",width:"5%",align:"center",render:function(rowdata){
+			           	 return rowdata.createdTime.substring(0,16);
+			        }},
+					{display:"操作",name:"do",width:"4%",align:"center",render:function(rowdata){
+		           	 var caozuo = '';
+		           	 if(rowdata.docStatus == "1"){
+		                	 caozuo +='<a title="转办" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="zhuanbanDoc(\''+rowdata.id+'\',\''+rowdata.infoId+'\',\''+fromMsg+'\')"><i class="fa fa-external-link"></i></a>';
+						 }else{
+							 caozuo+='<a title="撤回" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="chehuiDoc(\''+rowdata.id+'\',\''+rowdata.infoId+'\')"><i class="fa fa-mail-reply"></i></a>';
+						 }
+		           	 return caozuo;
+		            }}
+			)
+		    $('#goback').hide();
+		}
         grid = $("#gridcont").createGrid({
-            columns:[
-                 {display:"军委办件号",name:"banjianNumber",width:"6%",align:"left",title:true,render:function(rowdata,n){
-                	 return rowdata.banjianNumber;
-                 }},
-                 {display:"局内状态",name:"statusName",width:"8%",align:"center",render:function(rowdata,n){
-                 	var statusName="";
-               	 	var bgColor="";
-               	 	if(rowdata.docStatus==1){
-	               	 	statusName="待转办";
-	               		bgColor="rgba(240, 96, 0, 1)";
-            	 	}else if(rowdata.docStatus==3){
-	               	 	statusName="退回修改";
-	               		bgColor="rgba(240, 96, 0, 1)";
-	           	 		if(rowdata.dealUserName){
-	           	 			statusName="待"+rowdata.dealUserName+"修改";
-	           	 			bgColor="#FF8C40";
-	           	 		}
-               	 	}else if(rowdata.docStatus==5){
-	               	 	statusName="待落实";
-	               	 	bgColor="rgba(240, 96, 0, 1)";
-	           	 		if(rowdata.dealUserName){
-	           	 			statusName="待"+rowdata.dealUserName+"落实";
-	           	 			bgColor="#FF8C40";
-	           	 		}
-               	 	}else if(rowdata.docStatus==7){
-	               	 	statusName="待审批";
-	               	 	bgColor="rgba(60, 123, 255, 1)";
-	           	 		if(rowdata.dealUserName){
-	           	 			statusName="待"+rowdata.dealUserName+"审批";
-	           	 			bgColor="#6699FF";
-	           	 		}
-               	 	}else if(rowdata.docStatus==9){
-	               	 	statusName="办理中";
-	               	 	bgColor="rgba(43, 170, 129, 1)";
-	           	 		if(rowdata.dealUserName){
-	           	 			statusName=rowdata.dealUserName+"办理中";
-	           	 			bgColor="#33CC99";
-	           	 		}
-               	 	}else if(rowdata.docStatus==10){
-	               	 	statusName="建议办结";
-	               	 	bgColor="rgba(153, 153, 153, 1)";
-               	 	}else if(rowdata.docStatus==11){
-	               	 	statusName="常态落实";
-	               	 	bgColor="rgba(153, 153, 153, 1)";
-               	 	}   				  	
-               	 	return '<div title="'+statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+statusName+'</div>';
-                 }},
-                 {display:"文件标题",name:"docTitle",width:"15%",align:"left",title:false,render:function(rowdata){
-                	 var cuiban="";
-                 	 if(rowdata.cuibanFlag=="1"){
-                 		 cuiban = '<label class="cuibanlabel">催办</label>';
-                	 }
-                 	//isOverTreeMonth
-                 	var csFlag = "";
-                	if(rowdata.isOverTreeMonth==1){
-                		csFlag = '<img src="../../../common/images/u301.png" class="titleimg" />';
-                	}
-                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../view/html/view2.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&fileFrom='+fileFrom+'&showFileButton=true'+'&docTypeName='+rowdata.docTypeName+'&jobContent='+rowdata.jobContent+'" target="iframe1">'+cuiban+'<span class="tabletitle2">'+rowdata.docTitle+csFlag+'</span></a>'
-                 }},
-                 {display:"紧急程度",name:"urgencyDegree",width:"5%",align:"center",paixu:false,render:function(rowdata){
-                	 return rowdata.urgencyDegree;
-                 }},
-                 {display:"批示指示/任务分工",name:"",width:"20%",align:"left",paixu:false,title:false,render:function(rowdata){
-                	 var contentText = '';
-                	 if(rowdata.docTypeName == "重要决策部署分工"||rowdata.docTypeName == "其他重要工作"||rowdata.docTypeName == "部内重要工作分工"){
-                		 //contentText = rowdata.jobContent?rowdata.jobContent:"";
-                		 contentText = rowdata.jobContent?('<div style="cursor: initial;" class="zspsnr" title="' + rowdata.jobContent + '">'+rowdata.jobContent+'</div>'):"";
-                	 }else{
-                    	 var html1="";
-                    	 $.each(rowdata.szpslist,function(i,item){
-                    		 var createdTime="";
-                    		 if(item.createdTime!="" && item.createdTime!=null){
-                    			 createdTime= item.createdTime.substring(0,16);
-                    		 }
-                    		 html1+=item.userName+'&nbsp;&nbsp;'+createdTime+'批示：'+item.leaderComment+'&nbsp;&nbsp;&nbsp;'
-         				 });
-	                	 contentText = '<div class="zspsnr" onclick="pszsnrAlert(\''+rowdata.infoId+'\')" title="'+html1+'">'+html1+'</div>';
-                	 }
-
-                	 return contentText;
-
-                 }},
-                 {display:"本期局内反馈",name:"",width:"20%",align:"left",paixu:false,title:false,render:function(rowdata){
-                	 var dbCont="";
-                	 if(rowdata.latestReply){
-                		dbCont=rowdata.latestReply;
-                	 }	 
-                	 return '<div class="dblsqk" onclick="dblsqkAlert(\''+rowdata.infoId+'\')" title="'+dbCont+'"><span>'+dbCont+'</span></div>';
-                 }},
-                 {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,title:false,render:function(rowdata){
-                	 return '<div class="cbdw" title="'+rowdata.underDepts+'">'+rowdata.underDepts+'</div>'
-                 }},
-                 {display:"类别",name:"docTypeName",width:"7%",align:"left",paixu:false,render:function(rowdata){
-                	 return rowdata.docTypeName;
-                 }},
-                 {display:"转办时间",name:"createdTime",width:"5%",align:"center",render:function(rowdata){
-                	 return rowdata.createdTime.substring(0,16);
-                 }},
-                 {display:"操作",name:"do",width:"4%",align:"center",render:function(rowdata){
-                	 var caozuo = '';
-                	 if(rowdata.docStatus == "1"){
-                     	 caozuo +='<a title="转办" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="zhuanbanDoc(\''+rowdata.id+'\',\''+rowdata.infoId+'\',\''+fromMsg+'\')"><i class="fa fa-external-link"></i></a>';
-    				 }else{
-    					 caozuo+='<a title="撤回" class="btn btn-default btn-xs new_button1" href="javascript:;" onclick="chehuiDoc(\''+rowdata.id+'\',\''+rowdata.infoId+'\')"><i class="fa fa-mail-reply"></i></a>';
-    				 }
-                	 return caozuo;
-                 }}
-            ],
+            columns:columns,
             width:"100%",
             height:"100%",
             checkbox: true,
@@ -369,3 +386,6 @@ function chehuiDoc(id, infoId){
 		url:"/app/db/document/jndb/html/ch_confim.html?id="+id+"&infoId="+infoId
 	})
 }
+$("#goback").click(function(){
+    window.location.href = "../../jcdb/html/index.html"
+});
