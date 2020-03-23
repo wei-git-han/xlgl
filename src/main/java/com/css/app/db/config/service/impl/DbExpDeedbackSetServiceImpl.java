@@ -28,6 +28,11 @@ public class DbExpDeedbackSetServiceImpl implements DbExpDeedbackSetService {
 	}
 	
 	@Override
+	public List<DbExpDeedbackSet> queryListDefault(Map<String, Object> map){
+		return dbExpDeedbackSetDao.queryListDefault(map);
+	}
+	
+	@Override
 	public void save(DbExpDeedbackSet dbExpDeedbackSet){
 		dbExpDeedbackSetDao.save(dbExpDeedbackSet);
 	}
