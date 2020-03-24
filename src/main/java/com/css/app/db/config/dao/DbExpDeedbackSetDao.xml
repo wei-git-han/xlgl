@@ -17,6 +17,17 @@
 		</if>
 	</select>
 	
+	
+	<select id="queryListDefault" resultType="com.css.app.db.config.entity.DbExpDeedbackSet">
+		select * from DB_EXP_DEEDBACK_SET where flag = 1
+		<!-- <if test="userId != null and userId != null">
+			and CREATED_USER_ID = #{userId}
+		</if> -->
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
  	<select id="queryTotal" resultType="int">
 		select count(*) from DB_EXP_DEEDBACK_SET 
 	</select>
