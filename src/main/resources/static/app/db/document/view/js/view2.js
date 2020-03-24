@@ -33,6 +33,7 @@ var ifShowEditBtn="0";//是否有编辑按钮
 var scanFilePath = "";//扫描件路径
 var showCollectIdeaButtonUrl={"url":"/app/db/addXbDeal/showCollectIdeaButton","dataType":"text"}; //是否显示意见收集
 var commitIdeaUrl={"url":"/app/db/addXbDeal/commitIdea","dataType":"text"}; //发送意见url
+var listDefaultUrl = {"url":"/app/db/dbexpdeedbackset//listDefault","dataType":"text"}; /*相关文件--删除附件*/
 
 
 
@@ -96,7 +97,34 @@ var pageModule = function(){
 			}
 		});
 	}
-	
+	/* 按钮权限控制 */
+	var listDefault = function(){
+		$ajax({
+			url:listDefaultUrl,
+			data:{page:"1",pagesize:"1000"},
+			success:function(data){
+				var placeholder = "此处填写办理进度供部内审议"
+				if(data&&data.rows.length>0){
+					placeholder = "此处填写办理进展情况，填写要求如下：\n"//&#13;&#10;"
+					data.rows.map(function(item,index){
+						placeholder+=(item.expContent.toString()+";\n")//&#13;&#10;")
+					})
+//					$("#replyContent").attr("placeholder",placeholder)
+				}
+				$("#replyContent").val(placeholder).css({color:"#ccc"})
+				$("#replyContent").focus(function(){
+					if($(this).val() == placeholder){
+						$(this).val('').css({color:"inherit"})
+					}
+				})
+				$("#replyContent").blur(function(){
+					if($(this).val() == ""){
+						$(this).val(placeholder).css({color:"#ccc"})
+					}
+				})
+			}
+		});	
+	}
 	/* 按钮权限控制 */
 	var showButton = function(){
 		$ajax({
@@ -1345,6 +1373,7 @@ var pageModule = function(){
 		//加载页面处理程序
 		initControl:function(){
 			ifcuibanfn();
+			listDefault();
 			showButton();
 			takeMenufn();
 			initdata();
