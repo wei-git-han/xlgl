@@ -125,7 +125,15 @@
 	<select id="queryReplyList" resultType="com.css.app.db.business.entity.DocumentInfo">
 		select
 		db.*,
-		info.*
+		info.*,
+		listagg(sub_dept_name
+                        || nvl2(DECODE(undertaker_name, '', null, 'NULL', null, undertaker_name), '/'
+                        || undertaker_name
+                        || nvl2(DECODE(undertaker_phone, '', null, 'NULL', null, undertaker_phone), '('
+                        ||undertaker_phone
+                        ||')', null), null), ',') within group(
+                order by
+                         info.created_time desc) over(partition by info.info_id) under_depts
 		from
 		DB_SUB_DOC_INFO info
 		left join
