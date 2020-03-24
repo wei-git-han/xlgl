@@ -58,6 +58,9 @@ public interface DocumentInfoService {
 	List<DocumentInfo> queryReplyList(Map<String, Object> map);
 
 	List<DocumentInfo> queryReplyListPlus(Map<String, Object> map);
+	
+	
+	List<DocumentInfo> queryReplyListForWfk(Map<String, Object> map);
 
 	int queryDocumentWfk(String danweiid, String year);
 

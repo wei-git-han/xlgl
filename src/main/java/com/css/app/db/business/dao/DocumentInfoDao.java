@@ -50,6 +50,9 @@ public interface DocumentInfoDao extends BaseDao<DocumentInfo> {
 	List<DocumentInfo> queryReplyList(Map<String, Object> map);
 
 	List<DocumentInfo> queryReplyListPlus(Map<String, Object> map);
+	
+	
+	List<DocumentInfo> queryReplyListForWfk(Map<String, Object> map);
 
 	int queryDocumentWfk(@Param("danweiid") String danweiid, @Param("year") String year);
 

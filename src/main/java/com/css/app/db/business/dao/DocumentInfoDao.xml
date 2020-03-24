@@ -1268,5 +1268,28 @@
 			limit #{offset}, #{limit}
 		</if>
 	</select>
+	
+	<select id="queryReplyListForWfk" resultType="com.css.app.db.business.entity.DocumentInfo">
+		select * from DB_SUB_DOC_INFO a left join DB_DOCUMENT_INFO b
+		on a.INFO_ID = b.ID
+		left join(select s.INFO_ID,s.CREATED_TIME as
+		leader_time,
+		row_number() over(partition by s.info_id order by f.sort
+		asc) as dNum from DB_DOCUMENT_SZPS s inner join DB_ROLE_SET f
+		on
+		s.USER_ID=f.USER_ID order by f.sort asc) e on b.id = e.info_id and
+		(e.dNum = 1 or e.dNum is null)
+		where b.status=1 and (a.first_reply !=1
+		or a.first_reply is null)
+		<if test="orgId != null and orgId != '' ">
+			and a.SUB_DEPT_ID = #{orgId}
+		</if>
+		<if test="year != null and year != ''">
+			and case when e.leader_time is not null and e.leader_time
+			!= '' then to_char(e.leader_time) else
+			to_char(b.CREATED_TIME) end
+			like '%'||#{year}||'%'
+		</if>
+	</select>
 
 </mapper>

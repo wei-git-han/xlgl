@@ -344,8 +344,13 @@ public class DocumentInfoController {
 					}
 				}
 				if (StringUtils.isNotBlank(jnType)) {// 从统计报表点进去--本年度办理情况--点击某一个状态触发的查询
-					PageHelper.startPage(page, pagesize);
-					infoList = documentInfoService.queryReplyListPlus(map);
+					if ("4".equals(jnType)) {//未反馈的用这个查询
+						PageHelper.startPage(page, pagesize);
+						infoList = documentInfoService.queryReplyListForWfk(map);
+					}else {
+						PageHelper.startPage(page, pagesize);
+						infoList = documentInfoService.queryReplyListPlus(map);
+					}
 				} else {// 直接点击办理反馈触发的查询
 					PageHelper.startPage(page, pagesize);
 					infoList = documentInfoService.queryReplyList(map);
