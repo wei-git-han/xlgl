@@ -92,6 +92,7 @@ public class DbExpDeedbackSetController {
 		json.put("expName", dbExpDeedbackSet.getExpName());// securityClassification
 		json.put("expContent", dbExpDeedbackSet.getExpContent());
 		json.put("flId", dbExpDeedbackSet.getId());
+		json.put("flag", dbExpDeedbackSet.getFlag());
 		Response.json(json);
 	}
 	
