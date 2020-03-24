@@ -87,5 +87,13 @@ body {
 .newpage24{
 	color:#999999;
 }
-
+.showInput{
+	line-height:40px;
+}
+.showInput input{
+	margin-right:8px
+}
+.showInput span{
+	margin-right:25px
+}
 
