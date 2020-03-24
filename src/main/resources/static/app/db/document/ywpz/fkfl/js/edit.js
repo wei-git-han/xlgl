@@ -22,9 +22,10 @@ var pageModule = function(){
 			var flName = $("#expName").val();
 			var flId = $("#flId").val();
 			var flcontent = $("#expContent").val();
+			var flag = $("input[name='show']:checked").val();
 			$ajax({
 				url:saveUrl,
-				data:{id:id,expName:flName,expId:flId,expContent:flcontent},
+				data:{id:id,expName:flName,expId:flId,expContent:flcontent,flag:flag},
 				type: "GET",
 				success:function(data){
 					newbootbox.newdialogClose("addDialog");
