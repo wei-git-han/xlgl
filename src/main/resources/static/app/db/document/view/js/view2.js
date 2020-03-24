@@ -19,6 +19,7 @@ var cbDataUrl = {"url":"/app/db/documentinfo/getCuiBanlist","dataType":"text"}; 
 var latestCuiBanUrl = {"url":"/app/db/documentinfo/getLatestCuiBan","dataType":"text"}; //获取最新的催办
 var uploadFileUrl = "/app/db/documentinfo/uploadFile";//文件上传
 var delFileUrl = {"url":"/app/db/documentfile/delete","dataType":"text"}; /*相关文件--删除附件*/
+var finishButton = {"url":"/app/db/subdocinfo//finishButton","dataType":"text"}; //办结与常态落实接口
 var fileId=getUrlParam("fileId")||""; //主文件id
 var subId=getUrlParam("subId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
@@ -111,12 +112,16 @@ var pageModule = function(){
 				boolean isUndertaker=false;//是否承办人*/
 				if(data.docStatus<10){//文件为办理中
 					if("jndb"==fileFrom){
-                        if(data.docStatus==1){
+                        if(data.docStatus==1||data.docStatus==3||data.docStatus==5||data.docStatus==9){
                             $(".newbottom").show();
                             $("#zhuanban").show();
                         }else if(data.docStatus==9){
                             $(".newbottom").hide()
                             $(".blfk_bottom").hide();
+                        }
+                        if(data.docStatus==5||data.docStatus==9){
+                        	$(".newbottom").show();
+                        	$("#bjandls").show();
                         }
 					}else{
 						if(data.docStatus==5 && data.isCheckUser){//承办、转办按钮显示，输入框相关不显示
@@ -126,7 +131,7 @@ var pageModule = function(){
 						}else{
 							if(data.isUndertaker && data.docStatus!=5){
 								$(".newbottom").show(); //所有按钮的容器
-								$("#bjandls").show(); //办结和常态落实合并为一个
+//								$("#bjandls").show(); //办结和常态落实合并为一个
 							}
 							if(data.isCheckUser){//显示办结、常态落实,输入框
 								$(".blfk_bottom").show(); //意见外大框
@@ -1492,4 +1497,39 @@ function opinionView(teamId,subId,ideaGroupId){
 		style:{"padding":"0px"},
 		url:"/app/db/document/view/html/opinion.html?teamId="+teamId+"&subId="+subId+"&ideaGroupId="+ideaGroupId+"&fileFrom="+fileFrom
 	})
+}
+//办结，常态落实
+function jnbanjie(dom){ 
+	var msg = (dom == "banjie")?"是否确认要进行文件办结操作？":"是否确认要进行文件常态落实操作？";
+	var btntype = (dom == "banjie")?'1':'2';
+	var alert1 = (dom == "banjie")?"已办结！":"文件已常态落实！";
+	var alert2 = (dom == "banjie")?"办结失败！":"落实失败！";
+	newbootbox.oconfirm({
+	 	title:"提示",
+	 	message: msg,
+	 	callback1:function(){
+				$ajax({
+					url:finishButton,
+					data:{infoId:fileId,subId:subId,type:btntype},
+					type: "GET",
+					success:function(data){
+						if(data.result == "success"){
+							newbootbox.alert(alert1).done(function(){
+								if(fromMsg && fromMsg=="true"){
+									windowClose();
+								}else{
+									if(np2==0){
+										window.top.blfkfn();
+										window.top.grdbfn();
+									}
+								skip();
+								}
+							});
+						}else{
+							newbootbox.alert(alert2)
+						}
+					}
+				});
+	 	}
+	});
 }
