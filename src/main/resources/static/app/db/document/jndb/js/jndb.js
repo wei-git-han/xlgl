@@ -67,7 +67,10 @@ var pageModule = function(){
 			          	 	}else if((rowdata.docStatus==12)&&fileFrom && (fileFrom == "jcdb")){
 			              	 	statusName="已办结";
 			              	 	bgColor="rgba(153, 153, 153, 1)";
-			          	 	}   				  	
+			          	 	}else if((rowdata.docStatus==13)&&fileFrom && (fileFrom == "jcdb")){
+			              	 	statusName="常态落实";
+			              	 	bgColor="rgba(153, 153, 153, 1)";
+			          	 	}     				  	
 			          	 	return '<div title="'+statusName+'" class="btn btn-xs btn-color" style="background-color:'+bgColor+';">'+statusName+'</div>';
 			            }},
 			            {display:"文件标题",name:"docTitle",width:"15%",align:"left",title:false,render:function(rowdata){
