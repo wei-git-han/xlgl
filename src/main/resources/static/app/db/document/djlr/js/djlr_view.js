@@ -27,6 +27,11 @@ var isFromChart = getUrlParam("isFromChart");
 var isDepart = getUrlParam("isDepart");
 var docTypeName = getUrlParam2("docTypeName");//类别
 var jobContent = getUrlParam2("jobContent");//任务分工内容
+var backAnchor = getUrlParam2("backAnchor");//当为jndb时，代表是从统计报表进入的，显示办理反馈数据的局内代办页面，所打开的详情页
+var orgid0=getUrlParam("orgid")||""; //统计图传过来的机构
+var nowYear0 = getUrlParam("nowYear");//“统计报表”页面上的“年度”
+var month0=getUrlParam("month")||""; //统计图传过来的月份
+var ytype0=getUrlParam("ytype")||""; //统计图传过来的办理状态
 var backData = {
 	status:status,
 	leaderId:leaderId,
@@ -809,7 +814,11 @@ function skip(){
 		}else if(fileFrom == "grdb"){//文件来源于个人待办
 			window.location.href="/app/db/document/grdb/html/grdb.html?fileFrom="+fileFrom;
 		}else if(fileFrom=="blfk" || fileFrom=="jcdb"){  //文件来源于办理反馈
-			window.location="/app/db/document/blfk/html/blfk.html?fileFrom="+fileFrom;
+			if(backAnchor == "jndb"){
+				window.location="/app/db/document/jndb/html/jndb.html?fileFrom=jcdb"+"&orgid="+orgid0+"&nowYear="+nowYear0+"&month="+month0+"&ytype="+ytype0;
+			}else{
+				window.location="/app/db/document/blfk/html/blfk.html?fileFrom="+fileFrom;
+			}
 		}else if(fileFrom=="jndb"){ 
 			window.location.href="/app/db/document/jndb/html/jndb.html?fileFrom="+fileFrom;
 		}else if(fileFrom=="sztj"){ 

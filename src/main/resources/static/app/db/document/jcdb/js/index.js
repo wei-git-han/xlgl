@@ -108,7 +108,7 @@ var pageModule = function(){
 						`
 							<tr id="${id}">
 								<td>${i+1}</td>
-								<td title="${dwname}" ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','','${state}')">${dwname}</font></td>
+								<td title="${dwname}" ><font style="cursor:pointer">${dwname}</font></td>
 								<td ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','1','${state}')">${blz}</font></td>
 								<td ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','2','${state}')">${bj}</font></td>
 								<td ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','3','${state}')">${ctls}</font></td>

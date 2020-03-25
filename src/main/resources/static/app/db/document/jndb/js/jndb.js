@@ -85,7 +85,7 @@ var pageModule = function(){
 			           	}
 			           	var htmlText = "";
 			           	if(fileFrom && fileFrom == "jcdb"){
-			           		htmlText ='<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'" target="iframe1">'+cuiban+'<span class="tabletitle2">'+rowdata.docTitle+csFlag+'</span></a>'
+			           		htmlText ='<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../djlr/html/djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'&backAnchor='+'jndb'+'&orgid='+orgid+'&nowYear='+nowYear+'&month='+month+'&ytype='+ytype+'" target="iframe1">'+cuiban+'<span class="tabletitle2">'+rowdata.docTitle+csFlag+'</span></a>'
 			           	}else{
 			           		htmlText ='<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../view/html/view2.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&fileFrom='+fileFrom+'&showFileButton=true'+'&docTypeName='+rowdata.docTypeName+'&jobContent='+rowdata.jobContent+'" target="iframe1">'+cuiban+'<span class="tabletitle2">'+rowdata.docTitle+csFlag+'</span></a>'
 			           	}
