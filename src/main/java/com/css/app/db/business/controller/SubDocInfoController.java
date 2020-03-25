@@ -645,7 +645,7 @@ public class SubDocInfoController {
 	public void banJieOperation(String infoId, String subId) {
 		SubDocInfo subInfo = subDocInfoService.queryObject(subId);
 		DocumentBjjl bjjl = new DocumentBjjl();
-		// 取除本分支机构外的其他机构的最小状态值
+		// 本文件其他机构的最小状态值
 		int minDocStatus = subDocInfoService.queryMinDocStatus(infoId, subInfo.getSubDeptId());
 		int maxDocStatus = subDocInfoService.queryMaxDocStatus(infoId, subInfo.getSubDeptId());
 		// 说明只有当前一个局
@@ -686,8 +686,6 @@ public class SubDocInfoController {
 					info.setStatus(3);
 					documentInfoService.update(info);
 					// 当前分支文件变为办结
-					// subDocInfoService.updateDocStatus(DbDocStatusDefined.BAN_JIE, new Date() ,
-					// infoId);
 					subInfo.setDocStatus(DbDocStatusDefined.BAN_JIE);
 					bjjl.setContent("系统自动常态落实");
 				}
@@ -714,6 +712,7 @@ public class SubDocInfoController {
 	 */
 	public void luoShiOperation(String infoId, String subId) {
 		SubDocInfo subInfo = subDocInfoService.queryObject(subId);
+		//本文件其他分支的状态。
 		int minDocStatus = subDocInfoService.queryMinDocStatus(infoId, subInfo.getSubDeptId());
 		int maxDocStatus = subDocInfoService.queryMaxDocStatus(infoId, subInfo.getSubDeptId());
 		DocumentBjjl bjjl = new DocumentBjjl();
@@ -738,7 +737,7 @@ public class SubDocInfoController {
 					info.setSzReadIds("");
 					info.setStatus(3);
 					documentInfoService.update(info);
-					// 各分支文件变为常态落实
+					// 该分支文件变为常态落实
 					// subDocInfoService.updateDocStatus(DbDocStatusDefined.CHANG_TAI_LUO_SHI, new
 					// Date() , infoId);
 					subInfo.setDocStatus(DbDocStatusDefined.CHANG_TAI_LUO_SHI);
