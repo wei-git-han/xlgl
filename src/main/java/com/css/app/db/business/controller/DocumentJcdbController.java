@@ -179,7 +179,7 @@ public class DocumentJcdbController {
 				if (total == 0) {
 					jo.put("wcl", "0%");
 				} else {
-					long bjAddCtls = (long) map2.get("blz") + wfkCount;
+					long bjAddCtls = (long) map2.get("bj") + (long) map2.get("ctls");
 					if (bjAddCtls == 0) {
 						jo.put("wcl", "0%");
 					} else {
