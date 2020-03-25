@@ -31,6 +31,7 @@ var isCbr = 0;//承办人标识
 var isSave = 0;//保存成功提示标识
 var ifShowEditBtn="0";//是否有编辑按钮
 var scanFilePath = "";//扫描件路径
+var replyContentNone = true;//判断办理反馈的值是否为空
 var showCollectIdeaButtonUrl={"url":"/app/db/addXbDeal/showCollectIdeaButton","dataType":"text"}; //是否显示意见收集
 var commitIdeaUrl={"url":"/app/db/addXbDeal/commitIdea","dataType":"text"}; //发送意见url
 var listDefaultUrl = {"url":"/app/db/dbexpdeedbackset//listDefault","dataType":"text"}; /*相关文件--删除附件*/
@@ -119,7 +120,10 @@ var pageModule = function(){
 				})
 				$("#replyContent").blur(function(){
 					if($(this).val() == ""){
+						replyContentNone = true;
 						$(this).val(placeholder).css({color:"#ccc"})
+					}else{
+						replyContentNone = false;
 					}
 				})
 			}
@@ -674,6 +678,7 @@ var pageModule = function(){
             	clearsign();
         	}else{
             	$("#replyContent").val("");
+            	replyContentNone = true;
         	}
 		});
 		
@@ -682,7 +687,7 @@ var pageModule = function(){
 			var cbrFlag="";  
 			if(isCbr && isCbr == 1){ //承办人
 				cbrFlag="1";
-				if($("#replyContent").val() !="" && !!$("#replyContent").val()){
+				if((!replyContentNone)&&$("#replyContent").val() !="" && !!$("#replyContent").val()){
 					isSave=1;
 					$("#save").click();
 				}else{
@@ -720,7 +725,7 @@ var pageModule = function(){
 					header:true,
 					title:"提交",
 					classed:"cjDialog",
-					url:"/app/db/document/view/html/tijiaoDialog.html?subId="+subId+"&infoId="+fileId+"&replyContent="+$("#replyContent").val()+"&cbrFlag="+cbrFlag+"&fromMsg="+fromMsg
+					url:"/app/db/document/view/html/tijiaoDialog.html?subId="+subId+"&infoId="+fileId+"&replyContent="+((replyContentNone)?"":$("#replyContent").val())+"&cbrFlag="+cbrFlag+"&fromMsg="+fromMsg
 				})
 			}
 		});
@@ -743,7 +748,7 @@ var pageModule = function(){
 		
 		//返回修改
 		$("#fhxg").click(function(){
-			var replyContent = $("#replyContent").val();
+			var replyContent = ((replyContentNone)?"":$("#replyContent").val());
 			var imgFileId="";
 			var saveFlag="0"; //文字
 			if($("span.css3").attr("data") =="1"){
@@ -795,7 +800,7 @@ var pageModule = function(){
 		//局长送审 
 		$("#send").click(function(){
 			var cbrFlag="";
-			var replyContent = $("#replyContent").val();
+			var replyContent = ((replyContentNone)?"":$("#replyContent").val());
 			//----------------gkt
 //			var len = replyContent.split(" ").join("").length;
 //	    	if(replyContent == "" || replyContent== null || replyContent == "undefined"){
@@ -873,7 +878,7 @@ var pageModule = function(){
 			 	title:"提示",
 			 	message: "审批完成，确认后将正式发布此办件落实情况？",
 			 	callback1:function(){
-			 		var replyContent = $("#replyContent").val();
+			 		var replyContent = ((replyContentNone)?"":$("#replyContent").val());
 					var imgFileId="";
 					var saveFlag="0"; //文字
 					if($("span.css3").attr("data") =="1"){
@@ -1022,7 +1027,7 @@ var pageModule = function(){
 		//表单
 		$("#commentForm").validate({
 		    submitHandler: function() {
-		    	var replyContent=$("#replyContent").val();
+		    	var replyContent=((replyContentNone)?"":$("#replyContent").val());
 		    	//----------------gkt
 //		    	var len = replyContent.split(" ").join("").length;
 		    	if(replyContent == "" || replyContent== null || replyContent == "undefined"){
@@ -1037,19 +1042,21 @@ var pageModule = function(){
 		    	$("#editTeamId").val($(".isEditbtn").attr("data"));
 		    	var ajax_option = {
 					url : saveUrl.url,// 默认是form action
-					data:{subId:subId,infoId:fileId,teamId:$("#editTeamId").val(),replyContent:$("#replyContent").val()},
+					data:{subId:subId,infoId:fileId,teamId:$("#editTeamId").val(),replyContent:((replyContentNone)?"":$("#replyContent").val())},
 					type:'post',
 					success : function(data) {
 						if (data.result == "success") {
 							if(isSave && isSave!=1){
 								newbootbox.alert("保存成功！").done(function(){
 									$("#replyContent").val("");
+									replyContentNone = true;
 									initblfkList();
 									$(".filename").text("");
 									$(".filelist").text("附件列表:");
 								}); 
 							}else{
 								$("#replyContent").val("");
+								replyContentNone = true;
 								initblfkList();
 								$(".filename").text("");
 								$(".filelist").text("附件列表:");
@@ -1145,6 +1152,7 @@ var pageModule = function(){
     		$("#write").hide();
     		$("#replyContent").show();
     		$("#replyContent").val("");
+    		replyContentNone = true;
     		$(".setpen").hide();
     		$(".css3").attr("data","0");
     		/*$ajax({
@@ -1345,12 +1353,12 @@ var pageModule = function(){
 
 
         $("#fasong").click(function(){
-        	if($("#replyContent").val() == ''){
+        	if($("#replyContent").val() == ''||replyContentNone){
         		newbootbox.alert("发送内容不允许为空！");
         	}else{
         		$ajax({
         			url:commitIdeaUrl,
-        			data:{infoId:fileId,subId:subId,feedBackIdea:$("#replyContent").val()},
+        			data:{infoId:fileId,subId:subId,feedBackIdea:((replyContentNone)?"":$("#replyContent").val())},
         			type: "GET",
         			success:function(data){
         				if(data.result == "success"){
@@ -1358,6 +1366,7 @@ var pageModule = function(){
         						pageModule.takeMenufn()
         					});
         					$("#replyContent").val('');
+        					replyContentNone = true
         				}else{
         					newbootbox.alert("发送失败！").done(function(){
         						pageModule.takeMenufn()
@@ -1451,6 +1460,9 @@ function editfn(id,el,checkStatus){
 	var content=$(el).attr("dataContent");
 	$(el).parents(".nrt-cont").find(".nrt-cont-file .remove").show();
 	if(isCbr==1){
+		if(content){
+			replyContentNone = false;
+		}
 		$("#editTeamId").val(id);
 		$("#replyContent").val(content);
 		return;
