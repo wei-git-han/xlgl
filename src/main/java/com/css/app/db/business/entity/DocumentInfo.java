@@ -90,7 +90,17 @@ public class DocumentInfo implements Serializable {
 	
 	private String docStatus;
 	
+	private String infoId;
 	
+	
+	
+	
+	public String getInfoId() {
+		return infoId;
+	}
+	public void setInfoId(String infoId) {
+		this.infoId = infoId;
+	}
 	public String getDocStatus() {
 		return docStatus;
 	}

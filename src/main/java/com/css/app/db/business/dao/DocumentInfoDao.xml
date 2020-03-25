@@ -1284,6 +1284,10 @@
 		<if test="orgId != null and orgId != '' ">
 			and a.SUB_DEPT_ID = #{orgId}
 		</if>
+		<if test="search != null and search != ''">
+			and (b.DOC_TITLE like '%'||#{search}||'%' or
+			b.BANJIAN_NUMBER like '%'||#{search}||'%')
+		</if>
 		<if test="year != null and year != ''">
 			and case when e.leader_time is not null and e.leader_time
 			!= '' then to_char(e.leader_time) else
