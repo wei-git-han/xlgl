@@ -333,8 +333,8 @@ public class DocumentJcdbController {
 					xdata.add((String) map2.get("dwname"));
 					bjdata.add((long) map2.get("bj"));
 					ctlsdata.add((long) map2.get("ctls"));
-					int wfkCount = queryWfkCount(danweiid, year);
-					long blz = (long) map2.get("blz") - wfkCount;
+					int wfkCount = queryWfkCount2(danweiid, year);
+					long blz = (long) map2.get("blz");
 					blzdata.add(blz < 0 ? 0 : blz);
 					wfkdata.add(wfkCount);
 				}
