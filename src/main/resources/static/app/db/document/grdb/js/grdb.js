@@ -361,9 +361,22 @@ function refreshgrid(){
 	var documentStatus= $("input[name='documentStatus']:checked").val();
 	grid.setparams({search:search,docStatus:documentStatus});
 	grid.loadtable();
+	numsListClickfn();
 	
 	window.top.memory.radio = documentStatus;
 	window.top.memory.search = search;
+}
+function numsListClickfn(){
+	$ajax({
+		url:numsList,
+		data:{search:$("#searchVal").val()},
+		success:function(data){
+			$.each(data,function(i,item){
+				var id = "grdb"+i;
+				$("#"+id).html(item);
+			});
+		}
+	});	
 }
 
 //批示指示内容弹出框
