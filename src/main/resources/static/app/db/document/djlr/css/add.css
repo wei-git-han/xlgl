@@ -359,3 +359,9 @@ html, body {
 	margin-top:20px;
 	font-size: 14px;
 }
+.datepicker{
+	width:20%;
+}
+.table-condensed{
+	width:100%
+}
