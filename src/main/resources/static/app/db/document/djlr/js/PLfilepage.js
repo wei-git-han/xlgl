@@ -1,10 +1,12 @@
 var dicUrl = {"url":rootPath +"/documentdic/getDicByTypet","dataType":"text"}; //返回的下拉框字典值
+var fileNameArry = [];
+var docTypeName = '';
 var pageModule = function(){
 	var initother = function(){
 		$("#uploadFile").click(function(){
 			$("#file").click();
 			$("#file").change(function(){
-				var fileNameArry = Array.from($(this).context.files);//$(this).val().split("\\");
+				fileNameArry = Array.from($(this).context.files);//$(this).val().split("\\");
 				var fileName = "";
 				if(fileNameArry.length==1){
 					fileName=fileNameArry[0].name;
@@ -18,6 +20,7 @@ var pageModule = function(){
 			})
 		})
 		$("#docTypeId").change(function(){
+			docTypeName = $("#docTypeId option:checked").text();
 			$("#docTypeName").val($("#docTypeId option:checked").text());
 		})
 		$("#shangchuan2").click(function(){
@@ -34,7 +37,13 @@ var pageModule = function(){
 //				newbootbox.alertInfo("请上传正确格式的文件！");
 //				return;
 //			}
-			
+			if(!docTypeName){
+				newbootbox.alertInfo("请选择类别！");
+				return;
+			}else if(fileNameArry.length==0){
+				newbootbox.alertInfo("请选择文件！");
+				return;
+			}
 			var ajax_option ={
 					type: "post",
 					url:"/app/db/documentinfo/uploadFiles",//默认是form action
