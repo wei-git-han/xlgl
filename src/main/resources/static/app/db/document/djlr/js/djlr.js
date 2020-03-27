@@ -154,6 +154,20 @@ var pageModule = function(){
 			    url: rootPath + "/document/blfk/html/filepage.html"
 			  });
 		});
+		//批量导入
+		$("#pldr").click(function(){
+			 newbootbox.newdialog({
+				 header:true,
+			    id: "PLfileDr",
+			    title: "选择文件",
+			    style: {
+			      "padding": "1px"
+			    },
+			    width: 800,
+			    height: 400,
+			    url: rootPath + "/document/djlr/html/PLfilepage.html"
+			  });
+		});
 		
 		$(".date-picker").datepicker({
 		    language:"zh-CN",
