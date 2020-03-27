@@ -1114,7 +1114,7 @@ public class DocumentInfoController {
 
 	@ResponseBody
 	@RequestMapping("/uploadFiles")
-	public void saveMoreFiles(String docTypeName, @RequestParam(required = false) MultipartFile[] pdf) {
+	public void saveMoreFiles(String docTypeId,String docTypeName, @RequestParam(required = false) MultipartFile[] pdf) {
 		String formatDownPath = "";// 版式文件下载路径
 		String retFormatId = null;// 返回的版式文件id
 		String streamId = null;// 流式文件id
@@ -1127,9 +1127,10 @@ public class DocumentInfoController {
 				// 保存
 				DocumentInfo documentInfo = new DocumentInfo();
 				String uuid = UUIDUtils.random();
+				documentInfo.setDocStatus("0");
 				documentInfo.setId(uuid);
-				documentInfo.setStatus(0);
-				documentInfo.setDocTitle(fileName);
+				documentInfo.setDocTitle(fileName.substring(0,fileName.lastIndexOf(".")));
+				documentInfo.setDocTypeId(docTypeId);
 				documentInfo.setDocTypeName(docTypeName);
 				documentInfo.setCreatedTime(new Date());
 				documentInfoService.save(documentInfo);
