@@ -61,5 +61,7 @@ public interface DocumentInfoDao extends BaseDao<DocumentInfo> {
 	int queryDocumentWfk2(@Param("danweiid") String danweiid, @Param("year") String year);
 
 	List<DocumentInfo> queryNewList(Map<String, Object> map);
+	
+	List<DocumentInfo> queryNewListSort(Map<String, Object> map);
 
 }

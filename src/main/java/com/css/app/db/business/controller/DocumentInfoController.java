@@ -527,7 +527,19 @@ public class DocumentInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/info")
-	public void info(String id) {
+	public void info(Integer page, Integer pagesize, String id,String documentStatus) {
+		String preId="";
+		String sufId="";
+		Map<String, Object> map = new HashMap<>();
+		//map.put("docStatus", documentStatus);
+		PageHelper.startPage(page, pagesize);
+		List<DocumentInfo> infoList = documentInfoService.queryNewListSort(map);
+		for(int i=0;i<infoList.size();i++) {
+			if (StringUtils.equals(id,infoList.get(i).getId())) {
+				preId = infoList.get(i-1).getId();
+				sufId = infoList.get(i-1).getId();
+			}
+		}
 		DocumentInfo documentInfo = documentInfoService.queryObject(id);
 		String roleid = getNewRoleType();
 		if (!"".equals(roleid) && StringUtils.equals("1", roleid)) {// 首长
