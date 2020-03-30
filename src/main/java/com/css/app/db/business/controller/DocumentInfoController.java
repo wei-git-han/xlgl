@@ -743,6 +743,15 @@ public class DocumentInfoController {
 			info.setSzReadIds("");
 			info.setStatus(3);
 			documentInfoService.update(info);
+			//主文件办结，各分支文件强制更新为办结
+			List<SubDocInfo> subDocInfosList = subDocInfoService.queryForList(infoId);
+			if (subDocInfosList != null && subDocInfosList.size() > 0) {
+				for (SubDocInfo subDocInfo : subDocInfosList) {
+					subDocInfo.setDocStatus(13);
+					subDocInfo.setUpdateTime(new Date());
+					subDocInfoService.update(subDocInfo);
+				}
+			}
 			// 办结落实记录
 			DocumentBjjl bjjl = new DocumentBjjl();
 			bjjl.setInfoId(infoId);
@@ -773,6 +782,15 @@ public class DocumentInfoController {
 			info.setSzReadIds("");
 			info.setStatus(2);
 			documentInfoService.update(info);
+			//主文件办结，各分支文件强制更新为办结
+			List<SubDocInfo> subDocInfosList = subDocInfoService.queryForList(infoId);
+			if (subDocInfosList != null && subDocInfosList.size() > 0) {
+				for (SubDocInfo subDocInfo : subDocInfosList) {
+					subDocInfo.setDocStatus(12);
+					subDocInfo.setUpdateTime(new Date());
+					subDocInfoService.update(subDocInfo);
+				}
+			}
 			// 办结落实记录
 			DocumentBjjl bjjl = new DocumentBjjl();
 			bjjl.setInfoId(infoId);
