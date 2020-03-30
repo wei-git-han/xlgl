@@ -1316,10 +1316,10 @@
 
 		where (d.dNum =
 		1 or d.dNum is null)
-		<if test='docStatus == "1"'>
+		<if test='docStatus == "0"'>
 			and t.STATUS=0
 		</if>
-		<if test='docStatus == "2"'>
+		<if test='docStatus == "1"'>
 			and t.STATUS &gt; 0
 		</if>
 		<if test="search != null and search != ''">
