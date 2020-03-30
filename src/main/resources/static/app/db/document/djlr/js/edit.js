@@ -69,7 +69,7 @@ var pageModule = function(){
 					$("#nextFile").css("color","#ccc")
 					$("#nextFile .fa").css("color","#ccc")
 				}
-				setformdata(data.documentInfo);
+				setformdata(data);
 				if(data.docTypeId == "1" || data.docTypeId == "2"){
 					$("#jobContent").attr("disabled",true);
 					$("#banjianNumber").removeAttr("disabled");
