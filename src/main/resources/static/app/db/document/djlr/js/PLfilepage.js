@@ -50,14 +50,14 @@ var pageModule = function(){
 			if(!docTypeName){
 				newbootbox.alertInfo("请选择类别！");
 				return;
-			}else if(!securityClassification){
-				newbootbox.alertInfo("请选择密级！");
-				return;
 			}else if(fileNameArry.length==0){
 				newbootbox.alertInfo("请选择文件！");
 				return;
 			}
 			window.parent.lodaingControl('show')
+			$("#docTypeName").val($("#docTypeId option:checked").text());
+	    	$("#securityClassification").val($("#securityId option:checked").text());
+	    	$("#urgencyDegree").val($("#urgencyId option:checked").text());
 			var ajax_option ={
 					type: "post",
 					url:"/app/db/documentinfo/uploadFiles",//默认是form action
