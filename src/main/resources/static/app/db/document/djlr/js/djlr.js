@@ -8,6 +8,8 @@ var userUrl = {"url":"/app/db/document/grdb/data/userTree.json","dataType":"text
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var grid = null;
 var total=0;//列表中，数据的总条数
+var currPage=1;//列表中，数据的当前页
+var totalPage=15;//列表中，数据的每页条数
 
 if(!window.top.memory){
 	window.top.memory = {};
@@ -36,7 +38,7 @@ var pageModule = function(){
                  }},
                  {display:"文件标题",name:"",width:"15%",align:"left",render:function(rowdata){
 //                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle" href="djlr_view.html?fileId='+rowdata.id+'&fileFrom='+fileFrom+'&docTypeName='+rowdata.docTypeName+'&jobContent='+rowdata.jobContent+'" target="iframe1">'+rowdata.docTitle+'</a>'
-                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle" href="/app/db/document/djlr/html/edit.html?fileId="'+rowdata.id+'" target="iframe1">'+rowdata.docTitle+'</a>'
+                	 return '<a title="'+rowdata.docTitle+'" class="tabletitle" href="/app/db/document/djlr/html/edit.html?fileId='+rowdata.id+'&currPage='+currPage+'&totalPage='+totalPage+'&documentStatus='+rowdata.status+'" target="iframe1">'+rowdata.docTitle+'</a>'
                  }},
                  {display:"紧急程度",name:"",width:"4%",align:"center",paixu:false,render:function(rowdata){
                 	 return rowdata.urgencyDegree;
@@ -97,6 +99,8 @@ var pageModule = function(){
             pageyno:true,
             paramobj:{page:o.pagesize,search:$("#searchVal").val(),documentStatus:$("input[name='documentStatus']:checked").val()},
             loadafter:function(data){
+            	currPage=data.currPage;
+            	totalPage=data.totalPage;
             	total=data.total;
             	$(".zspsnr").each(function(){
 					var maxwidth = 90;
