@@ -533,7 +533,7 @@ public class DocumentInfoController {
 		String sufId="";
 		Map<String, Object> map = new HashMap<>();
 		map.put("docStatus", documentStatus);
-		PageHelper.startPage(1, 10);
+		//PageHelper.startPage(page, pagesize);
 		//对列表数据进行排序
 		List<DocumentInfo> infoList = documentInfoService.queryNewListSort(map);
 		for(int i=0;i<infoList.size();i++) {
