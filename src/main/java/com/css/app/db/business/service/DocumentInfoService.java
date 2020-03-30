@@ -69,4 +69,6 @@ public interface DocumentInfoService {
 	int queryDocumentWfk2(String danweiid, String year);
 
 	List<DocumentInfo> queryNewList(Map<String, Object> map);
+	
+	List<DocumentInfo> queryNewListSort(Map<String, Object> map);
 }

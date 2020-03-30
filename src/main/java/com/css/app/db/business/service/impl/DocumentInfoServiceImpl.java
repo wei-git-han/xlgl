@@ -214,4 +214,9 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 	public List<DocumentInfo> queryNewList(Map<String, Object> map) {
 		return documentInfoDao.queryNewList(map);
 	}
+	
+	@Override
+	public List<DocumentInfo> queryNewListSort(Map<String, Object> map) {
+		return documentInfoDao.queryNewListSort(map);
+	}
 }

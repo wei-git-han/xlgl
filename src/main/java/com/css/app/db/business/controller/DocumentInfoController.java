@@ -344,10 +344,10 @@ public class DocumentInfoController {
 					}
 				}
 				if (StringUtils.isNotBlank(jnType)) {// 从统计报表点进去--本年度办理情况--点击某一个状态触发的查询
-					if ("4".equals(jnType)) {//未反馈的用这个查询
+					if ("4".equals(jnType)) {// 未反馈的用这个查询
 						PageHelper.startPage(page, pagesize);
 						infoList = documentInfoService.queryReplyListForWfk(map);
-					}else {
+					} else {
 						PageHelper.startPage(page, pagesize);
 						infoList = documentInfoService.queryReplyListPlus(map);
 					}
@@ -527,7 +527,29 @@ public class DocumentInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/info")
-	public void info(String id) {
+	public void info(Integer page, Integer pagesize, String id,String documentStatus) {
+		JSONObject jsonObject  = new JSONObject();
+		String preId="";
+		String sufId="";
+		Map<String, Object> map = new HashMap<>();
+		map.put("docStatus", documentStatus);
+		//PageHelper.startPage(page, pagesize);
+		//对列表数据进行排序
+		List<DocumentInfo> infoList = documentInfoService.queryNewListSort(map);
+		for(int i=0;i<infoList.size();i++) {
+			if (StringUtils.equals(id,infoList.get(i).getId())) {
+				if (i == 0) {
+					preId = "noPredId";
+					sufId = infoList.get(i+1).getId();
+				}else if (i == infoList.size()-1) {
+					preId = infoList.get(i-1).getId();
+					sufId = "noSufId";
+				}else {
+				preId = infoList.get(i-1).getId();
+				sufId = infoList.get(i+1).getId();
+				}
+			}
+		}
 		DocumentInfo documentInfo = documentInfoService.queryObject(id);
 		String roleid = getNewRoleType();
 		if (!"".equals(roleid) && StringUtils.equals("1", roleid)) {// 首长
@@ -542,7 +564,10 @@ public class DocumentInfoController {
 			}
 
 		}
-		Response.json(documentInfo);
+		jsonObject.put("documentInfo", documentInfo);
+		jsonObject.put("preId", preId);
+		jsonObject.put("sufId", sufId);
+		Response.json(jsonObject);
 	}
 
 	@ResponseBody
@@ -1110,6 +1135,88 @@ public class DocumentInfoController {
 			}
 		}
 		return fileId;
+	}
+
+	@ResponseBody
+	@RequestMapping("/uploadFiles")
+	public void saveMoreFiles(String securityId,String securityClassification,String urgencyId,String urgencyDegree,String docTypeId,String docTypeName, @RequestParam(required = false) MultipartFile[] pdf) {
+		String formatDownPath = "";// 版式文件下载路径
+		String retFormatId = null;// 返回的版式文件id
+		String streamId = null;// 流式文件id
+		String formatId = null;// 版式文件id
+		JSONObject json = new JSONObject();
+		if (pdf != null && pdf.length > 0) {
+			for (int i = 0; i < pdf.length; i++) {
+				// 获取文件名字
+				String fileName = pdf[i].getOriginalFilename();
+				// 保存
+				DocumentInfo documentInfo = new DocumentInfo();
+				String uuid = UUIDUtils.random();
+				documentInfo.setStatus(0);
+				documentInfo.setId(uuid);
+				documentInfo.setDocTitle(fileName.substring(0,fileName.lastIndexOf(".")));
+				documentInfo.setDocTypeId(docTypeId);
+				documentInfo.setDocTypeName(docTypeName);
+				documentInfo.setCreatedTime(new Date());
+				documentInfo.setSecurityId(securityId);
+				documentInfo.setSecurityClassification(securityClassification);
+				documentInfo.setUrgencyId(urgencyId);
+				documentInfo.setUrgencyDegree(urgencyDegree);
+				documentInfoService.save(documentInfo);
+				// 获取文件后缀
+				String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
+				// 如果文件是流式则流式转换为版式
+				if (!StringUtils.equals("ofd", fileType)) {
+					streamId = FileBaseUtil.fileServiceUpload(pdf[i]);
+					HTTPFile hf = new HTTPFile(streamId);
+					try {
+						String path = appConfig.getLocalFilePath() + UUIDUtils.random() + "." + hf.getSuffix();
+						try {
+							FileUtils.moveFile(new File(hf.getFilePath()), new File(path));
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						if (StringUtils.isNotBlank(path)) {
+							formatId = OfdTransferUtil.convertLocalFileToOFD(path);
+						}
+						// 删除本地的临时流式文件
+						if (new File(path).exists()) {
+							new File(path).delete();
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else {
+					formatId = FileBaseUtil.fileServiceUpload(pdf[i]);
+				}
+				if (StringUtils.isNotBlank(formatId)) {
+					if (i == 0) {
+						retFormatId = formatId;
+						// 获取版式文件的下载路径
+						HTTPFile httpFiles = new HTTPFile(formatId);
+						if (httpFiles != null) {
+							formatDownPath = httpFiles.getAssginDownloadURL(true);
+						}
+					}
+					// 保存文件相关数据
+					DocumentFile file = new DocumentFile();
+					file.setId(UUIDUtils.random());
+					file.setDocInfoId(uuid);
+					file.setSort(documentFileService.queryMinSort(uuid));
+					file.setFileName(fileName);
+					file.setCreatedTime(new Date());
+					if (StringUtils.isNotBlank(streamId)) {
+						file.setFileServerStreamId(streamId);
+					}
+					file.setFileServerFormatId(formatId);
+					documentFileService.save(file);
+				}
+			}
+			json.put("smjId", retFormatId);
+			json.put("smjFilePath", formatDownPath);
+			json.put("result", "success");
+		}
+		Response.json(json);
 	}
 
 }

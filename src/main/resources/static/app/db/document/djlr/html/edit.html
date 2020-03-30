@@ -126,7 +126,7 @@ License: You must have a valid license purchased only from themeforest(the above
 						
 						<div class="newlayout3_cont">
 							<div class="wh100 scroller">
-								<div class="wg100 newlayout4">
+								<div class="wg100 newlayout4" style="height:94%">
 									<form  class="form-horizontal wg100" id="commentForm" role="form" method="post">
 										<div class="tabbable-line wg100">
 										    <div class="tab-content wg100">
@@ -207,7 +207,8 @@ License: You must have a valid license purchased only from themeforest(the above
 										                    	登记日期
 															 </td>
 															 <td>
-												                <div class="input-group  date form_datetime">
+												                <!-- <div class="input-group  date form_datetime"> -->
+												                <div class="input-group  date date-picker" data-date-format="yyyy-mm-dd">
 																    <input type="text" size="16" id="applyTime" name="applyTime"  onfocus="blur()" class="form-control">
 																    <span class="input-group-btn">
 																    <button class="btn default date-set" type="button"><i class="fa fa-calendar"></i></button>
@@ -329,6 +330,14 @@ License: You must have a valid license purchased only from themeforest(the above
 										    </div>
 										</div>
 									</form>
+								</div>
+								<div id="changefile" style="border-top:1px solid #fff;" >
+									<button class="btn changefilebtn"  data="prev" onclick="pagefn(this)" id="prevFile">
+										<i class="fa fa-chevron-left"  style="color: #5498eb;"></i> 上一篇
+									</button>
+									<button class="btn changefilebtn" data="next" onclick="pagefn(this)" id="nextFile">
+										下一篇 <i class="fa fa-chevron-right" style="color: #5498eb;"></i>
+									</button>
 								</div>
 							</div>
 						</div>

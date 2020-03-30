@@ -111,3 +111,7 @@ function blfkfn(){
 		}
 	});
 }
+//loading弹出框
+function lodaingControl(status){
+	$("#qjDialog").modal(status)
+}
