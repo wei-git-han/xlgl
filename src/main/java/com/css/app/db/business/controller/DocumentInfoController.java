@@ -528,7 +528,6 @@ public class DocumentInfoController {
 	@ResponseBody
 	@RequestMapping("/info")
 	public void info(Integer page, Integer pagesize, String id,String documentStatus) {
-		JSONObject jsonObject  = new JSONObject();
 		String preId="";
 		String sufId="";
 		Map<String, Object> map = new HashMap<>();
@@ -564,10 +563,9 @@ public class DocumentInfoController {
 			}
 
 		}
-		jsonObject.put("documentInfo", documentInfo);
-		jsonObject.put("preId", preId);
-		jsonObject.put("sufId", sufId);
-		Response.json(jsonObject);
+		documentInfo.setPreId(preId);
+		documentInfo.setSufId(sufId);
+		Response.json(documentInfo);
 	}
 
 	@ResponseBody

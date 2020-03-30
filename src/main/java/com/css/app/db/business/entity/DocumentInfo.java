@@ -94,11 +94,29 @@ public class DocumentInfo implements Serializable {
 	
 	private String sort;
 	
+	private String preId;
+	
+	private String sufId;
 	
 	
 	
 	
 	
+	
+	
+	
+	public String getPreId() {
+		return preId;
+	}
+	public void setPreId(String preId) {
+		this.preId = preId;
+	}
+	public String getSufId() {
+		return sufId;
+	}
+	public void setSufId(String sufId) {
+		this.sufId = sufId;
+	}
 	public String getSort() {
 		return sort;
 	}
