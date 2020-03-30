@@ -16,7 +16,7 @@ var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var fileId=getUrlParam("fileId")||""; //主文件id
 var currPage=getUrlParam("currPage")||1; //数据所在页码
 var totalPage=getUrlParam("totalPage")||15; //数据每页条数
-var documentStatus=getUrlParam("documentStatus")||"";//数据状态0：待处理，1：已处理
+var documentStatus=(getUrlParam("documentStatus")==0)?0:1;//数据状态0：待处理，1：已处理
 var preId = "";//上一页id
 var sufId = "";//下一页id
 var nowId = "";

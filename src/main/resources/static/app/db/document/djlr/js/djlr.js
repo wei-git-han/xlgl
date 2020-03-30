@@ -164,7 +164,7 @@ var pageModule = function(){
 			 newbootbox.newdialog({
 				 header:true,
 			    id: "PLfileDr",
-			    title: "选择文件",
+			    title: "批量新增",
 			    style: {
 			      "padding": "1px"
 			    },
