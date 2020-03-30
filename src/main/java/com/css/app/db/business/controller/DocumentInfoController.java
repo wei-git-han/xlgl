@@ -743,7 +743,7 @@ public class DocumentInfoController {
 			info.setSzReadIds("");
 			info.setStatus(3);
 			documentInfoService.update(info);
-			//主文件办结，各分支文件强制更新为办结
+			//主文件办结，各分支文件强制更新为常态落实
 			List<SubDocInfo> subDocInfosList = subDocInfoService.queryForList(infoId);
 			if (subDocInfosList != null && subDocInfosList.size() > 0) {
 				for (SubDocInfo subDocInfo : subDocInfosList) {
