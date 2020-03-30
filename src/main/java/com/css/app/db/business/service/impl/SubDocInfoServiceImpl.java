@@ -121,4 +121,8 @@ public class SubDocInfoServiceImpl implements SubDocInfoService {
 	public List<SubDocInfo> notTransferredTmingTaskList(){
 		return subDocInfoDao.notTransferredTmingTaskList();
 	}
+	@Override
+	public List<SubDocInfo> queryForList(String infoId){
+		return subDocInfoDao.queryForList(infoId);
+	}
 }
