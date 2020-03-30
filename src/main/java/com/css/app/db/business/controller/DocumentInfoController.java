@@ -527,7 +527,29 @@ public class DocumentInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/info")
-	public void info(String id) {
+	public void info(Integer page, Integer pagesize, String id,String documentStatus) {
+		JSONObject jsonObject  = new JSONObject();
+		String preId="";
+		String sufId="";
+		Map<String, Object> map = new HashMap<>();
+		map.put("docStatus", documentStatus);
+		PageHelper.startPage(1, 10);
+		//对列表数据进行排序
+		List<DocumentInfo> infoList = documentInfoService.queryNewListSort(map);
+		for(int i=0;i<infoList.size();i++) {
+			if (StringUtils.equals(id,infoList.get(i).getId())) {
+				if (i == 0) {
+					preId = "noPredId";
+					sufId = infoList.get(i+1).getId();
+				}else if (i == infoList.size()-1) {
+					preId = infoList.get(i-1).getId();
+					sufId = "noSufId";
+				}else {
+				preId = infoList.get(i-1).getId();
+				sufId = infoList.get(i+1).getId();
+				}
+			}
+		}
 		DocumentInfo documentInfo = documentInfoService.queryObject(id);
 		String roleid = getNewRoleType();
 		if (!"".equals(roleid) && StringUtils.equals("1", roleid)) {// 首长
@@ -542,7 +564,10 @@ public class DocumentInfoController {
 			}
 
 		}
-		Response.json(documentInfo);
+		jsonObject.put("documentInfo", documentInfo);
+		jsonObject.put("preId", preId);
+		jsonObject.put("sufId", sufId);
+		Response.json(jsonObject);
 	}
 
 	@ResponseBody
