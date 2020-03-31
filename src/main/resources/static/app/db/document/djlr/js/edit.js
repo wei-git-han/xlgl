@@ -32,6 +32,7 @@ var pageModule = function(){
 		if(fileFrom=="blfk"){
 			$('#saveAndAdd').hide();
 			$('#return').hide();
+			$('#zhuanban').hide();
 		}
 	}
 	//请求各字典数据
@@ -400,7 +401,18 @@ var pageModule = function(){
 			returnSave=true;
 	    	$("#commentForm").submit();
 		});
-		
+		//转办
+		$("#zhuanban").click(function(){
+			newbootbox.newdialog({
+				id:"zhuanbanDialog",
+				width:800,
+				height:600,
+				header:true,
+				title:"转办",
+				classed:"cjDialog",
+				url:"/app/db/document/blfk/html/zhuanbanDialog.html?fileIds="+fileId+"&fileFrom="+fileFrom
+			})
+		});
 		
 		/*//扫描续传功能
 		$("#scanKeepTransfer").click(function() {   	
