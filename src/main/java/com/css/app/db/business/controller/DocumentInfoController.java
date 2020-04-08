@@ -535,19 +535,27 @@ public class DocumentInfoController {
 		//PageHelper.startPage(page, pagesize);
 		//对列表数据进行排序
 		List<DocumentInfo> infoList = documentInfoService.queryNewListSort(map);
-		for(int i=0;i<infoList.size();i++) {
-			if (StringUtils.equals(id,infoList.get(i).getId())) {
-				if (i == 0) {
-					preId = "noPredId";
-					sufId = infoList.get(i+1).getId();
-				}else if (i == infoList.size()-1) {
-					preId = infoList.get(i-1).getId();
-					sufId = "noSufId";
-				}else {
-				preId = infoList.get(i-1).getId();
-				sufId = infoList.get(i+1).getId();
+		if (infoList != null && infoList.size() > 0) {
+			if (infoList.size() == 1) {
+				preId = "noPredId";
+				sufId = "noSufId";
+			} else {
+				for (int i = 0; i < infoList.size(); i++) {
+					if (StringUtils.equals(id, infoList.get(i).getId())) {
+						if (i == 0) {
+							preId = "noPredId";
+							sufId = infoList.get(i + 1).getId();
+						} else if (i == infoList.size() - 1) {
+							preId = infoList.get(i - 1).getId();
+							sufId = "noSufId";
+						} else {
+							preId = infoList.get(i - 1).getId();
+							sufId = infoList.get(i + 1).getId();
+						}
+					}
 				}
 			}
+
 		}
 		DocumentInfo documentInfo = documentInfoService.queryObject(id);
 		String roleid = getNewRoleType();
