@@ -67,7 +67,7 @@ csse:
         clientId: ${csse.dccb.appId}
         clientSecret: ${csse.dccb.appSecret}
     fileservice:
-      servers: http://10.1.150.10:7003
+      servers: http://10.1.150.3:7003
       tempDirPath: c:/temp/storetemp/
   sso: 
     server: 
