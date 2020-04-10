@@ -1163,7 +1163,7 @@ public class DocumentInfoController {
 
 	@ResponseBody
 	@RequestMapping("/uploadFiles")
-	public void saveMoreFiles(String securityId,String securityClassification,String urgencyId,String urgencyDegree,String docTypeId,String docTypeName, @RequestParam(required = false) MultipartFile[] pdf) {
+	public void saveMoreFiles(String period,String securityId,String securityClassification,String urgencyId,String urgencyDegree,String docTypeId,String docTypeName, @RequestParam(required = false) MultipartFile[] pdf) {
 		String formatDownPath = "";// 版式文件下载路径
 		String retFormatId = null;// 返回的版式文件id
 		String streamId = null;// 流式文件id
@@ -1186,6 +1186,7 @@ public class DocumentInfoController {
 				documentInfo.setSecurityClassification(securityClassification);
 				documentInfo.setUrgencyId(urgencyId);
 				documentInfo.setUrgencyDegree(urgencyDegree);
+				documentInfo.setPeriod(period);
 				documentInfoService.save(documentInfo);
 				// 获取文件后缀
 				String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);

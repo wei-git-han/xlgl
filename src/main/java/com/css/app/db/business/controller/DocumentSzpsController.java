@@ -61,7 +61,43 @@ public class DocumentSzpsController {
 		json.put("result", "success");
 		Response.json(json);
 	}
-	
+
+	/**
+	 * 针对批量导入新的保存接口
+	 * 新的保存
+	 *
+	 */
+	@ResponseBody
+	@RequestMapping("/newSave")
+	public void saveInfo(String infos) {
+		JSONObject jsonObject = new JSONObject();
+		String[] info = infos.split(",");
+		if (info != null) {
+			for (int i = 0; i < info.length; i++) {
+				String[] infomention = info[i].split("_");
+				if (infomention != null) {
+					DocumentSzps documentSzps = new DocumentSzps();
+					documentSzps.setUserId(infomention[1]);
+					documentSzps.setUserName(infomention[2]);
+					documentSzps.setLeaderComment(infomention[3]);
+					documentSzps.setCreatedTime(infomention[4]);
+					documentSzps.setInfoId(infomention[5]);
+					if (StringUtils.isBlank(infomention[0])) {
+						documentSzps.setId(UUIDUtils.random());
+						documentSzpsService.save(documentSzps);
+					} else {
+						documentSzps.setId(infomention[0]);
+						documentSzpsService.update(documentSzps);
+					}
+
+				}
+			}
+		}
+		jsonObject.put("result", "success");
+		Response.json(jsonObject);
+	}
+
+
 	/**
 	 * 删除
 	 */
