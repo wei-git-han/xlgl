@@ -278,13 +278,13 @@ var pageModule = function(){
 		    orientation: "right",
 		    autoclose: true
 		});
-		$("#cqDate").datepicker({
+        $("#cqDate").datepicker({
             language:"zh-CN",
-            format:'yyyy年',
-            startView:2,
-            minViewMode:2,
-            maxViewMode:2,
-            initialDate:new Date(),
+            rtl: Metronic.isRTL(),
+            orientation: "right",
+            startView:1,
+            minViewMode:1,
+            maxViewMode:1,
             autoclose: true
         });
 		$(".form_datetime").datetimepicker({
