@@ -278,7 +278,15 @@ var pageModule = function(){
 		    orientation: "right",
 		    autoclose: true
 		});
-		
+		$("#cqDate").datepicker({
+            language:"zh-CN",
+            format:'yyyy年',
+            startView:2,
+            minViewMode:2,
+            maxViewMode:2,
+            initialDate:new Date(),
+            autoclose: true
+        });
 		$(".form_datetime").datetimepicker({
 		    language:"zh-CN",
 		    autoclose: true,
@@ -302,6 +310,7 @@ var pageModule = function(){
 					url:updateUrl.url,
 					data:paramdata,
 					type:"post",
+					async:false,
 					success:function(data){
 						var psszName = $("#psszName").val();
 						var psszId = $("#psszId").val();
@@ -342,9 +351,12 @@ var pageModule = function(){
 						    	}
 							}else{
 								setTimeout(function(){
-									newbootbox.alert("保存成功！").done(function(){
-										
-									});
+								    if(!zhuanbanSave){
+
+                                        newbootbox.alert("保存成功！").done(function(){
+
+                                        });
+								    }
 								},200);
 							}
 						}else{
@@ -410,16 +422,19 @@ var pageModule = function(){
 		});
 		//转办
 		$("#zhuanban").click(function(){
+		    zhuanbanSave = true;
 		    $("#commentForm").submit();
-			newbootbox.newdialog({
-				id:"zhuanbanDialog",
-				width:800,
-				height:600,
-				header:true,
-				title:"转办",
-				classed:"cjDialog",
-				url:"/app/db/document/blfk/html/zhuanbanDialog.html?fileIds="+fileId+"&fileFrom="+fileFrom
-			})
+		    setTimeout(function(){
+                newbootbox.newdialog({
+                    id:"zhuanbanDialog",
+                    width:800,
+                    height:600,
+                    header:true,
+                    title:"转办",
+                    classed:"cjDialog",
+                    url:"/app/db/document/blfk/html/zhuanbanDialog.html?fileIds="+fileId+"&fileFrom="+fileFrom
+                })
+		    },1000)
 		});
 		
 		/*//扫描续传功能
@@ -491,8 +506,8 @@ var pageModule = function(){
 					if(data.result == "success"){
 					    //清空之前选中和复制的参数
                         $("#usersDiv").html("");
-                        $("#cqDate").val("");
-                        $("#cqcontent").val("");
+                       /* $("#cqDate").val("");
+                        $("#cqcontent").val("");*/
                         $("#psszName").val("");
                         $("#psszId").val("");
 						newbootbox.alert("保存成功！").done(function(){
