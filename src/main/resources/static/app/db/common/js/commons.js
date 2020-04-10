@@ -105,7 +105,10 @@ jQuery(document).ready(function() {
 	$(".year").val(year);
 	$(".datee").val(year+"-"+month+"-"+day);
 	$(".datee2").val(year+"年"+month+"月"+day+"日");
-	
+    $(".datee3").val(year+"年");
+
+
+
 	var hh = pagedate.getHours();
 	if(hh<10){
 		hh = "0"+hh;
