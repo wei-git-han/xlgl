@@ -12,6 +12,7 @@ var getData ={"url":"/app/db/documentinfo/info","dataType":"json"}; /*编辑返�
 var getPdfPath = {"url":rootPath +"/fileinfo/getFormaFileUrl","dataType":"text"};
 var UserTreeUrl = {"url":"/app/base/user/allTree","dataType":"text"}; //登记人树
 var deleteSzcqUrl = {"url":"/app/db/documentszps/delete","dataType":"text"};//删除首长批示
+var newSaveSzpsUrl = {"url":rootPath +"/documentszps/newSave","dataType":"text"}; //保存首长批示新版
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var fileId=getUrlParam("fileId")||""; //主文件id
 var currPage=getUrlParam("currPage")||1; //数据所在页码
@@ -129,12 +130,18 @@ var pageModule = function(){
 				$("#cqcontent").val("");
 				$("#editcqId").val("");
 				$.each(data,function(i,item){
-					$("#showcq").append(
+					/*$("#showcq").append(
 						'<div class="cqline">'+
 						'	<div dataId="'+item.id+'" dataUserId="'+item.userId+'" dataName="'+item.leaderComment+'" dataUser="'+item.userName+'" dataDate="'+item.createdTime+'"><span>'+item.userName+'</span><span class="cqrq">'+item.createdTime+'</span><span class="pull-right"><a style="margin-right:10px" class="editcq">编辑</a><a class="delcq">删除</a></span></div>'+
 						'	<div>'+item.leaderComment+'</div>'+
 						'</div>'
-					);
+					);*/
+					$("#showcq").append(
+                        '<div class="cqline">'+
+                        '	<div dataId="'+item.id+'" dataUserId="'+item.userId+'" dataName="'+item.leaderComment+'" dataUser="'+item.userName+'" dataDate="'+item.createdTime+'"><span>'+item.userName+'</span><span class="cqrq">'+item.createdTime+'</span><span class="pull-right"><a class="delcq">删除</a></span></div>'+
+                        '	<div>'+item.leaderComment+'</div>'+
+                        '</div>'
+                    );
 				});
 				
 				
@@ -403,6 +410,7 @@ var pageModule = function(){
 		});
 		//转办
 		$("#zhuanban").click(function(){
+		    $("#commentForm").submit();
 			newbootbox.newdialog({
 				id:"zhuanbanDialog",
 				width:800,
@@ -437,29 +445,56 @@ var pageModule = function(){
 				header:true,
 				title:"选择首长",
 				classed:"cjDialog",
-				url:"/app/db/document/djlr/html/chooseszDialog.html",
+				//url:"/app/db/document/djlr/html/chooseszDialog.html",
+				url:"/app/db/document/djlr/html/chooseszDialogNew.html"
 			})
 		});
 		
-		//增加批示
+		//增加批示   选择多人
 		$("#addcq").click(function(){
 			var psszName = $("#psszName").val();
 			var psszId = $("#psszId").val();
-			var leaderComment=$("#cqcontent").val();
+			//var leaderComment=$("#cqcontent").val();
 			var createdTime=$("#cqDate").val();
-			if($.trim(leaderComment) == "" || $.trim(leaderComment) == null){
-				newbootbox.alert('请输入抄清内容！');
-				return;
-			}
+			var infoId = $("#id").val();
+			var id = $("#editcqId").val();
 			if($.trim(psszName) == "" || $.trim(psszName) == null){
 				newbootbox.alert('请选择首长！');
 				return;
 			}
+			var str = "";
+			//拼接形式 id_userId_userName_leaderComment_createdTime_infoId
+			$("#usersDiv .cqcontent").each(function(i){
+			    var html="";
+			    if ($.trim($(this).val()) != null || $.trim($(this).val()) != "") {
+			        var temp = $(this).parent().parent().find("label:eq("+i+")");
+			        var psszName = temp.attr("data_name");
+			        var psszId = temp.attr("data_id");
+			        var leaderComment = $(this).val();
+                    html = id+"_"+psszId+"_"+psszName+"_"+leaderComment+"_"+createdTime+"_"+infoId;
+			    }
+			    if (html.length > 0 ) {
+			        html = html+","
+			    }
+			    str += html;
+			})
+			/*if($.trim(leaderComment) == "" || $.trim(leaderComment) == null){
+				newbootbox.alert('请输入抄清内容！');
+				return;
+			}*/
 			$ajax({
-				url:saveSzpsUrl,
-				data:{infoId:$("#id").val(),userName:psszName,userId:psszId,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
+				url:newSaveSzpsUrl,
+//				url:rootPath +"/documentszps/newSave",
+				//data:{infoId:$("#id").val(),userName:psszName,userId:psszId,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
+				data:{infos:str},
 				success:function(data){
 					if(data.result == "success"){
+					    //清空之前选中和复制的参数
+                        $("#usersDiv").html("");
+                        $("#cqDate").val("");
+                        $("#cqcontent").val("");
+                        $("#psszName").val("");
+                        $("#psszId").val("");
 						newbootbox.alert("保存成功！").done(function(){
 							initCqfn();
 						});
@@ -467,8 +502,9 @@ var pageModule = function(){
 				}
 			});
 			//清空之前选中和复制的参数
-			$("#cqDate").val("");
-			$("#cqcontent").val("");
+			$("#usersDiv").html("");
+			//$("#cqDate").val("");
+			//$("#cqcontent").val("");
 			$("#psszName").val("");
 			$("#psszId").val("");
 		});
@@ -631,8 +667,20 @@ var pageModule = function(){
 			initPdf();
 		},
 		getUserData:function(message1,message2){
-			$("#psszName").val(message1);
-			$("#psszId").val(message2);
+		    $("#usersDiv").html("");
+		    $("#psszName").val(message1);
+            $("#psszId").val(message2);
+		    if (message1.length > 0) {
+                var arrName = message1.split(",");
+                 var arrId = message2.split(",");
+                var str = "";
+                for (var i =0;i<arrId.length;i++) {
+                   str += '<div><label data_id="'+arrId[i]+'" data_name="'+arrName[i]+'">'+arrName[i]+'</label><textarea class="form-control cqcontent" placeholder="输入抄清内容..." maxlength="500"></textarea></div>'
+                }
+                $("#usersDiv").html(str);
+		    }
+			//$("#psszName").val(message1);
+			//$("#psszId").val(message2);
 		}
 	}
 	
