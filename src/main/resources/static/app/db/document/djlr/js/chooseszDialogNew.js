@@ -37,6 +37,18 @@ var pageModule = function(){
 	        window.top.iframe1.window.pageModule.getUserData(arrNames.join(","),arrId.join(","));
             newbootbox.newdialogClose("chooseszDialog");
         });
+        //全选
+        $("#all").click(function(){
+            if ($(this).prop("checked")) {
+                 $("input[name=users]").each(function(){
+                    $(this).prop("checked",true);
+                })
+            } else {
+                 $("input[name=users]").each(function(){
+                    $(this).prop("checked",false);
+                })
+            }
+        })
 	}
 	
 	return{
