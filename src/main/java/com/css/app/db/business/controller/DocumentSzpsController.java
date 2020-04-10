@@ -77,20 +77,22 @@ public class DocumentSzpsController {
 				for (int i = 0; i < info.length; i++) {
 					String[] infomention = info[i].split("_");
 					if (infomention != null) {
-						DocumentSzps documentSzps = new DocumentSzps();
-						documentSzps.setUserId(infomention[1]);
-						documentSzps.setUserName(infomention[2]);
-						documentSzps.setLeaderComment(infomention[3]);
-						documentSzps.setCreatedTime(infomention[4]);
-						documentSzps.setInfoId(infomention[5]);
-						if (StringUtils.isBlank(infomention[0])) {
-							documentSzps.setId(UUIDUtils.random());
-							documentSzpsService.save(documentSzps);
-						} else {
-							documentSzps.setId(infomention[0]);
-							documentSzpsService.update(documentSzps);
+						//如果用户选了多个首长，只给一个首长填了批示，那只保存填了批示的首长，也就是通过批示内容那个字段是否有值来判断。
+						if (StringUtils.isNotBlank(infomention[3])) {
+							DocumentSzps documentSzps = new DocumentSzps();
+							documentSzps.setUserId(infomention[1]);
+							documentSzps.setUserName(infomention[2]);
+							documentSzps.setLeaderComment(infomention[3]);
+							documentSzps.setCreatedTime(infomention[4]);
+							documentSzps.setInfoId(infomention[5]);
+							if (StringUtils.isBlank(infomention[0])) {
+								documentSzps.setId(UUIDUtils.random());
+								documentSzpsService.save(documentSzps);
+							} else {
+								documentSzps.setId(infomention[0]);
+								documentSzpsService.update(documentSzps);
+							}
 						}
-
 					}
 				}
 			}
