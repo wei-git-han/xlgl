@@ -150,7 +150,8 @@ var pageModule = function(){
 					
 					$("#psszName").val($(this).parent().parent().attr("dataUser"));
 					$("#psszId").val($(this).parent().parent().attr("dataUserId"));
-					$("#cqDate").val($(this).parent().parent().attr("dataDate"));
+					var date = $(this).parent().parent().attr("dataDate");
+					$("#cqDate").val(date.substring(0,5));
 				});
 				
 				$(".delcq").click(function(){
@@ -281,10 +282,10 @@ var pageModule = function(){
             language:"zh-CN",
             rtl: Metronic.isRTL(),
             orientation: "right",
-            startView:1,
-            format: "yyyy年mm月",
-            minViewMode:1,
-            maxViewMode:1,
+            startView:2,
+            format: "yyyy年",
+            minViewMode:2,
+            maxViewMode:2,
             autoclose: true
         });
 		$(".form_datetime").datetimepicker({
@@ -331,16 +332,24 @@ var pageModule = function(){
                             leaderComment = arr.join(",");
                             console.log("leaderComment"+leaderComment);
                         }
-
+                         var url = saveSzpsUrl;
+                        if (!editFlag) {
+                            url = saveSzpsUrl2;
+                        }
 						if(leaderComment != "" && leaderComment != null){
                             $ajax({
-                                url:saveSzpsUrl2,
+                                url:url,
                                 data:{infoId:$("#id").val(),userName:psszName,userId:psszId,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
                                 async:false,
                                 success:function(data){
                                     if(data.result == "success"){
                                         if(!turnSave){
                                             newbootbox.alert("保存成功！").done(function(){
+                                                //清空之前选中和复制的参数
+                                                $("#cqcontent").val("");
+                                                $("#psszName").val("");
+                                                $("#psszId").val("");
+                                                 editFlag = false;
                                                 initCqfn();
                                             });
                                         }
@@ -364,7 +373,10 @@ var pageModule = function(){
 								    if(!zhuanbanSave){
 
                                         newbootbox.alert("保存成功！").done(function(){
-
+                                            //清空之前选中和复制的参数
+                                            $("#cqcontent").val("");
+                                            $("#psszName").val("");
+                                            $("#psszId").val("");
                                         });
 								    }
 								},200);
@@ -514,7 +526,8 @@ var pageModule = function(){
 			});
 			//清空之前选中和复制的参数
 			$("#cqcontent").val("");
-
+            $("#psszName").val("");
+            $("#psszId").val("");
 		});
 		
 		/*//转办
