@@ -77,7 +77,7 @@ public class DocumentSzpsController {
 	 */
 	@ResponseBody
 	@RequestMapping("/newSaves")
-	public void saveInfos(String leaderComment,String infoId,String id){
+	public void saveInfos(String leaderComment,String infoId,String id,String createdTime){
 		JSONObject jsonObject = new JSONObject();
 		Map<String, Object> map = new HashMap<>();
 		map.put("roleFlag", DbDefined.ROLE_1);
@@ -89,6 +89,9 @@ public class DocumentSzpsController {
 					Date date = new Date();
 					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
 					String year = simpleDateFormat.format(date).substring(0, 4);
+					if(StringUtils.isNotBlank(createdTime)){
+						year = createdTime;
+					}
 					String strs = infomentions[i];
 					String[] contents = strs.split("：");
 					String[] contentss = strs.split(":");
