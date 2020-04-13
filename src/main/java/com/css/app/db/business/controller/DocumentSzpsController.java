@@ -83,67 +83,80 @@ public class DocumentSzpsController {
 		map.put("roleFlag", DbDefined.ROLE_1);
 		List<RoleSet> roleSetList = roleSetService.queryList(map);
 		if (StringUtils.isNotBlank(leaderComment)) {
-			String[] infomentions = leaderComment.split(",");
-			if (infomentions != null) {
-				for (int i = 0; i < infomentions.length; i++) {
-					Date date = new Date();
-					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
-					String year = simpleDateFormat.format(date).substring(0, 4);
-					if(StringUtils.isNotBlank(createdTime)){
-						year = createdTime;
-					}
-					String strs = infomentions[i];
-					String[] contents = strs.split("：");
-					String[] contentss = strs.split(":");
-					//以下是为了区分英文和中文下的  :
-					if (contents.length >= contentss.length) {
-						contents = contents;
-					}else {
-						contents = contentss;
-					}
-					if (contents != null) {
-						String userId = "";
-						int t = contents[0].indexOf("部长");
-						String userName = contents[0].substring(0, t + 2);
-						for (int j = 0; j < roleSetList.size(); j++) {
-							//判断这个人是否是首长
-							if (StringUtils.equals(userName, roleSetList.get(j).getUserName())) {
-								userId = roleSetList.get(j).getUserId();
-								if (StringUtils.isNotBlank(contents[1])) {//批示内容不为空的才保存。
-									String pishiContent = contents[1].substring(1, contents[1].length() - 1);
-									int tMonth = contents[0].indexOf("月");
-									String month = contents[0].substring(t + 2, tMonth);
-									if (Integer.parseInt(month) < 10) {
-										month = 0 + month;
-									}
-									int tDay = contents[0].indexOf("日");
-									String day = contents[0].substring(tMonth + 1, tDay);
-									if (Integer.parseInt(day) < 10) {
-										day = 0 + day;
-									}
-									DocumentSzps documentSzps = new DocumentSzps();
-									documentSzps.setUserId(userId);
-									documentSzps.setUserName(userName);
-									documentSzps.setLeaderComment(pishiContent);
-									documentSzps.setCreatedTime(year + "年" + month + "月" + day + "日");
-									documentSzps.setInfoId(infoId);
-									if (StringUtils.isBlank(id)) {
-										documentSzps.setId(UUIDUtils.random());
-										documentSzpsService.save(documentSzps);
-									} else {
-										documentSzps.setId(id);
-										documentSzpsService.update(documentSzps);
-									}
+			if (leaderComment.indexOf("部长") > -1 || leaderComment.indexOf("首长") > -1) {
+				String[] infomentions = leaderComment.split(",");
+				if (infomentions != null) {
+					for (int i = 0; i < infomentions.length; i++) {
+						Date date = new Date();
+						SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+						String year = simpleDateFormat.format(date).substring(0, 4);
+						if (StringUtils.isNotBlank(createdTime)) {
+							year = createdTime;
+						}
+						String strs = infomentions[i];
+						String[] contents = strs.split("：");
+						String[] contentss = strs.split(":");
+						//以下是为了区分英文和中文下的  :
+						if (contents.length >= contentss.length) {
+							contents = contents;
+						} else {
+							contents = contentss;
+						}
+						if (contents != null) {
+							String userId = "";
+							int t = contents[0].indexOf("部长");
+							int t1 = contents[0].indexOf("主席");
+							if(t >=t1){
+								t=t;
+							}else{
+								t=t1;
+							}
+							String userName = contents[0].substring(0, t + 2);
+							for (int j = 0; j < roleSetList.size(); j++) {
+								//判断这个人是否是首长
+								if (StringUtils.equals(userName, roleSetList.get(j).getUserName())) {
+									userId = roleSetList.get(j).getUserId();
+									if (StringUtils.isNotBlank(contents[1])) {//批示内容不为空的才保存。
+										String pishiContent = contents[1].substring(1, contents[1].length() - 1);
+										int tMonth = contents[0].indexOf("月");
+										String month = contents[0].substring(t + 2, tMonth);
+										if (Integer.parseInt(month) < 10) {
+											month = 0 + month;
+										}
+										int tDay = contents[0].indexOf("日");
+										String day = contents[0].substring(tMonth + 1, tDay);
+										if (Integer.parseInt(day) < 10) {
+											day = 0 + day;
+										}
+										DocumentSzps documentSzps = new DocumentSzps();
+										documentSzps.setUserId(userId);
+										documentSzps.setUserName(userName);
+										documentSzps.setLeaderComment(pishiContent);
+										documentSzps.setCreatedTime(year + month + "月" + day + "日");
+										documentSzps.setInfoId(infoId);
+										if (StringUtils.isBlank(id)) {
+											documentSzps.setId(UUIDUtils.random());
+											documentSzpsService.save(documentSzps);
+										} else {
+											documentSzps.setId(id);
+											documentSzpsService.update(documentSzps);
+										}
 
+									}
 								}
 							}
-						}
 
+						}
 					}
+
 				}
+				jsonObject.put("result", "success");
+			} else {
+				jsonObject.put("result", "error");
 			}
+		} else {
+			jsonObject.put("result", "error");
 		}
-		jsonObject.put("result", "success");
 		Response.json(jsonObject);
 	}
 
