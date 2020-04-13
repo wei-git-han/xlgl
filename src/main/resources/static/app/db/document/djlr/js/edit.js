@@ -314,17 +314,37 @@ var pageModule = function(){
 					success:function(data){
 						var psszName = $("#psszName").val();
 						var psszId = $("#psszId").val();
-						var leaderComment=$("#cqcontent").val();
+						/*var leaderComment=$("#cqcontent").val();*/
 						var createdTime=$("#cqDate").val();
-						
-						if($.trim(leaderComment) != "" && $.trim(leaderComment) != null){
+						var str = "";
+                        //拼接形式 id_userId_userName_leaderComment_createdTime_infoId
+                        $("#usersDiv .cqcontent").each(function(i){
+                            var html="";
+                            if (!($.trim($(this).val()) == null || $.trim($(this).val()) == "")) {
+                                var temp = $(this).parent().parent().find("label:eq("+i+")");
+                                var psszName = temp.attr("data_name");
+                                var psszId = temp.attr("data_id");
+                                var leaderComment = $(this).val();
+                                html = id+"_"+psszId+"_"+psszName+"_"+leaderComment+"_"+createdTime+"_"+infoId;
+                            }
+                            if (i != $("#usersDiv .cqcontent").length -1) {
+                                if (html.length > 0 ) {
+                                    html = html+","
+                                }
+                            }
+                            str += html;
+                        })
+						//if($.trim(leaderComment) != "" && $.trim(leaderComment) != null){
+						if(str.length > 0){
 							if($.trim(psszName) == "" || $.trim(psszName) == null){
 								newbootbox.alert('请选择首长！');
 								return;
 							}else{
 								$ajax({
-									url:saveSzpsUrl,
-									data:{infoId:$("#id").val(),userName:psszName,userId:psszId,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
+									//url:saveSzpsUrl,
+									//data:{infoId:$("#id").val(),userName:psszName,userId:psszId,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
+									url:newSaveSzpsUrl,
+									data:{infos:str},
 									async:false,
 									success:function(data){
 										if(data.result == "success"){
@@ -481,15 +501,17 @@ var pageModule = function(){
 			//拼接形式 id_userId_userName_leaderComment_createdTime_infoId
 			$("#usersDiv .cqcontent").each(function(i){
 			    var html="";
-			    if ($.trim($(this).val()) != null || $.trim($(this).val()) != "") {
+			    if (!($.trim($(this).val()) == null || $.trim($(this).val()) == "")) {
 			        var temp = $(this).parent().parent().find("label:eq("+i+")");
 			        var psszName = temp.attr("data_name");
 			        var psszId = temp.attr("data_id");
 			        var leaderComment = $(this).val();
                     html = id+"_"+psszId+"_"+psszName+"_"+leaderComment+"_"+createdTime+"_"+infoId;
 			    }
-			    if (html.length > 0 ) {
-			        html = html+","
+			    if (i != $("#usersDiv .cqcontent").length -1) {
+                    if (html.length > 0 ) {
+                        html = html+","
+                    }
 			    }
 			    str += html;
 			})
@@ -504,12 +526,6 @@ var pageModule = function(){
 				data:{infos:str},
 				success:function(data){
 					if(data.result == "success"){
-					    //清空之前选中和复制的参数
-                        $("#usersDiv").html("");
-                       /* $("#cqDate").val("");
-                        $("#cqcontent").val("");*/
-                        $("#psszName").val("");
-                        $("#psszId").val("");
 						newbootbox.alert("保存成功！").done(function(){
 							initCqfn();
 						});
