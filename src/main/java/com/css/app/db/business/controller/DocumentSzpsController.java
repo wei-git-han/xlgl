@@ -121,7 +121,6 @@ public class DocumentSzpsController {
 										day = 0 + day;
 									}
 									DocumentSzps documentSzps = new DocumentSzps();
-
 									documentSzps.setUserId(userId);
 									documentSzps.setUserName(userName);
 									documentSzps.setLeaderComment(pishiContent);
