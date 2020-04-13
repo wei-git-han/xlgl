@@ -22,6 +22,7 @@ var preId = "";//上一页id
 var sufId = "";//下一页id
 var nowId = "";
 var turnSave = false;
+var zhuanbanSave = false;
 $("#id").val(fileId);
 var scanFilePath = "";//扫描件路径
 var pageModule = function(){
@@ -283,6 +284,7 @@ var pageModule = function(){
             rtl: Metronic.isRTL(),
             orientation: "right",
             startView:1,
+            format: "yyyy年mm月",
             minViewMode:1,
             maxViewMode:1,
             autoclose: true
@@ -312,10 +314,12 @@ var pageModule = function(){
 					type:"post",
 					async:false,
 					success:function(data){
-						var psszName = $("#psszName").val();
+						/*var psszName = $("#psszName").val();
 						var psszId = $("#psszId").val();
-						/*var leaderComment=$("#cqcontent").val();*/
+						var leaderComment=$("#cqcontent").val();*/
 						var createdTime=$("#cqDate").val();
+						var infoId = $("#id").val();
+                        var id = $("#editcqId").val();
 						var str = "";
                         //拼接形式 id_userId_userName_leaderComment_createdTime_infoId
                         $("#usersDiv .cqcontent").each(function(i){

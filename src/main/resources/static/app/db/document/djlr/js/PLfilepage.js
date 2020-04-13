@@ -5,6 +5,7 @@ var securityClassification = '';
 var urgencyDegree = '';
 var pageModule = function(){
 	var initother = function(){
+	    $("#period").attr("readonly","readonly");
 		$("#uploadFile").click(function(){
 			$("#file").click();
 			$("#file").change(function(){
@@ -24,6 +25,12 @@ var pageModule = function(){
 		$("#docTypeId").change(function(){
 			docTypeName = $("#docTypeId option:checked").text();
 			$("#docTypeName").val(docTypeName);
+			$("#period").val("");
+            if ($(this).val() == "4") {
+                $("#period").removeAttr("readonly");
+            } else {
+                $("#period").attr("readonly","readonly");
+            }
 		})
 		$("#securityId").change(function(){
 			securityClassification = $("#docTypeId option:checked").text();
