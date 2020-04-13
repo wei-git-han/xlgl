@@ -78,6 +78,7 @@ public class DocumentSzpsController {
 	@ResponseBody
 	@RequestMapping("/newSaves")
 	public void saveInfos(String leaderComment,String infoId,String id){
+		JSONObject jsonObject = new JSONObject();
 		Map<String, Object> map = new HashMap<>();
 		map.put("roleFlag", DbDefined.ROLE_1);
 		List<RoleSet> roleSetList = roleSetService.queryList(map);
@@ -142,6 +143,8 @@ public class DocumentSzpsController {
 				}
 			}
 		}
+		jsonObject.put("result", "success");
+		Response.json(jsonObject);
 	}
 
 	/**
