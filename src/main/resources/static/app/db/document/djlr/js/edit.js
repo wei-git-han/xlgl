@@ -24,6 +24,7 @@ var sufId = "";//下一页id
 var nowId = "";
 var turnSave = false;
 var zhuanbanSave = false;
+var editFlag = false;   //超清内容是新增还是对原有数据的编辑
 $("#id").val(fileId);
 var scanFilePath = "";//扫描件路径
 var pageModule = function(){
@@ -143,6 +144,7 @@ var pageModule = function(){
 				
 				
 				$(".editcq").click(function(){//编辑抄清
+				    editFlag = true;
 					$("#cqcontent").val($(this).parent().parent().attr("dataName"));
 					$("#editcqId").val($(this).parent().parent().attr("dataId"));
 					
@@ -316,10 +318,10 @@ var pageModule = function(){
 						var createdTime=$("#cqDate").val();
 						var infoId = $("#id").val();
                         var id = $("#editcqId").val();
-                        if(leaderComment == "" || leaderComment == null){
+                       /* if(leaderComment == "" || leaderComment == null){
                             newbootbox.alert('请输入抄清内容！');
                             return;
-                        }
+                        }*/
                         if (leaderComment.indexOf("\n")) {
                             var reg = /\n|\r\n/g;
                             var arr = leaderComment.split(reg);
@@ -329,6 +331,7 @@ var pageModule = function(){
                             leaderComment = arr.join(",");
                             console.log("leaderComment"+leaderComment);
                         }
+
 						if(leaderComment != "" && leaderComment != null){
                             $ajax({
                                 url:saveSzpsUrl2,
@@ -493,12 +496,17 @@ var pageModule = function(){
             leaderComment = arr.join(",");
 			console.log("leaderComment"+leaderComment);
 			}
+			 var url = saveSzpsUrl;
+            if (!editFlag) {
+                url = saveSzpsUrl2;
+            }
 			$ajax({
-				url:saveSzpsUrl2,
+				url:url,
 				data:{infoId:$("#id").val(),userName:psszName,userId:psszId,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
 				success:function(data){
 					if(data.result == "success"){
 						newbootbox.alert("保存成功！").done(function(){
+						    editFlag = false;
 							initCqfn();
 						});
 					}
