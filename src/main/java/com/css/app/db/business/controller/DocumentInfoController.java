@@ -2,6 +2,7 @@ package com.css.app.db.business.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -1168,6 +1169,7 @@ public class DocumentInfoController {
 		String retFormatId = null;// 返回的版式文件id
 		String streamId = null;// 流式文件id
 		String formatId = null;// 版式文件id
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		JSONObject json = new JSONObject();
 		if (pdf != null && pdf.length > 0) {
 			for (int i = 0; i < pdf.length; i++) {
@@ -1187,6 +1189,9 @@ public class DocumentInfoController {
 				documentInfo.setUrgencyId(urgencyId);
 				documentInfo.setUrgencyDegree(urgencyDegree);
 				documentInfo.setPeriod(period);
+				documentInfo.setUserId(CurrentUser.getUserId());
+				documentInfo.setUserName(CurrentUser.getUsername());
+				documentInfo.setApplyTime(simpleDateFormat.format(new Date()));
 				documentInfoService.save(documentInfo);
 				// 获取文件后缀
 				String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
