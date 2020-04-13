@@ -84,7 +84,7 @@ public class DocumentSzpsController {
 							documentSzps.setUserId(infomention[1]);
 							documentSzps.setUserName(infomention[2]);
 							documentSzps.setLeaderComment(infomention[3]);
-							documentSzps.setCreatedTime(infomention[4]);
+							documentSzps.setCreatedTime(infomention[4]+"01日");
 							documentSzps.setInfoId(infomention[5]);
 							if (StringUtils.isBlank(infomention[0])) {
 								documentSzps.setId(UUIDUtils.random());
