@@ -93,11 +93,9 @@ public class DocumentSzpsController {
 					String[] contents = strs.split("：");
 					String[] contentss = strs.split(":");
 					//以下是为了区分英文和中文下的  :
-					if (contents.length == contentss.length) {
+					if (contents.length >= contentss.length) {
 						contents = contents;
-					} else if (contents.length > contentss.length) {
-						contents = contents;
-					} else {
+					}else {
 						contents = contentss;
 					}
 					if (contents != null) {
