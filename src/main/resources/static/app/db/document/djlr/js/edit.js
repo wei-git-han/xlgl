@@ -132,18 +132,13 @@ var pageModule = function(){
 				$("#cqcontent").val("");
 				$("#editcqId").val("");
 				$.each(data,function(i,item){
-					/*$("#showcq").append(
+					$("#showcq").append(
 						'<div class="cqline">'+
 						'	<div dataId="'+item.id+'" dataUserId="'+item.userId+'" dataName="'+item.leaderComment+'" dataUser="'+item.userName+'" dataDate="'+item.createdTime+'"><span>'+item.userName+'</span><span class="cqrq">'+item.createdTime+'</span><span class="pull-right"><a style="margin-right:10px" class="editcq">编辑</a><a class="delcq">删除</a></span></div>'+
 						'	<div>'+item.leaderComment+'</div>'+
 						'</div>'
-					);*/
-					$("#showcq").append(
-                        '<div class="cqline">'+
-                        '	<div dataId="'+item.id+'" dataUserId="'+item.userId+'" dataName="'+item.leaderComment+'" dataUser="'+item.userName+'" dataDate="'+item.createdTime+'"><span>'+item.userName+'</span><span class="cqrq">'+item.createdTime+'</span><span class="pull-right"><a class="delcq">删除</a></span></div>'+
-                        '	<div>'+item.leaderComment+'</div>'+
-                        '</div>'
-                    );
+					);
+
 				});
 				
 				
@@ -315,54 +310,41 @@ var pageModule = function(){
 					type:"post",
 					async:false,
 					success:function(data){
-						/*var psszName = $("#psszName").val();
+						var psszName = $("#psszName").val();
 						var psszId = $("#psszId").val();
-						var leaderComment=$("#cqcontent").val();*/
+						var leaderComment=$.trim($("#cqcontent").val());
 						var createdTime=$("#cqDate").val();
 						var infoId = $("#id").val();
                         var id = $("#editcqId").val();
-						var str = "";
-                        //拼接形式 id_userId_userName_leaderComment_createdTime_infoId
-                        $("#usersDiv .cqcontent").each(function(i){
-                            var html="";
-                            if (!($.trim($(this).val()) == null || $.trim($(this).val()) == "")) {
-                                var temp = $(this).parent().parent().find("label:eq("+i+")");
-                                var psszName = temp.attr("data_name");
-                                var psszId = temp.attr("data_id");
-                                var leaderComment = $(this).val();
-                                html = id+"_"+psszId+"_"+psszName+"_"+leaderComment+"_"+createdTime+"_"+infoId;
-                            }
-                            if (i != $("#usersDiv .cqcontent").length -1) {
-                                if (html.length > 0 ) {
-                                    html = html+","
+                        if(leaderComment == "" || leaderComment == null){
+                            newbootbox.alert('请输入抄清内容！');
+                            return;
+                        }
+                        if (leaderComment.indexOf("\n")) {
+                            var reg = /\n|\r\n/g;
+                            var arr = leaderComment.split(reg);
+                            $(arr).each(function(i){
+                                arr[i] = arr[i].replace(/^\s+|\s+$/g,"");
+                            })
+                            leaderComment = arr.join(",");
+                            console.log("leaderComment"+leaderComment);
+                        }
+						if(leaderComment != "" && leaderComment != null){
+                            $ajax({
+                                url:saveSzpsUrl2,
+                                data:{infoId:$("#id").val(),userName:psszName,userId:psszId,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
+                                async:false,
+                                success:function(data){
+                                    if(data.result == "success"){
+                                        if(!turnSave){
+                                            newbootbox.alert("保存成功！").done(function(){
+                                                initCqfn();
+                                            });
+                                        }
+
+                                    }
                                 }
-                            }
-                            str += html;
-                        })
-						//if($.trim(leaderComment) != "" && $.trim(leaderComment) != null){
-						if(str.length > 0){
-							if($.trim(psszName) == "" || $.trim(psszName) == null){
-								newbootbox.alert('请选择首长！');
-								return;
-							}else{
-								$ajax({
-									//url:saveSzpsUrl,
-									//data:{infoId:$("#id").val(),userName:psszName,userId:psszId,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
-									url:newSaveSzpsUrl,
-									data:{infos:str},
-									async:false,
-									success:function(data){
-										if(data.result == "success"){
-											if(!turnSave){
-												newbootbox.alert("保存成功！").done(function(){
-													initCqfn();
-												});
-											}
-											
-										}
-									}
-								});
-							}
+                            });
 						}
 						if(!turnSave){
 							window.top.$(".newclose").click();
