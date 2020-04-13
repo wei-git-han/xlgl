@@ -77,7 +77,7 @@ public class DocumentSzpsController {
 	 */
 	@ResponseBody
 	@RequestMapping("/newSaves")
-	public void saveInfos(String leaderComment,String infoId){
+	public void saveInfos(String leaderComment,String infoId,String id){
 		Map<String, Object> map = new HashMap<>();
 		map.put("roleFlag", DbDefined.ROLE_1);
 		List<RoleSet> roleSetList = roleSetService.queryList(map);
@@ -91,11 +91,12 @@ public class DocumentSzpsController {
 					String strs = infomentions[i];
 					String[] contents = strs.split("：");
 					String[] contentss = strs.split(":");
-					if(contents.length == contentss.length){
+					//以下是为了区分英文和中文下的  :
+					if (contents.length == contentss.length) {
 						contents = contents;
-					}else if(contents.length > contentss.length){
+					} else if (contents.length > contentss.length) {
 						contents = contents;
-					}else {
+					} else {
 						contents = contentss;
 					}
 					if (contents != null) {
@@ -119,13 +120,20 @@ public class DocumentSzpsController {
 										day = 0 + day;
 									}
 									DocumentSzps documentSzps = new DocumentSzps();
-									documentSzps.setId(UUIDUtils.random());
+
 									documentSzps.setUserId(userId);
 									documentSzps.setUserName(userName);
 									documentSzps.setLeaderComment(pishiContent);
 									documentSzps.setCreatedTime(year + "年" + month + "月" + day + "日");
 									documentSzps.setInfoId(infoId);
-									documentSzpsService.save(documentSzps);
+									if (StringUtils.isBlank(id)) {
+										documentSzps.setId(UUIDUtils.random());
+										documentSzpsService.save(documentSzps);
+									} else {
+										documentSzps.setId(id);
+										documentSzpsService.update(documentSzps);
+									}
+
 								}
 							}
 						}
