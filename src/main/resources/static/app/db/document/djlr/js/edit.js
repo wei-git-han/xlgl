@@ -13,6 +13,7 @@ var getPdfPath = {"url":rootPath +"/fileinfo/getFormaFileUrl","dataType":"text"}
 var UserTreeUrl = {"url":"/app/base/user/allTree","dataType":"text"}; //登记人树
 var deleteSzcqUrl = {"url":"/app/db/documentszps/delete","dataType":"text"};//删除首长批示
 var newSaveSzpsUrl = {"url":rootPath +"/documentszps/newSave","dataType":"text"}; //保存首长批示新版
+var saveSzpsUrl2 = {"url":rootPath +"/documentszps/newSaves","dataType":"text"}; //保存首长批示,，内容中存在多个部长信息
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var fileId=getUrlParam("fileId")||""; //主文件id
 var currPage=getUrlParam("currPage")||1; //数据所在页码
@@ -502,14 +503,17 @@ var pageModule = function(){
 				return;
 			}
 			if (leaderComment.indexOf("\n")) {
-			    var reg = /\n/g;
-                leaderComment = leaderComment.replace(reg,",");
-			}
+			    var reg = /\n|\r\n/g;
+                var arr = leaderComment.split(reg);
+                $(arr).each(function(i){
+                    arr[i] = arr[i].replace(/^\s+|\s+$/g,"");
+                })
+            leaderComment = arr.join(",");
 			console.log("leaderComment"+leaderComment);
+			}
 			$ajax({
-				url:saveSzpsUrl,
+				url:saveSzpsUrl2,
 				data:{infoId:$("#id").val(),userName:psszName,userId:psszId,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
-				data:{infos:str},
 				success:function(data){
 					if(data.result == "success"){
 						newbootbox.alert("保存成功！").done(function(){
