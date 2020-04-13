@@ -152,6 +152,7 @@ var pageModule = function(){
 					$("#psszId").val($(this).parent().parent().attr("dataUserId"));
 					var date = $(this).parent().parent().attr("dataDate");
 					$("#cqDate").val(date.substring(0,5));
+					$("#editDate").val(date);
 				});
 				
 				$(".delcq").click(function(){
@@ -336,6 +337,9 @@ var pageModule = function(){
                         if (!editFlag) {
                             url = saveSzpsUrl2;
                         }
+                        if (editFlag) {
+                            createdTime = $("#editDate").val();
+                        }
 						if(leaderComment != "" && leaderComment != null){
                             $ajax({
                                 url:url,
@@ -511,6 +515,9 @@ var pageModule = function(){
 			 var url = saveSzpsUrl;
             if (!editFlag) {
                 url = saveSzpsUrl2;
+            }
+            if (editFlag) {
+                createdTime = $("#editDate").val();
             }
 			$ajax({
 				url:url,
