@@ -24,7 +24,8 @@
 		select s.INFO_ID,s.USER_NAME as leader_name,s.LEADER_COMMENT as leader_content,s.CREATED_TIME as leader_time,
         row_number() over(partition by s.info_id order by d.sort asc) as num from DB_DOCUMENT_SZPS s inner join DB_ROLE_SET d on s.USER_ID=d.USER_ID order by d.sort asc
 		) c on a.info_id = c.info_id
-		left join (select distinct info_id,listagg(sub_dept_name || nvl2(DECODE(undertaker_name,'',null,'NULL',null,undertaker_name),'/' || undertaker_name || nvl2(DECODE(undertaker_phone,'',null,'NULL',null,undertaker_phone),'('||undertaker_phone||')',null),null), ',') within group(order by h.sort,created_time desc) over(partition by info_id) under_depts from DB_SUB_DOC_INFO g inner join BASE_APP_ORGAN h
+		left join (select distinct info_id,listagg(sub_dept_name || nvl2(DECODE(undertaker_name,'',null,'NULL',null,undertaker_name),'/' || undertaker_name || nvl2(DECODE(undertaker_phone,'','','NULL',null,undertaker_phone),'('||undertaker_phone||')'||'/'
+		|| case DOC_STATUS when '12' then '办结' when '10' then '建议办结' when '1' then '待转办' when '3' then '退回修改' when '5' then '待落实' when '7' then '待审批' when '9' then '办理中' when '13' then '常态落实' when '11' then '建议落实' else '其他' end,null),null), ',') within group(order by h.sort,created_time desc) over(partition by info_id) under_depts from DB_SUB_DOC_INFO g inner join BASE_APP_ORGAN h
         on g.sub_dept_id=h.id) e on a.INFO_ID = e.info_id
 		where (num = 1 or num is null) and a.DOC_STATUS  &lt; 10
 		<if test="orgId != null and orgId != ''">
