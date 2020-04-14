@@ -24,8 +24,6 @@ import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.service.DocumentInfoService;
 import com.css.app.db.config.entity.DocumentDic;
 
-
-
 @Service("documentInfoService")
 public class DocumentInfoServiceImpl implements DocumentInfoService {
 	@Autowired
@@ -48,36 +46,36 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 	private SubDocTrackingDao subDocTrackingDao;
 	@Autowired
 	private SubDocInfoDao subDocInfoDao;
-	
+
 	@Override
-	public DocumentInfo queryObject(String id){
+	public DocumentInfo queryObject(String id) {
 		return documentInfoDao.queryObject(id);
 	}
-	
+
 	@Override
-	public List<DocumentInfo> queryList(Map<String, Object> map){
+	public List<DocumentInfo> queryList(Map<String, Object> map) {
 		return documentInfoDao.queryList(map);
 	}
-	
+
 	@Override
-	public void save(DocumentInfo documentInfo){
+	public void save(DocumentInfo documentInfo) {
 		documentInfo.setCuibanFlag("0");
 		documentInfo.setCreatedTime(new Date());
 		documentInfoDao.save(documentInfo);
 	}
-	
+
 	@Override
-	public void update(DocumentInfo dbDocumentInfo){
+	public void update(DocumentInfo dbDocumentInfo) {
 		documentInfoDao.update(dbDocumentInfo);
 	}
-	
+
 	@Override
-	public void delete(String id){
+	public void delete(String id) {
 		documentInfoDao.delete(id);
 	}
-	
+
 	@Override
-	public void deleteBatch(String[] ids){
+	public void deleteBatch(String[] ids) {
 		documentInfoDao.deleteBatch(ids);
 	}
 
@@ -111,35 +109,36 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 		// TODO Auto-generated method stub
 		return documentInfoDao.queryListByDicStutas(map);
 	}
+
 	@Override
 	public void deleteByCheHui(String id) {
 		List<SubDocInfo> list = subDocInfoDao.queryAllSubByInfoId(id);
-		if(list !=null && list.size()>0) {
+		if (list != null && list.size() > 0) {
 			for (SubDocInfo subInfo : list) {
 				String subId = subInfo.getId();
-				//删除审批意见
+				// 删除审批意见
 				approvalOpinionDao.deleteBySubId(subId);
-				//删除附件
+				// 删除附件
 				replyAttacDao.deleteBySubId(subId);
-				//删除反馈
-				Map<String, Object> map=new HashMap<>();
+				// 删除反馈
+				Map<String, Object> map = new HashMap<>();
 				map.put("subId", subId);
 				replyExplainDao.deleteByParam(map);
-				//删除流转记录
+				// 删除流转记录
 				subDocTrackingDao.deleteBySubId(subId);
-				//删除子分支
+				// 删除子分支
 				subDocInfoDao.delete(subId);
 			}
 		}
-		//删除办结记录
+		// 删除办结记录
 		documentBjjlDao.deleteByInfoId(id);
-		//删除催办记录
+		// 删除催办记录
 		documentCbjlDao.deleteByInfoId(id);
-		//删除阅读记录
+		// 删除阅读记录
 		documentReadDao.deleteByInfoId(id);
-		//删除转办记录
+		// 删除转办记录
 		documentZbjlDao.deleteByInfoId(id);
-		//更新主文件状态
+		// 更新主文件状态
 		DocumentInfo info = documentInfoDao.queryObject(id);
 		info.setStatus(0);
 		info.setCuibanFlag("0");
@@ -175,7 +174,7 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 	public List<DocumentInfo> queryStatisticsList(Map<String, Object> map) {
 		return documentInfoDao.queryStatisticsList(map);
 	}
-	
+
 	@Override
 	public void updateDocumentInfoById(DocumentInfo documentInfo) {
 		documentInfoDao.updateDocumentInfoById(documentInfo);
@@ -187,14 +186,25 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 	}
 
 	@Override
+	public List<DocumentInfo> queryReplyListPlus(Map<String, Object> map) {
+		return documentInfoDao.queryReplyListPlus(map);
+	}
+	
+	@Override
+	public List<DocumentInfo> queryReplyListForWfk(Map<String, Object> map) {
+		return documentInfoDao.queryReplyListForWfk(map);
+	}
+
+	@Override
 	public int queryDocumentWfk(String danweiid, String year) {
 		return documentInfoDao.queryDocumentWfk(danweiid, year);
 	}
+
 	@Override
 	public int queryDocumentWfk2(String danweiid, String year) {
 		return documentInfoDao.queryDocumentWfk2(danweiid, year);
 	}
-	
+
 	@Override
 	public int queryWfkLeaderStatistics(Map<String, Object> map) {
 		return documentInfoDao.queryWfkLeaderStatistics(map);
@@ -203,5 +213,10 @@ public class DocumentInfoServiceImpl implements DocumentInfoService {
 	@Override
 	public List<DocumentInfo> queryNewList(Map<String, Object> map) {
 		return documentInfoDao.queryNewList(map);
+	}
+	
+	@Override
+	public List<DocumentInfo> queryNewListSort(Map<String, Object> map) {
+		return documentInfoDao.queryNewListSort(map);
 	}
 }

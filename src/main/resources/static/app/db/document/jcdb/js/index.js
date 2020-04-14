@@ -108,7 +108,7 @@ var pageModule = function(){
 						`
 							<tr id="${id}">
 								<td>${i+1}</td>
-								<td title="${dwname}" ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','','${state}')">${dwname}</font></td>
+								<td title="${dwname}" ><font style="cursor:pointer">${dwname}</font></td>
 								<td ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','1','${state}')">${blz}</font></td>
 								<td ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','2','${state}')">${bj}</font></td>
 								<td ><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','3','${state}')">${ctls}</font></td>
@@ -726,7 +726,8 @@ var topage = function(orgid,type,month,ytype,state){
 			},1000)
 			return;
 		}else{
-			window.location.href = "/app/db/document/blfk/html/blfk.html?fileFrom=jcdb&ifmenu=false&orgid="+orgid+"&month="+month+"&ytype="+ytype+"&nowYear="+nowYear;
+			//window.location.href = "/app/db/document/blfk/html/blfk.html?fileFrom=jcdb&ifmenu=false&orgid="+orgid+"&month="+month+"&ytype="+ytype+"&nowYear="+nowYear;
+			window.location.href = "/app/db/document/jndb/html/jndb.html?fileFrom=jcdb&ifmenu=false&orgid="+orgid+"&month="+month+"&ytype="+ytype+"&nowYear="+nowYear;
 		}
 	}
 }

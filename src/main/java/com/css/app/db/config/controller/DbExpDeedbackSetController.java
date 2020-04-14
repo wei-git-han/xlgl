@@ -51,6 +51,18 @@ public class DbExpDeedbackSetController {
 		Response.json(pageUtil);
 	}
 	
+	@ResponseBody
+	@RequestMapping("/listDefault")
+	public void listDefault(Integer page, Integer pagesize) {
+		Map<String, Object> map = new HashMap<>();
+		PageHelper.startPage(page, pagesize);
+		//查询列表数据
+		List<DbExpDeedbackSet> dbExpDeedbackSetList = dbExpDeedbackSetService.queryListDefault(map);
+		
+		GwPageUtils pageUtil = new GwPageUtils(dbExpDeedbackSetList);
+		Response.json(pageUtil);
+	}
+	
 	/**
 	 * @description:范例查看
 	 * @author:zhangyw
@@ -80,6 +92,7 @@ public class DbExpDeedbackSetController {
 		json.put("expName", dbExpDeedbackSet.getExpName());// securityClassification
 		json.put("expContent", dbExpDeedbackSet.getExpContent());
 		json.put("flId", dbExpDeedbackSet.getId());
+		json.put("flag", dbExpDeedbackSet.getFlag());
 		Response.json(json);
 	}
 	

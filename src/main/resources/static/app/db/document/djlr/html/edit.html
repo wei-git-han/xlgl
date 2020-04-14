@@ -125,8 +125,8 @@ License: You must have a valid license purchased only from themeforest(the above
 						</div>
 						
 						<div class="newlayout3_cont">
-							<div class="wh100 scroller">
-								<div class="wg100 newlayout4">
+							<div class="wh100">
+								<div class="wg100 newlayout4 scroller" style="height:94%">
 									<form  class="form-horizontal wg100" id="commentForm" role="form" method="post">
 										<div class="tabbable-line wg100">
 										    <div class="tab-content wg100">
@@ -207,7 +207,8 @@ License: You must have a valid license purchased only from themeforest(the above
 										                    	登记日期
 															 </td>
 															 <td>
-												                <div class="input-group  date form_datetime">
+												                <!-- <div class="input-group  date form_datetime"> -->
+												                <div class="input-group  date date-picker" data-date-format="yyyy-mm-dd">
 																    <input type="text" size="16" id="applyTime" name="applyTime"  onfocus="blur()" class="form-control">
 																    <span class="input-group-btn">
 																    <button class="btn default date-set" type="button"><i class="fa fa-calendar"></i></button>
@@ -238,7 +239,23 @@ License: You must have a valid license purchased only from themeforest(the above
 																			<span class="pull-left">新增/编辑抄清</span>
 																		</div>
 																		<input type="hidden" class="form-control" id="editcqId" name="editcqId" />
-																		<div class="cqnr">
+																		<input class="form-control psszName" type="hidden" id="psszName" name="psszName"/>
+																		<input class="form-control psszId" type="hidden" id="psszId" name="psszId" />
+																		<input class="form-control editDate" type="hidden" id="editDate" name="editDate" />
+                                                                        <div class="cqnr">
+                                                                            <label style="margin-left:30px;">
+                                                                                选择日期
+                                                                            </label>
+                                                                            <div>
+                                                                                <div style="display:inline-block" class="input-group date" data-date-format="yyyy年">
+                                                                                    <input type="text" class="form-control datee3 " id="cqDate" name="cqDate" readonly />
+                                                                                    <span class="input-group-btn">
+																				    	<button class="btn default setdis cqbtn"  type="button"></button>
+																				    </span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+																		<!--<div class="cqnr">
 																			<label>
 														                    	选择首长
 																			</label>
@@ -252,15 +269,16 @@ License: You must have a valid license purchased only from themeforest(the above
 														                    	选择日期
 																			 </label>
 																			 <div>
-																                <div style="display:inline-block" class="input-group date date-picker" data-date-format="yyyy年mm月dd日">
-																				    <input type="text" class="form-control datee2" id="cqDate" name="cqDate" />
+																                <div style="display:inline-block" class="input-group date" data-date-format="yyyy年MM月">
+																				    <input type="text" class="form-control datee3 " id="cqDate" name="cqDate" readonly />
 																				    <span class="input-group-btn">
 																				    	<button class="btn default setdis cqbtn"  type="button"></button>
 																				    </span>
 																				</div>
 																			 </div>
 																		</div>
-																		<textarea class="form-control cqcontent" id="cqcontent" placeholder="输入抄清内容..." maxlength="500"></textarea>
+																		<div id="usersDiv"></div>-->
+																		<textarea class="form-control cqcontent" id="cqcontent" placeholder="输入抄清内容...，格式如：xxx部长X月X日批示：”xxx内容”"></textarea>
 																		<button type="button" class="btn tableBtns1" id="addcq">保存</button>
 																	</div>
 																	<div class="showcq" id="showcq">
@@ -330,6 +348,14 @@ License: You must have a valid license purchased only from themeforest(the above
 										</div>
 									</form>
 								</div>
+								<div id="changefile" style="border-top:1px solid #fff;" >
+									<button class="btn changefilebtn"  data="prev" onclick="pagefn(this)" id="prevFile">
+										<i class="fa fa-chevron-left"  style="color: #5498eb;"></i> 上一篇
+									</button>
+									<button class="btn changefilebtn" data="next" onclick="pagefn(this)" id="nextFile">
+										下一篇 <i class="fa fa-chevron-right" style="color: #5498eb;"></i>
+									</button>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -341,6 +367,7 @@ License: You must have a valid license purchased only from themeforest(the above
 			<button type="button" class="btn tableBtns" id="save">保存</button>
 			<button type="button" class="btn tableBtns" id="saveAndAdd">保存并新增</button>
 			<button type="button" class="btn tableBtns"  id="return">取消并退出</button>
+			<button type="button" class="btn tableBtns"  id="zhuanban">转办</button>
 			<!-- <button type="button" class="btn tableBtns"  id="zhuanban">转办</button> -->
 		</div>
 		

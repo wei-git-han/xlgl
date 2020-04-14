@@ -19,6 +19,8 @@ public interface SubDocInfoService {
 	
 	List<SubDocInfo> queryList(Map<String, Object> map);
 	
+	List<SubDocInfo> queryForList(String infoId);
+	
 	void save(SubDocInfo dbSubDocInfo);
 	
 	void update(SubDocInfo dbSubDocInfo);

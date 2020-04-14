@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.netflix.discovery.converters.jackson.builder.StringInterningAmazonInfoBuilder;
+
 
 
 /**
@@ -85,6 +87,54 @@ public class DocumentInfo implements Serializable {
 	private List<DocumentSzps> szpslist;
 	//超期三个月
 	private Integer isOverTreeMonth;
+	
+	private String docStatus;
+	
+	private String infoId;
+	
+	private String sort;
+	
+	private String preId;
+	
+	private String sufId;
+	
+	
+	
+	
+	
+	
+	
+	
+	public String getPreId() {
+		return preId;
+	}
+	public void setPreId(String preId) {
+		this.preId = preId;
+	}
+	public String getSufId() {
+		return sufId;
+	}
+	public void setSufId(String sufId) {
+		this.sufId = sufId;
+	}
+	public String getSort() {
+		return sort;
+	}
+	public void setSort(String sort) {
+		this.sort = sort;
+	}
+	public String getInfoId() {
+		return infoId;
+	}
+	public void setInfoId(String infoId) {
+		this.infoId = infoId;
+	}
+	public String getDocStatus() {
+		return docStatus;
+	}
+	public void setDocStatus(String docStatus) {
+		this.docStatus = docStatus;
+	}
 	/**
 	 * 设置：唯一标识
 	 */

@@ -2,6 +2,9 @@ package com.css.app.db.config.dao;
 
 import com.css.app.db.config.entity.DbExpDeedbackSet;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.css.base.dao.BaseDao;
@@ -15,5 +18,7 @@ import com.css.base.dao.BaseDao;
  */
 @Mapper
 public interface DbExpDeedbackSetDao extends BaseDao<DbExpDeedbackSet> {
+	
+	List<DbExpDeedbackSet> queryListDefault(Map<String, Object> map);
 	
 }

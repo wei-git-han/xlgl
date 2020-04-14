@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.base.dao.BaseDao;
@@ -43,6 +44,9 @@ public interface SubDocInfoDao extends BaseDao<SubDocInfo> {
 	List<SubDocInfo> NoFeedbackTmingTaskList();
 	List<SubDocInfo> firstNoFeedbackTmingTaskList();
 	List<SubDocInfo> notTransferredTmingTaskList();
+	
+	@Select("select * from DB_SUB_DOC_INFO where INFO_ID = #{infoId}")
+	List<SubDocInfo> queryForList(String infoId);
 	
 	
 	

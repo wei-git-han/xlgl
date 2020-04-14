@@ -12,8 +12,19 @@ var getData ={"url":"/app/db/documentinfo/info","dataType":"json"}; /*编辑返�
 var getPdfPath = {"url":rootPath +"/fileinfo/getFormaFileUrl","dataType":"text"};
 var UserTreeUrl = {"url":"/app/base/user/allTree","dataType":"text"}; //登记人树
 var deleteSzcqUrl = {"url":"/app/db/documentszps/delete","dataType":"text"};//删除首长批示
+var newSaveSzpsUrl = {"url":rootPath +"/documentszps/newSave","dataType":"text"}; //保存首长批示新版
+var saveSzpsUrl2 = {"url":rootPath +"/documentszps/newSaves","dataType":"text"}; //保存首长批示,，内容中存在多个部长信息
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var fileId=getUrlParam("fileId")||""; //主文件id
+var currPage=getUrlParam("currPage")||1; //数据所在页码
+var totalPage=getUrlParam("totalPage")||15; //数据每页条数
+var documentStatus=(getUrlParam("documentStatus")==0)?0:1;//数据状态0：待处理，1：已处理
+var preId = "";//上一页id
+var sufId = "";//下一页id
+var nowId = "";
+var turnSave = false;
+var zhuanbanSave = false;
+var editFlag = false;   //超清内容是新增还是对原有数据的编辑
 $("#id").val(fileId);
 var scanFilePath = "";//扫描件路径
 var pageModule = function(){
@@ -25,6 +36,7 @@ var pageModule = function(){
 		if(fileFrom=="blfk"){
 			$('#saveAndAdd').hide();
 			$('#return').hide();
+			$('#zhuanban').hide();
 		}
 	}
 	//请求各字典数据
@@ -48,8 +60,20 @@ var pageModule = function(){
 		$ajax({
 			url:getData,
 			async:false,
-			data:{id:fileId},
+			data:{id:fileId,page:currPage,pagesize:totalPage,documentStatus:documentStatus},
 			success:function(data){
+				preId = data.preId;//上一页id
+				sufId = data.sufId;//下一页id
+				if(preId == "noPredId"){
+					$("#prevFile").css("pointer-events","none")
+					$("#prevFile").css("color","#ccc")
+					$("#prevFile .fa").css("color","#ccc")
+				}
+				if(sufId == "noSufId"){
+					$("#nextFile").css("pointer-events","none")
+					$("#nextFile").css("color","#ccc")
+					$("#nextFile .fa").css("color","#ccc")
+				}
 				setformdata(data);
 				if(data.docTypeId == "1" || data.docTypeId == "2"){
 					$("#jobContent").attr("disabled",true);
@@ -115,16 +139,20 @@ var pageModule = function(){
 						'	<div>'+item.leaderComment+'</div>'+
 						'</div>'
 					);
+
 				});
 				
 				
 				$(".editcq").click(function(){//编辑抄清
+				    editFlag = true;
 					$("#cqcontent").val($(this).parent().parent().attr("dataName"));
 					$("#editcqId").val($(this).parent().parent().attr("dataId"));
 					
 					$("#psszName").val($(this).parent().parent().attr("dataUser"));
 					$("#psszId").val($(this).parent().parent().attr("dataUserId"));
-					$("#cqDate").val($(this).parent().parent().attr("dataDate"));
+					var date = $(this).parent().parent().attr("dataDate");
+					$("#cqDate").val(date.substring(0,5));
+					$("#editDate").val(date);
 				});
 				
 				$(".delcq").click(function(){
@@ -251,7 +279,16 @@ var pageModule = function(){
 		    orientation: "right",
 		    autoclose: true
 		});
-		
+        $("#cqDate").datepicker({
+            language:"zh-CN",
+            rtl: Metronic.isRTL(),
+            orientation: "right",
+            startView:2,
+            format: "yyyy年",
+            minViewMode:2,
+            maxViewMode:2,
+            autoclose: true
+        });
 		$(".form_datetime").datetimepicker({
 		    language:"zh-CN",
 		    autoclose: true,
@@ -275,48 +312,83 @@ var pageModule = function(){
 					url:updateUrl.url,
 					data:paramdata,
 					type:"post",
+					async:false,
 					success:function(data){
 						var psszName = $("#psszName").val();
 						var psszId = $("#psszId").val();
-						var leaderComment=$("#cqcontent").val();
+						var leaderComment=$.trim($("#cqcontent").val());
 						var createdTime=$("#cqDate").val();
-						
-						if($.trim(leaderComment) != "" && $.trim(leaderComment) != null){
-							if($.trim(psszName) == "" || $.trim(psszName) == null){
-								newbootbox.alert('请选择首长！');
-								return;
+						var infoId = $("#id").val();
+                        var id = $("#editcqId").val();
+                       /* if(leaderComment == "" || leaderComment == null){
+                            newbootbox.alert('请输入抄清内容！');
+                            return;
+                        }*/
+                        if (leaderComment.indexOf("\n")) {
+                            var reg = /\n|\r\n/g;
+                            var arr = leaderComment.split(reg);
+                            $(arr).each(function(i){
+                                arr[i] = arr[i].replace(/^\s+|\s+$/g,"");
+                            })
+                            leaderComment = arr.join(",");
+                            console.log("leaderComment"+leaderComment);
+                        }
+                         var url = saveSzpsUrl;
+                        if (!editFlag) {
+                            url = saveSzpsUrl2;
+                        }
+                        if (editFlag) {
+                            createdTime = $("#editDate").val();
+                        }
+						if(leaderComment != "" && leaderComment != null){
+                            $ajax({
+                                url:url,
+                                data:{infoId:$("#id").val(),userName:psszName,userId:psszId,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
+                                async:false,
+                                success:function(data){
+                                    if(data.result == "success"){
+                                        if(!turnSave){
+                                            newbootbox.alert("保存成功！").done(function(){
+                                                //清空之前选中和复制的参数
+                                                $("#cqcontent").val("");
+                                                $("#psszName").val("");
+                                                $("#psszId").val("");
+                                                 editFlag = false;
+                                                initCqfn();
+                                            });
+                                        }
+
+                                    }
+                                }
+                            });
+						}
+						if(!turnSave){
+							window.top.$(".newclose").click();
+							if(addFlag){
+								window.location.href="/app/db/document/djlr/html/add.html";
+							}else if(returnSave){
+						    	if(fileFrom=='blfk'){
+							    	window.location.href = "/app/db/document/blfk/html/blfk.html?fileFrom=blfk";
+						    	}else{
+							    	window.location.href = "/app/db/document/djlr/html/djlr.html?fileFrom=djlr";
+						    	}
 							}else{
-								$ajax({
-									url:saveSzpsUrl,
-									data:{infoId:$("#id").val(),userName:psszName,userId:psszId,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
-									async:false,
-									success:function(data){
-										if(data.result == "success"){
-											newbootbox.alert("保存成功！").done(function(){
-												initCqfn();
-											});
-										}
-									}
-								});
+								setTimeout(function(){
+								    if(!zhuanbanSave){
+
+                                        newbootbox.alert("保存成功！").done(function(){
+                                            //清空之前选中和复制的参数
+                                            $("#cqcontent").val("");
+                                            $("#psszName").val("");
+                                            $("#psszId").val("");
+                                        });
+								    }
+								},200);
 							}
+						}else{
+							window.location.href ='/app/db/document/djlr/html/edit.html?fileId='+nowId+'&currPage='+currPage+'&totalPage='+totalPage+'&documentStatus='+documentStatus
 						}
 						
-						window.top.$(".newclose").click();
-						if(addFlag){
-							window.location.href="/app/db/document/djlr/html/add.html";
-						}else if(returnSave){
-					    	if(fileFrom=='blfk'){
-						    	window.location.href = "/app/db/document/blfk/html/blfk.html?fileFrom=blfk";
-					    	}else{
-						    	window.location.href = "/app/db/document/djlr/html/djlr.html?fileFrom=djlr";
-					    	}
-						}else{
-							setTimeout(function(){
-								newbootbox.alert("保存成功！").done(function(){
-									
-								});
-							},200);
-						}
 					}
 				})
 		    },
@@ -374,7 +446,22 @@ var pageModule = function(){
 			returnSave=true;
 	    	$("#commentForm").submit();
 		});
-		
+		//转办
+		$("#zhuanban").click(function(){
+		    zhuanbanSave = true;
+		    $("#commentForm").submit();
+		    setTimeout(function(){
+                newbootbox.newdialog({
+                    id:"zhuanbanDialog",
+                    width:800,
+                    height:600,
+                    header:true,
+                    title:"转办",
+                    classed:"cjDialog",
+                    url:"/app/db/document/blfk/html/zhuanbanDialog.html?fileIds="+fileId+"&fileFrom="+fileFrom
+                })
+		    },1000)
+		});
 		
 		/*//扫描续传功能
 		$("#scanKeepTransfer").click(function() {   	
@@ -399,40 +486,55 @@ var pageModule = function(){
 				header:true,
 				title:"选择首长",
 				classed:"cjDialog",
-				url:"/app/db/document/djlr/html/chooseszDialog.html",
+				//url:"/app/db/document/djlr/html/chooseszDialog.html",
+				url:"/app/db/document/djlr/html/chooseszDialogNew.html"
 			})
 		});
 		
-		//增加批示
+		//增加批示   选择多人
 		$("#addcq").click(function(){
 			var psszName = $("#psszName").val();
 			var psszId = $("#psszId").val();
-			var leaderComment=$("#cqcontent").val();
+			var leaderComment=$.trim($("#cqcontent").val());
 			var createdTime=$("#cqDate").val();
+			var infoId = $("#id").val();
+			var id = $("#editcqId").val();
 			if($.trim(leaderComment) == "" || $.trim(leaderComment) == null){
 				newbootbox.alert('请输入抄清内容！');
 				return;
 			}
-			if($.trim(psszName) == "" || $.trim(psszName) == null){
-				newbootbox.alert('请选择首长！');
-				return;
+			if (leaderComment.indexOf("\n")) {
+			    var reg = /\n|\r\n/g;
+                var arr = leaderComment.split(reg);
+                $(arr).each(function(i){
+                    arr[i] = arr[i].replace(/^\s+|\s+$/g,"");
+                })
+            leaderComment = arr.join(",");
+			console.log("leaderComment"+leaderComment);
 			}
+			 var url = saveSzpsUrl;
+            if (!editFlag) {
+                url = saveSzpsUrl2;
+            }
+            if (editFlag) {
+                createdTime = $("#editDate").val();
+            }
 			$ajax({
-				url:saveSzpsUrl,
+				url:url,
 				data:{infoId:$("#id").val(),userName:psszName,userId:psszId,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
 				success:function(data){
 					if(data.result == "success"){
 						newbootbox.alert("保存成功！").done(function(){
+						    editFlag = false;
 							initCqfn();
 						});
 					}
 				}
 			});
 			//清空之前选中和复制的参数
-			$("#cqDate").val("");
 			$("#cqcontent").val("");
-			$("#psszName").val("");
-			$("#psszId").val("");
+            $("#psszName").val("");
+            $("#psszId").val("");
 		});
 		
 		/*//转办
@@ -593,8 +695,20 @@ var pageModule = function(){
 			initPdf();
 		},
 		getUserData:function(message1,message2){
-			$("#psszName").val(message1);
-			$("#psszId").val(message2);
+		    $("#usersDiv").html("");
+		    $("#psszName").val(message1);
+            $("#psszId").val(message2);
+		    if (message1.length > 0) {
+                var arrName = message1.split(",");
+                 var arrId = message2.split(",");
+                var str = "";
+                for (var i =0;i<arrId.length;i++) {
+                   str += '<div><label data_id="'+arrId[i]+'" data_name="'+arrName[i]+'">'+arrName[i]+'</label><textarea class="form-control cqcontent" placeholder="输入抄清内容..." maxlength="500"></textarea></div>'
+                }
+                $("#usersDiv").html(str);
+		    }
+			//$("#psszName").val(message1);
+			//$("#psszId").val(message2);
 		}
 	}
 	
@@ -637,4 +751,17 @@ var psLoad = function(psFileId, psPath){
 			}
 		}
 	}
+}
+function pagefn(obj){
+	turnSave = true
+	var turn = $(obj).attr("data");
+	nowId = "";
+	if(turn == "prev"){
+		nowId = preId
+	}
+	if(turn == "next"){
+		nowId = sufId
+	}
+	$("#commentForm").submit();
+//	window.location.href ='/app/db/document/djlr/html/edit.html?fileId='+nowId+'&currPage='+currPage+'&totalPage='+totalPage+'&documentStatus='+documentStatus
 }

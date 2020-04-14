@@ -18,6 +18,8 @@ public interface DbExpDeedbackSetService {
 	
 	List<DbExpDeedbackSet> queryList(Map<String, Object> map);
 	
+	List<DbExpDeedbackSet> queryListDefault(Map<String, Object> map);
+	
 	void save(DbExpDeedbackSet dbExpDeedbackSet);
 	
 	void update(DbExpDeedbackSet dbExpDeedbackSet);

@@ -17,7 +17,7 @@ import org.springframework.security.access.method.P;
  * 督办基本信息表
  * 
  * @author 中软信息系统工程有限公司
- * @email 
+ * @email
  * @date 2019-04-18 16:34:38
  */
 @Mapper
@@ -30,7 +30,7 @@ public interface DocumentInfoDao extends BaseDao<DocumentInfo> {
 	List<Map<String, Object>> queryListByDicType(Map<String, Object> map);
 
 	List<Map<String, Object>> queryListByDicStu(Map<String, Object> map);
-	
+
 	List<DocumentInfo> queryPersonList(Map<String, Object> map);
 
 	List<Map<String, Object>> queryListByDicStutas(Map<String, Object> map);
@@ -38,23 +38,30 @@ public interface DocumentInfoDao extends BaseDao<DocumentInfo> {
 	List<DocumentDic> queryDicByType(Map<String, Object> map);
 
 	String getMaxSecurity(String[] id);
-	
+
 	List<DocumentInfo> queryInfoByParam(Map<String, Object> map);
 
 	void updateDocumentInfoById(DocumentInfo documentInfo);
-	
+
 	List<LeaderStatisticsDto> queryLeaderStatistics(Map<String, Object> map);
-	
+
 	List<DocumentInfo> queryStatisticsList(Map<String, Object> map);
-	
+
 	List<DocumentInfo> queryReplyList(Map<String, Object> map);
 
-    int queryDocumentWfk(@Param("danweiid") String danweiid, @Param("year") String year);
+	List<DocumentInfo> queryReplyListPlus(Map<String, Object> map);
+	
+	
+	List<DocumentInfo> queryReplyListForWfk(Map<String, Object> map);
 
-    int queryWfkLeaderStatistics(Map<String, Object> map);
-    
-    int queryDocumentWfk2(@Param("danweiid") String danweiid, @Param("year") String year);
-    
-    List<DocumentInfo> queryNewList(Map<String, Object> map);
-    
+	int queryDocumentWfk(@Param("danweiid") String danweiid, @Param("year") String year);
+
+	int queryWfkLeaderStatistics(Map<String, Object> map);
+
+	int queryDocumentWfk2(@Param("danweiid") String danweiid, @Param("year") String year);
+
+	List<DocumentInfo> queryNewList(Map<String, Object> map);
+	
+	List<DocumentInfo> queryNewListSort(Map<String, Object> map);
+
 }
