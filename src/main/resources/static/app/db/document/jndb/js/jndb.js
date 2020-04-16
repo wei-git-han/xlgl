@@ -123,7 +123,45 @@ var pageModule = function(){
 			           	 return '<div class="dblsqk" onclick="dblsqkAlert(\''+rowdata.infoId+'\')" title="'+dbCont+'"><span>'+dbCont+'</span></div>';
 			            }},
 			            {display:"承办单位/人",name:"",width:"10%",align:"left",paixu:false,title:false,render:function(rowdata){
-			           	 return '<div class="cbdw" title="'+rowdata.underDepts+'">'+rowdata.underDepts+'</div>'
+			           	 //return '<div class="cbdw" title="'+rowdata.underDepts+'">'+rowdata.underDepts+'</div>'
+			           	  var html = "";
+                          if (rowdata.underDepts.indexOf(",") > -1) {
+                             var arr = rowdata.underDepts.split(",");
+                             $(arr).each(function(i){
+                                 //判断状态是否是办结，建议办结
+                                 var arrTemp = arr[i].split("/");
+                                 if (arrTemp.length == 3) {
+                                     var str3 = "";
+                                     if(arrTemp[2] == "已办结" || arrTemp[2] == "建议办结") {
+                                         str3 = '<span class="span redspan">'+arrTemp[2]+'</span>';
+                                     } else {
+                                         str3 = '<span class="span">'+arrTemp[2]+'</span>';
+                                     }
+
+                                     html += '<p>'+arrTemp[0]+"/"+arrTemp[1]+"/"+str3+'</p>';
+                                 } else {
+
+                                     html += '<p>'+arr[i]+'</p>'
+                                 }
+
+                             })
+                          } else {
+                             //判断状态是否是办结，建议办结
+                             var arrTemp = rowdata.underDepts.split("/");
+                             if (arrTemp.length == 3) {
+                                 var str3 = "";
+                                 if(arrTemp[2] == "已办结" || arrTemp[2] == "建议办结") {
+                                     str3 = '<span class="span redspan">'+arrTemp[2]+'</span>';
+                                 } else {
+                                     str3 = '<span class="span">'+arrTemp[2]+'</span>';
+                                 }
+
+                                 html = '<p>'+arrTemp[0]+"/"+arrTemp[1]+"/"+str3+'</p>';
+                             } else {
+                                 html = '<p>'+rowdata.underDepts+'</p>';
+                             }
+                          }
+                          return '<div class="cbdw" title="'+rowdata.underDepts+'">'+html+'</div>'
 			            }},
 			            {display:"类别",name:"docTypeName",width:"7%",align:"left",paixu:false,render:function(rowdata){
 			           	 return rowdata.docTypeName;
