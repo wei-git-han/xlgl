@@ -76,13 +76,13 @@ public class DocumentSzpsController {
 	 */
 	@ResponseBody
 	@RequestMapping("/newSaves")
-	public void saveInfos(String leaderComment,String infoId,String id,String createdTime){
+	public void saveInfos(String leaderComment,String infoId,String id,String createdTime) {
 		JSONObject jsonObject = new JSONObject();
 		Map<String, Object> map = new HashMap<>();
 		map.put("roleFlag", DbDefined.ROLE_1);
 		List<RoleSet> roleSetList = roleSetService.queryList(map);
 		if (StringUtils.isNotBlank(leaderComment)) {
-			String[] infomentions = leaderComment.split(",");
+			String[] infomentions = leaderComment.split("&");
 			if (infomentions != null) {
 				for (int i = 0; i < infomentions.length; i++) {
 					Date date = new Date();
@@ -101,6 +101,17 @@ public class DocumentSzpsController {
 						} else {
 							contents = contentss;
 						}
+						String pishiContents = "";
+						String contentsNew = "";
+						if (contents.length >= 3) {
+							for (int j = 1; j < contents.length; j++) {
+								pishiContents += contents[j] + ":";
+							}
+							if (StringUtils.isNotBlank(pishiContents)) {
+								contentsNew = pishiContents.substring(0, pishiContents.length() - 1);
+							}
+
+						}
 						if (contents != null) {
 							String userId = "";
 							String regEx = "[^0-9]+";
@@ -111,14 +122,20 @@ public class DocumentSzpsController {
 							int t = contents[0].indexOf(character);
 							String userName = contents[0].substring(0, t);
 							int tt = userName.length();
-							String content = contents[0].substring(tt,contents[0].length());
+							String content = contents[0].substring(tt, contents[0].length());
 							for (int j = 0; j < roleSetList.size(); j++) {
 								//判断这个人是否是首长
 								if (StringUtils.equals(userName, roleSetList.get(j).getUserName())) {
 									userId = roleSetList.get(j).getUserId();
 									//批示内容不为空的才保存。
 									if (StringUtils.isNotBlank(contents[1])) {
-										String pishiContent = contents[1].substring(1, contents[1].length() - 1);
+										String pishiContent = "";
+										if (StringUtils.isNotBlank(contentsNew)) {
+											pishiContent = contentsNew.substring(1, contentsNew.length() - 1);
+										} else {
+											pishiContent = contents[1].substring(1, contents[1].length() - 1);
+										}
+
 										int tMonth = content.indexOf("月");
 										String month = content.substring(0, tMonth);
 										if (Integer.parseInt(month) < 10) {

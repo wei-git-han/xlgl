@@ -330,7 +330,7 @@ var pageModule = function(){
                             $(arr).each(function(i){
                                 arr[i] = arr[i].replace(/^\s+|\s+$/g,"");
                             })
-                            leaderComment = arr.join(",");
+                            leaderComment = arr.join("&");
                             console.log("leaderComment"+leaderComment);
                         }
                          var url = saveSzpsUrl;
@@ -509,7 +509,7 @@ var pageModule = function(){
                 $(arr).each(function(i){
                     arr[i] = arr[i].replace(/^\s+|\s+$/g,"");
                 })
-            leaderComment = arr.join(",");
+            leaderComment = arr.join("&");
 			console.log("leaderComment"+leaderComment);
 			}
 			 var url = saveSzpsUrl;
