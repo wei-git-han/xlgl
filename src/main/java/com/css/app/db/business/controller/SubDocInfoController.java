@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.NativeWebRequest;
 
 import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.apporgan.entity.BaseAppOrgan;
@@ -691,7 +692,7 @@ public class SubDocInfoController {
 				}
 			}
 		}
-		//标识本局已有正式反馈
+		// 标识本局已有正式反馈
 		subInfo.setFirstReply(1);
 		subInfo.setUpdateTime(new Date());
 		subDocInfoService.update(subInfo);
@@ -745,7 +746,7 @@ public class SubDocInfoController {
 				}
 			}
 		}
-		//本局已有正式反馈-标识为1
+		// 本局已有正式反馈-标识为1
 		subInfo.setFirstReply(1);
 		subInfo.setUpdateTime(new Date());
 		subDocInfoService.update(subInfo);
@@ -995,6 +996,95 @@ public class SubDocInfoController {
 	}
 
 	/**
+	 * 管理员办结 点击按钮支持对本局的在办事项建议办结、常态落实（建议）、办结（单局办理时）、常态落实（单局办理时）
+	 * 
+	 * @param subId
+	 *            分支主id
+	 * @type 1是办结，2是常态落实
+	 */
+
+	@ResponseBody
+	@RequestMapping("/finishButton")
+	public void finishButton(String infoId, String subId, String type) {
+		JSONObject json = new JSONObject();
+		if (StringUtils.isNotBlank(infoId) && StringUtils.isNotBlank(subId)) {
+			this.finishButtonImpl(subId, json, infoId, type);
+		} else {
+			json.put("result", "fail");
+		}
+		Response.json(json);
+	}
+
+	public void finishButtonImpl(String subId, JSONObject json, String infoId, String type) {
+		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+		// 1是办结
+		if (StringUtils.equals("1", type)) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("subId", subId);
+			map.put("userId", CurrentUser.getUserId());
+			map.put("showFlag", "0");
+			ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
+			if (tempReply != null) {
+				tempReply.setReVersion("1");
+				tempReply.setVersionTime(new Date());
+				replyExplainService.update(tempReply);
+			}
+			// 分支文件更新完成审批标识,并添加办结记录
+			this.banJieOperation(infoId, subId);
+		} else if (StringUtils.equals("2", type)) {// 2是常态落实
+			// 将临时反馈变为发布
+			Map<String, Object> map = new HashMap<>();
+			map.put("subId", subId);
+			map.put("userId", CurrentUser.getUserId());
+			map.put("showFlag", "0");
+			ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
+			if (tempReply != null) {
+				tempReply.setReVersion("1");
+				tempReply.setVersionTime(new Date());
+				replyExplainService.update(tempReply);
+			}
+			// 分支文件更新完成审批标识,并添加办结记录
+			this.luoShiOperation(infoId, subId);
+		}
+		// 催办完成
+		DocumentInfo info = documentInfoService.queryObject(infoId);
+		if (StringUtils.equals(info.getCuibanFlag(), "1")) {
+			// 催办记录添加响应承办人，并标识完成
+			Map<String, Object> cuiBanMap = new HashMap<>();
+			cuiBanMap.put("infoId", infoId);
+			cuiBanMap.put("finishFlag", 0);
+			List<DocumentCbjl> cuibanList = documentCbjlService.queryList(cuiBanMap);
+			if (cuibanList != null && cuibanList.size() > 0) {
+				DocumentCbjl cbjl = cuibanList.get(0);
+				cbjl.setCbrId(subDocInfo.getUndertaker());
+				cbjl.setCbrName(subDocInfo.getUndertakerName());
+				cbjl.setCbTime(new Date());
+				cbjl.setFinishFlag(1);
+				documentCbjlService.update(cbjl);
+			}
+			info.setCuibanFlag("0");
+		}
+		// 主记录不标识催办,清理本次首长已读
+		info.setSzReadIds("");
+		// 获取最新反馈(各组)
+		List<ReplyExplain> latestReplyList = replyExplainService.querySubLatestReply(infoId, subId);
+		if (latestReplyList != null && latestReplyList.size() > 0) {
+			info.setLatestReply(latestReplyList.get(0).getReplyContent());
+			info.setLatestSubDept(subDocInfo.getSubDeptName());
+			info.setLatestUndertaker(subDocInfo.getUndertakerName());
+			info.setLatestReplyTime(new Date());
+		}
+		documentInfoService.update(info);
+		// 清理除首长外的本文件已读
+		documentReadService.deleteByInfoId(infoId);
+		// 反馈对他局和部可见(顺序必须放标识催办完成后边，因为showFlag的值作为参数进行了查询)
+		replyExplainService.updateShowFlag(new Date(), subId);
+		// 意见对他局和部可见
+		approvalOpinionService.updateShowFlag(subId);
+		json.put("result", "success");
+	}
+
+	/**
 	 * 完成审批操作
 	 * 
 	 * @param subId
@@ -1036,7 +1126,7 @@ public class SubDocInfoController {
 				subDocInfo.setUpdateTime(new Date());
 				// 清空意见数目
 				subDocInfo.setIdeaCount(0);
-				//本局已有正式反馈-标识为1
+				// 本局已有正式反馈-标识为1
 				subDocInfo.setFirstReply(1);
 				subDocInfoService.update(subDocInfo);
 			}
