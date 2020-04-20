@@ -110,6 +110,8 @@ public class DocumentSzpsController {
 							Character character = result.charAt(0);
 							int t = contents[0].indexOf(character);
 							String userName = contents[0].substring(0, t);
+							int tt = userName.length();
+							String content = contents[0].substring(tt,contents[0].length());
 							for (int j = 0; j < roleSetList.size(); j++) {
 								//判断这个人是否是首长
 								if (StringUtils.equals(userName, roleSetList.get(j).getUserName())) {
@@ -117,13 +119,13 @@ public class DocumentSzpsController {
 									//批示内容不为空的才保存。
 									if (StringUtils.isNotBlank(contents[1])) {
 										String pishiContent = contents[1].substring(1, contents[1].length() - 1);
-										int tMonth = contents[0].indexOf("月");
-										String month = contents[0].substring(t, tMonth);
+										int tMonth = content.indexOf("月");
+										String month = content.substring(0, tMonth);
 										if (Integer.parseInt(month) < 10) {
 											month = 0 + month;
 										}
-										int tDay = contents[0].indexOf("日");
-										String day = contents[0].substring(tMonth + 1, tDay);
+										int tDay = content.indexOf("日");
+										String day = content.substring(tMonth + 1, tDay);
 										if (Integer.parseInt(day) < 10) {
 											day = 0 + day;
 										}
