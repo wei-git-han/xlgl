@@ -242,7 +242,23 @@ License: You must have a valid license purchased only from themeforest(the above
 																			<span class="pull-left">新增/编辑批示指示内容</span>
 																		</div>
 																		<input type="hidden" class="form-control" id="editcqId" name="editcqId" />
+																		<input class="form-control psszName" type="hidden" id="psszName" name="psszName"/>
+																		<input class="form-control psszId" type="hidden" id="psszId" name="psszId" />
+																		<input class="form-control editDate" type="hidden" id="editDate" name="editDate" />
 																		<div class="cqnr">
+																			<label style="margin-left:30px;">
+																				选择日期
+																			</label>
+																			<div>
+																				<div style="display:inline-block" class="input-group date date-picker" data-date-format="yyyy年">
+																					<input type="text" class="form-control datee3" id="cqDate" name="cqDate" />
+																					<span class="input-group-btn">
+																				    	<button class="btn default setdis cqbtn"  type="button"></button>
+																				    </span>
+																				</div>
+																			</div>
+																		</div>
+																		<!--<div class="cqnr">
 																			<label>
 														                    	选择首长
 																			</label>
@@ -263,8 +279,8 @@ License: You must have a valid license purchased only from themeforest(the above
 																				    </span>
 																				</div>
 																			 </div>
-																		</div>
-																		<textarea class="form-control cqcontent" id="cqcontent" placeholder="输入抄清内容..." maxlength="500"></textarea>
+																		</div>-->
+																		<textarea class="form-control cqcontent" id="cqcontent" placeholder="输入抄清内容...，格式如：xxx部长X月X日批示：”xxx内容”"></textarea>
 																		<button type="button" class="btn tableBtns1" id="addcq">保存</button>
 																	</div>
 																	<div class="showcq" id="showcq">

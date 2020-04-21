@@ -1,6 +1,7 @@
 var loginUser =  {"url":rootPath +"/documentinfo/getLoginUser","dataType":"text"};//获取当前登录人---录入人
 var dicUrl = {"url":rootPath +"/documentdic/getDicByTypet","dataType":"text"}; //返回的下拉框字典值
 var saveSzpsUrl = {"url":rootPath +"/documentszps/save","dataType":"text"}; //保存首长批示
+var saveSzpsUrl2 = {"url":rootPath +"/documentszps/newSaves","dataType":"text"}; //保存首长批示,，内容中存在多个部长信息
 var getSzpsListUrl = {"url":rootPath +"/documentszps/queryList","dataType":"text"}; //获取首长批示
 var updateUrl={"url":rootPath +"/documentinfo/update","dataType":"json"}; //表单数据保存
 var uploadFileUrl = "/app/db/documentinfo/uploadFile";//文件上传
@@ -15,6 +16,7 @@ var fileFrom=getUrlParam("fileFrom")||""; //文件来源
 var scanFilePath = "";//扫描件路径
 var addcqFlag="";//此变量用来标识是不是自动保存的操作，在submit中区分保存回调
 var loginUserId = ""//登录人Id
+var editFlag = false;   //超清内容是新增还是对原有数据的编辑
 var pageModule = function(){
 	 /*带入录入人*/
 	var makeLoginUser = function(){
@@ -84,12 +86,16 @@ var pageModule = function(){
 				});
 				
 				$(".editcq").click(function(){//编辑抄清
+				     editFlag = true;
 					$("#cqcontent").val($(this).parent().parent().attr("dataName"));
 					$("#editcqId").val($(this).parent().parent().attr("dataId"));
 					
 					$("#psszName").val($(this).parent().parent().attr("dataUser"));
 					$("#psszId").val($(this).parent().parent().attr("dataUserId"));
-					$("#cqDate").val($(this).parent().parent().attr("dataDate"));
+					//$("#cqDate").val($(this).parent().parent().attr("dataDate"));
+					var date = $(this).parent().parent().attr("dataDate");
+                    $("#cqDate").val(date.substring(0,5));
+                    $("#editDate").val(date);
 				});
 				
 				$(".delcq").click(function(){
@@ -214,7 +220,16 @@ var pageModule = function(){
 		    orientation: "right",
 		    autoclose: true
 		});
-		
+		$("#cqDate").datepicker({
+            language:"zh-CN",
+            rtl: Metronic.isRTL(),
+            orientation: "right",
+            startView:2,
+            format: "yyyy年",
+            minViewMode:2,
+            maxViewMode:2,
+            autoclose: true
+        });
 		$(".form_datetime").datetimepicker({
 		    language:"zh-CN",
 		    autoclose: true,
@@ -254,24 +269,38 @@ var pageModule = function(){
 						var psszId = $("#psszId").val();
 						var leaderComment=$("#cqcontent").val();
 						var createdTime=$("#cqDate").val();
+						if (leaderComment.indexOf("\n")) {
+                            var reg = /\n|\r\n/g;
+                            var arr = leaderComment.split(reg);
+                            $(arr).each(function(i){
+                                arr[i] = arr[i].replace(/^\s+|\s+$/g,"");
+                            })
+                            leaderComment = arr.join("&");
+                            console.log("leaderComment"+leaderComment);
+                        }
+                         var url = saveSzpsUrl;
+                        if (!editFlag) {
+                            url = saveSzpsUrl2;
+                        }
+                        if (editFlag) {
+                            createdTime = $("#editDate").val();
+                        }
 						if($.trim(leaderComment) != "" && $.trim(leaderComment) != null){
-							if($.trim(psszName) == "" || $.trim(psszName) == null){
-								newbootbox.alert('请选择首长！');
-								return;
-							}else{
-								$.ajax({
-									url:saveSzpsUrl.url,
-									data:{infoId:$("#id").val(),userName:psszName,userId:psszId,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
-									async:false,
-									success:function(data){
-										if(data.result == "success"){
-											newbootbox.alert("保存成功！").done(function(){
-												initCqfn();
-											});
-										}
-									}
-								});
-							}
+
+                            $.ajax({
+                                url:saveSzpsUrl.url,
+                                data:{infoId:$("#id").val(),userName:psszName,userId:psszId,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
+                                async:false,
+                                success:function(data){
+                                    if(data.result == "success"){
+                                        newbootbox.alert("保存成功！").done(function(){
+                                            editFlag = false;
+                                            initCqfn();
+                                        });
+                                    }
+                                }
+                            });
+
 						}
 
 						window.top.$(".newclose").click();
@@ -388,10 +417,22 @@ var pageModule = function(){
 				newbootbox.alert('请输入抄清内容！');
 				return;
 			}
-			if($.trim(psszName) == "" || $.trim(psszName) == null){
-				newbootbox.alert('请选择首长！');
-				return;
-			}
+			if (leaderComment.indexOf("\n")) {
+                var reg = /\n|\r\n/g;
+                var arr = leaderComment.split(reg);
+                $(arr).each(function(i){
+                    arr[i] = arr[i].replace(/^\s+|\s+$/g,"");
+                })
+            leaderComment = arr.join("&");
+            console.log("leaderComment"+leaderComment);
+            }
+             var url = saveSzpsUrl;
+            if (!editFlag) {
+                url = saveSzpsUrl2;
+            }
+            if (editFlag) {
+                createdTime = $("#editDate").val();
+            }
 
 			$ajax({
 				url:saveSzpsUrl,
@@ -400,6 +441,7 @@ var pageModule = function(){
 				success:function(data){
 					if(data.result == "success"){
 						newbootbox.alert("保存成功！").done(function(){
+						    editFlag = false;
 							initCqfn();
 						});
 					}
