@@ -288,7 +288,7 @@ var pageModule = function(){
 						if($.trim(leaderComment) != "" && $.trim(leaderComment) != null){
 
                             $.ajax({
-                                url:saveSzpsUrl.url,
+                                url:url.url,
                                 data:{infoId:$("#id").val(),userName:psszName,userId:psszId,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
                                 async:false,
                                 success:function(data){
@@ -435,7 +435,7 @@ var pageModule = function(){
             }
 
 			$ajax({
-				url:saveSzpsUrl,
+				url:url,
 				data:{infoId:$("#id").val(),userName:psszName,userId:psszId,leaderComment:leaderComment,createdTime:createdTime,id:$("#editcqId").val()},
 				async:false,
 				success:function(data){
@@ -448,7 +448,7 @@ var pageModule = function(){
 				}
 			});
 			//清空之前选中和复制的参数
-			$("#cqDate").val("");
+			//$("#cqDate").val("");
 			$("#cqcontent").val("");
 			$("#psszName").val("");
 			$("#psszId").val("");
