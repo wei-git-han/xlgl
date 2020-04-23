@@ -334,10 +334,10 @@ var pageModule = function(){
                                     var index = arr[i].indexOf(":")!=-1?arr[i].indexOf(":")+1:arr[i].indexOf("：")+1;
                                     var temp = $.trim(arr[i].substring(index,arr[i].length));
                                     var temp1 = $.trim(arr[i].charAt(arr[i].length-1));
-                                    if (!(temp.substring(0,1) == '"'||temp.substring(0,1) == '”')) {
+                                    if (!(temp.substring(0,1) == '"'||temp.substring(0,1) == '”'||temp.substring(0,1) == '“')) {
                                         temp = '"'+temp;
                                     }
-                                    if (!(temp1 == '"'||temp1 == '”')) {
+                                    if (!(temp1 == '"'||temp1 == '”'||temp.substring(0,1) == '“')) {
                                          temp = temp+'"';
                                     }
                                     arr[i] = arr[i].substring(0,index) +temp;
@@ -550,10 +550,10 @@ var pageModule = function(){
                             var index = arr[i].indexOf(":")!=-1?arr[i].indexOf(":")+1:arr[i].indexOf("：")+1;
                            var temp = $.trim(arr[i].substring(index,arr[i].length));
                            var temp1 = $.trim(arr[i].charAt(arr[i].length-1));
-                           if (!(temp.substring(0,1) == '"'||temp.substring(0,1) == '”')) {
+                           if (!(temp.substring(0,1) == '"'||temp.substring(0,1) == '”'||temp.substring(0,1) == '“')) {
                                temp = '"'+temp;
                            }
-                           if (!(temp1 == '"'||temp1 == '”')) {
+                           if (!(temp1 == '"'||temp1 == '”'||temp.substring(0,1) == '“')) {
                                 temp = temp+'"';
                            }
                            arr[i] = arr[i].substring(0,index) +temp;

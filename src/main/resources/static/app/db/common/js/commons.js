@@ -1064,7 +1064,7 @@ var newbootbox = {
         		 gettop2().$(".chajian .newclose").click();
         	 }
         	 dtd.resolve();
-		},2000);
+		},3000);
         obj.on("hidden.bs.modal",function(e){
 			clearTimeout(cancel);
 			dtd.resolve();
