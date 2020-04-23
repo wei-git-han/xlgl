@@ -320,6 +320,7 @@ var pageModule = function(){
 						var createdTime=$("#cqDate").val();
 						var infoId = $("#id").val();
                         var id = $("#editcqId").val();
+                        var errArr = new Array();
                        /* if(leaderComment == "" || leaderComment == null){
                             newbootbox.alert('请输入抄清内容！');
                             return;
@@ -329,9 +330,45 @@ var pageModule = function(){
                             var arr = leaderComment.split(reg);
                             $(arr).each(function(i){
                                 arr[i] = arr[i].replace(/^\s+|\s+$/g,"");
+                                if (!editFlag) {
+                                    var index = arr[i].indexOf(":")!=-1?arr[i].indexOf(":")+1:arr[i].indexOf("：")+1;
+                                    var temp = $.trim(arr[i].substring(index,arr[i].length));
+                                    var temp1 = $.trim(arr[i].charAt(arr[i].length-1));
+                                    if (!(temp.substring(0,1) == '"'||temp.substring(0,1) == '”')) {
+                                        temp = '"'+temp;
+                                    }
+                                    if (!(temp1 == '"'||temp1 == '”')) {
+                                         temp = temp+'"';
+                                    }
+                                    arr[i] = arr[i].substring(0,index) +temp;
+                                }
                             })
+                            //校验输入格式  xxx部长X月X日批示：”xxx内容”  注意冒号中英文
+                             if (!editFlag) {
+                                 $(arr).each(function(i){
+                                    var temp = new Array();
+                                    var reg1 = new RegExp("^[\u4E00-\u9FA5]+[0-9]{1,2}月[0-9]{1,2}日批示$");
+                                    if (arr[i].indexOf(":") != -1){
+                                        temp = arr[i].split(":");
+                                    }
+                                    if (arr[i].indexOf("：") != -1){
+                                        temp = arr[i].split("：");
+                                    }
+                                    if (temp.length <=1 ){
+                                        errArr.push(i+1);
+                                    } else {
+                                        if (!reg1.test(temp[0])) {
+                                           errArr.push(i+1);
+                                        }
+                                    }
+                                })
+                            }
                             leaderComment = arr.join("&");
                             console.log("leaderComment"+leaderComment);
+                        }
+                        if (errArr.length > 0) {
+                            newbootbox.alert("第<span style='color:red;'>"+errArr.join(",")+"</span>条内容，不合法，格式为：xxx部长X月X日批示：”xxx内容”！")
+                            return ;
                         }
                          var url = saveSzpsUrl;
                         if (!editFlag) {
@@ -499,6 +536,7 @@ var pageModule = function(){
 			var createdTime=$("#cqDate").val();
 			var infoId = $("#id").val();
 			var id = $("#editcqId").val();
+			 var errArr = new Array();
 			if($.trim(leaderComment) == "" || $.trim(leaderComment) == null){
 				newbootbox.alert('请输入抄清内容！');
 				return;
@@ -507,11 +545,47 @@ var pageModule = function(){
 			    var reg = /\n|\r\n/g;
                 var arr = leaderComment.split(reg);
                 $(arr).each(function(i){
-                    arr[i] = arr[i].replace(/^\s+|\s+$/g,"");
-                })
+                       arr[i] = arr[i].replace(/^\s+|\s+$/g,"");
+                         if (!editFlag) {
+                            var index = arr[i].indexOf(":")!=-1?arr[i].indexOf(":")+1:arr[i].indexOf("：")+1;
+                           var temp = $.trim(arr[i].substring(index,arr[i].length));
+                           var temp1 = $.trim(arr[i].charAt(arr[i].length-1));
+                           if (!(temp.substring(0,1) == '"'||temp.substring(0,1) == '”')) {
+                               temp = '"'+temp;
+                           }
+                           if (!(temp1 == '"'||temp1 == '”')) {
+                                temp = temp+'"';
+                           }
+                           arr[i] = arr[i].substring(0,index) +temp;
+                       }
+                   })
+                   //校验输入格式  xxx部长X月X日批示：”xxx内容”  注意冒号中英文
+                     if (!editFlag) {
+                        $(arr).each(function(i){
+                           var temp = new Array();
+                           var reg1 = new RegExp("^[\u4E00-\u9FA5]+[0-9]{1,2}月[0-9]{1,2}日批示$");
+                           if (arr[i].indexOf(":") != -1){
+                               temp = arr[i].split(":");
+                           }
+                           if (arr[i].indexOf("：") != -1){
+                               temp = arr[i].split("：");
+                           }
+                           if (temp.length <=1 ){
+                               errArr.push(i+1);
+                           } else {
+                               if (!reg1.test(temp[0])) {
+                                  errArr.push(i+1);
+                               }
+                           }
+                     })
+                   }
             leaderComment = arr.join("&");
 			console.log("leaderComment"+leaderComment);
 			}
+			if (errArr.length > 0) {
+                newbootbox.alert("第<span style='color:red;'>"+errArr.join(",")+"</span>条内容，不合法，格式为：xxx部长X月X日批示：”xxx内容”！")
+                return ;
+            }
 			 var url = saveSzpsUrl;
             if (!editFlag) {
                 url = saveSzpsUrl2;
