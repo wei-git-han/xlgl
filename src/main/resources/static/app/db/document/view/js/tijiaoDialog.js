@@ -60,17 +60,18 @@ var pageModule = function(){
 						success:function(data){
 							newbootbox.newdialogClose("tijiaoDialog");
 							if(data.result=="success"){
-								changToNum()
 								newbootbox.alert("提交成功！").done(function(){
-									if(fromMsg && fromMsg == "true"){
-										windowClose();
-									}else{
-										window.top.jndbfn();
-										window.top.grdbfn();
-										window.top.blfkfn();
-										$("#iframe1",window.top.document).attr("src","/app/db/document/grdb/html/grdb.html");
-									}
-								});
+								    changToNum2(function(){
+                                        if(fromMsg && fromMsg == "true"){
+                                            windowClose();
+                                        }else{
+                                            window.top.jndbfn();
+                                            window.top.grdbfn();
+                                            window.top.blfkfn();
+                                            $("#iframe1",window.top.document).attr("src","/app/db/document/grdb/html/grdb.html");
+                                        }
+								    });
+                                });
 							}else{
 								newbootbox.alert("提交失败！");
 							}
@@ -85,15 +86,17 @@ var pageModule = function(){
 							newbootbox.newdialogClose("tijiaoDialog");
 							if(data.result=="success"){
 								newbootbox.alert("提交成功！").done(function(){
-									if(fromMsg && fromMsg == "true"){
-										windowClose();
-									}else{
-										window.top.jndbfn();
-										window.top.grdbfn();
-										window.top.blfkfn();
-										changToNum()
-										$("#iframe1",window.top.document).attr("src","/app/db/document/grdb/html/grdb.html");
-									}
+                                    changToNum2(function(){
+                                        if(fromMsg && fromMsg == "true"){
+                                            windowClose();
+                                        }else{
+                                            window.top.jndbfn();
+                                            window.top.grdbfn();
+                                            window.top.blfkfn();
+                                            //changToNum()
+                                            $("#iframe1",window.top.document).attr("src","/app/db/document/grdb/html/grdb.html");
+                                        }
+                                    });
 								});
 							}else{
 								newbootbox.alert("提交失败！");

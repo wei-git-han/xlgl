@@ -783,14 +783,16 @@ var pageModule = function(){
 				success:function(data){
 					if(data.result == "success"){
 						newbootbox.alert("已返回承办人！").done(function(){
-							window.location.reload();
-							if(fromMsg && fromMsg=="true"){
-							}else{
-								window.top.jndbfn();
-								window.top.grdbfn();
-								window.top.blfkfn();
-								changToNum()
-							}
+							changToNum2(function(){
+                                window.location.reload();
+                                if(fromMsg && fromMsg=="true"){
+                                }else{
+                                    window.top.jndbfn();
+                                    window.top.grdbfn();
+                                    window.top.blfkfn();
+                                    //changToNum()
+                                }
+							})
 						});
 					}
 				}
@@ -901,14 +903,17 @@ var pageModule = function(){
 						success:function(data){
 							if(data.result == "success"){
 								newbootbox.alert("审批完成！").done(function(){
-									window.location.reload();
-									if(fromMsg && fromMsg=="true"){
-									}else{
-										window.top.jndbfn();
-										window.top.grdbfn();
-										window.top.blfkfn();
-										changToNum()
-									}
+
+									changToNum2(function(){
+                                        window.location.reload();
+                                        if(fromMsg && fromMsg=="true"){
+                                        }else{
+                                            window.top.jndbfn();
+                                            window.top.grdbfn();
+                                            window.top.blfkfn();
+                                            //changToNum()
+                                        }
+									})
 								});
 							}
 						}

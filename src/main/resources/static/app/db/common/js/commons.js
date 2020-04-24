@@ -1472,6 +1472,20 @@ function changToNum(){
 			}
 		});
 }
+//带回调 更新桌面待办数量
+function changToNum2(callback){
+         		$ajax({
+         			url:changToNumUrl,
+         			success:function(data){
+         			if(navigator.userAgent.indexOf('OfficeBrowser')>=0){
+         				gettop2().__set_todo_count__(data.count);
+         			   }
+         			if (callback) {
+                        callback();
+         			}
+         			}
+         		});
+         }
 function GetRootPath(){
 	var pathName = window.location.pathname.substring(1);
 	var webName = pathName == '' ? '' : pathName.substring(0, pathName.lastIndexOf('/'));

@@ -53,21 +53,23 @@ var pageModule = function(){
 					success:function(data){
 						newbootbox.newdialogClose("zhuanbanDialog");
 						if(data.result=="success"){
-							changToNum()
+							//changToNum()
 							newbootbox.alert("转办成功！").done(function(){
-								if(fromMsg && fromMsg == "true"){
-									windowClose();
-								}else{
-									if(fileFrom == "jndb"){
-										$("#iframe1",window.top.document).attr("src","/app/db/document/jndb/html/jndb.html?fileFrom="+fileFrom);
-									}
-									if(fileFrom == "grdb"){
-										$("#iframe1",window.top.document).attr("src","/app/db/document/grdb/html/grdb.html?fileFrom="+fileFrom);
-									}
-									window.top.jndbfn();
-									window.top.grdbfn();
-									window.top.blfkfn();
-								}
+                                changToNum2(function(){
+                                    if(fromMsg && fromMsg == "true"){
+                                        windowClose();
+                                    }else{
+                                        window.top.jndbfn();
+                                        window.top.grdbfn();
+                                        window.top.blfkfn();
+                                        if(fileFrom == "jndb"){
+                                            $("#iframe1",window.top.document).attr("src","/app/db/document/jndb/html/jndb.html?fileFrom="+fileFrom);
+                                        }
+                                        if(fileFrom == "grdb"){
+                                            $("#iframe1",window.top.document).attr("src","/app/db/document/grdb/html/grdb.html?fileFrom="+fileFrom);
+                                        }
+                                    }
+                                })
 							});
 						}else{
 							newbootbox.alert("转办失败！");
