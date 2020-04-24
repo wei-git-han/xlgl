@@ -346,6 +346,7 @@ var pageModule = function(){
                             //校验输入格式  xxx部长X月X日批示：”xxx内容”  注意冒号中英文
                              if (!editFlag) {
                                  $(arr).each(function(i){
+                                    var obj = new Object();
                                     var temp = new Array();
                                     var reg1 = new RegExp("^[\u4E00-\u9FA5]+[0-9]{1,2}月[0-9]{1,2}日批示$");
                                     if (arr[i].indexOf(":") != -1){
@@ -355,19 +356,27 @@ var pageModule = function(){
                                         temp = arr[i].split("：");
                                     }
                                     if (temp.length <=1 ){
-                                        errArr.push(i+1);
+                                       obj.index = i+1;
+                                       obj.msg = "无冒号";
+                                      errArr.push(obj);
                                     } else {
-                                        if (!reg1.test(temp[0])) {
-                                           errArr.push(i+1);
-                                        }
+                                          if (!reg1.test(temp[0])) {
+                                             obj.index = i+1;
+                                             obj.msg = "日期格式xx月xx日";
+                                             errArr.push(obj);
+                                          }
                                     }
                                 })
                             }
                             leaderComment = arr.join("&");
                             console.log("leaderComment"+leaderComment);
                         }
-                        if (errArr.length > 0) {
-                            newbootbox.alert("第<span style='color:red;'>"+errArr.join(",")+"</span>条内容，不合法，格式为：xxx部长X月X日批示：”xxx内容”！")
+                       if (errArr.length > 0) {
+                              var str = "";
+                             $(errArr).each(function(i){
+                                str += "<p>第<span style='color:red;'>"+errArr[i].index+"</span>条内容，不合法。"+"原因："+errArr[i].msg+"</p>"
+                             })
+                            newbootbox.alert1(str);
                             return ;
                         }
                          var url = saveSzpsUrl;
@@ -562,6 +571,7 @@ var pageModule = function(){
                    //校验输入格式  xxx部长X月X日批示：”xxx内容”  注意冒号中英文
                      if (!editFlag) {
                         $(arr).each(function(i){
+                           var obj = new Object();
                            var temp = new Array();
                            var reg1 = new RegExp("^[\u4E00-\u9FA5]+[0-9]{1,2}月[0-9]{1,2}日批示$");
                            if (arr[i].indexOf(":") != -1){
@@ -571,10 +581,14 @@ var pageModule = function(){
                                temp = arr[i].split("：");
                            }
                            if (temp.length <=1 ){
-                               errArr.push(i+1);
+                                obj.index = i+1;
+                                obj.msg = "无冒号";
+                               errArr.push(obj);
                            } else {
                                if (!reg1.test(temp[0])) {
-                                  errArr.push(i+1);
+                                  obj.index = i+1;
+                                  obj.msg = "日期格式xx月xx日";
+                                  errArr.push(obj);
                                }
                            }
                      })
@@ -583,7 +597,11 @@ var pageModule = function(){
 			console.log("leaderComment"+leaderComment);
 			}
 			if (errArr.length > 0) {
-                newbootbox.alert("第<span style='color:red;'>"+errArr.join(",")+"</span>条内容，不合法，格式为：xxx部长X月X日批示：”xxx内容”！")
+			      var str = "";
+			     $(errArr).each(function(i){
+			        str += "<p>第<span style='color:red;'>"+errArr[i].index+"</span>条内容，不合法。"+"原因："+errArr[i].msg+"</p>"
+			     })
+                newbootbox.alert1(str);
                 return ;
             }
 			 var url = saveSzpsUrl;

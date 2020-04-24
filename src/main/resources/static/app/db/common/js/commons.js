@@ -1064,13 +1064,31 @@ var newbootbox = {
         		 gettop2().$(".chajian .newclose").click();
         	 }
         	 dtd.resolve();
-		},3000);
+		},1000);
         obj.on("hidden.bs.modal",function(e){
 			clearTimeout(cancel);
 			dtd.resolve();
 		});
 		return dtd;
 	},
+	//插件的提示框，手动关闭提示框
+    alert1:function(text,shi){
+        var dtd=$.Deferred();
+        var obj=gettop2().bootbox.dialog({
+                message: text,
+                title: "提示",
+                className:"cjDialog chajian"
+            });
+        var $alert=gettop2().$(".cjDialog");
+
+        obj.on("hidden.bs.modal",function(e){
+            if(shi || shi == null || typeof(shi)=="undefined"){
+                 gettop2().$(".chajian .newclose").click();
+             }
+            dtd.resolve();
+        });
+        return dtd;
+    },
 	alertInfo:function(text,shi){
 		var dtd=$.Deferred();
 		var objInfo=gettop2().bootbox.dialog({
