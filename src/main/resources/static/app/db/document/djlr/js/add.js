@@ -269,60 +269,62 @@ var pageModule = function(){
 						var psszId = $("#psszId").val();
 						var leaderComment=$("#cqcontent").val();
 						var createdTime=$("#cqDate").val();
-						  var errArr = new Array();
-						if (leaderComment.indexOf("\n")) {
-                            var reg = /\n|\r\n/g;
-                            var arr = leaderComment.split(reg);
-                            $(arr).each(function(i){
-                                arr[i] = arr[i].replace(/^\s+|\s+$/g,"");
-                                if (!editFlag) {
-                                    var index = arr[i].indexOf(":")!=-1?arr[i].indexOf(":")+1:arr[i].indexOf("：")+1;
-                                    var temp = $.trim(arr[i].substring(index,arr[i].length));
-                                    var temp1 = $.trim(arr[i].charAt(arr[i].length-1));
-                                    if (!(temp.substring(0,1) == '"'||temp.substring(0,1) == '”'||temp.substring(0,1) == '“')) {
-                                        temp = '"'+temp;
-                                    }
-                                    if (!(temp1 == '"'||temp1 == '”'||temp.substring(0,1) == '“')) {
-                                         temp = temp+'"';
-                                    }
-                                    arr[i] = arr[i].substring(0,index) +temp;
-                                }
-                            })
-                            //校验输入格式  xxx部长X月X日批示：”xxx内容”  注意冒号中英文
-                             if (!editFlag) {
-                                 $(arr).each(function(i){
-                                    var obj = new Object();
-                                    var temp = new Array();
-                                    var reg1 = new RegExp("^[\u4E00-\u9FA5]+[0-9]{1,2}月[0-9]{1,2}日批示$");
-                                    if (arr[i].indexOf(":") != -1){
-                                        temp = arr[i].split(":");
-                                    }
-                                    if (arr[i].indexOf("：") != -1){
-                                        temp = arr[i].split("：");
-                                    }
-                                    if (temp.length <=1 ){
-                                       obj.index = i+1;
-                                       obj.msg = "无冒号";
-                                      errArr.push(obj);
-                                    } else {
-                                          if (!reg1.test(temp[0])) {
-                                             obj.index = i+1;
-                                             obj.msg = "日期格式xx月xx日";
-                                             errArr.push(obj);
-                                          }
+						var errArr = new Array();
+						if($.trim(leaderComment) != "" && $.trim(leaderComment) != null){
+                            if (leaderComment.indexOf("\n")) {
+                                var reg = /\n|\r\n/g;
+                                var arr = leaderComment.split(reg);
+                                $(arr).each(function(i){
+                                    arr[i] = arr[i].replace(/^\s+|\s+$/g,"");
+                                    if (!editFlag) {
+                                        var index = arr[i].indexOf(":")!=-1?arr[i].indexOf(":")+1:arr[i].indexOf("：")+1;
+                                        var temp = $.trim(arr[i].substring(index,arr[i].length));
+                                        var temp1 = $.trim(arr[i].charAt(arr[i].length-1));
+                                        if (!(temp.substring(0,1) == '"'||temp.substring(0,1) == '”'||temp.substring(0,1) == '“')) {
+                                            temp = '"'+temp;
+                                        }
+                                        if (!(temp1 == '"'||temp1 == '”'||temp.substring(0,1) == '“')) {
+                                             temp = temp+'"';
+                                        }
+                                        arr[i] = arr[i].substring(0,index) +temp;
                                     }
                                 })
+                                //校验输入格式  xxx部长X月X日批示：”xxx内容”  注意冒号中英文
+                                 if (!editFlag) {
+                                     $(arr).each(function(i){
+                                        var obj = new Object();
+                                        var temp = new Array();
+                                        var reg1 = new RegExp("^[\u4E00-\u9FA5]+[0-9]{1,2}月[0-9]{1,2}日批示$");
+                                        if (arr[i].indexOf(":") != -1){
+                                            temp = arr[i].split(":");
+                                        }
+                                        if (arr[i].indexOf("：") != -1){
+                                            temp = arr[i].split("：");
+                                        }
+                                        if (temp.length <=1 ){
+                                           obj.index = i+1;
+                                           obj.msg = "无冒号";
+                                          errArr.push(obj);
+                                        } else {
+                                              if (!reg1.test(temp[0])) {
+                                                 obj.index = i+1;
+                                                 obj.msg = "日期格式xx月xx日";
+                                                 errArr.push(obj);
+                                              }
+                                        }
+                                    })
+                                }
+                                leaderComment = arr.join("&");
+                                console.log("leaderComment"+leaderComment);
                             }
-                            leaderComment = arr.join("&");
-                            console.log("leaderComment"+leaderComment);
-                        }
-                        if (errArr.length > 0) {
-                              var str = "";
-                             $(errArr).each(function(i){
-                                str += "<p>第<span style='color:red;'>"+errArr[i].index+"</span>条内容，不合法。"+"原因："+errArr[i].msg+"</p>"
-                             })
-                            newbootbox.alert1(str);
-                            return ;
+                            if (errArr.length > 0) {
+                                  var str = "";
+                                 $(errArr).each(function(i){
+                                    str += "<p>第<span style='color:red;'>"+errArr[i].index+"</span>条内容，不合法。"+"原因："+errArr[i].msg+"</p>"
+                                 })
+                                newbootbox.alert1(str);
+                                return ;
+                            }
                         }
                          var url = saveSzpsUrl;
                         if (!editFlag) {

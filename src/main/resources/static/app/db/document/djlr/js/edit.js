@@ -325,6 +325,7 @@ var pageModule = function(){
                             newbootbox.alert('请输入抄清内容！');
                             return;
                         }*/
+                       if (leaderComment != "" && leaderComment != null) {
                         if (leaderComment.indexOf("\n")) {
                             var reg = /\n|\r\n/g;
                             var arr = leaderComment.split(reg);
@@ -371,13 +372,15 @@ var pageModule = function(){
                             leaderComment = arr.join("&");
                             console.log("leaderComment"+leaderComment);
                         }
-                       if (errArr.length > 0) {
-                              var str = "";
-                             $(errArr).each(function(i){
-                                str += "<p>第<span style='color:red;'>"+errArr[i].index+"</span>条内容，不合法。"+"原因："+errArr[i].msg+"</p>"
-                             })
-                            newbootbox.alert1(str);
-                            return ;
+
+                           if (errArr.length > 0) {
+                                  var str = "";
+                                 $(errArr).each(function(i){
+                                    str += "<p>第<span style='color:red;'>"+errArr[i].index+"</span>条内容，不合法。"+"原因："+errArr[i].msg+"</p>"
+                                 })
+                                newbootbox.alert1(str);
+                                return ;
+                            }
                         }
                          var url = saveSzpsUrl;
                         if (!editFlag) {
