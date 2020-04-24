@@ -307,7 +307,7 @@ var pageModule = function(){
                                         }
                                         if (temp.length <=1 ){
                                            obj.index = i+1;
-                                           obj.msg = "无冒号";
+                                           obj.msg = "批示后面无冒号";
                                           errArr.push(obj);
                                         } else {
                                               if (!reg1.test(temp[0])) {
@@ -506,7 +506,7 @@ var pageModule = function(){
                    }
                    if (temp.length <=1 ){
                      obj.index = i+1;
-                     obj.msg = "无冒号";
+                     obj.msg = "批示后面无冒号";
                     errArr.push(obj);
                    } else {
                         if (!reg1.test(temp[0])) {
