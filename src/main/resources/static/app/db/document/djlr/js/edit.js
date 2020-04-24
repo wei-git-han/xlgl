@@ -335,13 +335,18 @@ var pageModule = function(){
                                     var index = arr[i].indexOf(":")!=-1?arr[i].indexOf(":")+1:arr[i].indexOf("：")+1;
                                     var temp = $.trim(arr[i].substring(index,arr[i].length));
                                     var temp1 = $.trim(arr[i].charAt(arr[i].length-1));
-                                    if (!(temp.substring(0,1) == '"'||temp.substring(0,1) == '”'||temp.substring(0,1) == '“')) {
-                                        temp = '"'+temp;
+                                    //批示内容前后同时存在引号，则不追加引号
+                                    if ((temp.substring(0,1) == '"'||temp.substring(0,1) == '”'||temp.substring(0,1) == '“')&&(temp1 == '"'||temp1 == '”'||temp1.substring(0,1) == '“')) {
+                                            console.log("批示前后都有双引号");
+                                    } else {
+                                        if (!(temp.substring(0,1) == '"'||temp.substring(0,1) == '”'||temp.substring(0,1) == '“')) {
+                                            temp = '"'+temp;
+                                        }
+                                        if (!(temp1 == '"'||temp1 == '”'||temp1.substring(0,1) == '“')) {
+                                             temp = temp+'"';
+                                        }
+                                        arr[i] = arr[i].substring(0,index) +temp;
                                     }
-                                    if (!(temp1 == '"'||temp1 == '”'||temp.substring(0,1) == '“')) {
-                                         temp = temp+'"';
-                                    }
-                                    arr[i] = arr[i].substring(0,index) +temp;
                                 }
                             })
                             //校验输入格式  xxx部长X月X日批示：”xxx内容”  注意冒号中英文
@@ -562,13 +567,17 @@ var pageModule = function(){
                             var index = arr[i].indexOf(":")!=-1?arr[i].indexOf(":")+1:arr[i].indexOf("：")+1;
                            var temp = $.trim(arr[i].substring(index,arr[i].length));
                            var temp1 = $.trim(arr[i].charAt(arr[i].length-1));
-                           if (!(temp.substring(0,1) == '"'||temp.substring(0,1) == '”'||temp.substring(0,1) == '“')) {
-                               temp = '"'+temp;
+                            if ((temp.substring(0,1) == '"'||temp.substring(0,1) == '”'||temp.substring(0,1) == '“')&&(temp1 == '"'||temp1 == '”'||temp1.substring(0,1) == '“')) {
+                                console.log("批示前后都有双引号");
+                           } else {
+                               if (!(temp.substring(0,1) == '"'||temp.substring(0,1) == '”'||temp.substring(0,1) == '“')) {
+                                   temp = '"'+temp;
+                               }
+                               if (!(temp1 == '"'||temp1 == '”'||temp1.substring(0,1) == '“')) {
+                                    temp = temp+'"';
+                               }
+                               arr[i] = arr[i].substring(0,index) +temp;
                            }
-                           if (!(temp1 == '"'||temp1 == '”'||temp.substring(0,1) == '“')) {
-                                temp = temp+'"';
-                           }
-                           arr[i] = arr[i].substring(0,index) +temp;
                        }
                    })
                    //校验输入格式  xxx部长X月X日批示：”xxx内容”  注意冒号中英文
