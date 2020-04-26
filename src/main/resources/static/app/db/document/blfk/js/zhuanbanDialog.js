@@ -51,9 +51,13 @@ var pageModule = function(){
 					newbootbox.newdialogClose("zhuanbanDialog");
 					if(data.result=="success"){
 						newbootbox.alert("转办成功！").done(function(){
+						changToNum2(function(){
 							if(fromMsg && fromMsg == "true"){
 								windowClose();
 							}else{
+								window.top.blfkfn();
+								window.top.jndbfn();
+								window.top.grdbfn()
 								if(fileFrom == "djlr"){//文件来源于登记录入
 									$("#iframe1",window.top.document).attr("src","/app/db/document/djlr/html/djlr.html?fileFrom=djlr");
 								}else if(fileFrom=="blfk"){  //文件来源于办理反馈
@@ -65,10 +69,8 @@ var pageModule = function(){
 										$("#iframe1",window.top.document).attr("src","/app/db/document/djlr/html/djlr.html?fileFrom=djlr");
 									}
 								}
-								window.top.blfkfn();
-								window.top.jndbfn();
-								window.top.grdbfn()
 							}
+						})
 						});
 					}else{
 						newbootbox.alert("转办失败！");

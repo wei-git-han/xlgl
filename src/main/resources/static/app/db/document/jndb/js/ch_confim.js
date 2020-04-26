@@ -13,16 +13,21 @@ var pageModule = function(){
 		 				if(data.result=='success'){
 		 					newbootbox.newdialogClose("ch_confim");
 		 					newbootbox.alertInfo('撤回成功！').done(function(){
-		 						window.top.iframe1.pageModule.initgrid();
+		 					    changToNum2(function(){
+		 						    window.top.iframe1.pageModule.initgrid();
+		 						    window.top.jndbfn();
+                                    window.top.grdbfn();
+                                    window.top.blfkfn();
+		 						})
 		 					});
 		 				}else{
 		 					newbootbox.newdialogClose("ch_confim");
 		 					newbootbox.alertInfo('撤回失败！');
 		 				}
-		 				window.top.jndbfn();
+		 				/*window.top.jndbfn();
 						window.top.grdbfn();
 						window.top.blfkfn();
-						changToNum()
+						changToNum()*/
 		 			}
 		 		});	
 			}else{

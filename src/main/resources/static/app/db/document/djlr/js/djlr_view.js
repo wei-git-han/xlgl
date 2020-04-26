@@ -655,13 +655,15 @@ var pageModule = function(){
 					if(data.result=="success"){
 						newbootbox.alert("取消办结成功！").done(function(){
 							showButton();
-							if(fromMsg && fromMsg=="true"){
-								windowClose();
-							}else{
-								if(np2==0){
-									window.top.blfkfn();
-								}
-							}
+							changToNum2(function(){
+                                if(fromMsg && fromMsg=="true"){
+                                    windowClose();
+                                }else{
+                                    if(np2==0){
+                                        window.top.blfkfn();
+                                    }
+                                }
+							})
 						});
 					}
 				}
@@ -686,14 +688,16 @@ var pageModule = function(){
 	 					success:function(data){
 	 						if(data.result == "success"){
 	 							newbootbox.alert("已办结！").done(function(){
-	 								if(fromMsg && fromMsg=="true"){
-	 									windowClose();
-	 								}else{
-	 									if(np2==0){
-	 										window.top.blfkfn();
-	 									}
-										skip();
-	 								}
+	 							    changToNum2(function(){
+                                        if(fromMsg && fromMsg=="true"){
+                                            windowClose();
+                                        }else{
+                                            if(np2==0){
+                                                window.top.blfkfn();
+                                            }
+                                            skip();
+                                        }
+	 								})
 	 							});
 	 						}else{
 	 							newbootbox.alert("办结失败！")
@@ -717,14 +721,16 @@ var pageModule = function(){
 	 					success:function(data){
 	 						if(data.result == "success"){
 	 							newbootbox.alert("文件已常态落实！").done(function(){
-	 								if(fromMsg && fromMsg=="true"){
-	 									windowClose();
-	 								}else{
-	 									if(np2==0){
-	 										window.top.blfkfn();
-	 									}
-										skip();
-	 								}
+	 							    changToNum2(function(){
+                                        if(fromMsg && fromMsg=="true"){
+                                            windowClose();
+                                        }else{
+                                            if(np2==0){
+                                                window.top.blfkfn();
+                                            }
+                                            skip();
+                                        }
+	 								})
 	 							});
 	 						}else{
 	 							newbootbox.alert("落实失败！")
