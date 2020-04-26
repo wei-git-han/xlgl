@@ -1561,15 +1561,17 @@ function jnbanjie(dom){
 					success:function(data){
 						if(data.result == "success"){
 							newbootbox.alert(alert1).done(function(){
-								if(fromMsg && fromMsg=="true"){
-									windowClose();
-								}else{
-									if(np2==0){
-										window.top.blfkfn();
-										window.top.grdbfn();
-									}
-								skip();
-								}
+								 changToNum2(function(){
+                                    if(fromMsg && fromMsg=="true"){
+                                        windowClose();
+                                    }else{
+                                        if(np2==0){
+                                            window.top.blfkfn();
+                                            window.top.grdbfn();
+                                        }
+                                    skip();
+                                    }
+								})
 							});
 						}else{
 							newbootbox.alert(alert2)
