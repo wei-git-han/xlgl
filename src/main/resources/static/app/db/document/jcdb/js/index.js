@@ -108,7 +108,7 @@ var pageModule = function(){
 						`
 							<tr id="${id}">
 								<td width="8%">${i+1}</td>
-								<td width="18%" title="${dwname}" ><font style="cursor:pointer">${dwname}</font></td>
+								<td width="25%" title="${dwname}" ><font style="cursor:pointer">${dwname}</font></td>
 								<td width="13%"><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','1','${state}')">${blz}</font></td>
 								<td width="13%"><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','2','${state}')">${bj}</font></td>
 								<td width="15%"><font style="cursor:pointer" onclick="topage('${id}','${type}','${month_}','3','${state}')">${ctls}</font></td>
@@ -145,7 +145,7 @@ var pageModule = function(){
 						`
 							<tr id="${id}">
 								<td width="5%">${i+1}</td>
-								<td width="22%"><a name="all" ifclick="${ifclick}" isLeaderType="${isLeaderType}" id="${leaderid}">${dwname}</a></td>
+								<td width="30%"><a name="all" ifclick="${ifclick}" isLeaderType="${isLeaderType}" id="${leaderid}">${dwname}</a></td>
 								<td width="13%"><a name="1" ifclick="${ifclick}" isLeaderType="${isLeaderType}" id="${leaderid}">${blz}</a></td>
 								<td width="13%"><a name="2" ifclick="${ifclick}" isLeaderType="${isLeaderType}" id="${leaderid}">${bj}</a></td>
 								<td width="15%"><a name="3" ifclick="${ifclick}" isLeaderType="${isLeaderType}" id="${leaderid}">${ctls}</a></td>
