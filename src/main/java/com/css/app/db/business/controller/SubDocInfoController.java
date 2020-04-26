@@ -1096,10 +1096,26 @@ public class SubDocInfoController {
 	@RequestMapping("/finishOperation")
 	public void finishOperation(String infoId, String subId, String replyContent, String saveFlag) {
 		JSONObject json = new JSONObject();
+		String userId = "";
+		//承办人
+		if (StringUtils.isNotBlank(subId)) {
+			SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+			if (subDocInfo != null) {
+				userId = subDocInfo.getUndertaker();
+			}
+		}
 		if (StringUtils.isNotBlank(infoId) && StringUtils.isNotBlank(subId)) {
 			this.finishApprovalUnifiedDeal(subId, json, infoId, replyContent, saveFlag);
 		} else {
 			json.put("result", "fail");
+		}
+		MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_SHENPIWANCHENG_MSG_TITLE);
+		if (msg != null) {
+			String msgUrl = msg.getMsgRedirect() + "&fileId=" + infoId + "&subId=" + subId;
+			if (StringUtils.isNotBlank(userId)) {
+				msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId, appId, clientSecret,
+						msg.getGroupName(), msg.getGroupRedirect(), "", "true");
+			}
 		}
 		Response.json(json);
 	}
