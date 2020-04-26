@@ -47,7 +47,7 @@ body{overflow:auto;}
 .th1{width:30px;}
 .newtable tr:hover{background:rgba(0,255,255,0.1);}
 .newtable2{width:100%;}
-.newtable2 th{color:#87A8ED;font-size:17px;text-align:center;font-weight: inherit;height:36px;background:#293370;}
+.newtable2 th{color:#87A8ED;font-size:15px;text-align:center;font-weight: inherit;height:36px;background:#293370;}
 .newtable2 td{color:#fff;font-size:14px;text-align:center;font-weight: inherit;height: 32px;}
 .newtable2 tr:nth-of-type(2n) {background-color: #2E3778;}
 .newtable2 .th1{width:30px;}
