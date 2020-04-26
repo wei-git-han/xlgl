@@ -145,7 +145,7 @@ var pageModule = function(){
 						`
 							<tr id="${id}">
 								<td width="5%">${i+1}</td>
-								<td width="18%"><a name="all" ifclick="${ifclick}" isLeaderType="${isLeaderType}" id="${leaderid}">${dwname}</a></td>
+								<td width="22%"><a name="all" ifclick="${ifclick}" isLeaderType="${isLeaderType}" id="${leaderid}">${dwname}</a></td>
 								<td width="13%"><a name="1" ifclick="${ifclick}" isLeaderType="${isLeaderType}" id="${leaderid}">${blz}</a></td>
 								<td width="13%"><a name="2" ifclick="${ifclick}" isLeaderType="${isLeaderType}" id="${leaderid}">${bj}</a></td>
 								<td width="15%"><a name="3" ifclick="${ifclick}" isLeaderType="${isLeaderType}" id="${leaderid}">${ctls}</a></td>
