@@ -162,12 +162,13 @@ public class MsgTipUtil {
 
 	/**
 	 * 给消息服务推送消息，进行消息提醒；新版接口，带有分组的消息接口
+	 * 以下是发送消息提醒，但桌面不显示，就是为了触发角标更新。
 	 * @param title
 	 * @param content
 	 * @param userIds
 	 * @return
 	 */
-	public String sendMsg1(String title, String content, String url, String userIds, String appId, String appSecret, String groupName, String groupRedirect, String smsg,String value){
+	public String sendMsgUnvisible(String title, String content, String url, String userIds, String appId, String appSecret, String groupName, String groupRedirect, String smsg,String value){
 		if (StringUtils.isBlank(userIds) || StringUtils.equals(userIds, ",")) {// 没有消息接收人，就不用提醒了
 			return "fail";
 		}
@@ -186,7 +187,7 @@ public class MsgTipUtil {
 		MediaType type = MediaType.parseMediaType("multipart/form-data");
 		headers.setContentType(type);
 		LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String,Object>();
-		map.add("content", msgConfig.getMsgJson1(title,content,url,appId,groupName, groupRedirect,value));
+		map.add("content", msgConfig.getMsgJsonUnvisible(title,content,url,appId,groupName, groupRedirect,value));
 		System.out.println(map.toString() + "*****发给1*****" + userIds);
 		HttpEntity<LinkedMultiValueMap<String, Object>> formEntity = new HttpEntity<LinkedMultiValueMap<String, Object>>(map, headers);
 		String msgUrl = msgConfig.getMsgUrl() + "/message/user/" + userIds + "?access_token=";

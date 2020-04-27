@@ -15,7 +15,7 @@
 		<if test="infoId != null and infoId != ''">
 			and INFO_ID=#{infoId}
 		</if>
-		order by CREATED_TIME
+		order by CREATED_TIME desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>

@@ -211,6 +211,24 @@ public class DocumentZbjlController {
 	@RequestMapping("/subZbSave")
 	public void subZbSave(String infoId,String subId,String userId,String userName) {
 		JSONObject json=new JSONObject();
+		String cbuserId = "";//承办人userId
+		//承办人
+		if (StringUtils.isNotBlank(subId)) {
+			SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+			if (subDocInfo != null) {
+				cbuserId = subDocInfo.getUndertaker();
+			}
+		}
+		String dlsUserId = "";//待落实人userId
+		List<DocumentZbjl> zbjlList = null;
+		if(StringUtils.isNotBlank(infoId)) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("infoId", infoId);
+			zbjlList = documentZbjlService.queryList(map);
+			if(zbjlList != null && zbjlList.size() > 0){
+				dlsUserId = zbjlList.get(0).getUserId();
+			}
+		}
 		String loginUserId=CurrentUser.getUserId();
 		if(StringUtils.isNotBlank(infoId) && StringUtils.isNotBlank(subId)) {
 			SubDocInfo subInfo = subDocInfoService.queryObject(subId);
@@ -295,7 +313,14 @@ public class DocumentZbjlController {
 				String msgUrl = msg.getMsgRedirect()+"&fileId="+infoId+"&subId="+subId;
 				if(StringUtils.isNotBlank(userId)){
 					msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId, appId,clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "","true");
-				}				
+				}
+				//针对于局管理员对办理中和待落实的文件进行转办时（文件当前人离职了），给文件的当前人发送消息提醒，用于触发角标更新
+				if(StringUtils.isNotBlank(cbuserId)){
+					msgUtil.sendMsgUnvisible(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, cbuserId, appId,clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "","true");
+				}
+				if(StringUtils.isNotBlank(dlsUserId)){
+					msgUtil.sendMsgUnvisible(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, dlsUserId, appId,clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "","true");
+				}
 			}
 			json.put("result", "success");
 		}else {

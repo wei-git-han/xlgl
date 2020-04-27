@@ -1024,7 +1024,8 @@ public class SubDocInfoController {
 		if (msg != null) {
 			String msgUrl = msg.getMsgRedirect() + "&fileId=" + infoId + "&subId=" + subId;
 			if (StringUtils.isNotBlank(userId)) {
-				msgUtil.sendMsg1(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId, appId, clientSecret,
+				//以下是发送消息提醒，但桌面不显示，就是为了触发角标更新。
+				msgUtil.sendMsgUnvisible(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId, appId, clientSecret,
 						msg.getGroupName(), msg.getGroupRedirect(), "", "true");
 			}
 		}

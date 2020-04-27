@@ -146,11 +146,12 @@ public class MsgConfig {
 
 	/**
 	 * 获取消息字符串：新版接口，可分组的接口
+     * 以下是发送消息提醒，但桌面不显示，就是为了触发角标更新。
 	 * @param title
 	 * @param content
 	 * @return
 	 */
-	public JSONObject getMsgJson1(String title,String content,String redirect,String appId, String groupName, String groupRedirect,String value) {
+	public JSONObject getMsgJsonUnvisible(String title,String content,String redirect,String appId, String groupName, String groupRedirect,String value) {
 		JSONObject msgContent = new JSONObject();
 		msgContent.put("type", env.getProperty("msg.type"));
 		msgContent.put("title",title);
