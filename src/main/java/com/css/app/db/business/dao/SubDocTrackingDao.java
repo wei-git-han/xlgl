@@ -22,4 +22,5 @@ public interface SubDocTrackingDao extends BaseDao<SubDocTracking> {
 	void deleteBySubId(String subId);
 	List<SubDocTracking> queryListBySubId(String subId);
 	SubDocTracking queryNewRecord(String subId);
+	String findDealUserName(String subId);
 }

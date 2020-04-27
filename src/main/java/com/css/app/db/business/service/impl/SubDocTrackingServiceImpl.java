@@ -71,5 +71,10 @@ public class SubDocTrackingServiceImpl implements SubDocTrackingService {
 		// TODO Auto-generated method stub
 		return subDocTrackingDao.queryNewRecord(subId);
 	}
+
+	@Override
+	public String findDealUserName(String subId){
+		return subDocTrackingDao.findDealUserName(subId);
+	}
 	
 }

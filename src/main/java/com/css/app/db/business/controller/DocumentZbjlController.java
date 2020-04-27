@@ -219,16 +219,8 @@ public class DocumentZbjlController {
 				cbuserId = subDocInfo.getUndertaker();
 			}
 		}
-		String dlsUserId = "";//待落实人userId
-		List<DocumentZbjl> zbjlList = null;
-		if(StringUtils.isNotBlank(infoId)) {
-			Map<String, Object> map = new HashMap<>();
-			map.put("infoId", infoId);
-			zbjlList = documentZbjlService.queryList(map);
-			if(zbjlList != null && zbjlList.size() > 0){
-				dlsUserId = zbjlList.get(0).getUserId();
-			}
-		}
+		//待xxx落实的xxx的userId
+		String dlsUserId =  subDocTrackingService.findDealUserName(subId);
 		String loginUserId=CurrentUser.getUserId();
 		if(StringUtils.isNotBlank(infoId) && StringUtils.isNotBlank(subId)) {
 			SubDocInfo subInfo = subDocInfoService.queryObject(subId);

@@ -34,4 +34,6 @@ public interface SubDocTrackingService {
 
 	SubDocTracking queryNewRecord(String subId);
 
+	String findDealUserName(String subId);
+
 }
