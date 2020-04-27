@@ -159,6 +159,59 @@ public class MsgTipUtil {
 		}*/
 		return "success";
 	}
+
+	/**
+	 * 给消息服务推送消息，进行消息提醒；新版接口，带有分组的消息接口
+	 * @param title
+	 * @param content
+	 * @param userIds
+	 * @return
+	 */
+	public String sendMsg1(String title, String content, String url, String userIds, String appId, String appSecret, String groupName, String groupRedirect, String smsg,String value){
+		if (StringUtils.isBlank(userIds) || StringUtils.equals(userIds, ",")) {// 没有消息接收人，就不用提醒了
+			return "fail";
+		}
+		if (StringUtils.isBlank(url)) {
+			url = "";
+		}
+		// 获取指定应用的token
+		String accessToken = "";
+		if (StringUtils.isNotBlank(appId) && StringUtils.isNotBlank(appSecret)) {
+			accessToken = TokenConfig.token(appId, appSecret);
+		}
+		if (StringUtils.isBlank(accessToken)) {
+			accessToken = TokenConfig.token();
+		}
+		HttpHeaders headers = new HttpHeaders();
+		MediaType type = MediaType.parseMediaType("multipart/form-data");
+		headers.setContentType(type);
+		LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String,Object>();
+		map.add("content", msgConfig.getMsgJson1(title,content,url,appId,groupName, groupRedirect,value));
+		System.out.println(map.toString() + "*****发给1*****" + userIds);
+		HttpEntity<LinkedMultiValueMap<String, Object>> formEntity = new HttpEntity<LinkedMultiValueMap<String, Object>>(map, headers);
+		String msgUrl = msgConfig.getMsgUrl() + "/message/user/" + userIds + "?access_token=";
+		logger.info("消息请求路径:{}", msgUrl + accessToken);
+		ResponseEntity<String> postForEntity = restTemplate.postForEntity(msgUrl+ accessToken, formEntity, String.class);
+		logger.info("消息请求返回:{}",postForEntity.getBody());
+		//pcSendUtil.sendPC(msgUrl,accessToken,formEntity,String.class,appId,appSecret);
+		String[] ids = StringUtils.split(userIds,",");
+		String phone="";
+	/*	for(String id : ids){
+			//判断短信开关表中是否有该人信息    判断开关是否打开 判断短信内容是否为空
+			if(getSet(id).equals("1") && smsg!=""){
+				System.out.println("==================个人短信开关已打开==========================");
+				phone=baseAppUserService.queryObject(id).getMobile();
+				if(StringUtils.isNotEmpty(phone)){
+				    System.out.println("===================电话号码为:::"+phone);
+					smsUtil.send(smsg, phone);
+				}
+
+			}else {
+				System.out.println("====================个人短信开关已关闭=========================");
+			}
+		}*/
+		return "success";
+	}
 	/**
 	 * 查询单个人员的开关
 	 * @param id

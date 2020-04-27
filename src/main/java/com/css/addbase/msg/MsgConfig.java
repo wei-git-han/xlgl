@@ -144,4 +144,52 @@ public class MsgConfig {
 		return msgContent;
 	}
 
+	/**
+	 * 获取消息字符串：新版接口，可分组的接口
+	 * @param title
+	 * @param content
+	 * @return
+	 */
+	public JSONObject getMsgJson1(String title,String content,String redirect,String appId, String groupName, String groupRedirect,String value) {
+		JSONObject msgContent = new JSONObject();
+		msgContent.put("type", env.getProperty("msg.type"));
+		msgContent.put("title",title);
+		msgContent.put("content",content);
+		msgContent.put("appid",appId);
+		msgContent.put("sound","false");
+		// 消息体链接
+		msgContent.put("redirect", redirect);
+		// 消息接收方的平台；x86,arm64,amd64,win32等终端；
+		msgContent.put("platform", env.getProperty("msg.platform"));
+		// 消息是否在消息盒子可见；
+		msgContent.put("visible", "false");
+		// 消息显示的图标，默认由桌面提供
+		msgContent.put("icon", env.getProperty("msg.icon"));
+		// 设置消息时间戳
+		String time = String.valueOf(System.currentTimeMillis());
+		msgContent.put("timestamp",Long.valueOf(time.substring(0, 10)));
+		JSONObject group = new JSONObject();
+		// 分组名称
+		if (StringUtils.isEmpty(env.getProperty("msg.group.name"))) {
+			group.put("name", groupName);
+		} else {
+			group.put("name", env.getProperty("msg.group.name"));
+		}
+		// 分组消息跳转的地址
+		if (StringUtils.isEmpty(env.getProperty("msg.group.redirect"))) {
+			group.put("redirect", groupRedirect);
+		} else {
+			group.put("redirect", env.getProperty("msg.group.redirect"));
+		}
+		msgContent.put("group", group);
+		JSONArray array = new JSONArray();
+		JSONObject operations = new JSONObject();
+		operations.put("type", "update_todo_count");
+		operations.put("value", true);
+		array.add(operations);
+		msgContent.put("operations", array);
+
+		return msgContent;
+	}
+
 }

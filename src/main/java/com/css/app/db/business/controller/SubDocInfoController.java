@@ -1007,10 +1007,26 @@ public class SubDocInfoController {
 	@RequestMapping("/finishButton")
 	public void finishButton(String infoId, String subId, String type) {
 		JSONObject json = new JSONObject();
+		String userId = "";
+		//承办人
+		if (StringUtils.isNotBlank(subId)) {
+			SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+			if (subDocInfo != null) {
+				userId = subDocInfo.getUndertaker();
+			}
+		}
 		if (StringUtils.isNotBlank(infoId) && StringUtils.isNotBlank(subId)) {
 			this.finishButtonImpl(subId, json, infoId, type);
 		} else {
 			json.put("result", "fail");
+		}
+		MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_SHENPIWANCHENG_MSG_TITLE);
+		if (msg != null) {
+			String msgUrl = msg.getMsgRedirect() + "&fileId=" + infoId + "&subId=" + subId;
+			if (StringUtils.isNotBlank(userId)) {
+				msgUtil.sendMsg1(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId, appId, clientSecret,
+						msg.getGroupName(), msg.getGroupRedirect(), "", "true");
+			}
 		}
 		Response.json(json);
 	}
