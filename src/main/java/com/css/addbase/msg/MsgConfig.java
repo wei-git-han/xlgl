@@ -157,7 +157,7 @@ public class MsgConfig {
 		msgContent.put("title",title);
 		msgContent.put("content",content);
 		msgContent.put("appid",appId);
-		msgContent.put("sound","false");
+		//msgContent.put("sound","false");
 		// 消息体链接
 		msgContent.put("redirect", redirect);
 		// 消息接收方的平台；x86,arm64,amd64,win32等终端；
