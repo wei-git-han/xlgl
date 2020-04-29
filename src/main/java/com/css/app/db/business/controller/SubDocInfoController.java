@@ -1015,6 +1015,7 @@ public class SubDocInfoController {
 				userId = subDocInfo.getUndertaker();
 			}
 		}
+        //待xxx落实的xxx的userId
 		String dlsUserId =  subDocTrackingService.findDealUserName(subId);
 		if (StringUtils.isNotBlank(infoId) && StringUtils.isNotBlank(subId)) {
 			this.finishButtonImpl(subId, json, infoId, type);
