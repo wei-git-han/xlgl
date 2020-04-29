@@ -1015,6 +1015,7 @@ public class SubDocInfoController {
 				userId = subDocInfo.getUndertaker();
 			}
 		}
+		String dlsUserId =  subDocTrackingService.findDealUserName(subId);
 		if (StringUtils.isNotBlank(infoId) && StringUtils.isNotBlank(subId)) {
 			this.finishButtonImpl(subId, json, infoId, type);
 		} else {
@@ -1026,6 +1027,11 @@ public class SubDocInfoController {
 			if (StringUtils.isNotBlank(userId)) {
 				//以下是发送消息提醒，但桌面不显示，就是为了触发角标更新。
 				msgUtil.sendMsgUnvisible(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId, appId, clientSecret,
+						msg.getGroupName(), msg.getGroupRedirect(), "", "true");
+			}
+			if (StringUtils.isNotBlank(dlsUserId)) {
+				//以下是发送消息提醒，但桌面不显示，就是为了触发角标更新。
+				msgUtil.sendMsgUnvisible(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, dlsUserId, appId, clientSecret,
 						msg.getGroupName(), msg.getGroupRedirect(), "", "true");
 			}
 		}
