@@ -21,12 +21,12 @@
 		order by sort
 	</select>
 	<select id="selectUserByNameAndUnitId" resultType="com.css.addbase.apporgan.entity.BaseAppUser">
-		select * from BASE_APP_USER where truename=#{0} and organid in (
-		select ID from BASE_APP_ORGAN start with  id=#{1} connect by prior id=parent_Id)
+		select * from BASE_APP_USER where ISDELETE = 0 and truename=#{0} and organid in (
+		select ID from BASE_APP_ORGAN start with  id=#{1} and ISDELETE=0 connect by prior id=parent_Id)
 	</select>
 	<select id="queryListBySet" resultType="com.css.addbase.apporgan.entity.BaseAppUser">
 		select u.* from BASE_APP_USER u inner join DOCUMENT_BANJIAN_TREE_SET s
-		on u.user_id=s.user_id where 1=1 
+		on u.user_id=s.user_id where u.ISDELETE=0  
 		<if test="organid != null">
 		    and u.ORGANID = #{organid}
 		</if>
@@ -37,7 +37,7 @@
 	</select>
 	
  	<select id="queryTotal" resultType="int">
-		select count(*) from BASE_APP_USER where 1 = 1
+		select count(*) from BASE_APP_USER where ISDELETE=0
 		<if test="departmentId != null and departmentId != null">
 			and ORGANID = #{departmentId}
 		</if>
@@ -55,7 +55,7 @@
 	</select>
 	
 	<select id="queryObjectByDeptIds" resultType="com.css.addbase.apporgan.entity.BaseAppUser" >
-		select  *  from BASE_APP_USER where ORGANID in 
+		select  *  from BASE_APP_USER where ISDELETE=0 and ORGANID in 
 		<foreach item="deptIds" collection="array" open="(" separator="," close=")">
 			#{deptIds}
 		</foreach>

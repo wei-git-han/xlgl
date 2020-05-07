@@ -35,7 +35,7 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 	 * @author gengds
 	 * @date 2017年6月17日
 	 */
-	@Select("select * from BASE_APP_USER where ORGANID = #{organid} order by SORT")
+	@Select("select * from BASE_APP_USER where ISDELETE=0 and ORGANID = #{organid} order by SORT")
 	List<BaseAppUser> findByDepartmentId(String organid);
 	
 	/**
@@ -50,7 +50,7 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 	 * @author gengds
 	 * @date 2017年6月17日
 	 */
-	@Select("select a.*,b.name as organid from BASE_APP_USER a,BASE_APP_ORGAN b where a.ORGANID = #{organid} and b.ID=a.ORGANID order by a.SORT")
+	@Select("select a.*,b.name as organid from BASE_APP_USER a,BASE_APP_ORGAN b where a.ISDELETE=0 and b.ISDELETE=0 and a.ORGANID = #{organid} and b.ID=a.ORGANID order by a.SORT")
 	List<BaseAppUser> findByOrganid(String organid);
 	
 	/**

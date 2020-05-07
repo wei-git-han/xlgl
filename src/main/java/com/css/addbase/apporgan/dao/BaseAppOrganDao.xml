@@ -9,7 +9,7 @@
 	</select>
 
 	<select id="queryList" resultType="com.css.addbase.apporgan.entity.BaseAppOrgan">
-		select * from BASE_APP_ORGAN where 1=1
+		select * from BASE_APP_ORGAN where ISDELETE = 0
 		<if test="name != null and name != ''">
 			and NAME=#{name}
 		</if>
@@ -20,7 +20,7 @@
 	</select>
 	
  	<select id="queryTotal" resultType="int">
-		select count(*) from BASE_APP_ORGAN where 1 = 1
+		select count(*) from BASE_APP_ORGAN where ISDELETE = 0
 		<if test="parentId != null and parentId != null">
 			and PARENT_ID = #{parentId}
 		</if>
