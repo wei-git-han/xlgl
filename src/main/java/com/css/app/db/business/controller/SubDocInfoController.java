@@ -155,8 +155,12 @@ public class SubDocInfoController {
 			if (queryList != null && queryList.size() > 0) {
 				subDocInfo.setLatestReply(queryList.get(0).getReplyContent());
 			}
-			// 是否批示超过3个月
-			this.isOverTreeMonth(subDocInfo.getLeaderTime(), subDocInfo);
+			//已办结或常态落实的单位在局内待办中无需收到已超三个月通知
+			if (subDocInfo.getDocStatus() < 10) {
+				// 是否批示超过3个月
+				this.isOverTreeMonth(subDocInfo.getLeaderTime(), subDocInfo);
+			}
+
 		}
 		GwPageUtils pageUtil = new GwPageUtils(subDocInfoList);
 		Response.json(pageUtil);
@@ -304,8 +308,11 @@ public class SubDocInfoController {
 				szpsMap.put("infoId", subDocInfo.getInfoId());
 				List<DocumentSzps> szpsList = documentSzpsService.queryList(szpsMap);
 				subDocInfo.setSzpslist(szpsList);
-				// 是否批示超过3个月
-				this.isOverTreeMonth(subDocInfo.getLeaderTime(), subDocInfo);
+				//已办结或常态落实的单位在个人待办中无需收到已超三个月通知
+				if(subDocInfo.getDocStatus() < 10){
+					// 是否批示超过3个月
+					this.isOverTreeMonth(subDocInfo.getLeaderTime(), subDocInfo);
+				}
 				// 是否显示撤回按钮
 				this.isShowWithdrawButton(subDocInfo);
 				// 本局最新反馈
@@ -693,6 +700,20 @@ public class SubDocInfoController {
 					// 当前分支文件变为办结
 					subInfo.setDocStatus(DbDocStatusDefined.BAN_JIE);
 					bjjl.setContent("系统自动常态落实");
+				}
+				if(maxDocStatus == DbDocStatusDefined.CHANG_TAI_LUO_SHI){
+					// 当前分支文件变为办结
+					subInfo.setDocStatus(DbDocStatusDefined.BAN_JIE);
+					bjjl.setContent("办结");
+					//查询该文件的所有分支文件中状态为13的个数，若为1，说明是最后一个办结的，要改变主文件的状态
+					/*int num = subDocInfoService.queryNoBanJie(infoId);
+					if(num == 1){
+						// 主文件状态变为办结
+						DocumentInfo info = documentInfoService.queryObject(infoId);
+						info.setSzReadIds("");
+						info.setStatus(2);
+						documentInfoService.update(info);
+					}*/
 				}
 			}
 		}

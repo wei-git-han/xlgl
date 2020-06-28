@@ -47,8 +47,9 @@ public interface SubDocInfoDao extends BaseDao<SubDocInfo> {
 	
 	@Select("select * from DB_SUB_DOC_INFO where INFO_ID = #{infoId}")
 	List<SubDocInfo> queryForList(String infoId);
-	
-	
+
+	@Select("select count(*) from DB_SUB_DOC_INFO where INFO_ID = #{0} and DOC_STATUS= 13")
+	int queryNoBanJie(String infoId);
 	
 	
 }

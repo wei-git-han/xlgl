@@ -122,6 +122,10 @@ public class SubDocInfoServiceImpl implements SubDocInfoService {
 		return subDocInfoDao.notTransferredTmingTaskList();
 	}
 	@Override
+	public int queryNoBanJie(String infoId){
+		return subDocInfoDao.queryNoBanJie(infoId);
+	}
+	@Override
 	public List<SubDocInfo> queryForList(String infoId){
 		return subDocInfoDao.queryForList(infoId);
 	}
