@@ -67,7 +67,11 @@ var pageModule = function(){
 			          	 	}else if((rowdata.docStatus==12)&&fileFrom && (fileFrom == "jcdb")){
 			              	 	statusName="已办结";
 			              	 	bgColor="rgba(153, 153, 153, 1)";
-			          	 	}else if((rowdata.docStatus==13)&&fileFrom && (fileFrom == "jcdb")){
+			          	 	}else if((rowdata.docStatus==13)&&fileFrom && (fileFrom == "jndb")){
+                                statusName="常态落实";
+                                bgColor="rgba(153, 153, 153, 1)";
+                            }
+			          	 	else if((rowdata.docStatus==13)&&fileFrom && (fileFrom == "jcdb")){
 			              	 	statusName="常态落实";
 			              	 	bgColor="rgba(153, 153, 153, 1)";
 			          	 	}     				  	
