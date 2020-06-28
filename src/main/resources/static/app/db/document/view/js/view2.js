@@ -200,6 +200,9 @@ var pageModule = function(){
 						}
 					}
 
+				} else if (data.docStatus==13 &&"jndb"==fileFrom) {
+				    $(".newbottom").show();
+				    $("#ctlsBj").show();
 				}
 			}
 		});	
@@ -1384,6 +1387,11 @@ var pageModule = function(){
         		});
         	}
         });
+        //针对常态落实的数据进行办结操作
+        $("#ctlsBj").click(function(){
+            jnbanjie('banjie')
+        })
+
 	}
 		
 	return{
