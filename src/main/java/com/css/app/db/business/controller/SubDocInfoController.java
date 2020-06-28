@@ -180,7 +180,7 @@ public class SubDocInfoController {
 		if (StringUtils.isNotBlank(search)) {
 			map.put("search", search);
 		}
-		int[] arr = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		int[] arr = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 		List<SubDocInfo> subDocInfoList = subDocInfoService.queryList(map);
 		if (subDocInfoList != null && subDocInfoList.size() > 0) {
 			arr[0] = subDocInfoList.size();
@@ -210,13 +210,17 @@ public class SubDocInfoController {
 				if (10 == docStatus) {
 					arr[6] += 1;
 				}
-				// 常态落实
+				// 建议落实
 				if (11 == docStatus) {
 					arr[7] += 1;
 				}
 				// 催办
 				if (StringUtils.equals("1", subDocInfo.getCuibanFlag())) {
 					arr[8] += 1;
+				}
+				//常态落实
+				if(13 == docStatus){
+					arr[9] += 1;
 				}
 			}
 		}
