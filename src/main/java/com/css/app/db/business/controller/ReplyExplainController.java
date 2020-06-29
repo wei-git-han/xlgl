@@ -256,6 +256,17 @@ public class ReplyExplainController {
 					} else {
 						json.put("isSameDept", "false");
 					}
+					String status = subDocInfo.getChooseStatus();
+					String statusName="";
+					if(StringUtils.equals("1", status)) {
+						statusName="办理中";
+					}else if(StringUtils.equals("2", status)){
+						statusName="办结";
+					}else if(StringUtils.equals("3", status)) {
+						statusName="常态落实";
+					}
+					json.put("checkStatus",status);
+					json.put("checkStatusName",statusName);
 					jsonArray.add(json);
 				}
 			}
