@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.css.addbase.apporgan.service.BaseAppUserService;
+import com.css.app.db.config.service.AdminSetService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -55,6 +56,8 @@ public class ReplyExplainController {
 	private SubDocTrackingService subDocTrackingService;
 	@Autowired
 	private BaseAppUserService baseAppUserService;
+    @Autowired
+    private AdminSetService adminSetService;
 	/**
 	 * 获取某个分支局反馈
 	 * @param infoId 主文件id
@@ -244,7 +247,11 @@ public class ReplyExplainController {
 					}
 					String deptId = subDocInfo.getSubDeptId();
 					String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
-					if (StringUtils.equals(deptId, orgId)) {
+                    String loginUserId = CurrentUser.getUserId();
+                    //获取当前人的管理员类型（0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员）
+                    String adminFlag = adminSetService.getAdminTypeByUserId(loginUserId);
+                    //如果该局和当前登录人属于同一个部门且该登录人是局管理员或者超级管理员
+					if ((StringUtils.equals(deptId, orgId) && "2".equals(adminFlag)) || "0".equals(adminFlag)) {
 						json.put("isSameDept", "true");
 					} else {
 						json.put("isSameDept", "false");
