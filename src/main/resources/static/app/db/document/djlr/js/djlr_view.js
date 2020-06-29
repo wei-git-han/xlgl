@@ -872,16 +872,23 @@ function downloadfn(fileServerId){
 	});
 }
 function editfn(id,content,subId,checkStatus,el){
-	$(el).parents(".nrt-cont").find(".nrt-cont-file .remove").show();
-	newbootbox.newdialog({
-    			id:"editDialog",
-    			width:800,
-    			height:600,
-    			header:true,
-    			title:"编辑",
-    			classed:"cjDialog",
-    			url:"/app/db/document/view/html/editDialog.html?fileId="+fileId+"&replyContent="+content+"&subId="+subId+"&teamId="+id+"&fromMsg="+fromMsg+"&checkStatus="+checkStatus
-    		})
+	//$(el).parents(".nrt-cont").find(".nrt-cont-file .remove").show();
+	newbootbox.oconfirm({
+        title:"提示",
+        message: "当前办理反馈内容已正式提交，是否确认修改？",
+        callback1:function(){
+              newbootbox.newdialog({
+                id:"editDialog",
+                width:800,
+                height:600,
+                header:true,
+                title:"编辑",
+                classed:"cjDialog",
+                url:"/app/db/document/view/html/editDialog.html?fileId="+fileId+"&replyContent="+content+"&subId="+subId+"&teamId="+id+"&fromMsg="+fromMsg+"&checkStatus="+checkStatus
+              })
+        }
+    });
+
 }
 
 function removefn(id,el){
