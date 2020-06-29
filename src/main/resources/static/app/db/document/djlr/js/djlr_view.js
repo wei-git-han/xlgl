@@ -258,12 +258,15 @@ var pageModule = function(){
 					content = o.content;
 					subId = o.subId;
 					ideaGroupId = o.ideaGroupId;
-					//edit = o.edit;
-					//if(edit==true){
-					//	edit = `<div class="nrt-cont-top-btn">
-					//		<a class="" onclick="editfn('${id}','${content}',this)" >编辑</a>
-					//	</div>`;
-					//}else{edit=``};
+					edit = o.isSameDept;
+					checkStatus = o.checkStatus;
+					if(edit=="true"){
+						edit = `<div class="nrt-cont-top-btn">
+							<a class="" onclick="editfn('${id}','${content}','${subId}','${checkStatus}',this)" >编辑</a>
+						</div>`;
+					}else{
+					    edit=``
+					};
 					
 					var attchList = o.attchList;
 					if(typeof(attchList)!="undefined"&&attchList!=null&&$.trim(attchList)!=""){
@@ -865,10 +868,17 @@ function downloadfn(fileServerId){
 	    }
 	});
 }
-function editfn(id,content,el){
+function editfn(id,content,subId,checkStatus,el){
 	$(el).parents(".nrt-cont").find(".nrt-cont-file .remove").show();
-	$("#editTeamId").attr("id",id);
-	$("#replyContent").val(content);
+	newbootbox.newdialog({
+    			id:"editDialog",
+    			width:800,
+    			height:600,
+    			header:true,
+    			title:"编辑",
+    			classed:"cjDialog",
+    			url:"/app/db/document/view/html/editDialog.html?fileId="+fileId+"&replyContent="+content+"&subId="+subId+"&teamId="+id+"&fromMsg="+fromMsg+"&checkStatus="+checkStatus
+    		})
 }
 
 function removefn(id,el){
