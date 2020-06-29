@@ -761,6 +761,9 @@ var pageModule = function(){
 			$(".scroller").css("height","100%");
 			$(".slimScrollDiv").css("height","100%");
 		},
+		initblfkList:function(){
+            initblfkList();
+        },
 		takeMenufn:function(){
 			takeMenufn();
 			$(".scroller").css("height","100%");
