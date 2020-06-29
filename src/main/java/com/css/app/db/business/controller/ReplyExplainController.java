@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.css.addbase.apporgan.service.BaseAppUserService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -52,6 +53,8 @@ public class ReplyExplainController {
 	private ApprovalOpinionService approvalOpinionService;
 	@Autowired
 	private SubDocTrackingService subDocTrackingService;
+	@Autowired
+	private BaseAppUserService baseAppUserService;
 	/**
 	 * 获取某个分支局反馈
 	 * @param infoId 主文件id
@@ -238,6 +241,13 @@ public class ReplyExplainController {
 						json.put("opinionList",opinionList);
 					}else {
 						json.put("cuowei","0");
+					}
+					String deptId = subDocInfo.getSubDeptId();
+					String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
+					if (StringUtils.equals(deptId, orgId)) {
+						json.put("isSameDept", "true");
+					} else {
+						json.put("isSameDept", "false");
 					}
 					jsonArray.add(json);
 				}
