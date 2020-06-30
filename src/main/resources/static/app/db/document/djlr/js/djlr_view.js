@@ -260,7 +260,7 @@ var pageModule = function(){
 					ideaGroupId = o.ideaGroupId;
 					edit = o.isSameDept;
 					checkStatus = o.checkStatus;
-					if(edit=="true"){
+					if(edit=="true" && fileFrom=="blfk"){
 						edit = `<div class="nrt-cont-top-btn">
 							<a class="" onclick="editfn('${id}','${content}','${subId}','${checkStatus}','${teamId}','${ideaGroupId}',this)" >编辑</a>
 						</div>`;
