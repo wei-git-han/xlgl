@@ -6,7 +6,7 @@ var fromMsg=getUrlParam("fromMsg")|| false;
 var replyContent=getUrlParam2("replyContent")||""; //文件来源
 var checkStatus = getUrlParam("checkStatus");
 var fileFrom = getUrlParam("fileFrom");
-var opinionId = getUrlParam("opinionId");
+var ideaGroupId = getUrlParam("ideaGroupId");
 var sureUrl1 = {"url":"/app/db/replyexplain/editOpinion","dataType":"text"}; //保存
 $("#button1").find("font").text($.trim($("#button1 [data="+checkStatus+"]").text()));
 var pageModule = function(){
@@ -18,7 +18,7 @@ var pageModule = function(){
             var url = sureUrl;
             //办理反馈中编辑
             if ( fileFrom=="blfk" ) {
-                data.opinionId = opinionId;
+                data.ideaGroupId = ideaGroupId;
                 url = sureUrl1;
             }
 			$.ajax({
