@@ -52,6 +52,8 @@ public class ReplyExplainController {
     private AdminSetService adminSetService;
 	@Autowired
 	private DocumentInfoService documentInfoService;
+	@Autowired
+	private DocumentReadService documentReadService;
 	/**
 	 * 获取某个分支局反馈
 	 * @param infoId 主文件id
@@ -545,6 +547,8 @@ public class ReplyExplainController {
 			info.setLatestReply(replyContent);
 			info.setLatestReplyTime(new Date());
 			documentInfoService.update(info);
+			// 清理除首长外的本文件已读
+			documentReadService.deleteByInfoId(infoId);
 			json.put("result", "success");
 		}else {
 			json.put("result", "fail");
