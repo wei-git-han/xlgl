@@ -28,6 +28,8 @@ public interface ReplyExplainService {
 	void deleteBatch(String[] ids);
 	
 	ReplyExplain queryLastestTempReply(Map<String, Object> map);
+
+	ReplyExplain queryReplyExplain(String opinionId);
 	
 	void saveReply(String subId,String infoId,String userId,String userName,String teamId,String replyContent,String subDeptId,String subDeptName,String cbrFlag,String checkStatus);
 	

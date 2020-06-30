@@ -59,6 +59,10 @@ public class ReplyExplainServiceImpl implements ReplyExplainService {
 	public ReplyExplain queryLastestTempReply(Map<String, Object> map) {
 		return replyExplainDao.queryLastestTempReply(map);
 	}
+	@Override
+	public ReplyExplain queryReplyExplain(String opinionId){
+		return replyExplainDao.queryReplyExplain(opinionId);
+	}
 
 	@Override
 	public void saveReply(String subId, String infoId, String userId, String userName, String teamId,

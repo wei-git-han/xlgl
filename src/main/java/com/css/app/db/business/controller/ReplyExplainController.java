@@ -219,6 +219,7 @@ public class ReplyExplainController {
 					json.put("teamId", teamId);
 					json.put("content",replyExplain.getReplyContent());
 					json.put("updateTime",replyExplain.getCreatedTime());
+					json.put("id",replyExplain.getId());
 					//附件
 					Map<String, Object> map = new HashMap<>();
 					map.put("teamId", teamId);
@@ -469,6 +470,61 @@ public class ReplyExplainController {
 				map.put("teamId", teamId);
 				map.put("showFlag", "0");
 				ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
+				SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
+				if(StringUtils.isNotBlank(checkStatus)) {
+					subDocTracking.setPreviousStatus(Integer.parseInt(subDocInfo.getChooseStatus()));
+					subDocTrackingService.update(subDocTracking);
+				}
+				if(tempReply != null) {
+					if(StringUtils.isNotBlank(checkStatus)) {
+						subDocInfo.setChooseStatus(checkStatus);
+						subDocInfoService.update(subDocInfo);
+						tempReply.setChooseStatus(checkStatus);
+					}
+					tempReply.setReplyContent(replyContent);
+					replyExplainService.update(tempReply);
+				}else {
+					if(StringUtils.isNotBlank(checkStatus)) {
+						subDocInfo.setChooseStatus(checkStatus);
+						subDocInfoService.update(subDocInfo);
+					}
+					replyExplainService.saveReply(subId, infoId, loginUserId, loginUserName, teamId, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName(),cbrFlag,checkStatus);
+				}
+			}
+			json.put("result", "success");
+		}else {
+			json.put("result", "fail");
+		}
+		Response.json(json);
+	}
+
+	/**
+	 * 办理反馈编辑反馈意见
+	 */
+	@ResponseBody
+	@RequestMapping("/editOpinion")
+	public void editOpinion(String subId,String infoId,String teamId,String replyContent,String checkStatus,String opinionId){
+		String loginUserId=CurrentUser.getUserId();
+		String loginUserName=CurrentUser.getUsername();
+		String cbrFlag="0";
+		JSONObject json=new JSONObject();
+		if(StringUtils.isNotBlank(infoId) && StringUtils.isNotBlank(subId)) {
+			SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
+			if(StringUtils.equals(loginUserId, subDocInfo.getUndertaker())) {
+				cbrFlag="1";
+			}
+			if(StringUtils.isBlank(teamId)) {
+				String uuid=UUIDUtils.random();
+				//新增反馈及附件
+				replyExplainService.saveReply(subId, infoId, loginUserId, loginUserName, uuid, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName(),cbrFlag,checkStatus);
+			}else {
+				Map<String, Object> map =new HashMap<>();
+				map.put("subId", subId);
+				map.put("userId", loginUserId);
+				map.put("teamId", teamId);
+				map.put("showFlag", "0");
+				//ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
+				ReplyExplain tempReply = replyExplainService.queryReplyExplain(opinionId);
 				SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
 				if(StringUtils.isNotBlank(checkStatus)) {
 					subDocTracking.setPreviousStatus(Integer.parseInt(subDocInfo.getChooseStatus()));

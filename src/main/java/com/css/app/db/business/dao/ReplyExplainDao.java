@@ -9,6 +9,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.css.base.dao.BaseDao;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * 办理反馈表
@@ -33,4 +34,7 @@ public interface ReplyExplainDao extends BaseDao<ReplyExplain> {
 	void deleteByParam(Map<String, Object> map);
 	
 	ReplyExplain queryLastNewData(String infoId, String subId);
+
+	@Select("select * from DB_REPLY_EXPLAIN where id = #{0}")
+	ReplyExplain queryReplyExplain(String opinionId);
 }
