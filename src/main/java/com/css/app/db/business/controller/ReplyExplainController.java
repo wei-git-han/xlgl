@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.css.addbase.apporgan.service.BaseAppUserService;
+import com.css.app.db.business.entity.*;
+import com.css.app.db.business.service.*;
 import com.css.app.db.config.service.AdminSetService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.css.app.db.business.entity.ApprovalOpinion;
-import com.css.app.db.business.entity.ReplyAttac;
-import com.css.app.db.business.entity.ReplyExplain;
-import com.css.app.db.business.entity.SubDocInfo;
-import com.css.app.db.business.entity.SubDocTracking;
-import com.css.app.db.business.service.ApprovalOpinionService;
-import com.css.app.db.business.service.ReplyAttacService;
-import com.css.app.db.business.service.ReplyExplainService;
-import com.css.app.db.business.service.SubDocInfoService;
-import com.css.app.db.business.service.SubDocTrackingService;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.Response;
 import com.css.base.utils.UUIDUtils;
@@ -58,6 +50,8 @@ public class ReplyExplainController {
 	private BaseAppUserService baseAppUserService;
     @Autowired
     private AdminSetService adminSetService;
+	@Autowired
+	private DocumentInfoService documentInfoService;
 	/**
 	 * 获取某个分支局反馈
 	 * @param infoId 主文件id
@@ -546,6 +540,11 @@ public class ReplyExplainController {
 					replyExplainService.saveNewReply(subId, infoId, loginUserId, loginUserName, teamId, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName(),cbrFlag,checkStatus,ideaGroupId);
 				}
 			}
+			//列表督办落实情况也得更新
+			DocumentInfo info = documentInfoService.queryObject(infoId);
+			info.setLatestReply(replyContent);
+			info.setLatestReplyTime(new Date());
+			documentInfoService.update(info);
 			json.put("result", "success");
 		}else {
 			json.put("result", "fail");
