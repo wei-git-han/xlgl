@@ -93,6 +93,32 @@ public class ReplyExplainServiceImpl implements ReplyExplainService {
 	}
 
 	@Override
+	public void saveNewReply(String subId, String infoId, String userId, String userName, String teamId,
+						  String replyContent, String subDeptId, String subDeptName,String cbrFlag,String checkStatus,String ideaGroupId) {
+		ReplyExplain reply=new ReplyExplain();
+		reply.setId(UUIDUtils.random());
+		reply.setSubId(subId);
+		reply.setInfoId(infoId);
+		reply.setUserId(userId);
+		reply.setUserName(userName);
+		reply.setCreatedTime(new Date());
+		reply.setReplyContent(replyContent);
+		reply.setTeamId(teamId);
+		reply.setSubDeptId(subDeptId);
+		reply.setSubDeptName(subDeptName);
+		reply.setShowFlag("1");
+		reply.setReVersion("1");
+		reply.setCbrFlag(cbrFlag);
+		if(StringUtils.isNotBlank(checkStatus)) {
+			reply.setChooseStatus(checkStatus);
+		}
+		reply.setIdeaGroupId(ideaGroupId);
+		reply.setChowTime(new Date());
+		reply.setVersionTime(new Date());
+		replyExplainDao.save(reply);
+	}
+
+	@Override
 	public void updateShowFlag(Date showTime,String subId) {
 		replyExplainDao.updateShowFlag(showTime,subId);
 	}

@@ -32,7 +32,8 @@ public interface ReplyExplainService {
 	ReplyExplain queryReplyExplain(String opinionId);
 	
 	void saveReply(String subId,String infoId,String userId,String userName,String teamId,String replyContent,String subDeptId,String subDeptName,String cbrFlag,String checkStatus);
-	
+	void saveNewReply(String subId,String infoId,String userId,String userName,String teamId,String replyContent,String subDeptId,String subDeptName,String cbrFlag,String checkStatus,String ideaGroupId);
+
 	void updateShowFlag(Date showTime,String subId);
 	//查询所有分支局的反馈
 	List<ReplyExplain> queryAllLatestReply(String infoId);

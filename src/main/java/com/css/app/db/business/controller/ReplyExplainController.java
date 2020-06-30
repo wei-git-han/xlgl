@@ -503,7 +503,7 @@ public class ReplyExplainController {
 	 */
 	@ResponseBody
 	@RequestMapping("/editOpinion")
-	public void editOpinion(String subId,String infoId,String teamId,String replyContent,String checkStatus,String opinionId){
+	public void editOpinion(String subId,String infoId,String teamId,String replyContent,String checkStatus,String ideaGroupId){
 		String loginUserId=CurrentUser.getUserId();
 		String loginUserName=CurrentUser.getUsername();
 		String cbrFlag="0";
@@ -516,15 +516,15 @@ public class ReplyExplainController {
 			if(StringUtils.isBlank(teamId)) {
 				String uuid=UUIDUtils.random();
 				//新增反馈及附件
-				replyExplainService.saveReply(subId, infoId, loginUserId, loginUserName, uuid, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName(),cbrFlag,checkStatus);
+				replyExplainService.saveNewReply(subId, infoId, loginUserId, loginUserName, uuid, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName(),cbrFlag,checkStatus,ideaGroupId);
 			}else {
 				Map<String, Object> map =new HashMap<>();
 				map.put("subId", subId);
 				map.put("userId", loginUserId);
 				map.put("teamId", teamId);
 				map.put("showFlag", "0");
-				//ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
-				ReplyExplain tempReply = replyExplainService.queryReplyExplain(opinionId);
+				ReplyExplain tempReply = replyExplainService.queryLastestTempReply(map);
+				//ReplyExplain tempReply = replyExplainService.queryReplyExplain(opinionId);
 				SubDocTracking subDocTracking = subDocTrackingService.queryLatestRecord(subId);
 				if(StringUtils.isNotBlank(checkStatus)) {
 					subDocTracking.setPreviousStatus(Integer.parseInt(subDocInfo.getChooseStatus()));
@@ -543,7 +543,7 @@ public class ReplyExplainController {
 						subDocInfo.setChooseStatus(checkStatus);
 						subDocInfoService.update(subDocInfo);
 					}
-					replyExplainService.saveReply(subId, infoId, loginUserId, loginUserName, teamId, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName(),cbrFlag,checkStatus);
+					replyExplainService.saveNewReply(subId, infoId, loginUserId, loginUserName, teamId, replyContent, subDocInfo.getSubDeptId(), subDocInfo.getSubDeptName(),cbrFlag,checkStatus,ideaGroupId);
 				}
 			}
 			json.put("result", "success");
