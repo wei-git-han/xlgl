@@ -5,15 +5,22 @@ var teamId=getUrlParam("teamId")||"";
 var fromMsg=getUrlParam("fromMsg")|| false; 
 var replyContent=getUrlParam2("replyContent")||""; //文件来源
 var checkStatus = getUrlParam("checkStatus");
+var fileFrom = getUrlParam("fileFrom");
+var opinionId = getUrlParam("opinionId");
 $("#button1").find("font").text($.trim($("#button1 [data="+checkStatus+"]").text()));
 var pageModule = function(){
 	var initother = function(){
 		$("#replyContent").val(replyContent);
 		//确定
 		$("#sure").click(function(){
+            var data = {subId:subId,infoId:fileId,teamId:teamId,replyContent:$("#replyContent").val(),checkStatus:checkStatus};
+            //办理反馈中编辑
+            if ( fileFrom=="blfk" ) {
+                data.opinionId = opinionId;
+            }
 			$.ajax({
 				url:sureUrl.url,
-				data:{subId:subId,infoId:fileId,teamId:teamId,replyContent:$("#replyContent").val(),checkStatus:checkStatus},
+				data:data,
 				type:'post',
 				success:function(data){
 					newbootbox.newdialogClose("editDialog");
@@ -26,7 +33,7 @@ var pageModule = function(){
 							newbootbox.alert("修改成功！").done(function(){
 								window.top.iframe1.window.pageModule.initblfkList();
 							});
-						}  
+						}
 					}else{
 						newbootbox.alert("修改失败！");
 					}

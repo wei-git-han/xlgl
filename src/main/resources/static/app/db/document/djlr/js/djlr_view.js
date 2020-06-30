@@ -248,7 +248,7 @@ var pageModule = function(){
 				var teamId = ``;
 				var subId = ``;
 				if(n==1){
-					id = o.teamId;
+					id = o.id;
 					teamId = o.teamId;
 					cbrId = o.cbrId;
 					date = o.updateTime;
@@ -262,7 +262,7 @@ var pageModule = function(){
 					checkStatus = o.checkStatus;
 					if(edit=="true"){
 						edit = `<div class="nrt-cont-top-btn">
-							<a class="" onclick="editfn('${id}','${content}','${subId}','${checkStatus}',this)" >编辑</a>
+							<a class="" onclick="editfn('${id}','${content}','${subId}','${checkStatus}','${teamId}',this)" >编辑</a>
 						</div>`;
 					}else{
 					    edit=``
@@ -871,8 +871,8 @@ function downloadfn(fileServerId){
 	    }
 	});
 }
-function editfn(id,content,subId,checkStatus,el){
-	//$(el).parents(".nrt-cont").find(".nrt-cont-file .remove").show();
+function editfn(id,content,subId,checkStatus,teamId,el){
+	$(el).parents(".nrt-cont").find(".nrt-cont-file .remove").show();
 	newbootbox.oconfirm({
         title:"提示",
         message: "当前办理反馈内容已正式提交，是否确认修改？",
@@ -884,7 +884,7 @@ function editfn(id,content,subId,checkStatus,el){
                 header:true,
                 title:"编辑",
                 classed:"cjDialog",
-                url:"/app/db/document/view/html/editDialog.html?fileId="+fileId+"&replyContent="+content+"&subId="+subId+"&teamId="+id+"&fromMsg="+fromMsg+"&checkStatus="+checkStatus
+                url:"/app/db/document/view/html/editDialog.html?fileId="+fileId+"&replyContent="+content+"&subId="+subId+"&teamId="+teamId+"&fromMsg="+fromMsg+"&checkStatus="+checkStatus+"&opinionId="+id+"&fileFrom="+fileFrom
               })
         }
     });
