@@ -39,7 +39,7 @@
 		<if test="cui != null and cui != ''">
 			and b.CUIBAN_FLAG ='1'
 		</if>
-		and b.STATUS=1 order by a.DOC_STATUS,a.CREATED_TIME desc
+		and (b.STATUS=1 or b.STATUS=3 ) order by a.DOC_STATUS,a.CREATED_TIME desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
