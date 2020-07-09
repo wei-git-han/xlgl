@@ -9,6 +9,7 @@ import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.db.business.entity.*;
 import com.css.app.db.business.service.*;
 import com.css.app.db.config.service.AdminSetService;
+import com.css.app.db.config.service.RoleSetService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -54,6 +55,8 @@ public class ReplyExplainController {
 	private DocumentInfoService documentInfoService;
 	@Autowired
 	private DocumentReadService documentReadService;
+	@Autowired
+	private RoleSetService roleSetService;
 	/**
 	 * 获取某个分支局反馈
 	 * @param infoId 主文件id
@@ -247,8 +250,14 @@ public class ReplyExplainController {
                     String loginUserId = CurrentUser.getUserId();
                     //获取当前人的管理员类型（0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员）
                     String adminFlag = adminSetService.getAdminTypeByUserId(loginUserId);
+					// 当前登录人的角色（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
+					String roleType = roleSetService.getRoleTypeByUserId(loginUserId);
                     //如果该局和当前登录人属于同一个部门且该登录人是局管理员或者超级管理员
-					if ((StringUtils.equals(deptId, orgId) && "2".equals(adminFlag)) || "0".equals(adminFlag)) {
+					if (StringUtils.equals(deptId, orgId) && "2".equals(adminFlag)) {//是局管理员且是同一个局
+						json.put("isSameDept", "true");
+					} else if ("0".equals(adminFlag)) {//超级管理员
+						json.put("isSameDept", "true");
+					} else if (StringUtils.equals(deptId, orgId) && "3".equals(roleType)) {//是局长且是同一个局
 						json.put("isSameDept", "true");
 					} else {
 						json.put("isSameDept", "false");
