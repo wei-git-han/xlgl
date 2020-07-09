@@ -91,7 +91,13 @@ var pageModule = function(){
 			           	if(fileFrom && fileFrom == "jcdb"){
 			           		htmlText ='<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../djlr/html/djlr_view.html?fileId='+rowdata.infoId+'&fileFrom='+fileFrom+'&backAnchor='+'jndb'+'&orgid='+orgid+'&nowYear='+nowYear+'&month='+month+'&ytype='+ytype+'&docTypeName='+rowdata.docTypeName+'&jobContent='+rowdata.jobContent+'" target="iframe1">'+cuiban+'<span class="tabletitle2">'+rowdata.docTitle+csFlag+'</span></a>'
 			           	}else{
-			           		htmlText ='<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../view/html/view2.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&fileFrom='+fileFrom+'&showFileButton=true'+'&docTypeName='+rowdata.docTypeName+'&jobContent='+rowdata.jobContent+'" target="iframe1">'+cuiban+'<span class="tabletitle2">'+rowdata.docTitle+csFlag+'</span></a>'
+			           		var flag = "";
+			           		if (rowdata.docStatus == 13 || rowdata.docStatus == 11){
+			           			flag = "ctls"
+							}else{
+			           			flag = "fctls";
+							}
+			           		htmlText ='<a title="'+rowdata.docTitle+'" class="tabletitle addimg" href="../../view/html/view2.html?fileId='+rowdata.infoId+'&subId='+rowdata.id+'&fileFrom='+fileFrom+'&flag='+flag+'&showFileButton=true'+'&docTypeName='+rowdata.docTypeName+'&jobContent='+rowdata.jobContent+'" target="iframe1">'+cuiban+'<span class="tabletitle2">'+rowdata.docTitle+csFlag+'</span></a>'
 			           	}
 			           
 			           	 return htmlText

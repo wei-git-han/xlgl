@@ -26,7 +26,7 @@
 		) c on a.info_id = c.info_id
 		left join (select distinct info_id,listagg(sub_dept_name || nvl2(DECODE(undertaker_name,'',null,'NULL',null,undertaker_name),'/' || undertaker_name || nvl2(DECODE(undertaker_phone,'',null,'NULL',null,undertaker_phone),'('||undertaker_phone||')',null),null), ',') within group(order by h.sort,created_time desc) over(partition by info_id) under_depts from DB_SUB_DOC_INFO g inner join BASE_APP_ORGAN h
 		on g.sub_dept_id=h.id) e on a.INFO_ID = e.info_id
-		where (num = 1 or num is null) and (a.DOC_STATUS  &lt; 10 or a.DOC_STATUS = 13)
+		where (num = 1 or num is null) and (a.DOC_STATUS  &lt; 10 or a.DOC_STATUS = 13 or a.DOC_STATUS = 11)
 		<if test="orgId != null and orgId != ''">
 			and a.SUB_DEPT_ID = #{orgId}
 		</if>
@@ -38,6 +38,9 @@
 		</if>
 		<if test="cui != null and cui != ''">
 			and b.CUIBAN_FLAG ='1'
+		</if>
+		<if test="ctls != null and ctls != ''">
+			and (a.DOC_STATUS  = 13 or a.DOC_STATUS = 11)
 		</if>
 		and (b.STATUS=1 or b.STATUS=3 ) order by a.DOC_STATUS,a.CREATED_TIME desc
 		<if test="offset != null and limit != null">

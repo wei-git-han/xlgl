@@ -125,7 +125,9 @@ public class SubDocInfoController {
 		if (StringUtils.isNotBlank(docStatus)) {
 			if (StringUtils.equals("cui", docStatus)) {
 				map.put("cui", docStatus);
-			} else {
+			} else if(StringUtils.equals("13",docStatus)){
+				map.put("ctls",docStatus);
+			} else{
 				map.put("docStatus", docStatus);
 			}
 		}
@@ -216,7 +218,7 @@ public class SubDocInfoController {
 				}
 				// 建议落实
 				if (11 == docStatus) {
-					arr[7] += 1;
+					arr[9] += 1;
 				}
 				// 催办
 				if (StringUtils.equals("1", subDocInfo.getCuibanFlag())) {
@@ -654,9 +656,10 @@ public class SubDocInfoController {
 	 * @param subId
 	 *            分支主id
 	 */
-	public void banJieOperation(String infoId, String subId) {
+	public void banJieOperation(String infoId, String subId,String flag) {
 		SubDocInfo subInfo = subDocInfoService.queryObject(subId);
 		DocumentBjjl bjjl = new DocumentBjjl();
+		if("fctls".equals(flag)){
 		// 本文件其他机构的最小状态值
 		int minDocStatus = subDocInfoService.queryMinDocStatus(infoId, subInfo.getSubDeptId());
 		int maxDocStatus = subDocInfoService.queryMaxDocStatus(infoId, subInfo.getSubDeptId());
@@ -716,6 +719,19 @@ public class SubDocInfoController {
 					}*/
 				}
 			}
+		}
+		}else{
+		int numTotal = subDocInfoService.queryTotalNum(infoId);//该文件所有的分支
+		int numBJ = subDocInfoService.queryNoBjNum(infoId);//该文件是办结状态的分支
+		int t = numTotal - numBJ;
+		if(t== 1){//说明还有一个未办结的
+			DocumentInfo info = documentInfoService.queryObject(infoId);
+			info.setSzReadIds("");
+			info.setStatus(2);
+			documentInfoService.update(info);
+			bjjl.setContent("办结");
+		}
+		subInfo.setDocStatus(DbDocStatusDefined.BAN_JIE);
 		}
 		// 标识本局已有正式反馈
 		subInfo.setFirstReply(1);
@@ -1030,7 +1046,7 @@ public class SubDocInfoController {
 
 	@ResponseBody
 	@RequestMapping("/finishButton")
-	public void finishButton(String infoId, String subId, String type) {
+	public void finishButton(String infoId, String subId, String type,String flag) {
 		JSONObject json = new JSONObject();
 		String userId = "";
 		//承办人
@@ -1043,7 +1059,7 @@ public class SubDocInfoController {
         //待xxx落实的xxx的userId
 		String dlsUserId =  subDocTrackingService.findDealUserName(subId);
 		if (StringUtils.isNotBlank(infoId) && StringUtils.isNotBlank(subId)) {
-			this.finishButtonImpl(subId, json, infoId, type);
+			this.finishButtonImpl(subId, json, infoId, type,flag);
 		} else {
 			json.put("result", "fail");
 		}
@@ -1064,7 +1080,7 @@ public class SubDocInfoController {
 		Response.json(json);
 	}
 
-	public void finishButtonImpl(String subId, JSONObject json, String infoId, String type) {
+	public void finishButtonImpl(String subId, JSONObject json, String infoId, String type, String flag) {
 		SubDocInfo subDocInfo = subDocInfoService.queryObject(subId);
 		// 1是办结
 		if (StringUtils.equals("1", type)) {
@@ -1079,7 +1095,7 @@ public class SubDocInfoController {
 				replyExplainService.update(tempReply);
 			}
 			// 分支文件更新完成审批标识,并添加办结记录
-			this.banJieOperation(infoId, subId);
+			this.banJieOperation(infoId, subId,flag);
 		} else if (StringUtils.equals("2", type)) {// 2是常态落实
 			// 将临时反馈变为发布
 			Map<String, Object> map = new HashMap<>();
@@ -1209,7 +1225,7 @@ public class SubDocInfoController {
 				replyExplainService.update(tempReply);
 			}
 			// 分支文件更新完成审批标识,并添加办结记录
-			this.banJieOperation(infoId, subId);
+			this.banJieOperation(infoId, subId,"");
 		} else if (StringUtils.equals("3", chooseStatus)) {// 承办人提交选择常态落实
 			// 将临时反馈变为发布
 			Map<String, Object> map = new HashMap<>();

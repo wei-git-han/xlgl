@@ -11,6 +11,7 @@ import com.css.app.db.business.dao.SubDocInfoDao;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.business.service.SubDocInfoService;
 
+import javax.sound.sampled.Line;
 
 
 @Service("subDocInfoService")
@@ -124,6 +125,14 @@ public class SubDocInfoServiceImpl implements SubDocInfoService {
 	@Override
 	public int queryNoBanJie(String infoId){
 		return subDocInfoDao.queryNoBanJie(infoId);
+	}
+	@Override
+	public int queryNoBjNum(String infoId){
+		return subDocInfoDao.queryNoBjNum(infoId);
+	}
+	@Override
+	public int queryTotalNum(String infoId){
+		return subDocInfoDao.queryTotalNum(infoId);
 	}
 	@Override
 	public List<SubDocInfo> queryForList(String infoId){

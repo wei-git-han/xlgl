@@ -23,6 +23,7 @@ var finishButton = {"url":"/app/db/subdocinfo//finishButton","dataType":"text"};
 var fileId=getUrlParam("fileId")||""; //主文件id
 var subId=getUrlParam("subId")||""; //主文件id
 var fileFrom=getUrlParam("fileFrom")||""; //文件来源
+var flag = getUrlParam("flag")||"";
 var fromMsg=getUrlParam("fromMsg")||false; //是否为消息进入
 var showFileButton = getUrlParam("showFileButton")||false
 var docStatus = getUrlParam("docStatus")||"" //文件办理状态
@@ -1564,7 +1565,7 @@ function jnbanjie(dom){
 	 	callback1:function(){
 				$ajax({
 					url:finishButton,
-					data:{infoId:fileId,subId:subId,type:btntype},
+					data:{infoId:fileId,subId:subId,type:btntype,flag:flag},
 					type: "GET",
 					success:function(data){
 						if(data.result == "success"){

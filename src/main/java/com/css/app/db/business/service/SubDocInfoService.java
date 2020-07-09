@@ -56,4 +56,6 @@ public interface SubDocInfoService {
 	List<SubDocInfo> firstNoFeedbackTmingTaskList();
 	List<SubDocInfo> notTransferredTmingTaskList();
 	int queryNoBanJie(String infoId);
+	int queryNoBjNum(String infoId);
+	int queryTotalNum(String infoId);
 }
