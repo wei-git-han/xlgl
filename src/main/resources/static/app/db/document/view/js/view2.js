@@ -200,7 +200,7 @@ var pageModule = function(){
 						}
 					}
 
-				} else if (data.docStatus==13 &&"jndb"==fileFrom) {
+				} else if ((data.docStatus==13 || data.docStatus==11) &&"jndb"==fileFrom) {
 				    $(".newbottom").show();
 				    $("#ctlsBj").show();
 				}
