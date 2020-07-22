@@ -21,7 +21,7 @@ var pageModule = function(){
 				var sortType=$("#sortType").val();
 				$ajax({
 					url:saveUrl,
-					data:{text:encodeURI(content),value:sortType,dicType:type,id:''},
+					data:{text:content,value:sortType,dicType:type,id:''},
 					type: "GET",
 					success:function(data){
 						if(data.code == 0){
