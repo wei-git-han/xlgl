@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +37,7 @@ import cn.com.css.filestore.util.StringUtil;
 @Controller
 @RequestMapping("/remindadministration")
 public class RemindAdministrationController {
+	private final Logger logger = LoggerFactory.getLogger(AdminSetController.class);
 	@Autowired
 	private RemindAdministrationService remindAdministrationService;
 
@@ -144,6 +147,8 @@ public class RemindAdministrationController {
 	@ResponseBody
 	@RequestMapping("/delete")
 	public void delete(String[] ids) {
+		Date date = new Date();
+		logger.info("当前操作人："+CurrentUser.getUsername()+"---id:"+CurrentUser.getUserId()+"--时间是："+date);
 		remindAdministrationService.deleteBatch(ids);
 
 		Response.ok();

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,6 +35,7 @@ import com.github.pagehelper.PageHelper;
 @Controller
 @RequestMapping("/app/db/dbexpdeedbackset")
 public class DbExpDeedbackSetController {
+	private final Logger logger = LoggerFactory.getLogger(AdminSetController.class);
 	@Autowired
 	private DbExpDeedbackSetService dbExpDeedbackSetService;
 	
@@ -137,6 +140,8 @@ public class DbExpDeedbackSetController {
 	@ResponseBody
 	@RequestMapping("/delete")
 	public void delete(String[] ids){
+		Date date = new Date();
+		logger.info("当前操作人："+CurrentUser.getUsername()+"---id:"+CurrentUser.getUserId()+"--时间是："+date);
 		dbExpDeedbackSetService.deleteBatch(ids);
 		Response.json("result","success");
 	}

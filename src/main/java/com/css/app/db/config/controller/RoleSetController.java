@@ -1,10 +1,13 @@
 package com.css.app.db.config.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +40,7 @@ import com.github.pagehelper.PageHelper;
 @Controller
 @RequestMapping("/app/db/roleset")
 public class RoleSetController {
+	private final Logger logger = LoggerFactory.getLogger(AdminSetController.class);
 	@Autowired
 	private RoleSetService roleSetService;
 	@Autowired
@@ -202,6 +206,8 @@ public class RoleSetController {
 	@ResponseBody
 	@RequestMapping("/delete")
 	public void delete(String ids){
+		Date date = new Date();
+		logger.info("当前操作人："+CurrentUser.getUsername()+"---id:"+CurrentUser.getUserId()+"--时间是："+date);
 		String[] idArry = ids.split(",");
 		roleSetService.deleteBatch(idArry);
 		Response.json("result","success");

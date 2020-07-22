@@ -1,13 +1,12 @@
 package com.css.app.db.config.controller;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.css.base.utils.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,10 +18,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.css.app.db.config.entity.DocumentDic;
 import com.css.app.db.config.service.DocumentDicService;
 import com.css.app.db.util.DbDefined;
-import com.css.base.utils.GwPageUtils;
-import com.css.base.utils.PageUtils;
-import com.css.base.utils.Response;
-import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 
 
@@ -36,6 +31,7 @@ import com.github.pagehelper.PageHelper;
 @Controller
 @RequestMapping("/app/db/documentdic")
 public class DocumentDicController {
+	private final Logger logger = LoggerFactory.getLogger(DocumentDicController.class);
 	@Autowired
 	private DocumentDicService documentDicService;
 	
@@ -180,6 +176,8 @@ public class DocumentDicController {
 	@RequestMapping("/delete")
 	@RequiresPermissions("dbdocumentdic:delete")
 	public void delete(String ids){
+		Date date = new Date();
+		logger.info("当前操作人："+CurrentUser.getUsername()+"---id:"+CurrentUser.getUserId()+"--时间是："+date);
 		String[] idlist =null;
 		if(ids != null && !"".equals(ids)) {
 			idlist = ids.split(",");
