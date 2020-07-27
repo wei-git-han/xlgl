@@ -16,4 +16,4 @@ include 'api'
 include 'services:webservice'
 */
 
-rootProject.name = 'db_app'
+rootProject.name = 'xxgl_app'
