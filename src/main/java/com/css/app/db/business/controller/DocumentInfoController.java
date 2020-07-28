@@ -10,6 +10,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -110,7 +113,7 @@ public class DocumentInfoController {
 	 *            文件
 	 */
 	@ResponseBody
-	@RequestMapping("/uploadFile")
+	@RequestMapping("/uploadFile1")
 	public void savePDF(String idpdf, @RequestParam(required = false) MultipartFile[] pdf) {
 		String formatDownPath = "";// 版式文件下载路径
 		String retFormatId = null;// 返回的版式文件id
@@ -178,6 +181,26 @@ public class DocumentInfoController {
 			json.put("result", "fail");
 		}
 		Response.json(json);
+	}
+	
+	@ResponseBody
+	@RequestMapping("/uploadFile")
+	public Map<String, String> upLoadView(HttpServletRequest request, @RequestParam(required = false) MultipartFile pdf) throws IllegalStateException, IOException {
+		Map<String, String> map = new HashMap<>();
+		String savePath = request.getSession().getServletContext().getRealPath("/text/");
+		File dir = new File(savePath);
+		if(!dir.isDirectory()) {
+			dir.mkdirs();
+		}
+		String fileExt = pdf.getOriginalFilename();
+		String pikId = UUID.randomUUID().toString();
+		File file = new File(dir,fileExt);
+		System.out.println("ddddddd"+file.getAbsolutePath());
+		pdf.transferTo(file);
+		String filePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+"/text/"+fileExt;
+		map.put("resCode", "1");
+		return map;
+		
 	}
 
 	/**
