@@ -42,40 +42,50 @@ import com.css.base.utils.StringUtils;
  * @date 2020-07-28 13:15:37
  */
 @Controller
-@RequestMapping("/xlgldocumentfile")
+@RequestMapping("/xlgl/xlgldocumentfile")
 public class XlglDocumentFileController {
 	@Autowired
 	private XlglDocumentFileService xlglDocumentFileService;
 	@Autowired
 	private AppConfig appConfig;
 	
+	
 	/**
 	 * 列表
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	@RequiresPermissions("xlgldocumentfile:list")
-	public void list(Integer page, Integer limit){
-		Map<String, Object> map = new HashMap<>();
-		PageHelper.startPage(page, limit);
-		
-		//查询列表数据
-		List<XlglDocumentFile> xlglDocumentFileList = xlglDocumentFileService.queryList(map);
-		
-		PageUtils pageUtil = new PageUtils(xlglDocumentFileList);
-		Response.json("page",pageUtil);
+	public void list(String infoId){
+		List<XlglDocumentFile> fileList=null;
+		if(StringUtils.isNotBlank(infoId)) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("infoId", infoId);
+			fileList = xlglDocumentFileService.queryList(map);
+		}
+		Response.json(fileList);
 	}
-	
 	
 	/**
 	 * 信息
 	 */
 	@ResponseBody
-	@RequestMapping("/info/{id}")
-	@RequiresPermissions("xlgldocumentfile:info")
-	public void info(@PathVariable("id") String id){
+	@RequestMapping("/getFile")
+	public void info(String id){
+		System.err.println(id);
 		XlglDocumentFile xlglDocumentFile = xlglDocumentFileService.queryObject(id);
-		Response.json("xlglDocumentFile", xlglDocumentFile);
+		JSONObject json= new JSONObject();
+		if(xlglDocumentFile!=null) {
+			String formatId=xlglDocumentFile.getFileServerFormatId();
+			if(StringUtils.isNotBlank(formatId)){
+				//获取版式文件的下载路径
+				HTTPFile httpFiles = new HTTPFile(formatId);
+				if(httpFiles!=null) {
+					json.put("formatId", formatId);
+					json.put("downFormatIdUrl", httpFiles.getAssginDownloadURL(true));
+				}
+			}
+		}
+		Response.json(json);
 	}
 	
 	/**
@@ -108,11 +118,12 @@ public class XlglDocumentFileController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	@RequiresPermissions("xlgldocumentfile:delete")
-	public void delete(@RequestBody String[] ids){
-		xlglDocumentFileService.deleteBatch(ids);
-		
-		Response.ok();
+	public void delete(String ids){
+		if(StringUtils.isNotBlank(ids)) {
+			String[] idArray = ids.split(",");
+			xlglDocumentFileService.deleteBatch(idArray);
+			Response.json("result","success");
+		}
 	}
 	
 	/**
