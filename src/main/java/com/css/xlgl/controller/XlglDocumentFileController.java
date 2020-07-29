@@ -233,21 +233,13 @@ public class XlglDocumentFileController extends com.jfinal.core.Controller{
         try {
             String uploadPath = MyUtil.getTmpDir();
             uploadPath = uploadPath.substring(0, uploadPath.length() - 1);
-
-            //Site currentSite = null;
-            //String currentWebID = "";
-            //String currentColumnID = "";
-
             String action = getPara("action");
             String rtn = new ActionEnter(getRequest(), uploadPath).exec();
             System.out.println("--rtn--" + rtn);
             obj= JSON.parseObject(rtn);
             System.out.println("--obj--" + obj);
             String state = obj.getString("state");
-            //String dir=((StoreDisk) SpringContextUtil.getApplicationContext().getBean("storeDisk")).getDiskPath()+prefixPath;
-
             WebFileService webFileService = new WebFileService();
-
             // 将上传文件信息保存在数据库中
             if (state != null && state.equals("SUCCESS")) {
                 String tempFile = uploadPath + obj.getString("url");
@@ -358,6 +350,32 @@ public class XlglDocumentFileController extends com.jfinal.core.Controller{
         }
         renderHtml(JSON.toJSONString(obj));
 
+	}
+	
+	
+	/**
+	 * 文件上传接口
+	 * @param pdf
+	 */
+	@ResponseBody
+	@RequestMapping("/upLoadFile")
+	public void upLoad(@RequestParam(value = "pdf", required = false) MultipartFile pdf) {
+		JSONObject json = new JSONObject();
+		String fileId = FileBaseUtil.fileServiceUpload(pdf);
+		json.put("fileId", fileId);
+		Response.json(json);
+	}
+	
+	/**
+	 * 文件下载接口
+	 * @param fileId
+	 */
+	@ResponseBody
+	@RequestMapping("/downLoad")
+	public void downLoad(String fileId) {
+		HTTPFile httpFile = new HTTPFile(fileId);
+		String fileName = httpFile.getFileName();
+		Response.download(fileName, httpFile.getInputSteam());
 	}
 	
 }
