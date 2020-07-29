@@ -218,15 +218,25 @@ public class XlglDocumentFileController extends com.jfinal.core.Controller{
 		Response.json(json);
 	}
 	
-	public void index() {
+	/**
+	 * 富文本上传
+	 * @param currentSite
+	 * @param currentWebID
+	 * @param currentColumnID
+	 * @param watermark
+	 * @param user
+	 */
+	@ResponseBody
+	@RequestMapping("/upLoad")
+	public void upLoad(Site currentSite,String currentWebID,String currentColumnID,String watermark,User user) {
         JSONObject obj=new JSONObject();
         try {
             String uploadPath = MyUtil.getTmpDir();
             uploadPath = uploadPath.substring(0, uploadPath.length() - 1);
 
-            Site currentSite = null;
-            String currentWebID = "";
-            String currentColumnID = "";
+            //Site currentSite = null;
+            //String currentWebID = "";
+            //String currentColumnID = "";
 
             String action = getPara("action");
             String rtn = new ActionEnter(getRequest(), uploadPath).exec();
@@ -284,7 +294,7 @@ public class XlglDocumentFileController extends com.jfinal.core.Controller{
                         break;
                     case "uploadimage":
                         // 水印
-                        String watermark = "";
+                        //String watermark = "";
                         if (StrKit.notBlank(watermark)) {
                             WatermarkService ws = new WatermarkService();
                             Watermark w = Watermark.dao.findById(Site.dao.findById(currentSite.getStr("keyid")).getStr("WaterMarkID"));
@@ -317,7 +327,7 @@ public class XlglDocumentFileController extends com.jfinal.core.Controller{
                 }
                 //System.out.println("--url--"+url);
                 // 保存数据库
-                User user = null;
+                //User user = null;
                 //System.out.println("--url--"+url);
                 if (StrKit.notBlank(url)) {
                     String fileKeyID = url.substring(url.lastIndexOf("/") + 1, url.lastIndexOf(".")).split("_")[0];//视频会在原文件后加_,图片加水印后会在后面加_1
