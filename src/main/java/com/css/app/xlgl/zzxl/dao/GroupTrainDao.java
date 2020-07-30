@@ -15,5 +15,7 @@ import com.css.base.dao.BaseDao;
  */
 @Mapper
 public interface GroupTrainDao extends BaseDao<GroupTrain> {
+
+	boolean fabu(String id);
 	
 }

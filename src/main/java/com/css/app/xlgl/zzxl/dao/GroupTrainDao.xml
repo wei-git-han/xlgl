@@ -81,6 +81,10 @@
 		where ID = #{id}
 	</update>
 	
+	<update id="fabu">
+		update t_group_train set type= '1' where ID = #{id}
+	</update>
+	
 	<delete id="delete">
 		delete from T_GROUP_TRAIN where ID = #{value}
 	</delete>

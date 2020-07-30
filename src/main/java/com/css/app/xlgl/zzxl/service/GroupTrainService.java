@@ -22,4 +22,6 @@ public interface GroupTrainService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+
+	String fabu(HttpServletRequest request);
 }

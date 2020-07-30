@@ -84,6 +84,16 @@ public class GroupTrainController{
 	}
 	
 	/**
+	 * 信息
+	 */
+	@ResponseBody
+	@RequestMapping("/fabu")
+	public void fabu(HttpServletRequest request){
+		String msg = groupTrainService.fabu(request);
+		Response.json(msg);
+	}
+	
+	/**
 	 * 保存
 	 */
 	@ResponseBody

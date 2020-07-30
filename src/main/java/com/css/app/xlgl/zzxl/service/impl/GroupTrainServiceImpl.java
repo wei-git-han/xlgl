@@ -77,4 +77,21 @@ public class GroupTrainServiceImpl implements  GroupTrainService{
 		groupTrainDao.deleteBatch(ids);
 	}
 
+	@Override
+	public String fabu(HttpServletRequest request) {
+		JSONObject json = new JSONObject();
+	    json.put("flag", false);
+	    json.put("message", "发布失败");
+    	String idstr = request.getParameter("id");
+    	if(StringUtils.isNotEmpty(idstr)) {
+			String[] ids = idstr.split(",");
+			for (String id : ids) {
+				groupTrainDao.fabu(id);
+			}
+			json.put("flag", true);
+			json.put("message", "发布成功");
+		}
+		return json.toString();
+	}
+
 }
