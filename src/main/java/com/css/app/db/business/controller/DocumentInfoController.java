@@ -200,6 +200,10 @@ public class DocumentInfoController {
 		String filePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+"/text/"+fileExt;
 		map.put("resCode", "1");
 		return map;
+//		JSONObject json = new JSONObject();
+//		String fileId = FileBaseUtil.fileServiceUpload(pdf);
+//		json.put("fileId", fileId);
+//		Response.json(json);
 		
 	}
 

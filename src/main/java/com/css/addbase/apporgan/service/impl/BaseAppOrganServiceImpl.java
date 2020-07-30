@@ -85,5 +85,10 @@ public class BaseAppOrganServiceImpl implements BaseAppOrganService {
 		// TODO Auto-generated method stub
 		return baseAppOrganDao.queryListByIds(ids);
 	}
+	
+	@Override
+	public List<BaseAppOrgan> queryAllDept(String root){
+		return baseAppOrganDao.queryAllDept(root);
+	}
 
 }

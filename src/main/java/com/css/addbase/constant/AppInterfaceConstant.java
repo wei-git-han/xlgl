@@ -651,4 +651,12 @@ public class AppInterfaceConstant {
      * 
      */
     public final static String WEB_INTERFACE_DZBMS_TO_GWCL_QUERY_YJ = "/api/myRead/queryYJ";
+    
+    public final static String WEB_INTERFACE_QXJ = "/app/qxjgl/api/getQjUserIds";
+    
+    public final static String WEB_INTERFACE_XLGLZXR = "/api/online/";
+    
+    public final static String APP_QXJGL = "xlglqxj";
+    
+    public final static String APP_XLGLZXR = "xlglzxr";
 }

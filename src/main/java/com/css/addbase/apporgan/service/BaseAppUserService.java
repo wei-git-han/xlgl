@@ -99,4 +99,14 @@ public interface BaseAppUserService {
 	 * @Version v1.0
 	 */
 	List<BaseAppUser> selectUserByNameAndUnitId(String name,String unitId);
+	
+	int queryAllUser(String deptId);
+	
+	int queryZbUser(String deptId);
+	
+	int queryUserNum(String deptId);
+	
+	List<BaseAppUser> queryUsers(String deptId);
+	
+	
 }
