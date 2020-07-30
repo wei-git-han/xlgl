@@ -107,6 +107,7 @@ public class DocumentAddXbController {
 		}
 		Response.json(jsonObject);
 	}
+	
 	/**
 	 * 添加或者编辑协办人
 	 * @param subId 分支ID
