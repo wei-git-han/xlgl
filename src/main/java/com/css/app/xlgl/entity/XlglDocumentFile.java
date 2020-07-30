@@ -1,4 +1,4 @@
-package com.css.xlgl.entity;
+package com.css.app.xlgl.entity;
 
 import java.io.Serializable;
 import java.util.Date;

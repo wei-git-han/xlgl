@@ -1,10 +1,11 @@
-package com.css.xlgl.service;
+package com.css.app.xlgl.service;
 
 
 import java.util.List;
 import java.util.Map;
 
-import com.css.xlgl.entity.XlglDocumentFile;
+import com.css.app.xlgl.entity.XlglDocumentFile;
+
 
 /**
  * 基本信息表携带文件的关系表

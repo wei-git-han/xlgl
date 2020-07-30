@@ -1,10 +1,10 @@
-package com.css.xlgl.dao;
+package com.css.app.xlgl.dao;
 
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.css.app.xlgl.entity.XlglDocumentFile;
 import com.css.base.dao.BaseDao;
-import com.css.xlgl.entity.XlglDocumentFile;
 
 /**
  * 基本信息表携带文件的关系表

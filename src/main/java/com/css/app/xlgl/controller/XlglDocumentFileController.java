@@ -1,4 +1,4 @@
-package com.css.xlgl.controller;
+package com.css.app.xlgl.controller;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,12 +39,12 @@ import com.css.addbase.apporgmapped.entity.BaseAppOrgMapped;
 import com.css.addbase.apporgmapped.service.BaseAppOrgMappedService;
 import com.css.addbase.constant.AppInterfaceConstant;
 import com.css.addbase.suwell.OfdTransferUtil;
+import com.css.app.xlgl.entity.XlglDocumentFile;
+import com.css.app.xlgl.service.XlglDocumentFileService;
 import com.css.base.utils.CrossDomainUtil;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.PageUtils;
 import com.css.base.utils.UUIDUtils;
-import com.css.xlgl.entity.XlglDocumentFile;
-import com.css.xlgl.service.XlglDocumentFileService;
 import com.github.pagehelper.PageHelper;
 
 import cn.com.css.filestore.impl.HTTPFile;
