@@ -140,7 +140,7 @@ public class SportsTrainController {
      * 控制台活动发布列表
      */
     public void getActivePublishDetail() {
-        List<TGroupActivePublish> list = SportsTrainService.getActivePublishList();
+        List<TGroupActivePublish> list = SportsTrainService.getActivePublishList(); 
         Response.json(list);
     }
     
@@ -325,5 +325,4 @@ public class SportsTrainController {
             List<TGroupApplyRecord> userApplyList = SportsTrainService.getUserApplyList(actid);
             Response.json(userApplyList);
     }
-	
 }
