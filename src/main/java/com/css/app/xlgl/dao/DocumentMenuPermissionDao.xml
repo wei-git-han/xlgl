@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.DocumentMenuPermissionDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.DocumentMenuPermission">
+		select * from DOCUMENT_MENU_PERMISSION where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.DocumentMenuPermission">
+		select * from DOCUMENT_MENU_PERMISSION 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from DOCUMENT_MENU_PERMISSION 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.DocumentMenuPermission">
+		insert into DOCUMENT_MENU_PERMISSION
+		(
+			"ID", 
+			"MENU_ID", 
+			"USER_ID", 
+			"CREATOR", 
+			"CREATED_TIME"
+		)
+		values
+		(
+			#{id}, 
+			#{menuId}, 
+			#{userId}, 
+			#{creator}, 
+			#{createdTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.DocumentMenuPermission">
+		update DOCUMENT_MENU_PERMISSION 
+		<set>
+			<if test="menuId != null">"MENU_ID" = #{menuId}, </if>
+			<if test="userId != null">"USER_ID" = #{userId}, </if>
+			<if test="creator != null">"CREATOR" = #{creator}, </if>
+			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from DOCUMENT_MENU_PERMISSION where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from DOCUMENT_MENU_PERMISSION where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<delete id="deleteByUserId">
+		delete from DOCUMENT_MENU_PERMISSION where USER_ID = #{value}
+	</delete>
+
+</mapper>
