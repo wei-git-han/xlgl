@@ -79,7 +79,7 @@ public class XlglDocumentFileController{
 	 * 列表
 	 */
 	@ResponseBody
-	@RequestMapping("/list")
+	@RequestMapping("/fileList")
 	public void list(String infoId){
 		List<XlglDocumentFile> fileList=null;
 		if(StringUtils.isNotBlank(infoId)) {
