@@ -32,7 +32,6 @@ import com.css.base.utils.UUIDUtils;
 @RestController
 @RequestMapping("/sportstrain")
 public class SportsTrainController {
-
 	@Autowired
 	private SportsTrainService SportsTrainService;
 	
