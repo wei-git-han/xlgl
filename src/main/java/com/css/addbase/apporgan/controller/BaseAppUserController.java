@@ -111,6 +111,28 @@ public class BaseAppUserController {
 			return list;
 		}
 	}
+	
+	
+	/**
+	 * 获取当前登录人所在部门的人员树
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/Chutree")
+	@ResponseBody
+	public Object getUserChuTree() {
+		String organId = baseAppOrgMappedService.getChuByUserId(CurrentUser.getUserId());
+		List<BaseAppOrgan> organs = baseAppOrganService.queryList(null);
+		List<BaseAppUser> users = baseAppUserService.queryList(null);
+		if (StringUtils.isNotEmpty(organId)) {
+			JSONObject list=  OrgUtil.getUserTree(organs, users, organId);
+			return list;
+		} else {
+			JSONObject list=  OrgUtil.getUserTree(organs, users);
+			return list;
+		}
+	}
+	
 	/**
 	 * 获取当前登录人所在部门的人员树指定不显示的人员
 	 * @param request
@@ -337,5 +359,18 @@ public class BaseAppUserController {
         	json.put("undertakeUser", user.getTruename());
         }
 		Response.json(json);
+	}
+	
+	
+	/**
+	 * 加载当前人及当前人的部门
+	 */
+	@ResponseBody
+	@RequestMapping("/updateZbqk")
+    public void updateZbqk(BaseAppUser baseAppUser){
+		//删掉的代码没有调用到
+		JSONObject json = new JSONObject();
+		baseAppUserService.update(baseAppUser);
+		Response.json("result","success");
 	}
 }

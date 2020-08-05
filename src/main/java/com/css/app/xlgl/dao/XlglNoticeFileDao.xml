@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.XlglNoticeFileDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglNoticeFile">
+		select * from XLGL_NOTICE_FILE where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglNoticeFile">
+		select * from XLGL_NOTICE_FILE 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_NOTICE_FILE 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglNoticeFile">
+		insert into XLGL_NOTICE_FILE
+		(
+			"ID", 
+			"CREATE_TIME", 
+			"FJMC", 
+			"NOTICE_ID"
+		)
+		values
+		(
+			#{id}, 
+			#{createTime}, 
+			#{fjmc}, 
+			#{noticeId}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.XlglNoticeFile">
+		update XLGL_NOTICE_FILE 
+		<set>
+			<if test="createTime != null">"CREATE_TIME" = #{createTime}, </if>
+			<if test="fjmc != null">"FJMC" = #{fjmc}, </if>
+			<if test="noticeId != null">"NOTICE_ID" = #{noticeId}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_NOTICE_FILE where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_NOTICE_FILE where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

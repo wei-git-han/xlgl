@@ -380,6 +380,43 @@ public class BaseAppOrgMappedServiceImpl implements BaseAppOrgMappedService {
 		return baseAppOrgMappedDao.queryList(map);
 	}
 
+	@Override
+	public String getChuByUserId(String userId) {
+		// TODO Auto-generated method stub
+		if(StringUtils.isNotBlank(userId)){
+			BaseAppUser user = baseAppUserDao.queryObject(userId);
+			if(user != null){
+				BaseAppOrgan org = baseAppOrganDao.queryObject(user.getOrganid());
+				if(org != null){
+					String[] pathArr = org.getTreePath().split(",");
+					if(pathArr.length > 3){
+						return pathArr[3];
+					} else if(pathArr.length ==3){
+						return pathArr[2];
+					}else {
+						return org.getId();
+					}
+				}
+			} else {
+				UserInfo userInfo = orgService.getUserInfo(userId);
+				if(userInfo != null){
+					Organ org = orgService.getOrgan(userInfo.getOrganId());
+					if(org != null){
+						String[] pathArr = org.getP().split(",");
+						if(pathArr.length > 2){
+							return pathArr[2];
+						}else if(pathArr.length ==3){
+							return pathArr[2];
+						}else {
+							return org.getOrganId();
+						}
+					}
+				}
+			}
+		}
+		return "";
+	}
+
 
 	
 }

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.XlglNewsDao">
+	
+	<resultMap id="totalMap" type="HashMap">
+		<result property="releaseOrgan" column="releaseOrgan" jdbcType="VARCHAR" ></result>
+		<result property="nums" column="nums" jdbcType="INTEGER" ></result>
+	</resultMap>
+	
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglNews">
+		select * from XLGL_NEWS where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglNews">
+		select * from XLGL_NEWS where IS_RELEASE='1'
+		<if test="releaseUserid != null and releaseUserid != '' ">
+			and RELEASE_USERID = #{releaseUserid}
+		</if>
+		<if test="releaseOrganid != null and releaseOrganid != '' ">
+			and RELEASE_ORGANID = #{releaseOrganid}
+		</if>
+		order by is_top desc, release_date desc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+	<!--查询本年度发布新闻数  -->
+ 	<select id="queryTotalYear" resultType="int">
+		select count(*) from XLGL_NEWS where  IS_RELEASE='1' and to_char(RELEASE_DATE,'yyyy')=to_char(sysdate,'yyyy')
+	</select>
+	
+	<!--查询本月发布新闻数  -->
+ 	<select id="queryTotalMonth" resultType="int">
+		select count(*) from XLGL_NEWS where  IS_RELEASE='1' and to_char(RELEASE_DATE,'yyyy-MM')=to_char(sysdate,'yyyy-MM')
+	</select>
+	
+	<!--查询本周发布新闻数  -->
+ 	<select id="queryTotalWeek" resultType="int">
+		select count(*) from XLGL_NEWS where  IS_RELEASE='1' and RELEASE_DATE &gt;= TRUNC(NEXT_DAY(SYSDATE-8,1)+1) AND RELEASE_DATE &lt; TRUNC(NEXT_DAY(SYSDATE-8,1)+7)+1
+	</select>
+	
+	<!--根据局统计本年度发布新闻数  -->
+	<select id="queryTotalYearByOrgan" resultMap="totalMap">
+		select RELEASE_ORGAN releaseOrgan,count(*) nums from XLGL_NEWS where IS_RELEASE='1' and to_char(RELEASE_DATE,'yyyy')=to_char(sysdate,'yyyy') group by RELEASE_ORGAN
+	</select>
+	
+	<!--根据局统计本月发布新闻数  -->
+	<select id="queryTotalMonthByOrgan" resultMap="totalMap">
+		select RELEASE_ORGAN releaseOrgan,count(*) nums from XLGL_NEWS where IS_RELEASE='1' and to_char(RELEASE_DATE,'yyyy-MM')=to_char(sysdate,'yyyy-MM') group by RELEASE_ORGAN
+	</select>
+	
+	<!--查询本周发布新闻数  -->
+ 	<select id="queryTotalWeekByOrgan" resultMap="totalMap">
+		select RELEASE_ORGAN releaseOrgan, count(*) nums from XLGL_NEWS where  IS_RELEASE='1' and RELEASE_DATE &gt;= TRUNC(NEXT_DAY(SYSDATE-8,1)+1) AND RELEASE_DATE &lt; TRUNC(NEXT_DAY(SYSDATE-8,1)+7)+1 group by RELEASE_ORGAN
+	</select>
+	
+	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglNews">
+		insert into XLGL_NEWS
+		(
+			"ID", 
+			"TITLE", 
+			"RELEASE_ORGANID", 
+			"RELEASE_ORGAN", 
+			"RELEASE_USERID", 
+			"RELEASE_USER", 
+			"RELEASE_DATE",
+			"NEWS_TYPE", 
+			"CONTENT",
+			"CONTENT_TEXT",
+			"IS_RELEASE",
+			"PICTURE_PATH",
+			"RELEASE_DEPTID",
+			"RELEASE_DEPT"
+		)
+		values
+		(
+			#{id}, 
+			#{title}, 
+			#{releaseOrganid}, 
+			#{releaseOrgan}, 
+			#{releaseUserid}, 
+			#{releaseUser}, 
+			#{releaseDate},
+			#{newsType}, 
+			#{content},
+			#{contentText},
+			#{isRelease},
+			#{picturePath},
+			#{releaseDeptid},
+			#{releaseDept}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.XlglNews">
+		update XLGL_NEWS 
+		<set>
+			<if test="releaseUserid != null and releaseUserid !=''">"RELEASE_USERID" = #{releaseUserid}, </if>
+			<if test="releaseUser != null and releaseUser != '' ">"RELEASE_USER" = #{releaseUser}, </if>
+			<if test="title != null and title !=''">"TITLE" = #{title}, </if>
+			<if test="releaseOrganid != null and releaseOrganid != ''">"RELEASE_ORGANID" = #{releaseOrganid}, </if>
+			<if test="releaseOrgan != null and releaseOrgan != '' ">"RELEASE_ORGAN" = #{releaseOrgan}, </if>
+			<if test="releaseDate != null">"RELEASE_DATE" = #{releaseDate},</if>
+			<if test="newsType != null and newsType != '' ">"NEWS_TYPE" = #{newsType}, </if>
+			<if test="content != null and content != '' ">"CONTENT" = #{content},</if>
+			<if test="contentText != null and contentText != '' ">"CONTENT_TEXT" = #{contentText}, </if>
+			<if test="isRelease != null and isRelease != '' ">"IS_RELEASE" = #{isRelease},</if>
+			<if test="picturePath != null and picturePath != '' ">"PICTURE_PATH" = #{picturePath},</if>
+			<if test="hits != null and hits !='' ">"HITS" = #{hits},</if>
+			<if test="isTop != null">"IS_TOP" = #{isTop},</if>
+			<if test="releaseDeptid != null and releaseDeptid !='' ">"RELEASE_DEPTID" = #{releaseDeptid},</if>
+			<if test="releaseDept != null and releaseDept !='' ">"RELEASE_DEPT" = #{releaseDept}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_NEWS where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_NEWS where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+
+	<!--查询目前置顶的新闻  -->
+	<select id="queryNowTop" resultType="com.css.app.xlgl.entity.XlglNews">
+		select * from XLGL_NEWS where IS_TOP = 1
+	</select>
+	
+	<!--查询草稿箱  -->
+	<select id="queryDrafts" resultType="com.css.app.xlgl.entity.XlglNews">
+		select * from XLGL_NEWS where IS_RELEASE='0'
+		<if test="releaseUserid != null and releaseUserid != '' ">
+			and RELEASE_USERID = #{releaseUserid}
+		</if>
+		<if test="releaseOrganid != null and releaseOrganid != '' ">
+			and RELEASE_ORGANID = #{releaseOrganid}
+		</if>
+		order by is_top desc, release_date desc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+</mapper>
