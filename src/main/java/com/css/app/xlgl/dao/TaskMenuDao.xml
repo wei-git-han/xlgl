@@ -70,5 +70,9 @@
 			#{menuId}
 		</foreach>
 	</delete>
+	
+	<select id="queryAuthList" resultType="com.css.app.xlgl.entity.TaskMenu">
+		select * from TASK_MENU where 1=1 order by SORT
+	</select>
 
 </mapper>

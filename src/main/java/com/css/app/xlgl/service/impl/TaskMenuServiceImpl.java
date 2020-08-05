@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import com.css.app.xlgl.dao.TaskMenuDao;
 import com.css.app.xlgl.entity.TaskMenu;
 import com.css.app.xlgl.service.TaskMenuService;
+import com.css.base.utils.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,4 +50,18 @@ public class TaskMenuServiceImpl implements TaskMenuService {
 		taskMenuDao.deleteBatch(menuIds);
 	}
 	
+	@Override
+	public List<TaskMenu> findByParentId(String id) {
+		return taskMenuDao.findByParentId(id);
+	}
+	
+	@Override
+	public List<TaskMenu> queryAuthList(String userId) {
+		if (StringUtils.isNotEmpty(userId)) {
+			Map<String, Object> map = new HashMap<String,Object>();
+			map.put("userId", userId);
+			return taskMenuDao.queryAuthList(map);
+		}
+		return taskMenuDao.queryAuthList(null);
+	}
 }

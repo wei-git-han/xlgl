@@ -26,4 +26,8 @@ public interface TaskMenuService {
 	void delete(String menuId);
 	
 	void deleteBatch(String[] menuIds);
+	
+	List<TaskMenu> findByParentId(String id);
+	
+	List<TaskMenu> queryAuthList(String userId);
 }

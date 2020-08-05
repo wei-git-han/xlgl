@@ -166,8 +166,6 @@ public class DocumentMenuPermissionController {
 				documentMenuPermissionService.save(vo);
 			}
 		}
-		
-		
 		Response.json("result","success");
 	}
 	
