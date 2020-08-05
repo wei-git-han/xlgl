@@ -22,4 +22,23 @@
 		and height = #{height} and sex = #{sex} and #{age} between min_age and max_age
 	</select>
 	
+	<select id = "selYtxsCount" resultType = "int">
+		select grade from SS_YTXS_FWC where MAX_COUNT = #{ytxscount} and #{age} between MIN_AGE and MAX_AGE
+	</select>
+	
+	<select id = "selQbxcCount" resultType = "int">
+		select grade from SS_QBXC_FWC where TIME = #{qbxcCount} and #{age} between MIN_AGE and MAX_AGE
+	</select>
+	
+	<select id = "selYwqzCount" resultType = "int">
+		select grade from SS_YWQZ where sex = #{sex} and count = #{ywqzcount} and #{age} between MIN_AGE and MAX_AGE
+	</select>
+	
+	<select id = "selSrunCount" resultType = "int">
+		select grade from SS_SNAKERUN where sex = #{sex} and time = #{sruncount} and #{age} between MIN_AGE and MAX_AGE
+	</select>
+	
+	<select id = "selTsruncount" resultType = "int">
+		select time from SS_THREETHOUSAND where #{age} between AGE_MIN and AGE_MAX and #{tsruncount} between GRADE_MIN and GRADE_MAX and sex = #{sex}
+	</select>
 </mapper>

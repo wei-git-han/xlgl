@@ -31,7 +31,7 @@ public class SoldierTzController {
 				age < 0 || age > 1000) {
 			json.put("sex", sex);
 			json.put("birthday", birthday);
-			json.put("age", age);
+			json.put("age", age); 
 			json.put("type", type);
 			json.put("BMI", String.valueOf(BMI));
 			json.put("isFlag", "不合格");
@@ -57,11 +57,45 @@ public class SoldierTzController {
 	
 	/**
 	 * 根据4科成绩查询份数及总分数
+	 * ytxscount 引体向上个数
+	 * ywqzcount 仰卧起坐个数
+	 * sruncount 30米蛇形跑
+	 * tsruncount 3000米长跑
+	 * qbxcCount 屈臂悬垂个数 
 	 * */
 	@RequestMapping("/selgrade")
-	public void selGrade(String sex,String age,String type,String ytxscount,String ywqzcount,String sruncount,String tsruncount) {
+	public void selGrade(String sex,String age,String type,String ytxscount,String ywqzcount,String sruncount,String tsruncount,String qbxcCount) {
+		JSONObject json = new JSONObject();
+		//总成绩
+		int countNum = 0;
+		//引体向上成绩
+		int YtxsCount =0;
+		//屈臂垂悬成绩
+		int QbcxCount =0;
+		//仰卧起坐成绩
+		int YwqzCount = somatoTzService.selYwqzCount(age,sex,ywqzcount);
+		//蛇形跑成绩
+		int SrunCount = somatoTzService.selSrunCount(age,sex,sruncount);
+		//3000米长跑成绩
+		int TsrunCount = somatoTzService.selTsruncount(age,sex,tsruncount);
 		
-		
+		if("男".equals(sex)) {
+			YtxsCount = somatoTzService.selYtxsCount(age,ytxscount);
+			countNum = YwqzCount + SrunCount + TsrunCount + YtxsCount;
+		}else{
+			QbcxCount = somatoTzService.selQbxcCount(age,qbxcCount);
+			countNum = YwqzCount + SrunCount + TsrunCount + QbcxCount;
+		}
+		json.put("sex", sex);
+		json.put("age", age);
+		json.put("type", type);
+		json.put("YtxsCount", YtxsCount);
+		json.put("QbcxCount", QbcxCount);
+		json.put("YwqzCount", YwqzCount);
+		json.put("SrunCount", SrunCount);
+		json.put("TsrunCount", TsrunCount);
+		json.put("count", countNum);
+		Response.json(json);
 	}
 	
 	/**
@@ -228,32 +262,32 @@ public class SoldierTzController {
 		JSONArray jsonArr = new JSONArray();
 		JSONObject json1 = new JSONObject();
 		json1.put("age", "24岁以下");
-		json1.put("woman", "36\"");
+		json1.put("woman", "36");
 		jsonArr.add(json1);
 		
 		JSONObject json2 = new JSONObject();
 		json2.put("age", "25~27岁");
-		json2.put("woman", "35\"");
+		json2.put("woman", "35");
 		jsonArr.add(json2);
 		
 		JSONObject json3 = new JSONObject();
 		json3.put("age", "28~30岁");
-		json3.put("woman", "33\"");
+		json3.put("woman", "33");
 		jsonArr.add(json3);
 		
 		JSONObject json4 = new JSONObject();
 		json4.put("age", "31~33岁");
-		json4.put("woman", "30\"");
+		json4.put("woman", "30");
 		jsonArr.add(json4);
 		
 		JSONObject json5 = new JSONObject();
 		json5.put("age", "34~36岁");
-		json5.put("woman", "27\"");
+		json5.put("woman", "27");
 		jsonArr.add(json5);
 		
 		JSONObject json6 = new JSONObject();
 		json6.put("age", "37~39岁");
-		json6.put("woman", "24\"");
+		json6.put("woman", "24");
 		jsonArr.add(json6);
 		
 		result.put("result", jsonArr);
@@ -411,80 +445,80 @@ public class SoldierTzController {
 		JSONArray jsonArr = new JSONArray();
 		JSONObject json1 = new JSONObject();
 		json1.put("age", "24岁以下");
-		json1.put("man", "20.4\"");
-		json1.put("woman", "22.2\"");
+		json1.put("man", "20.4");
+		json1.put("woman", "22.2");
 		jsonArr.add(json1);
 		
 		JSONObject json2 = new JSONObject();
 		json2.put("age", "25~27岁");
-		json2.put("man", "20.8\"");
-		json2.put("woman", "22.5\"");
+		json2.put("man", "20.8");
+		json2.put("woman", "22.5");
 		jsonArr.add(json2);
 		
 		JSONObject json3 = new JSONObject();
 		json3.put("age", "28~30岁");
-		json3.put("man", "21.1\"");
-		json3.put("woman", "22.8\"");
+		json3.put("man", "21.1");
+		json3.put("woman", "22.8");
 		jsonArr.add(json3);
 		
 		JSONObject json4 = new JSONObject();
 		json4.put("age", "31~33岁");
-		json4.put("man", "21.3\"");
-		json4.put("woman", "23.1\"");
+		json4.put("man", "21.3");
+		json4.put("woman", "23.1");
 		jsonArr.add(json4);
 		
 		JSONObject json5 = new JSONObject();
 		json5.put("age", "34~36岁");
-		json5.put("man", "21.7\"");
-		json5.put("woman", "23.4\"");
+		json5.put("man", "21.7");
+		json5.put("woman", "23.4");
 		jsonArr.add(json5);
 		
 		JSONObject json6 = new JSONObject();
 		json6.put("age", "37~39岁");
-		json6.put("man", "21.8\"");
-		json6.put("woman", "23.7\"");
+		json6.put("man", "21.8");
+		json6.put("woman", "23.7");
 		jsonArr.add(json6);
 		
 		JSONObject json7 = new JSONObject();
 		json7.put("age", "40~42岁");
-		json7.put("man", "22.3\"");
-		json7.put("woman", "24\"");
+		json7.put("man", "22.3");
+		json7.put("woman", "24");
 		jsonArr.add(json7);
 		
 		JSONObject json8 = new JSONObject();
 		json8.put("age", "43~45岁");
-		json8.put("man", "22.4\"");
-		json8.put("woman", "24.3\"");
+		json8.put("man", "22.4");
+		json8.put("woman", "24.3");
 		jsonArr.add(json8);
 		
 		JSONObject json9 = new JSONObject();
 		json9.put("age", "46~48岁");
-		json9.put("man", "22.6\"");
-		json9.put("woman", "24.6\"");
+		json9.put("man", "22.6");
+		json9.put("woman", "24.6");
 		jsonArr.add(json9);
 		
 		JSONObject json10 = new JSONObject();
 		json10.put("age", "49~51岁");
-		json10.put("man", "22.8\"");
-		json10.put("woman", "24.9\"");
+		json10.put("man", "22.8");
+		json10.put("woman", "24.9");
 		jsonArr.add(json10);
 		
 		JSONObject json11 = new JSONObject();
 		json11.put("age", "52~54岁");
-		json11.put("man", "23.4\"");
-		json11.put("woman", "25.2\"");
+		json11.put("man", "23.4");
+		json11.put("woman", "25.2");
 		jsonArr.add(json11);
 		
 		JSONObject json12 = new JSONObject();
 		json12.put("age", "55~57岁");
-		json12.put("man", "23.8\"");
-		json12.put("woman", "25.5\"");
+		json12.put("man", "23.8");
+		json12.put("woman", "25.5");
 		jsonArr.add(json12);
 		
 		JSONObject json13 = new JSONObject();
 		json13.put("age", "58~60岁");
-		json13.put("man", "24.5\"");
-		json13.put("woman", "25.8\"");
+		json13.put("man", "24.5");
+		json13.put("woman", "25.8");
 		jsonArr.add(json13);
 		
 		result.put("result", jsonArr);
@@ -500,80 +534,80 @@ public class SoldierTzController {
 		JSONArray jsonArr = new JSONArray();
 		JSONObject json1 = new JSONObject();
 		json1.put("age", "24岁以下");
-		json1.put("man", "13'35\"");
-		json1.put("woman", "16'05\"");
+		json1.put("man", "13'35");
+		json1.put("woman", "16'05");
 		jsonArr.add(json1);
 		
 		JSONObject json2 = new JSONObject();
 		json2.put("age", "25~27岁");
-		json2.put("man", "13'47\"");
-		json2.put("woman", "16'18\"");
+		json2.put("man", "13'47");
+		json2.put("woman", "16'18");
 		jsonArr.add(json2);
 		
 		JSONObject json3 = new JSONObject();
 		json3.put("age", "28~30岁");
-		json3.put("man", "14'23\"");
-		json3.put("woman", "16'57\"");
+		json3.put("man", "14'23");
+		json3.put("woman", "16'57");
 		jsonArr.add(json3);
 		
 		JSONObject json4 = new JSONObject();
 		json4.put("age", "31~33岁");
-		json4.put("man", "14'55\"");
-		json4.put("woman", "17'36\"");
+		json4.put("man", "14'55");
+		json4.put("woman", "17'36");
 		jsonArr.add(json4);
 		
 		JSONObject json5 = new JSONObject();
 		json5.put("age", "34~36岁");
-		json5.put("man", "15'35\"");
-		json5.put("woman", "18'15\"");
+		json5.put("man", "15'35");
+		json5.put("woman", "18'15");
 		jsonArr.add(json5);
 		
 		JSONObject json6 = new JSONObject();
 		json6.put("age", "37~39岁");
-		json6.put("man", "15'55\"");
-		json6.put("woman", "18'54\"");
+		json6.put("man", "15'55");
+		json6.put("woman", "18'54");
 		jsonArr.add(json6);
 		
 		JSONObject json7 = new JSONObject();
 		json7.put("age", "40~42岁");
-		json7.put("man", "16'53\"");
-		json7.put("woman", "19'33\"");
+		json7.put("man", "16'53");
+		json7.put("woman", "19'33");
 		jsonArr.add(json7);
 		
 		JSONObject json8 = new JSONObject();
 		json8.put("age", "43~45岁");
-		json8.put("man", "17'35\"");
-		json8.put("woman", "20'12\"");
+		json8.put("man", "17'35");
+		json8.put("woman", "20'12");
 		jsonArr.add(json8);
 		
 		JSONObject json9 = new JSONObject();
 		json9.put("age", "46~48岁");
-		json9.put("man", "18'17\"");
-		json9.put("woman", "20'51\"");
+		json9.put("man", "18'17");
+		json9.put("woman", "20'51");
 		jsonArr.add(json9);
 		
 		JSONObject json10 = new JSONObject();
 		json10.put("age", "49~51岁");
-		json10.put("man", "18'59\"");
-		json10.put("woman", "21'30\"");
+		json10.put("man", "18'59");
+		json10.put("woman", "21'30");
 		jsonArr.add(json10);
 		
 		JSONObject json11 = new JSONObject();
 		json11.put("age", "52~54岁");
-		json11.put("man", "19'41\"");
-		json11.put("woman", "22'09\"");
+		json11.put("man", "19'41");
+		json11.put("woman", "22'09");
 		jsonArr.add(json11);
 		
 		JSONObject json12 = new JSONObject();
 		json12.put("age", "55~57岁");
-		json12.put("man", "20'23\"");
-		json12.put("woman", "22'48\"");
+		json12.put("man", "20'23");
+		json12.put("woman", "22'48");
 		jsonArr.add(json12);
 		
 		JSONObject json13 = new JSONObject();
 		json13.put("age", "58~60岁");
-		json13.put("man", "21'05\"");
-		json13.put("woman", "23'27\"");
+		json13.put("man", "21'05");
+		json13.put("woman", "23'27");
 		jsonArr.add(json13);
 		
 		result.put("result", jsonArr);

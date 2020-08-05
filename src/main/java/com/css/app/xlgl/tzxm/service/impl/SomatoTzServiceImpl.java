@@ -18,5 +18,30 @@ public class SomatoTzServiceImpl implements SomatoTzService {
 		return somatoTzDao.selectBMI(height,weight,sex,age);
 	}
 
+	@Override
+	public int selYtxsCount(String age, String ytxscount) {
+		return somatoTzDao.selYtxsCount(age,ytxscount);
+	}
+
+	@Override
+	public int selQbxcCount(String age, String qbxcCount) {
+		return somatoTzDao.selQbxcCount(age,qbxcCount);
+	}
+
+	@Override
+	public int selYwqzCount(String age, String sex, String ywqzcount) {
+		return somatoTzDao.selYwqzCount(age,sex,ywqzcount);
+	}
+
+	@Override
+	public int selSrunCount(String age, String sex, String sruncount) {
+		return somatoTzDao.selSrunCount(age,sex,sruncount);
+	}
+
+	@Override
+	public int selTsruncount(String age, String sex, String tsruncount) {
+		return somatoTzDao.selTsruncount(age,sex,tsruncount);
+	}
+
 	
 }
