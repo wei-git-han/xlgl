@@ -3,7 +3,7 @@
 
 <mapper namespace="com.css.app.xlgl.dao.XlglAdminSetDao">
 
-	<select id="queryObject" resultType="com.css.app.xlgl.config.entity.XlglAdminSet">
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglAdminSet">
 		select * from XLGL_ADMIN_SET where ID = #{value}
 	</select>
 
