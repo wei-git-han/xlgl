@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.css.xlgl.dao.XlglExamTopicDao">
+<mapper namespace="com.css.app.xlgl.dao.XlglExamTopicDao">
 
-	<select id="queryObject" resultType="com.css.xlgl.entity.XlglExamTopic">
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglExamTopic">
 		select * from XLGL_EXAM_TOPIC where id = #{value}
 	</select>
 
-	<select id="queryList" resultType="com.css.xlgl.entity.XlglExamTopic">
+	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglExamTopic">
 		select * from XLGL_EXAM_TOPIC 
 		where 1=1 
 			<if test="subjectId != null and subjectId !=''">
@@ -30,7 +30,7 @@
 		select count(*) from XLGL_EXAM_TOPIC 
 	</select>
 	 
-	<insert id="save" parameterType="com.css.xlgl.entity.XlglExamTopic">
+	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglExamTopic">
 		insert into XLGL_EXAM_TOPIC
 		(
 			"id", 
@@ -59,7 +59,7 @@
 		)
 	</insert>
 	 
-	<update id="update" parameterType="com.css.xlgl.entity.XlglExamTopic">
+	<update id="update" parameterType="com.css.app.xlgl.entity.XlglExamTopic">
 		update XLGL_EXAM_TOPIC 
 		<set>
 			<if test="topicColumn != null">"TOPIC_COLUMN" = #{topicColumn}, </if>
@@ -87,7 +87,7 @@
 	</delete>
 	
 	
-	<insert id="saveList" parameterType="com.css.xlgl.entity.XlglExamTopic">
+	<insert id="saveList" parameterType="com.css.app.xlgl.entity.XlglExamTopic">
 		insert into XLGL_EXAM_TOPIC
 		(
 			"id", 
@@ -119,7 +119,7 @@
 	
 	</insert>
 	
-	<select id="queryListByIds" resultType="com.css.xlgl.entity.XlglExamTopic">
+	<select id="queryListByIds" resultType="com.css.app.xlgl.entity.XlglExamTopic">
 		select * from XLGL_EXAM_TOPIC where id in
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}

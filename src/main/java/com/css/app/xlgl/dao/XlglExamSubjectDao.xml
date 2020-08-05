@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.css.xlgl.dao.XlglExamSubjectDao">
+<mapper namespace="com.css.app.xlgl.dao.XlglExamSubjectDao">
 
-	<select id="queryObject" resultType="com.css.xlgl.entity.XlglExamSubject">
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglExamSubject">
 		select * from XLGL_EXAM_SUBJECT where id = #{value}
 	</select>
 
-	<select id="queryList" resultType="com.css.xlgl.entity.XlglExamSubject">
+	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglExamSubject">
 		select * from XLGL_EXAM_SUBJECT 
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
@@ -18,7 +18,7 @@
 		select count(*) from XLGL_EXAM_SUBJECT 
 	</select>
 	 
-	<insert id="save" parameterType="com.css.xlgl.entity.XlglExamSubject">
+	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglExamSubject">
 		insert into XLGL_EXAM_SUBJECT
 		(
 			"id", 
@@ -41,7 +41,7 @@
 		)
 	</insert>
 	 
-	<update id="update" parameterType="com.css.xlgl.entity.XlglExamSubject">
+	<update id="update" parameterType="com.css.app.xlgl.entity.XlglExamSubject">
 		update XLGL_EXAM_SUBJECT 
 		<set>
 			<if test="subjectName != null">"SUBJECT_NAME" = #{subjectName}, </if>
@@ -65,7 +65,7 @@
 		</foreach>
 	</delete>
 	
-	<select id="findList" resultType="com.css.xlgl.entity.XlglExamSubject">
+	<select id="findList" resultType="com.css.app.xlgl.entity.XlglExamSubject">
 		select * from XLGL_EXAM_SUBJECT 
 	</select>
 
