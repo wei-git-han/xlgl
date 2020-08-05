@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.TGroupActivePublishDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.TGroupActivePublish">
+		select * from T_GROUP_ACTIVE_PUBLISH where ACT_ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.TGroupActivePublish">
+		select * from T_GROUP_ACTIVE_PUBLISH 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from T_GROUP_ACTIVE_PUBLISH 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.TGroupActivePublish">
+		insert into T_GROUP_ACTIVE_PUBLISH
+		(
+			"ACT_ID", 
+			"TITLE", 
+			"ACTIVE_FROM_DAY", 
+			"ACTIVE_TO_DAY", 
+			"ACTIVE_FROM_TIME", 
+			"ACTIVE_TO_TIME", 
+			"PLACE", 
+			"ACTIVE_ENDING_DAY", 
+			"PEOPLE_NUMBER", 
+			"CONTENT", 
+			"UPLOADFILE", 
+			"ACTIVE_STATUS", 
+			"CREATE_TIME", 
+			"UPDATE_TIME"
+		)
+		values
+		(
+			#{actId}, 
+			#{title}, 
+			#{activeFromDay}, 
+			#{activeToDay}, 
+			#{activeFromTime}, 
+			#{activeToTime}, 
+			#{place}, 
+			#{activeEndingDay}, 
+			#{peopleNumber}, 
+			#{content}, 
+			#{uploadfile}, 
+			#{activeStatus}, 
+			#{createTime}, 
+			#{updateTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.TGroupActivePublish">
+		update T_GROUP_ACTIVE_PUBLISH 
+		<set>
+			<if test="title != null">"TITLE" = #{title}, </if>
+			<if test="activeFromDay != null">"ACTIVE_FROM_DAY" = #{activeFromDay}, </if>
+			<if test="activeToDay != null">"ACTIVE_TO_DAY" = #{activeToDay}, </if>
+			<if test="activeFromTime != null">"ACTIVE_FROM_TIME" = #{activeFromTime}, </if>
+			<if test="activeToTime != null">"ACTIVE_TO_TIME" = #{activeToTime}, </if>
+			<if test="place != null">"PLACE" = #{place}, </if>
+			<if test="activeEndingDay != null">"ACTIVE_ENDING_DAY" = #{activeEndingDay}, </if>
+			<if test="peopleNumber != null">"PEOPLE_NUMBER" = #{peopleNumber}, </if>
+			<if test="content != null">"CONTENT" = #{content}, </if>
+			<if test="uploadfile != null">"UPLOADFILE" = #{uploadfile}, </if>
+			<if test="activeStatus != null">"ACTIVE_STATUS" = #{activeStatus}, </if>
+			<if test="createTime != null">"CREATE_TIME" = #{createTime}, </if>
+			<if test="updateTime != null">"UPDATE_TIME" = #{updateTime}</if>
+		</set>
+		where ACT_ID = #{actId}
+	</update>
+	
+	<delete id="delete">
+		delete from T_GROUP_ACTIVE_PUBLISH where ACT_ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from T_GROUP_ACTIVE_PUBLISH where ACT_ID in 
+		<foreach item="actId" collection="array" open="(" separator="," close=")">
+			#{actId}
+		</foreach>
+	</delete>
+
+</mapper>

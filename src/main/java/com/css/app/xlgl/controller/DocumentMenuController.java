@@ -31,6 +31,7 @@ import com.css.base.utils.Response;
 @Controller
 @RequestMapping("/documentmenu")
 public class DocumentMenuController {
+	
 	@Autowired
 	private DocumentMenuService documentMenuService;
 	

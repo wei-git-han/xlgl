@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.SportsTrainDao">
+	<insert id = "save" parameterType = "Map">
+		insert into t_group_active_publish 
+		(
+			act_id,
+			title,
+			active_from_day,
+			active_to_day,
+			active_from_time,
+			active_to_time,
+			place,
+			active_ending_day,
+			people_number,
+			content,
+			uploadfile,
+			active_status,
+			create_time,
+			update_time
+		)
+		values
+		(
+			#{act_id},
+			#{title},
+			#{active_from_day},
+			#{active_to_day},
+			#{active_from_time},
+			#{active_to_time},
+			#{place},
+			#{active_ending_day},
+			#{people_number},
+			#{content},
+			#{uploadfile},
+			#{active_status},
+			#{create_time},
+			#{update_time}
+		)
+	</insert>
+	
+	<update id = "update" parameterType = "Map">
+		update t_group_active_publish 
+		<set>
+			<if test="title != null">"title" = #{title}, </if>
+			<if test="active_from_day != null">"active_from_day" = #{active_from_day}, </if>
+			<if test="active_to_day != null">"active_to_day" = #{active_to_day}, </if>
+			<if test="active_from_time != null">"active_from_time" = #{active_from_time}, </if>
+			<if test="active_to_time != null">"active_to_time" = #{active_to_time}, </if>
+			<if test="place != null">"place" = #{place}, </if>
+			<if test="active_ending_day != null">"active_ending_day" = #{active_ending_day}, </if>
+			<if test="people_number != null">"people_number" = #{people_number}, </if>
+			<if test="content != null">"content" = #{content}, </if>
+			<if test="uploadfile != null">"uploadfile" = #{uploadfile}, </if>
+			<if test="active_status != null">"active_status" = #{tripPlace}, </if>
+			<if test="create_time != null">"create_time" = #{create_time}, </if>
+			<if test="update_time != null">"update_time" = #{update_time}, </if>
+		</set>
+		where 
+		act_id = #{act_id}
+	</update>
+	
+	<!-- <delete id = "delete">
+		delete from t_group_active_publish where act_id = #{act_id}
+	</delete> -->
+	
+	<select id = "sel" resultType = "com.css.app.xlgl.entity.TGroupActivePublish">
+		select * from t_group_active_publish where active_status in (1,2) order by active_from_day asc limit #{iPage},#{iRows}
+	</select>
+	
+	<select id = "getActivePublishList" resultType ="com.css.app.xlgl.entity.TGroupActivePublish">
+	select DISTINCT a.*,b.apply_status as apply_status 
+	from t_group_active_publish a 
+	left join t_group_apply_record b on a.act_id = b.act_id 
+	order by active_from_day asc
+	</select>
+	
+	<select id = "getPageActivePublishList" resultType ="com.css.app.xlgl.entity.TGroupActivePublish">
+	select a.* from t_group_active_publish a  
+	where active_from_day &gt;= #{curdate} order by active_from_day asc
+	</select>
+	
+	<select id = "getPageApplyStatus" resultType = "com.css.app.xlgl.entity.TGroupApplyRecord">
+		select a.apply_status 
+		from
+		t_group_apply_record a  
+		where 
+		a.act_id in (#{str}) and user_id = #{userId}
+	</select>
+	
+	<select id = "getapplyUserNumList" resultType = "com.css.app.xlgl.entity.TGroupApplyRecord">
+		select count(*) as people_number,any_value(a.act_id) as actId 
+		from 
+		t_group_apply_record a  
+		where a.act_id in (#{str})
+	</select>
+	
+	<select id = "getActiveListByDate" resultType = "com.css.app.xlgl.entity.TGroupActivePublish">
+		select DISTINCT a.* ,b.apply_status as apply_status 
+		from 
+		t_group_active_publish a 
+		left join t_group_apply_record b 
+		on 
+		a.act_id = b.act_id 
+		where 
+		active_from_day= #{active_from_day}
+	</select>
+	
+	<select id = "getdayList" resultType = "com.css.app.xlgl.entity.TGroupActivePublish">
+		select active_from_day from t_group_active_publish
+	</select>
+	
+	<select id = "getActiveContentData" resultType = "com.css.app.xlgl.entity.TGroupApplyRecord">
+		select * from t_group_active_publish where act_id = #{actid}
+	</select>
+	
+	<select id = "getApplyUserNumber" resultType = "com.css.app.xlgl.entity.TGroupApplyRecord">
+		select count(*) as num from t_group_apply_record where act_id = #{actid}
+	</select>
+	
+	<select id = "getUserApplyYN" resultType = "int">
+		select count(*) from t_group_apply_record where act_id = #{userId}
+	</select>
+	
+	<select id = "getUserApplyList" resultType = "com.css.app.xlgl.entity.TGroupApplyRecord">
+		select * from t_group_apply_record where act_id = #{actid}
+	</select>
+	
+	<select id = "selUser" resultType = "com.css.app.xlgl.entity.User">
+	 	select * from t_user where userid = #{userid}
+	</select>
+	
+	<select id = "getOrgName" resultType = "String">
+		select orgname from t_org where orgid = #{orgid}
+	</select>
+</mapper>

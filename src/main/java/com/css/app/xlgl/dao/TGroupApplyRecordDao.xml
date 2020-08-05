@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.TGroupApplyRecordDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.TGroupApplyRecord">
+		select * from T_GROUP_APPLY_RECORD where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.TGroupApplyRecord">
+		select * from T_GROUP_APPLY_RECORD 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from T_GROUP_APPLY_RECORD 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.TGroupApplyRecord">
+		insert into T_GROUP_APPLY_RECORD
+		(
+			"ID", 
+			"ACT_ID", 
+			"USER_ID", 
+			"USER_NAME", 
+			"DEPT_ID", 
+			"DEPT", 
+			"APPLY_TIME", 
+			"APPLY_STATUS", 
+			"TEST2"
+		)
+		values
+		(
+			#{id}, 
+			#{actId}, 
+			#{userId}, 
+			#{userName}, 
+			#{deptId}, 
+			#{dept}, 
+			#{applyTime}, 
+			#{applyStatus}, 
+			#{test2}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.TGroupApplyRecord">
+		update T_GROUP_APPLY_RECORD 
+		<set>
+			<if test="actId != null">"ACT_ID" = #{actId}, </if>
+			<if test="userId != null">"USER_ID" = #{userId}, </if>
+			<if test="userName != null">"USER_NAME" = #{userName}, </if>
+			<if test="deptId != null">"DEPT_ID" = #{deptId}, </if>
+			<if test="dept != null">"DEPT" = #{dept}, </if>
+			<if test="applyTime != null">"APPLY_TIME" = #{applyTime}, </if>
+			<if test="applyStatus != null">"APPLY_STATUS" = #{applyStatus}, </if>
+			<if test="test2 != null">"TEST2" = #{test2}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from T_GROUP_APPLY_RECORD where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from T_GROUP_APPLY_RECORD where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
