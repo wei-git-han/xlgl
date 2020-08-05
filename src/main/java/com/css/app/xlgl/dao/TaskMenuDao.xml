@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.TaskMenuDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.TaskMenu">
+		select * from TASK_MENU where MENU_ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.TaskMenu">
+		select * from TASK_MENU 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from TASK_MENU 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.TaskMenu">
+		insert into TASK_MENU
+		(
+			"MENU_ID", 
+			"MENU_NAME", 
+			"DISPLAY_NAME", 
+			"DEFAULT_PAGE", 
+			"SORT", 
+			"TREE_PATH", 
+			"DISPLAY_TYPE", 
+			"REMARK", 
+			"PARENT_ID"
+		)
+		values
+		(
+			#{menuId}, 
+			#{menuName}, 
+			#{displayName}, 
+			#{defaultPage}, 
+			#{sort}, 
+			#{treePath}, 
+			#{displayType}, 
+			#{remark}, 
+			#{parentId}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.TaskMenu">
+		update TASK_MENU 
+		<set>
+			<if test="menuName != null">"MENU_NAME" = #{menuName}, </if>
+			<if test="displayName != null">"DISPLAY_NAME" = #{displayName}, </if>
+			<if test="defaultPage != null">"DEFAULT_PAGE" = #{defaultPage}, </if>
+			<if test="sort != null">"SORT" = #{sort}, </if>
+			<if test="treePath != null">"TREE_PATH" = #{treePath}, </if>
+			<if test="displayType != null">"DISPLAY_TYPE" = #{displayType}, </if>
+			<if test="remark != null">"REMARK" = #{remark}, </if>
+			<if test="parentId != null">"PARENT_ID" = #{parentId}</if>
+		</set>
+		where MENU_ID = #{menuId}
+	</update>
+	
+	<delete id="delete">
+		delete from TASK_MENU where MENU_ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from TASK_MENU where MENU_ID in 
+		<foreach item="menuId" collection="array" open="(" separator="," close=")">
+			#{menuId}
+		</foreach>
+	</delete>
+
+</mapper>
