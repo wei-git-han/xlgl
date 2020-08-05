@@ -1,5 +1,6 @@
 package com.css.app.xlgl.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -125,12 +126,19 @@ public class TaskMenuController {
 				vo.setId(UUIDUtils.random());
 				vo.setUserId(uid);
 				vo.setMenuId(id.replace("&"+uid+"&", ""));
+				vo.setCreator(CurrentUser.getUserId());
+				vo.setCreatedTime(new Date());
 				documentMenuPermissionService.save(vo);
 			}
 		}
 		Response.json("result","success");
 	}
 	
+	/**
+	 * 配置里所有的菜单选项
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value = "/menutree4role")
 	@ResponseBody
 	public Object getMenuTree(HttpServletRequest request) {
@@ -148,15 +156,15 @@ public class TaskMenuController {
 			JSONArray children=getOrganTree(menu.getMenuId());
 			if (children.size() > 0) {
 				json.put("children", children);
-				json.put("is_leaf", false);
-			}else{
-				json.put("is_leaf", true);
 			}
 		    jsons.add(json);
 		}
 		return jsons;
 	}
 	
+	/**
+	 * 初始化时查出要显示的菜单
+	 */
 	@RequestMapping(value = "/auth")
 	@ResponseBody
 	public void authMenu() {
