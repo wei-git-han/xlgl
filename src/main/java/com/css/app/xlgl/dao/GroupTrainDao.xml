@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.css.app.xlgl.zzxl.dao.GroupTrainDao">
+<mapper namespace="com.css.app.xlgl.dao.GroupTrainDao">
 
-	<select id="queryObject" resultType="com.css.app.xlgl.zzxl.entity.GroupTrain">
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.GroupTrain">
 		select *,CASE type when '0' then '未发布' else '已发布' end as gt_type,CONCAT(CONCAT(start_date,' ',start_time),'~',CONCAT(end_date,' ',end_time)) as plan_time  from T_GROUP_TRAIN where ID = #{value}
 	</select>
 
-	<select id="queryList" resultType="com.css.app.xlgl.zzxl.entity.GroupTrain">
+	<select id="queryList" resultType="com.css.app.xlgl.entity.GroupTrain">
 		select *,CASE type when '0' then '未发布' else '已发布' end as gt_type,CONCAT(CONCAT(start_date,' ',start_time),'~',CONCAT(end_date,' ',end_time)) as plan_time  from T_GROUP_TRAIN 
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
@@ -18,7 +18,7 @@
 		select count(*) from T_GROUP_TRAIN 
 	</select>
 	 
-	<insert id="save" parameterType="com.css.app.xlgl.zzxl.entity.GroupTrain">
+	<insert id="save" parameterType="com.css.app.xlgl.entity.GroupTrain">
 		insert into T_GROUP_TRAIN
 		(
 			"ID", 
@@ -59,7 +59,7 @@
 		)
 	</insert>
 	 
-	<update id="update" parameterType="com.css.app.xlgl.zzxl.entity.GroupTrain">
+	<update id="update" parameterType="com.css.app.xlgl.entity.GroupTrain">
 		update T_GROUP_TRAIN 
 		<set>
 			<if test="title != null">"TITLE" = #{title}, </if>
