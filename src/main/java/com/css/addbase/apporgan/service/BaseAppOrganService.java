@@ -62,4 +62,6 @@ public interface BaseAppOrganService {
 	 * @return
 	 */
 	List<BaseAppOrgan> queryListByIds(String[] ids);
+	
+	List<BaseAppOrgan> queryAllDept(String root);
 }

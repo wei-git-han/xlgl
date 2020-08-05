@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.xlgl.dao.XlglExamTopicDao">
+
+	<select id="queryObject" resultType="com.css.xlgl.entity.XlglExamTopic">
+		select * from XLGL_EXAM_TOPIC where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.xlgl.entity.XlglExamTopic">
+		select * from XLGL_EXAM_TOPIC 
+		where 1=1 
+			<if test="subjectId != null and subjectId !=''">
+			  and SUBJECT_ID = #{subjectId}
+			</if>
+			<if test="topicType != null and topicType !=''">
+			  and TOPIC_TYPE = #{topicType}
+			</if>
+			<if test="topicColumn != null and topicColumn !=''">
+			  and TOPIC_COLUMN like "%"#{topicColumn}"%"
+			</if>
+			
+		
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_EXAM_TOPIC 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.xlgl.entity.XlglExamTopic">
+		insert into XLGL_EXAM_TOPIC
+		(
+			"id", 
+			"TOPIC_COLUMN", 
+			"TOPIC_TYPE", 
+			"TOPIC_OPTION", 
+			"SUBJECT_ID", 
+			"TOPIC_RESULT", 
+			"CREATE_USER", 
+			"CREATE_DATE", 
+			"UPDATE_USER", 
+			"UPDATE_DATE"
+		)
+		values
+		(
+			#{id}, 
+			#{topicColumn}, 
+			#{topicType}, 
+			#{topicOption}, 
+			#{subjectId}, 
+			#{topicResult}, 
+			#{createUser}, 
+			#{createDate}, 
+			#{updateUser}, 
+			#{updateDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.xlgl.entity.XlglExamTopic">
+		update XLGL_EXAM_TOPIC 
+		<set>
+			<if test="topicColumn != null">"TOPIC_COLUMN" = #{topicColumn}, </if>
+			<if test="topicType != null">"TOPIC_TYPE" = #{topicType}, </if>
+			<if test="topicOption != null">"TOPIC_OPTION" = #{topicOption}, </if>
+			<if test="subjectId != null">"SUBJECT_ID" = #{subjectId}, </if>
+			<if test="topicResult != null">"TOPIC_RESULT" = #{topicResult}, </if>
+			<if test="createUser != null">"CREATE_USER" = #{createUser}, </if>
+			<if test="createDate != null">"CREATE_DATE" = #{createDate}, </if>
+			<if test="updateUser != null">"UPDATE_USER" = #{updateUser}, </if>
+			<if test="updateDate != null">"UPDATE_DATE" = #{updateDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_EXAM_TOPIC where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_EXAM_TOPIC where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	
+	<insert id="saveList" parameterType="com.css.xlgl.entity.XlglExamTopic">
+		insert into XLGL_EXAM_TOPIC
+		(
+			"id", 
+			"TOPIC_COLUMN", 
+			"TOPIC_TYPE", 
+			"TOPIC_OPTION", 
+			"SUBJECT_ID", 
+			"TOPIC_RESULT", 
+			"CREATE_USER", 
+			"CREATE_DATE", 
+			"UPDATE_USER", 
+			"UPDATE_DATE"
+		)
+		values
+		<foreach collection="list" item="item" index="index" open="" close="" separator=",">
+			(
+			#{item.id}, 
+			#{item.topicColumn}, 
+			#{item.topicType}, 
+			#{item.topicOption}, 
+			#{item.subjectId}, 
+			#{item.topicResult}, 
+			#{item.createUser}, 
+			#{item.createDate}, 
+			#{item.updateUser}, 
+			#{item.updateDate}
+			)
+		</foreach>
+	
+	</insert>
+	
+	<select id="queryListByIds" resultType="com.css.xlgl.entity.XlglExamTopic">
+		select * from XLGL_EXAM_TOPIC where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</select>
+
+</mapper>

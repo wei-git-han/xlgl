@@ -41,6 +41,8 @@ public class BaseAppUser implements Serializable {
 	
 	private String telephone;
 	
+	private String sfzw;
+	
 	/**
 	 * 设置：主键
 	 */
@@ -204,6 +206,13 @@ public class BaseAppUser implements Serializable {
 	public void setTelephone(String telephone) {
 		this.telephone = telephone;
 	}
+	public String getSfzw() {
+		return sfzw;
+	}
+	public void setSfzw(String sfzw) {
+		this.sfzw = sfzw;
+	}
+	
 	
 	
 }

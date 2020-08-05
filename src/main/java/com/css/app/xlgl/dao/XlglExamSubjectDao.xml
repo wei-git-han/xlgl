@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.xlgl.dao.XlglExamSubjectDao">
+
+	<select id="queryObject" resultType="com.css.xlgl.entity.XlglExamSubject">
+		select * from XLGL_EXAM_SUBJECT where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.xlgl.entity.XlglExamSubject">
+		select * from XLGL_EXAM_SUBJECT 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_EXAM_SUBJECT 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.xlgl.entity.XlglExamSubject">
+		insert into XLGL_EXAM_SUBJECT
+		(
+			"id", 
+			"SUBJECT_NAME", 
+			"CREATE_USER", 
+			"UPDATE_DATE", 
+			"UPDATE_USER", 
+			"SUBJECT_TYPE", 
+			"CREATE_DATE"
+		)
+		values
+		(
+			#{id}, 
+			#{subjectName}, 
+			#{createUser}, 
+			#{updateDate}, 
+			#{updateUser}, 
+			#{subjectType}, 
+			#{createDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.xlgl.entity.XlglExamSubject">
+		update XLGL_EXAM_SUBJECT 
+		<set>
+			<if test="subjectName != null">"SUBJECT_NAME" = #{subjectName}, </if>
+			<if test="createUser != null">"CREATE_USER" = #{createUser}, </if>
+			<if test="updateDate != null">"UPDATE_DATE" = #{updateDate}, </if>
+			<if test="updateUser != null">"UPDATE_USER" = #{updateUser}, </if>
+			<if test="subjectType != null">"SUBJECT_TYPE" = #{subjectType}, </if>
+			<if test="createDate != null">"CREATE_DATE" = #{createDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_EXAM_SUBJECT where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_EXAM_SUBJECT where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<select id="findList" resultType="com.css.xlgl.entity.XlglExamSubject">
+		select * from XLGL_EXAM_SUBJECT 
+	</select>
+
+</mapper>

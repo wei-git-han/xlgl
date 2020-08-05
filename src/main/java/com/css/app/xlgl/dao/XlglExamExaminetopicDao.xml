@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.xlgl.dao.XlglExamExaminetopicDao">
+
+	<select id="queryObject" resultType="com.css.xlgl.entity.XlglExamExaminetopic">
+		select * from XLGL_EXAM_EXAMINETOPIC where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.xlgl.entity.XlglExamExaminetopic">
+		select * from XLGL_EXAM_EXAMINETOPIC 
+		
+		<if test="examineId != null and examineId !=''">
+			  and EXAMINE_ID = #{examineId}
+		</if>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_EXAM_EXAMINETOPIC 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.xlgl.entity.XlglExamExaminetopic">
+		insert into XLGL_EXAM_EXAMINETOPIC
+		(
+			"id", 
+			"EXAMINE_ID", 
+			"SUBJECT_ID", 
+			"TOPIC_ID", 
+			"TOPIC_TYPE", 
+			"TOPIC_COLUMN", 
+			"TOPIC_OPTION", 
+			"TOPIC_RESULT", 
+			"FRACTIONAL_NUMBER", 
+			"CREATE_USER", 
+			"CREATE_DATE", 
+			"UPDATE_USER", 
+			"UPDATE_DATE",
+			"SORT"
+		)
+		values
+		(
+			#{id}, 
+			#{examineId}, 
+			#{subjectId}, 
+			#{topicId}, 
+			#{topicType}, 
+			#{topicColumn}, 
+			#{topicOption}, 
+			#{topicResult}, 
+			#{fractionalNumber}, 
+			#{createUser}, 
+			#{createDate}, 
+			#{updateUser}, 
+			#{updateDate},
+			#{sort}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.xlgl.entity.XlglExamExaminetopic">
+		update XLGL_EXAM_EXAMINETOPIC 
+		<set>
+			<if test="examineId != null">"EXAMINE_ID" = #{examineId}, </if>
+			<if test="subjectId != null">"SUBJECT_ID" = #{subjectId}, </if>
+			<if test="topicId != null">"TOPIC_ID" = #{topicId}, </if>
+			<if test="topicType != null">"TOPIC_TYPE" = #{topicType}, </if>
+			<if test="topicColumn != null">"TOPIC_COLUMN" = #{topicColumn}, </if>
+			<if test="topicOption != null">"TOPIC_OPTION" = #{topicOption}, </if>
+			<if test="topicResult != null">"TOPIC_RESULT" = #{topicResult}, </if>
+			<if test="fractionalNumber != null">"FRACTIONAL_NUMBER" = #{fractionalNumber}, </if>
+			<if test="createUser != null">"CREATE_USER" = #{createUser}, </if>
+			<if test="createDate != null">"CREATE_DATE" = #{createDate}, </if>
+			<if test="updateUser != null">"UPDATE_USER" = #{updateUser}, </if>
+			<if test="updateDate != null">"UPDATE_DATE" = #{updateDate},</if>
+			<if test="sort != null">"SORT" = #{sort}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_EXAM_EXAMINETOPIC where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_EXAM_EXAMINETOPIC where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<insert id="saveBatch" parameterType="com.css.xlgl.entity.XlglExamExaminetopic">
+		insert into XLGL_EXAM_EXAMINETOPIC
+		(
+			"id", 
+			"EXAMINE_ID", 
+			"SUBJECT_ID", 
+			"TOPIC_ID", 
+			"TOPIC_TYPE", 
+			"TOPIC_COLUMN", 
+			"TOPIC_OPTION", 
+			"TOPIC_RESULT", 
+			"FRACTIONAL_NUMBER", 
+			"CREATE_USER", 
+			"CREATE_DATE", 
+			"UPDATE_USER", 
+			"UPDATE_DATE",
+			"SORT"
+		)
+		values
+		<foreach collection="list" item="item" index="index" open="" close="" separator=",">
+		(
+			#{item.id}, 
+			#{item.examineId}, 
+			#{item.subjectId}, 
+			#{item.topicId}, 
+			#{item.topicType}, 
+			#{item.topicColumn}, 
+			#{item.topicOption}, 
+			#{item.topicResult}, 
+			#{item.fractionalNumber}, 
+			#{item.createUser}, 
+			#{item.createDate}, 
+			#{item.updateUser}, 
+			#{item.updateDate},
+			#{item.sort}
+		)
+		</foreach>
+	</insert>
+	
+	<select id="findCountBySubjectId" resultType="com.css.xlgl.dto.XlglExamExaminetopicDto">
+		select 
+			topic_Type as topicType,
+			count(topic_Type)as typeCount,
+			sum(FRACTIONAL_NUMBER)as numberAll,
+			round(avg(FRACTIONAL_NUMBER)) as fractionalNumber
+		from 
+		XLGL_EXAM_EXAMINETOPIC 
+		where 1=1
+		<if test="examineId != null ">
+			and EXAMINE_ID =#{examineId}
+		</if>
+		GROUP BY topic_Type;
+	</select>
+	
+	<select id="findListBySubjectId" resultType="com.css.xlgl.entity.XlglExamExaminetopic">
+		select * from XLGL_EXAM_EXAMINETOPIC 
+		where 1=1
+		<if test="examineId != null ">
+			and EXAMINE_ID =#{examineId}
+		</if>
+	</select>
+	<delete id="deleteByExamineId">
+		delete from XLGL_EXAM_EXAMINETOPIC where EXAMINE_ID =#{examineId}
+	</delete>
+
+</mapper>
