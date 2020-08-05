@@ -37,6 +37,13 @@ public interface BaseAppOrgMappedService {
 	String getBareauByUserId(String userId);
 	
 	/**
+	 * 根据用户Id获取处级部门ID；
+	 * @param type
+	 * @return
+	 */
+	String getChuByUserId(String userId);
+	
+	/**
 	 * 获取访问路径
 	 * @param type
 	 * @param uri
