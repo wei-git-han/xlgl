@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.css.app.xlgl.sportstrain.dao.TGroupActivePublishDao">
+<mapper namespace="com.css.app.xlgl.dao.TGroupActivePublishDao">
 
-	<select id="queryObject" resultType="com.css.app.xlgl.sportstrain.entity.TGroupActivePublish">
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.TGroupActivePublish">
 		select * from T_GROUP_ACTIVE_PUBLISH where ACT_ID = #{value}
 	</select>
 
-	<select id="queryList" resultType="com.css.app.xlgl.sportstrain.entity.TGroupActivePublish">
+	<select id="queryList" resultType="com.css.app.xlgl.entity.TGroupActivePublish">
 		select * from T_GROUP_ACTIVE_PUBLISH 
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
@@ -18,7 +18,7 @@
 		select count(*) from T_GROUP_ACTIVE_PUBLISH 
 	</select>
 	 
-	<insert id="save" parameterType="com.css.app.xlgl.sportstrain.entity.TGroupActivePublish">
+	<insert id="save" parameterType="com.css.app.xlgl.entity.TGroupActivePublish">
 		insert into T_GROUP_ACTIVE_PUBLISH
 		(
 			"ACT_ID", 
@@ -55,7 +55,7 @@
 		)
 	</insert>
 	 
-	<update id="update" parameterType="com.css.app.xlgl.sportstrain.entity.TGroupActivePublish">
+	<update id="update" parameterType="com.css.app.xlgl.entity.TGroupActivePublish">
 		update T_GROUP_ACTIVE_PUBLISH 
 		<set>
 			<if test="title != null">"TITLE" = #{title}, </if>
