@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.css.xlgl.dao.XlglExamAnswerDao">
+<mapper namespace="com.css.app.xlgl.dao.XlglExamAnswerDao">
 
-	<select id="queryObject" resultType="com.css.xlgl.entity.XlglExamAnswer">
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglExamAnswer">
 		select * from XLGL_EXAM_ANSWER where id = #{value}
 	</select>
 
-	<select id="queryList" resultType="com.css.xlgl.entity.XlglExamAnswer">
+	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglExamAnswer">
 		select * from XLGL_EXAM_ANSWER 
 		where 1=1
 		<if test="examineId != null and examineId !=''">
@@ -22,7 +22,7 @@
 		select count(*) from XLGL_EXAM_ANSWER 
 	</select>
 	 
-	<insert id="save" parameterType="com.css.xlgl.entity.XlglExamAnswer">
+	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglExamAnswer">
 		insert into XLGL_EXAM_ANSWER
 		(
 			"id", 
@@ -67,7 +67,7 @@
 		)
 	</insert>
 	 
-	<update id="update" parameterType="com.css.xlgl.entity.XlglExamAnswer">
+	<update id="update" parameterType="com.css.app.xlgl.entity.XlglExamAnswer">
 		update XLGL_EXAM_ANSWER 
 		<set>
 			<if test="examineId != null">"EXAMINE_ID" = #{examineId}, </if>
@@ -103,7 +103,7 @@
 	</delete>
 	
 	
-	<insert id="saveBatch" parameterType="com.css.xlgl.entity.XlglExamAnswer">
+	<insert id="saveBatch" parameterType="com.css.app.xlgl.entity.XlglExamAnswer">
 		insert into XLGL_EXAM_ANSWER
 		(
 			"id", 
