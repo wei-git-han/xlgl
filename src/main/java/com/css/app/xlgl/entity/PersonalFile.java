@@ -1,6 +1,8 @@
 package com.css.app.xlgl.entity;
 
-public class PersonalFile {
+import java.io.Serializable;
+
+public class PersonalFile implements Serializable{
 	private String examineSubjectId;
 	private String examineSubjectName;
 	private String examineName;
