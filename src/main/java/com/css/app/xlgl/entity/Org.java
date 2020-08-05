@@ -1,4 +1,4 @@
-package com.css.app.xlgl.sportstrain.entity;
+package com.css.app.xlgl.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
