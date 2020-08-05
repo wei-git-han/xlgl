@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.xlgl.dao.XlglExamExamineDao">
+
+	<select id="queryObject" resultType="com.css.xlgl.entity.XlglExamExamine">
+		select * from XLGL_EXAM_EXAMINE where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.xlgl.entity.XlglExamExamine">
+		select * from XLGL_EXAM_EXAMINE 
+		where 1=1
+		<if test="issueStatus != null and issueStatus !=''">
+			  and ISSUE_STATUS = #{issueStatus}
+		</if>
+		<if test="issueDate != null and issueDate !=''">
+			  and ISSUE_DATE &gt;= #{issueDate}
+		</if>
+		<if test="examineName != null and examineName !=''">
+			  and EXAMINE_NAME like '%'||#{examineName}||'%'
+		</if>
+		<if test="status != null and status !=''">
+			  and STATUS = #{status}
+		</if>	
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_EXAM_EXAMINE 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.xlgl.entity.XlglExamExamine">
+		insert into XLGL_EXAM_EXAMINE
+		(
+			"id", 
+			"EXAMINE_NAME", 
+			"EXAMINE_DATE", 
+			"EXAMINE_START_DATE", 
+			"EXAMINE_ALL_NUMBER", 
+			"EXAMINE_SUBJECT_ID", 
+			"EXAMINE_SUBJECT_NAME", 
+			"CREATE_USER", 
+			"CREATE_DATE", 
+			"UPDATE_USER", 
+			"UPDATE_DATE", 
+			"ISSUE_STATUS",
+			"STATUS"
+		)
+		values
+		(
+			#{id}, 
+			#{examineName}, 
+			#{examineDate}, 
+			#{examineStartDate}, 
+			#{examineAllNumber}, 
+			#{examineSubjectId}, 
+			#{examineSubjectName}, 
+			#{createUser}, 
+			#{createDate}, 
+			#{updateUser}, 
+			#{updateDate}, 
+			#{issueStatus},
+			#{status}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.xlgl.entity.XlglExamExamine">
+		update XLGL_EXAM_EXAMINE 
+		<set>
+			<if test="examineName != null">"EXAMINE_NAME" = #{examineName}, </if>
+			<if test="examineDate != null">"EXAMINE_DATE" = #{examineDate}, </if>
+			<if test="examineStartDate != null">"EXAMINE_START_DATE" = #{examineStartDate}, </if>
+			<if test="examineAllNumber != null">"EXAMINE_ALL_NUMBER" = #{examineAllNumber}, </if>
+			<if test="examineSubjectId != null">"EXAMINE_SUBJECT_ID" = #{examineSubjectId}, </if>
+			<if test="examineSubjectName != null">"EXAMINE_SUBJECT_NAME" = #{examineSubjectName}, </if>
+			<if test="createUser != null">"CREATE_USER" = #{createUser}, </if>
+			<if test="createDate != null">"CREATE_DATE" = #{createDate}, </if>
+			<if test="updateUser != null">"UPDATE_USER" = #{updateUser}, </if>
+			<if test="updateDate != null">"UPDATE_DATE" = #{updateDate}, </if>
+			<if test="issueStatus != null">"ISSUE_STATUS" = #{issueStatus},</if>
+			<if test="status != null">"STATUS" = #{status}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_EXAM_EXAMINE where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_EXAM_EXAMINE where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

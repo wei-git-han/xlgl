@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.xlgl.dao.XlglExamMainAnswerDao">
+
+	<select id="queryObject" resultType="com.css.xlgl.entity.XlglExamMainAnswer">
+		select * from XLGL_EXAM_MAIN_ANSWER where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.xlgl.entity.XlglExamMainAnswer">
+		select * from XLGL_EXAM_MAIN_ANSWER 
+		where 1=1
+			<if test="examineId != null and examineId !=''">
+			  and EXAMINE_ID = #{examineId}
+			</if>
+			<if test="makeupStatus != null and makeupStatus !=''">
+			  and MAKEUP_STATUS = #{makeupStatus}
+			</if>
+			<if test="replyUserName != null and replyUserName !=''">
+			  and REPLY_USER_NAME like '%'||#{replyUserName}||'%'
+			</if>
+			<if test="level != null and level !=''">
+			  and LEVEL = #{level}
+			</if>
+			<if test="organName != null and organName !=''">
+			  and ORGAN_NAME like '%'||#{organName}||'%'
+			</if>
+			<if test="replyUserId != null and replyUserId !=''">
+			  and REPLY_USER_ID = #{replyUserId}
+			</if>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_EXAM_MAIN_ANSWER 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.xlgl.entity.XlglExamMainAnswer">
+		insert into XLGL_EXAM_MAIN_ANSWER
+		(
+			"id", 
+			"EXAMINE_ID", 
+			"FRACTIONSUM", 
+			"LEVEL", 
+			"ORGAN_ID", 
+			"ORGAN_NAME", 
+			"REPLY_USER_ID", 
+			"REPLY_USER_NAME", 
+			"CREATE_DATE", 
+			"UPDATE_DATE", 
+			"MAKEUP_STATUS", 
+			"MAKEUP_EXAMINE_ID"
+		)
+		values
+		(
+			#{id}, 
+			#{examineId}, 
+			#{fractionsum}, 
+			#{level}, 
+			#{organId}, 
+			#{organName}, 
+			#{replyUserId}, 
+			#{replyUserName}, 
+			#{createDate}, 
+			#{updateDate}, 
+			#{makeupStatus}, 
+			#{makeupExamineId}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.xlgl.entity.XlglExamMainAnswer">
+		update XLGL_EXAM_MAIN_ANSWER 
+		<set>
+			<if test="examineId != null">"EXAMINE_ID" = #{examineId}, </if>
+			<if test="fractionsum != null">"FRACTIONSUM" = #{fractionsum}, </if>
+			<if test="level != null">"LEVEL" = #{level}, </if>
+			<if test="organId != null">"ORGAN_ID" = #{organId}, </if>
+			<if test="organName != null">"ORGAN_NAME" = #{organName}, </if>
+			<if test="replyUserId != null">"REPLY_USER_ID" = #{replyUserId}, </if>
+			<if test="replyUserName != null">"REPLY_USER_NAME" = #{replyUserName}, </if>
+			<if test="createDate != null">"CREATE_DATE" = #{createDate}, </if>
+			<if test="updateDate != null">"UPDATE_DATE" = #{updateDate}, </if>
+			<if test="makeupStatus != null">"MAKEUP_STATUS" = #{makeupStatus}, </if>
+			<if test="makeupExamineId != null">"MAKEUP_EXAMINE_ID" = #{makeupExamineId}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_EXAM_MAIN_ANSWER where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_EXAM_MAIN_ANSWER where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<select id="queryUserCount" resultType="java.util.HashMap">
+		select EXAMINE_ID as "key",count(distinct REPLY_USER) as "value" from XLGL_EXAM_MAIN_ANSWER
+		 where 1 = 1 
+		 <if test="examineId != null and examineId != ''">
+			and EXAMINE_ID = #{examineId}
+		</if>
+		group by EXAMINE_ID 
+	</select>
+	
+	<insert id="saveBatch" parameterType="com.css.xlgl.entity.XlglExamMainAnswer">
+		insert into XLGL_EXAM_MAIN_ANSWER
+		(
+			"id", 
+			"EXAMINE_ID", 
+			"FRACTIONSUM", 
+			"LEVEL", 
+			"ORGAN_ID", 
+			"ORGAN_NAME", 
+			"REPLY_USER_ID", 
+			"REPLY_USER_NAME", 
+			"CREATE_DATE", 
+			"UPDATE_DATE", 
+			"MAKEUP_STATUS", 
+			"MAKEUP_EXAMINE_ID"
+		)
+		values
+		<foreach collection="list" item="item" index="index" open="" close="" separator=",">
+		(
+			#{item.id}, 
+			#{item.examineId}, 
+			#{item.fractionsum}, 
+			#{item.level}, 
+			#{item.organId}, 
+			#{item.organName}, 
+			#{item.replyUserId}, 
+			#{item.replyUserName}, 
+			#{item.createDate}, 
+			#{item.updateDate}, 
+			#{item.makeupStatus}, 
+			#{item.makeupExamineId}
+		)
+		</foreach>
+	</insert>
+
+</mapper>

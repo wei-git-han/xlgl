@@ -92,6 +92,18 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 	 * @Version v1.0
 	 */
 	List<BaseAppUser> selectUserByNameAndUnitId(String name,String unitId);
+	
+	
+	//@Select("select count(1) from BASE_APP_USER")
+	int queryAllUser(String deptId);
+	
+	//@Select("select count(1) from BASE_APP_USER  where")
+	int queryZbUser(String deptId);
+	
+	@Select("select count(1) from BASE_APP_USER where ORGANID = #{0}")
+	int queryUserNum(String deptId);
 
+	@Select("select * from BASE_APP_USER where ORGANID = #{0}")
+	List<BaseAppUser> queryUsers(String deptId);
 	
 }
