@@ -118,7 +118,7 @@ public class BaseAppUserController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/Chutree")
+	@RequestMapping(value = "/chuTree")
 	@ResponseBody
 	public Object getUserChuTree() {
 		String organId = baseAppOrgMappedService.getChuByUserId(CurrentUser.getUserId());
