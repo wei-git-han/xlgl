@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.css.app.xlgl.entity.XlglExamTopic;
 import com.css.app.xlgl.service.XlglExamTopicService;
+import com.css.base.utils.CurrentUser;
 import com.css.base.utils.PageUtils;
 import com.css.base.utils.Response;
 import com.css.base.utils.UUIDUtils;
@@ -44,7 +46,7 @@ import com.github.pagehelper.PageHelper;
  * @date 2020-07-28 16:17:20
  */
 @Controller
-@RequestMapping("/xlglexamtopic")
+@RequestMapping("app/xlgl/xlglexamtopic")
 public class XlglExamTopicController {
 	@Autowired
 	private XlglExamTopicService xlglExamTopicService;
@@ -74,8 +76,8 @@ public class XlglExamTopicController {
 	 * 信息
 	 */
 	@ResponseBody
-	@RequestMapping("/info/{id}")
-	public void info(@PathVariable("id") String id){
+	@RequestMapping("/info")
+	public void info(String id){
 		XlglExamTopic xlglExamTopic = xlglExamTopicService.queryObject(id);
 		Response.json("xlglExamTopic", xlglExamTopic);
 	}
@@ -85,7 +87,7 @@ public class XlglExamTopicController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public void save(@RequestBody XlglExamTopic xlglExamTopic){
+	public void save(XlglExamTopic xlglExamTopic){
 		xlglExamTopic.setId(UUIDUtils.random());
 		xlglExamTopicService.save(xlglExamTopic);
 		
@@ -97,7 +99,10 @@ public class XlglExamTopicController {
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	public void update(@RequestBody XlglExamTopic xlglExamTopic){
+	public void update(XlglExamTopic xlglExamTopic){
+		Date date = new Date();
+		xlglExamTopic.setUpdateDate(date);
+		xlglExamTopic.setUpdateUser(CurrentUser.getUserId());
 		xlglExamTopicService.update(xlglExamTopic);
 		
 		Response.ok();
@@ -108,7 +113,7 @@ public class XlglExamTopicController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	public void delete(@RequestBody String[] ids){
+	public void delete(String[] ids){
 		xlglExamTopicService.deleteBatch(ids);
 		
 		Response.ok();
@@ -131,7 +136,7 @@ public class XlglExamTopicController {
 			 }
 			 fileName =fileName+"-"+type;
 			 Sheet sheet = wb.createSheet(type);
-			 CellRangeAddress cellRangeAddress = new CellRangeAddress(1,1,0,6);
+			 CellRangeAddress cellRangeAddress = new CellRangeAddress(0,0,0,6);
 			 sheet.addMergedRegion(cellRangeAddress);
 			 Row row = sheet.createRow(0);
 			 row.createCell(0).setCellValue(type);
@@ -149,7 +154,7 @@ public class XlglExamTopicController {
 			 }
 			 fileName =fileName+"-"+type;
 			 Sheet sheet = wb.createSheet(type);
-			 CellRangeAddress cellRangeAddress = new CellRangeAddress(1,1,0,6);
+			 CellRangeAddress cellRangeAddress = new CellRangeAddress(0,0,0,6);
 			 sheet.addMergedRegion(cellRangeAddress);
 			 Row row = sheet.createRow(0);
 			 row.createCell(0).setCellValue(type);
@@ -158,7 +163,7 @@ public class XlglExamTopicController {
 			 row1.createCell(1).setCellValue("答案");
 		 }
 		 try {
-			 response.setHeader("Content-Disposition", "attachment; filename="+new String(fileName.getBytes("GB2312"),"ISO_8859_1")+".xls");  
+			 response.setHeader("Content-Disposition", "attachment; filename="+new String(fileName.getBytes("UTF-8"),"ISO_8859_1")+".xls");  
 		     response.setContentType("application/octet-stream; charset=UTF-8");  
 		     ServletOutputStream outputStream = response.getOutputStream();
 			 wb.write(outputStream);
@@ -167,8 +172,8 @@ public class XlglExamTopicController {
 			 wb.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+			Response.error();
 		}
-		
 	 }
 	 
 	 /**

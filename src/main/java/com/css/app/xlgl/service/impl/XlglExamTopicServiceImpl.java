@@ -124,5 +124,10 @@ public class XlglExamTopicServiceImpl implements XlglExamTopicService {
 	public List<XlglExamTopic> queryListByIds(Object[] id) {
 		return xlglExamTopicDao.queryListByIds(id);
 	}
+
+	@Override
+	public void deleteByType(Map<String, Object> map) {
+		xlglExamTopicDao.deleteByType(map);;
+	}
 	
 }
