@@ -1,6 +1,6 @@
 package com.css.app.xlgl.config.dao;
 
-import com.css.app.xlgl.config.entity.RoleSet;
+import com.css.app.xlgl.config.entity.XlglRoleSet;
 import com.css.base.dao.BaseDao;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2019-04-19 10:22:36
  */
 @Mapper
-public interface RoleSetDao extends BaseDao<RoleSet> {
+public interface XlglRoleSetDao extends BaseDao<XlglRoleSet> {
 	
 	int deleteByUserId(String userId);
 }

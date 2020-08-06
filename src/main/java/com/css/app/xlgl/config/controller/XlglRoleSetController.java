@@ -8,8 +8,8 @@ import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.db.business.service.DocumentSzpsService;
 import com.css.app.db.util.DbDefined;
-import com.css.app.xlgl.config.entity.RoleSet;
-import com.css.app.xlgl.config.service.RoleSetService;
+import com.css.app.xlgl.config.entity.XlglRoleSet;
+import com.css.app.xlgl.config.service.XlglRoleSetService;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.GwPageUtils;
 import com.css.base.utils.Response;
@@ -38,10 +38,10 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/app/xlgl/roleset")
-public class RoleSetController {
-	private final Logger logger = LoggerFactory.getLogger(RoleSetController.class);
+public class XlglRoleSetController {
+	private final Logger logger = LoggerFactory.getLogger(XlglRoleSetController.class);
 	@Autowired
-	private RoleSetService roleSetService;
+	private XlglRoleSetService xlglRoleSetService;
 	@Autowired
 	private BaseAppOrganService baseAppOrganService;
 	
@@ -63,7 +63,7 @@ public class RoleSetController {
 			map.put("deptId", deptId);
 		}
 		PageHelper.startPage(page, pagesize);
-		List<RoleSet> roleSetList = roleSetService.queryList(map);
+		List<XlglRoleSet> roleSetList = xlglRoleSetService.queryList(map);
 		GwPageUtils pageUtil = new GwPageUtils(roleSetList);
 		Response.json(pageUtil);
 	}
@@ -75,7 +75,7 @@ public class RoleSetController {
 	public void querySzList(){
 		Map<String, Object> map = new HashMap<>();
 		map.put("roleFlag", DbDefined.ROLE_1);
-		List<RoleSet> roleSetList = roleSetService.queryList(map);
+		List<XlglRoleSet> roleSetList = xlglRoleSetService.queryList(map);
 		Response.json(roleSetList);
 	}
 	
@@ -91,8 +91,8 @@ public class RoleSetController {
 		JSONArray array=new JSONArray();
 		Map<String, Object> map = new HashMap<>();
 		map.put("roleFlag", DbDefined.ROLE_1);
-		List<RoleSet> roleSetList = roleSetService.queryList(map);
-		for (RoleSet roleSet : roleSetList) {
+		List<XlglRoleSet> roleSetList = xlglRoleSetService.queryList(map);
+		for (XlglRoleSet roleSet : roleSetList) {
 			JSONObject json=new JSONObject();
 			json.put("id", roleSet.getUserId());
 			json.put("text", roleSet.getUserName());
@@ -111,7 +111,7 @@ public class RoleSetController {
 		Map<String, Object> map = new HashMap<>();
 		map.put("roleFlag", DbDefined.ROLE_1);
 		PageHelper.startPage(page, pagesize);
-		List<RoleSet> roleSetList = roleSetService.queryList(map);
+		List<XlglRoleSet> roleSetList = xlglRoleSetService.queryList(map);
 		GwPageUtils pageUtil = new GwPageUtils(roleSetList);
 		Response.json(pageUtil);
 	}
@@ -122,7 +122,7 @@ public class RoleSetController {
 	@ResponseBody
 	@RequestMapping("/info")
 	public void info(String id){
-		RoleSet roleSet = roleSetService.queryObject(id);
+		XlglRoleSet roleSet = xlglRoleSetService.queryObject(id);
 		Response.json(roleSet);
 	}
 	
@@ -131,7 +131,7 @@ public class RoleSetController {
 	 */
 	@ResponseBody
 	@RequestMapping("/saveOrUpdate")
-	public void save(RoleSet dbRoleSet) {
+	public void save(XlglRoleSet dbRoleSet) {
 		String orgId = "";
 		String orgName = "";
 		String userId = dbRoleSet.getUserId();
@@ -150,15 +150,15 @@ public class RoleSetController {
 				dbRoleSet.setDeptId(orgId);
 				dbRoleSet.setDeptName(orgName);
 			}
-			roleSetService.update(dbRoleSet);
+			xlglRoleSetService.update(dbRoleSet);
 		} else {
-			roleSetService.deleteByUserId(userId);
+			xlglRoleSetService.deleteByUserId(userId);
 			dbRoleSet.setId(UUIDUtils.random());
 			if (!StringUtils.equals(DbDefined.ROLE_1, dbRoleSet.getRoleFlag())) {
 				dbRoleSet.setDeptId(orgId);
 				dbRoleSet.setDeptName(orgName);
 			}
-			roleSetService.save(dbRoleSet);
+			xlglRoleSetService.save(dbRoleSet);
 		}
 		Response.json("result", "success");
 	}
@@ -172,7 +172,7 @@ public class RoleSetController {
 		Date date = new Date();
 		logger.info("当前操作人："+CurrentUser.getUsername()+"---id:"+CurrentUser.getUserId()+"--时间是："+date);
 		String[] idArry = ids.split(",");
-		roleSetService.deleteBatch(idArry);
+		xlglRoleSetService.deleteBatch(idArry);
 		Response.json("result","success");
 	}
 	

@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @email 
  * @date 2019-04-19 10:22:36
  */
-public class RoleSet implements Serializable {
+public class XlglRoleSet implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	//唯一标识

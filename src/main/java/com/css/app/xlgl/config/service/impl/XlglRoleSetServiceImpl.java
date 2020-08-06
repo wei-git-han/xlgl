@@ -1,9 +1,9 @@
 package com.css.app.xlgl.config.service.impl;
 
 import com.css.app.db.util.DbDefined;
-import com.css.app.xlgl.config.dao.RoleSetDao;
-import com.css.app.xlgl.config.entity.RoleSet;
-import com.css.app.xlgl.config.service.RoleSetService;
+import com.css.app.xlgl.config.dao.XlglRoleSetDao;
+import com.css.app.xlgl.config.entity.XlglRoleSet;
+import com.css.app.xlgl.config.service.XlglRoleSetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,28 +12,28 @@ import java.util.List;
 import java.util.Map;
 
 
-@Service("roleSetService")
-public class RoleSetServiceImpl implements RoleSetService {
+@Service("xlglRoleSetService")
+public class XlglRoleSetServiceImpl implements XlglRoleSetService {
 	@Autowired
-	private RoleSetDao roleSetDao;
+	private XlglRoleSetDao roleSetDao;
 	
 	@Override
-	public RoleSet queryObject(String id){
+	public XlglRoleSet queryObject(String id){
 		return roleSetDao.queryObject(id);
 	}
 	
 	@Override
-	public List<RoleSet> queryList(Map<String, Object> map){
+	public List<XlglRoleSet> queryList(Map<String, Object> map){
 		return roleSetDao.queryList(map);
 	}
 	
 	@Override
-	public void save(RoleSet dbRoleSet){
+	public void save(XlglRoleSet dbRoleSet){
 		roleSetDao.save(dbRoleSet);
 	}
 	
 	@Override
-	public void update(RoleSet dbRoleSet){
+	public void update(XlglRoleSet dbRoleSet){
 		roleSetDao.update(dbRoleSet);
 	}
 	
@@ -57,7 +57,7 @@ public class RoleSetServiceImpl implements RoleSetService {
 		String roleType = DbDefined.ROLE_6;//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
 		Map<String, Object> roleMap = new HashMap<>();
 		roleMap.put("userId", userId);
-		List<RoleSet> roleList = roleSetDao.queryList(roleMap);
+		List<XlglRoleSet> roleList = roleSetDao.queryList(roleMap);
 		if(roleList != null && roleList.size()>0) {
 			roleType = roleList.get(0).getRoleFlag();
 		}

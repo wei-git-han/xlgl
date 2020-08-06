@@ -1,6 +1,6 @@
 package com.css.app.xlgl.config.service;
 
-import com.css.app.xlgl.config.entity.RoleSet;
+import com.css.app.xlgl.config.entity.XlglRoleSet;
 
 import java.util.List;
 import java.util.Map;
@@ -12,15 +12,15 @@ import java.util.Map;
  * @email 
  * @date 2019-04-19 10:22:36
  */
-public interface RoleSetService {
+public interface XlglRoleSetService {
 	
-	RoleSet queryObject(String id);
+	XlglRoleSet queryObject(String id);
 	
-	List<RoleSet> queryList(Map<String, Object> map);
+	List<XlglRoleSet> queryList(Map<String, Object> map);
 	
-	void save(RoleSet dbRoleSet);
+	void save(XlglRoleSet dbRoleSet);
 	
-	void update(RoleSet dbRoleSet);
+	void update(XlglRoleSet dbRoleSet);
 	
 	void delete(String id);
 	
