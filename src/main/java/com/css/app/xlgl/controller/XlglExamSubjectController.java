@@ -1,6 +1,6 @@
 package com.css.app.xlgl.controller;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,14 +8,18 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.css.app.xlgl.entity.XlglExamSubject;
 import com.css.app.xlgl.service.XlglExamSubjectService;
+import com.css.app.xlgl.service.XlglExamTopicService;
+import com.css.base.utils.CurrentUser;
 import com.css.base.utils.PageUtils;
 import com.css.base.utils.Response;
+import com.css.base.utils.StringUtils;
 import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 
@@ -28,10 +32,12 @@ import com.github.pagehelper.PageHelper;
  * @date 2020-07-28 16:17:20
  */
 @Controller
-@RequestMapping("/xlglexamsubject")
+@RequestMapping("app/xlgl/xlglexamsubject")
 public class XlglExamSubjectController {
 	@Autowired
 	private XlglExamSubjectService xlglExamSubjectService;
+	@Autowired
+	private XlglExamTopicService xlglExamTopicService;
 	
 	/**
 	 * 列表
@@ -65,8 +71,14 @@ public class XlglExamSubjectController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public void save(@RequestBody XlglExamSubject xlglExamSubject){
+	public void save(XlglExamSubject xlglExamSubject){
 		xlglExamSubject.setId(UUIDUtils.random());
+		String userId = CurrentUser.getUserId();
+		Date date = new Date();
+		xlglExamSubject.setCreateDate(date);
+		xlglExamSubject.setUpdateDate(date);
+		xlglExamSubject.setCreateUser(userId);
+		xlglExamSubject.setUpdateUser(userId);
 		xlglExamSubjectService.save(xlglExamSubject);
 		
 		Response.ok();
@@ -77,9 +89,18 @@ public class XlglExamSubjectController {
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	public void update(@RequestBody XlglExamSubject xlglExamSubject){
+	public void update(XlglExamSubject xlglExamSubject,String delType){
+		Date date = new Date();
+		xlglExamSubject.setUpdateDate(date);
+		xlglExamSubject.setCreateUser(CurrentUser.getUserId());
 		xlglExamSubjectService.update(xlglExamSubject);
-		
+		if(StringUtils.isNotBlank(delType)) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("subjectId", xlglExamSubject.getId());
+			map.put("topicType", delType);
+			xlglExamTopicService.deleteByType(map);
+		}
+	
 		Response.ok();
 	}
 	
@@ -88,7 +109,7 @@ public class XlglExamSubjectController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	public void delete(@RequestBody String[] ids){
+	public void delete(String[] ids){
 		xlglExamSubjectService.deleteBatch(ids);
 		
 		Response.ok();
@@ -100,19 +121,49 @@ public class XlglExamSubjectController {
 	@RequestMapping("/subject")
 	public void subjectList() {
 		List<XlglExamSubject> findList = xlglExamSubjectService.findList();
-		List<XlglExamSubject> subjectList = new ArrayList<XlglExamSubject>();
+		JSONArray jsons = new JSONArray();
 		for (XlglExamSubject xlglExamSubject : findList) {
+			JSONObject json = new JSONObject();
+			json.put("id",xlglExamSubject.getId());
+			json.put("label", xlglExamSubject.getSubjectName());
+			String[] split =new String[xlglExamSubject.getSubjectType().length()];
 			if(xlglExamSubject.getSubjectType() !=null && xlglExamSubject.getSubjectType().contains(",")) {
-				String[] split = xlglExamSubject.getSubjectType().split(",");
-				xlglExamSubject.setSubjectTypeAll(split);
+				split = xlglExamSubject.getSubjectType().split(",");	
 			}else if(xlglExamSubject.getSubjectType() !=null) {
-				String[] split = new String[1];
 				split[0]=xlglExamSubject.getSubjectType();
 				xlglExamSubject.setSubjectTypeAll(split);
 			}
-			subjectList.add(xlglExamSubject);
+			JSONArray jsonTypeArray = new JSONArray();
+			for (String string : split) {
+				JSONObject jsontype = new JSONObject();
+				jsontype.put("id",string);
+				jsontype.put("type",string);
+				switch (string) {
+				case "1":
+					jsontype.put("label", "单选题");
+					break;
+				case "2":
+					jsontype.put("label", "多选题");
+					break;
+				case "3":
+					jsontype.put("label", "判断题");
+					break;
+				case "4":
+					jsontype.put("label", "填空题");
+					break;
+
+				case "5":
+					jsontype.put("label", "简答题");
+					break;
+				default:
+					break;
+				}
+				jsonTypeArray.add(jsontype);
+				json.put("children", jsonTypeArray);
+			}
+			jsons.add(json);
 		}
-		Response.json("subjectList", subjectList);
+		Response.json(jsons);
 	}
 	/**
 	 * 考试科目选择 下拉框

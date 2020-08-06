@@ -72,7 +72,7 @@
 			<if test="updateUser != null">"UPDATE_USER" = #{updateUser}, </if>
 			<if test="updateDate != null">"UPDATE_DATE" = #{updateDate}</if>
 		</set>
-		where id = #{id}
+		 where id = #{id}
 	</update>
 	
 	<delete id="delete">
@@ -125,5 +125,10 @@
 			#{id}
 		</foreach>
 	</select>
-
+	
+	<delete id="deleteByType">
+		delete from XLGL_EXAM_TOPIC 
+		where SUBJECT_ID = #{subjectId} 
+		and TOPIC_TYPE = #{topicType}
+	</delete>
 </mapper>
