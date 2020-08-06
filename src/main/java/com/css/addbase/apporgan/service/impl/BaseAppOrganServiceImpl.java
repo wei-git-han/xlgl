@@ -91,4 +91,16 @@ public class BaseAppOrganServiceImpl implements BaseAppOrganService {
 		return baseAppOrganDao.queryAllDept(root);
 	}
 
+	@Override
+	public List<BaseAppOrgan> getSubOrg(String id) {
+		// TODO Auto-generated method stub
+		return baseAppOrganDao.getSubOrg(id);
+	}
+
+	@Override
+	public List<BaseAppOrgan> getSubOrgSync(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return baseAppOrganDao.getSubOrgSync(map);
+	}
+
 }

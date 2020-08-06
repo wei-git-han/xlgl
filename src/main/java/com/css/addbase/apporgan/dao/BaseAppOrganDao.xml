@@ -22,6 +22,12 @@
 		</if>
 	</select>
 	
+	<select id="getSubOrgSync" resultType="com.css.addbase.apporgan.entity.BaseAppOrgan">
+		select ID, NAME, PARENT_ID, SORT,(select count(0) from BASE_APP_ORGAN a   WHERE a.PARENT_ID=b.ID and a.ISDELETE = 0) AS  CODE, TREE_PATH  
+		  from BASE_APP_ORGAN b where PARENT_ID = #{id} and b.ISDELETE = 0
+		   order by SORT
+	</select>
+	
  	<select id="queryTotal" resultType="int">
 		select count(*) from BASE_APP_ORGAN where ISDELETE = 0
 		<if test="parentId != null and parentId != null">
