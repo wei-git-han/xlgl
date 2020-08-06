@@ -364,6 +364,7 @@ public class BaseAppUserController {
 	
 	/**
 	 * 加载当前人及当前人的部门
+	 * 更改在编状态
 	 */
 	@ResponseBody
 	@RequestMapping("/updateZbqk")
