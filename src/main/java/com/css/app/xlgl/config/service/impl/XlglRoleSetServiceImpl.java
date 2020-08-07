@@ -3,7 +3,7 @@ package com.css.app.xlgl.config.service.impl;
 import com.css.app.xlgl.config.dao.XlglRoleSetDao;
 import com.css.app.xlgl.config.entity.XlglRoleSet;
 import com.css.app.xlgl.config.service.XlglRoleSetService;
-import com.css.app.xlgl.util.DbDefined;
+import com.css.app.xlgl.util.XlglDefined;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +54,7 @@ public class XlglRoleSetServiceImpl implements XlglRoleSetService {
 
 	@Override
 	public String getRoleTypeByUserId(String userId) {
-		String roleType = DbDefined.ROLE_6;//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
+		String roleType = XlglDefined.ROLE_6;//角色标识（1：首长；2：首长秘书；3：局长；4：局秘书；5：处长；6：参谋;）
 		Map<String, Object> roleMap = new HashMap<>();
 		roleMap.put("userId", userId);
 		List<XlglRoleSet> roleList = roleSetDao.queryList(roleMap);

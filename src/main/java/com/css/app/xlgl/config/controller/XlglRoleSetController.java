@@ -9,7 +9,7 @@ import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.db.business.service.DocumentSzpsService;
 import com.css.app.xlgl.config.entity.XlglRoleSet;
 import com.css.app.xlgl.config.service.XlglRoleSetService;
-import com.css.app.xlgl.util.DbDefined;
+import com.css.app.xlgl.util.XlglDefined;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.GwPageUtils;
 import com.css.base.utils.Response;
@@ -74,7 +74,7 @@ public class XlglRoleSetController {
 	@RequestMapping("/querySzList")
 	public void querySzList(){
 		Map<String, Object> map = new HashMap<>();
-		map.put("roleFlag", DbDefined.ROLE_1);
+		map.put("roleFlag", XlglDefined.ROLE_1);
 		List<XlglRoleSet> roleSetList = xlglRoleSetService.queryList(map);
 		Response.json(roleSetList);
 	}
@@ -90,7 +90,7 @@ public class XlglRoleSetController {
 	public void queryLeaderTree(){
 		JSONArray array=new JSONArray();
 		Map<String, Object> map = new HashMap<>();
-		map.put("roleFlag", DbDefined.ROLE_1);
+		map.put("roleFlag", XlglDefined.ROLE_1);
 		List<XlglRoleSet> roleSetList = xlglRoleSetService.queryList(map);
 		for (XlglRoleSet roleSet : roleSetList) {
 			JSONObject json=new JSONObject();
@@ -109,7 +109,7 @@ public class XlglRoleSetController {
 	@RequestMapping("/queryLeaderList")
 	public void queryLeaderList(Integer page, Integer pagesize){
 		Map<String, Object> map = new HashMap<>();
-		map.put("roleFlag", DbDefined.ROLE_1);
+		map.put("roleFlag", XlglDefined.ROLE_1);
 		PageHelper.startPage(page, pagesize);
 		List<XlglRoleSet> roleSetList = xlglRoleSetService.queryList(map);
 		GwPageUtils pageUtil = new GwPageUtils(roleSetList);
@@ -146,7 +146,7 @@ public class XlglRoleSetController {
 			}
 		}
 		if (StringUtils.isNotBlank(dbRoleSet.getId())) {
-			if (!StringUtils.equals(DbDefined.ROLE_1, dbRoleSet.getRoleFlag())) {
+			if (!StringUtils.equals(XlglDefined.ROLE_1, dbRoleSet.getRoleFlag())) {
 				dbRoleSet.setDeptId(orgId);
 				dbRoleSet.setDeptName(orgName);
 			}
@@ -154,7 +154,7 @@ public class XlglRoleSetController {
 		} else {
 			xlglRoleSetService.deleteByUserId(userId);
 			dbRoleSet.setId(UUIDUtils.random());
-			if (!StringUtils.equals(DbDefined.ROLE_1, dbRoleSet.getRoleFlag())) {
+			if (!StringUtils.equals(XlglDefined.ROLE_1, dbRoleSet.getRoleFlag())) {
 				dbRoleSet.setDeptId(orgId);
 				dbRoleSet.setDeptName(orgName);
 			}

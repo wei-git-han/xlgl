@@ -1,6 +1,6 @@
 package com.css.app.xlgl.util;
 
-public class DbDefined {
+public class XlglDefined {
 	
 	/**
 	 * 字典类型：所有字典
