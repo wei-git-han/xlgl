@@ -1,9 +1,9 @@
 package com.css.app.xlgl.config.service.impl;
 
-import com.css.app.db.util.DbDefined;
 import com.css.app.xlgl.config.dao.XlglRoleSetDao;
 import com.css.app.xlgl.config.entity.XlglRoleSet;
 import com.css.app.xlgl.config.service.XlglRoleSetService;
+import com.css.app.xlgl.util.DbDefined;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
