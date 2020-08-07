@@ -34,6 +34,8 @@ public class TaskMenu implements Serializable {
 	//
 	private String parentId;
 
+	private String icon;
+
 	/**
 	 * 设置：
 	 */
@@ -141,5 +143,13 @@ public class TaskMenu implements Serializable {
 	 */
 	public String getParentId() {
 		return parentId;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
 	}
 }
