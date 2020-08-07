@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.css.addbase.AppConfig;
 import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
@@ -38,7 +39,8 @@ public class BaseAppOrganController {
 	private BaseAppUserService baseAppUserService;
 	@Autowired
 	private BaseAppOrgMappedService baseAppOrgMappedService;
-
+	@Autowired
+	private AppConfig appConfig;
 	/**
 	 * 获取以当前登录人部门为根节点的部门树(获取全部的叶子节点)
 	 * @return
@@ -180,6 +182,40 @@ public class BaseAppOrganController {
 		}
 		JSONObject list= OrgUtil.getOrganTree(listOrg, organId);
 		return list;
+	}
+	
+	
+	@RequestMapping(value = "/syncTree")
+	@ResponseBody
+	public Object getDeptTreeSync(String id) {
+		JSONArray ja=new JSONArray();
+		if("#".equals(id)){
+			BaseAppOrgan organ=baseAppOrganService.queryObject("root");
+			JSONObject jo=new JSONObject();
+			jo.put("id",organ.getId());
+			jo.put("parent","#");
+			jo.put("text",organ.getName());
+			jo.put("children",true);
+			ja.add(jo);
+		}else{
+			if(StringUtils.isEmpty(id)){
+				id="root";
+			}
+			JSONObject jo=null;;
+			boolean isManager= CurrentUser.getIsManager(appConfig.getAppId(),appConfig.getAppSecret());
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("id",id);
+			List<BaseAppOrgan> organs= baseAppOrganService.getSubOrgSync(map);
+			for(BaseAppOrgan organ:organs){
+				jo=new JSONObject();
+				jo.put("id",organ.getId());
+				jo.put("parent",organ.getParentId());
+				jo.put("text",organ.getName());
+				jo.put("children",!"0".equals(organ.getCode()));
+				ja.add(jo);
+			}
+		}
+		return ja;
 	}
 
 }

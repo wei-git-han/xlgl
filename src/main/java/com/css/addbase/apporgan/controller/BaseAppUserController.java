@@ -1,6 +1,8 @@
 package com.css.addbase.apporgan.controller;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -61,7 +63,13 @@ public class BaseAppUserController {
 		if (StringUtils.isEmpty(organId)) {
 			organId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
 		}
-		List<BaseAppUser> users = baseAppUserService.findByOrganid(organId);
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (StringUtils.isNotBlank(organId) && !StringUtils.equals("root", organId)) {
+			organId = allOrgIds(organId);
+			map.put("orgIds", organId.split(","));
+		}
+		//List<BaseAppUser> users = baseAppUserService.findByOrganid(organId);
+		List<BaseAppUser> users = baseAppUserService.queryList(map);
 		JSONObject result = new JSONObject();
 		result.put("page", 1);
 		result.put("total", users.size());
@@ -72,6 +80,8 @@ public class BaseAppUserController {
 			json.put("truename", user.getTruename());
 			json.put("work", "");
 			json.put("departmentName", baseAppOrganService.queryObject(user.getOrganid()).getName());
+			json.put("moblie", user.getMobile());
+			json.put("sfzb", user.getSfzb());
 			jsons.add(json);
 		}
 		result.put("rows", jsons);
@@ -118,7 +128,7 @@ public class BaseAppUserController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/Chutree")
+	@RequestMapping(value = "/chuTree")
 	@ResponseBody
 	public Object getUserChuTree() {
 		String organId = baseAppOrgMappedService.getChuByUserId(CurrentUser.getUserId());
@@ -364,6 +374,7 @@ public class BaseAppUserController {
 	
 	/**
 	 * 加载当前人及当前人的部门
+	 * 更改在编状态
 	 */
 	@ResponseBody
 	@RequestMapping("/updateZbqk")
@@ -372,5 +383,22 @@ public class BaseAppUserController {
 		JSONObject json = new JSONObject();
 		baseAppUserService.update(baseAppUser);
 		Response.json("result","success");
+	}
+	
+	private String allOrgIds(String orgId) {
+		String ret = "";
+		if (StringUtils.isNotBlank(orgId)) {
+			BaseAppOrgan org = baseAppOrganService.queryObject(orgId);
+			if (org != null) {
+				ret += org.getId() + ",";
+				List<BaseAppOrgan> list = baseAppOrganService.getSubOrg(org.getId());
+				if (list != null && list.size() > 0) {
+					for (BaseAppOrgan organ : list) {
+						ret += allOrgIds(organ.getId());
+					}
+				}
+			}
+		}
+		return ret;
 	}
 }

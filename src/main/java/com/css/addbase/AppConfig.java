@@ -88,4 +88,12 @@ public class AppConfig {
 	public String getAppId(){
 		return env.getProperty("csse.dccb.appId");
 	}
+	
+	/**
+	 * 获取AppId
+	 * @return
+	 */
+	public String getAppSecret(){
+		return env.getProperty("csse.dccb.appSecret");
+	}
 }

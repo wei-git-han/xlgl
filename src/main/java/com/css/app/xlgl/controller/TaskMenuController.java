@@ -111,7 +111,7 @@ public class TaskMenuController {
 	}
 	
 	/**
-	 * 保存
+	 * 给个人配置菜单保存
 	 */
 	@ResponseBody
 	@RequestMapping("/permissionsave")
