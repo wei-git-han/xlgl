@@ -178,10 +178,11 @@ public class TaskMenuController {
         for (TaskMenu menu : menus) {
             if (StringUtils.equals(parentId, menu.getParentId())) {
                 JSONObject json = new JSONObject();
-                json.put("path", menu.getMenuId());
+                json.put("id", menu.getMenuId());
                 json.put("text", menu.getDisplayName());
                 json.put("component", menu.getDefaultPage());
                 json.put("icon",menu.getIcon());
+                json.put("path",menu.getPath());
                 JSONArray children = getMenuChildren(menus, menu.getMenuId());
                 if (children.size() > 0) {
                     json.put("children", children);

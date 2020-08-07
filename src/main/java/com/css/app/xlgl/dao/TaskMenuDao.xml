@@ -30,7 +30,8 @@
 			"DISPLAY_TYPE", 
 			"REMARK", 
 			"PARENT_ID",
-			"ICON"
+			"ICON",
+			"PATH"
 		)
 		values
 		(
@@ -43,7 +44,8 @@
 			#{displayType}, 
 			#{remark}, 
 			#{parentId},
-			#{icon}
+			#{icon},
+			#{path}
 		)
 	</insert>
 	 
@@ -59,6 +61,7 @@
 			<if test="remark != null">"REMARK" = #{remark}, </if>
 			<if test="parentId != null">"PARENT_ID" = #{parentId}</if>
 			<if test="icon != null">"ICON" = #{icon}</if>
+			<if test="path != null">"PATH" = #{path}</if>
 		</set>
 		where MENU_ID = #{menuId}
 	</update>
