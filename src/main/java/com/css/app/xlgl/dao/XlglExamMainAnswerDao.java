@@ -19,7 +19,7 @@ import com.css.base.dao.BaseDao;
 @Mapper
 public interface XlglExamMainAnswerDao extends BaseDao<XlglExamMainAnswer> {
 	
-	HashMap<String,Object> queryUserCount(Map<String,Object> map);
+	String queryUserCount(HashMap<String, Object> mapAll);
 	void saveBatch(List<XlglExamMainAnswer> list);
 	
 }

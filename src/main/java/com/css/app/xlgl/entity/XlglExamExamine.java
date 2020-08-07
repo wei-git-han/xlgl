@@ -55,7 +55,10 @@ public class XlglExamExamine implements Serializable {
 	private Integer numberIntoNot;
 	//参考率
 	private String ratio;
-
+	//考试开始时间
+	private String examineStartDateStr;
+	//考试结束时间
+	private String examineEndDateStr;
 
 
 	
@@ -245,6 +248,18 @@ public class XlglExamExamine implements Serializable {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public String getExamineStartDateStr() {
+		return examineStartDateStr;
+	}
+	public void setExamineStartDateStr(String examineStartDateStr) {
+		this.examineStartDateStr = examineStartDateStr;
+	}
+	public String getExamineEndDateStr() {
+		return examineEndDateStr;
+	}
+	public void setExamineEndDateStr(String examineEndDateStr) {
+		this.examineEndDateStr = examineEndDateStr;
 	}
 	
 

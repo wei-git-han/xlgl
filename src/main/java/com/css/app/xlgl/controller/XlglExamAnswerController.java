@@ -33,7 +33,7 @@ import com.github.pagehelper.PageHelper;
  * @date 2020-08-03 11:35:28
  */
 @Controller
-@RequestMapping("/xlglexamanswer")
+@RequestMapping("app/xlgl/xlglexamanswer")
 public class XlglExamAnswerController {
 	@Autowired
 	private XlglExamAnswerService xlglExamAnswerService;
@@ -123,7 +123,7 @@ public class XlglExamAnswerController {
 	 */
 	@ResponseBody
 	@RequestMapping("/saveBatch")
-	public void saveBath(@RequestBody String xlglExamAnswer,String mainAnswerId){
+	public void saveBath(String xlglExamAnswer,String mainAnswerId){
 		List<XlglExamAnswer> parseArray = JSONArray.parseArray(xlglExamAnswer, XlglExamAnswer.class);
 		Integer sum = 0;
 		for (XlglExamAnswer eanswer : parseArray) {

@@ -50,15 +50,15 @@ public class XlglExamMainAnswerServiceImpl implements XlglExamMainAnswerService 
 	}
 
 	@Override
-	public HashMap<String, Object> queryUserCount(Map<String, Object> map) {
-	
-		return xlglExamMainAnswerDao.queryUserCount(map);
-	}
-
-	@Override
 	public void saveBatch(List<XlglExamMainAnswer> list) {
 		xlglExamMainAnswerDao.saveBatch(list);
 		
+	}
+
+	@Override
+	public String queryUserCount(HashMap<String, Object> mapAll) {
+		// TODO Auto-generated method stub
+		return xlglExamMainAnswerDao.queryUserCount(mapAll);
 	}
 	
 }
