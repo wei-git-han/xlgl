@@ -129,39 +129,41 @@ public class XlglExamSubjectController {
 			String[] split =new String[xlglExamSubject.getSubjectType().length()];
 			if(xlglExamSubject.getSubjectType() !=null && xlglExamSubject.getSubjectType().contains(",")) {
 				split = xlglExamSubject.getSubjectType().split(",");	
-			}else if(xlglExamSubject.getSubjectType() !=null) {
+			}else if(StringUtils.isNotBlank(xlglExamSubject.getSubjectType())) {
 				split[0]=xlglExamSubject.getSubjectType();
 				xlglExamSubject.setSubjectTypeAll(split);
 			}
-			JSONArray jsonTypeArray = new JSONArray();
-			for (String string : split) {
-				JSONObject jsontype = new JSONObject();
-				jsontype.put("id",string);
-				jsontype.put("type",string);
-				switch (string) {
-				case "1":
-					jsontype.put("label", "单选题");
-					break;
-				case "2":
-					jsontype.put("label", "多选题");
-					break;
-				case "3":
-					jsontype.put("label", "判断题");
-					break;
-				case "4":
-					jsontype.put("label", "填空题");
-					break;
+			if(split.length>0) {
+				JSONArray jsonTypeArray = new JSONArray();
+				for (String string : split) {
+					JSONObject jsontype = new JSONObject();
+					jsontype.put("id",string);
+					jsontype.put("type",string);
+					switch (string) {
+					case "1":
+						jsontype.put("label", "单选题");
+						break;
+					case "2":
+						jsontype.put("label", "多选题");
+						break;
+					case "3":
+						jsontype.put("label", "判断题");
+						break;
+					case "4":
+						jsontype.put("label", "填空题");
+						break;
 
-				case "5":
-					jsontype.put("label", "简答题");
-					break;
-				default:
-					break;
+					case "5":
+						jsontype.put("label", "简答题");
+						break;
+					default:
+						break;
+					}
+					jsonTypeArray.add(jsontype);
+					json.put("children", jsonTypeArray);
 				}
-				jsonTypeArray.add(jsontype);
-				json.put("children", jsonTypeArray);
+				jsons.add(json);
 			}
-			jsons.add(json);
 		}
 		Response.json(jsons);
 	}
@@ -172,6 +174,27 @@ public class XlglExamSubjectController {
 	@RequestMapping("/subjectListAll")
 	public void subjectListAll(){
 		List<XlglExamSubject> findList = xlglExamSubjectService.findList();
+		
 		Response.json("findList", findList);
+	}
+	
+	/**
+	 * 选择科目返回题目类型
+	 * */
+	@ResponseBody
+	@RequestMapping("/findTopicBySubId")
+	public void findTopicBySubId(String subjectId){
+		XlglExamSubject queryObject = xlglExamSubjectService.queryObject(subjectId);
+		Map<String ,Object> map =new HashMap<String ,Object>();
+		if(queryObject.getSubjectType()!=null && queryObject.getSubjectType().contains(",")) {
+			String[] split = queryObject.getSubjectType().split(",");
+			map.put("type", split);
+		}else if(queryObject.getSubjectType()!=null) {
+			String[] split = new String[queryObject.getSubjectType().length()];
+			split[0]=queryObject.getSubjectType();
+			map.put("type", split);
+		}
+		
+		Response.json("findList", map);
 	}
 }

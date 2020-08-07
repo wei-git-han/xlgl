@@ -1,5 +1,7 @@
 package com.css.app.xlgl.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,8 +10,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -43,7 +43,7 @@ import com.github.pagehelper.PageHelper;
  * @date 2020-07-30 10:56:43
  */
 @Controller
-@RequestMapping("/xlglexamexamine")
+@RequestMapping("app/xlgl/xlglexamexamine")
 public class XlglExamExamineController {
 	@Autowired
 	private XlglExamExamineService xlglExamExamineService;
@@ -63,30 +63,39 @@ public class XlglExamExamineController {
 
 	/**
 	 * 考核清单列表
+	 * @param issueDate 发布时间
+	 * @param examineName 考试名称
+	 * @param status 0：考试，1:练习
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	public void list(Integer page, Integer limit,Date issueDate,String examineName,String status){
+	public void list(Integer page, Integer limit,String issueDate,String examineName,String status){
 		Map<String, Object> map = new HashMap<>();
 		Date date = new Date();
-		PageHelper.startPage(page, limit);
-		HashMap<String, Object> hashMap = xlglExamMainAnswerService.queryUserCount(null);//每个试卷的参考人数
-		int queryTotal = baseAppUserService.queryTotal(null);//总用户人数
+		int queryTotal = xlglExamExamineService.findCount();//总用户人数
 		map.put("issueDate", issueDate);
 		map.put("examineName", examineName);
 		map.put("issueStatus", "1");
 		map.put("status", status);
+		PageHelper.startPage(page, limit);
 		//查询列表数据
 		List<XlglExamExamine> xlglExamExamineList = xlglExamExamineService.queryList(map);
 		for (XlglExamExamine xlglExamExamine : xlglExamExamineList) {
-			if(xlglExamExamine.getExamineEndDate().before(date) && xlglExamExamine.getIssueStatus().equals("0")) {
+			HashMap<String,Object> mapAll = new HashMap<String, Object>();
+			mapAll.put("examineId", xlglExamExamine.getId());
+			String number = xlglExamMainAnswerService.queryUserCount(mapAll);//每个试卷的参考人数
+			Integer numberInto = 0;
+			if(StringUtils.isNotBlank(number)) {
+				numberInto=Integer.parseInt(number);
+			}
+			if(xlglExamExamine.getExamineEndDate() !=null && xlglExamExamine.getIssueStatus() !=null
+					&&xlglExamExamine.getExamineEndDate().before(date) && xlglExamExamine.getIssueStatus().equals("0")) {
 				xlglExamExamine.setIssueStatus("1");
 				XlglExamExamine ex = new XlglExamExamine();
 				ex.setId(xlglExamExamine.getId());
 				ex.setOverStatus("1");
 				xlglExamExamineService.update(ex);
 			}
-			Integer numberInto =(Integer)hashMap.get(xlglExamExamine.getId());
 			xlglExamExamine.setNumberInto(numberInto);
 			Integer numberIntoNot =queryTotal-numberInto;
 			if(numberIntoNot<0) {
@@ -97,7 +106,6 @@ public class XlglExamExamineController {
 			Integer raio =((numberInto/queryTotal)*100);
 			xlglExamExamine.setRatio(raio.toString()+"%");
 		}
-		
 		PageUtils pageUtil = new PageUtils(xlglExamExamineList);
 		Response.json("page",pageUtil);
 	}
@@ -139,8 +147,8 @@ public class XlglExamExamineController {
 	 * 信息
 	 */
 	@ResponseBody
-	@RequestMapping("/info/{id}")
-	public void info(@PathVariable("id") String id){
+	@RequestMapping("/info")
+	public void info(String id){
 		JSONObject jsonObject = new JSONObject();
 		Map<String, Object> map = new HashMap<String,Object>();
 		XlglExamExamine xlglExamExamine = xlglExamExamineService.queryObject(id);
@@ -157,8 +165,10 @@ public class XlglExamExamineController {
 		}
 		map.put("replyUserId", CurrentUser.getUserId());
 		List<XlglExamMainAnswer> queryList = xlglExamMainAnswerService.queryList(map);
-		XlglExamMainAnswer xlglExamMainAnswer = queryList.get(0);
-		jsonObject.put("xlglExamMainAnswer", xlglExamMainAnswer);
+		if(queryList!=null && queryList.size()>0) {
+			XlglExamMainAnswer xlglExamMainAnswer = queryList.get(0);
+			jsonObject.put("xlglExamMainAnswer", xlglExamMainAnswer);
+		}
 		jsonObject.put("examineTopicIds", strbu.toString());
 		jsonObject.put("listCount", listCount);
 		jsonObject.put("xlglExamExamine", xlglExamExamine);
@@ -171,7 +181,7 @@ public class XlglExamExamineController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public void save(@RequestBody XlglExamExamine xlglExamExamine){
+	public void save(XlglExamExamine xlglExamExamine){
 		String random = UUIDUtils.random();
 		xlglExamExamine.setId(random);
 		xlglExamExamine.setIssueStatus("0");
@@ -184,7 +194,7 @@ public class XlglExamExamineController {
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	public void update(@RequestBody XlglExamExamine xlglExamExamine){
+	public void update(XlglExamExamine xlglExamExamine){
 		xlglExamExamineService.update(xlglExamExamine);
 		
 		Response.ok();
@@ -195,16 +205,18 @@ public class XlglExamExamineController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	public void delete(@RequestBody String[] ids){
+	public void delete(String[] ids){
 		xlglExamExamineService.deleteBatch(ids);
-		
+		for (int i = 0; i < ids.length; i++) {
+			xlglExamExaminetopicService.deleteByExamineId(ids[i]);
+		}
 		Response.ok();
 	}
 	
 	/**
 	 * 考核清单-用户开始考试，并创建用户成绩表
 	 * @param examineId 试卷基本信息表id
-	 * @param makeupStatus 补考状态0：没补考，1:补考了
+	 * @param makeupStatus 未考状态0：没考，1:考了
 	 * @param makeupExamineId 补考id
 	 * */
 	@ResponseBody
@@ -261,10 +273,19 @@ public class XlglExamExamineController {
 	 */
 	@ResponseBody
 	@RequestMapping("/saveOrUpdate")
-	public void saveExamineAndTopic(@RequestBody XlglExamExamine xlglExamExamine,String IssueStatus,String typeAndNum){
+	public void saveExamineAndTopic(XlglExamExamine xlglExamExamine,String IssueStatus,String[] typeAndNum){
 		String random = UUIDUtils.random();
 		String userId = CurrentUser.getUserId();
 		Date date = new Date();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			Date startDate = format.parse(xlglExamExamine.getExamineStartDateStr());
+			Date endDate = format.parse(xlglExamExamine.getExamineEndDateStr());
+			xlglExamExamine.setExamineStartDate(startDate);
+			xlglExamExamine.setExamineEndDate(endDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		if(StringUtils.isNotBlank(IssueStatus)) {
 			xlglExamExamine.setIssueStatus(IssueStatus);
 			if(IssueStatus.equals("1"))
@@ -272,17 +293,19 @@ public class XlglExamExamineController {
 		}else {
 			xlglExamExamine.setIssueStatus("0"); //为空时默认保存
 		}
-		if( xlglExamExamine.getExamineStartDate().before(date)&& xlglExamExamine.getExamineEndDate().after(date)) {
+		
+		xlglExamExamine.setOverStatus("0");
+	/*	if( xlglExamExamine.getExamineStartDate().before(date)&& xlglExamExamine.getExamineEndDate().after(date)) {
 			xlglExamExamine.setOverStatus("0");
 		}else {
 			xlglExamExamine.setOverStatus("1");
-		}
+		}*/
 		
 		if(StringUtils.isNotBlank(xlglExamExamine.getId())) {
 			xlglExamExamine.setUpdateUser(userId);
 			xlglExamExamine.setUpdateDate(date);
 			xlglExamExamineService.update(xlglExamExamine);
-			if(StringUtils.isNotBlank(typeAndNum)) {
+			if(typeAndNum.length >0) {
 				xlglExamExaminetopicService.deleteByExamineId(xlglExamExamine.getId());
 			}
 		}else {
@@ -293,20 +316,20 @@ public class XlglExamExamineController {
 			xlglExamExamine.setId(random);
 			xlglExamExamineService.save(xlglExamExamine);
 		}	
-		if(typeAndNum.contains(";")) {
-			String[] split = typeAndNum.split(";");
-			for (int i = 0; i < split.length; i++) {
+			for (int i = 0; i < typeAndNum.length; i++) {
 				Map<String,Object> map = new HashMap<String,Object>();
-				String[] split2 = split[i].split(",");
+				String[] split2 = typeAndNum[i].split("-");
 				Integer fractionalNumber =Integer.parseInt(split2[2]) /Integer.parseInt(split2[1]);
 				map.put("subjectId", xlglExamExamine.getExamineSubjectId());
 				map.put("topicType", split2[0]);
 				map.put("topicNumber", split2[1]);
 				map.put("fractionalNumber", fractionalNumber);
 				List<XlglExamExaminetopic> randomExtract = xlglExamExaminetopicService.randomExtract(map, xlglExamExamine.getId());
-				xlglExamExaminetopicService.saveBatch(randomExtract);
+				if(randomExtract.size()>0) {
+					xlglExamExaminetopicService.saveBatch(randomExtract);
+				}
 			}
-		}
+		
 		if(IssueStatus.equals("1")) {
 			List<BaseAppUser> queryList = baseAppUserService.queryList(null);
 			List<XlglExamMainAnswer> mainExaminelist =new ArrayList<XlglExamMainAnswer>();
@@ -322,10 +345,13 @@ public class XlglExamExamineController {
 				xlglExamMainAnswer.setUpdateDate(new Date());
 				xlglExamMainAnswer.setMakeupStatus("0");
 				mainExaminelist.add(xlglExamMainAnswer);
+				if(mainExaminelist.size() ==10) {
+					xlglExamMainAnswerService.saveBatch(mainExaminelist);
+					mainExaminelist =new ArrayList<XlglExamMainAnswer>();
+				}
 			}
-			xlglExamMainAnswerService.saveBatch(mainExaminelist);
+			
 		}	
-		
 		Response.ok();
 	}
 	

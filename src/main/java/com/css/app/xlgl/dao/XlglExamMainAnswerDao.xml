@@ -99,13 +99,12 @@
 		</foreach>
 	</delete>
 
-	<select id="queryUserCount" resultType="java.util.HashMap">
-		select EXAMINE_ID as "key",count(distinct REPLY_USER) as "value" from XLGL_EXAM_MAIN_ANSWER
+	<select id="queryUserCount" resultType="String">
+		select IFNULL(count(distinct REPLY_USER_ID),0)  from XLGL_EXAM_MAIN_ANSWER
 		 where 1 = 1 
 		 <if test="examineId != null and examineId != ''">
 			and EXAMINE_ID = #{examineId}
 		</if>
-		group by EXAMINE_ID 
 	</select>
 	
 	<insert id="saveBatch" parameterType="com.css.app.xlgl.entity.XlglExamMainAnswer">

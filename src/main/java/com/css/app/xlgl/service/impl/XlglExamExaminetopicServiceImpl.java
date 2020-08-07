@@ -86,7 +86,8 @@ public class XlglExamExaminetopicServiceImpl implements XlglExamExaminetopicServ
 		List<XlglExamTopic> queryList = xlglExamTopicService.queryList(map);
 		Date date = new Date();
 		String userId = CurrentUser.getUserId();
-		if(queryList.size()<=(int)map.get("topicNumber")) {
+		Integer object =Integer.parseInt(map.get("topicNumber").toString());
+		if(queryList.size()<=object) {
 			for (XlglExamTopic xlglExamTopic : queryList) {
 				XlglExamExaminetopic examineTopic = new XlglExamExaminetopic();
 				examineTopic.setId(UUIDUtils.random());
@@ -108,7 +109,7 @@ public class XlglExamExaminetopicServiceImpl implements XlglExamExaminetopicServ
 			Map<Integer, Object> hashMap = new HashMap<>();
 			for (XlglExamTopic xlglExamTopic : queryList) {
 				int random = (int)(Math.random() * queryList.size());
-				if(hashMap.size()<(int)map.get("topicNumber")) {
+				if(hashMap.size()<object) {
 					if(!hashMap.containsKey(random)) {
 						hashMap.put(random, "");
 						XlglExamExaminetopic examineTopic = new XlglExamExaminetopic();

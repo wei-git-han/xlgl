@@ -26,4 +26,5 @@ public interface XlglExamExamineService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+	int findCount();
 }

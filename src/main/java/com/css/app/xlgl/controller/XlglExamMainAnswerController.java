@@ -27,7 +27,7 @@ import com.github.pagehelper.PageHelper;
  * @date 2020-08-03 11:36:19
  */
 @Controller
-@RequestMapping("/xlglexammainanswer")
+@RequestMapping("app/xlgl/xlglexammainanswer")
 public class XlglExamMainAnswerController {
 	@Autowired
 	private XlglExamMainAnswerService xlglExamMainAnswerService;
@@ -35,7 +35,7 @@ public class XlglExamMainAnswerController {
 	/**
 	 *考核清单-参考人员/未考人员清单 列表
 	 *@param examineId 试卷基本信息表id
-	 *@param makeupStatus 是否补考过 0没有，1补过
+	 *@param makeupStatus 是否考过 0没有，1考过
 	 *@param level 查询等级参数
 	 *@param replyUserName 查询答题人名称
 	 *@param organName 查询答题人的部门名称
