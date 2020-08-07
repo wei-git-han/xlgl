@@ -29,7 +29,7 @@ import com.css.base.utils.Response;
  * @date 2020-08-04 15:18:03
  */
 @Controller
-@RequestMapping("/documentmenu")
+@RequestMapping("/app/xlgl/documentmenu")
 public class DocumentMenuController {
 	
 	@Autowired

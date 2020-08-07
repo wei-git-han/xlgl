@@ -29,7 +29,9 @@
 			"TREE_PATH", 
 			"DISPLAY_TYPE", 
 			"REMARK", 
-			"PARENT_ID"
+			"PARENT_ID",
+			"ICON",
+			"PATH"
 		)
 		values
 		(
@@ -41,7 +43,9 @@
 			#{treePath}, 
 			#{displayType}, 
 			#{remark}, 
-			#{parentId}
+			#{parentId},
+			#{icon},
+			#{path}
 		)
 	</insert>
 	 
@@ -56,6 +60,8 @@
 			<if test="displayType != null">"DISPLAY_TYPE" = #{displayType}, </if>
 			<if test="remark != null">"REMARK" = #{remark}, </if>
 			<if test="parentId != null">"PARENT_ID" = #{parentId}</if>
+			<if test="icon != null">"ICON" = #{icon}</if>
+			<if test="path != null">"PATH" = #{path}</if>
 		</set>
 		where MENU_ID = #{menuId}
 	</update>
@@ -72,7 +78,12 @@
 	</delete>
 	
 	<select id="queryAuthList" resultType="com.css.app.xlgl.entity.TaskMenu">
-		select * from TASK_MENU where 1=1 order by SORT
+		select * from TASK_MENU where 1=1
+		<if test="userId != null">
+			and MENU_ID in (
+			select distinct(MENU_ID) from DOCUMENT_MENU_PERMISSION where USER_ID = #{userId}
+		</if>
+		order by SORT
 	</select>
 
 </mapper>

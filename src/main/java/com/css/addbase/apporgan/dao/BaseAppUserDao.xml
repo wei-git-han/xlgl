@@ -8,17 +8,16 @@
 	</select>
 
 	<select id="queryList" resultType="com.css.addbase.apporgan.entity.BaseAppUser">
-		select * from BASE_APP_USER WHERE 1= 1 and ISDELETE = '0'
-		<if test="organid != null">
-		    and ORGANID = #{organid}
+		select T.* , O.NAME AS DEPT,O.ID AS OORDERID from BASE_APP_USER T
+		left join BASE_APP_ORGAN O on O.ID =  T.ORGANID 
+		where 1=1 and T.ISDELETE =0 and O.ISDELETE =0
+		<if test="orgIds != null">
+		 and T.ORGANID in 
+		 <foreach item="item" collection="orgIds" open="(" separator="," close=")">
+			#{item}
+		</foreach>
 		</if>
-		<if test="userId != null">
-		    and USER_ID = #{userId}
-		</if>
-		<if test="offset != null and limit != null">
-			limit #{offset}, #{limit}
-		</if>
-		order by sort
+		order by OORDERID,SORT
 	</select>
 	<select id="selectUserByNameAndUnitId" resultType="com.css.addbase.apporgan.entity.BaseAppUser">
 		select * from BASE_APP_USER where ISDELETE = 0 and truename=#{0} and organid in (
