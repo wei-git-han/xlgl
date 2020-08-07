@@ -38,7 +38,7 @@ import com.css.base.utils.StringUtils;
  * @date 2020-08-04 16:13:34
  */
 @Controller
-@RequestMapping("/documentmenupermission")
+@RequestMapping("/app/xlgl/documentmenupermission")
 public class DocumentMenuPermissionController {
 	@Autowired
 	private DocumentMenuPermissionService documentMenuPermissionService;
