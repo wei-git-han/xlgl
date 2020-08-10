@@ -122,6 +122,7 @@ public class XlglNewsController {
 	 * 列表展示
 	 * @param page
 	 * @param pagesize
+	 * type   查询的类型
 	 */
 	@ResponseBody
 	@RequestMapping("list")
