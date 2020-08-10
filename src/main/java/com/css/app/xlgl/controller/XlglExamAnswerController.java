@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.css.app.xlgl.dto.XlglExamExaminetopicDto;
 import com.css.app.xlgl.entity.XlglExamAnswer;
 import com.css.app.xlgl.entity.XlglExamExamine;
 import com.css.app.xlgl.entity.XlglExamMainAnswer;
 import com.css.app.xlgl.service.XlglExamAnswerService;
 import com.css.app.xlgl.service.XlglExamExamineService;
+import com.css.app.xlgl.service.XlglExamExaminetopicService;
 import com.css.app.xlgl.service.XlglExamMainAnswerService;
 import com.css.base.entity.SSOUser;
 import com.css.base.utils.CurrentUser;
@@ -45,6 +47,8 @@ public class XlglExamAnswerController {
 	private XlglExamMainAnswerService xlglExamMainAnswerService;
 	@Autowired
 	private XlglExamExamineService xlglExamExamineService;
+	@Autowired
+	private XlglExamExaminetopicService xlglExamExaminetopicService;
 	/**
 	 * 列表
 	 */
@@ -128,6 +132,7 @@ public class XlglExamAnswerController {
 	@ResponseBody
 	@RequestMapping("/saveBatch")
 	public void saveBath(String xlglExamAnswer,String mainAnswerId){
+		JSONObject jsonObject = new JSONObject();
 		List<XlglExamAnswer> parseArray = JSONArray.parseArray(xlglExamAnswer, XlglExamAnswer.class);
 		Integer sum = 0;
 		SSOUser ssoUser = CurrentUser.getSSOUser();
@@ -170,7 +175,14 @@ public class XlglExamAnswerController {
 		xlglExamMainAnswer.setUpdateDate(date);
 		xlglExamMainAnswerService.update(xlglExamMainAnswer);
 		xlglExamAnswerService.saveBatch(parseArray);
-		Response.json("xlglExamMainAnswer",xlglExamMainAnswer);
+		XlglExamMainAnswer queryObject = xlglExamMainAnswerService.queryObject("mainAnswerId");
+		jsonObject.put("mainAnswer", queryObject);
+		jsonObject.put("answerList", parseArray);
+		Map<String, Object> map = new HashMap<String,Object>();
+		map.put("examineId", queryObject.getExamineId());
+		List<XlglExamExaminetopicDto> listCount = xlglExamExaminetopicService.findCountBySubjectId(map);
+		jsonObject.put("listCount", listCount);
+		Response.json(jsonObject);
 	}
 	
 }

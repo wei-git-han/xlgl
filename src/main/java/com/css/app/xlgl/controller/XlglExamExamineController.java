@@ -234,8 +234,6 @@ public class XlglExamExamineController {
 			XlglExamMainAnswer xlglExamMainAnswer = queryList.get(0);
 			jsonObject.put("MainAnswerID", xlglExamMainAnswer.getId());
 		}
-	
-	
 		Response.json(jsonObject);
 	}
 	
@@ -256,8 +254,33 @@ public class XlglExamExamineController {
 		map.put("examineId", examineId);
 		XlglExamExamine xlglExamExamine = xlglExamExamineService.queryObject(examineId);
 		List<XlglExamExaminetopic> queryList = xlglExamExaminetopicService.queryList(map);
+		List<XlglExamExaminetopic> listType1 = new ArrayList<XlglExamExaminetopic>();
+		List<XlglExamExaminetopic> listType2 = new ArrayList<XlglExamExaminetopic>();
+		List<XlglExamExaminetopic> listType3 = new ArrayList<XlglExamExaminetopic>();
+		List<XlglExamExaminetopic> listType4 = new ArrayList<XlglExamExaminetopic>();
+		for (XlglExamExaminetopic xlglExamExaminetopic : queryList) {
+			switch (xlglExamExaminetopic.getTopicType()) {
+			case "1":
+				listType1.add(xlglExamExaminetopic);
+				break;
+			case "2":
+				listType2.add(xlglExamExaminetopic);
+				break;
+			case "3":
+				listType3.add(xlglExamExaminetopic);
+				break;
+			case "4":
+				listType4.add(xlglExamExaminetopic);
+				break;
+			default:
+				break;
+			}
+		}
 		List<XlglExamExaminetopicDto> listCount = xlglExamExaminetopicService.findCountBySubjectId(map);
-		jsonObject.put("topicList", queryList);
+		jsonObject.put("listType1", listType1);
+		jsonObject.put("listType2", listType2);
+		jsonObject.put("listType3", listType3);
+		jsonObject.put("listType4", listType4);
 		jsonObject.put("topicCount", listCount);
 		jsonObject.put("xlglExamExamine", xlglExamExamine);
 		return jsonObject;
