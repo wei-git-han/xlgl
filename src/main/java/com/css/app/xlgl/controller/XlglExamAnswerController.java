@@ -1,5 +1,6 @@
 package com.css.app.xlgl.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,8 +20,11 @@ import com.css.app.xlgl.entity.XlglExamMainAnswer;
 import com.css.app.xlgl.service.XlglExamAnswerService;
 import com.css.app.xlgl.service.XlglExamExamineService;
 import com.css.app.xlgl.service.XlglExamMainAnswerService;
+import com.css.base.entity.SSOUser;
+import com.css.base.utils.CurrentUser;
 import com.css.base.utils.PageUtils;
 import com.css.base.utils.Response;
+import com.css.base.utils.StringUtils;
 import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 
@@ -69,7 +73,7 @@ public class XlglExamAnswerController {
 	}
 	
 	/**
-	 * 用户答完题的试卷信息
+	 * 用户答完题的试卷信息答题过程中试卷详情
 	 */
 	@ResponseBody
 	@RequestMapping("/view/info")
@@ -126,11 +130,27 @@ public class XlglExamAnswerController {
 	public void saveBath(String xlglExamAnswer,String mainAnswerId){
 		List<XlglExamAnswer> parseArray = JSONArray.parseArray(xlglExamAnswer, XlglExamAnswer.class);
 		Integer sum = 0;
+		SSOUser ssoUser = CurrentUser.getSSOUser();
+		Date date = new Date();
 		for (XlglExamAnswer eanswer : parseArray) {
 			eanswer.setId(UUIDUtils.random());
 			eanswer.setMainAnswerId(mainAnswerId);
-			if(eanswer.getTopicResult().equals(eanswer.getReply())) {
-				sum +=eanswer.getFraction();
+			eanswer.setReplyUserId(ssoUser.getUserId());
+			eanswer.setCreateDate(date);
+			eanswer.setUpdateDate(date);
+			eanswer.setOrganId(ssoUser.getOrganId());
+			eanswer.setOrganName(ssoUser.getOrgName());
+			eanswer.setReplyUserName(ssoUser.getFullname());
+			if(StringUtils.isNotBlank(eanswer.getReply())) {
+				eanswer.setStatus("1");
+				if(eanswer.getTopicResult().equals(eanswer.getReply())) {
+					sum +=eanswer.getFraction();
+					eanswer.setCorrectStatus("0");
+				}else {
+					eanswer.setCorrectStatus("1");
+				}
+			}else {
+				eanswer.setStatus("0");
 			}
 		}
 		String level ="";
@@ -147,6 +167,7 @@ public class XlglExamAnswerController {
 		xlglExamMainAnswer.setLevel(level);
 		xlglExamMainAnswer.setFractionsum(sum);
 		xlglExamMainAnswer.setMakeupStatus("1");
+		xlglExamMainAnswer.setUpdateDate(date);
 		xlglExamMainAnswerService.update(xlglExamMainAnswer);
 		xlglExamAnswerService.saveBatch(parseArray);
 		Response.json("xlglExamMainAnswer",xlglExamMainAnswer);
