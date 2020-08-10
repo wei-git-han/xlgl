@@ -164,7 +164,7 @@ public class XlglNewsController {
 	public void saveOrUpdate(XlglNews xlglNews,String pIds){
 		//判断是新增还是修改,id不为空则是修改，为空则是新增
 		String id = xlglNews.getId();
-		if(!StringUtils.isEmpty(id) && "0".equals(xlglNews.getIsRelease())){
+		if(!StringUtils.isEmpty(id)){
 			xlglNewsService.update(xlglNews);
 		}else{
 			String releaseOrganid="";
