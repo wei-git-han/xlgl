@@ -1,11 +1,11 @@
 package com.css.app.xlgl.controller;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
+import com.css.app.xlgl.entity.XlglPicture;
+import com.css.app.xlgl.service.XlglPictureService;
+import com.netflix.discovery.converters.Auto;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +45,8 @@ public class XlglNewsController {
 	private BaseAppOrganService baseAppOrganService;	
 	@Autowired
 	private BaseAppUserService baseAppUserService;
+	@Autowired
+	private XlglPictureService xlglPictureService;
 	
 	
 	/**
@@ -52,7 +54,7 @@ public class XlglNewsController {
 	 * @param type 查询类型 week:周、month：月、year:年
 	 */
 	@ResponseBody
-	@RequestMapping("queryTotal")
+	@RequestMapping("/queryTotal")
 	public void queryTotal(String type){
 		JSONObject json = new JSONObject();
 		//查询全局本年度发布新闻数
@@ -83,7 +85,7 @@ public class XlglNewsController {
 	 * @param ids
 	 */
 	@ResponseBody
-	@RequestMapping("delete")
+	@RequestMapping("/delete")
 	public void delete(String ids){
 		Date date = new Date();
 		logger.info("当前操作人："+CurrentUser.getUsername()+"---id:"+CurrentUser.getUserId()+"--时间是："+date);
@@ -98,17 +100,18 @@ public class XlglNewsController {
 	 * @param id
 	 */
 	@ResponseBody
-	@RequestMapping("top")
+	@RequestMapping("/top")
 	public void topping(String id){
 		//查询目前置顶的新闻，先将目前置顶的新闻置顶状态改为0
-		XlglNews topXlglNews = xlglNewsService.queryNowTop();
-		if(null != topXlglNews){
-			topXlglNews.setIsTop(0);
-			xlglNewsService.update(topXlglNews);
-		}
+//		XlglNews topXlglNews = xlglNewsService.queryNowTop();
+//		if(null != topXlglNews){
+//			topXlglNews.setIsTop(0);
+//			xlglNewsService.update(topXlglNews);
+//		}
 		//将要置顶的新闻置顶状态改为1
-		XlglNews xlglNews = new XlglNews();
-		xlglNews.setId(id);
+
+		XlglNews xlglNews = xlglNewsService.queryObject(id);
+		//xlglNews.setId(id);
 		xlglNews.setIsTop(1);
 		xlglNewsService.update(xlglNews);
 		Response.json("result", "success");
@@ -122,9 +125,10 @@ public class XlglNewsController {
 	 */
 	@ResponseBody
 	@RequestMapping("list")
-	public void list(Integer page, Integer pagesize){
-		PageHelper.startPage(page, pagesize);
+	public void list(Integer page, Integer pagesize,String type){
 		HashMap<String, Object> map = new HashMap<String,Object>();
+		map.put("type",type);
+		PageHelper.startPage(page, pagesize);
 		List<XlglNews> xlglNewsList = xlglNewsService.queryList(map);
 		GwPageUtils pageUtil = new GwPageUtils(xlglNewsList);
 		Response.json(pageUtil);
@@ -133,6 +137,7 @@ public class XlglNewsController {
 	
 	/**
 	 * 增加新闻点击量
+	 * 详情页接口
 	 * @param id
 	 */
 	@ResponseBody
@@ -155,10 +160,10 @@ public class XlglNewsController {
 	
 	@ResponseBody
 	@RequestMapping("saveOrUpdate")
-	public void saveOrUpdate(@RequestBody XlglNews xlglNews){
+	public void saveOrUpdate(XlglNews xlglNews,String pIds){
 		//判断是新增还是修改,id不为空则是修改，为空则是新增
 		String id = xlglNews.getId();
-		if(!StringUtils.isEmpty(id)){
+		if(!StringUtils.isEmpty(id) && "0".equals(xlglNews.getIsRelease())){
 			xlglNewsService.update(xlglNews);
 		}else{
 			String releaseOrganid="";
@@ -166,7 +171,8 @@ public class XlglNewsController {
 			String releaseDeptid="";
 			String releaseDept="";
 			//设置id
-			xlglNews.setId(UUIDUtils.random());
+			String fId = UUIDUtils.random();
+			xlglNews.setId(fId);
 			//设置发布时间
 			xlglNews.setReleaseDate(new Date());
 			//获取发布人id
@@ -199,10 +205,60 @@ public class XlglNewsController {
 			xlglNews.setReleaseDeptid(releaseDeptid);
 			xlglNews.setReleaseDept(releaseDept);
 			xlglNewsService.save(xlglNews);
-			
+
+			if(StringUtils.isNotBlank(pIds)) {
+				String[] ids = pIds.split(",");
+				xlglPictureService.deleteBatch(ids);
+				for (int i = 0; i < ids.length; i++) {
+					XlglPicture xlglPicture = new XlglPicture();
+					xlglPicture.setId(UUIDUtils.random());
+					xlglPicture.setFileId(fId);
+					xlglPicture.setIsFirst("0");
+					xlglPicture.setPictureId(ids[i]);
+					xlglPicture.setSort("0");
+					xlglPictureService.save(xlglPicture);
+				}
+			}
+
 		}
+		Response.json("result","success");
 		
-		
+	}
+
+	/**
+	 * 查询某个文件所有的图片
+	 * @param id
+	 */
+	@ResponseBody
+	@RequestMapping("/pictureList")
+	public void pictureList(String id){
+		List<XlglPicture> list = new ArrayList<XlglPicture>();
+		if(StringUtils.isNotBlank(id)){
+			HashMap<String,Object> map = new HashMap<String,Object>();
+			map.put("id",id);
+			if(StringUtils.isNotBlank(id)){
+				list = xlglPictureService.queryList(map);
+
+			}
+		}
+		Response.json("list",list);
+	}
+
+	/**
+	 * 正式发布
+	 */
+	@ResponseBody
+	@RequestMapping("/fabu")
+	public void fabu(String id){
+		if(StringUtils.isNotBlank(id)){
+			XlglNews xlglNews = xlglNewsService.queryObject(id);
+			if(xlglNews != null){
+				xlglNews.setIsRelease("1");
+				xlglNewsService.update(xlglNews);
+				Response.json("result","发布成功");
+			}
+
+		}
 	}
 	
 	/**
@@ -213,13 +269,14 @@ public class XlglNewsController {
 	@ResponseBody
 	@RequestMapping("queryDrafts")
 	public void queryDrafts(Integer page, Integer pagesize){
-		PageHelper.startPage(page, pagesize);
 		HashMap<String, Object> map = new HashMap<String,Object>();
+		PageHelper.startPage(page, pagesize);
 		List<XlglNews> xlglNewsList = xlglNewsService.queryDrafts(map);
 		GwPageUtils pageUtil = new GwPageUtils(xlglNewsList);
 		Response.json(pageUtil);
 	}
-	
+
+
 	
 	/**
 	 * 保存图片
