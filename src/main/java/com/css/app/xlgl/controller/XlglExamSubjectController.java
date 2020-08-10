@@ -137,7 +137,7 @@ public class XlglExamSubjectController {
 				JSONArray jsonTypeArray = new JSONArray();
 				for (String string : split) {
 					JSONObject jsontype = new JSONObject();
-					jsontype.put("id",string);
+					jsontype.put("id",UUIDUtils.random());
 					jsontype.put("type",string);
 					switch (string) {
 					case "1":

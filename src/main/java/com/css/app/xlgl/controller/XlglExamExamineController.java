@@ -214,31 +214,28 @@ public class XlglExamExamineController {
 	}
 	
 	/**
-	 * 考核清单-用户开始考试，并创建用户成绩表
+	 * 考核清单-用户开始考试详情
 	 * @param examineId 试卷基本信息表id
-	 * @param makeupStatus 未考状态0：没考，1:考了
+	 * @param isNotExam 未考状态0：没考，1:考了
 	 * @param makeupExamineId 补考id
+	 * @param makeupStatus //补考考状态0：没补考考，1:补考了
 	 * */
 	@ResponseBody
 	@RequestMapping("/view/examine")
-	public void viewExamine(String examineId,String makeupStatus,String makeupExamineId) {
+	public void viewExamine(String examineId,String isNotExam,String makeupExamineId,String makeupStatus) {
 		JSONObject jsonObject = getExamine(examineId);
-		XlglExamMainAnswer xlglExamMainAnswer = new XlglExamMainAnswer();
-		xlglExamMainAnswer.setId(UUIDUtils.random());
-		SSOUser ssoUser = CurrentUser.getSSOUser();
-		xlglExamMainAnswer.setOrganId(ssoUser.getOrganId());
-		xlglExamMainAnswer.setOrganName(ssoUser.getOrgName());
-		xlglExamMainAnswer.setReplyUserId(ssoUser.getUserId());
-		xlglExamMainAnswer.setReplyUserName(CurrentUser.getUsername());
-		xlglExamMainAnswer.setExamineId(makeupExamineId);
-		xlglExamMainAnswer.setCreateDate(new Date());
-		xlglExamMainAnswer.setUpdateDate(new Date());
-		if(makeupStatus.equals("1")) {
-			xlglExamMainAnswer.setMakeupExamineId(makeupExamineId);
-			xlglExamMainAnswer.setMakeupStatus("1");
+		Map<String, Object> map = new HashMap<>();
+		String userId = CurrentUser.getUserId();
+		map.put("examineId", examineId);
+		map.put("replyUserId", userId);
+		map.put("isNotExam",isNotExam);
+		List<XlglExamMainAnswer> queryList = xlglExamMainAnswerService.queryList(map);
+		if(queryList.size()>0) {
+			XlglExamMainAnswer xlglExamMainAnswer = queryList.get(0);
+			jsonObject.put("MainAnswerID", xlglExamMainAnswer.getId());
 		}
-		xlglExamMainAnswer.setMakeupStatus("0");
-		xlglExamMainAnswerService.save(xlglExamMainAnswer);
+	
+	
 		Response.json(jsonObject);
 	}
 	
@@ -269,22 +266,25 @@ public class XlglExamExamineController {
 	/**
 	 * 保存 考试基本信息和题目信息
 	 * @param IssueStatus 0：保存，1：发布
+	 * @param status 状态 0：考试，1：练习
 	 * @param typeAndNum 题类型，题数量，题分数
 	 */
 	@ResponseBody
 	@RequestMapping("/saveOrUpdate")
-	public void saveExamineAndTopic(XlglExamExamine xlglExamExamine,String IssueStatus,String[] typeAndNum){
+	public void saveExamineAndTopic(XlglExamExamine xlglExamExamine,String IssueStatus,String[] typeAndNum,String status ){
 		String random = UUIDUtils.random();
 		String userId = CurrentUser.getUserId();
-		Date date = new Date();
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();	
+		if(status.equals("0")) {
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-			Date startDate = format.parse(xlglExamExamine.getExamineStartDateStr());
-			Date endDate = format.parse(xlglExamExamine.getExamineEndDateStr());
-			xlglExamExamine.setExamineStartDate(startDate);
-			xlglExamExamine.setExamineEndDate(endDate);
-		} catch (ParseException e) {
-			e.printStackTrace();
+				Date startDate = format.parse(xlglExamExamine.getExamineStartDateStr());
+				Date endDate = format.parse(xlglExamExamine.getExamineEndDateStr());
+				xlglExamExamine.setExamineStartDate(startDate);
+				xlglExamExamine.setExamineEndDate(endDate);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 		}
 		if(StringUtils.isNotBlank(IssueStatus)) {
 			xlglExamExamine.setIssueStatus(IssueStatus);
@@ -293,15 +293,9 @@ public class XlglExamExamineController {
 		}else {
 			xlglExamExamine.setIssueStatus("0"); //为空时默认保存
 		}
-		
+		xlglExamExamine.setStatus(status);
 		xlglExamExamine.setOverStatus("0");
-	/*	if( xlglExamExamine.getExamineStartDate().before(date)&& xlglExamExamine.getExamineEndDate().after(date)) {
-			xlglExamExamine.setOverStatus("0");
-		}else {
-			xlglExamExamine.setOverStatus("1");
-		}*/
-		
-		if(StringUtils.isNotBlank(xlglExamExamine.getId())) {
+		if(StringUtils.isNotBlank(xlglExamExamine.getId())) {//修改
 			xlglExamExamine.setUpdateUser(userId);
 			xlglExamExamine.setUpdateDate(date);
 			xlglExamExamineService.update(xlglExamExamine);
@@ -329,8 +323,8 @@ public class XlglExamExamineController {
 					xlglExamExaminetopicService.saveBatch(randomExtract);
 				}
 			}
-		
-		if(IssueStatus.equals("1")) {
+		if(status.equals("0")) {
+			if(IssueStatus.equals("1") && !StringUtils.isNotBlank(xlglExamExamine.getId())) {
 			List<BaseAppUser> queryList = baseAppUserService.queryList(null);
 			List<XlglExamMainAnswer> mainExaminelist =new ArrayList<XlglExamMainAnswer>();
 			for (BaseAppUser baseAppUser : queryList) {
@@ -344,14 +338,36 @@ public class XlglExamExamineController {
 				xlglExamMainAnswer.setCreateDate(new Date());
 				xlglExamMainAnswer.setUpdateDate(new Date());
 				xlglExamMainAnswer.setMakeupStatus("0");
+				xlglExamMainAnswer.setStatus(status);
+				xlglExamMainAnswer.setIsNotExam("0");
+				xlglExamMainAnswer.setCreateUser(CurrentUser.getUserId());
+				xlglExamMainAnswer.setUpdateUser(CurrentUser.getUserId());
 				mainExaminelist.add(xlglExamMainAnswer);
 				if(mainExaminelist.size() ==10) {
 					xlglExamMainAnswerService.saveBatch(mainExaminelist);
 					mainExaminelist =new ArrayList<XlglExamMainAnswer>();
+					}
 				}
-			}
-			
-		}	
+			}	
+		}else if(status.equals("1")) {
+			SSOUser ssoUser = CurrentUser.getSSOUser();
+			XlglExamMainAnswer xlglExamMainAnswer = new XlglExamMainAnswer();
+			xlglExamMainAnswer.setId(UUIDUtils.random());
+			xlglExamMainAnswer.setExamineId(random);
+			xlglExamMainAnswer.setOrganId(ssoUser.getOrganId());
+			xlglExamMainAnswer.setOrganName(ssoUser.getOrgName());
+			xlglExamMainAnswer.setReplyUserId(ssoUser.getUserId());
+			xlglExamMainAnswer.setReplyUserName(ssoUser.getFullname());
+			xlglExamMainAnswer.setCreateDate(new Date());
+			xlglExamMainAnswer.setUpdateDate(new Date());
+			xlglExamMainAnswer.setMakeupStatus("0");
+			xlglExamMainAnswer.setStatus(status);
+			xlglExamMainAnswer.setIsNotExam("0");
+			xlglExamMainAnswer.setCreateUser(CurrentUser.getUserId());
+			xlglExamMainAnswer.setUpdateUser(CurrentUser.getUserId());
+			xlglExamMainAnswerService.save(xlglExamMainAnswer);
+		}
+		
 		Response.ok();
 	}
 	

@@ -11,8 +11,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONObject;
+import com.css.app.xlgl.entity.XlglExamExamine;
 import com.css.app.xlgl.entity.XlglExamMainAnswer;
+import com.css.app.xlgl.service.XlglExamExamineService;
 import com.css.app.xlgl.service.XlglExamMainAnswerService;
+import com.css.base.entity.SSOUser;
+import com.css.base.utils.CurrentUser;
 import com.css.base.utils.PageUtils;
 import com.css.base.utils.Response;
 import com.css.base.utils.UUIDUtils;
@@ -31,19 +36,23 @@ import com.github.pagehelper.PageHelper;
 public class XlglExamMainAnswerController {
 	@Autowired
 	private XlglExamMainAnswerService xlglExamMainAnswerService;
+	@Autowired
+	private XlglExamExamineService xlglExamExamineService;
 	
 	/**
 	 *考核清单-参考人员/未考人员清单 列表
 	 *@param examineId 试卷基本信息表id
-	 *@param makeupStatus 是否考过 0没有，1考过
+	 *@param makeupStatus //补考考状态0：没补考考，1:补考了
 	 *@param level 查询等级参数
 	 *@param replyUserName 查询答题人名称
 	 *@param organName 查询答题人的部门名称
+	 *@param isNotExam //考试状态 0:没考，1:考了
+	 *@param status  //状态 0：考试，1：练习
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
 	public void list(Integer page, Integer limit,String examineId,String makeupStatus,String level,String replyUserName
-			,String organName){
+			,String organName,String isNotExam,String status){
 		Map<String, Object> map = new HashMap<>();
 		PageHelper.startPage(page, limit);
 		map.put("examineId", examineId);
@@ -51,6 +60,8 @@ public class XlglExamMainAnswerController {
 		map.put("makeupStatus", makeupStatus);
 		map.put("replyUserName", replyUserName);
 		map.put("organName", organName);
+		map.put("isNotExam", isNotExam);
+		map.put("status", status);
 		//查询列表数据
 		List<XlglExamMainAnswer> xlglExamMainAnswerList = xlglExamMainAnswerService.queryList(map);
 		
@@ -120,5 +131,24 @@ public class XlglExamMainAnswerController {
 		
 		Response.ok();
 	}
-	
+	/**
+	 * 用户 具体情况以及交卷时间
+	 * @param mainAnswerId 成绩单id
+	 * */
+	@ResponseBody
+	@RequestMapping("/getMainAnsUser")
+	public void getMainAns(String mainAnswerId) {
+		JSONObject jsonObject = new JSONObject();
+		XlglExamMainAnswer queryObject = xlglExamMainAnswerService.queryObject(mainAnswerId);
+		XlglExamExamine queryObject2 = xlglExamExamineService.queryObject(queryObject.getExamineId());
+		jsonObject.put("time", queryObject.getUpdateDate());
+		jsonObject.put("userName", queryObject.getReplyUserName());
+		jsonObject.put("userId", queryObject.getReplyUserId());
+		jsonObject.put("orgName", queryObject.getOrganName());
+		jsonObject.put("orgId", queryObject.getOrganId());
+		jsonObject.put("level", queryObject.getLevel());
+		jsonObject.put("fractionsum", queryObject.getFractionsum());
+		jsonObject.put("examineName", queryObject2.getExamineName());
+		Response.json(jsonObject);
+	}
 }
