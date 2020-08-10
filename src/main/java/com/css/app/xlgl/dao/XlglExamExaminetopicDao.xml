@@ -9,7 +9,7 @@
 
 	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglExamExaminetopic">
 		select * from XLGL_EXAM_EXAMINETOPIC 
-		
+		where 1=1
 		<if test="examineId != null and examineId !=''">
 			  and EXAMINE_ID = #{examineId}
 		</if>
@@ -105,11 +105,11 @@
 			"CREATE_USER", 
 			"CREATE_DATE", 
 			"UPDATE_USER", 
-			"UPDATE_DATE",
-			"SORT"
+			"UPDATE_DATE"
+		
 		)
 		values
-		<foreach collection="list" item="item" index="index" open="" close="" separator=",">
+		<foreach collection="list" item="item" index="index"  separator="," >
 		(
 			#{item.id}, 
 			#{item.examineId}, 
@@ -123,8 +123,8 @@
 			#{item.createUser}, 
 			#{item.createDate}, 
 			#{item.updateUser}, 
-			#{item.updateDate},
-			#{item.sort}
+			#{item.updateDate}
+		
 		)
 		</foreach>
 	</insert>
@@ -139,7 +139,7 @@
 		XLGL_EXAM_EXAMINETOPIC 
 		where 1=1
 		<if test="examineId != null ">
-			and EXAMINE_ID =#{examineId}
+			and EXAMINE_ID = #{examineId}
 		</if>
 		GROUP BY topic_Type;
 	</select>

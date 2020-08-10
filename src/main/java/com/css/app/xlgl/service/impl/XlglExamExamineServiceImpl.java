@@ -47,5 +47,10 @@ public class XlglExamExamineServiceImpl implements XlglExamExamineService {
 	public void deleteBatch(String[] ids){
 		xlglExamExamineDao.deleteBatch(ids);
 	}
+
+	@Override
+	public int findCount() {
+		return xlglExamExamineDao.findCount();
+	}
 	
 }

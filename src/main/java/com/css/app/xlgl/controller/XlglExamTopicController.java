@@ -3,6 +3,7 @@ package com.css.app.xlgl.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
@@ -22,12 +23,14 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.css.app.xlgl.entity.XlglExamTopic;
 import com.css.app.xlgl.service.XlglExamTopicService;
@@ -50,7 +53,8 @@ import com.github.pagehelper.PageHelper;
 public class XlglExamTopicController {
 	@Autowired
 	private XlglExamTopicService xlglExamTopicService;
-	
+	@Value("${filePath}")
+	private String filePath;
 	/**
 	 * 列表
 	 */
@@ -125,6 +129,7 @@ public class XlglExamTopicController {
 	  * */
 	@RequestMapping("/downloadFile")
 	 public void downloadFile(HttpServletRequest request,HttpServletResponse response,String topicType) {
+		 FileOutputStream fout = null;
 		 String fileName = "题目模板";
 		 Workbook wb = new HSSFWorkbook();
 		 CellStyle style = wb.createCellStyle();
@@ -134,7 +139,7 @@ public class XlglExamTopicController {
 			 if(topicType.equals("2")) {
 				 type = "多选题";
 			 }
-			 fileName =fileName+"-"+type;
+			 fileName =fileName+"-"+type+".xls";
 			 Sheet sheet = wb.createSheet(type);
 			 CellRangeAddress cellRangeAddress = new CellRangeAddress(0,0,0,6);
 			 sheet.addMergedRegion(cellRangeAddress);
@@ -152,7 +157,7 @@ public class XlglExamTopicController {
 			 if(topicType.equals("4")) {
 				 type = "填空题";
 			 }
-			 fileName =fileName+"-"+type;
+			 fileName =fileName+"-"+type+".xls";
 			 Sheet sheet = wb.createSheet(type);
 			 CellRangeAddress cellRangeAddress = new CellRangeAddress(0,0,0,6);
 			 sheet.addMergedRegion(cellRangeAddress);
@@ -162,18 +167,33 @@ public class XlglExamTopicController {
 			 row1.createCell(0).setCellValue("题目");
 			 row1.createCell(1).setCellValue("答案");
 		 }
+		 File tempFile=new File(filePath,fileName);
+		 Map<String,Object> resultMap =new HashMap<String,Object>();
 		 try {
-			 response.setHeader("Content-Disposition", "attachment; filename="+new String(fileName.getBytes("UTF-8"),"ISO_8859_1")+".xls");  
-		     response.setContentType("application/octet-stream; charset=UTF-8");  
-		     ServletOutputStream outputStream = response.getOutputStream();
-			 wb.write(outputStream);
-			 outputStream.close();
-			 outputStream.flush();
+			 fout = new FileOutputStream(tempFile.getAbsolutePath());
+			 FileInputStream is = new FileInputStream(tempFile.getAbsolutePath());
+			 is.close();
+			 wb.write(fout);
+			 fout.flush();
+			 fout.flush();
 			 wb.close();
+			 resultMap.put("code","200");
+			 resultMap.put("fileUrl", tempFile.getAbsoluteFile());
+			 resultMap.put("fileName",tempFile.getName());
+			 resultMap.put("result","success");
 		} catch (IOException e) {
 			e.printStackTrace();
 			Response.error();
-		}
+		}finally {
+		      if (fout != null) {
+			        try {
+						fout.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+			      }
+			    }
+		 Response.json(resultMap);
 	 }
 	 
 	 /**
@@ -181,9 +201,9 @@ public class XlglExamTopicController {
 	 * @throws Exception 
 	  * */
 	 @RequestMapping("/readExcelSave")
-	 public void readExcelSave(@RequestParam("file") File file,String subjectId)  {
+	 public void readExcelSave(HttpServletRequest request,String subjectId, @RequestParam(required = false) MultipartFile file)  {
 		 try {
-			InputStream fileInputStream = new FileInputStream(file);
+			InputStream fileInputStream = new FileInputStream(file.getOriginalFilename());
 			List<XlglExamTopic> readExcelLists = xlglExamTopicService.readExcelLists(fileInputStream,subjectId);
 			xlglExamTopicService.saveList(readExcelLists);
 		} catch (FileNotFoundException e) {
