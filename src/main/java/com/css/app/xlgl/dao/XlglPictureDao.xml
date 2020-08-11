@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.XlglPictureDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglPicture">
+		select * from XLGL_PICTURE where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglPicture">
+		select * from XLGL_PICTURE where 1=1
+		<if test="id != null">
+			and FILE_ID = #{id}
+		</if>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+		order by CREATE_TIME asc
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_PICTURE 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglPicture">
+		insert into XLGL_PICTURE
+		(
+			"ID", 
+			"FILE_ID", 
+			"PICTURE_ID", 
+			"IS_FIRST", 
+			"SORT",
+			"CREATE_TIME"
+		)
+		values
+		(
+			#{id}, 
+			#{fileId}, 
+			#{pictureId}, 
+			#{isFirst}, 
+			#{sort},
+			#{createTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.XlglPicture">
+		update XLGL_PICTURE 
+		<set>
+			<if test="fileId != null">"FILE_ID" = #{fileId}, </if>
+			<if test="pictureId != null">"PICTURE_ID" = #{pictureId}, </if>
+			<if test="isFirst != null">"IS_FIRST" = #{isFirst}, </if>
+			<if test="sort != null">"SORT" = #{sort}</if>
+			<if test="createTime != null">"CREATE_TIME" = #{createTime}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_PICTURE where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_PICTURE where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

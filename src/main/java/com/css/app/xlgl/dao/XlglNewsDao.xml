@@ -20,6 +20,9 @@
 		<if test="releaseOrganid != null and releaseOrganid != '' ">
 			and RELEASE_ORGANID = #{releaseOrganid}
 		</if>
+		<if test="type != null and type != ''">
+			and NEWS_TYPE = #{type}
+		</if>
 		order by is_top desc, release_date desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}

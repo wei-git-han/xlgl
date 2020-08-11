@@ -35,10 +35,16 @@ public class XlglExamMainAnswer implements Serializable {
 	private Date createDate;
 	//修改时间
 	private Date updateDate;
-	//未考状态0：没考，1:考了
+	//补考考状态0：没补考考，1:补考了
 	private String makeupStatus;
 	//补考id
 	private String makeupExamineId;
+	//状态 0：考试，1：练习
+	private String status;
+	//考试状态 0:没考，1:考了
+	private String isNotExam;
+	private String createUser;
+	private String updateUser;
 
 	/**
 	 * 设置：
@@ -184,4 +190,29 @@ public class XlglExamMainAnswer implements Serializable {
 	public String getMakeupExamineId() {
 		return makeupExamineId;
 	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getIsNotExam() {
+		return isNotExam;
+	}
+	public void setIsNotExam(String isNotExam) {
+		this.isNotExam = isNotExam;
+	}
+	public String getCreateUser() {
+		return createUser;
+	}
+	public void setCreateUser(String createUser) {
+		this.createUser = createUser;
+	}
+	public String getUpdateUser() {
+		return updateUser;
+	}
+	public void setUpdateUser(String updateUser) {
+		this.updateUser = updateUser;
+	}
+	
 }

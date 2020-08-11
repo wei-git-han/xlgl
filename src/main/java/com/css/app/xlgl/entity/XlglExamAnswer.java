@@ -31,7 +31,7 @@ public class XlglExamAnswer implements Serializable {
 	private String topicResult;
 	//用户回答
 	private String reply;
-	//答题的用户id
+	//答题的用户id 答题的用户就是创建人
 	private String replyUserId;
 	//创建时间
 	private Date createDate;
