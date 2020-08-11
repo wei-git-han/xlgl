@@ -105,5 +105,7 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 
 	@Select("select * from BASE_APP_USER where ORGANID = #{0}")
 	List<BaseAppUser> queryUsers(String deptId);
+
+	List<BaseAppUser> queryAllUserIdAndName(String deptId);
 	
 }

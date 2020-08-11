@@ -26,4 +26,6 @@ public interface XlglSubDocInfoService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+
+	List<String> queryAllSubDeptIds(String fileId);
 }

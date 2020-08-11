@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.css.base.dao.BaseDao;
 
+import java.util.List;
+
 /**
  * 各子分支主记录表
  * 
@@ -15,5 +17,6 @@ import com.css.base.dao.BaseDao;
  */
 @Mapper
 public interface XlglSubDocInfoDao extends BaseDao<XlglSubDocInfo> {
-	
+
+    List<String> queryAllSubDeptIds(String fileId);
 }

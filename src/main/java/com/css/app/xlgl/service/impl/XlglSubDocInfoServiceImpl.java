@@ -46,5 +46,10 @@ public class XlglSubDocInfoServiceImpl implements XlglSubDocInfoService {
 	public void deleteBatch(String[] ids){
 		xlglSubDocInfoDao.deleteBatch(ids);
 	}
+
+	@Override
+	public List<String> queryAllSubDeptIds(String fileId){
+		return xlglSubDocInfoDao.queryAllSubDeptIds(fileId);
+	}
 	
 }

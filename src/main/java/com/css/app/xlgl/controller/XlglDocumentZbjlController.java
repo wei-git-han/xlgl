@@ -1,23 +1,38 @@
 package com.css.app.xlgl.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.css.addbase.appconfig.service.BaseAppConfigService;
+import com.css.addbase.apporgan.entity.BaseAppOrgan;
+import com.css.addbase.apporgan.entity.BaseAppUser;
+import com.css.addbase.apporgan.service.BaseAppOrganService;
+import com.css.addbase.apporgan.service.BaseAppUserService;
+import com.css.addbase.apporgmapped.service.BaseAppOrgMappedService;
+import com.css.addbase.msg.MSGTipDefined;
+import com.css.addbase.msg.MsgTipUtil;
+import com.css.addbase.msg.entity.MsgTip;
+import com.css.addbase.msg.service.MsgTipService;
+import com.css.addbase.orgservice.OrgService;
+import com.css.app.db.business.entity.SubDocInfo;
+import com.css.app.db.config.service.AdminSetService;
 import com.css.app.xlgl.entity.XlglDocumentZbjl;
+import com.css.app.xlgl.entity.XlglSubDocInfo;
 import com.css.app.xlgl.service.XlglDocumentZbjlService;
+import com.css.app.xlgl.service.XlglSubDocInfoService;
+import com.css.base.utils.*;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.stereotype.Controller;
 
-import com.css.base.utils.PageUtils;
-import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
-import com.css.base.utils.Response;
 
 
 /**
@@ -28,10 +43,32 @@ import com.css.base.utils.Response;
  * @date 2020-08-11 11:11:27
  */
 @Controller
-@RequestMapping("/xlgldocumentzbjl")
+@RequestMapping("/app/xlgl/xlgldocumentzbjl")
 public class XlglDocumentZbjlController {
 	@Autowired
 	private XlglDocumentZbjlService xlglDocumentZbjlService;
+    @Autowired
+    private BaseAppOrgMappedService baseAppOrgMappedService;
+    @Autowired
+    private BaseAppOrganService baseAppOrganService;
+    @Autowired
+    private XlglSubDocInfoService xlglSubDocInfoService;
+    @Autowired
+    private AdminSetService adminSetService;
+    @Autowired
+    private MsgTipService msgService;
+    @Autowired
+    private MsgTipUtil msgUtil;
+    @Value("${csse.dccb.appId}")
+    private  String appId;
+    @Value("${csse.dccb.appSecret}")
+    private  String clientSecret;
+    @Autowired
+    private BaseAppUserService baseAppUserService;
+    @Autowired
+    private OrgService orgService;
+    @Autowired
+    private BaseAppConfigService baseAppConfigService;
 	
 	/**
 	 * 列表
@@ -63,17 +100,105 @@ public class XlglDocumentZbjlController {
 	}
 	
 	/**
-	 * 保存
+	 * 分发接口
+     * fileId为文件的id
+     * idAndNames   局id和名字以逗号连接，局与局已分好连接
+     * 4832975928423057,信息系统局;385934762908523490,保密局
 	 */
 	@ResponseBody
-	@RequestMapping("/save")
-	@RequiresPermissions("xlgldocumentzbjl:save")
-	public void save(@RequestBody XlglDocumentZbjl xlglDocumentZbjl){
-		xlglDocumentZbjl.setId(UUIDUtils.random());
-		xlglDocumentZbjlService.save(xlglDocumentZbjl);
-		
-		Response.ok();
-	}
+	@RequestMapping("/send")
+	public void send(String fileId,String idAndNames,String deptIds,String deptNames) {
+        if (StringUtils.isNotBlank(fileId) && StringUtils.isNotBlank(idAndNames)) {
+            String organId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
+            BaseAppOrgan org = baseAppOrganService.queryObject(organId);
+            //添加转办记录
+            XlglDocumentZbjl xlglDocumentZbjl = new XlglDocumentZbjl();
+            xlglDocumentZbjl.setInfoId(fileId);
+            xlglDocumentZbjl.setReceiverIds(deptIds);
+            xlglDocumentZbjl.setReceiverNames(deptNames);
+            xlglDocumentZbjl.setCreatedTime(new Date());
+            xlglDocumentZbjl.setOrgName(org.getName());
+            xlglDocumentZbjlService.save(xlglDocumentZbjl);
+            //添加各分支记录
+            String[] ids = idAndNames.split(";");
+            List<String> subDeptIds = xlglSubDocInfoService.queryAllSubDeptIds(fileId);
+            for (int i = 0; i < ids.length; i++) {
+                String[] idAndName = ids[i].split(",");
+                String deptId = idAndName[0];
+                String deptName = idAndName[1];
+                if (!subDeptIds.contains(deptId)) {
+                    XlglSubDocInfo xlglSubDocInfo = new XlglSubDocInfo();
+                    xlglSubDocInfo.setId(UUIDUtils.random());
+                    xlglSubDocInfo.setInfoId(fileId);
+                    xlglSubDocInfo.setCreatedTime(new Date());
+                    xlglSubDocInfo.setSubDeptId(deptId);
+                    xlglSubDocInfo.setSubDeptName(deptName);
+                    xlglSubDocInfoService.save(xlglSubDocInfo);
+                }
+                //获取局管理员,给局管理员发送消息提醒
+                List<String> userIds = adminSetService.queryUserIdByOrgId(deptId);
+                if (userIds != null && userIds.size() > 0) {
+                    for (String user : userIds) {
+                        MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_BU_ZHUANBAN_MSG_TITLE);
+                        if (msg != null) {
+                            String msgUrl = "";
+                            for (String userId : userIds) {
+                                msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId, appId, clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "", "true");
+                            }
+                        }
+                    }
+                }
+
+            }
+            Response.json("result", "success");
+        } else {
+            Response.json("result", "faild");
+        }
+
+    }
+
+    /**
+     * 局内分发
+     */
+    @ResponseBody
+    @RequestMapping("/sendToUsers")
+    public void sendToUsers(String fileId,String subId) {
+        String organId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
+        List<BaseAppUser> list = baseAppUserService.queryAllUserIdAndName(organId);
+        if (list != null && list.size() > 0) {
+            XlglSubDocInfo subInfo = xlglSubDocInfoService.queryObject(subId);
+            for (BaseAppUser baseAppUser : list) {
+                String receiverId = baseAppUser.getUserId();
+                String receiverName = baseAppUser.getTruename();
+                String userOrganId = baseAppUser.getOrganid();
+                BaseAppOrgan organ = baseAppOrganService.queryObject(userOrganId);
+                String deptName = organ.getName();
+                XlglDocumentZbjl xl = new XlglDocumentZbjl();
+                xl.setInfoId(fileId);
+                xl.setReceiverIds(receiverId);
+                xl.setReceiverNames(receiverName);
+                xl.setReceiverDeptId(userOrganId);
+                xl.setReceiverDeptName(deptName);
+                xl.setOrgName(subInfo.getSubDeptName());
+                xl.setSubId(subId);
+                xl.setCreatedTime(new Date());
+                xlglDocumentZbjlService.save(xl);
+                //发送消息提醒
+                MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_JU_ZHUANBAN_MSG_TITLE);
+                if (msg != null) {
+                    String msgUrl = "";
+                    if (StringUtils.isNotBlank(receiverId)) {
+                        msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, receiverId, appId, clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "", "true");
+                    }
+                }
+
+            }
+            Response.json("result", "success");
+        } else {
+            Response.json("result", "faild");
+        }
+
+    }
 	
 	/**
 	 * 修改
@@ -98,5 +223,7 @@ public class XlglDocumentZbjlController {
 		
 		Response.ok();
 	}
+
+
 	
 }

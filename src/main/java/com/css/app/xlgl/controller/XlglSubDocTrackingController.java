@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.css.app.xlgl.entity.XlglXlzzInfo;
-import com.css.app.xlgl.service.XlglXlzzInfoService;
+import com.css.app.xlgl.entity.XlglSubDocTracking;
+import com.css.app.xlgl.service.XlglSubDocTrackingService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,32 +21,32 @@ import com.css.base.utils.Response;
 
 
 /**
- * 训练组织基本信息表
+ * 
  * 
  * @author 中软信息系统工程有限公司
  * @email 
- * @date 2020-08-11 10:12:29
+ * @date 2020-08-11 15:53:31
  */
 @Controller
-@RequestMapping("/app/xlgl/xlglxlzzinfo")
-public class XlglXlzzInfoController {
+@RequestMapping("/xlglsubdoctracking")
+public class XlglSubDocTrackingController {
 	@Autowired
-	private XlglXlzzInfoService xlglXlzzInfoService;
+	private XlglSubDocTrackingService xlglSubDocTrackingService;
 	
 	/**
 	 * 列表
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	@RequiresPermissions("xlglxlzzinfo:list")
+	@RequiresPermissions("xlglsubdoctracking:list")
 	public void list(Integer page, Integer limit){
 		Map<String, Object> map = new HashMap<>();
 		PageHelper.startPage(page, limit);
 		
 		//查询列表数据
-		List<XlglXlzzInfo> xlglXlzzInfoList = xlglXlzzInfoService.queryList(map);
+		List<XlglSubDocTracking> xlglSubDocTrackingList = xlglSubDocTrackingService.queryList(map);
 		
-		PageUtils pageUtil = new PageUtils(xlglXlzzInfoList);
+		PageUtils pageUtil = new PageUtils(xlglSubDocTrackingList);
 		Response.json("page",pageUtil);
 	}
 	
@@ -56,10 +56,10 @@ public class XlglXlzzInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/info/{id}")
-	@RequiresPermissions("xlglxlzzinfo:info")
+	@RequiresPermissions("xlglsubdoctracking:info")
 	public void info(@PathVariable("id") String id){
-		XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(id);
-		Response.json("xlglXlzzInfo", xlglXlzzInfo);
+		XlglSubDocTracking xlglSubDocTracking = xlglSubDocTrackingService.queryObject(id);
+		Response.json("xlglSubDocTracking", xlglSubDocTracking);
 	}
 	
 	/**
@@ -67,10 +67,12 @@ public class XlglXlzzInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public void save(XlglXlzzInfo xlglXlzzInfo){
-		xlglXlzzInfo.setId(UUIDUtils.random());
-		xlglXlzzInfoService.save(xlglXlzzInfo);
-		Response.json("result","success");
+	@RequiresPermissions("xlglsubdoctracking:save")
+	public void save(@RequestBody XlglSubDocTracking xlglSubDocTracking){
+		xlglSubDocTracking.setId(UUIDUtils.random());
+		xlglSubDocTrackingService.save(xlglSubDocTracking);
+		
+		Response.ok();
 	}
 	
 	/**
@@ -78,9 +80,9 @@ public class XlglXlzzInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	@RequiresPermissions("xlglxlzzinfo:update")
-	public void update(@RequestBody XlglXlzzInfo xlglXlzzInfo){
-		xlglXlzzInfoService.update(xlglXlzzInfo);
+	@RequiresPermissions("xlglsubdoctracking:update")
+	public void update(@RequestBody XlglSubDocTracking xlglSubDocTracking){
+		xlglSubDocTrackingService.update(xlglSubDocTracking);
 		
 		Response.ok();
 	}
@@ -90,9 +92,9 @@ public class XlglXlzzInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	@RequiresPermissions("xlglxlzzinfo:delete")
+	@RequiresPermissions("xlglsubdoctracking:delete")
 	public void delete(@RequestBody String[] ids){
-		xlglXlzzInfoService.deleteBatch(ids);
+		xlglSubDocTrackingService.deleteBatch(ids);
 		
 		Response.ok();
 	}

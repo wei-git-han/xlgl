@@ -7,6 +7,20 @@
 		select * from BASE_APP_USER where ID = #{value}
 	</select>
 
+	<select id="queryAllUserIdAndName" resultType="com.css.addbase.apporgan.entity.BaseAppUser">
+		select * from BASE_APP_USER where
+        ORGANID in
+        (
+                select
+                        id
+                from
+                        "ZF_XLGL_APP".BASE_APP_ORGAN start
+                with ID         = #{deptId}
+                    and ISDELETE=0 connect by prior ID = PARENT_ID
+        )
+
+	</select>
+
 	<select id="queryList" resultType="com.css.addbase.apporgan.entity.BaseAppUser">
 		select T.* , O.NAME AS DEPT,O.ID AS OORDERID from BASE_APP_USER T
 		left join BASE_APP_ORGAN O on O.ID =  T.ORGANID 

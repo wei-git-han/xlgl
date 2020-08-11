@@ -13,6 +13,10 @@
 			limit #{offset}, #{limit}
 		</if>
 	</select>
+
+	<select id="queryAllSubDeptIds" resultType="String">
+		select SUB_DEPT_ID from XLGL_SUB_DOC_INFO where INFO_ID = #{value}
+	</select>
 	
  	<select id="queryTotal" resultType="int">
 		select count(*) from XLGL_SUB_DOC_INFO 
