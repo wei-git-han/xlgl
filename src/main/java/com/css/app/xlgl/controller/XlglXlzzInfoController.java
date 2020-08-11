@@ -4,8 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.css.app.xlgl.entity.XlglSubDocTracking;
 import com.css.app.xlgl.entity.XlglXlzzInfo;
+import com.css.app.xlgl.service.XlglSubDocTrackingService;
 import com.css.app.xlgl.service.XlglXlzzInfoService;
+import com.css.base.utils.CurrentUser;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +35,8 @@ import com.css.base.utils.Response;
 public class XlglXlzzInfoController {
 	@Autowired
 	private XlglXlzzInfoService xlglXlzzInfoService;
+	@Autowired
+	private XlglSubDocTrackingService xlglSubDocTrackingService;
 	
 	/**
 	 * 列表
@@ -55,10 +60,16 @@ public class XlglXlzzInfoController {
 	 * 信息
 	 */
 	@ResponseBody
-	@RequestMapping("/info/{id}")
-	@RequiresPermissions("xlglxlzzinfo:info")
-	public void info(@PathVariable("id") String id){
+	@RequestMapping("/info")
+	public void info(String id){
+		String loginUser = CurrentUser.getUserId();
 		XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(id);
+		//打开的同时，更新打开人的状态为已读
+		XlglSubDocTracking xlglSubDocTracking = xlglSubDocTrackingService.queryInfo(id,loginUser);
+		xlglSubDocTracking.setStatus("1");
+		xlglSubDocTrackingService.update(xlglSubDocTracking);
+		xlglXlzzInfo.setStatus("1");//1为已读
+		xlglXlzzInfo.setBaoming(xlglSubDocTracking.getBaoming());
 		Response.json("xlglXlzzInfo", xlglXlzzInfo);
 	}
 	

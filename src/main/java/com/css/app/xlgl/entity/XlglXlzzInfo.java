@@ -47,8 +47,11 @@ public class XlglXlzzInfo implements Serializable {
 	private Date createTime;
 	//创建人
 	private String creator;
-	//状态
+	//状态   0是未读   1是已读
 	private String status;
+
+	//报名 0为报名，1已报名，2延后
+	private String baoming;
 
 	/**
 	 * 设置：
@@ -253,5 +256,13 @@ public class XlglXlzzInfo implements Serializable {
 	 */
 	public String getStatus() {
 		return status;
+	}
+
+	public String getBaoming() {
+		return baoming;
+	}
+
+	public void setBaoming(String baoming) {
+		this.baoming = baoming;
 	}
 }

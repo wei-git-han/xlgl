@@ -3,26 +3,26 @@
 
 <mapper namespace="com.css.app.xlgl.dao.XlglSubDocInfoDao">
 
-	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglSubDocInfo">
+    <select id="queryObject" resultType="com.css.app.xlgl.entity.XlglSubDocInfo">
 		select * from XLGL_SUB_DOC_INFO where ID = #{value}
 	</select>
 
-	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglSubDocInfo">
-		select * from XLGL_SUB_DOC_INFO 
-		<if test="offset != null and limit != null">
-			limit #{offset}, #{limit}
-		</if>
-	</select>
+    <select id="queryList" resultType="com.css.app.xlgl.entity.XlglSubDocInfo">
+        select * from XLGL_SUB_DOC_INFO
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
 
-	<select id="queryAllSubDeptIds" resultType="String">
+    <select id="queryAllSubDeptIds" resultType="String">
 		select SUB_DEPT_ID from XLGL_SUB_DOC_INFO where INFO_ID = #{value}
 	</select>
-	
- 	<select id="queryTotal" resultType="int">
+
+    <select id="queryTotal" resultType="int">
 		select count(*) from XLGL_SUB_DOC_INFO 
 	</select>
-	 
-	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglSubDocInfo">
+
+    <insert id="save" parameterType="com.css.app.xlgl.entity.XlglSubDocInfo">
 		insert into XLGL_SUB_DOC_INFO
 		(
 			"ID", 
@@ -58,36 +58,146 @@
 			#{ideaAddFlag}
 		)
 	</insert>
-	 
-	<update id="update" parameterType="com.css.app.xlgl.entity.XlglSubDocInfo">
-		update XLGL_SUB_DOC_INFO 
-		<set>
-			<if test="undertakerPhone != null">"UNDERTAKER_PHONE" = #{undertakerPhone}, </if>
-			<if test="undertaker != null">"UNDERTAKER" = #{undertaker}, </if>
-			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
-			<if test="updateTime != null">"UPDATE_TIME" = #{updateTime}, </if>
-			<if test="subDeptName != null">"SUB_DEPT_NAME" = #{subDeptName}, </if>
-			<if test="ideaCount != null">"IDEA_COUNT" = #{ideaCount}, </if>
-			<if test="chooseStatus != null">"CHOOSE_STATUS" = #{chooseStatus}, </if>
-			<if test="firstReply != null">"FIRST_REPLY" = #{firstReply}, </if>
-			<if test="infoId != null">"INFO_ID" = #{infoId}, </if>
-			<if test="undertakerName != null">"UNDERTAKER_NAME" = #{undertakerName}, </if>
-			<if test="docStatus != null">"DOC_STATUS" = #{docStatus}, </if>
-			<if test="subDeptId != null">"SUB_DEPT_ID" = #{subDeptId}, </if>
-			<if test="ideaAddFlag != null">"IDEA_ADD_FLAG" = #{ideaAddFlag}</if>
-		</set>
-		where ID = #{id}
-	</update>
-	
-	<delete id="delete">
+
+    <update id="update" parameterType="com.css.app.xlgl.entity.XlglSubDocInfo">
+        update XLGL_SUB_DOC_INFO
+        <set>
+            <if test="undertakerPhone != null">"UNDERTAKER_PHONE" = #{undertakerPhone},</if>
+            <if test="undertaker != null">"UNDERTAKER" = #{undertaker},</if>
+            <if test="createdTime != null">"CREATED_TIME" = #{createdTime},</if>
+            <if test="updateTime != null">"UPDATE_TIME" = #{updateTime},</if>
+            <if test="subDeptName != null">"SUB_DEPT_NAME" = #{subDeptName},</if>
+            <if test="ideaCount != null">"IDEA_COUNT" = #{ideaCount},</if>
+            <if test="chooseStatus != null">"CHOOSE_STATUS" = #{chooseStatus},</if>
+            <if test="firstReply != null">"FIRST_REPLY" = #{firstReply},</if>
+            <if test="infoId != null">"INFO_ID" = #{infoId},</if>
+            <if test="undertakerName != null">"UNDERTAKER_NAME" = #{undertakerName},</if>
+            <if test="docStatus != null">"DOC_STATUS" = #{docStatus},</if>
+            <if test="subDeptId != null">"SUB_DEPT_ID" = #{subDeptId},</if>
+            <if test="ideaAddFlag != null">"IDEA_ADD_FLAG" = #{ideaAddFlag}</if>
+        </set>
+        where ID = #{id}
+    </update>
+
+    <delete id="delete">
 		delete from XLGL_SUB_DOC_INFO where ID = #{value}
 	</delete>
-	
-	<delete id="deleteBatch">
-		delete from XLGL_SUB_DOC_INFO where ID in 
-		<foreach item="id" collection="array" open="(" separator="," close=")">
-			#{id}
-		</foreach>
-	</delete>
+
+    <delete id="deleteBatch">
+        delete from XLGL_SUB_DOC_INFO where ID in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="queryListForJu" resultType="com.css.app.xlgl.entity.XlglSubDocInfo">
+		select
+        *
+from
+        XLGL_SUB_DOC_INFO a
+inner join XLGL_XLZZ_INFO b
+on
+        a.INFO_ID=b.ID
+left join
+        (
+                select
+                        SUB_ID,
+                        RECEIVER_NAME as deal_user_name
+                from
+                        (
+                                select
+                                        SUB_ID       ,
+                                        RECEIVER_NAME,
+                                        row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num
+                                from
+                                        XLGL_SUB_DOC_TRACKING
+                        )
+                where
+                        num=1
+        )
+        f
+on
+        a.id=f.sub_id
+left join
+        (
+                select distinct
+                        info_id,
+                        listagg(sub_dept_name
+                        || nvl2(DECODE(undertaker_name, '', null, 'NULL', null, undertaker_name), '/'
+                        || undertaker_name
+                        || nvl2(DECODE(undertaker_phone, '', null, 'NULL', null, undertaker_phone), '('
+                        ||undertaker_phone
+                        ||')', null), null), ',') within group(
+                order by
+                        h.sort, created_time desc) over(partition by info_id) under_depts
+                from
+                        XLGL_SUB_DOC_INFO g
+                inner join BASE_APP_ORGAN h
+                on
+                        g.sub_dept_id=h.id
+        )
+        e on a.INFO_ID = e.info_id
+where
+        (
+                num  = 1
+             or num is null
+        )
+        <if test="orgId != null and orgId != ''">
+            and a.SUB_DEPT_ID = #{orgId}
+        </if>
+        <if test="search != null and search != ''">
+            and b.DOC_TITLE like '%'||#{search}||'%'
+        </if>
+        order by a.CREATED_TIME desc
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+
+	</select>
+
+    <select id="queryListForPerson" resultType="com.css.app.xlgl.entity.XlglSubDocInfo">
+        <!-- 文在我这 -->
+        WITH V_RESULT as(select SUB_ID from
+        (select SUB_ID, row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num
+        from XLGL_SUB_DOC_TRACKING where 1=1
+        <if test="loginUserId !=null and loginUserId !=''">
+            and RECEIVER_ID = #{loginUserId}
+        </if>)
+        where num =1)
+
+        select *  from XLGL_SUB_DOC_INFO a inner join v_result b on a.ID = b.SUB_ID
+        <!-- 主文件要素 -->
+        left join XLGL_XLZZ_INFO c on a.INFO_ID=c.ID
+        <!-- 当前处理人 -->
+        left join (select SUB_ID,RECEIVER_NAME as deal_user_name from (select SUB_ID,RECEIVER_NAME,row_number() over(partition by SUB_ID order by CREATED_TIME desc) as num from XLGL_SUB_DOC_TRACKING) where num=1) f on a.id=f.sub_id
+        <!--  承办单位/人 -->
+        left join (select distinct info_id,listagg(sub_dept_name || nvl2(DECODE(undertaker_name,'',null,'NULL',null,undertaker_name),'/' || undertaker_name || nvl2(DECODE(undertaker_phone,'',null,'NULL',null,undertaker_phone),'('||undertaker_phone||')',null),null), ',') within group(order by k.sort,created_time desc) over(partition by info_id) under_depts from XLGL_SUB_DOC_INFO i inner join BASE_APP_ORGAN k
+        on i.sub_dept_id=k.id) h on a.INFO_ID = h.info_id
+        <!-- receiverIsMe：我为当前处理人，并且文件状态<10，字段置为1 -->
+        left join (select SUB_ID,RECEIVER_NAME deal_user_name,1 as receiver_is_me from(select SUB_ID,RECEIVER_ID,RECEIVER_NAME,n.DOC_STATUS,row_number() over(partition by SUB_ID order by m.CREATED_TIME desc) as num from XLGL_SUB_DOC_TRACKING m left join XLGL_SUB_DOC_INFO n on m.SUB_ID = n.ID)
+        where 1=1
+        <if test="userId !=null and userId !=''">
+            and RECEIVER_ID = #{loginUserId}
+        </if> and num = 1 )as e on a.ID = e.SUB_ID
+        <!-- left join (select SUB_ID, count(0) as ideaCount from DB_DOC_XB_IDEA group by SUB_ID) p on p.SUB_ID = b.SUB_ID  -->
+        where 1=1
+        <if test="search != null and search != ''">
+            and c.DOC_TITLE like '%'||#{search}||'%'
+        </if>
+        <if test="docStatus != null and docStatus != ''">
+            and a.DOC_STATUS = #{docStatus}
+        </if>
+        <if test="cui != null and cui != ''">
+            and c.CUIBAN_FLAG ='1'
+        </if>
+        <if test="receiver!= null and receiver != ''">
+            and e.receiver_is_me = 1
+        </if>
+        and c.STATUS=1 and (dNum = 1 or dNum is null)
+        order by e.receiver_is_me nulls last, a.CREATED_TIME desc
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
 
 </mapper>

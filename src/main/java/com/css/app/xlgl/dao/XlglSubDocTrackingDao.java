@@ -5,6 +5,7 @@ import com.css.app.xlgl.entity.XlglSubDocTracking;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.css.base.dao.BaseDao;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * 
@@ -15,5 +16,10 @@ import com.css.base.dao.BaseDao;
  */
 @Mapper
 public interface XlglSubDocTrackingDao extends BaseDao<XlglSubDocTracking> {
-	
+
+    @Select("select * from XLGL_SUB_DOC_TRACKING where INFO_ID = #{0} and RECEIVER_ID = #{1}")
+    XlglSubDocTracking queryInfo(String id,String userId);
+
+    @Select("select * from XLGL_SUB_DOC_TRACKING where INFO_ID = #{0} and RECEIVER_ID = #{2} and SUB_ID = #{1}")
+    XlglSubDocTracking querybaoming(String infoId,String subId,String userId);
 }

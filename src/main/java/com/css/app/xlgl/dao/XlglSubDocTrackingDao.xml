@@ -36,7 +36,11 @@
 			"REC_DEPT_ID", 
 			"PREVIOUS_STATUS", 
 			"SENDER_ID", 
-			"REC_DEPT_NAME"
+			"REC_DEPT_NAME",
+			"STATUS",
+			"INFO_ID",
+			"BAOMING",
+			"REASON"
 		)
 		values
 		(
@@ -55,7 +59,11 @@
 			#{recDeptId}, 
 			#{previousStatus}, 
 			#{senderId}, 
-			#{recDeptName}
+			#{recDeptName},
+			#{status},
+			#{infoId},
+			#{baoming},
+			#{reason}
 		)
 	</insert>
 	 
@@ -77,6 +85,10 @@
 			<if test="previousStatus != null">"PREVIOUS_STATUS" = #{previousStatus}, </if>
 			<if test="senderId != null">"SENDER_ID" = #{senderId}, </if>
 			<if test="recDeptName != null">"REC_DEPT_NAME" = #{recDeptName}</if>
+			<if test="status != null">"STATUS" = #{status}</if>
+			<if test="infoId != null">"INFO_ID" = #{infoId}</if>
+			<if test="baoming != null">"BAOMING" = #{baoming}</if>
+			<if test="reason != null">"REASON" = #{reason}</if>
 		</set>
 		where ID = #{id}
 	</update>

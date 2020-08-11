@@ -28,4 +28,8 @@ public interface XlglSubDocInfoService {
 	void deleteBatch(String[] ids);
 
 	List<String> queryAllSubDeptIds(String fileId);
+
+	List<XlglSubDocInfo> queryListForJu(Map<String,Object> map);
+
+	List<XlglSubDocInfo> queryListForPerson(Map<String,Object> map);
 }

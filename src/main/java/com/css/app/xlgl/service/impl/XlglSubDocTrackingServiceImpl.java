@@ -46,5 +46,15 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 	public void deleteBatch(String[] ids){
 		xlglSubDocTrackingDao.deleteBatch(ids);
 	}
+
+	@Override
+	public XlglSubDocTracking queryInfo(String id,String userId){
+		return xlglSubDocTrackingDao.queryInfo(id,userId);
+	}
+
+	@Override
+	public XlglSubDocTracking querybaoming(String infoId,String subId,String userId){
+		return xlglSubDocTrackingDao.querybaoming(infoId,subId,userId);
+	}
 	
 }

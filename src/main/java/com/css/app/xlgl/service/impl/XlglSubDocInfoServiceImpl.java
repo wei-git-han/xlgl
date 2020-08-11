@@ -51,5 +51,15 @@ public class XlglSubDocInfoServiceImpl implements XlglSubDocInfoService {
 	public List<String> queryAllSubDeptIds(String fileId){
 		return xlglSubDocInfoDao.queryAllSubDeptIds(fileId);
 	}
-	
+
+	@Override
+	public List<XlglSubDocInfo> queryListForJu(Map<String,Object> map){
+		return xlglSubDocInfoDao.queryListForJu(map);
+	}
+
+	@Override
+	public List<XlglSubDocInfo> queryListForPerson(Map<String,Object> map){
+		return xlglSubDocInfoDao.queryListForPerson(map);
+	}
+
 }

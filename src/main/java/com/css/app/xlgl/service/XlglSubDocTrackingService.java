@@ -26,4 +26,8 @@ public interface XlglSubDocTrackingService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+
+	XlglSubDocTracking queryInfo(String id,String userId);
+
+	XlglSubDocTracking querybaoming(String infoId,String subId,String userId);
 }

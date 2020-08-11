@@ -47,6 +47,16 @@ public class XlglSubDocTracking implements Serializable {
 	private String senderId;
 	//
 	private String recDeptName;
+	//0未读，1已读
+	private String status;
+
+	private String infoId;
+
+	//报名 0未报名，1已报名
+	private String baoming;
+
+	//未报名原因
+	private String reason;
 
 	/**
 	 * 设置：
@@ -239,5 +249,37 @@ public class XlglSubDocTracking implements Serializable {
 	 */
 	public String getRecDeptName() {
 		return recDeptName;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getInfoId() {
+		return infoId;
+	}
+
+	public void setInfoId(String infoId) {
+		this.infoId = infoId;
+	}
+
+	public String getBaoming() {
+		return baoming;
+	}
+
+	public void setBaoming(String baoming) {
+		this.baoming = baoming;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 }
