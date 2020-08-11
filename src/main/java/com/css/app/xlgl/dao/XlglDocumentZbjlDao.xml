@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.XlglDocumentZbjlDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglDocumentZbjl">
+		select * from XLGL_DOCUMENT_ZBJL where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglDocumentZbjl">
+		select * from XLGL_DOCUMENT_ZBJL 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_DOCUMENT_ZBJL 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglDocumentZbjl">
+		insert into XLGL_DOCUMENT_ZBJL
+		(
+			"ID", 
+			"USER_ID", 
+			"DEPT_NAME", 
+			"DEPT_ID", 
+			"CREATED_TIME", 
+			"RECEIVER_DEPT_ID", 
+			"SUB_ID", 
+			"ORG_NAME", 
+			"USER_NAME", 
+			"INFO_ID", 
+			"RECEIVER_IDS", 
+			"RECEIVER_NAMES", 
+			"RECEIVER_DEPT_NAME"
+		)
+		values
+		(
+			#{id}, 
+			#{userId}, 
+			#{deptName}, 
+			#{deptId}, 
+			#{createdTime}, 
+			#{receiverDeptId}, 
+			#{subId}, 
+			#{orgName}, 
+			#{userName}, 
+			#{infoId}, 
+			#{receiverIds}, 
+			#{receiverNames}, 
+			#{receiverDeptName}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.XlglDocumentZbjl">
+		update XLGL_DOCUMENT_ZBJL 
+		<set>
+			<if test="userId != null">"USER_ID" = #{userId}, </if>
+			<if test="deptName != null">"DEPT_NAME" = #{deptName}, </if>
+			<if test="deptId != null">"DEPT_ID" = #{deptId}, </if>
+			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
+			<if test="receiverDeptId != null">"RECEIVER_DEPT_ID" = #{receiverDeptId}, </if>
+			<if test="subId != null">"SUB_ID" = #{subId}, </if>
+			<if test="orgName != null">"ORG_NAME" = #{orgName}, </if>
+			<if test="userName != null">"USER_NAME" = #{userName}, </if>
+			<if test="infoId != null">"INFO_ID" = #{infoId}, </if>
+			<if test="receiverIds != null">"RECEIVER_IDS" = #{receiverIds}, </if>
+			<if test="receiverNames != null">"RECEIVER_NAMES" = #{receiverNames}, </if>
+			<if test="receiverDeptName != null">"RECEIVER_DEPT_NAME" = #{receiverDeptName}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_DOCUMENT_ZBJL where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_DOCUMENT_ZBJL where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

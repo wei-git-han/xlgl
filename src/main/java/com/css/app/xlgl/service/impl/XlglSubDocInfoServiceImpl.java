@@ -1,0 +1,50 @@
+package com.css.app.xlgl.service.impl;
+
+import com.css.app.xlgl.dao.XlglSubDocInfoDao;
+import com.css.app.xlgl.entity.XlglSubDocInfo;
+import com.css.app.xlgl.service.XlglSubDocInfoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+
+
+
+@Service("xlglSubDocInfoService")
+public class XlglSubDocInfoServiceImpl implements XlglSubDocInfoService {
+	@Autowired
+	private XlglSubDocInfoDao xlglSubDocInfoDao;
+	
+	@Override
+	public XlglSubDocInfo queryObject(String id){
+		return xlglSubDocInfoDao.queryObject(id);
+	}
+	
+	@Override
+	public List<XlglSubDocInfo> queryList(Map<String, Object> map){
+		return xlglSubDocInfoDao.queryList(map);
+	}
+	
+	@Override
+	public void save(XlglSubDocInfo xlglSubDocInfo){
+		xlglSubDocInfoDao.save(xlglSubDocInfo);
+	}
+	
+	@Override
+	public void update(XlglSubDocInfo xlglSubDocInfo){
+		xlglSubDocInfoDao.update(xlglSubDocInfo);
+	}
+	
+	@Override
+	public void delete(String id){
+		xlglSubDocInfoDao.delete(id);
+	}
+	
+	@Override
+	public void deleteBatch(String[] ids){
+		xlglSubDocInfoDao.deleteBatch(ids);
+	}
+	
+}

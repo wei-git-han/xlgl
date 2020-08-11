@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.XlglSubDocInfoDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglSubDocInfo">
+		select * from XLGL_SUB_DOC_INFO where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglSubDocInfo">
+		select * from XLGL_SUB_DOC_INFO 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_SUB_DOC_INFO 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglSubDocInfo">
+		insert into XLGL_SUB_DOC_INFO
+		(
+			"ID", 
+			"UNDERTAKER_PHONE", 
+			"UNDERTAKER", 
+			"CREATED_TIME", 
+			"UPDATE_TIME", 
+			"SUB_DEPT_NAME", 
+			"IDEA_COUNT", 
+			"CHOOSE_STATUS", 
+			"FIRST_REPLY", 
+			"INFO_ID", 
+			"UNDERTAKER_NAME", 
+			"DOC_STATUS", 
+			"SUB_DEPT_ID", 
+			"IDEA_ADD_FLAG"
+		)
+		values
+		(
+			#{id}, 
+			#{undertakerPhone}, 
+			#{undertaker}, 
+			#{createdTime}, 
+			#{updateTime}, 
+			#{subDeptName}, 
+			#{ideaCount}, 
+			#{chooseStatus}, 
+			#{firstReply}, 
+			#{infoId}, 
+			#{undertakerName}, 
+			#{docStatus}, 
+			#{subDeptId}, 
+			#{ideaAddFlag}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.XlglSubDocInfo">
+		update XLGL_SUB_DOC_INFO 
+		<set>
+			<if test="undertakerPhone != null">"UNDERTAKER_PHONE" = #{undertakerPhone}, </if>
+			<if test="undertaker != null">"UNDERTAKER" = #{undertaker}, </if>
+			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
+			<if test="updateTime != null">"UPDATE_TIME" = #{updateTime}, </if>
+			<if test="subDeptName != null">"SUB_DEPT_NAME" = #{subDeptName}, </if>
+			<if test="ideaCount != null">"IDEA_COUNT" = #{ideaCount}, </if>
+			<if test="chooseStatus != null">"CHOOSE_STATUS" = #{chooseStatus}, </if>
+			<if test="firstReply != null">"FIRST_REPLY" = #{firstReply}, </if>
+			<if test="infoId != null">"INFO_ID" = #{infoId}, </if>
+			<if test="undertakerName != null">"UNDERTAKER_NAME" = #{undertakerName}, </if>
+			<if test="docStatus != null">"DOC_STATUS" = #{docStatus}, </if>
+			<if test="subDeptId != null">"SUB_DEPT_ID" = #{subDeptId}, </if>
+			<if test="ideaAddFlag != null">"IDEA_ADD_FLAG" = #{ideaAddFlag}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_SUB_DOC_INFO where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_SUB_DOC_INFO where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
