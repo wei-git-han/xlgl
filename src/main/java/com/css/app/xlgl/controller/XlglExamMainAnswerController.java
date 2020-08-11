@@ -53,8 +53,7 @@ public class XlglExamMainAnswerController {
 	@RequestMapping("/list")
 	public void list(Integer page, Integer limit,String examineId,String makeupStatus,String level,String replyUserName
 			,String organName,String isNotExam,String status){
-		Map<String, Object> map = new HashMap<>();
-		PageHelper.startPage(page, limit);
+		Map<String, Object> map = new HashMap<>();	
 		map.put("examineId", examineId);
 		map.put("level", level);
 		map.put("makeupStatus", makeupStatus);
@@ -62,6 +61,7 @@ public class XlglExamMainAnswerController {
 		map.put("organName", organName);
 		map.put("isNotExam", isNotExam);
 		map.put("status", status);
+		PageHelper.startPage(page, limit);
 		//查询列表数据
 		List<XlglExamMainAnswer> xlglExamMainAnswerList = xlglExamMainAnswerService.queryList(map);
 		

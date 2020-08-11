@@ -16,6 +16,7 @@ import com.css.app.xlgl.entity.XlglExamTopic;
 import com.css.app.xlgl.service.XlglExamExaminetopicService;
 import com.css.app.xlgl.service.XlglExamTopicService;
 import com.css.base.utils.CurrentUser;
+import com.css.base.utils.StringUtils;
 import com.css.base.utils.UUIDUtils;
 
 
@@ -81,7 +82,7 @@ public class XlglExamExaminetopicServiceImpl implements XlglExamExaminetopicServ
 	 * 
 	 * */
 	@Override
-	public List<XlglExamExaminetopic> randomExtract(Map<String, Object> map,String examineId) {
+	public List<XlglExamExaminetopic> randomExtract(Map<String, Object> map,String examineId,String makeUpId) {
 		List<XlglExamExaminetopic> list = new ArrayList<XlglExamExaminetopic>();
 		List<XlglExamTopic> queryList = xlglExamTopicService.queryList(map);
 		Date date = new Date();
@@ -103,6 +104,12 @@ public class XlglExamExaminetopicServiceImpl implements XlglExamExaminetopicServ
 				examineTopic.setCreateUser(userId);
 				examineTopic.setUpdateDate(date);
 				examineTopic.setUpdateUser(userId);
+				if(StringUtils.isNotBlank(makeUpId)) {
+					examineTopic.setMakeUpId(makeUpId);
+					examineTopic.setMakeUpStatus("1");
+				}else {
+					examineTopic.setMakeUpStatus("0");
+				}
 				list.add(examineTopic);
 			}
 		}else {
@@ -126,6 +133,12 @@ public class XlglExamExaminetopicServiceImpl implements XlglExamExaminetopicServ
 						examineTopic.setCreateUser(userId);
 						examineTopic.setUpdateDate(date);
 						examineTopic.setUpdateUser(userId);
+						if(StringUtils.isNotBlank(makeUpId)) {
+							examineTopic.setMakeUpId(makeUpId);
+							examineTopic.setMakeUpStatus("1");
+						}else {
+							examineTopic.setMakeUpStatus("0");
+						}
 						list.add(examineTopic);
 					}
 				}else {
@@ -139,8 +152,8 @@ public class XlglExamExaminetopicServiceImpl implements XlglExamExaminetopicServ
 	}
 
 	@Override
-	public void deleteByExamineId(String examineId) {
-		xlglExamExaminetopicDao.deleteByExamineId(examineId);
+	public void deleteByExamineId(Map<String, Object> map) {
+		xlglExamExaminetopicDao.deleteByExamineId(map);
 		
 	}
 	

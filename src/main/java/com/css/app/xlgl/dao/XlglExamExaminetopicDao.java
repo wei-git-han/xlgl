@@ -23,6 +23,6 @@ public interface XlglExamExaminetopicDao extends BaseDao<XlglExamExaminetopic> {
 	List<XlglExamExaminetopicDto> findCountBySubjectId(Map<String,Object> map);
 	List<XlglExamExaminetopic> findListBySubjectId(Map<String,Object> map);
 
-	void deleteByExamineId(String examineId);
+	void deleteByExamineId(Map<String,Object> map);
 }
 

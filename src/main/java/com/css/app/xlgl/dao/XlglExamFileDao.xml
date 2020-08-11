@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.XlglExamFileDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglExamFile">
+		select * from XLGL_EXAM_FILE where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglExamFile">
+		select * from XLGL_EXAM_FILE 
+		where 1 = 1 and FILE_TYPE is not null
+		<if test="fileType != null and fileType != ''">
+			and "FILE_TYPE" = #{fileType}
+		</if>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_EXAM_FILE 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglExamFile">
+		insert into XLGL_EXAM_FILE
+		(
+			"id", 
+			"FILE_TYPE", 
+			"CREATE_USER", 
+			"FILE_ID", 
+			"CREATE_DATE", 
+			"FILE_NAME"
+		)
+		values
+		(
+			#{id}, 
+			#{fileType}, 
+			#{createUser}, 
+			#{fileId}, 
+			#{createDate}, 
+			#{fileName}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.XlglExamFile">
+		update XLGL_EXAM_FILE 
+		<set>
+			<if test="fileType != null">"FILE_TYPE" = #{fileType}, </if>
+			<if test="createUser != null">"CREATE_USER" = #{createUser}, </if>
+			<if test="fileId != null">"FILE_ID" = #{fileId}, </if>
+			<if test="createDate != null">"CREATE_DATE" = #{createDate}, </if>
+			<if test="fileName != null">"FILE_NAME" = #{fileName}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_EXAM_FILE where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_EXAM_FILE where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

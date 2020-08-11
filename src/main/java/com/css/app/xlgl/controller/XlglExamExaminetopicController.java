@@ -28,7 +28,7 @@ import com.github.pagehelper.PageHelper;
  * @date 2020-07-30 10:56:43
  */
 @Controller
-@RequestMapping("/xlglexamexaminetopic")
+@RequestMapping("app/xlgl/xlglexamexaminetopic")
 public class XlglExamExaminetopicController {
 	@Autowired
 	private XlglExamExaminetopicService xlglExamExaminetopicService;

@@ -29,6 +29,17 @@
 	
  	<select id="queryTotal" resultType="int">
 		select count(*) from XLGL_EXAM_EXAMINE 
+		 where 1=1
+		<if test="issueStatus != null and issueStatus !=''">
+			  and ISSUE_STATUS = #{issueStatus}
+		</if>
+		<if test="status != null and status !=''">
+			  and STATUS = #{status}
+		</if>	
+		<if test="overStatus != null and overStatus !=''">
+			  and OVER_STATUS = #{overStatus}
+		</if>	
+		
 	</select>
 	 
 	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglExamExamine">

@@ -189,7 +189,7 @@ public class XlglExamSubjectController {
 		if(queryObject.getSubjectType()!=null && queryObject.getSubjectType().contains(",")) {
 			String[] split = queryObject.getSubjectType().split(",");
 			map.put("type", split);
-		}else if(queryObject.getSubjectType()!=null) {
+		}else if(StringUtils.isNotBlank(queryObject.getSubjectType())) {
 			String[] split = new String[queryObject.getSubjectType().length()];
 			split[0]=queryObject.getSubjectType();
 			map.put("type", split);

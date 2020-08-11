@@ -33,7 +33,7 @@ public interface XlglExamExaminetopicService {
 	/**
 	 * 返回随机抽中的题目
 	 * */
-	List<XlglExamExaminetopic> randomExtract(Map<String,Object> map,String examineId);
-	void deleteByExamineId(String examineId);
+	List<XlglExamExaminetopic> randomExtract(Map<String,Object> map,String examineId,String makeUpId);
+	void deleteByExamineId(Map<String,Object> map);
 	
 }

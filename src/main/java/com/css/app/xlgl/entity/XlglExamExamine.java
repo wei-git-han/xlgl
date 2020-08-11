@@ -39,7 +39,7 @@ public class XlglExamExamine implements Serializable {
 	private Date updateDate;
 	//是否发布0:没发布，1发布
 	private String issueStatus;
-	//考试是否结束 0：没结束进行中，1：已结束已完结
+	//考试是否结束 0：没结束进行中，1：已结束已完结 2 :补考开始
 	private String overStatus;
 	//考试结束时间
 	private Date examineEndDate;

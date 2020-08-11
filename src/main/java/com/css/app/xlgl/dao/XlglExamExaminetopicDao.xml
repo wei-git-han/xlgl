@@ -9,9 +9,12 @@
 
 	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglExamExaminetopic">
 		select * from XLGL_EXAM_EXAMINETOPIC 
-		where 1=1
+		where 1=1 
 		<if test="examineId != null and examineId !=''">
 			  and EXAMINE_ID = #{examineId}
+		</if>
+		<if test="makeUpStatus != null and makeUpStatus !=''">
+			  and MAKEUP_STATUS = #{makeUpStatus}
 		</if>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
@@ -20,6 +23,12 @@
 	
  	<select id="queryTotal" resultType="int">
 		select count(*) from XLGL_EXAM_EXAMINETOPIC 
+		<if test="examineId != null and examineId !=''">
+			  and EXAMINE_ID = #{examineId}
+		</if>
+		<if test="makeUpStatus != null and makeUpStatus !=''">
+			  and MAKEUP_STATUS = #{makeUpStatus}
+		</if>
 	</select>
 	 
 	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglExamExaminetopic">
@@ -28,7 +37,8 @@
 			"id", 
 			"EXAMINE_ID", 
 			"SUBJECT_ID", 
-			"TOPIC_ID", 
+			"TOPIC_ID",
+			"MAKEUP_ID", 
 			"TOPIC_TYPE", 
 			"TOPIC_COLUMN", 
 			"TOPIC_OPTION", 
@@ -46,6 +56,7 @@
 			#{examineId}, 
 			#{subjectId}, 
 			#{topicId}, 
+			#{makeUpId},
 			#{topicType}, 
 			#{topicColumn}, 
 			#{topicOption}, 
@@ -65,6 +76,8 @@
 			<if test="examineId != null">"EXAMINE_ID" = #{examineId}, </if>
 			<if test="subjectId != null">"SUBJECT_ID" = #{subjectId}, </if>
 			<if test="topicId != null">"TOPIC_ID" = #{topicId}, </if>
+			<if test="makeUpId != null">"MAKEUP_ID" = #{makeUpId}, </if>
+			<if test="makeUpStatus != null">"MAKEUP_STATUS" = #{makeUpStatus}, </if>
 			<if test="topicType != null">"TOPIC_TYPE" = #{topicType}, </if>
 			<if test="topicColumn != null">"TOPIC_COLUMN" = #{topicColumn}, </if>
 			<if test="topicOption != null">"TOPIC_OPTION" = #{topicOption}, </if>
@@ -97,6 +110,8 @@
 			"EXAMINE_ID", 
 			"SUBJECT_ID", 
 			"TOPIC_ID", 
+			"MAKEUP_ID",
+			"MAKEUP_STATUS",
 			"TOPIC_TYPE", 
 			"TOPIC_COLUMN", 
 			"TOPIC_OPTION", 
@@ -114,7 +129,9 @@
 			#{item.id}, 
 			#{item.examineId}, 
 			#{item.subjectId}, 
-			#{item.topicId}, 
+			#{item.topicId},
+			#{item.makeUpId}, 
+			#{item.makeUpStatus},
 			#{item.topicType}, 
 			#{item.topicColumn}, 
 			#{item.topicOption}, 
@@ -141,6 +158,9 @@
 		<if test="examineId != null ">
 			and EXAMINE_ID = #{examineId}
 		</if>
+		<if test="makeUpStatus != null and makeUpStatus !=''">
+			  and MAKEUP_STATUS = #{makeUpStatus}
+		</if>
 		GROUP BY topic_Type;
 	</select>
 	
@@ -150,9 +170,15 @@
 		<if test="examineId != null ">
 			and EXAMINE_ID =#{examineId}
 		</if>
+		<if test="makeUpStatus != null and makeUpStatus !=''">
+			  and MAKEUP_STATUS = #{makeUpStatus}
+		</if>
 	</select>
 	<delete id="deleteByExamineId">
-		delete from XLGL_EXAM_EXAMINETOPIC where EXAMINE_ID =#{examineId}
+		delete from XLGL_EXAM_EXAMINETOPIC where EXAMINE_ID =#{examineId} 
+		<if test="makeUpStatus != null and makeUpStatus !=''">
+			  and MAKEUP_STATUS = #{makeUpStatus}
+		</if>
 	</delete>
 
 </mapper>

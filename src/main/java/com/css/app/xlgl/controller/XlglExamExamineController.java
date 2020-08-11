@@ -20,8 +20,10 @@ import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.xlgl.dao.XlglExamExamineDao;
 import com.css.app.xlgl.dto.XlglExamExaminetopicDto;
 import com.css.app.xlgl.entity.XlglExamExamine;
+import com.css.app.xlgl.entity.XlglExamExamineMakeup;
 import com.css.app.xlgl.entity.XlglExamExaminetopic;
 import com.css.app.xlgl.entity.XlglExamMainAnswer;
+import com.css.app.xlgl.service.XlglExamExamineMakeupService;
 import com.css.app.xlgl.service.XlglExamExamineService;
 import com.css.app.xlgl.service.XlglExamExaminetopicService;
 import com.css.app.xlgl.service.XlglExamMainAnswerService;
@@ -59,7 +61,8 @@ public class XlglExamExamineController {
 	private XlglExamExamineDao xlglExamExamineDao;
 	@Autowired
 	private BaseAppOrganService baseAppOrganService;
-
+	@Autowired
+	private XlglExamExamineMakeupService xlglExamExamineMakeupService;
 
 	/**
 	 * 考核清单列表
@@ -83,6 +86,7 @@ public class XlglExamExamineController {
 		for (XlglExamExamine xlglExamExamine : xlglExamExamineList) {
 			HashMap<String,Object> mapAll = new HashMap<String, Object>();
 			mapAll.put("examineId", xlglExamExamine.getId());
+			mapAll.put("isNotExam", "1");
 			String number = xlglExamMainAnswerService.queryUserCount(mapAll);//每个试卷的参考人数
 			Integer numberInto = 0;
 			if(StringUtils.isNotBlank(number)) {
@@ -115,14 +119,16 @@ public class XlglExamExamineController {
 	@ResponseBody
 	@RequestMapping("/conutInto")
 	public void conutInto(){
+		JSONObject jsonObject = new JSONObject();
 		Map<String, Object> map = new HashMap<>();
 		map.put("issueStatus", "1");
-		map.put("overStatus", "0");
+		map.put("status", "0");
 		int into = xlglExamExamineDao.queryTotal(map);//进行中
 		map.put("overStatus", "1");
 		int intoNot = xlglExamExamineDao.queryTotal(map);//已结束
-		Response.json("into",into);
-		Response.json("intoNot",intoNot);
+		jsonObject.put("into",into);
+		jsonObject.put("intoNot",intoNot);
+		Response.json(jsonObject);
 	}
 	
 	/**
@@ -153,6 +159,7 @@ public class XlglExamExamineController {
 		Map<String, Object> map = new HashMap<String,Object>();
 		XlglExamExamine xlglExamExamine = xlglExamExamineService.queryObject(id);
 		map.put("examineId", id);
+		map.put("makeUpStatus", "0");
 		List<XlglExamExaminetopicDto> listCount = xlglExamExaminetopicService.findCountBySubjectId(map);
 		List<XlglExamExaminetopic> list = xlglExamExaminetopicService.findListBySubjectId(map);
 		StringBuffer strbu = new StringBuffer();
@@ -207,9 +214,9 @@ public class XlglExamExamineController {
 	@RequestMapping("/delete")
 	public void delete(String[] ids){
 		xlglExamExamineService.deleteBatch(ids);
-		for (int i = 0; i < ids.length; i++) {
+		/*for (int i = 0; i < ids.length; i++) {
 			xlglExamExaminetopicService.deleteByExamineId(ids[i]);
-		}
+		}*/
 		Response.ok();
 	}
 	
@@ -252,6 +259,7 @@ public class XlglExamExamineController {
 		JSONObject jsonObject = new JSONObject();
 		Map<String, Object> map = new HashMap<String,Object>();
 		map.put("examineId", examineId);
+		map.put("makeUpStatus", "0");
 		XlglExamExamine xlglExamExamine = xlglExamExamineService.queryObject(examineId);
 		List<XlglExamExaminetopic> queryList = xlglExamExaminetopicService.queryList(map);
 		List<XlglExamExaminetopic> listType1 = new ArrayList<XlglExamExaminetopic>();
@@ -323,7 +331,10 @@ public class XlglExamExamineController {
 			xlglExamExamine.setUpdateDate(date);
 			xlglExamExamineService.update(xlglExamExamine);
 			if(typeAndNum.length >0) {
-				xlglExamExaminetopicService.deleteByExamineId(xlglExamExamine.getId());
+				Map<String, Object> map = new HashMap<String,Object>();
+				map.put("examineId", xlglExamExamine.getId());
+				map.put("makeUpStatus", "0");
+				xlglExamExaminetopicService.deleteByExamineId(map);
 			}
 		}else {
 			xlglExamExamine.setCreateUser(userId);
@@ -341,7 +352,7 @@ public class XlglExamExamineController {
 				map.put("topicType", split2[0]);
 				map.put("topicNumber", split2[1]);
 				map.put("fractionalNumber", fractionalNumber);
-				List<XlglExamExaminetopic> randomExtract = xlglExamExaminetopicService.randomExtract(map, xlglExamExamine.getId());
+				List<XlglExamExaminetopic> randomExtract = xlglExamExaminetopicService.randomExtract(map, xlglExamExamine.getId(),null);
 				if(randomExtract.size()>0) {
 					xlglExamExaminetopicService.saveBatch(randomExtract);
 				}
@@ -392,6 +403,78 @@ public class XlglExamExamineController {
 		}
 		
 		Response.ok();
+	}
+	
+	/**
+	 * 
+	 * 试卷 参考率、参考人数、优秀率
+	 * @param examineId 试卷id
+	 * */
+	@ResponseBody
+	@RequestMapping("/examineTotal")
+	public void examineTotal(String examineId) {
+		JSONObject jsonObject = new JSONObject();
+		int queryTotal = xlglExamExamineService.findCount();//需要参考的人数
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("examineId",examineId);
+		map.put("isNotExam", "1");
+		map.put("status", "0");
+		String number = xlglExamMainAnswerService.queryUserCount(map);//试卷的参考人数
+		Integer numberInto = 0;
+		if(StringUtils.isNotBlank(number)) {
+			numberInto=Integer.parseInt(number);
+		}
+		Integer numberIntoNot =queryTotal-numberInto;//需要补考人数
+		Integer raio =(numberInto/queryTotal)*100;//参考率
+		map.put("level", "1");
+		int total1 = xlglExamMainAnswerService.queryTotal(map);//优秀人数
+		map.put("level", "2");
+		int total2 = xlglExamMainAnswerService.queryTotal(map);//优良人数
+		map.put("level", "3");
+		int total3 = xlglExamMainAnswerService.queryTotal(map);//及格人数
+		Integer total1Raio = (total1/numberInto) *100;
+		Integer total2Raio = (total2/numberInto) *100;
+		Integer total3Raio = (total3/numberInto) *100;
+		jsonObject.put("raioAll", raio);
+		jsonObject.put("peopleNum" , numberInto);
+		jsonObject.put("fillUpNum", numberIntoNot);
+		jsonObject.put("excellent", total1Raio);
+		jsonObject.put("fine", total2Raio);
+		jsonObject.put("pass", total3Raio);
+		XlglExamExamine queryObject = xlglExamExamineService.queryObject(examineId);
+		jsonObject.put("examine", queryObject);
+		Response.json(jsonObject);
+	}
+	/**
+	 * 原考题四项题型比例
+	 * @param examineId 试卷id
+	 * */
+	@ResponseBody
+	@RequestMapping("/topicTypeCount")
+	public void topicTypeCount(String examineId) {
+		JSONObject jsonObject = new JSONObject();
+		Map<String, Object> map = new HashMap<String,Object>();
+		map.put("examineId", examineId);
+		map.put("makeUpStatus", "0");
+		List<XlglExamExaminetopicDto> listCount = xlglExamExaminetopicService.findCountBySubjectId(map);
+		Integer  originalTypeCount = 0;
+		Integer originalnumberAll = 0;
+		for (XlglExamExaminetopicDto xlglExamExaminetopicDto : listCount) {
+			originalTypeCount +=xlglExamExaminetopicDto.getTypeCount();
+			originalnumberAll +=xlglExamExaminetopicDto.getNumberAll();
+		}
+		List<XlglExamExamineMakeup> queryList = xlglExamExamineMakeupService.queryList(map);
+		if(queryList.size()>0) {
+			XlglExamExamineMakeup xlglExamExamineMakeup = queryList.get(0);
+			map.put("makeUpStatus", "1");
+			map.put("makeUpId", xlglExamExamineMakeup.getId());
+			List<XlglExamExaminetopicDto> findCountBySubjectId = xlglExamExaminetopicService.findCountBySubjectId(map);
+			jsonObject.put("makeUpTopic", findCountBySubjectId);
+		}else {
+			jsonObject.put("makeUpTopic", "0");
+		}
+		jsonObject.put("originalTopic", listCount);
+		Response.json(jsonObject);
 	}
 	
 }

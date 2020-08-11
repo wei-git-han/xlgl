@@ -60,5 +60,10 @@ public class XlglExamMainAnswerServiceImpl implements XlglExamMainAnswerService 
 		// TODO Auto-generated method stub
 		return xlglExamMainAnswerDao.queryUserCount(mapAll);
 	}
+
+	@Override
+	public int queryTotal(Map<String, Object> map) {	
+		return xlglExamMainAnswerDao.queryTotal(map);
+	}
 	
 }

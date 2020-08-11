@@ -30,7 +30,7 @@ public interface XlglExamTopicService {
 	
 	void deleteBatch(String[] ids);
 	List<XlglExamTopic> readExcelLists(InputStream is,String subjectId) throws Exception;
-	void saveList(@Param("list")List<XlglExamTopic> list);
+	void saveList(List<XlglExamTopic> list);
 	List<XlglExamTopic> queryListByIds(Object[] id);
 	void deleteByType(Map<String, Object> map);
 }

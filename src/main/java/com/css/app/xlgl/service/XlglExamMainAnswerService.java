@@ -31,4 +31,5 @@ public interface XlglExamMainAnswerService {
 	String  queryUserCount(HashMap<String, Object> mapAll);
 	
 	void saveBatch(List<XlglExamMainAnswer> list);
+	int queryTotal(Map<String,Object> map);
 }

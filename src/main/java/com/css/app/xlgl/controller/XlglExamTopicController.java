@@ -32,13 +32,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSONObject;
+import com.css.addbase.FileBaseUtil;
+import com.css.app.xlgl.entity.XlglExamFile;
 import com.css.app.xlgl.entity.XlglExamTopic;
+import com.css.app.xlgl.service.XlglExamFileService;
 import com.css.app.xlgl.service.XlglExamTopicService;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.PageUtils;
 import com.css.base.utils.Response;
 import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
+
+import cn.com.css.filestore.impl.HTTPFile;
 
 
 /**
@@ -53,8 +59,8 @@ import com.github.pagehelper.PageHelper;
 public class XlglExamTopicController {
 	@Autowired
 	private XlglExamTopicService xlglExamTopicService;
-	@Value("${filePath}")
-	private String filePath;
+	@Autowired
+	private XlglExamFileService xlglExamFileService;
 	/**
 	 * 列表
 	 */
@@ -63,11 +69,10 @@ public class XlglExamTopicController {
 	public void list(Integer page, Integer limit,String subjectId,
 			String topicType,String topicColumn){
 		Map<String, Object> map = new HashMap<>();
-		PageHelper.startPage(page, limit);
 		map.put("subjectId", subjectId);
 		map.put("topicType", topicType);
 		map.put("topicColumn", topicColumn);
-		
+		PageHelper.startPage(page, limit);
 		//查询列表数据
 		List<XlglExamTopic> xlglExamTopicList = xlglExamTopicService.queryList(map);
 		
@@ -124,88 +129,75 @@ public class XlglExamTopicController {
 	}
 	
 	 /**
-	  *@param topicType 1：单选，2：多选，3：判断，4：填空，5：简答。
+	  * 文件下载接口
 	  * 下载模板
 	  * */
 	@RequestMapping("/downloadFile")
-	 public void downloadFile(HttpServletRequest request,HttpServletResponse response,String topicType) {
-		 FileOutputStream fout = null;
-		 String fileName = "题目模板";
-		 Workbook wb = new HSSFWorkbook();
-		 CellStyle style = wb.createCellStyle();
-		 style.setAlignment(HorizontalAlignment.CENTER);
-		 if(topicType !=null &&(topicType.equals("1")||topicType.equals("2"))) {
-			 String type = "单选题";
-			 if(topicType.equals("2")) {
-				 type = "多选题";
-			 }
-			 fileName =fileName+"-"+type+".xls";
-			 Sheet sheet = wb.createSheet(type);
-			 CellRangeAddress cellRangeAddress = new CellRangeAddress(0,0,0,6);
-			 sheet.addMergedRegion(cellRangeAddress);
-			 Row row = sheet.createRow(0);
-			 row.createCell(0).setCellValue(type);
-			 Row row1 = sheet.createRow(1);
-			 row1.createCell(0).setCellValue("题目");
-			 row1.createCell(1).setCellValue("A");
-			 row1.createCell(2).setCellValue("B");
-			 row1.createCell(3).setCellValue("C");
-			 row1.createCell(4).setCellValue("D");
-			 row1.createCell(5).setCellValue("答案");
-		 }else if(topicType !=null &&(topicType.equals("3")||topicType.equals("4"))) {
-			 String type = "判断题";
-			 if(topicType.equals("4")) {
-				 type = "填空题";
-			 }
-			 fileName =fileName+"-"+type+".xls";
-			 Sheet sheet = wb.createSheet(type);
-			 CellRangeAddress cellRangeAddress = new CellRangeAddress(0,0,0,6);
-			 sheet.addMergedRegion(cellRangeAddress);
-			 Row row = sheet.createRow(0);
-			 row.createCell(0).setCellValue(type);
-			 Row row1 = sheet.createRow(1);
-			 row1.createCell(0).setCellValue("题目");
-			 row1.createCell(1).setCellValue("答案");
-		 }
-		 File tempFile=new File(filePath,fileName);
-		 Map<String,Object> resultMap =new HashMap<String,Object>();
-		 try {
-			 fout = new FileOutputStream(tempFile.getAbsolutePath());
-			 FileInputStream is = new FileInputStream(tempFile.getAbsolutePath());
-			 is.close();
-			 wb.write(fout);
-			 fout.flush();
-			 fout.flush();
-			 wb.close();
-			 resultMap.put("code","200");
-			 resultMap.put("fileUrl", tempFile.getAbsoluteFile());
-			 resultMap.put("fileName",tempFile.getName());
-			 resultMap.put("result","success");
-		} catch (IOException e) {
-			e.printStackTrace();
-			Response.error();
-		}finally {
-		      if (fout != null) {
-			        try {
-						fout.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-			      }
-			    }
-		 Response.json(resultMap);
-	 }
-	 
+	 public void downloadFile(String fileId) {
+		HTTPFile httpFile = new HTTPFile(fileId);
+		String fileName = httpFile.getFileName();
+		Response.download(fileName, httpFile.getInputSteam());
+	}
+	
+	/**
+	 * 模板文件上传接口
+	 * @param file
+	 */
+	@ResponseBody
+	@RequestMapping("/upLoadFile")
+	public void upLoad(@RequestParam(value="file",required = false) MultipartFile file,String fileType) {
+		JSONObject json = new JSONObject();
+		Map<String, Object> map = new HashMap<>();
+		map.put("fileType", fileType);
+		String fileId = FileBaseUtil.fileServiceUpload(file);
+		json.put("fileId", fileId);
+		List<XlglExamFile> queryList = xlglExamFileService.queryList(map);
+		if(queryList.size()>0) {
+			XlglExamFile xlglExamFile = queryList.get(0);
+			if(xlglExamFile.getFileType().equals(fileType)) {
+				HTTPFile httpFile = new HTTPFile(xlglExamFile.getFileId());
+				httpFile.delete();
+				xlglExamFile.setFileId(fileId);
+				xlglExamFile.setFileName(file.getName());
+				xlglExamFile.setCreateDate(new Date());
+				xlglExamFile.setCreateUser(CurrentUser.getUserId());
+				xlglExamFileService.update(xlglExamFile);
+			}
+		}else {
+			XlglExamFile xlglExamFile = new XlglExamFile();
+			xlglExamFile.setId(UUIDUtils.random());
+			xlglExamFile.setFileId(fileId);
+			xlglExamFile.setFileName(file.getName());
+			xlglExamFile.setFileType(fileType);
+			xlglExamFile.setCreateDate(new Date());
+			xlglExamFile.setCreateUser(CurrentUser.getUserId());
+			xlglExamFileService.save(xlglExamFile);
+		}
+		Response.json(json);
+	}
+	
 	 /**
 	  * 题目导入
 	 * @throws Exception 
 	  * */
+	 @ResponseBody
 	 @RequestMapping("/readExcelSave")
-	 public void readExcelSave(HttpServletRequest request,String subjectId, @RequestParam(required = false) MultipartFile file)  {
+	 public void readExcelSave(HttpServletRequest request,String subjectId, @RequestParam(value="file",required = false) MultipartFile file)  {
+		 JSONObject json = new JSONObject();
 		 try {
-			InputStream fileInputStream = new FileInputStream(file.getOriginalFilename());
+			String fileId = FileBaseUtil.fileServiceUpload(file);
+			HTTPFile httpFile = new HTTPFile(fileId);
+			InputStream fileInputStream = httpFile.getInputSteam();
 			List<XlglExamTopic> readExcelLists = xlglExamTopicService.readExcelLists(fileInputStream,subjectId);
 			xlglExamTopicService.saveList(readExcelLists);
+			json.put("fileId", fileId);
+			XlglExamFile xlglExamFile = new XlglExamFile();
+			xlglExamFile.setId(UUIDUtils.random());
+			xlglExamFile.setFileId(fileId);
+			xlglExamFile.setFileName(file.getName());
+			xlglExamFile.setCreateDate(new Date());
+			xlglExamFile.setCreateUser(CurrentUser.getUserId());
+			xlglExamFileService.save(xlglExamFile);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			Response.error();
@@ -213,7 +205,7 @@ public class XlglExamTopicController {
 			e.printStackTrace();
 			Response.error();
 		}
-		 Response.ok();
+		 Response.json(json);
 	 } 
 	 
 	

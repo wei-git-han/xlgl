@@ -72,7 +72,7 @@ public class XlglExamTopicServiceImpl implements XlglExamTopicService {
 			if(title.equals("多选题")) {
 				type = "2";
 			}
-			for(int i = 2 ;i<sheet.getLastRowNum(); i ++) {
+			for(int i = 2 ;i<=sheet.getLastRowNum(); i ++) {
 				XlglExamTopic xlglExamTopic = new XlglExamTopic ();
 				xlglExamTopic.setId(UUIDUtils.random());
 				String steCell = sheet.getRow(i).getCell(0).getStringCellValue(); //题目
@@ -97,7 +97,7 @@ public class XlglExamTopicServiceImpl implements XlglExamTopicService {
 			if(title.equals("填空题")) {
 				type = "4";
 			}
-			for(int i = 2 ;i<sheet.getLastRowNum(); i ++) {
+			for(int i = 2 ;i<=sheet.getLastRowNum(); i ++) {
 				XlglExamTopic xlglExamTopic = new XlglExamTopic ();
 				String steCell = sheet.getRow(i).getCell(0).getStringCellValue(); //题目
 				xlglExamTopic.setTopicColumn(steCell);
@@ -112,6 +112,8 @@ public class XlglExamTopicServiceImpl implements XlglExamTopicService {
 				list.add(xlglExamTopic);
 			}	
 		}
+		wb.close();
+		is.close();
 		return list;
 	}
 

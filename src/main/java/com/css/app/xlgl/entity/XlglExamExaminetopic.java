@@ -43,6 +43,11 @@ public class XlglExamExaminetopic implements Serializable {
 	private Date updateDate;
 	//排序
 	private int sort;
+	//补考id
+	private String makeUpId;
+	//补考状态 0 :不是补考题 ， 1:补考题
+	private String makeUpStatus;
+	
 	/**
 	 * 设置：
 	 */
@@ -204,6 +209,18 @@ public class XlglExamExaminetopic implements Serializable {
 	}
 	public void setSort(int sort) {
 		this.sort = sort;
+	}
+	public String getMakeUpId() {
+		return makeUpId;
+	}
+	public void setMakeUpId(String makeUpId) {
+		this.makeUpId = makeUpId;
+	}
+	public String getMakeUpStatus() {
+		return makeUpStatus;
+	}
+	public void setMakeUpStatus(String makeUpStatus) {
+		this.makeUpStatus = makeUpStatus;
 	}
 	
 }

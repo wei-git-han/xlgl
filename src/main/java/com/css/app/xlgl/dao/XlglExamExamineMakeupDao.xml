@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.XlglExamExamineMakeupDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglExamExamineMakeup">
+		select * from XLGL_EXAM_EXAMINE_MAKEUP where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglExamExamineMakeup">
+		select * from XLGL_EXAM_EXAMINE_MAKEUP
+		where 1 = 1 
+		<if test="examineId != null and examineId != ''">
+			and EXAMINE_ID = #{examineId}
+		</if>
+		order by sort desc 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_EXAM_EXAMINE_MAKEUP 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglExamExamineMakeup">
+		insert into XLGL_EXAM_EXAMINE_MAKEUP
+		(
+			"id", 
+			"EXAMINE_ID", 
+			"MAKEUP_START_DATE",
+			"MAKEUP_END_DATE",
+			"SORT", 
+			"CREATE_USER", 
+			"UPDATE_DATE", 
+			"UPDATE_USER", 
+			"CREATE_DATE"
+		)
+		values
+		(
+			#{id}, 
+			#{examineId},
+			#{makeUpStartDate}, 
+			#{makeUpEndDate}, 
+			#{sort}, 
+			#{createUser}, 
+			#{updateDate}, 
+			#{updateUser}, 
+			#{createDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.XlglExamExamineMakeup">
+		update XLGL_EXAM_EXAMINE_MAKEUP 
+		<set>
+			<if test="examineId != null">"EXAMINE_ID" = #{examineId}, </if>
+			<if test="sort != null">"SORT" = #{sort}, </if>			
+			<if test="makeUpStartDate != null">"MAKEUP_START_DATE" = #{makeUpStartDate}, </if>
+			<if test="makeUpEndDate != null">"MAKEUP_END_DATE" = #{makeUpEndDate}, </if>	
+			<if test="createUser != null">"CREATE_USER" = #{createUser}, </if>
+			<if test="updateDate != null">"UPDATE_DATE" = #{updateDate}, </if>
+			<if test="updateUser != null">"UPDATE_USER" = #{updateUser}, </if>
+			<if test="createDate != null">"CREATE_DATE" = #{createDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_EXAM_EXAMINE_MAKEUP where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_EXAM_EXAMINE_MAKEUP where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

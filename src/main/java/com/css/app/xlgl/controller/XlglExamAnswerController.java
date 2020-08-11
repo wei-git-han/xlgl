@@ -180,6 +180,7 @@ public class XlglExamAnswerController {
 		jsonObject.put("answerList", parseArray);
 		Map<String, Object> map = new HashMap<String,Object>();
 		map.put("examineId", queryObject.getExamineId());
+		map.put("makeUpStatus", "0");
 		List<XlglExamExaminetopicDto> listCount = xlglExamExaminetopicService.findCountBySubjectId(map);
 		jsonObject.put("listCount", listCount);
 		Response.json(jsonObject);
