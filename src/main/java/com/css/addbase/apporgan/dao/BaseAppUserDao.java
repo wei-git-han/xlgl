@@ -108,10 +108,10 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 
 	List<BaseAppUser> queryAllUserIdAndName(String deptId);
 
-	@Select("select  t.*,d.BAOMING from BASE_APP_USER t left join XLGL_SUB_DOC_TRACKING d on t.USER_ID = d.RECEIVER_ID where  t.ORGANID in  (  select id from BASE_APP_ORGAN start with ID = #{0} and ISDELETE=0 connect by prior ID = PARENT_ID )")
-	List<BaseAppUser> queryAllUserByDeptId(String deptId);
+	@Select("select  t.*,d.BAOMING from BASE_APP_USER t left join XLGL_SUB_DOC_TRACKING d on t.USER_ID = d.RECEIVER_ID and and d.INFO_ID = #{1} where  t.ORGANID in  (  select id from BASE_APP_ORGAN start with ID = #{0} and ISDELETE=0 connect by prior ID = PARENT_ID )")
+	List<BaseAppUser> queryAllUserByDeptId(String deptId,String infoId);
 
-	@Select("select  t.*,d.BAOMING from BASE_APP_USER t left join XLGL_SUB_DOC_TRACKING d on t.USER_ID = d.RECEIVER_ID where  t.ORGANID in  (  select id from BASE_APP_ORGAN where ID = #{0})")
-	List<BaseAppUser> queryAllJuUserByDeptId(String deptId);
+	@Select("select  t.*,d.BAOMING from BASE_APP_USER t left join XLGL_SUB_DOC_TRACKING d on t.USER_ID = d.RECEIVER_ID and and d.INFO_ID = #{1} where  t.ORGANID in  (  select id from BASE_APP_ORGAN where ID = #{0})")
+	List<BaseAppUser> queryAllJuUserByDeptId(String deptId,String infoId);
 	
 }

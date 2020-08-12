@@ -136,7 +136,7 @@ public class XlglXlzzInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getDateForDept")
-	public void getDateForDept() {
+	public void getDateForDept(String infoId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
 		map.put("orgId", orgId);
@@ -150,9 +150,9 @@ public class XlglXlzzInfoController {
 				String deptId = list.get(i).getId();
 				String deptName = list.get(i).getName();
 				if (i == 0) {
-					listUser = baseAppUserService.queryAllJuUserByDeptId(deptId);
+					listUser = baseAppUserService.queryAllJuUserByDeptId(deptId,infoId);
 				} else {
-					listUser = baseAppUserService.queryAllUserByDeptId(deptId);
+					listUser = baseAppUserService.queryAllUserByDeptId(deptId,infoId);
 				}
 				jsonObject.put("listUser",listUser);
 				jsonObject.put("deptName",deptName);
