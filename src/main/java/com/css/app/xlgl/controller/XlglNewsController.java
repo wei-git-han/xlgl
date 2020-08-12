@@ -116,6 +116,17 @@ public class XlglNewsController {
 		xlglNewsService.update(xlglNews);
 		Response.json("result", "success");
 	}
+
+
+	@ResponseBody
+	@RequestMapping("/topCancle")
+	public void topCancle(String id){
+		XlglNews xlglNews  = xlglNewsService.queryObject(id);
+		xlglNews.setIsTop(0);
+		xlglNewsService.update(xlglNews);
+		Response.json("result","success");
+
+	}
 	
 	
 	/**
