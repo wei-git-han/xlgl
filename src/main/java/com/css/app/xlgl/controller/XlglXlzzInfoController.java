@@ -163,5 +163,20 @@ public class XlglXlzzInfoController {
 		Response.json("listAllUser",listAllUser);
 	}
 
+	/**
+	 *更改个人训练情况
+	 * @param infoId 文id
+	 * @param userId  用户id
+	 * @param status  0未报名，1已报名，2延后
+	 */
+	@ResponseBody
+	@RequestMapping("/updateStatus")
+	public void updateStatus(String infoId,String userId,String status){
+		XlglSubDocTracking xlglSubDocTracking = xlglSubDocTrackingService.queryStatusByInfoIdAndUserId(infoId,userId);
+		xlglSubDocTracking.setBaoming(status);
+		xlglSubDocTrackingService.update(xlglSubDocTracking);
+		Response.json("result","success");
+	}
+
 	
 }
