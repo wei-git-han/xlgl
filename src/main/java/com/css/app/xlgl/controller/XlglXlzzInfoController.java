@@ -1,5 +1,6 @@
 package com.css.app.xlgl.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,6 +134,34 @@ public class XlglXlzzInfoController {
 	 * @param request
 	 * @return
 	 */
+	@ResponseBody
+	@RequestMapping("/getDateForDept")
+	public void getDateForDept() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
+		map.put("orgId", orgId);
+		//获取了该局所有的部门id
+		List<BaseAppOrgan> list = baseAppOrganService.queryAllDeptId(orgId);
+		List listAllUser = new ArrayList();
+		if (list != null && list.size() > 0) {
+			for (int i = 0; i < list.size(); i++) {
+				List<BaseAppUser> listUser = null;
+				JSONObject jsonObject = new JSONObject();
+				String deptId = list.get(i).getId();
+				String deptName = list.get(i).getName();
+				if (i == 0) {
+					listUser = baseAppUserService.queryAllJuUserByDeptId(deptId);
+				} else {
+					listUser = baseAppUserService.queryAllUserByDeptId(deptId);
+				}
+				jsonObject.put("listUser",listUser);
+				jsonObject.put("deptName",deptName);
+				listAllUser.add(jsonObject);
+			}
+
+		}
+		Response.json("listAllUser",listAllUser);
+	}
 
 	
 }

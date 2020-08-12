@@ -109,6 +109,10 @@ public interface BaseAppUserService {
 	List<BaseAppUser> queryUsers(String deptId);
 
 	List<BaseAppUser> queryAllUserIdAndName(String deptId);
-	
+
+	List<BaseAppUser> queryAllUserByDeptId(String deptId);
+
+	List<BaseAppUser> queryAllJuUserByDeptId(String deptId);
+
 	
 }
