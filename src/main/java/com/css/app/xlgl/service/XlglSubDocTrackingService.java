@@ -30,4 +30,5 @@ public interface XlglSubDocTrackingService {
 	XlglSubDocTracking queryInfo(String id,String userId);
 
 	XlglSubDocTracking querybaoming(String infoId,String subId,String userId);
+
 }

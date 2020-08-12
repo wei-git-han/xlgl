@@ -56,5 +56,4 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 	public XlglSubDocTracking querybaoming(String infoId,String subId,String userId){
 		return xlglSubDocTrackingDao.querybaoming(infoId,subId,userId);
 	}
-	
 }

@@ -117,7 +117,10 @@ public class XlglNewsController {
 		Response.json("result", "success");
 	}
 
-
+	/**
+	 * 取消置顶
+	 * @param id
+	 */
 	@ResponseBody
 	@RequestMapping("/topCancle")
 	public void topCancle(String id){

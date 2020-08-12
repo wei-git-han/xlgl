@@ -4,11 +4,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
+import com.css.addbase.appconfig.service.BaseAppConfigService;
+import com.css.addbase.apporgan.entity.BaseAppOrgan;
+import com.css.addbase.apporgan.entity.BaseAppUser;
+import com.css.addbase.apporgan.service.BaseAppOrganService;
+import com.css.addbase.apporgan.service.BaseAppUserService;
+import com.css.addbase.apporgan.util.OrgUtil;
+import com.css.addbase.apporgmapped.service.BaseAppOrgMappedService;
+import com.css.addbase.orgservice.OrgService;
 import com.css.app.xlgl.entity.XlglSubDocTracking;
 import com.css.app.xlgl.entity.XlglXlzzInfo;
 import com.css.app.xlgl.service.XlglSubDocTrackingService;
 import com.css.app.xlgl.service.XlglXlzzInfoService;
-import com.css.base.utils.CurrentUser;
+import com.css.base.utils.*;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,10 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.stereotype.Controller;
 
-import com.css.base.utils.PageUtils;
-import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
-import com.css.base.utils.Response;
 
 
 /**
@@ -37,6 +43,19 @@ public class XlglXlzzInfoController {
 	private XlglXlzzInfoService xlglXlzzInfoService;
 	@Autowired
 	private XlglSubDocTrackingService xlglSubDocTrackingService;
+	@Autowired
+	private BaseAppOrganService baseAppOrganService;
+
+	@Autowired
+	private BaseAppUserService baseAppUserService;
+
+	@Autowired
+	private BaseAppOrgMappedService baseAppOrgMappedService;
+
+	@Autowired
+	private OrgService orgService;
+	@Autowired
+	private BaseAppConfigService baseAppConfigService;
 	
 	/**
 	 * 列表
@@ -107,5 +126,13 @@ public class XlglXlzzInfoController {
 		
 		Response.ok();
 	}
+
+
+	/**
+	 * 获取当前登录人所在部门的训练跟踪情况
+	 * @param request
+	 * @return
+	 */
+
 	
 }

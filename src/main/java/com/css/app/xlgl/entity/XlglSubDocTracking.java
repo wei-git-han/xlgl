@@ -52,7 +52,7 @@ public class XlglSubDocTracking implements Serializable {
 
 	private String infoId;
 
-	//报名 0未报名，1已报名
+	//报名 0未报名，1已报名,2延后
 	private String baoming;
 
 	//未报名原因
