@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,6 +49,8 @@ import com.github.pagehelper.PageHelper;
 @Controller
 @RequestMapping("app/xlgl/xlglexamexamine")
 public class XlglExamExamineController {
+	private final Logger logger = LoggerFactory.getLogger(XlglNewsController.class);
+	
 	@Autowired
 	private XlglExamExamineService xlglExamExamineService;
 	@Autowired
@@ -214,6 +218,8 @@ public class XlglExamExamineController {
 	@RequestMapping("/delete")
 	public void delete(String[] ids){
 		xlglExamExamineService.deleteBatch(ids);
+		String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		logger.info("当前删除操作人："+CurrentUser.getUsername()+"---id:"+CurrentUser.getUserId()+"--时间是："+date);
 		/*for (int i = 0; i < ids.length; i++) {
 			xlglExamExaminetopicService.deleteByExamineId(ids[i]);
 		}*/

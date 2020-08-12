@@ -1,9 +1,13 @@
 package com.css.app.xlgl.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +38,8 @@ import com.github.pagehelper.PageHelper;
 @Controller
 @RequestMapping("app/xlgl/xlglexammainanswer")
 public class XlglExamMainAnswerController {
+	private final Logger logger = LoggerFactory.getLogger(XlglNewsController.class);
+	
 	@Autowired
 	private XlglExamMainAnswerService xlglExamMainAnswerService;
 	@Autowired
@@ -92,8 +98,8 @@ public class XlglExamMainAnswerController {
 	 * 信息
 	 */
 	@ResponseBody
-	@RequestMapping("/info/{id}")
-	public void info(@PathVariable("id") String id){
+	@RequestMapping("/info")
+	public void info(String id){
 		XlglExamMainAnswer xlglExamMainAnswer = xlglExamMainAnswerService.queryObject(id);
 		Response.json("xlglExamMainAnswer", xlglExamMainAnswer);
 	}
@@ -103,7 +109,7 @@ public class XlglExamMainAnswerController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public void save(@RequestBody XlglExamMainAnswer xlglExamMainAnswer){
+	public void save(XlglExamMainAnswer xlglExamMainAnswer){
 		xlglExamMainAnswer.setId(UUIDUtils.random());
 		xlglExamMainAnswerService.save(xlglExamMainAnswer);
 		
@@ -115,7 +121,7 @@ public class XlglExamMainAnswerController {
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	public void update(@RequestBody XlglExamMainAnswer xlglExamMainAnswer){
+	public void update(XlglExamMainAnswer xlglExamMainAnswer){
 		xlglExamMainAnswerService.update(xlglExamMainAnswer);
 		
 		Response.ok();
@@ -126,9 +132,10 @@ public class XlglExamMainAnswerController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	public void delete(@RequestBody String[] ids){
+	public void delete(String[] ids){
 		xlglExamMainAnswerService.deleteBatch(ids);
-		
+		String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		logger.info("当前删除操作人："+CurrentUser.getUsername()+"---id:"+CurrentUser.getUserId()+"--时间是："+date);
 		Response.ok();
 	}
 	/**

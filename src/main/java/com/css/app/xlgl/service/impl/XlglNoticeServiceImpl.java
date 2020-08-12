@@ -1,5 +1,7 @@
 package com.css.app.xlgl.service.impl;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +48,46 @@ public class XlglNoticeServiceImpl implements XlglNoticeService {
 	@Override
 	public void deleteBatch(String[] ids){
 		xlglNoticeDao.deleteBatch(ids);
+	}
+
+	@Override
+	public List<XlglNotice> queryDrafts(HashMap<String, Object> map) {
+		return xlglNoticeDao.queryDrafts(map);
+	}
+
+	@Override
+	public int queryTotalYear() {
+		return xlglNoticeDao.queryTotalYear();
+	}
+
+	@Override
+	public int queryTotalMonth() {
+		return xlglNoticeDao.queryTotalMonth();
+	}
+
+	@Override
+	public int queryTotalWeek() {
+		return xlglNoticeDao.queryTotalWeek();
+	}
+
+	@Override
+	public List<LinkedHashMap<String, Integer>> queryTotalYearByOrgan() {
+		return xlglNoticeDao.queryTotalYearByOrgan();
+	}
+
+	@Override
+	public List<LinkedHashMap<String, Integer>> queryTotalMonthByOrgan() {
+		return xlglNoticeDao.queryTotalMonthByOrgan();
+	}
+
+	@Override
+	public List<LinkedHashMap<String, Integer>> queryTotalWeekByOrgan() {
+		return xlglNoticeDao.queryTotalWeekByOrgan();
+	}
+
+	@Override
+	public XlglNotice queryNowTop() {
+		return xlglNoticeDao.queryNowTop();
 	}
 	
 }

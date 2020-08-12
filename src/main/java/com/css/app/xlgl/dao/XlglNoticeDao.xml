@@ -2,13 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.css.app.xlgl.dao.XlglNoticeDao">
-
+	
+	<resultMap id="totalMap" type="HashMap">
+		<result property="releaseOrgan" column="releaseOrgan" jdbcType="VARCHAR" ></result>
+		<result property="nums" column="nums" jdbcType="INTEGER" ></result>
+	</resultMap>
+	
 	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglNotice">
 		select * from XLGL_NOTICE where ID = #{value}
 	</select>
 
 	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglNotice">
 		select * from XLGL_NOTICE 
+		where 1=1
+		<if test="releaseOrganid != null and releaseOrganid != '' ">
+			and RELEASE_ORGANID = #{releaseOrganid}
+		</if>
+		<if test="type != null and type != ''">
+			and TYPE = #{type}
+		</if>
+		order by is_top desc, RELEASE_TIME desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
@@ -70,5 +83,78 @@
 			#{id}
 		</foreach>
 	</delete>
+	
+		<!--查询草稿箱  -->
+	<select id="queryDrafts" resultType="com.css.app.xlgl.entity.XlglNews">
+		select * from XLGL_NOTICE where 1 = 1
+		<!-- <if test="releaseUserid != null and releaseUserid != '' ">
+			and RELEASE_USERID = #{releaseUserid}
+		</if> -->
+		<if test="releaseOrganid != null and releaseOrganid != '' ">
+			and RELEASE_ORGANID = #{releaseOrganid}
+		</if>
+		order by is_top desc, RELEASE_TIME desc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<!--查询本年度发布通知公告数  -->
+ 	<select id="queryTotalYear" resultType="int">
+		select count(*) from XLGL_NOTICE where  to_char(RELEASE_TIME,'yyyy')=to_char(sysdate,'yyyy')
+	</select>
+	
+	<!--查询本月发布通知公告数  -->
+ 	<select id="queryTotalMonth" resultType="int">
+		select count(*) from XLGL_NOTICE where  to_char(RELEASE_TIME,'yyyy-MM')=to_char(sysdate,'yyyy-MM')
+	</select>
+	
+	<!--查询本周发布通知公告数  -->
+ 	<select id="queryTotalWeek" resultType="int">
+		select 
+			count(*) 
+		from 
+			XLGL_NOTICE 
+		where   
+			RELEASE_TIME &gt;= TRUNC(NEXT_DAY(SYSDATE-8,1)+1) 
+		AND RELEASE_TIME &lt; TRUNC(NEXT_DAY(SYSDATE-8,1)+7)+1
+	</select>
+	
+	<!--根据局统计本年度发布通知公告数  -->
+	<select id="queryTotalYearByOrgan" resultMap="totalMap">
+		select 
+			RELEASE_ORGAN releaseOrgan,
+			count(*) nums 
+		from 
+			XLGL_NOTICE 
+		where   
+			to_char(RELEASE_TIME,'yyyy') = to_char(sysdate,'yyyy') 
+		group by RELEASE_ORGAN
+	</select>
+	
+	<!--根据局统计本月发布通知公告数  -->
+	<select id="queryTotalMonthByOrgan" resultMap="totalMap">
+		select 
+			RELEASE_ORGAN releaseOrgan,
+			count(*) nums 
+		from 
+			XLGL_NOTICE 
+		where  
+			to_char(RELEASE_TIME,'yyyy-MM') = to_char(sysdate,'yyyy-MM') 
+		group by RELEASE_ORGAN
+	</select>
+	
+	<!--查询本周发布通知公告数  -->
+ 	<select id="queryTotalWeekByOrgan" resultMap="totalMap">
+		select 
+			RELEASE_ORGAN releaseOrgan, 
+			count(*) nums 
+		from 
+			XLGL_NOTICE 
+		where  
+			RELEASE_TIME &gt;= TRUNC(NEXT_DAY(SYSDATE-8,1)+1) 
+		AND RELEASE_TIME &lt; TRUNC(NEXT_DAY(SYSDATE-8,1)+7)+1 
+		group by RELEASE_ORGAN
+	</select>
 
 </mapper>

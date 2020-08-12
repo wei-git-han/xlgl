@@ -1,10 +1,13 @@
 package com.css.app.xlgl.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +44,8 @@ import com.github.pagehelper.PageHelper;
 @Controller
 @RequestMapping("app/xlgl/xlglexamanswer")
 public class XlglExamAnswerController {
+	private final Logger logger = LoggerFactory.getLogger(XlglNewsController.class);
+	
 	@Autowired
 	private XlglExamAnswerService xlglExamAnswerService;
 	@Autowired
@@ -70,8 +75,8 @@ public class XlglExamAnswerController {
 	 * 信息
 	 */
 	@ResponseBody
-	@RequestMapping("/info/{id}")
-	public void info(@PathVariable("id") String id){
+	@RequestMapping("/info")
+	public void info(String id){
 		XlglExamAnswer xlglExamAnswer = xlglExamAnswerService.queryObject(id);
 		Response.json("xlglExamAnswer", xlglExamAnswer);
 	}
@@ -81,7 +86,7 @@ public class XlglExamAnswerController {
 	 */
 	@ResponseBody
 	@RequestMapping("/view/info")
-	public void viewinfo( String examineId){
+	public void viewinfo(String examineId){
 		JSONObject jsonObject = new JSONObject();
 		Map<String, Object> map = new HashMap<>();
 		map.put("examineId", examineId);
@@ -97,7 +102,7 @@ public class XlglExamAnswerController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public void save(@RequestBody XlglExamAnswer xlglExamAnswer){
+	public void save(XlglExamAnswer xlglExamAnswer){
 		xlglExamAnswer.setId(UUIDUtils.random());
 		xlglExamAnswerService.save(xlglExamAnswer);
 		
@@ -109,7 +114,7 @@ public class XlglExamAnswerController {
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	public void update(@RequestBody XlglExamAnswer xlglExamAnswer){
+	public void update(XlglExamAnswer xlglExamAnswer){
 		xlglExamAnswerService.update(xlglExamAnswer);
 		
 		Response.ok();
@@ -120,9 +125,10 @@ public class XlglExamAnswerController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	public void delete(@RequestBody String[] ids){
+	public void delete(String[] ids){
 		xlglExamAnswerService.deleteBatch(ids);
-		
+		String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		logger.info("当前删除操作人："+CurrentUser.getUsername()+"---id:"+CurrentUser.getUserId()+"--时间是："+date);
 		Response.ok();
 	}
 	/**

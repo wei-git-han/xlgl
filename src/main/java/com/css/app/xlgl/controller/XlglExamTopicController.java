@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +23,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -41,6 +44,7 @@ import com.css.app.xlgl.service.XlglExamTopicService;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.PageUtils;
 import com.css.base.utils.Response;
+import com.css.base.utils.StringUtils;
 import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 
@@ -57,6 +61,8 @@ import cn.com.css.filestore.impl.HTTPFile;
 @Controller
 @RequestMapping("app/xlgl/xlglexamtopic")
 public class XlglExamTopicController {
+	private final Logger logger = LoggerFactory.getLogger(XlglNewsController.class);
+	
 	@Autowired
 	private XlglExamTopicService xlglExamTopicService;
 	@Autowired
@@ -124,7 +130,8 @@ public class XlglExamTopicController {
 	@RequestMapping("/delete")
 	public void delete(String[] ids){
 		xlglExamTopicService.deleteBatch(ids);
-		
+		String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		logger.info("当前删除操作人："+CurrentUser.getUsername()+"---id:"+CurrentUser.getUserId()+"--时间是："+date);
 		Response.ok();
 	}
 	
@@ -146,34 +153,41 @@ public class XlglExamTopicController {
 	@ResponseBody
 	@RequestMapping("/upLoadFile")
 	public void upLoad(@RequestParam(value="file",required = false) MultipartFile file,String fileType) {
+		String originalFilename = file.getOriginalFilename();
 		JSONObject json = new JSONObject();
 		Map<String, Object> map = new HashMap<>();
-		map.put("fileType", fileType);
-		String fileId = FileBaseUtil.fileServiceUpload(file);
-		json.put("fileId", fileId);
-		List<XlglExamFile> queryList = xlglExamFileService.queryList(map);
-		if(queryList.size()>0) {
-			XlglExamFile xlglExamFile = queryList.get(0);
-			if(xlglExamFile.getFileType().equals(fileType)) {
-				HTTPFile httpFile = new HTTPFile(xlglExamFile.getFileId());
-				httpFile.delete();
+		if(StringUtils.isNotBlank(fileType)&& !fileType.equals("undefined")) {
+			map.put("fileType", fileType);
+			String fileId = FileBaseUtil.fileServiceUpload(file);
+			json.put("fileId", fileId);
+			List<XlglExamFile> queryList = xlglExamFileService.queryList(map);
+			if(queryList.size()>0) {
+				XlglExamFile xlglExamFile = queryList.get(0);
+				if(xlglExamFile.getFileType().equals(fileType)) {
+					HTTPFile httpFile = new HTTPFile(xlglExamFile.getFileId());
+					httpFile.delete();
+					xlglExamFile.setFileId(fileId);
+					xlglExamFile.setFileName(originalFilename);
+					xlglExamFile.setCreateDate(new Date());
+					xlglExamFile.setCreateUser(CurrentUser.getUserId());
+					xlglExamFileService.update(xlglExamFile);
+				}
+			}else {
+				XlglExamFile xlglExamFile = new XlglExamFile();
+				xlglExamFile.setId(UUIDUtils.random());
 				xlglExamFile.setFileId(fileId);
-				xlglExamFile.setFileName(file.getName());
+				xlglExamFile.setFileName(originalFilename);
+				xlglExamFile.setFileType(fileType);
 				xlglExamFile.setCreateDate(new Date());
 				xlglExamFile.setCreateUser(CurrentUser.getUserId());
-				xlglExamFileService.update(xlglExamFile);
+				xlglExamFileService.save(xlglExamFile);
 			}
+			Response.json(json);
 		}else {
-			XlglExamFile xlglExamFile = new XlglExamFile();
-			xlglExamFile.setId(UUIDUtils.random());
-			xlglExamFile.setFileId(fileId);
-			xlglExamFile.setFileName(file.getName());
-			xlglExamFile.setFileType(fileType);
-			xlglExamFile.setCreateDate(new Date());
-			xlglExamFile.setCreateUser(CurrentUser.getUserId());
-			xlglExamFileService.save(xlglExamFile);
-		}
-		Response.json(json);
+			Response.error();
+		}	
+		
+		
 	}
 	
 	 /**

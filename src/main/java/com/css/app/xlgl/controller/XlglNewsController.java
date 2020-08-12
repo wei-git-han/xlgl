@@ -153,8 +153,6 @@ public class XlglNewsController {
 			xlglNewsService.update(xlglNews);
 			Response.json("xlglNews",xlglNews);
 		}
-		
-		
 	}
 	
 	

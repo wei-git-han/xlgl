@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.stereotype.Controller;
 
+import com.css.base.utils.CurrentUser;
 import com.css.base.utils.PageUtils;
 import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
@@ -37,6 +40,8 @@ import com.css.app.xlgl.service.XlglExamExaminetopicService;
 @Controller
 @RequestMapping("app/xlgl/xlglexamexaminemakeup")
 public class XlglExamExamineMakeupController {
+	private final Logger logger = LoggerFactory.getLogger(XlglNewsController.class);
+	
 	@Autowired
 	private XlglExamExamineMakeupService xlglExamExamineMakeupService;
 	@Autowired
@@ -65,8 +70,8 @@ public class XlglExamExamineMakeupController {
 	 * 信息
 	 */
 	@ResponseBody
-	@RequestMapping("/info/{id}")
-	public void info(@PathVariable("id") String id){
+	@RequestMapping("/info")
+	public void info(String id){
 		XlglExamExamineMakeup xlglExamExamineMakeup = xlglExamExamineMakeupService.queryObject(id);
 		Response.json("xlglExamExamineMakeup", xlglExamExamineMakeup);
 	}
@@ -123,7 +128,7 @@ public class XlglExamExamineMakeupController {
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	public void update(@RequestBody XlglExamExamineMakeup xlglExamExamineMakeup){
+	public void update(XlglExamExamineMakeup xlglExamExamineMakeup){
 		xlglExamExamineMakeupService.update(xlglExamExamineMakeup);
 		
 		Response.ok();
@@ -134,9 +139,10 @@ public class XlglExamExamineMakeupController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	public void delete(@RequestBody String[] ids){
+	public void delete(String[] ids){
 		xlglExamExamineMakeupService.deleteBatch(ids);
-		
+		String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		logger.info("当前删除操作人："+CurrentUser.getUsername()+"---id:"+CurrentUser.getUserId()+"--时间是："+date);
 		Response.ok();
 	}
 	
