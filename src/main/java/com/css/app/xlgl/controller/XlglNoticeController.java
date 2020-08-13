@@ -190,7 +190,7 @@ public class XlglNoticeController {
 	@RequestMapping("/top")
 	public void topping(String id,String istop){
 		XlglNotice queryObject = xlglNoticeService.queryObject(id);
-		if(StringUtils.isNotBlank(istop)) {
+		if(queryObject != null && StringUtils.isNotBlank(istop)) {
 			queryObject.setIsTop(Integer.parseInt(istop));
 		}
 		xlglNoticeService.update(queryObject);
