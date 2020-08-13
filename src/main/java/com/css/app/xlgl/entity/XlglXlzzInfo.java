@@ -53,6 +53,13 @@ public class XlglXlzzInfo implements Serializable {
 	//报名 0为报名，1已报名，2延后
 	private String baoming;
 
+	//训练科目
+	private String exerciseIssue;
+	//参加人员
+	private String joinPeople;
+	//训练时间
+	private String exerciseTime;
+
 	/**
 	 * 设置：
 	 */
@@ -264,5 +271,29 @@ public class XlglXlzzInfo implements Serializable {
 
 	public void setBaoming(String baoming) {
 		this.baoming = baoming;
+	}
+
+	public String getExerciseIssue() {
+		return exerciseIssue;
+	}
+
+	public void setExerciseIssue(String exerciseIssue) {
+		this.exerciseIssue = exerciseIssue;
+	}
+
+	public String getJoinPeople() {
+		return joinPeople;
+	}
+
+	public void setJoinPeople(String joinPeople) {
+		this.joinPeople = joinPeople;
+	}
+
+	public String getExerciseTime() {
+		return exerciseTime;
+	}
+
+	public void setExerciseTime(String exerciseTime) {
+		this.exerciseTime = exerciseTime;
 	}
 }

@@ -37,7 +37,10 @@
 			"BZ", 
 			"CREATE_TIME", 
 			"CREATOR", 
-			"STATUS"
+			"STATUS",
+			"EXERCISE_ISSUE",
+			"JOIN_PEOPLE",
+			"EXERCISE_TIME"
 		)
 		values
 		(
@@ -57,7 +60,10 @@
 			#{bz}, 
 			#{createTime}, 
 			#{creator}, 
-			#{status}
+			#{status},
+			#{exerciseIssue},
+			#{joinPeople},
+			#{exerciseTime}
 		)
 	</insert>
 	 
@@ -80,6 +86,9 @@
 			<if test="createTime != null">"CREATE_TIME" = #{createTime}, </if>
 			<if test="creator != null">"CREATOR" = #{creator}, </if>
 			<if test="status != null">"STATUS" = #{status}</if>
+			<if test="exerciseIssue != null">"EXERCISE_ISSUE" = #{exerciseIssue}</if>
+			<if test="joinPeople != null">"JOIN_PEOPLE" = #{joinPeople}</if>
+			<if test="exerciseTime != null">"EXERCISE_TIME" = #{exerciseTime}</if>
 		</set>
 		where ID = #{id}
 	</update>

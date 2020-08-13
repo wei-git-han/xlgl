@@ -1,9 +1,6 @@
 package com.css.app.xlgl.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.appconfig.service.BaseAppConfigService;
@@ -14,11 +11,14 @@ import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.addbase.apporgan.util.OrgUtil;
 import com.css.addbase.apporgmapped.service.BaseAppOrgMappedService;
 import com.css.addbase.orgservice.OrgService;
+import com.css.app.xlgl.entity.XlglPicture;
 import com.css.app.xlgl.entity.XlglSubDocTracking;
 import com.css.app.xlgl.entity.XlglXlzzInfo;
+import com.css.app.xlgl.service.XlglPictureService;
 import com.css.app.xlgl.service.XlglSubDocTrackingService;
 import com.css.app.xlgl.service.XlglXlzzInfoService;
 import com.css.base.utils.*;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,6 +59,8 @@ public class XlglXlzzInfoController {
 	private OrgService orgService;
 	@Autowired
 	private BaseAppConfigService baseAppConfigService;
+	@Autowired
+	private XlglPictureService xlglPictureService;
 	
 	/**
 	 * 列表
@@ -94,15 +96,50 @@ public class XlglXlzzInfoController {
 		xlglXlzzInfo.setBaoming(xlglSubDocTracking.getBaoming());
 		Response.json("xlglXlzzInfo", xlglXlzzInfo);
 	}
+
+	/**
+	 * 查询某个文件所有的图片
+	 * @param infoId
+	 */
+	@ResponseBody
+	@RequestMapping("/pictureList")
+	public void pictureList(String infoId){
+		List<XlglPicture> list = new ArrayList<XlglPicture>();
+		if(StringUtils.isNotBlank(infoId)){
+			HashMap<String,Object> map = new HashMap<String,Object>();
+			map.put("id",infoId);
+			if(StringUtils.isNotBlank(infoId)){
+				list = xlglPictureService.queryList(map);
+
+			}
+		}
+		Response.json("list",list);
+	}
 	
 	/**
 	 * 保存
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public void save(XlglXlzzInfo xlglXlzzInfo){
-		xlglXlzzInfo.setId(UUIDUtils.random());
+	public void save(XlglXlzzInfo xlglXlzzInfo,String pIds){
+		String fId = UUIDUtils.random();
+		xlglXlzzInfo.setId(fId);
+		xlglXlzzInfo.setCreateTime(new Date());
 		xlglXlzzInfoService.save(xlglXlzzInfo);
+		//保存上传图片，视频，文件
+		if(StringUtils.isNotBlank(pIds)) {
+			String[] ids = pIds.split(",");
+			xlglPictureService.deleteBatch(ids);
+			for (int i = 0; i < ids.length; i++) {
+				XlglPicture xlglPicture = new XlglPicture();
+				xlglPicture.setId(UUIDUtils.random());
+				xlglPicture.setFileId(fId);
+				xlglPicture.setIsFirst("0");
+				xlglPicture.setPictureId(ids[i]);
+				xlglPicture.setSort("0");
+				xlglPictureService.save(xlglPicture);
+			}
+		}
 		Response.json("result","success");
 	}
 	
@@ -133,7 +170,7 @@ public class XlglXlzzInfoController {
 
 	/**
 	 * 获取当前登录人所在部门的训练跟踪情况
-	 * @param request
+	 * @param infoId
 	 * @return
 	 */
 	@ResponseBody
