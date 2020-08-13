@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.XlglUrgentNoticeDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglUrgentNotice">
+		select * from XLGL_URGENT_NOTICE where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglUrgentNotice">
+		select * from XLGL_URGENT_NOTICE 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_URGENT_NOTICE 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglUrgentNotice">
+		insert into XLGL_URGENT_NOTICE
+		(
+			"ID", 
+			"RE_DEPT_ID", 
+			"RE_DEPT_NAME", 
+			"CREATOR", 
+			"CREATED_TIME", 
+			"CONTENT", 
+			"SEND_DEPT_ID"
+		)
+		values
+		(
+			#{id}, 
+			#{reDeptId}, 
+			#{reDeptName}, 
+			#{creator}, 
+			#{createdTime}, 
+			#{content}, 
+			#{sendDeptId}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.XlglUrgentNotice">
+		update XLGL_URGENT_NOTICE 
+		<set>
+			<if test="reDeptId != null">"RE_DEPT_ID" = #{reDeptId}, </if>
+			<if test="reDeptName != null">"RE_DEPT_NAME" = #{reDeptName}, </if>
+			<if test="creator != null">"CREATOR" = #{creator}, </if>
+			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
+			<if test="content != null">"CONTENT" = #{content}, </if>
+			<if test="sendDeptId != null">"SEND_DEPT_ID" = #{sendDeptId}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_URGENT_NOTICE where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_URGENT_NOTICE where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
