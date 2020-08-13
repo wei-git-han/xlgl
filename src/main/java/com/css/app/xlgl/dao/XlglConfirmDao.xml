@@ -7,6 +7,21 @@
 		select * from XLGL_CONFIRM where ID = #{value}
 	</select>
 
+	<select id="queryPerDeptInfo" resultType="com.css.app.xlgl.dto.XlglConfirmDto">
+		select
+        DEPTNAME,
+        DEPTID,
+        CONFIRM_COUNT,
+        NO_CONFIRM_COUNT,
+        QJ_CONNT,
+        STATUS
+        from
+        XLGL_CONFIRM where
+        DEPTID in
+        ( select   t.id  from   BASE_APP_ORGAN t start  with ID  = #{deptId} and ISDELETE=0 connect by prior ID = PARENT_ID  )
+        and INFOID = #{infoId}
+	</select>
+
 	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglConfirm">
 		select * from XLGL_CONFIRM 
 		<if test="offset != null and limit != null">
@@ -28,7 +43,10 @@
 			"STATUS", 
 			"CREATOR", 
 			"CREATEDTIME", 
-			"CREATORNAME"
+			"CREATORNAME",
+			"CONFIRM_COUNT",
+			"NO_CONFIRM_COUNT",
+			"QJ_CONNT"
 		)
 		values
 		(
@@ -39,7 +57,10 @@
 			#{status}, 
 			#{creator}, 
 			#{createdtime}, 
-			#{creatorname}
+			#{creatorname},
+			#{confirmCount},
+			#{noConfirmCount},
+			#{qjCount}
 		)
 	</insert>
 	 
@@ -53,6 +74,9 @@
 			<if test="creator != null">"CREATOR" = #{creator}, </if>
 			<if test="createdtime != null">"CREATEDTIME" = #{createdtime}, </if>
 			<if test="creatorname != null">"CREATORNAME" = #{creatorname}</if>
+			<if test="confirmCount != null">"CONFIRM_COUNT" = #{confirmCount}</if>
+			<if test="noConfirmCount != null">"NO_CONFIRM_COUNT" = #{noConfirmCount}</if>
+			<if test="qjCount != null">"QJ_CONNT" = #{qjCount}</if>
 		</set>
 		where ID = #{id}
 	</update>

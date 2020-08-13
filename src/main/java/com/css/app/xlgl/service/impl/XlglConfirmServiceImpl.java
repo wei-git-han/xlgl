@@ -1,6 +1,7 @@
 package com.css.app.xlgl.service.impl;
 
 import com.css.app.xlgl.dao.XlglConfirmDao;
+import com.css.app.xlgl.dto.XlglConfirmDto;
 import com.css.app.xlgl.entity.XlglConfirm;
 import com.css.app.xlgl.service.XlglConfirmService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,11 @@ public class XlglConfirmServiceImpl implements XlglConfirmService {
 	@Override
 	public void deleteBatch(String[] ids){
 		xlglConfirmDao.deleteBatch(ids);
+	}
+
+	@Override
+	public XlglConfirmDto queryPerDeptInfo(Map<String,Object> map){
+		return xlglConfirmDao.queryPerDeptInfo(map);
 	}
 	
 }

@@ -69,4 +69,6 @@ public interface BaseAppOrganService {
 	List<BaseAppOrgan> getSubOrgSync(Map<String, Object> map);
 
 	List<BaseAppOrgan> queryAllDeptId(String orgId);
+
+	List<String> queryAllDeptIds();
 }

@@ -31,6 +31,12 @@ public class XlglConfirm implements Serializable {
 	private Date createdtime;
 	//创建人名字
 	private String creatorname;
+	//报名人数
+	private String confirmCount;
+	//未报名人数
+	private String noConfirmCount;
+	//延后请假人数
+	private String qjCount;
 
 	/**
 	 * 设置：
@@ -127,5 +133,29 @@ public class XlglConfirm implements Serializable {
 	 */
 	public String getCreatorname() {
 		return creatorname;
+	}
+
+	public String getConfirmCount() {
+		return confirmCount;
+	}
+
+	public void setConfirmCount(String confirmCount) {
+		this.confirmCount = confirmCount;
+	}
+
+	public String getNoConfirmCount() {
+		return noConfirmCount;
+	}
+
+	public void setNoConfirmCount(String noConfirmCount) {
+		this.noConfirmCount = noConfirmCount;
+	}
+
+	public String getQjCount() {
+		return qjCount;
+	}
+
+	public void setQjCount(String qjCount) {
+		this.qjCount = qjCount;
 	}
 }

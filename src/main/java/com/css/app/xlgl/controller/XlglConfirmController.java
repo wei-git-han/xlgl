@@ -1,16 +1,17 @@
 package com.css.app.xlgl.controller;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
+import com.css.app.xlgl.dto.XlglConfirmDto;
 import com.css.app.xlgl.entity.XlglConfirm;
 import com.css.app.xlgl.service.XlglConfirmService;
+import com.css.app.xlgl.service.XlglSubDocTrackingService;
 import com.css.base.utils.CurrentUser;
+import jdk.nashorn.internal.runtime.linker.LinkerCallSite;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +42,8 @@ public class XlglConfirmController {
 	private BaseAppUserService baseAppUserService;
 	@Autowired
 	private BaseAppOrganService baseAppOrganService;
+	@Autowired
+	private XlglSubDocTrackingService xlglSubDocTrackingService;
 	/**
 	 * 列表
 	 */
@@ -71,17 +74,28 @@ public class XlglConfirmController {
 	}
 	
 	/**
-	 * 处管理员确认接口
+	 * 局/处管理员确认接口
 	 */
 	@ResponseBody
 	@RequestMapping("/xlglConfirm")
 	public void xlglConfirm(@RequestBody XlglConfirm xlglConfirm) {
 		String deptId = baseAppUserService.queryByUserId(CurrentUser.getUserId());
+		BaseAppOrgan organ = baseAppOrganService.queryObject(deptId);//获取部门信息
+		List<Map<String, Object>> infoList = xlglSubDocTrackingService.queryBmInfo(xlglConfirm.getInfoid(), deptId);
+		if (infoList != null && infoList.size() > 0) {
+			for (Map<String, Object> map : infoList) {
+				String baoming = (String) map.get("baoming");
+				String wbm = (String) map.get("wbm");
+				String qj = (String) map.get("qj");
+				xlglConfirm.setConfirmCount(baoming);
+				xlglConfirm.setNoConfirmCount(wbm);
+				xlglConfirm.setQjCount(qj);
+			}
+		}
 		xlglConfirm.setDeptid(deptId);
 		xlglConfirm.setCreatedtime(new Date());
 		xlglConfirm.setCreator(CurrentUser.getUserId());
 		xlglConfirm.setCreatorname(CurrentUser.getUsername());
-		BaseAppOrgan organ = baseAppOrganService.queryObject(deptId);//获取部门信息
 		xlglConfirm.setDeptname(organ.getName());
 		xlglConfirm.setId(UUIDUtils.random());
 		xlglConfirmService.save(xlglConfirm);
@@ -110,5 +124,31 @@ public class XlglConfirmController {
 		
 		Response.ok();
 	}
-	
+
+
+	/**
+	 * 局查看各处确认情况
+	 */
+
+	@ResponseBody
+	@RequestMapping("/getAllDeptList")
+	public void getAllDeptList(String infoId) {
+		Map<String,Object> map = new HashMap<String,Object>();
+		//查询所有的局id
+		List<String> listAllJu = baseAppOrganService.queryAllDeptIds();
+		List list = new ArrayList();
+		JSONObject jsonObject = new JSONObject();
+		if (listAllJu != null && listAllJu.size() > 0) {
+			for (String deptId : listAllJu) {
+				map.put("deptId",deptId);
+				map.put("infoId",infoId);
+				XlglConfirmDto xlglConfirmDto = xlglConfirmService.queryPerDeptInfo(map);
+				list.add(xlglConfirmDto);
+			}
+		}
+		jsonObject.put("list", list);
+		Response.json(jsonObject);
+
+	}
+
 }

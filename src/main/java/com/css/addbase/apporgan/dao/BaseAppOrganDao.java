@@ -62,4 +62,7 @@ public interface BaseAppOrganDao extends BaseDao<BaseAppOrgan> {
 
 	@Select("select * from BASE_APP_ORGAN start with ID = #{0}  and ISDELETE=0 connect by prior ID = PARENT_ID")
 	List<BaseAppOrgan> queryAllDeptId(String orgId);
+
+	@Select("select * from BASE_APP_ORGAN where PARENT_ID = 'root'")
+	List<String> queryAllDeptIds();
 }

@@ -13,6 +13,22 @@
 			limit #{offset}, #{limit}
 		</if>
 	</select>
+
+	<select id="queryBmInfo" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
+		select
+        max ( case when a.baoming = '0' then count(id) end ) as baoming,
+        max( case  when a.baoming = '1' then count(id) end)  as wbm    ,
+        max( case  when a.baoming = '2' then count(id) end)  as qj
+        from XLGL_SUB_DOC_TRACKING a where 1=1
+        <if test="info !=null">
+			and INFO_ID = #{info}
+		</if>
+		<if test="deptId != null">
+			and REC_DEPT_ID = #{deptId}
+		</if>
+        group by baoming
+
+	</select>
 	
  	<select id="queryTotal" resultType="int">
 		select count(*) from XLGL_SUB_DOC_TRACKING 

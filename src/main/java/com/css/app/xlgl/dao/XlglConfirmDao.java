@@ -1,10 +1,13 @@
 package com.css.app.xlgl.dao;
 
 
+import com.css.app.xlgl.dto.XlglConfirmDto;
 import com.css.app.xlgl.entity.XlglConfirm;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.css.base.dao.BaseDao;
+
+import java.util.Map;
 
 /**
  * 训练管理确认表
@@ -15,5 +18,6 @@ import com.css.base.dao.BaseDao;
  */
 @Mapper
 public interface XlglConfirmDao extends BaseDao<XlglConfirm> {
-	
+
+    XlglConfirmDto queryPerDeptInfo(Map<String,Object> map);
 }

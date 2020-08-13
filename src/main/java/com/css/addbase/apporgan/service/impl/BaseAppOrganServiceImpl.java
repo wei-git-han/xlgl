@@ -103,8 +103,14 @@ public class BaseAppOrganServiceImpl implements BaseAppOrganService {
 		return baseAppOrganDao.getSubOrgSync(map);
 	}
 
+	@Override
 	public List<BaseAppOrgan> queryAllDeptId(String orgId){
 		return baseAppOrganDao.queryAllDeptId(orgId);
+	}
+
+	@Override
+	public List<String> queryAllDeptIds(){
+		return baseAppOrganDao.queryAllDeptIds();
 	}
 
 }

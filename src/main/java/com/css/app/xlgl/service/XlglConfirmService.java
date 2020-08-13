@@ -1,6 +1,7 @@
 package com.css.app.xlgl.service;
 
 
+import com.css.app.xlgl.dto.XlglConfirmDto;
 import com.css.app.xlgl.entity.XlglConfirm;
 
 import java.util.List;
@@ -26,4 +27,6 @@ public interface XlglConfirmService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+
+	XlglConfirmDto queryPerDeptInfo(Map<String,Object> map);
 }

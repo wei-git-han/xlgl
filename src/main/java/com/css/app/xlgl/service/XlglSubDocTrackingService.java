@@ -33,4 +33,6 @@ public interface XlglSubDocTrackingService {
 
 	XlglSubDocTracking queryStatusByInfoIdAndUserId(String infoId,String userId);
 
+	List<Map<String,Object>> queryBmInfo(String infoId,String deptId);
+
 }
