@@ -113,5 +113,11 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 
 	@Select("select  t.*,d.BAOMING,d.INFO_ID from BASE_APP_USER t left join XLGL_SUB_DOC_TRACKING d on t.USER_ID = d.RECEIVER_ID and and d.INFO_ID = #{1} where  t.ORGANID in  (  select id from BASE_APP_ORGAN where ID = #{0})")
 	List<BaseAppUser> queryAllJuUserByDeptId(String deptId,String infoId);
+
+	@Select("select  count(*) from BASE_APP_USER t left join XLGL_SUB_DOC_TRACKING d on t.USER_ID = d.RECEIVER_ID and and d.INFO_ID = #{1} and d.baoming = #{2} where  t.ORGANID in  (  select id from BASE_APP_ORGAN start with ID = #{0} and ISDELETE=0 connect by prior ID = PARENT_ID)")
+	int queryBmCout(String deptId,String infoId,String status);
+
+	@Select("select ORGANID from BASE_APP_USER where USER_ID = #{0}")
+	String queryByUserId(String userId);
 	
 }

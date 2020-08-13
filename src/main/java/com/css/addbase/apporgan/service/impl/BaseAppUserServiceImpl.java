@@ -163,5 +163,15 @@ public class BaseAppUserServiceImpl implements BaseAppUserService {
 	public List<BaseAppUser> queryAllJuUserByDeptId(String deptId,String infoId){
 		return baseAppUserDao.queryAllJuUserByDeptId(deptId,infoId);
 	}
+
+	@Override
+	public int queryBmCout(String deptId,String infoId,String status){
+		return baseAppUserDao.queryBmCout(deptId,infoId,status);
+	}
+
+	@Override
+	public String queryByUserId(String userId){
+		return baseAppUserDao.queryByUserId(userId);
+	}
 	
 }

@@ -114,5 +114,9 @@ public interface BaseAppUserService {
 
 	List<BaseAppUser> queryAllJuUserByDeptId(String deptId,String infoId);
 
+	int queryBmCout(String deptId,String infoId,String status );
+
+	String queryByUserId(String userId);
+
 	
 }

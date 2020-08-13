@@ -48,7 +48,7 @@ public class XlglSubDocTracking implements Serializable {
 	//
 	private String recDeptName;
 	//0未读，1已读
-	private String status;
+	private String read;
 
 	private String infoId;
 
@@ -251,14 +251,6 @@ public class XlglSubDocTracking implements Serializable {
 		return recDeptName;
 	}
 
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
 	public String getInfoId() {
 		return infoId;
 	}
@@ -281,5 +273,13 @@ public class XlglSubDocTracking implements Serializable {
 
 	public void setReason(String reason) {
 		this.reason = reason;
+	}
+
+	public String getRead() {
+		return read;
+	}
+
+	public void setRead(String read) {
+		this.read = read;
 	}
 }

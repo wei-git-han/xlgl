@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.stereotype.Controller;
 
 import com.github.pagehelper.PageHelper;
+import org.thymeleaf.processor.ITextNodeProcessorMatcher;
 
 
 /**
@@ -86,7 +87,7 @@ public class XlglXlzzInfoController {
 		XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(id);
 		//打开的同时，更新打开人的状态为已读
 		XlglSubDocTracking xlglSubDocTracking = xlglSubDocTrackingService.queryInfo(id,loginUser);
-		xlglSubDocTracking.setStatus("1");
+		xlglSubDocTracking.setRead("1");
 		xlglSubDocTrackingService.update(xlglSubDocTracking);
 		xlglXlzzInfo.setStatus("1");//1为已读
 		xlglXlzzInfo.setBaoming(xlglSubDocTracking.getBaoming());
@@ -161,6 +162,35 @@ public class XlglXlzzInfoController {
 
 		}
 		Response.json("listAllUser",listAllUser);
+	}
+
+	/**
+	 * 局统计各处报名未报名个数
+	 * @param infoId
+	 */
+	@ResponseBody
+	@RequestMapping("/getDateForJu")
+	public void getDateForJu(String infoId){
+		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
+		//获取了该局所有的部门id
+		List<BaseAppOrgan> list = baseAppOrganService.queryAllDeptId(orgId);
+		List listTotal = new ArrayList();
+		if(list != null && list.size() > 0){
+			for(int i=0;i<list.size();i++){
+				JSONObject jsonObject = new JSONObject();
+				String deptId = list.get(i).getId();
+				String deptName = list.get(i).getName();
+				int sum = baseAppUserService.queryBmCout(deptId,infoId,"1");//已报名
+				int nsum = baseAppUserService.queryBmCout(deptId,infoId,"0");//未报名
+				jsonObject.put("sum",sum);
+				jsonObject.put("nsum",nsum);
+				jsonObject.put("deptName",deptName);
+				listTotal.add(jsonObject);
+			}
+		}
+
+		Response.json("listTotal",listTotal);
+
 	}
 
 	/**
