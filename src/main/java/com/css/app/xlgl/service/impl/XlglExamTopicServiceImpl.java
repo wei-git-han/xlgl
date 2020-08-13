@@ -81,7 +81,7 @@ public class XlglExamTopicServiceImpl implements XlglExamTopicService {
 				String steCell3 = sheet.getRow(i).getCell(2).getStringCellValue(); //选项B
 				String steCell4 = sheet.getRow(i).getCell(3).getStringCellValue(); //选项C
 				String steCell5 = sheet.getRow(i).getCell(4).getStringCellValue(); //选项D
-				xlglExamTopic.setTopicOption(steCell2+"-"+steCell3+"-"+steCell4+"-"+steCell5);//题目选项
+				xlglExamTopic.setTopicOption("A:"+steCell2+",B:"+steCell3+",C:"+steCell4+",D:"+steCell5);//题目选项
 				xlglExamTopic.setSubjectId(subjectId);	//科目表id
 				String steCell6 = sheet.getRow(i).getCell(5).getStringCellValue(); //答案
 				xlglExamTopic.setTopicResult(steCell6);

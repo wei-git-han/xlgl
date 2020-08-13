@@ -2,6 +2,7 @@ package com.css.app.xlgl.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 
 
 
@@ -47,6 +48,8 @@ public class XlglExamExaminetopic implements Serializable {
 	private String makeUpId;
 	//补考状态 0 :不是补考题 ， 1:补考题
 	private String makeUpStatus;
+	
+	private Map<String,Object> topicOptionMap;
 	
 	/**
 	 * 设置：
@@ -221,6 +224,12 @@ public class XlglExamExaminetopic implements Serializable {
 	}
 	public void setMakeUpStatus(String makeUpStatus) {
 		this.makeUpStatus = makeUpStatus;
+	}
+	public Map<String, Object> getTopicOptionMap() {
+		return topicOptionMap;
+	}
+	public void setTopicOptionMap(Map<String, Object> topicOptionMap) {
+		this.topicOptionMap = topicOptionMap;
 	}
 	
 }

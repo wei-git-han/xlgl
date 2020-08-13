@@ -140,9 +140,10 @@ public class XlglExamExamineController {
 	 */
 	@ResponseBody
 	@RequestMapping("/issueStatusList")
-	public void issueStatusList(Integer page, Integer limit){
+	public void issueStatusList(Integer page, Integer limit,String examineName){
 		Map<String, Object> map = new HashMap<>();
 		map.put("issueStatus", "0");
+		map.put("examineName", examineName);
 		PageHelper.startPage(page, limit);
 		
 		//查询列表数据
@@ -273,8 +274,20 @@ public class XlglExamExamineController {
 		List<XlglExamExaminetopic> listType3 = new ArrayList<XlglExamExaminetopic>();
 		List<XlglExamExaminetopic> listType4 = new ArrayList<XlglExamExaminetopic>();
 		for (XlglExamExaminetopic xlglExamExaminetopic : queryList) {
+			HashMap<String, Object> hashMap = new HashMap<String,Object>();
+			if(StringUtils.isNotBlank(xlglExamExaminetopic.getTopicOption()) 
+					&& xlglExamExaminetopic.getTopicOption().contains(",")) {
+				String[] split = xlglExamExaminetopic.getTopicOption().split(",");
+				for (String str : split) {
+					if(str.contains(":")) {
+						String[] split2 = str.split(":");
+						hashMap.put(split2[0], split2[1]);
+					}
+				}
+			}
+			xlglExamExaminetopic.setTopicOptionMap(hashMap);
 			switch (xlglExamExaminetopic.getTopicType()) {
-			case "1":
+			case "1":	
 				listType1.add(xlglExamExaminetopic);
 				break;
 			case "2":
