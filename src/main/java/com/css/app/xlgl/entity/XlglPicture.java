@@ -27,6 +27,8 @@ public class XlglPicture implements Serializable {
 	private String sort;
 
 	private Date createTime;
+	//1:图片，2：视频，3：附件，4：封面
+	private String pictureType;
 
 	/**
 	 * 设置：
@@ -96,4 +98,17 @@ public class XlglPicture implements Serializable {
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
+	/**
+	 * 获取：	1:图片，2：视频，3：附件，4：封面
+	 */
+	public String getPictureType() {
+		return pictureType;
+	}
+	/**
+	 * 设置：	1:图片，2：视频，3：附件，4：封面
+	 */
+	public void setPictureType(String pictureType) {
+		this.pictureType = pictureType;
+	}
+	
 }

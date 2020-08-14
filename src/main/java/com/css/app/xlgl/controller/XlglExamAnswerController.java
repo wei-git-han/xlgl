@@ -154,11 +154,9 @@ public class XlglExamAnswerController {
 			eanswer.setReplyUserName(ssoUser.getFullname());
 			if(StringUtils.isNotBlank(eanswer.getReply())) {
 				eanswer.setStatus("1");
-				if(eanswer.getTopicResult().equals(eanswer.getReply())) {
+				eanswer = getRightReply(eanswer);
+				if(eanswer.getCorrectStatus().equals("0")) {
 					sum +=eanswer.getFraction();
-					eanswer.setCorrectStatus("0");
-				}else {
-					eanswer.setCorrectStatus("1");
 				}
 			}else {
 				eanswer.setStatus("0");
@@ -190,6 +188,40 @@ public class XlglExamAnswerController {
 		List<XlglExamExaminetopicDto> listCount = xlglExamExaminetopicService.findCountBySubjectId(map);
 		jsonObject.put("listCount", listCount);
 		Response.json(jsonObject);
+	}
+	/**
+	 * 判断用户答题是否正确
+	 * */
+	private XlglExamAnswer getRightReply(XlglExamAnswer eanswer) {
+		switch (eanswer.getTopicType()) {
+		case "1":
+			eanswer.setCorrectStatus(eanswer.getTopicResult().equals(eanswer.getReply())?"0":"1");
+			break;
+		case "2":
+			eanswer.setCorrectStatus(eanswer.getTopicResult().equals(eanswer.getReply())?"0":"1");
+			break;
+		case "3":
+			eanswer.setCorrectStatus(eanswer.getTopicResult().equals(eanswer.getReply())?"0":"1");
+			break;
+		case "4":
+			if(eanswer.getTopicResult().contains(",")) {
+				String[] split = eanswer.getTopicResult().split(",");
+				for (String string : split) {
+					if(!eanswer.getTopicResult().contains(string)) {
+						eanswer.setCorrectStatus("1");
+						break;
+					}
+				}
+				eanswer.setCorrectStatus("0");
+			}else {
+				eanswer.setCorrectStatus(eanswer.getTopicResult().equals(eanswer.getReply())?"0":"1");
+			}
+			break;
+		default:
+			break;
+		}
+		return eanswer;
+		
 	}
 	
 }

@@ -30,7 +30,8 @@
 			"PICTURE_ID", 
 			"IS_FIRST", 
 			"SORT",
-			"CREATE_TIME"
+			"CREATE_TIME",
+			"PICTURE_TYPE"
 		)
 		values
 		(
@@ -39,7 +40,8 @@
 			#{pictureId}, 
 			#{isFirst}, 
 			#{sort},
-			#{createTime}
+			#{createTime},
+			#{pictureType}
 		)
 	</insert>
 	 
@@ -49,8 +51,9 @@
 			<if test="fileId != null">"FILE_ID" = #{fileId}, </if>
 			<if test="pictureId != null">"PICTURE_ID" = #{pictureId}, </if>
 			<if test="isFirst != null">"IS_FIRST" = #{isFirst}, </if>
-			<if test="sort != null">"SORT" = #{sort}</if>
-			<if test="createTime != null">"CREATE_TIME" = #{createTime}</if>
+			<if test="sort != null">"SORT" = #{sort},</if>
+			<if test="createTime != null">"CREATE_TIME" = #{createTime},</if>
+			<if test="pictureType != null">"PICTURE_TYPE" = #{pictureType}</if>
 		</set>
 		where ID = #{id}
 	</update>
