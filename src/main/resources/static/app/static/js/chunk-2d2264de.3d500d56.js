@@ -1,0 +1,1 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d2264de"],{e7a7:function(n,e,a){"use strict";a.r(e);var t=function(){var n=this,e=n.$createElement,a=n._self._c||e;return a("div")},r=[],c={name:"TrainOrgan"},u=c,i=a("2877"),s=Object(i["a"])(u,t,r,!1,null,"61a48052",null);e["default"]=s.exports}}]);
