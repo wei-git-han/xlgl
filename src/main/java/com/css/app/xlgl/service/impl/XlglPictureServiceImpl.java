@@ -3,6 +3,8 @@ package com.css.app.xlgl.service.impl;
 import com.css.app.xlgl.dao.XlglPictureDao;
 import com.css.app.xlgl.entity.XlglPicture;
 import com.css.app.xlgl.service.XlglPictureService;
+import com.css.base.utils.UUIDUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +47,25 @@ public class XlglPictureServiceImpl implements XlglPictureService {
 	@Override
 	public void deleteBatch(String[] ids){
 		xlglPictureDao.deleteBatch(ids);
+	}
+
+	@Override
+	public int queryTotal(Map<String, Object> map) {
+		return xlglPictureDao.queryTotal(map);
+	}
+
+	@Override
+	public void savePicture(String fileId, String pictureId, String pictureType) {
+		XlglPicture xlglPicture = new XlglPicture();
+		xlglPicture.setId(UUIDUtils.random());
+		xlglPicture.setFileId(fileId);
+		xlglPicture.setPictureId(pictureId);
+		xlglPicture.setPictureType(pictureType);
+		xlglPicture.setIsFirst("0");
+		Integer valueOf=xlglPictureDao.queryTotal(null)+1;
+		xlglPicture.setSort(valueOf.toString());
+		xlglPictureDao.save(xlglPicture);
+		
 	}
 	
 }

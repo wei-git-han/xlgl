@@ -26,4 +26,7 @@ public interface XlglPictureService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+	int queryTotal(Map<String,Object> map);
+	
+	void savePicture(String fileId,String pictureId ,String pictureType);
 }
