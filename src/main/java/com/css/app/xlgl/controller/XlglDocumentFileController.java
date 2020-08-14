@@ -61,7 +61,7 @@ import com.css.base.utils.StringUtils;
  * @date 2020-07-28 13:15:37
  */
 @Controller
-@RequestMapping("/xlgl/xlgldocumentfile")
+@RequestMapping("/app/xlgl/xlgldocumentfile")
 public class XlglDocumentFileController{
 	@Autowired
 	private XlglDocumentFileService xlglDocumentFileService;
