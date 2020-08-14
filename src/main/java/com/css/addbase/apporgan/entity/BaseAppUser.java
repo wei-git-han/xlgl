@@ -44,6 +44,8 @@ public class BaseAppUser implements Serializable {
 	private String sfzb;
 	
 	private String sfzw;
+
+	private String baoming;
 	
 	/**
 	 * 设置：主键
@@ -220,8 +222,12 @@ public class BaseAppUser implements Serializable {
 	public void setSfzw(String sfzw) {
 		this.sfzw = sfzw;
 	}
-	
-	
-	
-	
+
+	public String getBaoming() {
+		return baoming;
+	}
+
+	public void setBaoming(String baoming) {
+		this.baoming = baoming;
+	}
 }

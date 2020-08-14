@@ -116,6 +116,20 @@ public class XlglNewsController {
 		xlglNewsService.update(xlglNews);
 		Response.json("result", "success");
 	}
+
+	/**
+	 * 取消置顶
+	 * @param id
+	 */
+	@ResponseBody
+	@RequestMapping("/topCancle")
+	public void topCancle(String id){
+		XlglNews xlglNews  = xlglNewsService.queryObject(id);
+		xlglNews.setIsTop(0);
+		xlglNewsService.update(xlglNews);
+		Response.json("result","success");
+
+	}
 	
 	
 	/**
@@ -308,5 +322,22 @@ public class XlglNewsController {
 		HTTPFile httpFile = new HTTPFile(fileId);
 		String filePath = httpFile.getFilePath();
 		Response.json(filePath);
+	}
+
+
+	@ResponseBody
+	@RequestMapping("/getDeptName")
+	public void getDeptName() {
+		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
+		String deptId = baseAppUserService.queryByUserId(CurrentUser.getUserId());
+		List<BaseAppOrgan> list = baseAppOrganService.queryAllDeptId(orgId);
+		String name = list.get(0).getName();
+		for (BaseAppOrgan baseAppOrgan : list) {
+			if (deptId.equals(baseAppOrgan.getId())) {
+				name += baseAppOrgan.getName();
+			}
+		}
+		Response.json("deptName", name);
+
 	}
 }

@@ -8,6 +8,7 @@
 		order by SORT asc
 	</select>
 
+
 	<select id="queryList" resultType="com.css.addbase.apporgan.entity.BaseAppOrgan">
 		select * from BASE_APP_ORGAN where ISDELETE = 0
 		<if test="name != null and name != ''">

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.XlglXlzzInfoDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglXlzzInfo">
+		select * from XLGL_XLZZ_INFO where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglXlzzInfo">
+		select * from XLGL_XLZZ_INFO 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_XLZZ_INFO 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglXlzzInfo">
+		insert into XLGL_XLZZ_INFO
+		(
+			"ID", 
+			"TITLE", 
+			"XLTYPE", 
+			"ZJDEPT", 
+			"MEETING_ISSUE", 
+			"START_TIME", 
+			"END_TIME", 
+			"ZJPERSION", 
+			"XXADRESS", 
+			"MEETING_LINE", 
+			"TODEPT_ID", 
+			"TODEPT_NAME", 
+			"CONTENT", 
+			"BZ", 
+			"CREATE_TIME", 
+			"CREATOR", 
+			"STATUS",
+			"EXERCISE_ISSUE",
+			"JOIN_PEOPLE",
+			"EXERCISE_TIME"
+		)
+		values
+		(
+			#{id}, 
+			#{title}, 
+			#{xltype}, 
+			#{zjdept}, 
+			#{meetingIssue}, 
+			#{startTime}, 
+			#{endTime}, 
+			#{zjpersion}, 
+			#{xxadress}, 
+			#{meetingLine}, 
+			#{todeptId}, 
+			#{todeptName}, 
+			#{content}, 
+			#{bz}, 
+			#{createTime}, 
+			#{creator}, 
+			#{status},
+			#{exerciseIssue},
+			#{joinPeople},
+			#{exerciseTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.XlglXlzzInfo">
+		update XLGL_XLZZ_INFO 
+		<set>
+			<if test="title != null">"TITLE" = #{title}, </if>
+			<if test="xltype != null">"XLTYPE" = #{xltype}, </if>
+			<if test="zjdept != null">"ZJDEPT" = #{zjdept}, </if>
+			<if test="meetingIssue != null">"MEETING_ISSUE" = #{meetingIssue}, </if>
+			<if test="startTime != null">"START_TIME" = #{startTime}, </if>
+			<if test="endTime != null">"END_TIME" = #{endTime}, </if>
+			<if test="zjpersion != null">"ZJPERSION" = #{zjpersion}, </if>
+			<if test="xxadress != null">"XXADRESS" = #{xxadress}, </if>
+			<if test="meetingLine != null">"MEETING_LINE" = #{meetingLine}, </if>
+			<if test="todeptId != null">"TODEPT_ID" = #{todeptId}, </if>
+			<if test="todeptName != null">"TODEPT_NAME" = #{todeptName}, </if>
+			<if test="content != null">"CONTENT" = #{content}, </if>
+			<if test="bz != null">"BZ" = #{bz}, </if>
+			<if test="createTime != null">"CREATE_TIME" = #{createTime}, </if>
+			<if test="creator != null">"CREATOR" = #{creator}, </if>
+			<if test="status != null">"STATUS" = #{status}</if>
+			<if test="exerciseIssue != null">"EXERCISE_ISSUE" = #{exerciseIssue}</if>
+			<if test="joinPeople != null">"JOIN_PEOPLE" = #{joinPeople}</if>
+			<if test="exerciseTime != null">"EXERCISE_TIME" = #{exerciseTime}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_XLZZ_INFO where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_XLZZ_INFO where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
