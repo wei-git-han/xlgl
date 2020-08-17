@@ -60,6 +60,9 @@ public class XlglXlzzInfo implements Serializable {
 	//训练时间
 	private String exerciseTime;
 
+	//首页图片地址
+	private String picturePath;
+
 	/**
 	 * 设置：
 	 */
@@ -295,5 +298,13 @@ public class XlglXlzzInfo implements Serializable {
 
 	public void setExerciseTime(String exerciseTime) {
 		this.exerciseTime = exerciseTime;
+	}
+
+	public String getPicturePath() {
+		return picturePath;
+	}
+
+	public void setPicturePath(String picturePath) {
+		this.picturePath = picturePath;
 	}
 }
