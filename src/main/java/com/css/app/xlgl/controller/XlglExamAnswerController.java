@@ -179,7 +179,7 @@ public class XlglExamAnswerController {
 		xlglExamMainAnswer.setUpdateDate(date);
 		xlglExamMainAnswerService.update(xlglExamMainAnswer);
 		xlglExamAnswerService.saveBatch(parseArray);
-		XlglExamMainAnswer queryObject = xlglExamMainAnswerService.queryObject("mainAnswerId");
+		XlglExamMainAnswer queryObject = xlglExamMainAnswerService.queryObject(mainAnswerId);
 		jsonObject.put("mainAnswer", queryObject);
 		jsonObject.put("answerList", parseArray);
 		Map<String, Object> map = new HashMap<String,Object>();
