@@ -22,30 +22,33 @@ import com.github.pagehelper.PageHelper;
 import com.css.base.utils.Response;
 import com.css.base.utils.StringUtils;
 import com.css.app.xlgl.entity.XlglPicture;
+import com.css.app.xlgl.entity.XlglWarCommonQueue;
 import com.css.app.xlgl.entity.XlglWarCommonQueueRead;
-import com.css.app.xlgl.entity.XlglWarTactic;
-import com.css.app.xlgl.entity.XlglWarTacticRead;
+import com.css.app.xlgl.entity.XlglWarCommonSports;
+import com.css.app.xlgl.entity.XlglWarCommonSportsRead;
 import com.css.app.xlgl.service.XlglPictureService;
-import com.css.app.xlgl.service.XlglWarTacticReadService;
-import com.css.app.xlgl.service.XlglWarTacticService;
+import com.css.app.xlgl.service.XlglWarCommonSportsReadService;
+import com.css.app.xlgl.service.XlglWarCommonSportsService;
 
 
 /**
- * 军事训练-战略训练
+ * 军事训练-共同训练-军事体育
  * 
  * @author 中软信息系统工程有限公司
  * @email 
- * @date 2020-08-14 16:50:25
+ * @date 2020-08-17 09:53:19
  */
 @Controller
-@RequestMapping("/xlglwartactic")
-public class XlglWarTacticController {
+@RequestMapping("/xlglwarcommonsports")
+public class XlglWarCommonSportsController {
 	@Autowired
-	private XlglWarTacticService xlglWarTacticService;
+	private XlglWarCommonSportsService xlglWarCommonSportsService;
 	@Autowired
 	private XlglPictureService xlglPictureService;
 	@Autowired
-	private XlglWarTacticReadService xlglWarTacticReadService;
+	private XlglWarCommonSportsReadService xlglWarCommonSportsReadService;
+	
+	
 	/**
 	 * 列表
 	 */
@@ -54,35 +57,34 @@ public class XlglWarTacticController {
 	public void list(Integer page, Integer limit){
 		Map<String, Object> map = new HashMap<>();
 		PageHelper.startPage(page, limit);
-		
 		//查询列表数据
-		List<XlglWarTactic> xlglWarTacticList = xlglWarTacticService.queryList(map);
+		List<XlglWarCommonSports> xlglWarCommonSportsList = xlglWarCommonSportsService.queryList(map);
 		Map<String, Object> fileMap = new HashMap<>();
 		Map<String, Object> hashMap = new HashMap<>();
 		hashMap.put("readUserId", CurrentUser.getUserId());
-		for (XlglWarTactic xlglWarTactic : xlglWarTacticList) {
-			hashMap.put("tacticId", xlglWarTactic.getId());
-			List<XlglWarTacticRead> readList = xlglWarTacticReadService.queryList(hashMap);
+		for (XlglWarCommonSports xlglWarCommonSports : xlglWarCommonSportsList) {
+			hashMap.put("sportsId", xlglWarCommonSports.getId());
+			List<XlglWarCommonSportsRead> readList = xlglWarCommonSportsReadService.queryList(hashMap);
 			if(readList.size() >0) {
-				xlglWarTactic.setReadStatus("1");
+				xlglWarCommonSports.setReadStatus("1");
 			}else {
-				xlglWarTactic.setReadStatus("0");
+				xlglWarCommonSports.setReadStatus("0");
 			}
-			fileMap.put("id", xlglWarTactic.getId());
+			fileMap.put("id", xlglWarCommonSports.getId());
 			List<XlglPicture> queryList = xlglPictureService.queryList(map);
 			List<String> list = new ArrayList<String>();
 			for (XlglPicture xlglPicture : queryList) { //1:图片，2：视频，3：附件，4：封面
 				if(xlglPicture.getPictureType().equals("2")) {
-					xlglWarTactic.setVideoFile(xlglPicture.getPictureId());
+					xlglWarCommonSports.setVideoFile(xlglPicture.getPictureId());
 				}else if(xlglPicture.getPictureType().equals("3")) {
 					list.add(xlglPicture.getPictureId());
 				}else if(xlglPicture.getPictureType().equals("4")) {
-					xlglWarTactic.setCoverFile(xlglPicture.getPictureId());
+					xlglWarCommonSports.setCoverFile(xlglPicture.getPictureId());
 				}
 			}
-			xlglWarTactic.setAccessoryFileArray(list);
+			xlglWarCommonSports.setAccessoryFileArray(list);
 		}
-		PageUtils pageUtil = new PageUtils(xlglWarTacticList);
+		PageUtils pageUtil = new PageUtils(xlglWarCommonSportsList);
 		Response.json("page",pageUtil);
 	}
 	
@@ -95,29 +97,30 @@ public class XlglWarTacticController {
 	public void info(String id){
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		Map<String, Object> map = new HashMap<>();
-		map.put("tacticId", id);
+		map.put("sportsId", id);
 		map.put("readUserId", ssoUser.getUserId());
-		XlglWarTactic xlglWarTactic = xlglWarTacticService.queryObject(id);
-		xlglWarTactic.setViewNumber(xlglWarTactic.getViewNumber()+1);
-		xlglWarTacticService.update(xlglWarTactic);
+		XlglWarCommonSports xlglWarCommonSports = xlglWarCommonSportsService.queryObject(id);
+		xlglWarCommonSports.setViewNumber(xlglWarCommonSports.getViewNumber()+1);
+		xlglWarCommonSportsService.update(xlglWarCommonSports);
 		//已读记录表
-		List<XlglWarTacticRead> queryList = xlglWarTacticReadService.queryList(map);
+		List<XlglWarCommonSportsRead> queryList = xlglWarCommonSportsReadService.queryList(map);
 		if(queryList.size()>0) {
-			XlglWarTacticRead xlglWarTacticRead = queryList.get(0);
-			xlglWarTacticRead.setReadDate(new Date());
-			xlglWarTacticReadService.update(xlglWarTacticRead);
+			XlglWarCommonSportsRead xlglWarCommonSportsRead = queryList.get(0);
+			xlglWarCommonSportsRead.setReadDate(new Date());
+			xlglWarCommonSportsReadService.update(xlglWarCommonSportsRead);
 		}else {
-			XlglWarTacticRead xlglWarTacticRead = new XlglWarTacticRead();
-			xlglWarTacticRead.setId(UUIDUtils.random());
-			xlglWarTacticRead.setTacticId(id);
-			xlglWarTacticRead.setReadOrgName(ssoUser.getOrgName());
-			xlglWarTacticRead.setReadOrgId(ssoUser.getOrganId());
-			xlglWarTacticRead.setReadUserId(ssoUser.getUserId());
-			xlglWarTacticRead.setReadUserName(ssoUser.getFullname());
-			xlglWarTacticRead.setReadDate(new Date());
-			xlglWarTacticReadService.save(xlglWarTacticRead);
+			XlglWarCommonSportsRead xlglWarCommonSportsRead = new XlglWarCommonSportsRead();
+			xlglWarCommonSportsRead.setId(UUIDUtils.random());
+			xlglWarCommonSportsRead.setSportsId(id);
+			xlglWarCommonSportsRead.setReadOrgName(ssoUser.getOrgName());
+			xlglWarCommonSportsRead.setReadOrgId(ssoUser.getOrganId());
+			xlglWarCommonSportsRead.setReadUserId(ssoUser.getUserId());
+			xlglWarCommonSportsRead.setReadUserName(ssoUser.getFullname());
+			xlglWarCommonSportsRead.setReadDate(new Date());
+			xlglWarCommonSportsReadService.save(xlglWarCommonSportsRead);
 		}
-		Response.json("xlglWarTactic", xlglWarTactic);
+		
+		Response.json("xlglWarCommonSports", xlglWarCommonSports);
 	}
 	
 	/**
@@ -128,17 +131,17 @@ public class XlglWarTacticController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public void save(XlglWarTactic xlglWarTactic,String coverFile,String videoFile,String[] accessoryFile){
+	public void save(XlglWarCommonSports xlglWarCommonSports,String coverFile,String videoFile,String[] accessoryFile){
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		Date date = new Date();
 		String random = UUIDUtils.random();
-		xlglWarTactic.setId(random);
-		xlglWarTactic.setCreateOrganId(ssoUser.getOrganId());
-		xlglWarTactic.setCreateOrganName(ssoUser.getOrgName());
-		xlglWarTactic.setCreateDate(date);
-		xlglWarTactic.setCreateUser(ssoUser.getUserId());
-		xlglWarTactic.setPublishDate(date);
-		xlglWarTacticService.save(xlglWarTactic);
+		xlglWarCommonSports.setId(random);
+		xlglWarCommonSports.setCreateOrganId(ssoUser.getOrganId());
+		xlglWarCommonSports.setCreateOrganName(ssoUser.getOrgName());
+		xlglWarCommonSports.setCreateDate(date);
+		xlglWarCommonSports.setCreateUser(ssoUser.getUserId());
+		xlglWarCommonSports.setPublishDate(date);
+		xlglWarCommonSportsService.save(xlglWarCommonSports);
 		if(StringUtils.isNotBlank(coverFile)) {
 			xlglPictureService.savePicture(random,coverFile,"4");
 		}
@@ -150,7 +153,6 @@ public class XlglWarTacticController {
 				xlglPictureService.savePicture(random,string,"3");
 			}
 		}
-		
 		Response.ok();
 	}
 	
@@ -159,8 +161,8 @@ public class XlglWarTacticController {
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	public void update(XlglWarTactic xlglWarTactic){
-		xlglWarTacticService.update(xlglWarTactic);
+	public void update(XlglWarCommonSports xlglWarCommonSports){
+		xlglWarCommonSportsService.update(xlglWarCommonSports);
 		
 		Response.ok();
 	}
@@ -171,7 +173,7 @@ public class XlglWarTacticController {
 	@ResponseBody
 	@RequestMapping("/delete")
 	public void delete(String[] ids){
-		xlglWarTacticService.deleteBatch(ids);
+		xlglWarCommonSportsService.deleteBatch(ids);
 		
 		Response.ok();
 	}

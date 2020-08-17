@@ -2,6 +2,7 @@ package com.css.app.xlgl.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 
 
@@ -19,7 +20,7 @@ public class XlglNotice implements Serializable {
 	private String id;
 	//发布时间
 	private Date releaseTime;
-	//通知类型:通知、公告
+	//通知类型:通知、公告0：通知，1：公告
 	private String type;
 	//是否置顶
 	private Integer isTop;
@@ -33,6 +34,12 @@ public class XlglNotice implements Serializable {
 	private String content;
 	//内容(不带格式)
 	private String contenttext;
+	//访问量
+	private Integer viewNumber;
+	
+	
+	//图片或视频的fileid
+	private List<String> pictureIds;
 
 	/**
 	 * 设置：主键id
@@ -142,4 +149,18 @@ public class XlglNotice implements Serializable {
 	public String getContenttext() {
 		return contenttext;
 	}
+	public Integer getViewNumber() {
+		return viewNumber;
+	}
+	public void setViewNumber(Integer viewNumber) {
+		this.viewNumber = viewNumber;
+	}
+	public List<String> getPictureIds() {
+		return pictureIds;
+	}
+	public void setPictureIds(List<String> pictureIds) {
+		this.pictureIds = pictureIds;
+	}
+	
+	
 }

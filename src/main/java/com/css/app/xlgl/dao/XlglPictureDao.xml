@@ -12,6 +12,10 @@
 		<if test="id != null">
 			and FILE_ID = #{id}
 		</if>
+		<if test="pictureId != pictureId">
+			and PICTURE_ID = #{pictureId}
+		</if>
+		
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>

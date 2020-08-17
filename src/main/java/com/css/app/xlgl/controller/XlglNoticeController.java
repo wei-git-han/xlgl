@@ -106,6 +106,17 @@ public class XlglNoticeController {
 		PageHelper.startPage(page, limit);
 		//查询列表数据
 		List<XlglNotice> xlglNoticeList = xlglNoticeService.queryList(map);
+		for (XlglNotice xlglNotice : xlglNoticeList) {
+			map.put("pictureId", xlglNotice.getId());
+			List<XlglPicture> queryList = xlglPictureService.queryList(map);
+			ArrayList<String> pictureIds = new ArrayList<String>();
+			if(queryList.size()>0) {
+				for (XlglPicture xlglPicture : queryList) {
+					pictureIds.add(xlglPicture.getFileId());
+				}
+			}
+			xlglNotice.setPictureIds(pictureIds);
+		}
 		PageUtils pageUtil = new PageUtils(xlglNoticeList);
 		Response.json("page",pageUtil);
 	}
@@ -144,6 +155,8 @@ public class XlglNoticeController {
 	@RequestMapping("/info")
 	public void info(String id){
 		XlglNotice xlglNotice = xlglNoticeService.queryObject(id);
+		xlglNotice.setViewNumber(xlglNotice.getViewNumber()+1);
+		xlglNoticeService.update(xlglNotice);
 		Response.json("xlglNotice", xlglNotice);
 	}
 	

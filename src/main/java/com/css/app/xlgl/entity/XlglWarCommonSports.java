@@ -7,13 +7,13 @@ import java.util.List;
 
 
 /**
- * 军事训练-共同训练-队列训练
+ * 军事训练-共同训练-军事体育
  * 
  * @author 中软信息系统工程有限公司
  * @email 
- * @date 2020-08-14 16:52:03
+ * @date 2020-08-17 09:53:19
  */
-public class XlglWarCommonQueue implements Serializable {
+public class XlglWarCommonSports implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	//
@@ -22,6 +22,8 @@ public class XlglWarCommonQueue implements Serializable {
 	private String accessoryFile;
 	//创建人
 	private String createUser;
+	//观看次数
+	private Integer viewNumber;
 	//修改时间
 	private String updateDate;
 	//封面上传
@@ -33,7 +35,7 @@ public class XlglWarCommonQueue implements Serializable {
 	//训练类型
 	private String queueType;
 	//修改人
-	private Date updateUser;
+	private String updateUser;
 	//发布时间
 	private Date publishDate;
 	//创建时间
@@ -46,9 +48,6 @@ public class XlglWarCommonQueue implements Serializable {
 	private String videoFile;
 	//发布单位id
 	private String createOrganId;
-	//观看次数
-	private Integer viewNumber;
-	
 	
 	//封面上传
 	private List<String> coverFileArray;
@@ -94,6 +93,18 @@ public class XlglWarCommonQueue implements Serializable {
 	 */
 	public String getCreateUser() {
 		return createUser;
+	}
+	/**
+	 * 设置：观看次数
+	 */
+	public void setViewNumber(Integer viewNumber) {
+		this.viewNumber = viewNumber;
+	}
+	/**
+	 * 获取：观看次数
+	 */
+	public Integer getViewNumber() {
+		return viewNumber;
 	}
 	/**
 	 * 设置：修改时间
@@ -158,16 +169,16 @@ public class XlglWarCommonQueue implements Serializable {
 	/**
 	 * 设置：修改人
 	 */
-	public void setUpdateUser(Date updateUser) {
+	public void setUpdateUser(String updateUser) {
 		this.updateUser = updateUser;
 	}
 	/**
 	 * 获取：修改人
 	 */
-	public Date getUpdateUser() {
+	public String getUpdateUser() {
 		return updateUser;
 	}
-	/**s
+	/**
 	 * 设置：发布时间
 	 */
 	public void setPublishDate(Date publishDate) {
@@ -256,12 +267,6 @@ public class XlglWarCommonQueue implements Serializable {
 	}
 	public void setAccessoryFileArray(List<String> accessoryFileArray) {
 		this.accessoryFileArray = accessoryFileArray;
-	}
-	public Integer getViewNumber() {
-		return viewNumber;
-	}
-	public void setViewNumber(Integer viewNumber) {
-		this.viewNumber = viewNumber;
 	}
 	public String getReadStatus() {
 		return readStatus;

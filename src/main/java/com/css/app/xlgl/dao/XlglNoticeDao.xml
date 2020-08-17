@@ -42,7 +42,8 @@
 			"RELEASE_ORGANID", 
 			"RELEASE_ORGAN", 
 			"CONTENT", 
-			"CONTENTTEXT"
+			"CONTENTTEXT",
+			"VIEW_NUMBER"
 		)
 		values
 		(
@@ -54,7 +55,8 @@
 			#{releaseOrganid}, 
 			#{releaseOrgan}, 
 			#{content}, 
-			#{contenttext}
+			#{contenttext},
+			#{viewNumber}
 		)
 	</insert>
 	 
@@ -68,7 +70,9 @@
 			<if test="releaseOrganid != null">"RELEASE_ORGANID" = #{releaseOrganid}, </if>
 			<if test="releaseOrgan != null">"RELEASE_ORGAN" = #{releaseOrgan}, </if>
 			<if test="content != null">"CONTENT" = #{content}, </if>
-			<if test="contenttext != null">"CONTENTTEXT" = #{contenttext}</if>
+			<if test="contenttext != null">"CONTENTTEXT" = #{contenttext},</if>
+			<if test="viewNumber != null">"VIEW_NUMBER" = #{viewNumber}</if>
+			
 		</set>
 		where ID = #{id}
 	</update>
@@ -90,6 +94,9 @@
 		<!-- <if test="releaseUserid != null and releaseUserid != '' ">
 			and RELEASE_USERID = #{releaseUserid}
 		</if> -->
+		<if test="type != null and type != ''">
+			and TYPE = #{type}
+		</if>
 		<if test="releaseOrganid != null and releaseOrganid != '' ">
 			and RELEASE_ORGANID = #{releaseOrganid}
 		</if>
@@ -102,11 +109,17 @@
 	<!--查询本年度发布通知公告数  -->
  	<select id="queryTotalYear" resultType="int">
 		select count(*) from XLGL_NOTICE where  to_char(RELEASE_TIME,'yyyy')=to_char(sysdate,'yyyy')
+		<if test="type != null and type != ''">
+			and TYPE = #{type}
+		</if>
 	</select>
 	
 	<!--查询本月发布通知公告数  -->
  	<select id="queryTotalMonth" resultType="int">
 		select count(*) from XLGL_NOTICE where  to_char(RELEASE_TIME,'yyyy-MM')=to_char(sysdate,'yyyy-MM')
+		<if test="type != null and type != ''">
+			and TYPE = #{type}
+		</if>
 	</select>
 	
 	<!--查询本周发布通知公告数  -->
@@ -118,6 +131,9 @@
 		where   
 			RELEASE_TIME &gt;= TRUNC(NEXT_DAY(SYSDATE-8,1)+1) 
 		AND RELEASE_TIME &lt; TRUNC(NEXT_DAY(SYSDATE-8,1)+7)+1
+		<if test="type != null and type != ''">
+			and TYPE = #{type}
+		</if>
 	</select>
 	
 	<!--根据局统计本年度发布通知公告数  -->
@@ -129,6 +145,9 @@
 			XLGL_NOTICE 
 		where   
 			to_char(RELEASE_TIME,'yyyy') = to_char(sysdate,'yyyy') 
+		<if test="type != null and type != ''">
+			and TYPE = #{type}
+		</if>
 		group by RELEASE_ORGAN
 	</select>
 	
@@ -154,6 +173,9 @@
 		where  
 			RELEASE_TIME &gt;= TRUNC(NEXT_DAY(SYSDATE-8,1)+1) 
 		AND RELEASE_TIME &lt; TRUNC(NEXT_DAY(SYSDATE-8,1)+7)+1 
+		<if test="type != null and type != ''">
+			and TYPE = #{type}
+		</if>
 		group by RELEASE_ORGAN
 	</select>
 
