@@ -79,6 +79,7 @@ public class XlglCarsManagerController {
 	
 	/**
 	 * 保存
+     * 点击新增的时候，调用这个接口，创建一个表数据
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
