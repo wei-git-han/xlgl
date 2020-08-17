@@ -35,4 +35,6 @@ public interface XlglSubDocTrackingService {
 
 	List<Map<String,Object>> queryBmInfo(String infoId,String deptId);
 
+	List<XlglSubDocTracking> queryListForPerson(Map<String,Object> map);
+
 }

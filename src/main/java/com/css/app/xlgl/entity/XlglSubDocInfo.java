@@ -44,6 +44,9 @@ public class XlglSubDocInfo implements Serializable {
 	//承办人ID
 	private Integer ideaAddFlag;
 
+	//是否分发
+	private String isSend;
+
 	/**
 	 * 设置：唯一标识
 	 */
@@ -211,5 +214,13 @@ public class XlglSubDocInfo implements Serializable {
 	 */
 	public Integer getIdeaAddFlag() {
 		return ideaAddFlag;
+	}
+
+	public String getIsSend() {
+		return isSend;
+	}
+
+	public void setIsSend(String isSend) {
+		this.isSend = isSend;
 	}
 }

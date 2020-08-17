@@ -30,4 +30,6 @@ public interface XlglSubDocTrackingDao extends BaseDao<XlglSubDocTracking> {
     XlglSubDocTracking queryStatusByInfoIdAndUserId(String infoId,String userId);
 
     List<Map<String,Object>> queryBmInfo(String infoId,String deptId);
+
+    List<XlglSubDocTracking> queryListForPerson(Map<String,Object> map);
 }

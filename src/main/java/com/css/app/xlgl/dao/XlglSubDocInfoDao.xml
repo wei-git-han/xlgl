@@ -38,7 +38,8 @@
 			"UNDERTAKER_NAME", 
 			"DOC_STATUS", 
 			"SUB_DEPT_ID", 
-			"IDEA_ADD_FLAG"
+			"IDEA_ADD_FLAG",
+			"IS_SEND"
 		)
 		values
 		(
@@ -55,7 +56,8 @@
 			#{undertakerName}, 
 			#{docStatus}, 
 			#{subDeptId}, 
-			#{ideaAddFlag}
+			#{ideaAddFlag},
+			#{isSend}
 		)
 	</insert>
 
@@ -75,6 +77,7 @@
             <if test="docStatus != null">"DOC_STATUS" = #{docStatus},</if>
             <if test="subDeptId != null">"SUB_DEPT_ID" = #{subDeptId},</if>
             <if test="ideaAddFlag != null">"IDEA_ADD_FLAG" = #{ideaAddFlag}</if>
+            <if test="isSend != null">"IS_SEND" = #{isSend}</if>
         </set>
         where ID = #{id}
     </update>

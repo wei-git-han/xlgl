@@ -30,6 +30,9 @@ public class XlglPicture implements Serializable {
 	//1:图片，2：视频，3：附件，4：封面
 	private String pictureType;
 
+	//上传文件名称
+	private String pictureName;
+
 	/**
 	 * 设置：
 	 */
@@ -110,5 +113,12 @@ public class XlglPicture implements Serializable {
 	public void setPictureType(String pictureType) {
 		this.pictureType = pictureType;
 	}
-	
+
+	public String getPictureName() {
+		return pictureName;
+	}
+
+	public void setPictureName(String pictureName) {
+		this.pictureName = pictureName;
+	}
 }

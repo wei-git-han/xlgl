@@ -66,4 +66,9 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 	public List<Map<String,Object>> queryBmInfo(String infoId,String deptId){
 		return xlglSubDocTrackingDao.queryBmInfo(infoId,deptId);
 	}
+
+	@Override
+	public List<XlglSubDocTracking> queryListForPerson(Map<String,Object> map){
+		return xlglSubDocTrackingDao.queryListForPerson(map);
+	}
 }
