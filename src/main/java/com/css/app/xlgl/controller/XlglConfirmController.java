@@ -134,12 +134,12 @@ public class XlglConfirmController {
 	public void getAllDeptList(String infoId) {
 		Map<String,Object> map = new HashMap<String,Object>();
 		//查询所有的局id
-		List<String> listAllJu = baseAppOrganService.queryAllDeptIds();
+		List<BaseAppOrgan> listAllJu = baseAppOrganService.queryAllDeptIds();
 		List list = new ArrayList();
 		JSONObject jsonObject = new JSONObject();
 		if (listAllJu != null && listAllJu.size() > 0) {
-			for (String deptId : listAllJu) {
-				map.put("deptId",deptId);
+			for (BaseAppOrgan baseAppOrgan : listAllJu) {
+				map.put("deptId",baseAppOrgan.getId());
 				map.put("infoId",infoId);
 				XlglConfirmDto xlglConfirmDto = xlglConfirmService.queryPerDeptInfo(map);
 				list.add(xlglConfirmDto);
