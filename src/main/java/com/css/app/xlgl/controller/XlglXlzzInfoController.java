@@ -121,10 +121,11 @@ public class XlglXlzzInfoController {
 	
 	/**
 	 * 保存
+	 * type  视频是0；图片是1；文档是2
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public void save(XlglXlzzInfo xlglXlzzInfo,String pIds){
+	public void save(XlglXlzzInfo xlglXlzzInfo,String pIds,String type){
 		String fId = UUIDUtils.random();
 		xlglXlzzInfo.setId(fId);
 		xlglXlzzInfo.setCreateTime(new Date());
@@ -132,6 +133,7 @@ public class XlglXlzzInfoController {
 		//保存上传图片，视频，文件
 		if(StringUtils.isNotBlank(pIds)) {
 			String[] ids = pIds.split(",");
+			String[] types = type.split(",");
 			xlglPictureService.deleteBatch(ids);
 			for (int i = 0; i < ids.length; i++) {
 				XlglPicture xlglPicture = new XlglPicture();
@@ -140,6 +142,14 @@ public class XlglXlzzInfoController {
 				xlglPicture.setIsFirst("0");
 				xlglPicture.setPictureId(ids[i]);
 				xlglPicture.setSort("0");
+				String typePicture = types[i];
+				if("video/mp4".equals(typePicture)){
+					xlglPicture.setPictureType("0");
+				}else if("image/png".equals(typePicture)){
+					xlglPicture.setPictureType("1");
+				}else {
+					xlglPicture.setPictureType("2");
+				}
 				xlglPictureService.save(xlglPicture);
 			}
 		}
