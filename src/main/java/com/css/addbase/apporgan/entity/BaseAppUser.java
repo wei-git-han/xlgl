@@ -46,6 +46,9 @@ public class BaseAppUser implements Serializable {
 	private String sfzw;
 
 	private String baoming;
+
+	//是否有效
+	private String sfyx;
 	
 	/**
 	 * 设置：主键
@@ -229,5 +232,13 @@ public class BaseAppUser implements Serializable {
 
 	public void setBaoming(String baoming) {
 		this.baoming = baoming;
+	}
+
+	public String getSfyx() {
+		return sfyx;
+	}
+
+	public void setSfyx(String sfyx) {
+		this.sfyx = sfyx;
 	}
 }

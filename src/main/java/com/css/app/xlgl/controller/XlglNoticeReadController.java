@@ -72,6 +72,9 @@ public class XlglNoticeReadController {
 	@RequestMapping("/save")
 	public void save(String noticeId){
 		SSOUser ssoUser = CurrentUser.getSSOUser();
+		//判断是否已读过，已读就不更新表了
+		XlglNoticeRead xlgl = xlglNoticeReadService.queryIsRead(noticeId,ssoUser.getUserId());
+		if(xlgl == null){
 		XlglNoticeRead xlglNoticeRead = new XlglNoticeRead();
 		xlglNoticeRead.setId(UUIDUtils.random());
 		xlglNoticeRead.setNoticeId(noticeId);
@@ -81,8 +84,8 @@ public class XlglNoticeReadController {
 		xlglNoticeRead.setReadOrgId(ssoUser.getOrganId());
 		xlglNoticeRead.setReadOrgName(ssoUser.getOrgName());
 		xlglNoticeReadService.save(xlglNoticeRead);
-		
-		Response.ok();
+		}
+		Response.json("result","success");
 	}
 	
 	/**

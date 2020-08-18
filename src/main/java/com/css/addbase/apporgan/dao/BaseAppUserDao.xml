@@ -173,6 +173,7 @@
 			<if test="sex != null">"SEX" = #{sex}, </if>
 			<if test="telephone != null">"TELEPHONE" = #{telephone},</if>
 			<if test="sfzb != null">"SFZB" = #{sfzb}</if>
+			<if test="sfyx != null">"SFYX" = #{sfyx}</if>
 		</set>
 		where ID = #{id}
 	</update>

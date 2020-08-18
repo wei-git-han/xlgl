@@ -46,5 +46,10 @@ public class XlglNoticeReadServiceImpl implements XlglNoticeReadService {
 	public void deleteBatch(String[] ids){
 		xlglNoticeReadDao.deleteBatch(ids);
 	}
+
+	@Override
+	public XlglNoticeRead queryIsRead(String noticeId,String userId){
+		return xlglNoticeReadDao.queryIsRead(noticeId,userId);
+	}
 	
 }
