@@ -37,4 +37,18 @@ public interface XlglSubDocTrackingService {
 
 	List<XlglSubDocTracking> queryListForPerson(Map<String,Object> map);
 
+	List<String> queryAllInfos(String userId,String type);
+
+	int queryCount(String fileId);
+
+	int queryAllCount(String userId);
+
+	int quereyWcCount(String userId);
+
+	int queryCurrentYear(Map<String,Object> map);
+
+	int queryCxCount(Map<String,Object> map);
+
+	int queryBmCount(Map<String,Object> map);
+
 }

@@ -29,4 +29,6 @@ public interface XlglPictureService {
 	int queryTotal(Map<String,Object> map);
 	
 	void savePicture(String fileId,String pictureId ,String pictureType);
+
+	List<XlglPicture> queryAllInfoByInfoId(Map<String,Object> map);
 }

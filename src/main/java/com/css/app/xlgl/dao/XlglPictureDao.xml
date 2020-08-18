@@ -7,6 +7,10 @@
 		select * from XLGL_PICTURE where ID = #{value}
 	</select>
 
+	<select id="queryAllInfoByInfoId" resultType="com.css.app.xlgl.entity.XlglPicture">
+		select * from XLGL_PICTURE where FILE_ID = #{infoId}
+	</select>
+
 	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglPicture">
 		select * from XLGL_PICTURE where 1=1
 		<if test="id != null">

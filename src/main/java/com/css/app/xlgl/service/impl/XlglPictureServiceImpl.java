@@ -67,5 +67,10 @@ public class XlglPictureServiceImpl implements XlglPictureService {
 		xlglPictureDao.save(xlglPicture);
 		
 	}
+
+	@Override
+	public List<XlglPicture> queryAllInfoByInfoId(Map<String,Object> map){
+		return xlglPictureDao.queryAllInfoByInfoId(map);
+	}
 	
 }

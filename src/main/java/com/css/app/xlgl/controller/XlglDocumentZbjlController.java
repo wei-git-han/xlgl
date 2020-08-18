@@ -216,6 +216,7 @@ public class XlglDocumentZbjlController {
                 tracking.setUndertaker(subInfo.getUndertaker());
                 tracking.setBaoming("0");
                 tracking.setTitle(xlglXlzzInfo.getTitle());
+                tracking.setTrackingType(xlglXlzzInfo.getXltype());//训练类型
                 xlglSubDocTrackingService.save(tracking);
 
                 //发送消息提醒
@@ -313,7 +314,7 @@ public class XlglDocumentZbjlController {
      */
     @ResponseBody
     @RequestMapping("/personList")
-    public void personList(Integer page, Integer pagesize, String search){
+    public void personList(Integer page, Integer pagesize, String search,String type){
         List<XlglSubDocTracking> list = null;
         String userId = CurrentUser.getUserId();
         Map<String,Object> map = new HashMap<String,Object>();
@@ -322,6 +323,9 @@ public class XlglDocumentZbjlController {
         }
         if(StringUtils.isNotBlank(search)){
             map.put("search",search);
+        }
+        if(StringUtils.isNotBlank(type)){
+            map.put("type",type);
         }
 
         PageHelper.startPage(page,pagesize);

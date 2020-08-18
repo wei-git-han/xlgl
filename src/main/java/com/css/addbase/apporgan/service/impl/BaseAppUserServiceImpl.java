@@ -173,5 +173,10 @@ public class BaseAppUserServiceImpl implements BaseAppUserService {
 	public String queryByUserId(String userId){
 		return baseAppUserDao.queryByUserId(userId);
 	}
+
+	@Override
+	public int queryListAllYx(Map<String,Object> map){
+		return baseAppUserDao.queryListAllYx(map);
+	}
 	
 }

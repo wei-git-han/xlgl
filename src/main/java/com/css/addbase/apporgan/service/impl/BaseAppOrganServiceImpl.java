@@ -109,7 +109,7 @@ public class BaseAppOrganServiceImpl implements BaseAppOrganService {
 	}
 
 	@Override
-	public List<String> queryAllDeptIds(){
+	public List<BaseAppOrgan> queryAllDeptIds(){
 		return baseAppOrganDao.queryAllDeptIds();
 	}
 

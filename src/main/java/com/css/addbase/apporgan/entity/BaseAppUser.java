@@ -47,8 +47,13 @@ public class BaseAppUser implements Serializable {
 
 	private String baoming;
 
-	//是否有效
+	//是否有效 0有效，1无效
 	private String sfyx;
+
+	//有效时间
+	private String startTime;
+	//失效时间
+	private String endTime;
 	
 	/**
 	 * 设置：主键
@@ -240,5 +245,21 @@ public class BaseAppUser implements Serializable {
 
 	public void setSfyx(String sfyx) {
 		this.sfyx = sfyx;
+	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
 	}
 }
