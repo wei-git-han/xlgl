@@ -57,6 +57,7 @@ public class XlglWarTacticController {
 		
 		//查询列表数据
 		List<XlglWarTactic> xlglWarTacticList = xlglWarTacticService.queryList(map);
+		PageUtils pageUtil = new PageUtils(xlglWarTacticList);
 		Map<String, Object> fileMap = new HashMap<>();
 		Map<String, Object> hashMap = new HashMap<>();
 		hashMap.put("readUserId", CurrentUser.getUserId());
@@ -82,7 +83,7 @@ public class XlglWarTacticController {
 			}
 			xlglWarTactic.setAccessoryFileArray(list);
 		}
-		PageUtils pageUtil = new PageUtils(xlglWarTacticList);
+	
 		Response.json("page",pageUtil);
 	}
 	

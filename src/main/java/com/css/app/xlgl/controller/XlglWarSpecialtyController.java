@@ -58,6 +58,7 @@ public class XlglWarSpecialtyController {
 		
 		//查询列表数据
 		List<XlglWarSpecialty> xlglWarSpecialtyList = xlglWarSpecialtyService.queryList(map);
+		PageUtils pageUtil = new PageUtils(xlglWarSpecialtyList);
 		Map<String, Object> fileMap = new HashMap<>();
 		Map<String, Object> hashMap = new HashMap<>();
 		for (XlglWarSpecialty xlglWarSpecialty : xlglWarSpecialtyList) {
@@ -82,7 +83,7 @@ public class XlglWarSpecialtyController {
 			}
 			xlglWarSpecialty.setAccessoryFileArray(list);
 		}
-		PageUtils pageUtil = new PageUtils(xlglWarSpecialtyList);
+	
 		Response.json("page",pageUtil);
 	}
 	

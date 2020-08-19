@@ -157,7 +157,12 @@ public class XlglNoticeController {
 	@RequestMapping("/info")
 	public void info(String id){
 		XlglNotice xlglNotice = xlglNoticeService.queryObject(id);
-		xlglNotice.setViewNumber(xlglNotice.getViewNumber()+1);
+		if(xlglNotice.getViewNumber() !=null) {
+			xlglNotice.setViewNumber(xlglNotice.getViewNumber()+1);
+		}else {
+			xlglNotice.setViewNumber(1);
+		}
+		
 		xlglNoticeService.update(xlglNotice);
 		Response.json("xlglNotice", xlglNotice);
 	}

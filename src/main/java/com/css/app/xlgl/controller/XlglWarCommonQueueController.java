@@ -52,6 +52,7 @@ public class XlglWarCommonQueueController {
 		PageHelper.startPage(page, limit);
 		//查询列表数据
 		List<XlglWarCommonQueue> xlglWarCommonQueueList = xlglWarCommonQueueService.queryList(map);
+		PageUtils pageUtil = new PageUtils(xlglWarCommonQueueList);
 		Map<String, Object> fileMap = new HashMap<>();
 		Map<String, Object> hashMap = new HashMap<>();
 		hashMap.put("readUserId", CurrentUser.getUserId());
@@ -77,8 +78,6 @@ public class XlglWarCommonQueueController {
 			}
 			xlglWarCommonQueue.setAccessoryFileArray(list);
 		}
-		
-		PageUtils pageUtil = new PageUtils(xlglWarCommonQueueList);
 		Response.json("page",pageUtil);
 	}
 	
