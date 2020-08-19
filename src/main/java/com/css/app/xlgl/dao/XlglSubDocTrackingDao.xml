@@ -14,6 +14,48 @@
 		</if>
 	</select>
 
+	<select id="queryCurrentYear" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
+		select count(1) from XLGL_SUB_DOC_TRACKING where 1=1
+		<if test="userId != null and userId !=''">
+			and RECEIVER_ID =#{userId}
+		</if>
+		<if test="year != null and year !=''">
+			and CREATED_TIME like '%'||#{year}||'%'
+		</if>
+	</select>
+
+	<select id="queryCxCount" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
+		select count(1) from XLGL_SUB_DOC_TRACKING where 1=1
+		<if test="userId != null and userId !=''">
+			and RECEIVER_ID =#{userId}
+		</if>
+		<if test="year != null and year !=''">
+			and CREATED_TIME like '%'||#{year}||'%'
+		</if>
+		and IS_WORK = '1' and TRACKING_TYPE = '0'
+	</select>
+
+	<select id="queryBmCount" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
+		select count(1) from XLGL_SUB_DOC_TRACKING where 1=1
+		<if test="userId != null and userId !=''">
+			and RECEIVER_ID =#{userId}
+		</if>
+		<if test="year != null and year !=''">
+			and CREATED_TIME like '%'||#{year}||'%'
+		</if>
+		and BAOMING = '1' and TRACKING_TYPE = '1'
+	</select>
+
+	<select id="queryListForPerson" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
+		select * from XLGL_SUB_DOC_TRACKING where 1=1
+		<if test="userId != null and userId != ''">
+			 and RECEIVER_ID =#{userId}
+		</if>
+		<if test="type != null and type !=''">
+			and TRACKING_TYPE = #{type}
+		</if>
+	</select>
+
 	<select id="queryBmInfo" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
 		select
         max ( case when a.baoming = '0' then count(id) end ) as baoming,
@@ -56,7 +98,9 @@
 			"READ",
 			"INFO_ID",
 			"BAOMING",
-			"REASON"
+			"REASON",
+			"TITLE",
+			"IS_WORK"
 		)
 		values
 		(
@@ -79,7 +123,9 @@
 			#{read},
 			#{infoId},
 			#{baoming},
-			#{reason}
+			#{reason},
+			#{title},
+			#{isWork}
 		)
 	</insert>
 	 
@@ -105,6 +151,8 @@
 			<if test="infoId != null">"INFO_ID" = #{infoId}</if>
 			<if test="baoming != null">"BAOMING" = #{baoming}</if>
 			<if test="reason != null">"REASON" = #{reason}</if>
+			<if test="title != null">"TITLE" = #{title}</if>
+			<if test="isWork != null">"IS_WORK" = #{isWork}</if>
 		</set>
 		where ID = #{id}
 	</update>

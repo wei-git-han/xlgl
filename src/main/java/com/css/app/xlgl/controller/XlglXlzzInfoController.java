@@ -1,7 +1,9 @@
 package com.css.app.xlgl.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.appconfig.service.BaseAppConfigService;
 import com.css.addbase.apporgan.entity.BaseAppOrgan;
@@ -18,6 +20,7 @@ import com.css.app.xlgl.service.XlglPictureService;
 import com.css.app.xlgl.service.XlglSubDocTrackingService;
 import com.css.app.xlgl.service.XlglXlzzInfoService;
 import com.css.base.utils.*;
+import com.google.gson.JsonObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,10 +121,11 @@ public class XlglXlzzInfoController {
 	
 	/**
 	 * 保存
+	 * type  视频是0；图片是1；文档是2
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public void save(XlglXlzzInfo xlglXlzzInfo,String pIds){
+	public void save(XlglXlzzInfo xlglXlzzInfo,String pIds,String type){
 		String fId = UUIDUtils.random();
 		xlglXlzzInfo.setId(fId);
 		xlglXlzzInfo.setCreateTime(new Date());
@@ -129,6 +133,7 @@ public class XlglXlzzInfoController {
 		//保存上传图片，视频，文件
 		if(StringUtils.isNotBlank(pIds)) {
 			String[] ids = pIds.split(",");
+			String[] types = type.split(",");
 			xlglPictureService.deleteBatch(ids);
 			for (int i = 0; i < ids.length; i++) {
 				XlglPicture xlglPicture = new XlglPicture();
@@ -137,6 +142,14 @@ public class XlglXlzzInfoController {
 				xlglPicture.setIsFirst("0");
 				xlglPicture.setPictureId(ids[i]);
 				xlglPicture.setSort("0");
+				String typePicture = types[i];
+				if("video/mp4".equals(typePicture)){
+					xlglPicture.setPictureType("0");
+				}else if("image/png".equals(typePicture)){
+					xlglPicture.setPictureType("1");
+				}else {
+					xlglPicture.setPictureType("2");
+				}
 				xlglPictureService.save(xlglPicture);
 			}
 		}
@@ -245,6 +258,157 @@ public class XlglXlzzInfoController {
 		xlglSubDocTrackingService.update(xlglSubDocTracking);
 		Response.json("result","success");
 	}
+
+	/**
+	 * 详情里面大讲堂单科目和所有局的参训率
+	 */
+	@ResponseBody
+	@RequestMapping("/getPerData")
+	public void getPerData(String fileId){
+		int sum = 0;//每一个课程在有效期内所有的有效人员相加
+		int count1 = 0;//每一个课程在有效期内所有参训人员相加
+		JSONArray jsonArray = new JSONArray();
+		JSONObject jsonObject1 = new JSONObject();
+		List<BaseAppOrgan> allDepts = baseAppOrganService.queryAllDeptIds();
+		if(allDepts != null && allDepts.size() > 0){
+			for(BaseAppOrgan baseAppOrgan : allDepts){
+				String CurrentOrganId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
+				JSONObject jsonObject = new JSONObject();
+				String organId = baseAppOrgan.getId();
+				Map<String, Object> map = new HashMap<String, Object>();
+				if (com.css.base.utils.StringUtils.isNotBlank(organId) && !com.css.base.utils.StringUtils.equals("root", organId)) {
+					//organId = allOrgIds(organId);
+					//map.put("orgIds", organId.split(","));
+					map.put("orgIds", organId);
+				}
+				XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(fileId);
+				String time = xlglXlzzInfo.getExerciseTime();
+				map.put("time",time);
+				int allCount = baseAppUserService.queryListAllYx(map);//查询所有的有效人员
+				sum += allCount;
+
+				//参训的人待会议那传过来，更新XLGL_SUB_DOC_TRACKING表的IS_WORK字段
+
+				///////////////////////////////////////////////
+
+				int count = xlglSubDocTrackingService.queryCount(fileId);
+				count1 +=count;
+
+				float lv = count/allCount;
+				if(baseAppOrgan.getId().equals(CurrentOrganId)){
+					jsonObject.put("isCurrentDept",true);
+				}else {
+					jsonObject.put("isCurrentDept",false);
+				}
+				jsonObject.put("lv",lv);//详情里面大讲堂单科目参训率
+				jsonObject.put("name",baseAppOrgan.getName());
+				jsonArray.add(jsonObject);
+			}
+		}
+		float Alllv = count1/sum;
+		jsonObject1.put("result",jsonArray);
+		jsonObject1.put("Alllv",Alllv);//大讲堂列表各单位年度参训完成情况
+
+		Response.json(jsonObject1);
+	}
+
+
+
+	private String allOrgIds(String orgId) {
+		String ret = "";
+		if (com.css.base.utils.StringUtils.isNotBlank(orgId)) {
+			BaseAppOrgan org = baseAppOrganService.queryObject(orgId);
+			if (org != null) {
+				ret += org.getId() + ",";
+				List<BaseAppOrgan> list = baseAppOrganService.getSubOrg(org.getId());
+				if (list != null && list.size() > 0) {
+					for (BaseAppOrgan organ : list) {
+						ret += allOrgIds(organ.getId());
+					}
+				}
+			}
+		}
+		return ret;
+	}
+
+	/**
+	 * 强装兴装大讲堂列表
+	 * type  1是已报名 2是延后
+	 */
+	@ResponseBody
+	@RequestMapping("/getDjtList")
+	public void getDjtList(String type){
+		String userId = CurrentUser.getUserId();
+		JSONArray jsonArray = new JSONArray();
+		//查出所有的文id
+		List<String> listInfoIds = xlglSubDocTrackingService.queryAllInfos(userId,type);
+		if(listInfoIds != null && listInfoIds.size() > 0){
+			for(String infoId : listInfoIds){
+				JSONObject jsonObject = new JSONObject();
+				Map<String,Object> map = new HashMap<String,Object>();
+				map.put("infoId",infoId);
+				List<XlglPicture> listPicture = xlglPictureService.queryAllInfoByInfoId(map);
+				jsonObject.put("listPicture",listPicture);
+				jsonArray.add(jsonObject);
+			}
+		}
+
+		Response.json("result",jsonArray);
+	}
+
+	/**
+	 * 强装大讲堂详情页
+	 * infoId 文id，id 视频保存的id（picture表的id）
+	 */
+	@ResponseBody
+	@RequestMapping("/getInfo")
+	public void getInfo(String infoId,String id){
+		XlglPicture xlglPicture = xlglPictureService.queryObject(id);
+		XlglSubDocTracking xlglSubDocTracking = xlglSubDocTrackingService.queryInfo(infoId,CurrentUser.getUserId());
+		xlglSubDocTracking.setIsWork("1");
+		xlglSubDocTrackingService.update(xlglSubDocTracking);
+		Response.json("xlglPicture",xlglPicture);
+
+	}
+
+	/**
+	 * 大讲堂列表参训完成率
+	 */
+	@ResponseBody
+	@RequestMapping("/getWcl")
+	public void getWcl(){
+		String userId = CurrentUser.getUserId();
+		int sum = xlglSubDocTrackingService.queryAllCount(userId);
+		int count = xlglSubDocTrackingService.quereyWcCount(userId);
+		float f = count/sum;
+		Response.json("lv",f);
+
+	}
+
+	/**
+	 * 训练组织列表参训完成率
+	 */
+	@ResponseBody
+	@RequestMapping("/getCxwcl")
+	public void getCxwcl(){
+		Map<String,Object> map = new HashMap<>();
+		String userId = CurrentUser.getUserId();
+		SimpleDateFormat sd = new SimpleDateFormat("yyyy");
+		Date date = new Date();
+		String year = sd.format(date);
+		map.put("userId",userId);
+		map.put("year",year);
+		int count = xlglSubDocTrackingService.queryCurrentYear(map);//本年度大讲堂数+日常训练数
+
+		int ycx = xlglSubDocTrackingService.queryCxCount(map);//已参训的大讲堂数
+
+		int ybm = xlglSubDocTrackingService.queryBmCount(map);
+
+		float f= (ycx + ybm) / count;
+
+		Response.json("lv",f);
+	}
+
 
 	
 }

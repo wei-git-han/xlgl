@@ -7,6 +7,10 @@
 		select * from XLGL_PICTURE where ID = #{value}
 	</select>
 
+	<select id="queryAllInfoByInfoId" resultType="com.css.app.xlgl.entity.XlglPicture">
+		select * from XLGL_PICTURE where FILE_ID = #{infoId}
+	</select>
+
 	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglPicture">
 		select * from XLGL_PICTURE where 1=1
 		<if test="id != null">
@@ -35,7 +39,8 @@
 			"IS_FIRST", 
 			"SORT",
 			"CREATE_TIME",
-			"PICTURE_TYPE"
+			"PICTURE_TYPE",
+			"PICTURE_NAME"
 		)
 		values
 		(
@@ -45,7 +50,8 @@
 			#{isFirst}, 
 			#{sort},
 			#{createTime},
-			#{pictureType}
+			#{pictureType},
+			#{pictureName}
 		)
 	</insert>
 	 
@@ -58,6 +64,7 @@
 			<if test="sort != null">"SORT" = #{sort},</if>
 			<if test="createTime != null">"CREATE_TIME" = #{createTime},</if>
 			<if test="pictureType != null">"PICTURE_TYPE" = #{pictureType}</if>
+			<if test="pictureName != null">"PICTURE_NAME" = #{pictureName}</if>
 		</set>
 		where ID = #{id}
 	</update>

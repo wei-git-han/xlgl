@@ -5,6 +5,10 @@ import com.css.app.xlgl.entity.XlglPicture;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.css.base.dao.BaseDao;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 训练管理存图片表
@@ -15,5 +19,6 @@ import com.css.base.dao.BaseDao;
  */
 @Mapper
 public interface XlglPictureDao extends BaseDao<XlglPicture> {
-	
+
+    List<XlglPicture> queryAllInfoByInfoId(Map<String,Object> map);
 }

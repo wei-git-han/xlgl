@@ -118,5 +118,7 @@ public interface BaseAppUserService {
 
 	String queryByUserId(String userId);
 
+	int queryListAllYx(Map<String,Object> map);
+
 	
 }

@@ -33,6 +33,22 @@
 		</if>
 		order by OORDERID,SORT
 	</select>
+
+	<select id="queryListAllYx" resultType="com.css.addbase.apporgan.entity.BaseAppUser">
+		select count(1) from BASE_APP_USER T
+		left join BASE_APP_ORGAN O on O.ID =  T.ORGANID
+		where 1=1 and T.ISDELETE =0 and O.ISDELETE =0
+		<if test="orgIds != null">
+		 and T.ORGANID in
+		 <foreach item="item" collection="orgIds" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		</if>
+		<if test="time != null">
+			and T.END_TIME > to_date(time,'yyyy-mm-dd HH24:mi:ss')
+		</if>
+		order by OORDERID,SORT
+	</select>
 	<select id="selectUserByNameAndUnitId" resultType="com.css.addbase.apporgan.entity.BaseAppUser">
 		select * from BASE_APP_USER where ISDELETE = 0 and truename=#{0} and organid in (
 		select ID from BASE_APP_ORGAN start with  id=#{1} and ISDELETE=0 connect by prior id=parent_Id)
@@ -173,6 +189,9 @@
 			<if test="sex != null">"SEX" = #{sex}, </if>
 			<if test="telephone != null">"TELEPHONE" = #{telephone},</if>
 			<if test="sfzb != null">"SFZB" = #{sfzb}</if>
+			<if test="sfyx != null">"SFYX" = #{sfyx}</if>
+			<if test="startTime != null">"START_TIME" = #{startTime}</if>
+			<if test="endTime != null">"END_TIME" = #{endTime}</if>
 		</set>
 		where ID = #{id}
 	</update>

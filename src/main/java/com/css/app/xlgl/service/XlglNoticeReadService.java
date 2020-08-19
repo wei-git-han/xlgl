@@ -25,4 +25,5 @@ public interface XlglNoticeReadService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+	XlglNoticeRead queryIsRead(String noticeId,String userId);
 }

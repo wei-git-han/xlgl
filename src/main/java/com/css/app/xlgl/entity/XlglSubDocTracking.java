@@ -58,6 +58,12 @@ public class XlglSubDocTracking implements Serializable {
 	//未报名原因
 	private String reason;
 
+	//标题名
+	private String title;
+
+	//是否参训 0未参训 1已参训
+	private String isWork;
+
 	/**
 	 * 设置：
 	 */
@@ -281,5 +287,21 @@ public class XlglSubDocTracking implements Serializable {
 
 	public void setRead(String read) {
 		this.read = read;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getIsWork() {
+		return isWork;
+	}
+
+	public void setIsWork(String isWork) {
+		this.isWork = isWork;
 	}
 }

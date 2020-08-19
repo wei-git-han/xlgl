@@ -21,9 +21,11 @@ import com.css.app.db.config.service.AdminSetService;
 import com.css.app.xlgl.entity.XlglDocumentZbjl;
 import com.css.app.xlgl.entity.XlglSubDocInfo;
 import com.css.app.xlgl.entity.XlglSubDocTracking;
+import com.css.app.xlgl.entity.XlglXlzzInfo;
 import com.css.app.xlgl.service.XlglDocumentZbjlService;
 import com.css.app.xlgl.service.XlglSubDocInfoService;
 import com.css.app.xlgl.service.XlglSubDocTrackingService;
+import com.css.app.xlgl.service.XlglXlzzInfoService;
 import com.css.base.utils.*;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.codehaus.groovy.util.HashCodeHelper;
@@ -74,6 +76,8 @@ public class XlglDocumentZbjlController {
     private BaseAppConfigService baseAppConfigService;
     @Autowired
     private XlglSubDocTrackingService xlglSubDocTrackingService;
+    @Autowired
+    private XlglXlzzInfoService xlglXlzzInfoService;
 	
 	/**
 	 * 列表
@@ -168,10 +172,13 @@ public class XlglDocumentZbjlController {
     @ResponseBody
     @RequestMapping("/sendToUsers")
     public void sendToUsers(String fileId,String subId) {
+        XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(fileId);
         String organId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
         List<BaseAppUser> list = baseAppUserService.queryAllUserIdAndName(organId);
         if (list != null && list.size() > 0) {
             XlglSubDocInfo subInfo = xlglSubDocInfoService.queryObject(subId);
+            subInfo.setIsSend("1");//更新状态，已分发
+            xlglSubDocInfoService.update(subInfo);
             for (BaseAppUser baseAppUser : list) {
                 String receiverId = baseAppUser.getUserId();
                 String receiverName = baseAppUser.getTruename();
@@ -194,6 +201,7 @@ public class XlglDocumentZbjlController {
                 String loginUserName = CurrentUser.getUsername();
                 String loginUserDeptId = CurrentUser.getDepartmentId();
                 String loginUserDeptName = CurrentUser.getOrgName();
+                tracking.setInfoId(fileId);
                 tracking.setSenderId(CurrentUser.getUserId());
                 tracking.setSenderName(loginUserName);
                 tracking.setSenDeptId(loginUserDeptId);
@@ -207,6 +215,8 @@ public class XlglDocumentZbjlController {
                 tracking.setPreviousStatus(subInfo.getDocStatus());
                 tracking.setUndertaker(subInfo.getUndertaker());
                 tracking.setBaoming("0");
+                tracking.setTitle(xlglXlzzInfo.getTitle());
+                tracking.setTrackingType(xlglXlzzInfo.getXltype());//训练类型
                 xlglSubDocTrackingService.save(tracking);
 
                 //发送消息提醒
@@ -275,6 +285,7 @@ public class XlglDocumentZbjlController {
      * @param page
      * @param pagesize
      * @param search
+     * isSend字段代表是否分发  0未分发，1已分发
      */
     @ResponseBody
     @RequestMapping("/juList")
@@ -303,8 +314,8 @@ public class XlglDocumentZbjlController {
      */
     @ResponseBody
     @RequestMapping("/personList")
-    public void personList(Integer page, Integer pagesize, String search){
-        List<XlglSubDocInfo> list = null;
+    public void personList(Integer page, Integer pagesize, String search,String type){
+        List<XlglSubDocTracking> list = null;
         String userId = CurrentUser.getUserId();
         Map<String,Object> map = new HashMap<String,Object>();
         if(StringUtils.isNotBlank(userId)){
@@ -313,9 +324,12 @@ public class XlglDocumentZbjlController {
         if(StringUtils.isNotBlank(search)){
             map.put("search",search);
         }
+        if(StringUtils.isNotBlank(type)){
+            map.put("type",type);
+        }
 
         PageHelper.startPage(page,pagesize);
-        list = xlglSubDocInfoService.queryListForPerson(map);
+        list = xlglSubDocTrackingService.queryListForPerson(map);
         GwPageUtils pageUtil = new GwPageUtils(list);
         Response.json(pageUtil);
 

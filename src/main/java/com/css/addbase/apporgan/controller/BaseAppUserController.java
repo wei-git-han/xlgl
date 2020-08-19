@@ -384,6 +384,19 @@ public class BaseAppUserController {
 		baseAppUserService.update(baseAppUser);
 		Response.json("result","success");
 	}
+
+	/**
+	 * 加载当前人及当前人的部门
+	 * 更改是否有效状态
+	 */
+	@ResponseBody
+	@RequestMapping("/updateSfyx")
+	public void updateSfyx(BaseAppUser baseAppUser){
+		//删掉的代码没有调用到
+		JSONObject json = new JSONObject();
+		baseAppUserService.update(baseAppUser);
+		Response.json("result","success");
+	}
 	
 	private String allOrgIds(String orgId) {
 		String ret = "";
