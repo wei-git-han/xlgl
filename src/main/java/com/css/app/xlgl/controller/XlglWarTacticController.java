@@ -100,6 +100,11 @@ public class XlglWarTacticController {
 		map.put("readUserId", ssoUser.getUserId());
 		XlglWarTactic xlglWarTactic = xlglWarTacticService.queryObject(id);
 		xlglWarTactic.setViewNumber(xlglWarTactic.getViewNumber()+1);
+		if(xlglWarTactic.getViewNumber() !=null) {
+			xlglWarTactic.setViewNumber(xlglWarTactic.getViewNumber()+1);
+		}else {
+			xlglWarTactic.setViewNumber(1);
+		}
 		xlglWarTacticService.update(xlglWarTactic);
 		//已读记录表
 		List<XlglWarTacticRead> queryList = xlglWarTacticReadService.queryList(map);

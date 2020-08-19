@@ -93,7 +93,11 @@ public class XlglWarCommonQueueController {
 		map.put("queueId", id);
 		map.put("readUserId", ssoUser.getUserId());
 		XlglWarCommonQueue xlglWarCommonQueue = xlglWarCommonQueueService.queryObject(id);
-		xlglWarCommonQueue.setViewNumber(xlglWarCommonQueue.getViewNumber()+1);
+		if(xlglWarCommonQueue.getViewNumber() !=null) {
+			xlglWarCommonQueue.setViewNumber(xlglWarCommonQueue.getViewNumber()+1);
+		}else {
+			xlglWarCommonQueue.setViewNumber(1);
+		}
 		xlglWarCommonQueueService.update(xlglWarCommonQueue);
 		//已读记录表
 		List<XlglWarCommonQueueRead> queryList = xlglWarCommonQueueReadService.queryList(map);

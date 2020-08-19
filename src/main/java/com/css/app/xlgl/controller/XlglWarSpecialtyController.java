@@ -100,6 +100,11 @@ public class XlglWarSpecialtyController {
 		map.put("readUserId", ssoUser.getUserId());
 		XlglWarSpecialty xlglWarSpecialty = xlglWarSpecialtyService.queryObject(id);
 		xlglWarSpecialty.setViewNumber(xlglWarSpecialty.getViewNumber()+1);
+		if(xlglWarSpecialty.getViewNumber() !=null) {
+			xlglWarSpecialty.setViewNumber(xlglWarSpecialty.getViewNumber()+1);
+		}else {
+			xlglWarSpecialty.setViewNumber(1);
+		}
 		xlglWarSpecialtyService.update(xlglWarSpecialty);
 		//已读记录表
 		List<XlglWarSpecialtyRead> queryList = xlglWarSpecialtyReadService.queryList(map);

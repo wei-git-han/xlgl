@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.XlglWarCommonWarbasisDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglWarCommonWarbasis">
+		select * from XLGL_WAR_COMMON_WARBASIS where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglWarCommonWarbasis">
+		select * from XLGL_WAR_COMMON_WARBASIS 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_WAR_COMMON_WARBASIS 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglWarCommonWarbasis">
+		insert into XLGL_WAR_COMMON_WARBASIS
+		(
+			"id", 
+			"TACTIC_TITLE", 
+			"CREATE_ORGAN_ID", 
+			"CREATE_ORGAN_NAME", 
+			"PUBLISH_DATE", 
+			"CONTENT", 
+			"TARGET", 
+			"VIDEO_FILE", 
+			"ACCESSORY_FILE", 
+			"COVER_FILE", 
+			"CREATE_USER", 
+			"CREATE_DATE", 
+			"UPDATE_USER", 
+			"UPDATE_DATE", 
+			"QUEUE_TYPE", 
+			"VIEW_NUMBER"
+		)
+		values
+		(
+			#{id}, 
+			#{tacticTitle}, 
+			#{createOrganId}, 
+			#{createOrganName}, 
+			#{publishDate}, 
+			#{content}, 
+			#{target}, 
+			#{videoFile}, 
+			#{accessoryFile}, 
+			#{coverFile}, 
+			#{createUser}, 
+			#{createDate}, 
+			#{updateUser}, 
+			#{updateDate}, 
+			#{queueType}, 
+			#{viewNumber}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.XlglWarCommonWarbasis">
+		update XLGL_WAR_COMMON_WARBASIS 
+		<set>
+			<if test="tacticTitle != null">"TACTIC_TITLE" = #{tacticTitle}, </if>
+			<if test="createOrganId != null">"CREATE_ORGAN_ID" = #{createOrganId}, </if>
+			<if test="createOrganName != null">"CREATE_ORGAN_NAME" = #{createOrganName}, </if>
+			<if test="publishDate != null">"PUBLISH_DATE" = #{publishDate}, </if>
+			<if test="content != null">"CONTENT" = #{content}, </if>
+			<if test="target != null">"TARGET" = #{target}, </if>
+			<if test="videoFile != null">"VIDEO_FILE" = #{videoFile}, </if>
+			<if test="accessoryFile != null">"ACCESSORY_FILE" = #{accessoryFile}, </if>
+			<if test="coverFile != null">"COVER_FILE" = #{coverFile}, </if>
+			<if test="createUser != null">"CREATE_USER" = #{createUser}, </if>
+			<if test="createDate != null">"CREATE_DATE" = #{createDate}, </if>
+			<if test="updateUser != null">"UPDATE_USER" = #{updateUser}, </if>
+			<if test="updateDate != null">"UPDATE_DATE" = #{updateDate}, </if>
+			<if test="queueType != null">"QUEUE_TYPE" = #{queueType}, </if>
+			<if test="viewNumber != null">"VIEW_NUMBER" = #{viewNumber}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_WAR_COMMON_WARBASIS where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_WAR_COMMON_WARBASIS where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

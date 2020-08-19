@@ -24,29 +24,29 @@ import com.css.base.utils.StringUtils;
 import com.css.app.xlgl.entity.XlglPicture;
 import com.css.app.xlgl.entity.XlglWarCommonQueue;
 import com.css.app.xlgl.entity.XlglWarCommonQueueRead;
-import com.css.app.xlgl.entity.XlglWarCommonSports;
-import com.css.app.xlgl.entity.XlglWarCommonSportsRead;
+import com.css.app.xlgl.entity.XlglWarCommonWeapon;
+import com.css.app.xlgl.entity.XlglWarCommonWeaponRead;
 import com.css.app.xlgl.service.XlglPictureService;
-import com.css.app.xlgl.service.XlglWarCommonSportsReadService;
-import com.css.app.xlgl.service.XlglWarCommonSportsService;
+import com.css.app.xlgl.service.XlglWarCommonWeaponReadService;
+import com.css.app.xlgl.service.XlglWarCommonWeaponService;
 
 
 /**
- * 军事训练-共同训练-军事体育
+ * 军事训练-共同训练-轻武器操作
  * 
  * @author 中软信息系统工程有限公司
  * @email 
- * @date 2020-08-17 09:53:19
+ * @date 2020-08-19 10:14:38
  */
 @Controller
-@RequestMapping("/xlglwarcommonsports")
-public class XlglWarCommonSportsController {
+@RequestMapping("/xlglwarcommonweapon")
+public class XlglWarCommonWeaponController {
 	@Autowired
-	private XlglWarCommonSportsService xlglWarCommonSportsService;
+	private XlglWarCommonWeaponService xlglWarCommonWeaponService;
 	@Autowired
 	private XlglPictureService xlglPictureService;
 	@Autowired
-	private XlglWarCommonSportsReadService xlglWarCommonSportsReadService;
+	private XlglWarCommonWeaponReadService xlglWarCommonWeaponReadService;
 	
 	
 	/**
@@ -57,35 +57,35 @@ public class XlglWarCommonSportsController {
 	public void list(Integer page, Integer limit){
 		Map<String, Object> map = new HashMap<>();
 		PageHelper.startPage(page, limit);
+		
 		//查询列表数据
-		List<XlglWarCommonSports> xlglWarCommonSportsList = xlglWarCommonSportsService.queryList(map);
-		PageUtils pageUtil = new PageUtils(xlglWarCommonSportsList);
+		List<XlglWarCommonWeapon> xlglWarCommonWeaponList = xlglWarCommonWeaponService.queryList(map);
+		PageUtils pageUtil = new PageUtils(xlglWarCommonWeaponList);
 		Map<String, Object> fileMap = new HashMap<>();
 		Map<String, Object> hashMap = new HashMap<>();
 		hashMap.put("readUserId", CurrentUser.getUserId());
-		for (XlglWarCommonSports xlglWarCommonSports : xlglWarCommonSportsList) {
-			hashMap.put("sportsId", xlglWarCommonSports.getId());
-			List<XlglWarCommonSportsRead> readList = xlglWarCommonSportsReadService.queryList(hashMap);
+		for (XlglWarCommonWeapon xlglWarCommonWeapon : xlglWarCommonWeaponList) {
+			hashMap.put("weaponId", xlglWarCommonWeapon.getId());
+			List<XlglWarCommonWeaponRead> readList = xlglWarCommonWeaponReadService.queryList(hashMap);
 			if(readList.size() >0) {
-				xlglWarCommonSports.setReadStatus("1");
+				xlglWarCommonWeapon.setReadStatus("1");
 			}else {
-				xlglWarCommonSports.setReadStatus("0");
+				xlglWarCommonWeapon.setReadStatus("0");
 			}
-			fileMap.put("id", xlglWarCommonSports.getId());
+			fileMap.put("id", xlglWarCommonWeapon.getId());
 			List<XlglPicture> queryList = xlglPictureService.queryList(map);
 			List<String> list = new ArrayList<String>();
 			for (XlglPicture xlglPicture : queryList) { //1:图片，2：视频，3：附件，4：封面
 				if(xlglPicture.getPictureType().equals("2")) {
-					xlglWarCommonSports.setVideoFile(xlglPicture.getPictureId());
+					xlglWarCommonWeapon.setVideoFile(xlglPicture.getPictureId());
 				}else if(xlglPicture.getPictureType().equals("3")) {
 					list.add(xlglPicture.getPictureId());
 				}else if(xlglPicture.getPictureType().equals("4")) {
-					xlglWarCommonSports.setCoverFile(xlglPicture.getPictureId());
+					xlglWarCommonWeapon.setCoverFile(xlglPicture.getPictureId());
 				}
 			}
-			xlglWarCommonSports.setAccessoryFileArray(list);
+			xlglWarCommonWeapon.setAccessoryFileArray(list);
 		}
-		
 		Response.json("page",pageUtil);
 	}
 	
@@ -94,39 +94,38 @@ public class XlglWarCommonSportsController {
 	 * 信息
 	 */
 	@ResponseBody
-	@RequestMapping("/info")
+	@RequestMapping("/info/{id}")
 	public void info(String id){
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		Map<String, Object> map = new HashMap<>();
-		map.put("sportsId", id);
+		map.put("queueId", id);
 		map.put("readUserId", ssoUser.getUserId());
-		XlglWarCommonSports xlglWarCommonSports = xlglWarCommonSportsService.queryObject(id);
-		xlglWarCommonSports.setViewNumber(xlglWarCommonSports.getViewNumber()+1);
-		if(xlglWarCommonSports.getViewNumber() !=null) {
-			xlglWarCommonSports.setViewNumber(xlglWarCommonSports.getViewNumber()+1);
+		XlglWarCommonWeapon xlglWarCommonWeapon = xlglWarCommonWeaponService.queryObject(id);
+		if(xlglWarCommonWeapon.getViewNumber() !=null) {
+			xlglWarCommonWeapon.setViewNumber(xlglWarCommonWeapon.getViewNumber()+1);
 		}else {
-			xlglWarCommonSports.setViewNumber(1);
+			xlglWarCommonWeapon.setViewNumber(1);
 		}
-		xlglWarCommonSportsService.update(xlglWarCommonSports);
+		xlglWarCommonWeaponService.update(xlglWarCommonWeapon);
 		//已读记录表
-		List<XlglWarCommonSportsRead> queryList = xlglWarCommonSportsReadService.queryList(map);
+		List<XlglWarCommonWeaponRead> queryList = xlglWarCommonWeaponReadService.queryList(map);
 		if(queryList.size()>0) {
-			XlglWarCommonSportsRead xlglWarCommonSportsRead = queryList.get(0);
-			xlglWarCommonSportsRead.setReadDate(new Date());
-			xlglWarCommonSportsReadService.update(xlglWarCommonSportsRead);
+			XlglWarCommonWeaponRead xlglWarCommonWeaponRead = queryList.get(0);
+			xlglWarCommonWeaponRead.setReadDate(new Date());
+			xlglWarCommonWeaponReadService.update(xlglWarCommonWeaponRead);
 		}else {
-			XlglWarCommonSportsRead xlglWarCommonSportsRead = new XlglWarCommonSportsRead();
-			xlglWarCommonSportsRead.setId(UUIDUtils.random());
-			xlglWarCommonSportsRead.setSportsId(id);
-			xlglWarCommonSportsRead.setReadOrgName(ssoUser.getOrgName());
-			xlglWarCommonSportsRead.setReadOrgId(ssoUser.getOrganId());
-			xlglWarCommonSportsRead.setReadUserId(ssoUser.getUserId());
-			xlglWarCommonSportsRead.setReadUserName(ssoUser.getFullname());
-			xlglWarCommonSportsRead.setReadDate(new Date());
-			xlglWarCommonSportsReadService.save(xlglWarCommonSportsRead);
+			XlglWarCommonWeaponRead xlglWarCommonWeaponRead = new XlglWarCommonWeaponRead();
+			xlglWarCommonWeaponRead.setId(UUIDUtils.random());
+			xlglWarCommonWeaponRead.setWeaponId(id);
+			xlglWarCommonWeaponRead.setReadOrgName(ssoUser.getOrgName());
+			xlglWarCommonWeaponRead.setReadOrgId(ssoUser.getOrganId());
+			xlglWarCommonWeaponRead.setReadUserId(ssoUser.getUserId());
+			xlglWarCommonWeaponRead.setReadUserName(ssoUser.getFullname());
+			xlglWarCommonWeaponRead.setReadDate(new Date());
+			xlglWarCommonWeaponReadService.save(xlglWarCommonWeaponRead);
 		}
 		
-		Response.json("xlglWarCommonSports", xlglWarCommonSports);
+		Response.json("xlglWarCommonWeapon", xlglWarCommonWeapon);
 	}
 	
 	/**
@@ -137,17 +136,17 @@ public class XlglWarCommonSportsController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public void save(XlglWarCommonSports xlglWarCommonSports,String coverFile,String videoFile,String[] accessoryFile){
+	public void save(XlglWarCommonWeapon xlglWarCommonWeapon,String coverFile,String videoFile,String[] accessoryFile){
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		Date date = new Date();
 		String random = UUIDUtils.random();
-		xlglWarCommonSports.setId(random);
-		xlglWarCommonSports.setCreateOrganId(ssoUser.getOrganId());
-		xlglWarCommonSports.setCreateOrganName(ssoUser.getOrgName());
-		xlglWarCommonSports.setCreateDate(date);
-		xlglWarCommonSports.setCreateUser(ssoUser.getUserId());
-		xlglWarCommonSports.setPublishDate(date);
-		xlglWarCommonSportsService.save(xlglWarCommonSports);
+		xlglWarCommonWeapon.setId(random);
+		xlglWarCommonWeapon.setCreateOrganId(ssoUser.getOrganId());
+		xlglWarCommonWeapon.setCreateOrganName(ssoUser.getOrgName());
+		xlglWarCommonWeapon.setCreateDate(date);
+		xlglWarCommonWeapon.setCreateUser(ssoUser.getUserId());
+		xlglWarCommonWeapon.setPublishDate(date);
+		xlglWarCommonWeaponService.save(xlglWarCommonWeapon);
 		if(StringUtils.isNotBlank(coverFile)) {
 			xlglPictureService.savePicture(random,coverFile,"4");
 		}
@@ -167,8 +166,8 @@ public class XlglWarCommonSportsController {
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	public void update(XlglWarCommonSports xlglWarCommonSports){
-		xlglWarCommonSportsService.update(xlglWarCommonSports);
+	public void update(XlglWarCommonWeapon xlglWarCommonWeapon){
+		xlglWarCommonWeaponService.update(xlglWarCommonWeapon);
 		
 		Response.ok();
 	}
@@ -179,7 +178,7 @@ public class XlglWarCommonSportsController {
 	@ResponseBody
 	@RequestMapping("/delete")
 	public void delete(String[] ids){
-		xlglWarCommonSportsService.deleteBatch(ids);
+		xlglWarCommonWeaponService.deleteBatch(ids);
 		
 		Response.ok();
 	}
