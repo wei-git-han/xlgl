@@ -1,6 +1,8 @@
 package com.css.app.xlgl.controller;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -216,6 +218,16 @@ public class XlglNoticeController {
 	public void saveOrUpdate(XlglNotice xlglNotice,String pIds){
 		//判断是新增还是修改,id不为空则是修改，为空则是新增
 		String id = xlglNotice.getId();
+		if(StringUtils.isNotBlank(xlglNotice.getReleaseTimeStr())) {
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			try {
+				Date parse = simpleDateFormat.parse(xlglNotice.getReleaseTimeStr());
+				xlglNotice.setReleaseTime(parse);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				Response.error();
+			}
+		}
 		if(!StringUtils.isEmpty(id)){
 			xlglNoticeService.update(xlglNotice);
 		}else{
@@ -319,6 +331,7 @@ public class XlglNoticeController {
 			 HTTPFile httpFile=HTTPFile.save( file.getInputStream(),file.getOriginalFilename());
 			 String filePath = httpFile.getFilePath();
 			 json.put("filePath", filePath);
+			 json.put("fileid", httpFile.getFileId());
 			 Response.json(json);
 		} catch (IOException e) {
 			e.printStackTrace();

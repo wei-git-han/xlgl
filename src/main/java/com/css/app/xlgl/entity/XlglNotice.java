@@ -40,6 +40,8 @@ public class XlglNotice implements Serializable {
 	
 	//图片或视频的fileid
 	private List<String> pictureIds;
+	//
+	private String releaseTimeStr;
 
 	/**
 	 * 设置：主键id
@@ -160,6 +162,12 @@ public class XlglNotice implements Serializable {
 	}
 	public void setPictureIds(List<String> pictureIds) {
 		this.pictureIds = pictureIds;
+	}
+	public String getReleaseTimeStr() {
+		return releaseTimeStr;
+	}
+	public void setReleaseTimeStr(String releaseTimeStr) {
+		this.releaseTimeStr = releaseTimeStr;
 	}
 	
 	
