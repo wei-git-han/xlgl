@@ -664,13 +664,16 @@ public class AppInterfaceConstant {
     /**
      * @author 李振楠
      * @date 2020年8月13日
-     * (app/gwcl/documentFlow/finishApprove)
      * */
     public final static String WEB_INTERFACE_QXJ_USER_INFO_QJDAYS = "/leave/apply/countXiuJiaDays";
     /**
      * @author 李振楠
      * @date 2020年8月13日
-     * (app/gwcl/documentFlow/finishApprove)
      * */
     public final static String WEB_INTERFACE_QXJ_USER_INFO_LIST = "/leave/apply/qxjUserInfoList";
+    /**
+     * @author 李振楠
+     * @date 2020年8月19日
+     * */
+    public final static String WEB_INTERFACE_QXJ_statistics = "/app/qxjgl/leaveOrBack/getXLGLNumber";
 }

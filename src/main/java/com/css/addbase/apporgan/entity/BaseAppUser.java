@@ -54,6 +54,8 @@ public class BaseAppUser implements Serializable {
 	private String startTime;
 	//失效时间
 	private String endTime;
+	//是否在位 0：不在，1:在位
+	private String reign;
 	
 	/**
 	 * 设置：主键
@@ -262,4 +264,12 @@ public class BaseAppUser implements Serializable {
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
+	public String getReign() {
+		return reign;
+	}
+	public void setReign(String reign) {
+		this.reign = reign;
+	}
+	
+	
 }

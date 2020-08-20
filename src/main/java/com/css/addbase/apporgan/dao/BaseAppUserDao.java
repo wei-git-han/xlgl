@@ -122,4 +122,6 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 
 	int queryListAllYx(Map<String,Object> map);
 	
+	
+	List<BaseAppUser>  queryListByOrganid(Map<String,Object> map);
 }

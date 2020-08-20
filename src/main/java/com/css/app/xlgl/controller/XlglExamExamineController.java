@@ -87,6 +87,7 @@ public class XlglExamExamineController {
 		PageHelper.startPage(page, limit);
 		//查询列表数据
 		List<XlglExamExamine> xlglExamExamineList = xlglExamExamineService.queryList(map);
+		PageUtils pageUtil = new PageUtils(xlglExamExamineList);
 		for (XlglExamExamine xlglExamExamine : xlglExamExamineList) {
 			HashMap<String,Object> mapAll = new HashMap<String, Object>();
 			mapAll.put("examineId", xlglExamExamine.getId());
@@ -114,7 +115,6 @@ public class XlglExamExamineController {
 			Integer raio =((numberInto/queryTotal)*100);
 			xlglExamExamine.setRatio(raio.toString()+"%");
 		}
-		PageUtils pageUtil = new PageUtils(xlglExamExamineList);
 		Response.json("page",pageUtil);
 	}
 	/**
