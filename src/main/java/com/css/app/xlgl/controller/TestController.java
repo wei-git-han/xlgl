@@ -1,6 +1,8 @@
 package com.css.app.xlgl.controller;
 
 
+import com.alibaba.fastjson.JSONObject;
+import com.css.base.utils.Response;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -8,36 +10,124 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/app/xlgl/getCore")
 public class TestController {
-    public static void main(String[] args) {
+    /**
+     *
+     * @param age 年龄
+     * @param up  引体向上
+     * @param sit  仰卧起坐
+     * @param sRun 30*2跑
+     * @param tRun 3000米跑
+     * @param sex 性别  0男，1女
+     * @param type 1:一类人员；2：二类人员；3：三类人员
+     */
+    @ResponseBody
+    @RequestMapping("/getSumCore")
+    public void getSumCore(int age,int up,int sit,int sRun,int tRun,int sex,int type ){
+        JSONObject jsonObject = new JSONObject();
+        int sum = 0;
+        if("0".equals(sex)){
+            sum = getManSumCore(age,up,sit,sRun,tRun);
+        }else {
+            sum = getWomanSumCore(age,up,sit,sRun,tRun);
+        }
+        String dj = null;
+        if("1".equals(type)){
+            if(up < 65 || sit < 65 || sRun < 65 || tRun < 65 || sum < 260){
+                dj = "不及格";
+            }else if(sum >= 260 && sum < 340){
+                dj = "及格";
+            }else if(sum >= 340 && sum < 380){
+                dj = "良好";
+            }else if(sum >= 380 && sum < 440){
+                dj = "优秀";
+            }else if(sum >= 440 && sum < 480){
+                dj = "特3级";
+            }else if(sum >= 480 && sum < 500){
+                dj = "特2级";
+            }else if(sum > 500){
+                dj = "特1级";
+            }
+        }else if("2".equals(type)){
+            if(up < 60 || sit < 60 || sRun < 60 || tRun < 60 || sum < 240){
+                dj = "不及格";
+            }else if(sum >= 240 && sum < 320){
+                dj = "及格";
+            }else if(sum >= 320 && sum < 360){
+                dj = "良好";
+            }else if(sum >= 360 && sum < 440){
+                dj = "优秀";
+            }else if(sum >= 440 && sum < 480){
+                dj = "特3级";
+            }else if(sum >= 480 && sum < 500){
+                dj = "特2级";
+            }else if(sum > 500){
+                dj = "特1级";
+            }
+        }else if("3".equals(type)){
+            if(up < 55 || sit < 55 || sRun < 55 || tRun < 55 || sum < 220){
+                dj = "不及格";
+            }else if(sum >= 220 && sum < 300){
+                dj = "及格";
+            }else if(sum >= 300 && sum < 340){
+                dj = "良好";
+            }else if(sum >= 340 && sum < 440){
+                dj = "优秀";
+            }else if(sum >= 440 && sum < 480){
+                dj = "特3级";
+            }else if(sum >= 480 && sum < 500){
+                dj = "特2级";
+            }else if(sum > 500){
+                dj = "特1级";
+            }
+        }
+        jsonObject.put("score",sum);
+        jsonObject.put("dj",dj);
+        Response.json(jsonObject);
 
-        TestController testController = new TestController();
-        int y =  testController.getManCore(27, 22);//男子引体向上
+    }
+
+    /**
+     * 男子的成绩
+     * @param up
+     * @param sit
+     * @param sRun
+     * @param tRun
+     * @return
+     */
+    public int getManSumCore(int age,int up,int sit,int sRun,int tRun){
+        int y =  getManCore(age, up);//男子引体向上
         System.out.println(y);
-        int z =  testController.getManywqz(27,69);//男子仰卧起坐
+        int z =  getManywqz(age,sit);//男子仰卧起坐
         System.out.println(z);
-        int s =  testController.getManSxRun(27,193);//男子 30*2蛇形跑
+        int s =  getManSxRun(age,sRun);//男子 30*2蛇形跑
         System.out.println(s);
-        int r =  testController.getManRunCore(27,1233);//男子3000米跑
+        int r =  getManRunCore(age,tRun);//男子3000米跑
         System.out.println(r);
         int sum = y+r+s+z;
-        System.out.println("男子成绩-----"+sum);
+        return sum;
+    }
 
-        int o = testController.getWoMenDgqbCore(27,41);//女子单杠曲臂悬垂
+    /**
+     * 女子成绩
+     * @param age
+     * @param up
+     * @param sit
+     * @param sRun
+     * @param tRun
+     * @return
+     */
+    public int getWomanSumCore(int age,int up,int sit,int sRun,int tRun){
+        int o = getWoMenDgqbCore(age,up);//女子单杠曲臂悬垂
         System.out.println(o);
-        int m = testController.getWomenCore(27,52);//女子仰卧起坐
+        int m = getWomenCore(age,sit);//女子仰卧起坐
         System.out.println(m);
-        int a = testController.getWomenRun(27,218);//女子蛇形跑
+        int a = getWomenRun(age,sRun);//女子蛇形跑
         System.out.println(a);
-        int w = testController.getWomen3Run(27,1605);//女子3000米跑
+        int w = getWomen3Run(age,tRun);//女子3000米跑
         System.out.println(w);
 
-        int sum1 = o+m+a+w;
-
-        System.out.println("女子成绩-----"+sum1);
-
-
-
-
+        int sum = o+m+a+w;
+        return sum;
     }
 
     /**
