@@ -16,6 +16,18 @@
 			limit #{offset}, #{limit}
 		</if>
 	</select>
+
+	<select id="queryAll" resultType="com.css.app.xlgl.entity.XlglRule">
+		select * from XLGL_RULE where 1=1
+		<if test="type != null and type !=''">
+			and type = #{type}
+		</if>
+		union all
+		select * from XLGL_CARS_MANAGER where 1=1
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
 	
  	<select id="queryTotal" resultType="int">
 		select count(*) from XLGL_RULE 

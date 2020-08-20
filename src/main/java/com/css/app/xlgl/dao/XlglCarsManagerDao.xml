@@ -22,22 +22,34 @@
 		insert into XLGL_CARS_MANAGER
 		(
 			"ID", 
-			"CREAETD_TIME", 
-			"TITLE"
+			"CREATED_TIME",
+			"UPLOAD_USER",
+			"FILE_NAME",
+			"INFO_ID",
+			"FILE_SERVER_FORMAT_ID",
+			"TYPE"
 		)
 		values
 		(
 			#{id}, 
-			#{creaetdTime}, 
-			#{title}
+			#{createdTime},
+			#{uploadUser},
+			#{fileName},
+			#{infoId},
+			#{fileServerFormatId},
+			#{type}
 		)
 	</insert>
 	 
 	<update id="update" parameterType="com.css.app.xlgl.entity.XlglCarsManager">
 		update XLGL_CARS_MANAGER 
 		<set>
-			<if test="creaetdTime != null">"CREAETD_TIME" = #{creaetdTime}, </if>
-			<if test="title != null">"TITLE" = #{title}</if>
+			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
+			<if test="uploadUser != null">"UPLOAD_USER" = #{uploadUser}, </if>
+			<if test="fileName != null">"FILE_NAME" = #{fileName}, </if>
+			<if test="infoId != null">"INFO_ID" = #{infoId}, </if>
+			<if test="fileServerFormatId != null">"FILE_SERVER_FORMAT_ID" = #{fileServerFormatId}</if>
+			<if test="type != null">"TYPE" = #{type}</if>
 		</set>
 		where ID = #{id}
 	</update>

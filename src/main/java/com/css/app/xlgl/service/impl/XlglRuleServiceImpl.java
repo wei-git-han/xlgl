@@ -26,6 +26,11 @@ public class XlglRuleServiceImpl implements XlglRuleService {
 	public List<XlglRule> queryList(Map<String, Object> map){
 		return xlglRuleDao.queryList(map);
 	}
+
+	@Override
+	public List<XlglRule> queryAll(Map<String, Object> map){
+		return xlglRuleDao.queryAll(map);
+	}
 	
 	@Override
 	public void save(XlglRule xlglRule){

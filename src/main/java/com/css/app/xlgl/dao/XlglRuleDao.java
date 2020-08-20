@@ -6,6 +6,9 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.css.base.dao.BaseDao;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * 训练管理法规资料
  * 
@@ -15,5 +18,6 @@ import com.css.base.dao.BaseDao;
  */
 @Mapper
 public interface XlglRuleDao extends BaseDao<XlglRule> {
-	
+
+    List<XlglRule> queryAll(Map<String,Object> map);
 }

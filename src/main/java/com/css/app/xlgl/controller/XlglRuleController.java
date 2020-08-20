@@ -2,10 +2,7 @@ package com.css.app.xlgl.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import cn.com.css.filestore.impl.HTTPFile;
 import com.alibaba.fastjson.JSONObject;
@@ -52,12 +49,19 @@ public class XlglRuleController {
 	@ResponseBody
 	@RequestMapping("/list")
 	public void list(Integer page, Integer limit,String type){
+		List<XlglRule> xlglRuleList = new ArrayList<>();
 		Map<String, Object> map = new HashMap<>();
 		map.put("type",type);
 		PageHelper.startPage(page, limit);
 		
-		//查询列表数据
-		List<XlglRule> xlglRuleList = xlglRuleService.queryList(map);
+
+
+		if("1".equals(type)){
+			xlglRuleList = xlglRuleService.queryAll(map);
+		}else {
+			//查询列表数据
+			xlglRuleList = xlglRuleService.queryList(map);
+		}
 		
 		PageUtils pageUtil = new PageUtils(xlglRuleList);
 		Response.json("page",pageUtil);

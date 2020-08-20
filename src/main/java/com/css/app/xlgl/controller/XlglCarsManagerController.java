@@ -170,13 +170,12 @@ public class XlglCarsManagerController {
 							}
 						}
 						// 保存文件相关数据
-						XlglPicture file = new XlglPicture();
-						file.setId(UUIDUtils.random());
-						file.setFileId(fileId);
-						file.setPictureName(fileName);
-						file.setCreateTime(new Date());
-						file.setPictureId(formatId);
-						xlglPictureService.save(file);
+						XlglCarsManager file = new XlglCarsManager();
+						file.setId(fileId);
+						file.setInfoId(fileId);
+						file.setFileName(fileName);
+						file.setFileServerFormatId(formatId);
+						xlglCarsManagerService.save(file);
 					}
 				}
 				json.put("smjId", retFormatId);

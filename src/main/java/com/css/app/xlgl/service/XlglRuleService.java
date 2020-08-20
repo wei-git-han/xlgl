@@ -18,7 +18,9 @@ public interface XlglRuleService {
 	XlglRule queryObject(String id);
 	
 	List<XlglRule> queryList(Map<String, Object> map);
-	
+
+	List<XlglRule> queryAll(Map<String, Object> map);
+
 	void save(XlglRule xlglRule);
 	
 	void update(XlglRule xlglRule);
