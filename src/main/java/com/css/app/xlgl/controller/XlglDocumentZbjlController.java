@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.appconfig.service.BaseAppConfigService;
 import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.entity.BaseAppUser;
@@ -337,5 +339,53 @@ public class XlglDocumentZbjlController {
     }
 
 
-	
+    /**
+     * 训练档案分析--训练成绩清单
+     */
+    @ResponseBody
+    @RequestMapping("/getXlCoreList")
+    public void getXlCoreList(){
+        String organId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
+        //获取局内所有的人
+        List<BaseAppUser> list = baseAppUserService.queryAllUserIdAndName(organId);
+        JSONArray jsonArray = new JSONArray();
+        if(list != null && list.size() > 0){
+            for(BaseAppUser baseAppUser : list){
+                JSONObject jsonObject = new JSONObject();
+                String userOrganId = baseAppUser.getOrganid();
+                String userName = baseAppUser.getTruename();//名字
+                jsonObject.put("userName",userName);
+                BaseAppOrgan organ = baseAppOrganService.queryObject(userOrganId);
+                String deptName = organ.getName();//部门名称
+                jsonObject.put("deptName",deptName);
+                String userId = CurrentUser.getUserId();
+                //强装兴装大讲堂得分 ------------------start
+                int sum = xlglSubDocTrackingService.queryAllCount(userId);
+                int count = xlglSubDocTrackingService.quereyWcCount(userId);
+                float f = count/sum;//强装兴装大讲堂得分
+                String dj = "优秀，目前写死";
+                jsonObject.put("f",f);
+                jsonObject.put("dj",dj);
+                //强装兴装大讲堂得分 ------------------end
+
+                //共同训练，专业训练，战略训练，军事训练 ------------------start
+                String gongtongxunlian = "99";
+                String gongtongxunliandengji = "优秀";
+                jsonObject.put("gongtongxunlian",gongtongxunlian);
+                jsonObject.put("gongtongxunliandengji",gongtongxunliandengji);
+                //共同训练，专业训练，战略训练，军事训练 ------------------end
+
+
+
+                jsonArray.add(jsonObject);
+
+            }
+        }
+
+        Response.json(jsonArray);
+
+    }
+
+
+
 }
