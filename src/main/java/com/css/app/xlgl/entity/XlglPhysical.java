@@ -48,7 +48,7 @@ public class XlglPhysical implements Serializable {
 	//体育等级评定
 	private String allJudge;
 	//创建时间
-	private String createdTime;
+	private Date createdTime;
 	//创建人
 	private String creator;
 	//创建人id
@@ -250,15 +250,14 @@ public class XlglPhysical implements Serializable {
 	/**
 	 * 设置：创建时间
 	 */
-	public void setCreatedTime(String createdTime) {
-		this.createdTime = createdTime;
-	}
-	/**
-	 * 获取：创建时间
-	 */
-	public String getCreatedTime() {
+	public Date getCreatedTime() {
 		return createdTime;
 	}
+
+	public void setCreatedTime(Date createdTime) {
+		this.createdTime = createdTime;
+	}
+
 	/**
 	 * 设置：创建人
 	 */

@@ -1,11 +1,13 @@
 package com.css.app.xlgl.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.css.app.xlgl.entity.XlglPhysical;
 import com.css.app.xlgl.service.XlglPhysicalService;
+import com.css.base.utils.CurrentUser;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,9 +40,9 @@ public class XlglPhysicalController {
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	@RequiresPermissions("xlglphysical:list")
 	public void list(Integer page, Integer limit){
 		Map<String, Object> map = new HashMap<>();
+		map.put("userId",CurrentUser.getUserId());
 		PageHelper.startPage(page, limit);
 		
 		//查询列表数据
@@ -55,9 +57,8 @@ public class XlglPhysicalController {
 	 * 信息
 	 */
 	@ResponseBody
-	@RequestMapping("/info/{id}")
-	@RequiresPermissions("xlglphysical:info")
-	public void info(@PathVariable("id") String id){
+	@RequestMapping("/info")
+	public void info(String id){
 		XlglPhysical xlglPhysical = xlglPhysicalService.queryObject(id);
 		Response.json("xlglPhysical", xlglPhysical);
 	}
@@ -69,9 +70,12 @@ public class XlglPhysicalController {
 	@RequestMapping("/save")
 	public void save(XlglPhysical xlglPhysical){
 		xlglPhysical.setId(UUIDUtils.random());
+		xlglPhysical.setCreator(CurrentUser.getUserId());
+		xlglPhysical.setCreatedTime(new Date());
+		xlglPhysical.setUserId(CurrentUser.getUserId());
 		xlglPhysicalService.save(xlglPhysical);
 		
-		Response.ok();
+		Response.json("result","success");
 	}
 	
 	/**
@@ -91,9 +95,8 @@ public class XlglPhysicalController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	@RequiresPermissions("xlglphysical:delete")
-	public void delete(@RequestBody String[] ids){
-		xlglPhysicalService.deleteBatch(ids);
+	public void delete(String[] id){
+		xlglPhysicalService.deleteBatch(id);
 		
 		Response.ok();
 	}

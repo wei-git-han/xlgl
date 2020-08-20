@@ -28,7 +28,7 @@ import com.css.base.utils.Response;
  * @date 2020-08-10 15:13:49
  */
 @Controller
-@RequestMapping("/xlglpicture")
+@RequestMapping("/app/xlgl/xlglpicture")
 public class XlglPictureController {
 	@Autowired
 	private XlglPictureService xlglPictureService;
@@ -67,8 +67,7 @@ public class XlglPictureController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	@RequiresPermissions("xlglpicture:save")
-	public void save(@RequestBody XlglPicture xlglPicture){
+	public void save(XlglPicture xlglPicture){
 		xlglPicture.setId(UUIDUtils.random());
 		xlglPictureService.save(xlglPicture);
 		
