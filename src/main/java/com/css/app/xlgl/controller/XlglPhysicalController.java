@@ -67,8 +67,7 @@ public class XlglPhysicalController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	@RequiresPermissions("xlglphysical:save")
-	public void save(@RequestBody XlglPhysical xlglPhysical){
+	public void save(XlglPhysical xlglPhysical){
 		xlglPhysical.setId(UUIDUtils.random());
 		xlglPhysicalService.save(xlglPhysical);
 		
