@@ -53,6 +53,16 @@ public class XlglPhysical implements Serializable {
 	private String creator;
 	//创建人id
 	private String userId;
+	//年龄
+	private String age;
+
+	public String getAge() {
+		return age;
+	}
+
+	public void setAge(String age) {
+		this.age = age;
+	}
 
 	/**
 	 * 设置：

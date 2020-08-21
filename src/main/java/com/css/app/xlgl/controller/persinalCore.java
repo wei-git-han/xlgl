@@ -1,17 +1,14 @@
 package com.css.app.xlgl.controller;
 
-
 import com.alibaba.fastjson.JSONObject;
 import com.css.base.utils.Response;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@Controller
-@RequestMapping("/app/xlgl/getCore")
-public class TestController {
+public class persinalCore {
     /**
-     *  @param age 年龄
+     *
+     * @param age 年龄
      * @param up  引体向上
      * @param sit  仰卧起坐
      * @param sRun 30*2跑
@@ -19,9 +16,7 @@ public class TestController {
      * @param sex 性别  0男，1女
      * @param type 1:一类人员；2：二类人员；3：三类人员
      */
-    @ResponseBody
-    @RequestMapping("/getSumCore")
-    public JSONObject getSumCore(int age, int up, int sit, int sRun, int tRun, int sex, int type ){
+    public JSONObject getSumCore(int age,int up,int sit,int sRun,int tRun,int sex,int type ){
         JSONObject jsonObject = new JSONObject();
         int sum = 0;
         if("0".equals(sex)){
@@ -82,8 +77,8 @@ public class TestController {
         jsonObject.put("score",sum);
         jsonObject.put("dj",dj);
         Response.json(jsonObject);
-
         return jsonObject;
+
     }
 
     /**
@@ -4887,558 +4882,558 @@ public class TestController {
      */
     @ResponseBody
     @RequestMapping("/getWomen3Run")
-     public int getWomen3Run(int age ,int m){
-         int s = 0;
-         int c = 0;
-         if(age < 24){
-             if(m <= 1610 && m >= 1600){
-                 int t = m - 1600;
-                 int d = t * 5 % 5;
-                 if (d == 0) {
-                     s = t * 5 / 5;
-                 } else {
-                     s = t * 5 / 5 + 1;
-                 }
-                 c = 65 - s;
-             }else if( m < 1600 && m >= 1540){
-                 int t = m -40 - 1540;
-                 int d = t * 5 % 20;
-                 if (d == 0) {
-                     s = t * 5 / 20;
-                 } else {
-                     s = t * 5 / 20 + 1;
-                 }
-                 c = 70 - s;
-             }else if( m < 1540 && m >= 1425){
-                 int t = m -40 - 1425;
-                 int d = t * 5 % 15;
-                 if (d == 0) {
-                     s = t * 5 / 15;
-                 } else {
-                     s = t * 5 / 15 + 1;
-                 }
-                 c = 95 - s;
-             }else if(m < 1425 && m >= 1400){
-                 int t = m - 1400;
-                 int d = t * 5 % 25;
-                 if (d == 0) {
-                     s = t * 5 / 25;
-                 } else {
-                     s = t * 5 / 25 + 1;
-                 }
-                 c = 100 - s;
-             }else if(m < 1400){
-                 c = (1400-m) / 5 + 100;
-             }
-         }else if(age >=25 && age <=27){
-             if(m <= 1623 && m >= 1613){
-                 int t = m - 1613;
-                 int d = t * 5 % 5;
-                 if (d == 0) {
-                     s = t * 5 / 5;
-                 } else {
-                     s = t * 5 / 5 + 1;
-                 }
-                 c = 65 - s;
-             }else if(m < 1613 && m >= 1553){
-                 int t = m - 40 - 1553;
-                 int d = t * 5 % 20;
-                 if (d == 0) {
-                     s = t * 5 / 20;
-                 } else {
-                     s = t * 5 / 20 + 1;
-                 }
-                 c = 70 - s;
-             }else if(m < 1553 && m >= 1438){
-                 int t = m - 40 - 1438;
-                 int d = t * 5 % 15;
-                 if (d == 0) {
-                     s = t * 5 / 15;
-                 } else {
-                     s = t * 5 / 15 + 1;
-                 }
-                 c = 95 - s;
-             }else if(m < 1438 && m >= 1413){
-                 int t = m - 1413;
-                 int d = t * 5 % 25;
-                 if (d == 0) {
-                     s = t * 5 / 25;
-                 } else {
-                     s = t * 5 / 25 + 1;
-                 }
-                 c = 100 - s;
-             }else if(m < 1413){
-                 c = (1413-m) / 5 + 100;
-             }
-         }else if(age >=28 && age <=30){
-             if(m <= 1702 && m >= 1652){
-                 int t = m - 40 - 1652;
-                 int d = t * 5 % 5;
-                 if (d == 0) {
-                     s = t * 5 / 5;
-                 } else {
-                     s = t * 5 / 5 + 1;
-                 }
-                 c = 65 - s;
-             }else if(m < 1652 && m >= 1632){
-                 int t = m - 1632;
-                 int d = t * 5 % 20;
-                 if (d == 0) {
-                     s = t * 5 / 20;
-                 } else {
-                     s = t * 5 / 20 + 1;
-                 }
-                 c = 70 - s;
-             }else if(m < 1632 && m >= 1517){
-                 int t = m - 40 - 1517;
-                 int d = t * 5 % 15;
-                 if (d == 0) {
-                     s = t * 5 / 15;
-                 } else {
-                     s = t * 5 / 15 + 1;
-                 }
-                 c = 95 - s;
-             }else if(m < 1517 && m >= 1452){
-                 int t = m - 1452;
-                 int d = t * 5 % 25;
-                 if (d == 0) {
-                     s = t * 5 / 25;
-                 } else {
-                     s = t * 5 / 25 + 1;
-                 }
-                 c = 100 - s;
-             }else if(m < 1452){
-                 c = (1452-m) / 5 + 100;
-             }
-         }else if(age >=31 && age <=33){
-             if(m <= 1741 && m >= 1731){
-                 int t = m - 1731;
-                 int d = t * 5 % 5;
-                 if (d == 0) {
-                     s = t * 5 / 5;
-                 } else {
-                     s = t * 5 / 5 + 1;
-                 }
-                 c = 65 - s;
-             }else if(m < 1731 && m >= 1711){
-                 int t = m - 1711;
-                 int d = t * 5 % 20;
-                 if (d == 0) {
-                     s = t * 5 / 20;
-                 } else {
-                     s = t * 5 / 20 + 1;
-                 }
-                 c = 70 - s;
-             }else if(m < 1711 && m >= 1661){
-                 int t = m - 40 - 1661;
-                 int d = t * 5 % 15;
-                 if (d == 0) {
-                     s = t * 5 / 15;
-                 } else {
-                     s = t * 5 / 15 + 1;
-                 }
-                 c = 85 - s;
-             }else if(m < 1661 && m >= 1556){
-                 int t = m -40 - 1556;
-                 int d = t * 5 % 15;
-                 if (d == 0) {
-                     s = t * 5 / 15;
-                 } else {
-                     s = t * 5 / 15 + 1;
-                 }
-                 c = 95 - s;
-             }else if(m < 1556 && m >= 1531){
-                 int t = m - 1531;
-                 int d = t * 5 % 25;
-                 if (d == 0) {
-                     s = t * 5 / 25;
-                 } else {
-                     s = t * 5 / 25 + 1;
-                 }
-                 c = 100 - s;
-             }else if(m < 1531){
-                 c = (1531-m) / 5 + 100;
-             }
-         }else if(age >=34 && age <=36){
-             if(m <= 1820 && m >= 1810){
-                 int t = m - 1810;
-                 int d = t * 5 % 5;
-                 if (d == 0) {
-                     s = t * 5 / 5;
-                 } else {
-                     s = t * 5 / 5 + 1;
-                 }
-                 c = 65 - s;
-             }else if(m < 1810 && m >= 1750){
-                 int t = m - 40- 1750;
-                 int d = t * 5 % 20;
-                 if (d == 0) {
-                     s = t * 5 / 20;
-                 } else {
-                     s = t * 5 / 20 + 1;
-                 }
-                 c = 70 - s;
-             }else if(m < 1750 && m >= 1635){
-                 int t = m - 40 - 1635;
-                 int d = t * 5 % 15;
-                 if (d == 0) {
-                     s = t * 5 / 15;
-                 } else {
-                     s = t * 5 / 15 + 1;
-                 }
-                 c = 95 - s;
-             }else if(m < 1635 && m >= 1610){
-                 int t = m - 1610;
-                 int d = t * 5 % 25;
-                 if (d == 0) {
-                     s = t * 5 / 25;
-                 } else {
-                     s = t * 5 / 25 + 1;
-                 }
-                 c = 100 - s;
-             }else if(m < 1610){
-                 c = (1610-m) / 5 + 100;
-             }
-         }else if(age >=37 && age <=39){
-             if(m <= 1859 && m >= 1849){
-                 int t = m - 1849;
-                 int d = t * 5 % 5;
-                 if (d == 0) {
-                     s = t * 5 / 5;
-                 } else {
-                     s = t * 5 / 5 + 1;
-                 }
-                 c = 65 - s;
-             }else if(m < 1849 && m >= 1829){
-                 int t = m - 1829;
-                 int d = t * 5 % 20;
-                 if (d == 0) {
-                     s = t * 5 / 20;
-                 } else {
-                     s = t * 5 / 20 + 1;
-                 }
-                 c = 70 - s;
-             }else if(m < 1829 && m >= 1714){
-                 int t = m - 40 - 1714;
-                 int d = t * 5 % 15;
-                 if (d == 0) {
-                     s = t * 5 / 15;
-                 } else {
-                     s = t * 5 / 15 + 1;
-                 }
-                 c = 95 - s;
-             }else if(m < 1714 && m >= 1649){
-                 int t = m -40 - 1649;
-                 int d = t * 5 % 25;
-                 if (d == 0) {
-                     s = t * 5 / 25;
-                 } else {
-                     s = t * 5 / 25 + 1;
-                 }
-                 c = 95 - s;
-             }else if(m < 1649){
-                 c = (1649-m) / 5 + 100;
-             }
-         }else if(age >=40 && age <=42){
-             if(m <= 1938 && m >= 1928){
-                 int t = m - 1928;
-                 int d = t * 5 % 5;
-                 if (d == 0) {
-                     s = t * 5 / 5;
-                 } else {
-                     s = t * 5 / 5 + 1;
-                 }
-                 c = 65 - s;
-             }else if(m < 1928 && m >= 1908){
-                 int t = m - 1908;
-                 int d = t * 5 % 20;
-                 if (d == 0) {
-                     s = t * 5 / 20;
-                 } else {
-                     s = t * 5 / 20 + 1;
-                 }
-                 c = 70 - s;
-             }else if(m < 1908 && m >= 1808){
-                 int t = m - 40 - 1808;
-                 int d = t * 5 % 15;
-                 if (d == 0) {
-                     s = t * 5 / 15;
-                 } else {
-                     s = t * 5 / 15 + 1;
-                 }
-                 c = 90 - s;
-             }else if(m < 1808 && m >= 1753){
-                 int t = m -40 - 1753;
-                 int d = t * 5 % 15;
-                 if (d == 0) {
-                     s = t * 5 / 15;
-                 } else {
-                     s = t * 5 / 15 + 1;
-                 }
-                 c = 95 - s;
-             }else if(m < 1753 && m >= 1728){
-                 int t = m - 1728;
-                 int d = t * 5 % 25;
-                 if (d == 0) {
-                     s = t * 5 / 25;
-                 } else {
-                     s = t * 5 / 25 + 1;
-                 }
-                 c = 100 - s;
-             }else if(m < 1728){
-                 c = (1728-m) / 5 + 100;
-             }
-         }else if(age >=43 && age <=45){
-             if(m <= 2017 && m >= 2007){
-                 int t = m - 2007;
-                 int d = t * 5 % 5;
-                 if (d == 0) {
-                     s = t * 5 / 5;
-                 } else {
-                     s = t * 5 / 5 + 1;
-                 }
-                 c = 65 - s;
-             }else if(m < 2007 && m >= 1947){
-                 int t = m - 40 - 1947;
-                 int d = t * 5 % 20;
-                 if (d == 0) {
-                     s = t * 5 / 20;
-                 } else {
-                     s = t * 5 / 20 + 1;
-                 }
-                 c = 70 - s;
-             }else if(m < 1947 && m >= 1832){
-                 int t = m - 40 - 1832;
-                 int d = t * 5 % 15;
-                 if (d == 0) {
-                     s = t * 5 / 15;
-                 } else {
-                     s = t * 5 / 15 + 1;
-                 }
-                 c = 95 - s;
-             }else if(m < 1832 && m >= 1807){
-                 int t = m - 1807;
-                 int d = t * 5 % 15;
-                 if (d == 0) {
-                     s = t * 5 / 15;
-                 } else {
-                     s = t * 5 / 15 + 1;
-                 }
-                 c = 100 - s;
-             }else if(m < 1807){
-                 c = (1807-m) / 5 + 100;
-             }
-         }else if(age >=46 && age <=48){
-             if(m <= 2056 && m >= 2046){
-                 int t = m - 2046;
-                 int d = t * 5 % 5;
-                 if (d == 0) {
-                     s = t * 5 / 5;
-                 } else {
-                     s = t * 5 / 5 + 1;
-                 }
-                 c = 65 - s;
-             }else if(m < 2046 && m >= 2026){
-                 int t = m - 2026;
-                 int d = t * 5 % 20;
-                 if (d == 0) {
-                     s = t * 5 / 20;
-                 } else {
-                     s = t * 5 / 20 + 1;
-                 }
-                 c = 70 - s;
-             }else if(m < 2026 && m >= 1911){
-                 int t = m - 40 - 2922;
-                 int d = t * 5 % 15;
-                 if (d == 0) {
-                     s = t * 5 / 15;
-                 } else {
-                     s = t * 5 / 15 + 1;
-                 }
-                 c = 95 - s;
-             }else if(m < 1911 && m >= 1846){
-                 int t = m -40 - 1846;
-                 int d = t * 5 % 25;
-                 if (d == 0) {
-                     s = t * 5 / 25;
-                 } else {
-                     s = t * 5 / 25 + 1;
-                 }
-                 c = 100 - s;
-             }else if(m < 1846){
-                 c = (1846-m) / 5 + 100;
-             }
-         }else if(age >=49 && age <=51){
-             if(m <= 2135 && m >= 2125){
-                 int t = m - 2125;
-                 int d = t * 5 % 5;
-                 if (d == 0) {
-                     s = t * 5 / 5;
-                 } else {
-                     s = t * 5 / 5 + 1;
-                 }
-                 c = 65 - s;
-             }else if(m < 2125 && m >= 2105){
-                 int t = m - 2105;
-                 int d = t * 5 % 20;
-                 if (d == 0) {
-                     s = t * 5 / 20;
-                 } else {
-                     s = t * 5 / 20 + 1;
-                 }
-                 c = 70 - s;
-             }else if(m < 2105 && m >= 2005){
-                 int t = m - 40 - 2005;
-                 int d = t * 5 % 15;
-                 if (d == 0) {
-                     s = t * 5 / 15;
-                 } else {
-                     s = t * 5 / 15 + 1;
-                 }
-                 c = 90 - s;
-             }else if(m < 2005 && m >= 1950){
-                 int t = m -40 - 1950;
-                 int d = t * 5 % 15;
-                 if (d == 0) {
-                     s = t * 5 / 15;
-                 } else {
-                     s = t * 5 / 15 + 1;
-                 }
-                 c = 95 - s;
-             }else if(m < 1950 && m >= 1925){
-                 int t = m - 1925;
-                 int d = t * 5 % 25;
-                 if (d == 0) {
-                     s = t * 5 / 25;
-                 } else {
-                     s = t * 5 / 25 + 1;
-                 }
-                 c = 100 - s;
-             }else if(m < 1925){
-                 c = (1925-m) / 5 + 100;
-             }
-         }else if(age >=52 && age <=54){
-             if(m <= 2214 && m >= 2204){
-                 int t = m - 2204;
-                 int d = t * 5 % 5;
-                 if (d == 0) {
-                     s = t * 5 / 5;
-                 } else {
-                     s = t * 5 / 5 + 1;
-                 }
-                 c = 65 - s;
-             }else if(m < 2204 && m >= 2144){
-                 int t = m - 40 - 2144;
-                 int d = t * 5 % 20;
-                 if (d == 0) {
-                     s = t * 5 / 20;
-                 } else {
-                     s = t * 5 / 20 + 1;
-                 }
-                 c = 70 - s;
-             }else if(m < 2144 && m >= 2004){
-                 int t = m - 40 - 2004;
-                 int d = t * 5 % 15;
-                 if (d == 0) {
-                     s = t * 5 / 15;
-                 } else {
-                     s = t * 5 / 15 + 1;
-                 }
-                 c = 100 - s;
-             }else if(m < 2004){
-                 c = (2004-m) / 5 + 100;
-             }
-         }else if(age >=55 && age <=57){
-             if(m <= 2253 && m >= 2243){
-                 int t = m - 2243;
-                 int d = t * 5 % 5;
-                 if (d == 0) {
-                     s = t * 5 / 5;
-                 } else {
-                     s = t * 5 / 5 + 1;
-                 }
-                 c = 65 - s;
-             }else if(m < 2243 && m >= 2223){
-                 int t = m - 2223;
-                 int d = t * 5 % 20;
-                 if (d == 0) {
-                     s = t * 5 / 20;
-                 } else {
-                     s = t * 5 / 20 + 1;
-                 }
-                 c = 70 - s;
-             }else if(m < 2223 && m >= 2108){
-                 int t = m - 40 - 2108;
-                 int d = t * 5 % 15;
-                 if (d == 0) {
-                     s = t * 5 / 15;
-                 } else {
-                     s = t * 5 / 15 + 1;
-                 }
-                 c = 95 - s;
-             }else if(m < 2108 && m >= 2043){
-                 int t = m -40 - 2043;
-                 int d = t * 5 % 25;
-                 if (d == 0) {
-                     s = t * 5 / 25;
-                 } else {
-                     s = t * 5 / 25 + 1;
-                 }
-                 c = 100 - s;
-             }else if(m < 2043){
-                 c = (2043-m) / 5 + 100;
-             }
-         }else if(age >=58 && age <=60){
-             if(m <= 2332 && m >= 2322){
-                 int t = m - 2322;
-                 int d = t * 5 % 5;
-                 if (d == 0) {
-                     s = t * 5 / 5;
-                 } else {
-                     s = t * 5 / 5 + 1;
-                 }
-                 c = 65 - s;
-             }else if(m < 2322 && m >= 2302){
-                 int t = m - 2302;
-                 int d = t * 5 % 20;
-                 if (d == 0) {
-                     s = t * 5 / 20;
-                 } else {
-                     s = t * 5 / 20 + 1;
-                 }
-                 c = 70 - s;
-             }else if(m < 2302 && m >= 2202){
-                 int t = m - 40 - 2202;
-                 int d = t * 5 % 15;
-                 if (d == 0) {
-                     s = t * 5 / 15;
-                 } else {
-                     s = t * 5 / 15 + 1;
-                 }
-                 c = 90 - s;
-             }else if(m < 2202 && m >= 2147){
-                 int t = m -40 - 2147;
-                 int d = t * 5 % 15;
-                 if (d == 0) {
-                     s = t * 5 / 15;
-                 } else {
-                     s = t * 5 / 15 + 1;
-                 }
-                 c = 95 - s;
-             }else if(m < 2147 && m >= 2122){
-                 int t = m - 2122;
-                 int d = t * 5 % 25;
-                 if (d == 0) {
-                     s = t * 5 / 25;
-                 } else {
-                     s = t * 5 / 25 + 1;
-                 }
-                 c = 100 - s;
-             }else if(m < 2122){
-                 c = (2122-m) / 5 + 100;
-             }
-         }
+    public int getWomen3Run(int age ,int m){
+        int s = 0;
+        int c = 0;
+        if(age < 24){
+            if(m <= 1610 && m >= 1600){
+                int t = m - 1600;
+                int d = t * 5 % 5;
+                if (d == 0) {
+                    s = t * 5 / 5;
+                } else {
+                    s = t * 5 / 5 + 1;
+                }
+                c = 65 - s;
+            }else if( m < 1600 && m >= 1540){
+                int t = m -40 - 1540;
+                int d = t * 5 % 20;
+                if (d == 0) {
+                    s = t * 5 / 20;
+                } else {
+                    s = t * 5 / 20 + 1;
+                }
+                c = 70 - s;
+            }else if( m < 1540 && m >= 1425){
+                int t = m -40 - 1425;
+                int d = t * 5 % 15;
+                if (d == 0) {
+                    s = t * 5 / 15;
+                } else {
+                    s = t * 5 / 15 + 1;
+                }
+                c = 95 - s;
+            }else if(m < 1425 && m >= 1400){
+                int t = m - 1400;
+                int d = t * 5 % 25;
+                if (d == 0) {
+                    s = t * 5 / 25;
+                } else {
+                    s = t * 5 / 25 + 1;
+                }
+                c = 100 - s;
+            }else if(m < 1400){
+                c = (1400-m) / 5 + 100;
+            }
+        }else if(age >=25 && age <=27){
+            if(m <= 1623 && m >= 1613){
+                int t = m - 1613;
+                int d = t * 5 % 5;
+                if (d == 0) {
+                    s = t * 5 / 5;
+                } else {
+                    s = t * 5 / 5 + 1;
+                }
+                c = 65 - s;
+            }else if(m < 1613 && m >= 1553){
+                int t = m - 40 - 1553;
+                int d = t * 5 % 20;
+                if (d == 0) {
+                    s = t * 5 / 20;
+                } else {
+                    s = t * 5 / 20 + 1;
+                }
+                c = 70 - s;
+            }else if(m < 1553 && m >= 1438){
+                int t = m - 40 - 1438;
+                int d = t * 5 % 15;
+                if (d == 0) {
+                    s = t * 5 / 15;
+                } else {
+                    s = t * 5 / 15 + 1;
+                }
+                c = 95 - s;
+            }else if(m < 1438 && m >= 1413){
+                int t = m - 1413;
+                int d = t * 5 % 25;
+                if (d == 0) {
+                    s = t * 5 / 25;
+                } else {
+                    s = t * 5 / 25 + 1;
+                }
+                c = 100 - s;
+            }else if(m < 1413){
+                c = (1413-m) / 5 + 100;
+            }
+        }else if(age >=28 && age <=30){
+            if(m <= 1702 && m >= 1652){
+                int t = m - 40 - 1652;
+                int d = t * 5 % 5;
+                if (d == 0) {
+                    s = t * 5 / 5;
+                } else {
+                    s = t * 5 / 5 + 1;
+                }
+                c = 65 - s;
+            }else if(m < 1652 && m >= 1632){
+                int t = m - 1632;
+                int d = t * 5 % 20;
+                if (d == 0) {
+                    s = t * 5 / 20;
+                } else {
+                    s = t * 5 / 20 + 1;
+                }
+                c = 70 - s;
+            }else if(m < 1632 && m >= 1517){
+                int t = m - 40 - 1517;
+                int d = t * 5 % 15;
+                if (d == 0) {
+                    s = t * 5 / 15;
+                } else {
+                    s = t * 5 / 15 + 1;
+                }
+                c = 95 - s;
+            }else if(m < 1517 && m >= 1452){
+                int t = m - 1452;
+                int d = t * 5 % 25;
+                if (d == 0) {
+                    s = t * 5 / 25;
+                } else {
+                    s = t * 5 / 25 + 1;
+                }
+                c = 100 - s;
+            }else if(m < 1452){
+                c = (1452-m) / 5 + 100;
+            }
+        }else if(age >=31 && age <=33){
+            if(m <= 1741 && m >= 1731){
+                int t = m - 1731;
+                int d = t * 5 % 5;
+                if (d == 0) {
+                    s = t * 5 / 5;
+                } else {
+                    s = t * 5 / 5 + 1;
+                }
+                c = 65 - s;
+            }else if(m < 1731 && m >= 1711){
+                int t = m - 1711;
+                int d = t * 5 % 20;
+                if (d == 0) {
+                    s = t * 5 / 20;
+                } else {
+                    s = t * 5 / 20 + 1;
+                }
+                c = 70 - s;
+            }else if(m < 1711 && m >= 1661){
+                int t = m - 40 - 1661;
+                int d = t * 5 % 15;
+                if (d == 0) {
+                    s = t * 5 / 15;
+                } else {
+                    s = t * 5 / 15 + 1;
+                }
+                c = 85 - s;
+            }else if(m < 1661 && m >= 1556){
+                int t = m -40 - 1556;
+                int d = t * 5 % 15;
+                if (d == 0) {
+                    s = t * 5 / 15;
+                } else {
+                    s = t * 5 / 15 + 1;
+                }
+                c = 95 - s;
+            }else if(m < 1556 && m >= 1531){
+                int t = m - 1531;
+                int d = t * 5 % 25;
+                if (d == 0) {
+                    s = t * 5 / 25;
+                } else {
+                    s = t * 5 / 25 + 1;
+                }
+                c = 100 - s;
+            }else if(m < 1531){
+                c = (1531-m) / 5 + 100;
+            }
+        }else if(age >=34 && age <=36){
+            if(m <= 1820 && m >= 1810){
+                int t = m - 1810;
+                int d = t * 5 % 5;
+                if (d == 0) {
+                    s = t * 5 / 5;
+                } else {
+                    s = t * 5 / 5 + 1;
+                }
+                c = 65 - s;
+            }else if(m < 1810 && m >= 1750){
+                int t = m - 40- 1750;
+                int d = t * 5 % 20;
+                if (d == 0) {
+                    s = t * 5 / 20;
+                } else {
+                    s = t * 5 / 20 + 1;
+                }
+                c = 70 - s;
+            }else if(m < 1750 && m >= 1635){
+                int t = m - 40 - 1635;
+                int d = t * 5 % 15;
+                if (d == 0) {
+                    s = t * 5 / 15;
+                } else {
+                    s = t * 5 / 15 + 1;
+                }
+                c = 95 - s;
+            }else if(m < 1635 && m >= 1610){
+                int t = m - 1610;
+                int d = t * 5 % 25;
+                if (d == 0) {
+                    s = t * 5 / 25;
+                } else {
+                    s = t * 5 / 25 + 1;
+                }
+                c = 100 - s;
+            }else if(m < 1610){
+                c = (1610-m) / 5 + 100;
+            }
+        }else if(age >=37 && age <=39){
+            if(m <= 1859 && m >= 1849){
+                int t = m - 1849;
+                int d = t * 5 % 5;
+                if (d == 0) {
+                    s = t * 5 / 5;
+                } else {
+                    s = t * 5 / 5 + 1;
+                }
+                c = 65 - s;
+            }else if(m < 1849 && m >= 1829){
+                int t = m - 1829;
+                int d = t * 5 % 20;
+                if (d == 0) {
+                    s = t * 5 / 20;
+                } else {
+                    s = t * 5 / 20 + 1;
+                }
+                c = 70 - s;
+            }else if(m < 1829 && m >= 1714){
+                int t = m - 40 - 1714;
+                int d = t * 5 % 15;
+                if (d == 0) {
+                    s = t * 5 / 15;
+                } else {
+                    s = t * 5 / 15 + 1;
+                }
+                c = 95 - s;
+            }else if(m < 1714 && m >= 1649){
+                int t = m -40 - 1649;
+                int d = t * 5 % 25;
+                if (d == 0) {
+                    s = t * 5 / 25;
+                } else {
+                    s = t * 5 / 25 + 1;
+                }
+                c = 95 - s;
+            }else if(m < 1649){
+                c = (1649-m) / 5 + 100;
+            }
+        }else if(age >=40 && age <=42){
+            if(m <= 1938 && m >= 1928){
+                int t = m - 1928;
+                int d = t * 5 % 5;
+                if (d == 0) {
+                    s = t * 5 / 5;
+                } else {
+                    s = t * 5 / 5 + 1;
+                }
+                c = 65 - s;
+            }else if(m < 1928 && m >= 1908){
+                int t = m - 1908;
+                int d = t * 5 % 20;
+                if (d == 0) {
+                    s = t * 5 / 20;
+                } else {
+                    s = t * 5 / 20 + 1;
+                }
+                c = 70 - s;
+            }else if(m < 1908 && m >= 1808){
+                int t = m - 40 - 1808;
+                int d = t * 5 % 15;
+                if (d == 0) {
+                    s = t * 5 / 15;
+                } else {
+                    s = t * 5 / 15 + 1;
+                }
+                c = 90 - s;
+            }else if(m < 1808 && m >= 1753){
+                int t = m -40 - 1753;
+                int d = t * 5 % 15;
+                if (d == 0) {
+                    s = t * 5 / 15;
+                } else {
+                    s = t * 5 / 15 + 1;
+                }
+                c = 95 - s;
+            }else if(m < 1753 && m >= 1728){
+                int t = m - 1728;
+                int d = t * 5 % 25;
+                if (d == 0) {
+                    s = t * 5 / 25;
+                } else {
+                    s = t * 5 / 25 + 1;
+                }
+                c = 100 - s;
+            }else if(m < 1728){
+                c = (1728-m) / 5 + 100;
+            }
+        }else if(age >=43 && age <=45){
+            if(m <= 2017 && m >= 2007){
+                int t = m - 2007;
+                int d = t * 5 % 5;
+                if (d == 0) {
+                    s = t * 5 / 5;
+                } else {
+                    s = t * 5 / 5 + 1;
+                }
+                c = 65 - s;
+            }else if(m < 2007 && m >= 1947){
+                int t = m - 40 - 1947;
+                int d = t * 5 % 20;
+                if (d == 0) {
+                    s = t * 5 / 20;
+                } else {
+                    s = t * 5 / 20 + 1;
+                }
+                c = 70 - s;
+            }else if(m < 1947 && m >= 1832){
+                int t = m - 40 - 1832;
+                int d = t * 5 % 15;
+                if (d == 0) {
+                    s = t * 5 / 15;
+                } else {
+                    s = t * 5 / 15 + 1;
+                }
+                c = 95 - s;
+            }else if(m < 1832 && m >= 1807){
+                int t = m - 1807;
+                int d = t * 5 % 15;
+                if (d == 0) {
+                    s = t * 5 / 15;
+                } else {
+                    s = t * 5 / 15 + 1;
+                }
+                c = 100 - s;
+            }else if(m < 1807){
+                c = (1807-m) / 5 + 100;
+            }
+        }else if(age >=46 && age <=48){
+            if(m <= 2056 && m >= 2046){
+                int t = m - 2046;
+                int d = t * 5 % 5;
+                if (d == 0) {
+                    s = t * 5 / 5;
+                } else {
+                    s = t * 5 / 5 + 1;
+                }
+                c = 65 - s;
+            }else if(m < 2046 && m >= 2026){
+                int t = m - 2026;
+                int d = t * 5 % 20;
+                if (d == 0) {
+                    s = t * 5 / 20;
+                } else {
+                    s = t * 5 / 20 + 1;
+                }
+                c = 70 - s;
+            }else if(m < 2026 && m >= 1911){
+                int t = m - 40 - 2922;
+                int d = t * 5 % 15;
+                if (d == 0) {
+                    s = t * 5 / 15;
+                } else {
+                    s = t * 5 / 15 + 1;
+                }
+                c = 95 - s;
+            }else if(m < 1911 && m >= 1846){
+                int t = m -40 - 1846;
+                int d = t * 5 % 25;
+                if (d == 0) {
+                    s = t * 5 / 25;
+                } else {
+                    s = t * 5 / 25 + 1;
+                }
+                c = 100 - s;
+            }else if(m < 1846){
+                c = (1846-m) / 5 + 100;
+            }
+        }else if(age >=49 && age <=51){
+            if(m <= 2135 && m >= 2125){
+                int t = m - 2125;
+                int d = t * 5 % 5;
+                if (d == 0) {
+                    s = t * 5 / 5;
+                } else {
+                    s = t * 5 / 5 + 1;
+                }
+                c = 65 - s;
+            }else if(m < 2125 && m >= 2105){
+                int t = m - 2105;
+                int d = t * 5 % 20;
+                if (d == 0) {
+                    s = t * 5 / 20;
+                } else {
+                    s = t * 5 / 20 + 1;
+                }
+                c = 70 - s;
+            }else if(m < 2105 && m >= 2005){
+                int t = m - 40 - 2005;
+                int d = t * 5 % 15;
+                if (d == 0) {
+                    s = t * 5 / 15;
+                } else {
+                    s = t * 5 / 15 + 1;
+                }
+                c = 90 - s;
+            }else if(m < 2005 && m >= 1950){
+                int t = m -40 - 1950;
+                int d = t * 5 % 15;
+                if (d == 0) {
+                    s = t * 5 / 15;
+                } else {
+                    s = t * 5 / 15 + 1;
+                }
+                c = 95 - s;
+            }else if(m < 1950 && m >= 1925){
+                int t = m - 1925;
+                int d = t * 5 % 25;
+                if (d == 0) {
+                    s = t * 5 / 25;
+                } else {
+                    s = t * 5 / 25 + 1;
+                }
+                c = 100 - s;
+            }else if(m < 1925){
+                c = (1925-m) / 5 + 100;
+            }
+        }else if(age >=52 && age <=54){
+            if(m <= 2214 && m >= 2204){
+                int t = m - 2204;
+                int d = t * 5 % 5;
+                if (d == 0) {
+                    s = t * 5 / 5;
+                } else {
+                    s = t * 5 / 5 + 1;
+                }
+                c = 65 - s;
+            }else if(m < 2204 && m >= 2144){
+                int t = m - 40 - 2144;
+                int d = t * 5 % 20;
+                if (d == 0) {
+                    s = t * 5 / 20;
+                } else {
+                    s = t * 5 / 20 + 1;
+                }
+                c = 70 - s;
+            }else if(m < 2144 && m >= 2004){
+                int t = m - 40 - 2004;
+                int d = t * 5 % 15;
+                if (d == 0) {
+                    s = t * 5 / 15;
+                } else {
+                    s = t * 5 / 15 + 1;
+                }
+                c = 100 - s;
+            }else if(m < 2004){
+                c = (2004-m) / 5 + 100;
+            }
+        }else if(age >=55 && age <=57){
+            if(m <= 2253 && m >= 2243){
+                int t = m - 2243;
+                int d = t * 5 % 5;
+                if (d == 0) {
+                    s = t * 5 / 5;
+                } else {
+                    s = t * 5 / 5 + 1;
+                }
+                c = 65 - s;
+            }else if(m < 2243 && m >= 2223){
+                int t = m - 2223;
+                int d = t * 5 % 20;
+                if (d == 0) {
+                    s = t * 5 / 20;
+                } else {
+                    s = t * 5 / 20 + 1;
+                }
+                c = 70 - s;
+            }else if(m < 2223 && m >= 2108){
+                int t = m - 40 - 2108;
+                int d = t * 5 % 15;
+                if (d == 0) {
+                    s = t * 5 / 15;
+                } else {
+                    s = t * 5 / 15 + 1;
+                }
+                c = 95 - s;
+            }else if(m < 2108 && m >= 2043){
+                int t = m -40 - 2043;
+                int d = t * 5 % 25;
+                if (d == 0) {
+                    s = t * 5 / 25;
+                } else {
+                    s = t * 5 / 25 + 1;
+                }
+                c = 100 - s;
+            }else if(m < 2043){
+                c = (2043-m) / 5 + 100;
+            }
+        }else if(age >=58 && age <=60){
+            if(m <= 2332 && m >= 2322){
+                int t = m - 2322;
+                int d = t * 5 % 5;
+                if (d == 0) {
+                    s = t * 5 / 5;
+                } else {
+                    s = t * 5 / 5 + 1;
+                }
+                c = 65 - s;
+            }else if(m < 2322 && m >= 2302){
+                int t = m - 2302;
+                int d = t * 5 % 20;
+                if (d == 0) {
+                    s = t * 5 / 20;
+                } else {
+                    s = t * 5 / 20 + 1;
+                }
+                c = 70 - s;
+            }else if(m < 2302 && m >= 2202){
+                int t = m - 40 - 2202;
+                int d = t * 5 % 15;
+                if (d == 0) {
+                    s = t * 5 / 15;
+                } else {
+                    s = t * 5 / 15 + 1;
+                }
+                c = 90 - s;
+            }else if(m < 2202 && m >= 2147){
+                int t = m -40 - 2147;
+                int d = t * 5 % 15;
+                if (d == 0) {
+                    s = t * 5 / 15;
+                } else {
+                    s = t * 5 / 15 + 1;
+                }
+                c = 95 - s;
+            }else if(m < 2147 && m >= 2122){
+                int t = m - 2122;
+                int d = t * 5 % 25;
+                if (d == 0) {
+                    s = t * 5 / 25;
+                } else {
+                    s = t * 5 / 25 + 1;
+                }
+                c = 100 - s;
+            }else if(m < 2122){
+                c = (2122-m) / 5 + 100;
+            }
+        }
 
-         return c;
-     }
+        return c;
+    }
 }

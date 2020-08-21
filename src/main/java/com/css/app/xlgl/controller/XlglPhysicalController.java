@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
 import com.css.app.xlgl.entity.XlglPhysical;
 import com.css.app.xlgl.service.XlglPhysicalService;
 import com.css.base.utils.CurrentUser;
+import org.apache.poi.hssf.eventusermodel.examples.XLS2CSVmra;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +36,8 @@ import com.css.base.utils.Response;
 public class XlglPhysicalController {
 	@Autowired
 	private XlglPhysicalService xlglPhysicalService;
+
+	private TestController testController;
 	
 	/**
 	 * 列表
@@ -62,9 +66,11 @@ public class XlglPhysicalController {
 		XlglPhysical xlglPhysical = xlglPhysicalService.queryObject(id);
 		Response.json("xlglPhysical", xlglPhysical);
 	}
-	
+
+	//(int age,int up,int sit,int sRun,int tRun,int sex,int type )
 	/**
 	 * 保存
+	 * 页面输入分数，会自动算出所有的分数，按照不同字段传进来就行
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
@@ -73,7 +79,22 @@ public class XlglPhysicalController {
 		xlglPhysical.setCreator(CurrentUser.getUserId());
 		xlglPhysical.setCreatedTime(new Date());
 		xlglPhysical.setUserId(CurrentUser.getUserId());
+
+//		int age = Integer.parseInt(xlglPhysical.getAge());
+//		int up = Integer.parseInt(xlglPhysical.getUp());
+//		int sit = Integer.parseInt(xlglPhysical.getSit());
+//		int sRun = Integer.parseInt(xlglPhysical.getSrun());
+//		int tRun = Integer.parseInt(xlglPhysical.getTrun());
+//		int sex = Integer.parseInt(xlglPhysical.getSex());
+//		int type = Integer.parseInt(xlglPhysical.getType());
+//		persinalCore persinalCore = new persinalCore();
+//		JSONObject jsonObject = persinalCore.getSumCore(age,up,sit,sRun,tRun,sex,type);
+//		String score = jsonObject.get("score").toString();
+//		String dj =jsonObject.get("dj").toString();
+//		xlglPhysical.setAllScore(score);
+//		xlglPhysical.setAllJudge(dj);
 		xlglPhysicalService.save(xlglPhysical);
+
 		
 		Response.json("result","success");
 	}

@@ -42,7 +42,8 @@
 			"ALL_JUDGE", 
 			"CREATED_TIME", 
 			"CREATOR", 
-			"USER_ID"
+			"USER_ID",
+			"AGE"
 		)
 		values
 		(
@@ -64,7 +65,8 @@
 			#{allJudge}, 
 			#{createdTime}, 
 			#{creator}, 
-			#{userId}
+			#{userId},
+			#{age}
 		)
 	</insert>
 	 
@@ -89,6 +91,7 @@
 			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
 			<if test="creator != null">"CREATOR" = #{creator}, </if>
 			<if test="userId != null">"USER_ID" = #{userId}</if>
+			<if test="age != null">"AGE" = #{age}</if>
 		</set>
 		where ID = #{id}
 	</update>
