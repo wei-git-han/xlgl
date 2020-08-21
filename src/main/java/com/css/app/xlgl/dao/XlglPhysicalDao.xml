@@ -43,7 +43,8 @@
 			"CREATED_TIME", 
 			"CREATOR", 
 			"USER_ID",
-			"AGE"
+			"AGE",
+			"DEPT_NAME"
 		)
 		values
 		(
@@ -66,7 +67,8 @@
 			#{createdTime}, 
 			#{creator}, 
 			#{userId},
-			#{age}
+			#{age},
+			#{deptName}
 		)
 	</insert>
 	 
@@ -92,6 +94,7 @@
 			<if test="creator != null">"CREATOR" = #{creator}, </if>
 			<if test="userId != null">"USER_ID" = #{userId}</if>
 			<if test="age != null">"AGE" = #{age}</if>
+			<if test="deptName != null">"DEPT_NAME" = #{deptName}</if>
 		</set>
 		where ID = #{id}
 	</update>

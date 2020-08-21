@@ -56,6 +56,17 @@ public class XlglPhysical implements Serializable {
 	//年龄
 	private String age;
 
+	//人员所在部门
+	private String deptName;
+
+	public String getDeptName() {
+		return deptName;
+	}
+
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
+	}
+
 	public String getAge() {
 		return age;
 	}
