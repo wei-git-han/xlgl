@@ -21,10 +21,12 @@ import com.css.addbase.orgservice.OrgService;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.config.service.AdminSetService;
 import com.css.app.xlgl.entity.XlglDocumentZbjl;
+import com.css.app.xlgl.entity.XlglExamMainAnswer;
 import com.css.app.xlgl.entity.XlglSubDocInfo;
 import com.css.app.xlgl.entity.XlglSubDocTracking;
 import com.css.app.xlgl.entity.XlglXlzzInfo;
 import com.css.app.xlgl.service.XlglDocumentZbjlService;
+import com.css.app.xlgl.service.XlglExamMainAnswerService;
 import com.css.app.xlgl.service.XlglSubDocInfoService;
 import com.css.app.xlgl.service.XlglSubDocTrackingService;
 import com.css.app.xlgl.service.XlglXlzzInfoService;
@@ -80,6 +82,8 @@ public class XlglDocumentZbjlController {
     private XlglSubDocTrackingService xlglSubDocTrackingService;
     @Autowired
     private XlglXlzzInfoService xlglXlzzInfoService;
+	@Autowired
+	private XlglExamMainAnswerService xlglExamMainAnswerService;
 	
 	/**
 	 * 列表
@@ -374,9 +378,20 @@ public class XlglDocumentZbjlController {
                 jsonObject.put("gongtongxunlian",gongtongxunlian);
                 jsonObject.put("gongtongxunliandengji",gongtongxunliandengji);
                 //共同训练，专业训练，战略训练，军事训练 ------------------end
-
-
-
+                Map<String, Object> map = new HashMap<String,Object>();
+                map.put("replyUserId", baseAppUser.getUserId());
+                map.put("examineSubjectName", "共同训练");
+                List<XlglExamMainAnswer> commonList = xlglExamMainAnswerService.findListBySubjectId(map);
+                map.put("examineSubjectName", "专业训练");
+                List<XlglExamMainAnswer> specialtyList = xlglExamMainAnswerService.findListBySubjectId(map);
+                map.put("examineSubjectName", "战略训练");
+                List<XlglExamMainAnswer> tacticalList = xlglExamMainAnswerService.findListBySubjectId(map);
+                map.put("examineSubjectName", "军事训练");
+                List<XlglExamMainAnswer> warList = xlglExamMainAnswerService.findListBySubjectId(map);
+                jsonObject.put("common", commonList.get(0));
+                jsonObject.put("specialty", specialtyList.get(0));
+                jsonObject.put("tactical", tacticalList.get(0));
+                jsonObject.put("war", warList.get(0));
                 jsonArray.add(jsonObject);
 
             }

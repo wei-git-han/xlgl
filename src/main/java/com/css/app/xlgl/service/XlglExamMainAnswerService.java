@@ -32,4 +32,6 @@ public interface XlglExamMainAnswerService {
 	
 	void saveBatch(List<XlglExamMainAnswer> list);
 	int queryTotal(Map<String,Object> map);
+	
+	List<XlglExamMainAnswer> findListBySubjectId(Map<String, Object> map);
 }

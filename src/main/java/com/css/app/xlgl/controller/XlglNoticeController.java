@@ -235,6 +235,18 @@ public class XlglNoticeController {
 		}
 		if(!StringUtils.isEmpty(id)){
 			xlglNoticeService.update(xlglNotice);
+			if(StringUtils.isNotBlank(pIds)) {
+				String[] ids = pIds.split(",");
+				for (int i = 0; i < ids.length; i++) {
+					XlglPicture xlglPicture = new XlglPicture();
+					xlglPicture.setId(UUIDUtils.random());
+					xlglPicture.setFileId(xlglNotice.getId());
+					xlglPicture.setIsFirst("0");
+					xlglPicture.setPictureId(ids[i]);
+					xlglPicture.setSort("0");
+					xlglPictureService.save(xlglPicture);
+				}
+			}
 		}else{
 			String releaseOrganid="";
 			String releaseOrgan="";

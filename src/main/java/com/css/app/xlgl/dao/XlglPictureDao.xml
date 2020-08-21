@@ -38,9 +38,12 @@
 			"PICTURE_ID", 
 			"IS_FIRST", 
 			"SORT",
+			"USER_ID",
+			"USER_NAME",
 			"CREATE_TIME",
 			"PICTURE_TYPE",
 			"PICTURE_NAME"
+
 		)
 		values
 		(
@@ -49,6 +52,8 @@
 			#{pictureId}, 
 			#{isFirst}, 
 			#{sort},
+			#{userId},
+			#{userName},
 			#{createTime},
 			#{pictureType},
 			#{pictureName}
@@ -62,6 +67,8 @@
 			<if test="pictureId != null">"PICTURE_ID" = #{pictureId}, </if>
 			<if test="isFirst != null">"IS_FIRST" = #{isFirst}, </if>
 			<if test="sort != null">"SORT" = #{sort},</if>
+			<if test="userId != null">"USER_ID" = #{userId},</if>
+			<if test="userName != null">"USER_NAME" = #{userName},</if>
 			<if test="createTime != null">"CREATE_TIME" = #{createTime},</if>
 			<if test="pictureType != null">"PICTURE_TYPE" = #{pictureType}</if>
 			<if test="pictureName != null">"PICTURE_NAME" = #{pictureName}</if>

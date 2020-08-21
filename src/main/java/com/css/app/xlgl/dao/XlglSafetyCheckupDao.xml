@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.XlglSafetyCheckupDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglSafetyCheckup">
+		select * from XLGL_SAFETY_CHECKUP where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglSafetyCheckup">
+		select * from XLGL_SAFETY_CHECKUP 
+		where 1 = 1
+		<if test="orgId != null">
+			and ORG_ID = #{orgId}
+		</if>
+		order by UPDATE_DATE desc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_SAFETY_CHECKUP 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglSafetyCheckup">
+		insert into XLGL_SAFETY_CHECKUP
+		(
+			"id", 
+			"FILE_ID", 
+			"FILE_NAME", 
+			"ORG_ID", 
+			"ORG_NAME", 
+			"CREATE_USER", 
+			"CREATE_DATE", 
+			"UPDATE_USER", 
+			"UPDATE_DATE"
+		)
+		values
+		(
+			#{id}, 
+			#{fileId}, 
+			#{fileName}, 
+			#{orgId}, 
+			#{orgName}, 
+			#{createUser}, 
+			#{createDate}, 
+			#{updateUser}, 
+			#{updateDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.XlglSafetyCheckup">
+		update XLGL_SAFETY_CHECKUP 
+		<set>
+			<if test="fileId != null">"FILE_ID" = #{fileId}, </if>
+			<if test="fileName != null">"FILE_NAME" = #{fileName}, </if>
+			<if test="orgId != null">"ORG_ID" = #{orgId}, </if>
+			<if test="orgName != null">"ORG_NAME" = #{orgName}, </if>
+			<if test="createUser != null">"CREATE_USER" = #{createUser}, </if>
+			<if test="createDate != null">"CREATE_DATE" = #{createDate}, </if>
+			<if test="updateUser != null">"UPDATE_USER" = #{updateUser}, </if>
+			<if test="updateDate != null">"UPDATE_DATE" = #{updateDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_SAFETY_CHECKUP where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_SAFETY_CHECKUP where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
