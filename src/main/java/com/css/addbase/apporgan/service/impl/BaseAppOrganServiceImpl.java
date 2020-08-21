@@ -113,4 +113,9 @@ public class BaseAppOrganServiceImpl implements BaseAppOrganService {
 		return baseAppOrganDao.queryAllDeptIds();
 	}
 
+	@Override
+	public BaseAppOrgan queryDeptNameByUserId(String orgId){
+		return baseAppOrganDao.queryDeptNameByUserId(orgId);
+	}
+
 }

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.XlglPhysicalDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglPhysical">
+		select * from XLGL_PHYSICAL where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglPhysical">
+		select * from XLGL_PHYSICAL where 1=1
+		<if test="userId != null and userId !=''">
+			and USER_ID = #{userId}
+		</if>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_PHYSICAL 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglPhysical">
+		insert into XLGL_PHYSICAL
+		(
+			"ID", 
+			"NAME", 
+			"ID_CARD", 
+			"SEX", 
+			"HIGH", 
+			"TYPE", 
+			"WIGHT", 
+			"BIRTHDAY", 
+			"UP", 
+			"SIT", 
+			"SRUN", 
+			"TRUN", 
+			"TSCORE", 
+			"JUDGE", 
+			"ALL_SCORE",
+			"ALL_JUDGE", 
+			"CREATED_TIME", 
+			"CREATOR", 
+			"USER_ID",
+			"AGE",
+			"DEPT_NAME",
+			"UP_ID"
+		)
+		values
+		(
+			#{id}, 
+			#{name}, 
+			#{idCard}, 
+			#{sex}, 
+			#{high}, 
+			#{type}, 
+			#{wight}, 
+			#{birthday}, 
+			#{up}, 
+			#{sit}, 
+			#{srun}, 
+			#{trun}, 
+			#{tscore}, 
+			#{judge}, 
+			#{allScore},
+			#{allJudge}, 
+			#{createdTime}, 
+			#{creator}, 
+			#{userId},
+			#{age},
+			#{deptName},
+			#{upId}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.XlglPhysical">
+		update XLGL_PHYSICAL 
+		<set>
+			<if test="name != null">"NAME" = #{name}, </if>
+			<if test="idCard != null">"ID_CARD" = #{idCard}, </if>
+			<if test="sex != null">"SEX" = #{sex}, </if>
+			<if test="high != null">"HIGH" = #{high}, </if>
+			<if test="type != null">"TYPE" = #{type}, </if>
+			<if test="wight != null">"WIGHT" = #{wight}, </if>
+			<if test="birthday != null">"BIRTHDAY" = #{birthday}, </if>
+			<if test="up != null">"UP" = #{up}, </if>
+			<if test="sit != null">"SIT" = #{sit}, </if>
+			<if test="srun != null">"SRUN" = #{srun}, </if>
+			<if test="trun != null">"TRUN" = #{trun}, </if>
+			<if test="tscore != null">"TSCORE" = #{tscore}, </if>
+			<if test="judge != null">"JUDGE" = #{judge}, </if>
+			<if test="allScore != null">"ALL_SCORE" = #{allScore}, </if>
+			<if test="allJudge != null">"ALL_JUDGE" = #{allJudge}, </if>
+			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
+			<if test="creator != null">"CREATOR" = #{creator}, </if>
+			<if test="userId != null">"USER_ID" = #{userId}</if>
+			<if test="age != null">"AGE" = #{age}</if>
+			<if test="deptName != null">"DEPT_NAME" = #{deptName}</if>
+			<if test="upId != null">"UP_ID" = #{upId}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_PHYSICAL where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_PHYSICAL where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	<delete id="deleteAllRecord">
+		delete from XLGL_PHYSICAL where UP_ID in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

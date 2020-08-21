@@ -120,5 +120,10 @@ public interface BaseAppUserService {
 
 	int queryListAllYx(Map<String,Object> map);
 
+
 	List<BaseAppUser>  queryListByOrganid(Map<String,Object> map);
+
+	List<BaseAppUser> queryAllExcelList(Map<String,Object> map);
+
+
 }

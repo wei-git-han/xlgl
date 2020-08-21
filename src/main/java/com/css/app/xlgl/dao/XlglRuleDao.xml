@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.XlglRuleDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglRule">
+		select * from XLGL_RULE where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglRule">
+		select * from XLGL_RULE where 1=1
+		<if test="type != null and type !=''">
+			and type = #{type}
+		</if>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="queryAll" resultType="com.css.app.xlgl.entity.XlglRule">
+		select * from XLGL_RULE where 1=1
+		<if test="type != null and type !=''">
+			and type = #{type}
+		</if>
+		union all
+		select * from XLGL_CARS_MANAGER where 1=1
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_RULE 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglRule">
+		insert into XLGL_RULE
+		(
+			"ID", 
+			"CREATED_TIME", 
+			"UPLOAD_USER", 
+			"FILE_NAME", 
+			"INFO_ID", 
+			"FILE_SERVER_FORMAT_ID",
+			"TYPE"
+		)
+		values
+		(
+			#{id}, 
+			#{createdTime}, 
+			#{uploadUser}, 
+			#{fileName}, 
+			#{infoId}, 
+			#{fileServerFormatId},
+			#{type}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.XlglRule">
+		update XLGL_RULE 
+		<set>
+			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
+			<if test="uploadUser != null">"UPLOAD_USER" = #{uploadUser}, </if>
+			<if test="fileName != null">"FILE_NAME" = #{fileName}, </if>
+			<if test="infoId != null">"INFO_ID" = #{infoId}, </if>
+			<if test="fileServerFormatId != null">"FILE_SERVER_FORMAT_ID" = #{fileServerFormatId}</if>
+			<if test="type != null">"TYPE" = #{type}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_RULE where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_RULE where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

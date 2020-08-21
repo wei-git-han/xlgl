@@ -183,5 +183,9 @@ public class BaseAppUserServiceImpl implements BaseAppUserService {
 	public List<BaseAppUser> queryListByOrganid(Map<String, Object> map) {
 		return baseAppUserDao.queryListByOrganid(map);
 	}
+	@Override
+	public List<BaseAppUser> queryAllExcelList(Map<String,Object> map){
+		return baseAppUserDao.queryAllExcelList(map);
+	}
 	
 }

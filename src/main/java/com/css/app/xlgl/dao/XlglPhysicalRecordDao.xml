@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.XlglPhysicalRecordDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglPhysicalRecord">
+		select * from XLGL_PHYSICAL_RECORD where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglPhysicalRecord">
+		select * from XLGL_PHYSICAL_RECORD 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_PHYSICAL_RECORD 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglPhysicalRecord">
+		insert into XLGL_PHYSICAL_RECORD
+		(
+			"ID", 
+			"CREATED_TIME", 
+			"UP_USER_ID", 
+			"UP_USER_NAME", 
+			"UP_DEPT_NAME"
+		)
+		values
+		(
+			#{id}, 
+			#{createdTime}, 
+			#{upUserId}, 
+			#{upUserName}, 
+			#{upDeptName}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.XlglPhysicalRecord">
+		update XLGL_PHYSICAL_RECORD 
+		<set>
+			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
+			<if test="upUserId != null">"UP_USER_ID" = #{upUserId}, </if>
+			<if test="upUserName != null">"UP_USER_NAME" = #{upUserName}, </if>
+			<if test="upDeptName != null">"UP_DEPT_NAME" = #{upDeptName}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_PHYSICAL_RECORD where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_PHYSICAL_RECORD where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

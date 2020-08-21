@@ -71,4 +71,6 @@ public interface BaseAppOrganService {
 	List<BaseAppOrgan> queryAllDeptId(String orgId);
 
 	List<BaseAppOrgan> queryAllDeptIds();
+
+	BaseAppOrgan queryDeptNameByUserId(String orgId);
 }

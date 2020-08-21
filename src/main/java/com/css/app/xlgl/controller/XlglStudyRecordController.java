@@ -4,8 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.css.app.xlgl.entity.XlglPicture;
-import com.css.app.xlgl.service.XlglPictureService;
+import com.css.app.xlgl.entity.XlglStudyRecord;
+import com.css.app.xlgl.service.XlglMineStudyService;
+import com.css.app.xlgl.service.XlglStudyRecordService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,32 +22,33 @@ import com.css.base.utils.Response;
 
 
 /**
- * 训练管理存图片表
+ * 自学上传记录
  * 
  * @author 中软信息系统工程有限公司
  * @email 
- * @date 2020-08-10 15:13:49
+ * @date 2020-08-21 14:42:54
  */
 @Controller
-@RequestMapping("/app/xlgl/xlglpicture")
-public class XlglPictureController {
+@RequestMapping("/app/xlgl/xlglstudyrecord")
+public class XlglStudyRecordController {
 	@Autowired
-	private XlglPictureService xlglPictureService;
+	private XlglStudyRecordService xlglStudyRecordService;
+	@Autowired
+	private XlglMineStudyService xlglMineStudyService;
 	
 	/**
 	 * 列表
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	@RequiresPermissions("xlglpicture:list")
 	public void list(Integer page, Integer limit){
 		Map<String, Object> map = new HashMap<>();
 		PageHelper.startPage(page, limit);
 		
 		//查询列表数据
-		List<XlglPicture> xlglPictureList = xlglPictureService.queryList(map);
+		List<XlglStudyRecord> xlglStudyRecordList = xlglStudyRecordService.queryList(map);
 		
-		PageUtils pageUtil = new PageUtils(xlglPictureList);
+		PageUtils pageUtil = new PageUtils(xlglStudyRecordList);
 		Response.json("page",pageUtil);
 	}
 	
@@ -56,10 +58,10 @@ public class XlglPictureController {
 	 */
 	@ResponseBody
 	@RequestMapping("/info/{id}")
-	@RequiresPermissions("xlglpicture:info")
+	@RequiresPermissions("xlglstudyrecord:info")
 	public void info(@PathVariable("id") String id){
-		XlglPicture xlglPicture = xlglPictureService.queryObject(id);
-		Response.json("xlglPicture", xlglPicture);
+		XlglStudyRecord xlglStudyRecord = xlglStudyRecordService.queryObject(id);
+		Response.json("xlglStudyRecord", xlglStudyRecord);
 	}
 	
 	/**
@@ -67,9 +69,10 @@ public class XlglPictureController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public void save(XlglPicture xlglPicture){
-		xlglPicture.setId(UUIDUtils.random());
-		xlglPictureService.save(xlglPicture);
+	@RequiresPermissions("xlglstudyrecord:save")
+	public void save(@RequestBody XlglStudyRecord xlglStudyRecord){
+		xlglStudyRecord.setId(UUIDUtils.random());
+		xlglStudyRecordService.save(xlglStudyRecord);
 		
 		Response.ok();
 	}
@@ -79,9 +82,9 @@ public class XlglPictureController {
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	@RequiresPermissions("xlglpicture:update")
-	public void update(@RequestBody XlglPicture xlglPicture){
-		xlglPictureService.update(xlglPicture);
+	@RequiresPermissions("xlglstudyrecord:update")
+	public void update(@RequestBody XlglStudyRecord xlglStudyRecord){
+		xlglStudyRecordService.update(xlglStudyRecord);
 		
 		Response.ok();
 	}
@@ -91,11 +94,13 @@ public class XlglPictureController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	@RequiresPermissions("xlglpicture:delete")
-	public void delete(@RequestBody String[] ids){
-		xlglPictureService.deleteBatch(ids);
+	public void delete(@RequestBody String id){
+		String[] ids = id.split(",");
+		xlglStudyRecordService.deleteBatch(ids);
+
+		xlglMineStudyService.deleteAllRecord(ids);
 		
-		Response.ok();
+		Response.json("result","success");
 	}
 	
 }

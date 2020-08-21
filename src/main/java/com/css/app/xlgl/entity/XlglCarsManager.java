@@ -19,8 +19,56 @@ public class XlglCarsManager implements Serializable {
 	private String id;
 	//创建时间
 	private Date creaetdTime;
-	//题目
-	private String title;
+	//上传人
+	private String uploadUser;
+	//文件标题
+	private String fileName;
+	//主文件id
+	private String infoId;
+	//文件服务流式ID
+	private String fileServerFormatId;
+	//类别
+	private String type;
+
+	public String getUploadUser() {
+		return uploadUser;
+	}
+
+	public void setUploadUser(String uploadUser) {
+		this.uploadUser = uploadUser;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public String getInfoId() {
+		return infoId;
+	}
+
+	public void setInfoId(String infoId) {
+		this.infoId = infoId;
+	}
+
+	public String getFileServerFormatId() {
+		return fileServerFormatId;
+	}
+
+	public void setFileServerFormatId(String fileServerFormatId) {
+		this.fileServerFormatId = fileServerFormatId;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 
 	/**
 	 * 设置：
@@ -46,16 +94,5 @@ public class XlglCarsManager implements Serializable {
 	public Date getCreaetdTime() {
 		return creaetdTime;
 	}
-	/**
-	 * 设置：题目
-	 */
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	/**
-	 * 获取：题目
-	 */
-	public String getTitle() {
-		return title;
-	}
+
 }

@@ -2,21 +2,17 @@ package com.css.app.xlgl.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import cn.com.css.filestore.impl.HTTPFile;
 import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.AppConfig;
 import com.css.addbase.FileBaseUtil;
 import com.css.addbase.suwell.OfdTransferUtil;
-import com.css.app.db.business.entity.DocumentFile;
-import com.css.app.xlgl.entity.XlglCarsManager;
 import com.css.app.xlgl.entity.XlglPicture;
-import com.css.app.xlgl.service.XlglCarsManagerService;
-import com.css.app.xlgl.service.XlglPictureService;
+import com.css.app.xlgl.entity.XlglRule;
+import com.css.app.xlgl.service.XlglRuleService;
+import com.css.base.utils.CurrentUser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -32,36 +28,42 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 /**
- * 训练管理车辆管理表
+ * 训练管理法规资料
  * 
  * @author 中软信息系统工程有限公司
  * @email 
- * @date 2020-08-17 14:15:57
+ * @date 2020-08-20 20:18:42
  */
 @Controller
-@RequestMapping("/app/xlgl/xlglcarsmanager")
-public class XlglCarsManagerController {
+@RequestMapping("/app/xlgl/xlglrule")
+public class XlglRuleController {
 	@Autowired
-	private XlglCarsManagerService xlglCarsManagerService;
-	@Autowired
-	private XlglPictureService xlglPictureService;
+	private XlglRuleService xlglRuleService;
 	@Autowired
 	private AppConfig appConfig;
 	
 	/**
 	 * 列表
+	 * type : 0:全军管理法规；1:装备发展部管理法规；2：常用资料；3：其他法规
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	@RequiresPermissions("xlglcarsmanager:list")
-	public void list(Integer page, Integer limit){
+	public void list(Integer page, Integer limit,String type){
+		List<XlglRule> xlglRuleList = new ArrayList<>();
 		Map<String, Object> map = new HashMap<>();
+		map.put("type",type);
 		PageHelper.startPage(page, limit);
 		
-		//查询列表数据
-		List<XlglCarsManager> xlglCarsManagerList = xlglCarsManagerService.queryList(map);
+
+
+		if("1".equals(type)){
+			xlglRuleList = xlglRuleService.queryAll(map);
+		}else {
+			//查询列表数据
+			xlglRuleList = xlglRuleService.queryList(map);
+		}
 		
-		PageUtils pageUtil = new PageUtils(xlglCarsManagerList);
+		PageUtils pageUtil = new PageUtils(xlglRuleList);
 		Response.json("page",pageUtil);
 	}
 	
@@ -71,23 +73,25 @@ public class XlglCarsManagerController {
 	 */
 	@ResponseBody
 	@RequestMapping("/info/{id}")
-	@RequiresPermissions("xlglcarsmanager:info")
+	@RequiresPermissions("xlglrule:info")
 	public void info(@PathVariable("id") String id){
-		XlglCarsManager xlglCarsManager = xlglCarsManagerService.queryObject(id);
-		Response.json("xlglCarsManager", xlglCarsManager);
+		XlglRule xlglRule = xlglRuleService.queryObject(id);
+		Response.json("xlglRule", xlglRule);
 	}
 	
 	/**
 	 * 保存
-     * 点击新增的时候，调用这个接口，创建一个表数据
+	 * 点击新增的时候，调用这个接口，创建一个表数据
+	 * type : 0:全军管理法规；1:装备发展部管理法规；2：常用资料；3：其他法规
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public void save(XlglCarsManager xlglCarsManager){
-		xlglCarsManager.setId(UUIDUtils.random());
-		xlglCarsManager.setCreaetdTime(new Date());
-		xlglCarsManagerService.save(xlglCarsManager);
-		Response.json("xlglCarsManager",xlglCarsManager);
+	public void save(XlglRule xlglRule){
+		xlglRule.setId(UUIDUtils.random());
+		xlglRule.setCreatedTime(new Date());
+		xlglRule.setUploadUser(CurrentUser.getUserId());
+		xlglRuleService.save(xlglRule);
+		Response.json("xlglRule",xlglRule);
 	}
 	
 	/**
@@ -95,9 +99,9 @@ public class XlglCarsManagerController {
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	@RequiresPermissions("xlglcarsmanager:update")
-	public void update(@RequestBody XlglCarsManager xlglCarsManager){
-		xlglCarsManagerService.update(xlglCarsManager);
+	@RequiresPermissions("xlglrule:update")
+	public void update(@RequestBody XlglRule xlglRule){
+		xlglRuleService.update(xlglRule);
 		
 		Response.ok();
 	}
@@ -107,9 +111,8 @@ public class XlglCarsManagerController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	@RequiresPermissions("xlglcarsmanager:delete")
-	public void delete(@RequestBody String[] ids){
-		xlglCarsManagerService.deleteBatch(ids);
+	public void delete(String[] ids){
+		xlglRuleService.deleteBatch(ids);
 		
 		Response.ok();
 	}
@@ -170,12 +173,12 @@ public class XlglCarsManagerController {
 							}
 						}
 						// 保存文件相关数据
-						XlglCarsManager file = new XlglCarsManager();
+						XlglRule file = new XlglRule();
 						file.setId(fileId);
 						file.setInfoId(fileId);
 						file.setFileName(fileName);
 						file.setFileServerFormatId(formatId);
-						xlglCarsManagerService.save(file);
+						xlglRuleService.save(file);
 					}
 				}
 				json.put("smjId", retFormatId);
