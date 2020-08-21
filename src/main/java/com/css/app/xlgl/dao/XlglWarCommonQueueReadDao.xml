@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.XlglWarCommonQueueReadDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglWarCommonQueueRead">
+		select * from XLGL_WAR_COMMON_QUEUE_READ where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglWarCommonQueueRead">
+		select * from XLGL_WAR_COMMON_QUEUE_READ 
+		where 1 = 1
+		<if test="queueId != null and queueId != ''">
+		and QUEUE_ID = #{queueId}
+		</if>
+		<if test="readUserId != null and readUserId != ''">
+		and READ_USER_ID = #{readUserId}
+		</if>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_WAR_COMMON_QUEUE_READ 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglWarCommonQueueRead">
+		insert into XLGL_WAR_COMMON_QUEUE_READ
+		(
+			"ID", 
+			"QUEUE_ID", 
+			"READ_ORG_NAME", 
+			"READ_USER_NAME", 
+			"READ_ORG_ID", 
+			"READ_USER_ID", 
+			"READ_DATE"
+		)
+		values
+		(
+			#{id}, 
+			#{queueId}, 
+			#{readOrgName}, 
+			#{readUserName}, 
+			#{readOrgId}, 
+			#{readUserId}, 
+			#{readDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.XlglWarCommonQueueRead">
+		update XLGL_WAR_COMMON_QUEUE_READ 
+		<set>
+			<if test="queueId != null">"QUEUE_ID" = #{queueId}, </if>
+			<if test="readOrgName != null">"READ_ORG_NAME" = #{readOrgName}, </if>
+			<if test="readUserName != null">"READ_USER_NAME" = #{readUserName}, </if>
+			<if test="readOrgId != null">"READ_ORG_ID" = #{readOrgId}, </if>
+			<if test="readUserId != null">"READ_USER_ID" = #{readUserId}, </if>
+			<if test="readDate != null">"READ_DATE" = #{readDate}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_WAR_COMMON_QUEUE_READ where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_WAR_COMMON_QUEUE_READ where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

@@ -31,6 +31,19 @@ public class BaseAppOrgan implements Serializable {
 	private String parentId;
 	//更新类型
 	private Integer deptOfficer;
+	
+	//应在位人数
+	private Integer yzwrs;
+	//实际在位人数
+	private Integer sjzwrs;
+	//人员在位率
+	private Integer zwrate;
+	//请假人数
+	private Integer qjrs;
+	//休假人数
+	private Integer xjrs;
+	//查看权限 0:不能看，1：能看
+	private String status;
 
 	/**
 	 * 设置：
@@ -146,4 +159,42 @@ public class BaseAppOrgan implements Serializable {
 	public void setDeptOfficer(Integer deptOfficer) {
 		this.deptOfficer = deptOfficer;
 	}
+	public Integer getYzwrs() {
+		return yzwrs;
+	}
+	public void setYzwrs(Integer yzwrs) {
+		this.yzwrs = yzwrs;
+	}
+	public Integer getSjzwrs() {
+		return sjzwrs;
+	}
+	public void setSjzwrs(Integer sjzwrs) {
+		this.sjzwrs = sjzwrs;
+	}
+	public Integer getZwrate() {
+		return zwrate;
+	}
+	public void setZwrate(Integer zwrate) {
+		this.zwrate = zwrate;
+	}
+	public Integer getQjrs() {
+		return qjrs;
+	}
+	public void setQjrs(Integer qjrs) {
+		this.qjrs = qjrs;
+	}
+	public Integer getXjrs() {
+		return xjrs;
+	}
+	public void setXjrs(Integer xjrs) {
+		this.xjrs = xjrs;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	
 }

@@ -1,6 +1,8 @@
 package com.css.app.xlgl.controller;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -106,6 +108,17 @@ public class XlglNoticeController {
 		PageHelper.startPage(page, limit);
 		//查询列表数据
 		List<XlglNotice> xlglNoticeList = xlglNoticeService.queryList(map);
+		for (XlglNotice xlglNotice : xlglNoticeList) {
+			map.put("pictureId", xlglNotice.getId());
+			List<XlglPicture> queryList = xlglPictureService.queryList(map);
+			ArrayList<String> pictureIds = new ArrayList<String>();
+			if(queryList.size()>0) {
+				for (XlglPicture xlglPicture : queryList) {
+					pictureIds.add(xlglPicture.getFileId());
+				}
+			}
+			xlglNotice.setPictureIds(pictureIds);
+		}
 		PageUtils pageUtil = new PageUtils(xlglNoticeList);
 		Response.json("page",pageUtil);
 	}
@@ -144,6 +157,13 @@ public class XlglNoticeController {
 	@RequestMapping("/info")
 	public void info(String id){
 		XlglNotice xlglNotice = xlglNoticeService.queryObject(id);
+		if(xlglNotice.getViewNumber() !=null) {
+			xlglNotice.setViewNumber(xlglNotice.getViewNumber()+1);
+		}else {
+			xlglNotice.setViewNumber(1);
+		}
+		
+		xlglNoticeService.update(xlglNotice);
 		Response.json("xlglNotice", xlglNotice);
 	}
 	
@@ -203,8 +223,30 @@ public class XlglNoticeController {
 	public void saveOrUpdate(XlglNotice xlglNotice,String pIds){
 		//判断是新增还是修改,id不为空则是修改，为空则是新增
 		String id = xlglNotice.getId();
+		if(StringUtils.isNotBlank(xlglNotice.getReleaseTimeStr())) {
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			try {
+				Date parse = simpleDateFormat.parse(xlglNotice.getReleaseTimeStr());
+				xlglNotice.setReleaseTime(parse);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				Response.error();
+			}
+		}
 		if(!StringUtils.isEmpty(id)){
 			xlglNoticeService.update(xlglNotice);
+			if(StringUtils.isNotBlank(pIds)) {
+				String[] ids = pIds.split(",");
+				for (int i = 0; i < ids.length; i++) {
+					XlglPicture xlglPicture = new XlglPicture();
+					xlglPicture.setId(UUIDUtils.random());
+					xlglPicture.setFileId(xlglNotice.getId());
+					xlglPicture.setIsFirst("0");
+					xlglPicture.setPictureId(ids[i]);
+					xlglPicture.setSort("0");
+					xlglPictureService.save(xlglPicture);
+				}
+			}
 		}else{
 			String releaseOrganid="";
 			String releaseOrgan="";
@@ -306,6 +348,7 @@ public class XlglNoticeController {
 			 HTTPFile httpFile=HTTPFile.save( file.getInputStream(),file.getOriginalFilename());
 			 String filePath = httpFile.getFilePath();
 			 json.put("filePath", filePath);
+			 json.put("fileid", httpFile.getFileId());
 			 Response.json(json);
 		} catch (IOException e) {
 			e.printStackTrace();

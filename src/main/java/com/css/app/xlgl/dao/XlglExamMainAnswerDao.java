@@ -22,4 +22,6 @@ public interface XlglExamMainAnswerDao extends BaseDao<XlglExamMainAnswer> {
 	String queryUserCount(HashMap<String, Object> mapAll);
 	void saveBatch(List<XlglExamMainAnswer> list);
 	
+	List<XlglExamMainAnswer> findListBySubjectId(Map<String, Object> map);
+	
 }

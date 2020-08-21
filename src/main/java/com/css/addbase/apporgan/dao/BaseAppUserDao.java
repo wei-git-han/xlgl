@@ -124,4 +124,6 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 
 	List<BaseAppUser> queryAllExcelList(Map<String,Object> map);
 	
+	
+	List<BaseAppUser>  queryListByOrganid(Map<String,Object> map);
 }

@@ -46,6 +46,8 @@ public class XlglWarCommonQueue implements Serializable {
 	private String videoFile;
 	//发布单位id
 	private String createOrganId;
+	//观看次数
+	private Integer viewNumber;
 	
 	
 	//封面上传
@@ -54,6 +56,8 @@ public class XlglWarCommonQueue implements Serializable {
 	private List<String> videoFileArray;
 	//附件上传
 	private List<String> accessoryFileArray;
+	//已读、未读标志 0：未读，1：已读
+	private String readStatus;
 
 	/**
 	 * 设置：
@@ -252,6 +256,18 @@ public class XlglWarCommonQueue implements Serializable {
 	}
 	public void setAccessoryFileArray(List<String> accessoryFileArray) {
 		this.accessoryFileArray = accessoryFileArray;
+	}
+	public Integer getViewNumber() {
+		return viewNumber;
+	}
+	public void setViewNumber(Integer viewNumber) {
+		this.viewNumber = viewNumber;
+	}
+	public String getReadStatus() {
+		return readStatus;
+	}
+	public void setReadStatus(String readStatus) {
+		this.readStatus = readStatus;
 	}
 	
 	

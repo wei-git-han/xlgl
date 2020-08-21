@@ -180,4 +180,33 @@
 		</foreach>
 	</insert>
 	
+	<select id="findListBySubjectId" resultType="com.css.app.xlgl.entity.XlglExamMainAnswer">
+		select 
+			m.* 
+		from 
+			XLGL_EXAM_MAIN_ANSWER m
+		join 
+			XLGL_EXAM_EXAMINE e on e.id = m.EXAMINE_ID
+		where m.STATUS  = '0' 
+			<if test="examineId != null and examineId !=''">
+			  and m.EXAMINE_ID = #{examineId}
+			</if>
+			<if test="makeupStatus != null and makeupStatus !=''">
+			  and m.MAKEUP_STATUS = #{makeupStatus}
+			</if>
+			<if test="replyUserName != null and replyUserName !=''">
+			  and m.REPLY_USER_NAME like '%'||#{replyUserName}||'%'
+			</if>
+			<if test="replyUserId != null and replyUserId !=''">
+			  and m.REPLY_USER_ID = #{replyUserId}
+			</if>
+			<if test="isNotExam != null and isNotExam !=''">
+			  and m.ISNOTEXAM = #{isNotExam}
+			</if>
+			<if test="examineSubjectName != null and examineSubjectName !=''">
+			 	and e.EXAMINE_SUBJECT_NAME like '%'||#{examineSubjectName}||'%'
+			</if>
+			order by m.update_date desc
+	</select>
+	
 </mapper>

@@ -22,8 +22,11 @@ import com.github.pagehelper.PageHelper;
 import com.css.base.utils.Response;
 import com.css.base.utils.StringUtils;
 import com.css.app.xlgl.entity.XlglPicture;
+import com.css.app.xlgl.entity.XlglWarCommonQueueRead;
 import com.css.app.xlgl.entity.XlglWarSpecialty;
+import com.css.app.xlgl.entity.XlglWarSpecialtyRead;
 import com.css.app.xlgl.service.XlglPictureService;
+import com.css.app.xlgl.service.XlglWarSpecialtyReadService;
 import com.css.app.xlgl.service.XlglWarSpecialtyService;
 
 
@@ -41,6 +44,8 @@ public class XlglWarSpecialtyController {
 	private XlglWarSpecialtyService xlglWarSpecialtyService;
 	@Autowired
 	private XlglPictureService xlglPictureService;
+	@Autowired
+	private XlglWarSpecialtyReadService xlglWarSpecialtyReadService;
 	
 	/**
 	 * 列表
@@ -53,8 +58,17 @@ public class XlglWarSpecialtyController {
 		
 		//查询列表数据
 		List<XlglWarSpecialty> xlglWarSpecialtyList = xlglWarSpecialtyService.queryList(map);
+		PageUtils pageUtil = new PageUtils(xlglWarSpecialtyList);
 		Map<String, Object> fileMap = new HashMap<>();
+		Map<String, Object> hashMap = new HashMap<>();
 		for (XlglWarSpecialty xlglWarSpecialty : xlglWarSpecialtyList) {
+			hashMap.put("specialtyId", xlglWarSpecialty.getId());
+			List<XlglWarSpecialtyRead> readList = xlglWarSpecialtyReadService.queryList(hashMap);
+			if(readList.size() > 0) {
+				xlglWarSpecialty.setReadStatus("1");
+			}else {
+				xlglWarSpecialty.setReadStatus("0");
+			}
 			fileMap.put("id", xlglWarSpecialty.getId());
 			List<XlglPicture> queryList = xlglPictureService.queryList(map);
 			List<String> list = new ArrayList<String>();
@@ -69,7 +83,7 @@ public class XlglWarSpecialtyController {
 			}
 			xlglWarSpecialty.setAccessoryFileArray(list);
 		}
-		PageUtils pageUtil = new PageUtils(xlglWarSpecialtyList);
+	
 		Response.json("page",pageUtil);
 	}
 	
@@ -80,7 +94,36 @@ public class XlglWarSpecialtyController {
 	@ResponseBody
 	@RequestMapping("/info")
 	public void info(String id){
+		SSOUser ssoUser = CurrentUser.getSSOUser();
+		Map<String, Object> map = new HashMap<>();
+		map.put("specialtyId", id);
+		map.put("readUserId", ssoUser.getUserId());
 		XlglWarSpecialty xlglWarSpecialty = xlglWarSpecialtyService.queryObject(id);
+		xlglWarSpecialty.setViewNumber(xlglWarSpecialty.getViewNumber()+1);
+		if(xlglWarSpecialty.getViewNumber() !=null) {
+			xlglWarSpecialty.setViewNumber(xlglWarSpecialty.getViewNumber()+1);
+		}else {
+			xlglWarSpecialty.setViewNumber(1);
+		}
+		xlglWarSpecialtyService.update(xlglWarSpecialty);
+		//已读记录表
+		List<XlglWarSpecialtyRead> queryList = xlglWarSpecialtyReadService.queryList(map);
+		if(queryList.size()>0) {
+			XlglWarSpecialtyRead xlglWarSpecialtyRead = queryList.get(0);
+			xlglWarSpecialtyRead.setReadDate(new Date());
+			xlglWarSpecialtyReadService.update(xlglWarSpecialtyRead);
+		}else {
+			XlglWarSpecialtyRead xlglWarSpecialtyRead = new XlglWarSpecialtyRead();
+			xlglWarSpecialtyRead.setId(UUIDUtils.random());
+			xlglWarSpecialtyRead.setSpecialtyId(id);
+			xlglWarSpecialtyRead.setReadOrgName(ssoUser.getOrgName());
+			xlglWarSpecialtyRead.setReadOrgId(ssoUser.getOrganId());
+			xlglWarSpecialtyRead.setReadUserId(ssoUser.getUserId());
+			xlglWarSpecialtyRead.setReadUserName(ssoUser.getFullname());
+			xlglWarSpecialtyRead.setReadDate(new Date());
+			xlglWarSpecialtyReadService.save(xlglWarSpecialtyRead);
+		}
+		
 		Response.json("xlglWarSpecialty", xlglWarSpecialty);
 	}
 	

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.XlglWarCommonSportsDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglWarCommonSports">
+		select * from XLGL_WAR_COMMON_SPORTS where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglWarCommonSports">
+		select * from XLGL_WAR_COMMON_SPORTS 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_WAR_COMMON_SPORTS 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglWarCommonSports">
+		insert into XLGL_WAR_COMMON_SPORTS
+		(
+			"id", 
+			"ACCESSORY_FILE", 
+			"CREATE_USER", 
+			"VIEW_NUMBER", 
+			"UPDATE_DATE", 
+			"COVER_FILE", 
+			"CREATE_ORGAN_NAME", 
+			"TARGET", 
+			"QUEUE_TYPE", 
+			"UPDATE_USER", 
+			"PUBLISH_DATE", 
+			"CREATE_DATE", 
+			"CONTENT", 
+			"TACTIC_TITLE", 
+			"VIDEO_FILE", 
+			"CREATE_ORGAN_ID"
+		)
+		values
+		(
+			#{id}, 
+			#{accessoryFile}, 
+			#{createUser}, 
+			#{viewNumber}, 
+			#{updateDate}, 
+			#{coverFile}, 
+			#{createOrganName}, 
+			#{target}, 
+			#{queueType}, 
+			#{updateUser}, 
+			#{publishDate}, 
+			#{createDate}, 
+			#{content}, 
+			#{tacticTitle}, 
+			#{videoFile}, 
+			#{createOrganId}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.XlglWarCommonSports">
+		update XLGL_WAR_COMMON_SPORTS 
+		<set>
+			<if test="accessoryFile != null">"ACCESSORY_FILE" = #{accessoryFile}, </if>
+			<if test="createUser != null">"CREATE_USER" = #{createUser}, </if>
+			<if test="viewNumber != null">"VIEW_NUMBER" = #{viewNumber}, </if>
+			<if test="updateDate != null">"UPDATE_DATE" = #{updateDate}, </if>
+			<if test="coverFile != null">"COVER_FILE" = #{coverFile}, </if>
+			<if test="createOrganName != null">"CREATE_ORGAN_NAME" = #{createOrganName}, </if>
+			<if test="target != null">"TARGET" = #{target}, </if>
+			<if test="queueType != null">"QUEUE_TYPE" = #{queueType}, </if>
+			<if test="updateUser != null">"UPDATE_USER" = #{updateUser}, </if>
+			<if test="publishDate != null">"PUBLISH_DATE" = #{publishDate}, </if>
+			<if test="createDate != null">"CREATE_DATE" = #{createDate}, </if>
+			<if test="content != null">"CONTENT" = #{content}, </if>
+			<if test="tacticTitle != null">"TACTIC_TITLE" = #{tacticTitle}, </if>
+			<if test="videoFile != null">"VIDEO_FILE" = #{videoFile}, </if>
+			<if test="createOrganId != null">"CREATE_ORGAN_ID" = #{createOrganId}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_WAR_COMMON_SPORTS where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_WAR_COMMON_SPORTS where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

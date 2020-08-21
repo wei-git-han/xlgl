@@ -22,8 +22,11 @@ import com.github.pagehelper.PageHelper;
 import com.css.base.utils.Response;
 import com.css.base.utils.StringUtils;
 import com.css.app.xlgl.entity.XlglPicture;
+import com.css.app.xlgl.entity.XlglWarCommonQueueRead;
 import com.css.app.xlgl.entity.XlglWarTactic;
+import com.css.app.xlgl.entity.XlglWarTacticRead;
 import com.css.app.xlgl.service.XlglPictureService;
+import com.css.app.xlgl.service.XlglWarTacticReadService;
 import com.css.app.xlgl.service.XlglWarTacticService;
 
 
@@ -41,7 +44,8 @@ public class XlglWarTacticController {
 	private XlglWarTacticService xlglWarTacticService;
 	@Autowired
 	private XlglPictureService xlglPictureService;
-	
+	@Autowired
+	private XlglWarTacticReadService xlglWarTacticReadService;
 	/**
 	 * 列表
 	 */
@@ -53,8 +57,18 @@ public class XlglWarTacticController {
 		
 		//查询列表数据
 		List<XlglWarTactic> xlglWarTacticList = xlglWarTacticService.queryList(map);
+		PageUtils pageUtil = new PageUtils(xlglWarTacticList);
 		Map<String, Object> fileMap = new HashMap<>();
+		Map<String, Object> hashMap = new HashMap<>();
+		hashMap.put("readUserId", CurrentUser.getUserId());
 		for (XlglWarTactic xlglWarTactic : xlglWarTacticList) {
+			hashMap.put("tacticId", xlglWarTactic.getId());
+			List<XlglWarTacticRead> readList = xlglWarTacticReadService.queryList(hashMap);
+			if(readList.size() >0) {
+				xlglWarTactic.setReadStatus("1");
+			}else {
+				xlglWarTactic.setReadStatus("0");
+			}
 			fileMap.put("id", xlglWarTactic.getId());
 			List<XlglPicture> queryList = xlglPictureService.queryList(map);
 			List<String> list = new ArrayList<String>();
@@ -69,7 +83,7 @@ public class XlglWarTacticController {
 			}
 			xlglWarTactic.setAccessoryFileArray(list);
 		}
-		PageUtils pageUtil = new PageUtils(xlglWarTacticList);
+	
 		Response.json("page",pageUtil);
 	}
 	
@@ -80,7 +94,35 @@ public class XlglWarTacticController {
 	@ResponseBody
 	@RequestMapping("/info")
 	public void info(String id){
+		SSOUser ssoUser = CurrentUser.getSSOUser();
+		Map<String, Object> map = new HashMap<>();
+		map.put("tacticId", id);
+		map.put("readUserId", ssoUser.getUserId());
 		XlglWarTactic xlglWarTactic = xlglWarTacticService.queryObject(id);
+		xlglWarTactic.setViewNumber(xlglWarTactic.getViewNumber()+1);
+		if(xlglWarTactic.getViewNumber() !=null) {
+			xlglWarTactic.setViewNumber(xlglWarTactic.getViewNumber()+1);
+		}else {
+			xlglWarTactic.setViewNumber(1);
+		}
+		xlglWarTacticService.update(xlglWarTactic);
+		//已读记录表
+		List<XlglWarTacticRead> queryList = xlglWarTacticReadService.queryList(map);
+		if(queryList.size()>0) {
+			XlglWarTacticRead xlglWarTacticRead = queryList.get(0);
+			xlglWarTacticRead.setReadDate(new Date());
+			xlglWarTacticReadService.update(xlglWarTacticRead);
+		}else {
+			XlglWarTacticRead xlglWarTacticRead = new XlglWarTacticRead();
+			xlglWarTacticRead.setId(UUIDUtils.random());
+			xlglWarTacticRead.setTacticId(id);
+			xlglWarTacticRead.setReadOrgName(ssoUser.getOrgName());
+			xlglWarTacticRead.setReadOrgId(ssoUser.getOrganId());
+			xlglWarTacticRead.setReadUserId(ssoUser.getUserId());
+			xlglWarTacticRead.setReadUserName(ssoUser.getFullname());
+			xlglWarTacticRead.setReadDate(new Date());
+			xlglWarTacticReadService.save(xlglWarTacticRead);
+		}
 		Response.json("xlglWarTactic", xlglWarTactic);
 	}
 	

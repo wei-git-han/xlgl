@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.css.app.xlgl.entity.XlglPicture;
 import com.css.app.xlgl.entity.XlglWarCommonQueue;
+import com.css.app.xlgl.entity.XlglWarCommonQueueRead;
 import com.css.app.xlgl.service.XlglPictureService;
+import com.css.app.xlgl.service.XlglWarCommonQueueReadService;
 import com.css.app.xlgl.service.XlglWarCommonQueueService;
 import com.css.base.entity.SSOUser;
 import com.css.base.utils.CurrentUser;
@@ -38,7 +40,8 @@ public class XlglWarCommonQueueController {
 	private XlglWarCommonQueueService xlglWarCommonQueueService;
 	@Autowired
 	private XlglPictureService xlglPictureService;
-	
+	@Autowired
+	private XlglWarCommonQueueReadService xlglWarCommonQueueReadService;
 	/**
 	 * 列表
 	 */
@@ -49,8 +52,18 @@ public class XlglWarCommonQueueController {
 		PageHelper.startPage(page, limit);
 		//查询列表数据
 		List<XlglWarCommonQueue> xlglWarCommonQueueList = xlglWarCommonQueueService.queryList(map);
+		PageUtils pageUtil = new PageUtils(xlglWarCommonQueueList);
 		Map<String, Object> fileMap = new HashMap<>();
+		Map<String, Object> hashMap = new HashMap<>();
+		hashMap.put("readUserId", CurrentUser.getUserId());
 		for (XlglWarCommonQueue xlglWarCommonQueue : xlglWarCommonQueueList) {
+			hashMap.put("queueId", xlglWarCommonQueue.getId());
+			List<XlglWarCommonQueueRead> readList = xlglWarCommonQueueReadService.queryList(hashMap);
+			if(readList.size() >0) {
+				xlglWarCommonQueue.setReadStatus("1");
+			}else {
+				xlglWarCommonQueue.setReadStatus("0");
+			}
 			fileMap.put("id", xlglWarCommonQueue.getId());
 			List<XlglPicture> queryList = xlglPictureService.queryList(map);
 			List<String> list = new ArrayList<String>();
@@ -65,8 +78,6 @@ public class XlglWarCommonQueueController {
 			}
 			xlglWarCommonQueue.setAccessoryFileArray(list);
 		}
-		
-		PageUtils pageUtil = new PageUtils(xlglWarCommonQueueList);
 		Response.json("page",pageUtil);
 	}
 	
@@ -77,7 +88,35 @@ public class XlglWarCommonQueueController {
 	@ResponseBody
 	@RequestMapping("/info")
 	public void info(String id){
+		SSOUser ssoUser = CurrentUser.getSSOUser();
+		Map<String, Object> map = new HashMap<>();
+		map.put("queueId", id);
+		map.put("readUserId", ssoUser.getUserId());
 		XlglWarCommonQueue xlglWarCommonQueue = xlglWarCommonQueueService.queryObject(id);
+		if(xlglWarCommonQueue.getViewNumber() !=null) {
+			xlglWarCommonQueue.setViewNumber(xlglWarCommonQueue.getViewNumber()+1);
+		}else {
+			xlglWarCommonQueue.setViewNumber(1);
+		}
+		xlglWarCommonQueueService.update(xlglWarCommonQueue);
+		//已读记录表
+		List<XlglWarCommonQueueRead> queryList = xlglWarCommonQueueReadService.queryList(map);
+		if(queryList.size()>0) {
+			XlglWarCommonQueueRead xlglWarCommonQueueRead = queryList.get(0);
+			xlglWarCommonQueueRead.setReadDate(new Date());
+			xlglWarCommonQueueReadService.update(xlglWarCommonQueueRead);
+		}else {
+			XlglWarCommonQueueRead xlglWarCommonQueueRead = new XlglWarCommonQueueRead();
+			xlglWarCommonQueueRead.setId(UUIDUtils.random());
+			xlglWarCommonQueueRead.setQueueId(id);
+			xlglWarCommonQueueRead.setReadOrgName(ssoUser.getOrgName());
+			xlglWarCommonQueueRead.setReadOrgId(ssoUser.getOrganId());
+			xlglWarCommonQueueRead.setReadUserId(ssoUser.getUserId());
+			xlglWarCommonQueueRead.setReadUserName(ssoUser.getFullname());
+			xlglWarCommonQueueRead.setReadDate(new Date());
+			xlglWarCommonQueueReadService.save(xlglWarCommonQueueRead);
+		}
+		
 		Response.json("xlglWarCommonQueue", xlglWarCommonQueue);
 	}
 	
