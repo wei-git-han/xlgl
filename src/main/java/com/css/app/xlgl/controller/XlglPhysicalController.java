@@ -90,6 +90,7 @@ public class XlglPhysicalController {
 		xlglPhysical.setCreator(CurrentUser.getUserId());
 		xlglPhysical.setCreatedTime(new Date());
 		xlglPhysical.setUserId(CurrentUser.getUserId());
+		xlglPhysical.setNormal("0");//1是正式导入，0是自己保存
 
 //		int age = Integer.parseInt(xlglPhysical.getAge());
 //		int up = Integer.parseInt(xlglPhysical.getUp());

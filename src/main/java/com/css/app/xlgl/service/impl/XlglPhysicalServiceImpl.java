@@ -204,6 +204,7 @@ public class XlglPhysicalServiceImpl implements XlglPhysicalService {
 				xlglPhysical.setUserId(steCell9);
 				xlglPhysical.setDeptName(steCell10);
 				xlglPhysical.setUpId(id);//每次上传的id
+				xlglPhysical.setNormal("1");//1是正式导入，0是自己保存
 				list.add(xlglPhysical);
 			}
 		wb.close();

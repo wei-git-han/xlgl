@@ -45,7 +45,8 @@
 			"USER_ID",
 			"AGE",
 			"DEPT_NAME",
-			"UP_ID"
+			"UP_ID",
+			"NORMAL"
 		)
 		values
 		(
@@ -70,7 +71,8 @@
 			#{userId},
 			#{age},
 			#{deptName},
-			#{upId}
+			#{upId},
+			#{normal}
 		)
 	</insert>
 	 
@@ -98,6 +100,7 @@
 			<if test="age != null">"AGE" = #{age}</if>
 			<if test="deptName != null">"DEPT_NAME" = #{deptName}</if>
 			<if test="upId != null">"UP_ID" = #{upId}</if>
+			<if test="normal != null">"NORMAL" = #{normal}</if>
 		</set>
 		where ID = #{id}
 	</update>

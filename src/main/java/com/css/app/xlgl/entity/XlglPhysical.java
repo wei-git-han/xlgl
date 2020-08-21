@@ -62,6 +62,17 @@ public class XlglPhysical implements Serializable {
 	//每次上传的id
 	private String upId;
 
+	//是否是正式上传还是自己保存  0是自己保存  1是上传
+	private String normal;
+
+	public String getNormal() {
+		return normal;
+	}
+
+	public void setNormal(String normal) {
+		this.normal = normal;
+	}
+
 	public String getUpId() {
 		return upId;
 	}
