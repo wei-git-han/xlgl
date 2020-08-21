@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.XlglMineStudyDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglMineStudy">
+		select * from XLGL_MINE_STUDY where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglMineStudy">
+		select * from XLGL_MINE_STUDY 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_MINE_STUDY 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglMineStudy">
+		insert into XLGL_MINE_STUDY
+		(
+			"ID", 
+			"USER_NAME", 
+			"USER_ID", 
+			"SCORE", 
+			"DJ", 
+			"CREATED_TIME", 
+			"DEPT_NAME"
+		)
+		values
+		(
+			#{id}, 
+			#{userName}, 
+			#{userId}, 
+			#{score}, 
+			#{dj}, 
+			#{createdTime}, 
+			#{deptName}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.XlglMineStudy">
+		update XLGL_MINE_STUDY 
+		<set>
+			<if test="userName != null">"USER_NAME" = #{userName}, </if>
+			<if test="userId != null">"USER_ID" = #{userId}, </if>
+			<if test="score != null">"SCORE" = #{score}, </if>
+			<if test="dj != null">"DJ" = #{dj}, </if>
+			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
+			<if test="deptName != null">"DEPT_NAME" = #{deptName}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_MINE_STUDY where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_MINE_STUDY where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
