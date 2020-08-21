@@ -178,5 +178,10 @@ public class BaseAppUserServiceImpl implements BaseAppUserService {
 	public int queryListAllYx(Map<String,Object> map){
 		return baseAppUserDao.queryListAllYx(map);
 	}
+
+	@Override
+	public List<BaseAppUser> queryAllExcelList(Map<String,Object> map){
+		return baseAppUserDao.queryAllExcelList(map);
+	}
 	
 }

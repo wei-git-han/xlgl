@@ -1,8 +1,10 @@
 package com.css.app.xlgl.service;
 
 
+import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.app.xlgl.entity.XlglPhysical;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -26,4 +28,8 @@ public interface XlglPhysicalService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+
+	public InputStream createExcelInfoFile(List<BaseAppUser> list, String fileName) throws Exception;
+
+	List<XlglPhysical> importExcle(InputStream is) throws Exception;
 }

@@ -1,27 +1,31 @@
 package com.css.app.xlgl.controller;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.io.InputStream;
+import java.util.*;
 
+import cn.com.css.filestore.impl.HTTPFile;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.css.addbase.FileBaseUtil;
+import com.css.addbase.PinYinUtil;
+import com.css.addbase.apporgan.entity.BaseAppUser;
+import com.css.addbase.apporgan.service.BaseAppUserService;
+import com.css.addbase.constant.AppConstant;
+import com.css.addbase.constant.AppInterfaceConstant;
 import com.css.app.xlgl.entity.XlglPhysical;
 import com.css.app.xlgl.service.XlglPhysicalService;
-import com.css.base.utils.CurrentUser;
+import com.css.base.utils.*;
 import org.apache.poi.hssf.eventusermodel.examples.XLS2CSVmra;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 
-import com.css.base.utils.PageUtils;
-import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
-import com.css.base.utils.Response;
+import org.springframework.web.multipart.MultipartFile;
 
 
 /**
@@ -37,7 +41,10 @@ public class XlglPhysicalController {
 	@Autowired
 	private XlglPhysicalService xlglPhysicalService;
 
-	private TestController testController;
+	@Value("${filePath}")
+	private String filePath;
+	@Autowired
+	private BaseAppUserService baseAppUserService;
 	
 	/**
 	 * 列表
@@ -121,5 +128,60 @@ public class XlglPhysicalController {
 		
 		Response.ok();
 	}
-	
+
+	/**
+	 * 军事体育成绩先导出
+	 */
+	@ResponseBody
+	@RequestMapping("/exportList")
+	public void exportList(){
+		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("orgId",orgId);
+		List<BaseAppUser> infoList = baseAppUserService.queryAllExcelList(map);
+		File tempFile = new File(filePath, "军事体育成绩清单.xls");
+		if (tempFile.exists()) {
+			tempFile.delete();
+		} else {
+			tempFile.getParentFile().mkdirs();
+		}
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		InputStream is;
+		try {
+			is = xlglPhysicalService.createExcelInfoFile(infoList, tempFile.getAbsolutePath());
+			is.close();
+			resultMap.put("fileUrl", tempFile.getAbsoluteFile());
+			resultMap.put("fileName", tempFile.getName());
+			resultMap.put("result", "success");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Response.json(resultMap);
+	}
+
+
+	/**
+	 * 军事体育成绩导入
+	 */
+
+	@ResponseBody
+	@RequestMapping("/importExcel")
+	public void importExcel(@RequestParam(value="file",required = false) MultipartFile file) {
+		JSONObject jsonObject = new JSONObject();
+		try {
+			String fileId = FileBaseUtil.fileServiceUpload(file);
+			HTTPFile httpFile = new HTTPFile(fileId);
+			InputStream inputStream = httpFile.getInputSteam();
+			List<XlglPhysical> list = xlglPhysicalService.importExcle(inputStream);
+			if (list != null && list.size() > 0) {
+				for (XlglPhysical xlglPhysical : list) {
+					xlglPhysicalService.save(xlglPhysical);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+
+	}
 }
