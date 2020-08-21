@@ -29,7 +29,9 @@ public interface XlglPhysicalService {
 	
 	void deleteBatch(String[] ids);
 
+	void deleteAllRecord(String[] ids);
+
 	public InputStream createExcelInfoFile(List<BaseAppUser> list, String fileName) throws Exception;
 
-	List<XlglPhysical> importExcle(InputStream is) throws Exception;
+	List<XlglPhysical> importExcle(InputStream is,String id) throws Exception;
 }

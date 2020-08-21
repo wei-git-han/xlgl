@@ -65,6 +65,11 @@ public class XlglPhysicalServiceImpl implements XlglPhysicalService {
 	}
 
 	@Override
+	public void deleteAllRecord(String[] ids){
+		xlglPhysicalDao.deleteAllRecord(ids);
+	}
+
+	@Override
 	public InputStream createExcelInfoFile(List<BaseAppUser> list, String fileName) throws Exception {
 		//String ministry = baseAppOrgMappedService.getAppLevelByType(AppConstant.APP_DZBMS);
 
@@ -168,7 +173,7 @@ public class XlglPhysicalServiceImpl implements XlglPhysicalService {
 	}
 
 	@Override
-	public List<XlglPhysical> importExcle(InputStream is) throws Exception {
+	public List<XlglPhysical> importExcle(InputStream is,String id) throws Exception {
 		List<XlglPhysical> list =new ArrayList<XlglPhysical>();
 		Workbook wb =new HSSFWorkbook(is);
 		Sheet sheet = wb.getSheetAt(0); // 遍历第一个Sheet
@@ -198,6 +203,7 @@ public class XlglPhysicalServiceImpl implements XlglPhysicalService {
 				xlglPhysical.setType(steCell8);
 				xlglPhysical.setUserId(steCell9);
 				xlglPhysical.setDeptName(steCell10);
+				xlglPhysical.setUpId(id);//每次上传的id
 				list.add(xlglPhysical);
 			}
 		wb.close();

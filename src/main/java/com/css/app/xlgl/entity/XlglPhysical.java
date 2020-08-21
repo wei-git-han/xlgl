@@ -59,6 +59,17 @@ public class XlglPhysical implements Serializable {
 	//人员所在部门
 	private String deptName;
 
+	//每次上传的id
+	private String upId;
+
+	public String getUpId() {
+		return upId;
+	}
+
+	public void setUpId(String upId) {
+		this.upId = upId;
+	}
+
 	public String getDeptName() {
 		return deptName;
 	}

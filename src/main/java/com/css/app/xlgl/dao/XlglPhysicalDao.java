@@ -15,5 +15,6 @@ import com.css.base.dao.BaseDao;
  */
 @Mapper
 public interface XlglPhysicalDao extends BaseDao<XlglPhysical> {
-	
+
+    void deleteAllRecord(String[] ids);
 }

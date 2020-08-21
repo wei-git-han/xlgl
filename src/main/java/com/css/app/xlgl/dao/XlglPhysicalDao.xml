@@ -44,7 +44,8 @@
 			"CREATOR", 
 			"USER_ID",
 			"AGE",
-			"DEPT_NAME"
+			"DEPT_NAME",
+			"UP_ID"
 		)
 		values
 		(
@@ -68,7 +69,8 @@
 			#{creator}, 
 			#{userId},
 			#{age},
-			#{deptName}
+			#{deptName},
+			#{upId}
 		)
 	</insert>
 	 
@@ -95,6 +97,7 @@
 			<if test="userId != null">"USER_ID" = #{userId}</if>
 			<if test="age != null">"AGE" = #{age}</if>
 			<if test="deptName != null">"DEPT_NAME" = #{deptName}</if>
+			<if test="upId != null">"UP_ID" = #{upId}</if>
 		</set>
 		where ID = #{id}
 	</update>
@@ -105,6 +108,12 @@
 	
 	<delete id="deleteBatch">
 		delete from XLGL_PHYSICAL where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	<delete id="deleteAllRecord">
+		delete from XLGL_PHYSICAL where UP_ID in
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
 		</foreach>

@@ -14,6 +14,8 @@ import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.addbase.constant.AppConstant;
 import com.css.addbase.constant.AppInterfaceConstant;
 import com.css.app.xlgl.entity.XlglPhysical;
+import com.css.app.xlgl.entity.XlglPhysicalRecord;
+import com.css.app.xlgl.service.XlglPhysicalRecordService;
 import com.css.app.xlgl.service.XlglPhysicalService;
 import com.css.base.utils.*;
 import org.apache.poi.hssf.eventusermodel.examples.XLS2CSVmra;
@@ -45,6 +47,8 @@ public class XlglPhysicalController {
 	private String filePath;
 	@Autowired
 	private BaseAppUserService baseAppUserService;
+	@Autowired
+	private XlglPhysicalRecordService xlglPhysicalRecordService;
 	
 	/**
 	 * 列表
@@ -169,15 +173,25 @@ public class XlglPhysicalController {
 	public void importExcel(@RequestParam(value="file",required = false) MultipartFile file) {
 		JSONObject jsonObject = new JSONObject();
 		try {
+			//文件上传记录
+			XlglPhysicalRecord xlglPhysicalRecord = new XlglPhysicalRecord();
+			String id = UUIDUtils.random();
+			xlglPhysicalRecord.setId(id);
+			xlglPhysicalRecord.setUpUserId(CurrentUser.getUserId());
+			xlglPhysicalRecord.setUpUserName(CurrentUser.getOrgName());
+			xlglPhysicalRecord.setUpUserName(CurrentUser.getUsername());
 			String fileId = FileBaseUtil.fileServiceUpload(file);
 			HTTPFile httpFile = new HTTPFile(fileId);
 			InputStream inputStream = httpFile.getInputSteam();
-			List<XlglPhysical> list = xlglPhysicalService.importExcle(inputStream);
+			List<XlglPhysical> list = xlglPhysicalService.importExcle(inputStream,id);
 			if (list != null && list.size() > 0) {
 				for (XlglPhysical xlglPhysical : list) {
 					xlglPhysicalService.save(xlglPhysical);
 				}
 			}
+
+			xlglPhysicalRecord.setCreatedTime(new Date());
+			xlglPhysicalRecordService.save(xlglPhysicalRecord);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
