@@ -27,7 +27,8 @@
 			"SCORE", 
 			"DJ", 
 			"CREATED_TIME", 
-			"DEPT_NAME"
+			"DEPT_NAME",
+			"UP_ID"
 		)
 		values
 		(
@@ -37,7 +38,8 @@
 			#{score}, 
 			#{dj}, 
 			#{createdTime}, 
-			#{deptName}
+			#{deptName},
+			#{upId}
 		)
 	</insert>
 	 
@@ -50,6 +52,7 @@
 			<if test="dj != null">"DJ" = #{dj}, </if>
 			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
 			<if test="deptName != null">"DEPT_NAME" = #{deptName}</if>
+			<if test="upId != null">"UP_ID" = #{upId}</if>
 		</set>
 		where ID = #{id}
 	</update>
@@ -60,6 +63,13 @@
 	
 	<delete id="deleteBatch">
 		delete from XLGL_MINE_STUDY where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<delete id="deleteAllRecord">
+		delete from XLGL_MINE_STUDY where ID in
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
 		</foreach>

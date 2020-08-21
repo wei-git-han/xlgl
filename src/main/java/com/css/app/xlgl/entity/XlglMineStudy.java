@@ -26,9 +26,11 @@ public class XlglMineStudy implements Serializable {
 	//等级
 	private String dj;
 	//创建时间
-	private String createdTime;
+	private Date createdTime;
 	//部门名称
 	private String deptName;
+	//上传id，用于统计和删除
+	private String upId;
 
 	/**
 	 * 设置：
@@ -90,18 +92,7 @@ public class XlglMineStudy implements Serializable {
 	public String getDj() {
 		return dj;
 	}
-	/**
-	 * 设置：创建时间
-	 */
-	public void setCreatedTime(String createdTime) {
-		this.createdTime = createdTime;
-	}
-	/**
-	 * 获取：创建时间
-	 */
-	public String getCreatedTime() {
-		return createdTime;
-	}
+
 	/**
 	 * 设置：部门名称
 	 */
@@ -113,5 +104,21 @@ public class XlglMineStudy implements Serializable {
 	 */
 	public String getDeptName() {
 		return deptName;
+	}
+
+	public Date getCreatedTime() {
+		return createdTime;
+	}
+
+	public void setCreatedTime(Date createdTime) {
+		this.createdTime = createdTime;
+	}
+
+	public String getUpId() {
+		return upId;
+	}
+
+	public void setUpId(String upId) {
+		this.upId = upId;
 	}
 }
