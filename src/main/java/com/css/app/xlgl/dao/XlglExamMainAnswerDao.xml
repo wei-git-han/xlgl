@@ -159,7 +159,11 @@
 			"CREATE_DATE", 
 			"UPDATE_DATE", 
 			"MAKEUP_STATUS", 
-			"MAKEUP_EXAMINE_ID"
+			"MAKEUP_EXAMINE_ID",
+			"CREATE_USER",
+			"UPDATE_USER",
+			"STATUS",
+			"ISNOTEXAM"
 		)
 		values
 		<foreach collection="list" item="item" index="index" open="" close="" separator=",">
@@ -175,7 +179,11 @@
 			#{item.createDate}, 
 			#{item.updateDate}, 
 			#{item.makeupStatus}, 
-			#{item.makeupExamineId}
+			#{item.makeupExamineId},
+			#{item.createUser},
+			#{item.updateUser},
+			#{item.status},
+			#{item.isNotExam}
 		)
 		</foreach>
 	</insert>

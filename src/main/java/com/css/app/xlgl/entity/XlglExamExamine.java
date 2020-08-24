@@ -39,7 +39,7 @@ public class XlglExamExamine implements Serializable {
 	private Date updateDate;
 	//是否发布0:没发布，1发布
 	private String issueStatus;
-	//考试是否结束 0：没结束进行中，1：已结束已完结 2 :补考开始
+	//考试是否结束 0：没结束进行中，1：已结束已完结 2 :补考开始，99：未开始
 	private String overStatus;
 	//考试结束时间
 	private Date examineEndDate;
@@ -59,6 +59,9 @@ public class XlglExamExamine implements Serializable {
 	private String examineStartDateStr;
 	//考试结束时间
 	private String examineEndDateStr;
+	
+	//用户考试状态  1：已完成，2：未考试，3：已补考
+	private String userStatus;
 
 
 	
@@ -260,6 +263,12 @@ public class XlglExamExamine implements Serializable {
 	}
 	public void setExamineEndDateStr(String examineEndDateStr) {
 		this.examineEndDateStr = examineEndDateStr;
+	}
+	public String getUserStatus() {
+		return userStatus;
+	}
+	public void setUserStatus(String userStatus) {
+		this.userStatus = userStatus;
 	}
 	
 

@@ -31,6 +31,8 @@ public class XlglExamSubject implements Serializable {
 	private Date createDate;
 	//题目类型
 	private String[] subjectTypeAll;
+	//科目说明
+	private String state;
 	/**
 	 * 设置：
 	 */
@@ -120,6 +122,18 @@ public class XlglExamSubject implements Serializable {
 	}
 	public void setSubjectTypeAll(String[] subjectTypeAll) {
 		this.subjectTypeAll = subjectTypeAll;
+	}
+	/**
+	 * 获取：科目说明
+	 */
+	public String getState() {
+		return state;
+	}
+	/**
+	 * 设置：科目说明
+	 */
+	public void setState(String state) {
+		this.state = state;
 	}
 	
 }

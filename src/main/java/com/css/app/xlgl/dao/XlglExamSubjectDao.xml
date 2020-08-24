@@ -27,7 +27,8 @@
 			"UPDATE_DATE", 
 			"UPDATE_USER", 
 			"SUBJECT_TYPE", 
-			"CREATE_DATE"
+			"CREATE_DATE",
+			"STATE"
 		)
 		values
 		(
@@ -37,7 +38,8 @@
 			#{updateDate}, 
 			#{updateUser}, 
 			#{subjectType}, 
-			#{createDate}
+			#{createDate},
+			#{state}
 		)
 	</insert>
 	 
@@ -46,10 +48,12 @@
 		<set>
 			<if test="subjectName != null">"SUBJECT_NAME" = #{subjectName}, </if>
 			<if test="createUser != null">"CREATE_USER" = #{createUser}, </if>
-			<if test="updateDate != null">"UPDATE_DATE" = #{updateDate}, </if>
 			<if test="updateUser != null">"UPDATE_USER" = #{updateUser}, </if>
+			<if test="state != null">"STATE" = #{state}, </if>
 			<if test="subjectType != null">"SUBJECT_TYPE" = #{subjectType}, </if>
-			<if test="createDate != null">"CREATE_DATE" = #{createDate}</if>
+			<if test="createDate != null">"CREATE_DATE" = #{createDate}, </if>
+			<if test="updateDate != null">"UPDATE_DATE" = #{updateDate} </if>
+	
 		</set>
 		where id = #{id}
 	</update>
