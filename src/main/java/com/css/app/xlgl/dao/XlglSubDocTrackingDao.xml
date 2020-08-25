@@ -14,7 +14,7 @@
 		</if>
 	</select>
 
-	<select id="queryCurrentYear" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
+	<select id="queryCurrentYear" resultType="int">
 		select count(1) from XLGL_SUB_DOC_TRACKING where 1=1
 		<if test="userId != null and userId !=''">
 			and RECEIVER_ID =#{userId}
@@ -24,7 +24,7 @@
 		</if>
 	</select>
 
-	<select id="queryCxCount" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
+	<select id="queryCxCount" resultType="int">
 		select count(1) from XLGL_SUB_DOC_TRACKING where 1=1
 		<if test="userId != null and userId !=''">
 			and RECEIVER_ID =#{userId}
@@ -35,7 +35,7 @@
 		and IS_WORK = '1' and TRACKING_TYPE = '0'
 	</select>
 
-	<select id="queryBmCount" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
+	<select id="queryBmCount" resultType="int">
 		select count(1) from XLGL_SUB_DOC_TRACKING where 1=1
 		<if test="userId != null and userId !=''">
 			and RECEIVER_ID =#{userId}

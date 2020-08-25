@@ -406,8 +406,11 @@ public class XlglXlzzInfoController {
 		int ycx = xlglSubDocTrackingService.queryCxCount(map);//已参训的大讲堂数
 
 		int ybm = xlglSubDocTrackingService.queryBmCount(map);
+		float f=0.0f;
+		if(count > 0){
+			f= (ycx + ybm) / count;
+		}
 
-		float f= (ycx + ybm) / count;
 
 		Response.json("lv",f);
 	}
