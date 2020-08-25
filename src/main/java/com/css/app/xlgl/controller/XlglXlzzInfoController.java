@@ -393,26 +393,24 @@ public class XlglXlzzInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getCxwcl")
-	public void getCxwcl(){
-		Map<String,Object> map = new HashMap<>();
+	public void getCxwcl() {
+		Map<String, Object> map = new HashMap<>();
 		String userId = CurrentUser.getUserId();
 		SimpleDateFormat sd = new SimpleDateFormat("yyyy");
 		Date date = new Date();
 		String year = sd.format(date);
-		map.put("userId",userId);
-		map.put("year",year);
+		map.put("userId", userId);
+		map.put("year", year);
 		int count = xlglSubDocTrackingService.queryCurrentYear(map);//本年度大讲堂数+日常训练数
 
 		int ycx = xlglSubDocTrackingService.queryCxCount(map);//已参训的大讲堂数
 
 		int ybm = xlglSubDocTrackingService.queryBmCount(map);
-		float f=0.0f;
-		if(count > 0){
-			f= (ycx + ybm) / count;
+		float f = 0.0f;
+		if (count > 0) {
+			f = (ycx + ybm) / count;
 		}
-
-
-		Response.json("lv",f);
+		Response.json("lv", f);
 	}
 
 
