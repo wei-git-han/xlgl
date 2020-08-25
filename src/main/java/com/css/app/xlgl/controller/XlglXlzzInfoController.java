@@ -389,7 +389,7 @@ public class XlglXlzzInfoController {
 	}
 
 	/**
-	 * 训练组织列表参训完成率
+	 * 训练组织列表参训完成率,已完成，需补考
 	 */
 	@ResponseBody
 	@RequestMapping("/getCxwcl")
