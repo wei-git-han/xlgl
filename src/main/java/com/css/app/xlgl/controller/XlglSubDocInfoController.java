@@ -38,7 +38,6 @@ public class XlglSubDocInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	@RequiresPermissions("xlglsubdocinfo:list")
 	public void list(Integer page, Integer limit){
 		Map<String, Object> map = new HashMap<>();
 		PageHelper.startPage(page, limit);
@@ -56,8 +55,7 @@ public class XlglSubDocInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/info/{id}")
-	@RequiresPermissions("xlglsubdocinfo:info")
-	public void info(@PathVariable("id") String id){
+	public void info(String id){
 		XlglSubDocInfo xlglSubDocInfo = xlglSubDocInfoService.queryObject(id);
 		Response.json("xlglSubDocInfo", xlglSubDocInfo);
 	}
@@ -67,8 +65,7 @@ public class XlglSubDocInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	@RequiresPermissions("xlglsubdocinfo:save")
-	public void save(@RequestBody XlglSubDocInfo xlglSubDocInfo){
+	public void save(XlglSubDocInfo xlglSubDocInfo){
 		xlglSubDocInfo.setId(UUIDUtils.random());
 		xlglSubDocInfoService.save(xlglSubDocInfo);
 		
@@ -80,8 +77,7 @@ public class XlglSubDocInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	@RequiresPermissions("xlglsubdocinfo:update")
-	public void update(@RequestBody XlglSubDocInfo xlglSubDocInfo){
+	public void update(XlglSubDocInfo xlglSubDocInfo){
 		xlglSubDocInfoService.update(xlglSubDocInfo);
 		
 		Response.ok();
@@ -92,8 +88,7 @@ public class XlglSubDocInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	@RequiresPermissions("xlglsubdocinfo:delete")
-	public void delete(@RequestBody String[] ids){
+	public void delete(String[] ids){
 		xlglSubDocInfoService.deleteBatch(ids);
 		
 		Response.ok();

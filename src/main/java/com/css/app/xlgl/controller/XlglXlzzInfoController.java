@@ -90,13 +90,17 @@ public class XlglXlzzInfoController {
 	@RequestMapping("/info")
 	public void info(String id){
 		String loginUser = CurrentUser.getUserId();
+		String deptName = CurrentUser.getOrgName();
 		XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(id);
 		//打开的同时，更新打开人的状态为已读
 		XlglSubDocTracking xlglSubDocTracking = xlglSubDocTrackingService.queryInfo(id,loginUser);
-		xlglSubDocTracking.setRead("1");
-		xlglSubDocTrackingService.update(xlglSubDocTracking);
-		xlglXlzzInfo.setStatus("1");//1为已读
-		xlglXlzzInfo.setBaoming(xlglSubDocTracking.getBaoming());
+		if(xlglSubDocTracking != null){
+			xlglSubDocTracking.setRead("1");
+			xlglSubDocTrackingService.update(xlglSubDocTracking);
+		}
+		//xlglXlzzInfo.setStatus("1");//1为已读
+		//xlglXlzzInfo.setBaoming(xlglSubDocTracking.getBaoming());
+		xlglXlzzInfo.setFbDept(deptName);
 		Response.json("xlglXlzzInfo", xlglXlzzInfo);
 	}
 
@@ -125,16 +129,22 @@ public class XlglXlzzInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public void save(XlglXlzzInfo xlglXlzzInfo,String pIds,String type){
+	public void save(XlglXlzzInfo xlglXlzzInfo,String pIds,String type,String pidNames){
 		JSONObject jsonObject = new JSONObject();
-		String fId = UUIDUtils.random();
-		xlglXlzzInfo.setId(fId);
-		xlglXlzzInfo.setCreateTime(new Date());
-		xlglXlzzInfoService.save(xlglXlzzInfo);
+		String fId = null;
+		if(StringUtils.isNotBlank(xlglXlzzInfo.getId())){
+			xlglXlzzInfoService.update(xlglXlzzInfo);
+		}else {
+			fId = UUIDUtils.random();
+			xlglXlzzInfo.setId(fId);
+			xlglXlzzInfo.setCreateTime(new Date());
+			xlglXlzzInfoService.save(xlglXlzzInfo);
+		}
 		//保存上传图片，视频，文件
 		if(StringUtils.isNotBlank(pIds)) {
 			String[] ids = pIds.split(",");
 			String[] types = type.split(",");
+			String[] names = pidNames.split(",");
 			xlglPictureService.deleteBatch(ids);
 			for (int i = 0; i < ids.length; i++) {
 				XlglPicture xlglPicture = new XlglPicture();
@@ -143,6 +153,7 @@ public class XlglXlzzInfoController {
 				xlglPicture.setIsFirst("0");
 				xlglPicture.setPictureId(ids[i]);
 				xlglPicture.setSort("0");
+				xlglPicture.setPictureName(names[i]);
 				String typePicture = types[i];
 				if("video/mp4".equals(typePicture)){
 					xlglPicture.setPictureType("0");

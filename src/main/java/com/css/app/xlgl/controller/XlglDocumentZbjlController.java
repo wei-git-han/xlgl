@@ -135,6 +135,11 @@ public class XlglDocumentZbjlController {
             xlglDocumentZbjl.setCreatedTime(new Date());
             xlglDocumentZbjl.setOrgName(org.getName());
             xlglDocumentZbjlService.save(xlglDocumentZbjl);
+
+            XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(fileId);
+            xlglXlzzInfo.setTodeptName(deptNames);
+            xlglXlzzInfo.setTodeptId(deptIds);
+            xlglXlzzInfoService.update(xlglXlzzInfo);
             //添加各分支记录
             String[] ids = idAndNames.split(";");
             List<String> subDeptIds = xlglSubDocInfoService.queryAllSubDeptIds(fileId);
@@ -178,12 +183,13 @@ public class XlglDocumentZbjlController {
      */
     @ResponseBody
     @RequestMapping("/sendToUsers")
-    public void sendToUsers(String fileId,String subId) {
+    public void sendToUsers(String fileId,String subId,String instraction) {
         XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(fileId);
         String organId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
         List<BaseAppUser> list = baseAppUserService.queryAllUserIdAndName(organId);
         if (list != null && list.size() > 0) {
             XlglSubDocInfo subInfo = xlglSubDocInfoService.queryObject(subId);
+            subInfo.setInstraction(instraction);
             subInfo.setIsSend("1");//更新状态，已分发
             xlglSubDocInfoService.update(subInfo);
             for (BaseAppUser baseAppUser : list) {

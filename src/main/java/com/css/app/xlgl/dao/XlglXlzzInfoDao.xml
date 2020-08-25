@@ -87,10 +87,10 @@
 			<if test="bz != null">"BZ" = #{bz}, </if>
 			<if test="createTime != null">"CREATE_TIME" = #{createTime}, </if>
 			<if test="creator != null">"CREATOR" = #{creator}, </if>
-			<if test="status != null">"STATUS" = #{status}</if>
-			<if test="exerciseIssue != null">"EXERCISE_ISSUE" = #{exerciseIssue}</if>
-			<if test="joinPeople != null">"JOIN_PEOPLE" = #{joinPeople}</if>
-			<if test="exerciseTime != null">"EXERCISE_TIME" = #{exerciseTime}</if>
+			<if test="status != null">"STATUS" = #{status},</if>
+			<if test="exerciseIssue != null">"EXERCISE_ISSUE" = #{exerciseIssue},</if>
+			<if test="joinPeople != null">"JOIN_PEOPLE" = #{joinPeople},</if>
+			<if test="exerciseTime != null">"EXERCISE_TIME" = #{exerciseTime},</if>
 			<if test="picturePath != null">"PICTURE_PATH" = #{picturePath}</if>
 		</set>
 		where ID = #{id}

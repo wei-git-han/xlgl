@@ -56,6 +56,17 @@ public class XlglSubDocInfo implements Serializable {
 	//训练开始时间
 	private String exerciseTime;
 
+	//本单位补充说明
+	private String instraction;
+
+	public String getInstraction() {
+		return instraction;
+	}
+
+	public void setInstraction(String instraction) {
+		this.instraction = instraction;
+	}
+
 	public String getTitle() {
 		return title;
 	}

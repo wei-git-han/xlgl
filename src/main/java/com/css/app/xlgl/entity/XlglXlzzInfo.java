@@ -63,6 +63,17 @@ public class XlglXlzzInfo implements Serializable {
 	//首页图片地址
 	private String picturePath;
 
+	//发布单位
+	private String fbDept;
+
+	public String getFbDept() {
+		return fbDept;
+	}
+
+	public void setFbDept(String fbDept) {
+		this.fbDept = fbDept;
+	}
+
 	/**
 	 * 设置：
 	 */
