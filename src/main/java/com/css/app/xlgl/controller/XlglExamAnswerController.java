@@ -183,6 +183,9 @@ public class XlglExamAnswerController {
 	/**
 	 * 用户考试完成保存
 	 * @param xlglExamAnswer 前端传jsonarray,
+	 * @param mainAnswerId 成绩单id
+	 * @param status 0：考试，1：练习
+	 * @param makeupStatus  0：没补考考，1:补考了
 	 */
 	@ResponseBody
 	@RequestMapping("/saveBatch")

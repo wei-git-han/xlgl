@@ -24,6 +24,7 @@ import com.css.base.entity.SSOUser;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.PageUtils;
 import com.css.base.utils.Response;
+import com.css.base.utils.StringUtils;
 import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 
@@ -141,13 +142,26 @@ public class XlglExamMainAnswerController {
 	/**
 	 * 用户 具体情况以及交卷时间
 	 * @param mainAnswerId 成绩单id
+	 * @param examineId 考试id
 	 * */
 	@ResponseBody
 	@RequestMapping("/getMainAnsUser")
-	public void getMainAns(String mainAnswerId) {
+	public void getMainAns(String mainAnswerId,String examineId) {
 		JSONObject jsonObject = new JSONObject();
-		XlglExamMainAnswer queryObject = xlglExamMainAnswerService.queryObject(mainAnswerId);
-		XlglExamExamine queryObject2 = xlglExamExamineService.queryObject(queryObject.getExamineId());
+		XlglExamMainAnswer queryObject = null;
+		XlglExamExamine queryObject2 = null;
+		if(StringUtils.isNotBlank(mainAnswerId)) {
+			queryObject=xlglExamMainAnswerService.queryObject(mainAnswerId);
+			queryObject2=xlglExamExamineService.queryObject(queryObject.getExamineId());
+		}else {
+			Map<String, Object> map = new HashMap<>();	
+			map.put("examineId", examineId);
+			map.put("replyUserId", CurrentUser.getUserId());
+			List<XlglExamMainAnswer> queryList = xlglExamMainAnswerService.queryList(map);
+			queryObject=queryList.get(0);
+			queryObject2=xlglExamExamineService.queryObject(queryObject.getExamineId());
+		}
+	
 		jsonObject.put("time", queryObject.getUpdateDate());
 		jsonObject.put("userName", queryObject.getReplyUserName());
 		jsonObject.put("userId", queryObject.getReplyUserId());

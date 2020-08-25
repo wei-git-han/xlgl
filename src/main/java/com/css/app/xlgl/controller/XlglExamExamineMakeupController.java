@@ -106,6 +106,8 @@ public class XlglExamExamineMakeupController {
 		xlglExamExamineMakeupService.save(xlglExamExamineMakeup);
 		XlglExamExamine queryObject = xlglExamExamineService.queryObject(xlglExamExamineMakeup.getExamineId());
 		queryObject.setOverStatus("2");
+		xlglExamExamineService.update(queryObject);
+		queryObject.setOverStatus("2");
 		for (int i = 0; i < typeAndNum.length; i++) {
 			Map<String,Object> map = new HashMap<String,Object>();
 			String[] split2 = typeAndNum[i].split("-");
@@ -114,7 +116,6 @@ public class XlglExamExamineMakeupController {
 			map.put("topicNumber", split2[1]);
 			map.put("fractionalNumber", split2[2]);
 			List<XlglExamExaminetopic> randomExtract = xlglExamExaminetopicService.randomExtract(map, queryObject.getId(),random);
-			xlglExamExamineService.update(queryObject);
 			if(randomExtract.size()>0) {
 				xlglExamExaminetopicService.saveBatch(randomExtract);
 			}
