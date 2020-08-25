@@ -49,7 +49,7 @@ public class XlglSubDocInfo implements Serializable {
 
 	//标题
 	private String title;
-	//训练类型
+	//训练类型 0是大讲堂，1是日常军事训练
 	private String xltype;
 	//首页图片地址
 	private String picturePath;

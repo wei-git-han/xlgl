@@ -297,7 +297,7 @@ public class XlglDocumentZbjlController {
      */
     @ResponseBody
     @RequestMapping("/juList")
-    public void juList(Integer page, Integer pagesize, String search) {
+    public void juList(Integer page, Integer pagesize, String search,String xltype) {
         Map<String, Object> map = new HashMap<String, Object>();
         String loginUserId = CurrentUser.getUserId();
         String orgId = baseAppUserService.getBareauByUserId(loginUserId);
@@ -306,6 +306,9 @@ public class XlglDocumentZbjlController {
         }
         if (StringUtils.isNotBlank(search)) {
             map.put("search", search);
+        }
+        if (StringUtils.isNotBlank(xltype)) {
+            map.put("xltype", xltype);
         }
         PageHelper.startPage(page, pagesize);
         List<XlglSubDocInfo> list = xlglSubDocInfoService.queryListForJu(map);
