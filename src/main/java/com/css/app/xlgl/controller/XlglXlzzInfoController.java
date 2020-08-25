@@ -70,7 +70,6 @@ public class XlglXlzzInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	@RequiresPermissions("xlglxlzzinfo:list")
 	public void list(Integer page, Integer limit){
 		Map<String, Object> map = new HashMap<>();
 		PageHelper.startPage(page, limit);
@@ -88,20 +87,32 @@ public class XlglXlzzInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/info")
-	public void info(String id){
+	public void info(String id) {
+		JSONObject jsonObject = new JSONObject();
+		Map<String, Object> map = new HashMap<>();
 		String loginUser = CurrentUser.getUserId();
 		String deptName = CurrentUser.getOrgName();
 		XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(id);
 		//打开的同时，更新打开人的状态为已读
-		XlglSubDocTracking xlglSubDocTracking = xlglSubDocTrackingService.queryInfo(id,loginUser);
+		XlglSubDocTracking xlglSubDocTracking = xlglSubDocTrackingService.queryInfo(id, loginUser);
 		if(xlglSubDocTracking != null){
+		if (xlglSubDocTracking != null) {
 			xlglSubDocTracking.setRead("1");
 			xlglSubDocTrackingService.update(xlglSubDocTracking);
 		}
-		//xlglXlzzInfo.setStatus("1");//1为已读
-		//xlglXlzzInfo.setBaoming(xlglSubDocTracking.getBaoming());
+		xlglXlzzInfo.setStatus("1");//1为已读
+		if(com.css.base.utils.StringUtils.isNotBlank(xlglSubDocTracking.getBaoming())){
+			xlglXlzzInfo.setBaoming(xlglSubDocTracking.getBaoming());
+		}
+		}
 		xlglXlzzInfo.setFbDept(deptName);
-		Response.json("xlglXlzzInfo", xlglXlzzInfo);
+		map.put("fileId", id);
+		map.put("pictureType","2");
+		List<XlglPicture> list = xlglPictureService.queryAllInfoByInfoId(map);
+		jsonObject.put("pictureList", list);
+		jsonObject.put("xlglXlzzInfo", xlglXlzzInfo);
+		//jsonObject.put("isBm",xlglSubDocTracking.getBaoming());
+		Response.json(jsonObject);
 	}
 
 	/**

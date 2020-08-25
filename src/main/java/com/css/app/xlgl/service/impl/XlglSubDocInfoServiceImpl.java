@@ -62,4 +62,9 @@ public class XlglSubDocInfoServiceImpl implements XlglSubDocInfoService {
 		return xlglSubDocInfoDao.queryListForPerson(map);
 	}
 
+	@Override
+	public void deleteSub(String orgId,String fileId){
+		xlglSubDocInfoDao.deleteSub(orgId,fileId);
+	}
+
 }

@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import com.css.app.xlgl.service.XlglAdminSetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,6 +54,8 @@ public class BaseAppUserController {
 	private OrgService orgService;
 	@Autowired
 	private BaseAppConfigService baseAppConfigService;
+	@Autowired
+	private XlglAdminSetService adminSetService;
 	
 	/**
 	 * 获取指定部门下的人员列表
@@ -211,12 +215,15 @@ public class BaseAppUserController {
 	@ResponseBody
 	@RequestMapping("/userInfo")
     public void getUserInfo(){
-    	JSONObject userJson = new JSONObject();
+		//0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员;4:处管理员
+		String adminFlag = adminSetService.getAdminTypeByUserId(CurrentUser.getUserId());
+		JSONObject userJson = new JSONObject();
     	SSOUser ssoUser = SSOAuthFilter.getSUser();
     	userJson.put("result","error");
     	if(ssoUser != null){
     		userJson = (JSONObject) JSONObject.toJSON(ssoUser);
     		userJson.put("result","success");
+    		userJson.put("adminFlag",adminFlag);
     	}
     	Response.json(userJson);
     }

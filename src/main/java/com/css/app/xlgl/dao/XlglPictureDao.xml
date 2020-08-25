@@ -8,7 +8,14 @@
 	</select>
 
 	<select id="queryAllInfoByInfoId" resultType="com.css.app.xlgl.entity.XlglPicture">
-		select * from XLGL_PICTURE where FILE_ID = #{infoId}
+		select * from XLGL_PICTURE where 1=1
+		<if test="fileId != null">
+			and FILE_ID = #{fileId}
+		</if>
+		<if test="pictureType != null">
+			and PICTURE_TYPE = #{pictureType}
+		</if>
+
 	</select>
 
 	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglPicture">

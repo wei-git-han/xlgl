@@ -32,4 +32,6 @@ public interface XlglSubDocInfoService {
 	List<XlglSubDocInfo> queryListForJu(Map<String,Object> map);
 
 	List<XlglSubDocInfo> queryListForPerson(Map<String,Object> map);
+
+	void deleteSub(String orgId,String fileId);
 }

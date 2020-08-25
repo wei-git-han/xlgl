@@ -90,7 +90,7 @@
 	</delete>
 
     <delete id="deleteBatch">
-        delete from XLGL_SUB_DOC_INFO where ID in
+        delete from XLGL_SUB_DOC_INFO where INFO_ID in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -144,7 +144,7 @@ left join
         )
         e on a.INFO_ID = e.info_id
 where
-        1=1
+        1=1 and a.IS_SEND = '0'
         <if test="orgId != null and orgId != ''">
             and a.SUB_DEPT_ID = #{orgId}
         </if>
@@ -154,6 +154,7 @@ where
         <if test="xltype != null and xltype != ''">
             and b.XLTYPE like '%'||#{xltype}||'%'
         </if>
+
         order by a.CREATED_TIME desc
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}

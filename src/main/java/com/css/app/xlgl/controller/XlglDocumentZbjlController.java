@@ -1,5 +1,6 @@
 package com.css.app.xlgl.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -154,6 +155,10 @@ public class XlglDocumentZbjlController {
                     xlglSubDocInfo.setCreatedTime(new Date());
                     xlglSubDocInfo.setSubDeptId(deptId);
                     xlglSubDocInfo.setSubDeptName(deptName);
+                    xlglSubDocInfo.setXltype(xlglXlzzInfo.getXltype());
+                    xlglSubDocInfo.setExerciseTime(xlglXlzzInfo.getExerciseTime());
+                    xlglSubDocInfo.setPicturePath(xlglXlzzInfo.getPicturePath());
+                    xlglSubDocInfo.setIsSend("0");
                     xlglSubDocInfoService.save(xlglSubDocInfo);
                 }
                 //获取局管理员,给局管理员发送消息提醒
@@ -215,6 +220,7 @@ public class XlglDocumentZbjlController {
                 String loginUserName = CurrentUser.getUsername();
                 String loginUserDeptId = CurrentUser.getDepartmentId();
                 String loginUserDeptName = CurrentUser.getOrgName();
+                tracking.setId(UUIDUtils.random());
                 tracking.setInfoId(fileId);
                 tracking.setSenderId(CurrentUser.getUserId());
                 tracking.setSenderName(loginUserName);
@@ -231,6 +237,12 @@ public class XlglDocumentZbjlController {
                 tracking.setBaoming("0");
                 tracking.setTitle(xlglXlzzInfo.getTitle());
                 tracking.setTrackingType(xlglXlzzInfo.getXltype());//训练类型
+                tracking.setXlType(xlglXlzzInfo.getXltype());
+                tracking.setPicturePath(xlglXlzzInfo.getPicturePath());
+                tracking.setExerciseTime(xlglXlzzInfo.getExerciseTime());
+                tracking.setInstraction(subInfo.getInstraction());
+                tracking.setRead("0");
+                tracking.setIsWork("0");//0是未参训
                 xlglSubDocTrackingService.save(tracking);
 
                 //发送消息提醒
@@ -291,6 +303,7 @@ public class XlglDocumentZbjlController {
 	        xlglSubDocTracking.setReason(reason);
         }
         xlglSubDocTrackingService.update(xlglSubDocTracking);
+	    Response.json("result","success");
 
     }
 
@@ -328,10 +341,11 @@ public class XlglDocumentZbjlController {
      * @param page
      * @param pagesize
      * @param search
+     * type 0 未开始 1已完成
      */
     @ResponseBody
     @RequestMapping("/personList")
-    public void personList(Integer page, Integer pagesize, String search,String type){
+    public void personList(Integer page, Integer pagesize, String search,String type,String xltype){
         List<XlglSubDocTracking> list = null;
         String userId = CurrentUser.getUserId();
         Map<String,Object> map = new HashMap<String,Object>();
@@ -344,9 +358,19 @@ public class XlglDocumentZbjlController {
         if(StringUtils.isNotBlank(type)){
             map.put("type",type);
         }
+        SimpleDateFormat format  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        map.put("time",format.format(new Date()));
 
-        PageHelper.startPage(page,pagesize);
-        list = xlglSubDocTrackingService.queryListForPerson(map);
+        map.put("xltype",xltype);
+
+        if("0".equals(type)){
+            PageHelper.startPage(page,pagesize);
+            list = xlglSubDocTrackingService.queryListForPerson(map);
+        }else if("1".equals(type)){
+            PageHelper.startPage(page,pagesize);
+            list = xlglSubDocTrackingService.queryListForPerson1(map);
+        }
+
         GwPageUtils pageUtil = new GwPageUtils(list);
         Response.json(pageUtil);
 

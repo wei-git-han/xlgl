@@ -2,6 +2,7 @@ package com.css.app.xlgl.dao;
 
 
 import com.css.app.xlgl.entity.XlglSubDocInfo;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.css.base.dao.BaseDao;
@@ -24,4 +25,7 @@ public interface XlglSubDocInfoDao extends BaseDao<XlglSubDocInfo> {
     List<XlglSubDocInfo> queryListForJu(Map<String,Object> map);
 
     List<XlglSubDocInfo> queryListForPerson(Map<String,Object> map);
+
+    @Delete("delete from XLGL_SUB_DOC_INFO where SUB_DEPT_ID = #{0} and INFO_ID = #{1}")
+    void deleteSub(String orgId,String fileId);
 }

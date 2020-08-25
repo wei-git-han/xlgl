@@ -73,6 +73,11 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 	}
 
 	@Override
+	public List<XlglSubDocTracking> queryListForPerson1(Map<String,Object> map){
+		return xlglSubDocTrackingDao.queryListForPerson1(map);
+	}
+
+	@Override
 	public List<String> queryAllInfos(String userId,String type){
 		return xlglSubDocTrackingDao.queryAllInfos(userId,type);
 	}
