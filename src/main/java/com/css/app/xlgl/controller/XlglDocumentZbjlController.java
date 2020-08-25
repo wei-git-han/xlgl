@@ -128,6 +128,7 @@ public class XlglDocumentZbjlController {
             BaseAppOrgan org = baseAppOrganService.queryObject(organId);
             //添加转办记录
             XlglDocumentZbjl xlglDocumentZbjl = new XlglDocumentZbjl();
+            xlglDocumentZbjl.setId(UUIDUtils.random());
             xlglDocumentZbjl.setInfoId(fileId);
             xlglDocumentZbjl.setReceiverIds(deptIds);
             xlglDocumentZbjl.setReceiverNames(deptNames);
@@ -193,6 +194,7 @@ public class XlglDocumentZbjlController {
                 String deptName = organ.getName();
                 //转办记录
                 XlglDocumentZbjl xl = new XlglDocumentZbjl();
+                xl.setId(UUIDUtils.random());
                 xl.setInfoId(fileId);
                 xl.setReceiverIds(receiverId);
                 xl.setReceiverNames(receiverName);
