@@ -47,6 +47,47 @@ public class XlglSubDocInfo implements Serializable {
 	//是否分发
 	private String isSend;
 
+	//标题
+	private String title;
+	//训练类型
+	private String xltype;
+	//首页图片地址
+	private String picturePath;
+	//训练开始时间
+	private String exerciseTime;
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getXltype() {
+		return xltype;
+	}
+
+	public void setXltype(String xltype) {
+		this.xltype = xltype;
+	}
+
+	public String getPicturePath() {
+		return picturePath;
+	}
+
+	public void setPicturePath(String picturePath) {
+		this.picturePath = picturePath;
+	}
+
+	public String getExerciseTime() {
+		return exerciseTime;
+	}
+
+	public void setExerciseTime(String exerciseTime) {
+		this.exerciseTime = exerciseTime;
+	}
+
 	/**
 	 * 设置：唯一标识
 	 */
