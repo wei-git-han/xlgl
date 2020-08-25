@@ -239,6 +239,7 @@ public class XlglExamAnswerController {
 		xlglExamMainAnswer.setIsNotExam("1");
 		xlglExamMainAnswer.setStatus(status);
 		xlglExamMainAnswer.setUpdateDate(date);
+		xlglExamMainAnswer.setId(mainAnswerId);
 		xlglExamMainAnswerService.update(xlglExamMainAnswer);
 		xlglExamAnswerService.saveBatch(parseArray);
 		jsonObject.put("mainAnswer", queryObject);
