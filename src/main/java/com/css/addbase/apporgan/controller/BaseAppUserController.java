@@ -82,6 +82,7 @@ public class BaseAppUserController {
 			json.put("departmentName", baseAppOrganService.queryObject(user.getOrganid()).getName());
 			json.put("moblie", user.getMobile());
 			json.put("sfzb", user.getSfzb());
+			json.put("sfyx",user.getSfyx());
 			jsons.add(json);
 		}
 		result.put("rows", jsons);
