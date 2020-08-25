@@ -210,6 +210,7 @@ public class XlglExamAnswerController {
 			eanswer.setOrganId(ssoUser.getOrganId());
 			eanswer.setOrganName(ssoUser.getOrgName());
 			eanswer.setReplyUserName(ssoUser.getFullname());
+			eanswer.setExamineId(xlglExamExamine.getId());
 			if(StringUtils.isNotBlank(eanswer.getReply())) {
 				eanswer.setStatus("1");
 				eanswer = getRightReply(eanswer);
