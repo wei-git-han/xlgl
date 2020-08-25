@@ -72,7 +72,7 @@ public class XlglExamExamineController {
 	 * 考核清单列表
 	 * @param issueDate 发布时间
 	 * @param examineName 考试名称
-	 * @param status 0：考试，1:练习
+	 * @param status 0：考试，1:练习xlglexamanswer
 	 */
 	@ResponseBody
 	@RequestMapping("/list")

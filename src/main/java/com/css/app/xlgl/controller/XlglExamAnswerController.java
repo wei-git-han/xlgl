@@ -143,6 +143,8 @@ public class XlglExamAnswerController {
 		Integer sum = 0;
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		Date date = new Date();
+		XlglExamMainAnswer queryObject = xlglExamMainAnswerService.queryObject(mainAnswerId);
+		XlglExamExamine xlglExamExamine = xlglExamExamineService.queryObject(queryObject.getExamineId());
 		for (XlglExamAnswer eanswer : parseArray) {
 			eanswer.setId(UUIDUtils.random());
 			eanswer.setMainAnswerId(mainAnswerId);
@@ -163,11 +165,11 @@ public class XlglExamAnswerController {
 			}
 		}
 		String level ="";
-		if(sum >=85) {
+		if(sum >=(xlglExamExamine.getExamineAllNumber()*0.9)) {
 			level="优秀";
-		}else if(85 >sum && sum >=70 ) {
+		}else if((xlglExamExamine.getExamineAllNumber()*0.9) >sum && sum >=(xlglExamExamine.getExamineAllNumber()*0.75) ) {
 			level="优良";
-		}else if(70 >sum && sum >=60){
+		}else if((xlglExamExamine.getExamineAllNumber()*0.75) >sum && sum >=(xlglExamExamine.getExamineAllNumber()*0.6)){
 			level="及格";
 		}else {
 			level="不及格";
@@ -179,7 +181,6 @@ public class XlglExamAnswerController {
 		xlglExamMainAnswer.setUpdateDate(date);
 		xlglExamMainAnswerService.update(xlglExamMainAnswer);
 		xlglExamAnswerService.saveBatch(parseArray);
-		XlglExamMainAnswer queryObject = xlglExamMainAnswerService.queryObject(mainAnswerId);
 		jsonObject.put("mainAnswer", queryObject);
 		jsonObject.put("answerList", parseArray);
 		Map<String, Object> map = new HashMap<String,Object>();
@@ -187,7 +188,8 @@ public class XlglExamAnswerController {
 		map.put("makeUpStatus", "0");
 		List<XlglExamExaminetopicDto> listCount = xlglExamExaminetopicService.findCountBySubjectId(map);
 		jsonObject.put("listCount", listCount);
-		Response.json(jsonObject);
+		//Response.json(jsonObject);
+		Response.ok();
 	}
 	/**
 	 * 判断用户答题是否正确
