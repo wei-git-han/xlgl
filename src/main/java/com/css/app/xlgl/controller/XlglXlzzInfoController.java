@@ -126,6 +126,7 @@ public class XlglXlzzInfoController {
 	@ResponseBody
 	@RequestMapping("/save")
 	public void save(XlglXlzzInfo xlglXlzzInfo,String pIds,String type){
+		JSONObject jsonObject = new JSONObject();
 		String fId = UUIDUtils.random();
 		xlglXlzzInfo.setId(fId);
 		xlglXlzzInfo.setCreateTime(new Date());
@@ -153,7 +154,9 @@ public class XlglXlzzInfoController {
 				xlglPictureService.save(xlglPicture);
 			}
 		}
-		Response.json("result","success");
+		jsonObject.put("fileId",fId);
+		jsonObject.put("result","success");
+		Response.json(jsonObject);
 	}
 	
 	/**
