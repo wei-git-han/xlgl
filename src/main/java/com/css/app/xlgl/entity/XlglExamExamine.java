@@ -62,7 +62,10 @@ public class XlglExamExamine implements Serializable {
 	
 	//用户考试状态  1：已完成，2：未考试，3：已补考
 	private String userStatus;
-
+	//补考id
+	private String makeupId;
+	//编辑人名称
+	private String updateUserName;
 
 	
 
@@ -269,6 +272,18 @@ public class XlglExamExamine implements Serializable {
 	}
 	public void setUserStatus(String userStatus) {
 		this.userStatus = userStatus;
+	}
+	public String getMakeupId() {
+		return makeupId;
+	}
+	public void setMakeupId(String makeupId) {
+		this.makeupId = makeupId;
+	}
+	public String getUpdateUserName() {
+		return updateUserName;
+	}
+	public void setUpdateUserName(String updateUserName) {
+		this.updateUserName = updateUserName;
 	}
 	
 

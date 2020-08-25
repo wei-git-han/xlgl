@@ -2,6 +2,7 @@ package com.css.app.xlgl.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 
 
 
@@ -51,7 +52,9 @@ public class XlglExamAnswer implements Serializable {
 	private String replyUserName;
 	//主表id
 	private String mainAnswerId;
-
+	
+	
+	private Map<String,Object> topicOptionMap;
 	/**
 	 * 设置：
 	 */
@@ -268,14 +271,11 @@ public class XlglExamAnswer implements Serializable {
 	public String getMainAnswerId() {
 		return mainAnswerId;
 	}
-	@Override
-	public String toString() {
-		return "XlglExamAnswer [id=" + id + ", examineId=" + examineId + ", examineTopicId=" + examineTopicId
-				+ ", topicColumn=" + topicColumn + ", topicType=" + topicType + ", topicOption=" + topicOption
-				+ ", topicResult=" + topicResult + ", reply=" + reply + ", replyUserId=" + replyUserId + ", createDate="
-				+ createDate + ", updateDate=" + updateDate + ", status=" + status + ", correctStatus=" + correctStatus
-				+ ", organId=" + organId + ", organName=" + organName + ", fraction=" + fraction + ", replyUserName="
-				+ replyUserName + ", mainAnswerId=" + mainAnswerId + "]";
+	public Map<String, Object> getTopicOptionMap() {
+		return topicOptionMap;
+	}
+	public void setTopicOptionMap(Map<String, Object> topicOptionMap) {
+		this.topicOptionMap = topicOptionMap;
 	}
 	
 	

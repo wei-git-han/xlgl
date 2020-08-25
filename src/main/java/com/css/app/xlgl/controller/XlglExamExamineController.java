@@ -112,6 +112,12 @@ public class XlglExamExamineController {
 			}else {
 				xlglExamExamine.setUserStatus("2");
 			}
+			//当前考试是否发起补考
+			if(xlglExamExamine.getOverStatus() != null &&xlglExamExamine.getOverStatus().equals("2")) {
+				List<XlglExamExamineMakeup> makeupList = xlglExamExamineMakeupService.queryList(mapAnswer);
+				String id = makeupList.get(0).getId();
+				xlglExamExamine.setMakeupId(id);
+			}
 			
 			//当前考试参考人员人数，未参考人员人数、参考率计算
 			Integer numberInto = 0;
@@ -183,6 +189,10 @@ public class XlglExamExamineController {
 		
 		//查询列表数据
 		List<XlglExamExamine> xlglExamExamineList = xlglExamExamineService.queryList(map);
+		for (XlglExamExamine xlglExamExamine : xlglExamExamineList) {
+			BaseAppUser queryObject = baseAppUserService.queryObject(xlglExamExamine.getUpdateUser());
+			xlglExamExamine.setUpdateUserName(queryObject.getTruename());
+		}
 		
 		PageUtils pageUtil = new PageUtils(xlglExamExamineList);
 		Response.json("page",pageUtil);

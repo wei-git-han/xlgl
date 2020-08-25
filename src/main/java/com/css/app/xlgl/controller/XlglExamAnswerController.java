@@ -1,6 +1,7 @@
 package com.css.app.xlgl.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.css.app.xlgl.dto.XlglExamExaminetopicDto;
 import com.css.app.xlgl.entity.XlglExamAnswer;
 import com.css.app.xlgl.entity.XlglExamExamine;
+import com.css.app.xlgl.entity.XlglExamExaminetopic;
 import com.css.app.xlgl.entity.XlglExamMainAnswer;
 import com.css.app.xlgl.service.XlglExamAnswerService;
 import com.css.app.xlgl.service.XlglExamExamineService;
@@ -88,14 +90,68 @@ public class XlglExamAnswerController {
 	@RequestMapping("/view/info")
 	public void viewinfo(String examineId){
 		JSONObject jsonObject = new JSONObject();
-		Map<String, Object> map = new HashMap<>();
-		map.put("examineId", examineId);
-		List<XlglExamAnswer> xlglExamAnswerList = xlglExamAnswerService.queryList(map);
-		XlglExamExamine queryObject = xlglExamExamineService.queryObject(examineId);
-		jsonObject.put("list", xlglExamAnswerList);
-		jsonObject.put("examine", queryObject);
+		jsonObject = getAllAnswer(examineId);
 		Response.json(jsonObject);
 	}
+	private JSONObject getAllAnswer(String examineId) {
+		JSONObject jsonObject = new JSONObject();
+		Map<String, Object> map = new HashMap<String,Object>();
+		map.put("examineId", examineId);
+		map.put("replyUserId", CurrentUser.getUserId());
+		map.put("makeUpStatus", "0");
+		List<XlglExamAnswer> list = xlglExamAnswerService.queryList(map);
+		XlglExamExamine xlglExamExamine = xlglExamExamineService.queryObject(examineId);
+		List<XlglExamAnswer> listType1 = new ArrayList<XlglExamAnswer>();
+		List<XlglExamAnswer> listType2 = new ArrayList<XlglExamAnswer>();
+		List<XlglExamAnswer> listType3 = new ArrayList<XlglExamAnswer>();
+		List<XlglExamAnswer> listType4 = new ArrayList<XlglExamAnswer>();
+		for (XlglExamAnswer xlglExamAnswer : list) {
+			HashMap<String, Object> hashMap = new HashMap<String,Object>();
+			if(StringUtils.isNotBlank(xlglExamAnswer.getTopicOption()) 
+					&& xlglExamAnswer.getTopicOption().contains(",")) {
+				String[] split = xlglExamAnswer.getTopicOption().split(",");
+				for (String str : split) {
+					if(str.contains(":")) {
+						String[] split2 = str.split(":");
+						hashMap.put(split2[0], split2[1]);
+					}
+				}
+			}
+			xlglExamAnswer.setTopicOptionMap(hashMap);
+			switch (xlglExamAnswer.getTopicType()) {
+			case "1":	
+				listType1.add(xlglExamAnswer);
+				break;
+			case "2":
+				listType2.add(xlglExamAnswer);
+				break;
+			case "3":
+				listType3.add(xlglExamAnswer);
+				break;
+			case "4":
+				listType4.add(xlglExamAnswer);
+				break;
+			default:
+				break;
+			}
+		}
+		List<XlglExamExaminetopicDto> listCount = xlglExamExaminetopicService.findCountBySubjectId(map);
+		jsonObject.put("listType1", listType1);
+		jsonObject.put("listType2", listType2);
+		jsonObject.put("listType3", listType3);
+		jsonObject.put("listType4", listType4);
+		jsonObject.put("topicCount", listCount);
+		jsonObject.put("xlglExamExamine", xlglExamExamine);
+		return jsonObject;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	/**
 	 * 保存
@@ -137,7 +193,7 @@ public class XlglExamAnswerController {
 	 */
 	@ResponseBody
 	@RequestMapping("/saveBatch")
-	public void saveBath(String xlglExamAnswer,String mainAnswerId){
+	public void saveBath(String xlglExamAnswer,String mainAnswerId,String status,String makeupStatus){
 		JSONObject jsonObject = new JSONObject();
 		List<XlglExamAnswer> parseArray = JSONArray.parseArray(xlglExamAnswer, XlglExamAnswer.class);
 		Integer sum = 0;
@@ -162,6 +218,7 @@ public class XlglExamAnswerController {
 				}
 			}else {
 				eanswer.setStatus("0");
+				eanswer.setCorrectStatus("1");
 			}
 		}
 		String level ="";
@@ -177,7 +234,9 @@ public class XlglExamAnswerController {
 		XlglExamMainAnswer xlglExamMainAnswer = new XlglExamMainAnswer();
 		xlglExamMainAnswer.setLevel(level);
 		xlglExamMainAnswer.setFractionsum(sum);
-		xlglExamMainAnswer.setMakeupStatus("1");
+		xlglExamMainAnswer.setMakeupStatus(makeupStatus);
+		xlglExamMainAnswer.setIsNotExam("1");
+		xlglExamMainAnswer.setStatus(status);
 		xlglExamMainAnswer.setUpdateDate(date);
 		xlglExamMainAnswerService.update(xlglExamMainAnswer);
 		xlglExamAnswerService.saveBatch(parseArray);
@@ -188,6 +247,7 @@ public class XlglExamAnswerController {
 		map.put("makeUpStatus", "0");
 		List<XlglExamExaminetopicDto> listCount = xlglExamExaminetopicService.findCountBySubjectId(map);
 		jsonObject.put("listCount", listCount);
+		jsonObject.put("code", 0);
 		//Response.json(jsonObject);
 		Response.ok();
 	}
