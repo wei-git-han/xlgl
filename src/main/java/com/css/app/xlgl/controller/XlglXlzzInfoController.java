@@ -394,6 +394,7 @@ public class XlglXlzzInfoController {
 	@ResponseBody
 	@RequestMapping("/getCxwcl")
 	public void getCxwcl() {
+		JSONObject jsonObject = new JSONObject();
 		Map<String, Object> map = new HashMap<>();
 		String userId = CurrentUser.getUserId();
 		SimpleDateFormat sd = new SimpleDateFormat("yyyy");
@@ -410,8 +411,13 @@ public class XlglXlzzInfoController {
 		if (count > 0) {
 			f = (ycx + ybm) / count;
 		}
-		Response.json("lv", f);
+		jsonObject.put("wcl",f);
+		jsonObject.put("ywc",ycx+ybm);
+		jsonObject.put("bk",count - ybm - ycx);
+		Response.json(jsonObject);
 	}
+
+
 
 
 	
