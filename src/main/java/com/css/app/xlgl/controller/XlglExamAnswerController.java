@@ -146,13 +146,6 @@ public class XlglExamAnswerController {
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
 	/**
 	 * 保存
 	 */
@@ -235,9 +228,17 @@ public class XlglExamAnswerController {
 		XlglExamMainAnswer xlglExamMainAnswer = new XlglExamMainAnswer();
 		xlglExamMainAnswer.setLevel(level);
 		xlglExamMainAnswer.setFractionsum(sum);
-		xlglExamMainAnswer.setMakeupStatus(makeupStatus);
+		if(StringUtils.isNotBlank(makeupStatus)) {
+			xlglExamMainAnswer.setMakeupStatus(makeupStatus);
+		}else {
+			xlglExamMainAnswer.setMakeupStatus("0");
+		}
+		if(StringUtils.isNotBlank(status)) {
+			xlglExamMainAnswer.setStatus(status);
+		}else {
+			xlglExamMainAnswer.setStatus("0");
+		}
 		xlglExamMainAnswer.setIsNotExam("1");
-		xlglExamMainAnswer.setStatus(status);
 		xlglExamMainAnswer.setUpdateDate(date);
 		xlglExamMainAnswer.setId(mainAnswerId);
 		xlglExamMainAnswerService.update(xlglExamMainAnswer);

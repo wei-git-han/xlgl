@@ -411,11 +411,10 @@ public class XlglExamExamineController {
 			for (int i = 0; i < typeAndNum.length; i++) {
 				Map<String,Object> map = new HashMap<String,Object>();
 				String[] split2 = typeAndNum[i].split("-");
-				Integer fractionalNumber =Integer.parseInt(split2[2]) /Integer.parseInt(split2[1]);
 				map.put("subjectId", xlglExamExamine.getExamineSubjectId());
 				map.put("topicType", split2[0]);
 				map.put("topicNumber", split2[1]);
-				map.put("fractionalNumber", fractionalNumber);
+				map.put("fractionalNumber", split2[2]);
 				List<XlglExamExaminetopic> randomExtract = xlglExamExaminetopicService.randomExtract(map, xlglExamExamine.getId(),null);
 				if(randomExtract.size()>0) {
 					xlglExamExaminetopicService.saveBatch(randomExtract);

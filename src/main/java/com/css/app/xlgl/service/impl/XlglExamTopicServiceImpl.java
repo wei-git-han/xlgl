@@ -99,6 +99,7 @@ public class XlglExamTopicServiceImpl implements XlglExamTopicService {
 			}
 			for(int i = 2 ;i<=sheet.getLastRowNum(); i ++) {
 				XlglExamTopic xlglExamTopic = new XlglExamTopic ();
+				xlglExamTopic.setId(UUIDUtils.random());
 				String steCell = sheet.getRow(i).getCell(0).getStringCellValue(); //题目
 				xlglExamTopic.setTopicColumn(steCell);
 				xlglExamTopic.setSubjectId(subjectId);	//科目表id
