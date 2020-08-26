@@ -292,4 +292,75 @@ public class XlglExamAnswerController {
 		
 	}
 	
+	/**
+	 * 用户练习考试完成保存
+	 * @param xlglExamAnswer 前端传jsonarray,
+	 * @param mainAnswerId 成绩单id
+	 * @param status 0：考试，1：练习
+	 */
+	@ResponseBody
+	@RequestMapping("/saveBatchLIANXI")
+	public void saveBathLIANXI(String xlglExamAnswer,String mainAnswerId,String status){
+		try {
+		JSONObject jsonObject = new JSONObject();
+		List<XlglExamAnswer> parseArray = JSONArray.parseArray(xlglExamAnswer, XlglExamAnswer.class);
+		Integer sum = 0;
+		SSOUser ssoUser = CurrentUser.getSSOUser();
+		Date date = new Date();
+		XlglExamMainAnswer queryObject = xlglExamMainAnswerService.queryObject(mainAnswerId);
+		XlglExamExamine xlglExamExamine = xlglExamExamineService.queryObject(queryObject.getExamineId());
+		jsonObject.put("examineId", xlglExamExamine.getId());
+		for (XlglExamAnswer eanswer : parseArray) {
+			eanswer.setId(UUIDUtils.random());
+			eanswer.setMainAnswerId(mainAnswerId);
+			eanswer.setReplyUserId(ssoUser.getUserId());
+			eanswer.setCreateDate(date);
+			eanswer.setUpdateDate(date);
+			eanswer.setOrganId(ssoUser.getOrganId());
+			eanswer.setOrganName(ssoUser.getOrgName());
+			eanswer.setReplyUserName(ssoUser.getFullname());
+			eanswer.setExamineId(xlglExamExamine.getId());
+			if(StringUtils.isNotBlank(eanswer.getReply())) {
+				eanswer.setStatus("1");
+				eanswer = getRightReply(eanswer);
+				if(eanswer.getCorrectStatus().equals("0")) {
+					sum +=eanswer.getFraction();
+				}
+			}else {
+				eanswer.setStatus("0");
+				eanswer.setCorrectStatus("1");
+			}
+		}
+		XlglExamMainAnswer xlglExamMainAnswer = new XlglExamMainAnswer();
+		String level ="";
+		if(StringUtils.isNotBlank(xlglExamExamine.getLianxiType()) && xlglExamExamine.getLianxiType().equals("0")) {
+			if(sum >=(xlglExamExamine.getExamineAllNumber()*0.9)) {
+				level="优秀";
+			}else if((xlglExamExamine.getExamineAllNumber()*0.9) >sum && sum >=(xlglExamExamine.getExamineAllNumber()*0.75) ) {
+				level="优良";
+			}else if((xlglExamExamine.getExamineAllNumber()*0.75) >sum && sum >=(xlglExamExamine.getExamineAllNumber()*0.6)){
+				level="及格";
+			}else {
+				level="不及格";
+			}
+			xlglExamMainAnswer.setLevel(level);
+			xlglExamMainAnswer.setFractionsum(sum);
+		}
+		xlglExamMainAnswer.setMakeupStatus("0");
+		
+		xlglExamMainAnswer.setStatus(status);
+		xlglExamMainAnswer.setIsNotExam("1");
+		xlglExamMainAnswer.setUpdateDate(date);
+		xlglExamMainAnswer.setId(mainAnswerId);
+		xlglExamMainAnswerService.update(xlglExamMainAnswer);
+		xlglExamAnswerService.saveBatch(parseArray);
+		jsonObject.put("mainAnswerId", queryObject.getId());	
+		jsonObject.put("code", 0);
+		jsonObject.put("msg", "success");
+		Response.json(jsonObject);
+		}catch (Exception e) {
+			Response.error();
+		}
+	}
+	
 }
