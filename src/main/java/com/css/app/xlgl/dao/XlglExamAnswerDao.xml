@@ -94,6 +94,10 @@
 		where id = #{id}
 	</update>
 	
+	<delete id="deleteByExamineId">
+		delete from XLGL_EXAM_ANSWER where EXAMINE_ID = #{value}
+	</delete>
+	
 	<delete id="delete">
 		delete from XLGL_EXAM_ANSWER where id = #{value}
 	</delete>

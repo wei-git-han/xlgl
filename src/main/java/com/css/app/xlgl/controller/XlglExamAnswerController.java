@@ -334,6 +334,13 @@ public class XlglExamAnswerController {
 		XlglExamExamine xlglExamExamine = xlglExamExamineService.queryObject(queryObject.getExamineId());
 		jsonObject.put("examineId", xlglExamExamine.getId());
 		jsonObject.put("lianxiType", xlglExamExamine.getLianxiType());
+		Map<String, Object> map = new HashMap<>();
+		map.put("examineId", xlglExamExamine.getId());
+		map.put("replyUserId", ssoUser.getUserId());
+		List<XlglExamAnswer> queryList = xlglExamAnswerService.queryList(map);
+		if(queryList.size()>0) {
+			xlglExamAnswerService.deleteByExamineId(xlglExamExamine.getId());
+		}
 		for (XlglExamAnswer eanswer : parseArray) {
 			eanswer.setId(UUIDUtils.random());
 			eanswer.setMainAnswerId(mainAnswerId);

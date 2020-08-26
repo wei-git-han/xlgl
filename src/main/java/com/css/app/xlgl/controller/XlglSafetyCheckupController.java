@@ -94,4 +94,16 @@ public class XlglSafetyCheckupController {
 		Response.ok();
 	}
 	
+	/**
+	 * 信息
+	 */
+	@ResponseBody
+	@RequestMapping("/infoByOrganId")
+	public void infoByOrganId(String organId){
+		Map<String, Object> map = new HashMap<>();
+		map.put("orgId", organId);
+		List<XlglSafetyCheckup> queryList = xlglSafetyCheckupService.queryList(map);
+		Response.json("xlglSafetyCheckup", queryList.get(0));
+	}
+	
 }

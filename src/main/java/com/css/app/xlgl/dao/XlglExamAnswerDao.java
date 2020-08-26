@@ -21,4 +21,7 @@ public interface XlglExamAnswerDao extends BaseDao<XlglExamAnswer> {
 	void saveBatch(@Param("list")List<XlglExamAnswer> list);
 	
 	int queryCorrectStatus(Map<String, Object> map);
+	
+	int deleteByExamineId(Object id);
+	
 }
