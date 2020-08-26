@@ -35,8 +35,8 @@ public interface XlglSubDocTrackingDao extends BaseDao<XlglSubDocTracking> {
 
     List<XlglSubDocTracking> queryListForPerson1(Map<String,Object> map);
 
-    @Select("select INFO_ID from XLGL_SUB_DOC_TRACKING where RECEIVER_ID = #{0} and BAOMING = #{1}")
-    List<String> queryAllInfos(String userId,String type);
+    //@Select("select INFO_ID from XLGL_SUB_DOC_TRACKING where RECEIVER_ID = #{0} and BAOMING = #{1}")
+    List<XlglSubDocTracking> queryAllInfos(Map<String,Object> map1);
 
     @Select("select count(1) from XLGL_SUB_DOC_TRACKING where INFO_ID = #{0} and IS_WORK = '1'")
     int queryCount(String fileId);

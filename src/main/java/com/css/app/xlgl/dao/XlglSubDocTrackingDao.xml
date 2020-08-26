@@ -7,6 +7,20 @@
 		select * from XLGL_SUB_DOC_TRACKING where ID = #{value}
 	</select>
 
+	<select id="queryAllInfos" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
+		select * from XLGL_SUB_DOC_TRACKING where 1=1
+		<if test="userId != null and userId !=''">
+			and RECEIVER_ID = #{userId}
+		</if>
+		<if test='type == "0"'>
+			and EXERCISE_TIME > to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
+		</if>
+		<if test='type =="1"'>
+			and EXERCISE_TIME &lt; to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
+		</if>
+
+	</select>
+
 	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
 		select * from XLGL_SUB_DOC_TRACKING 
 		<if test="offset != null and limit != null">

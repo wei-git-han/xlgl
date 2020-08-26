@@ -99,18 +99,25 @@ public class XlglXlzzInfoController {
 		if (xlglSubDocTracking != null) {
 			xlglSubDocTracking.setRead("1");
 			xlglSubDocTrackingService.update(xlglSubDocTracking);
+			if(StringUtils.isNotBlank(xlglSubDocTracking.getBaoming())){
+				xlglXlzzInfo.setBaoming(xlglSubDocTracking.getBaoming());
+			}
+			if(StringUtils.isNotBlank(xlglSubDocTracking.getReason())){
+				xlglXlzzInfo.setReason(xlglSubDocTracking.getReason());
+			}
 		}
 		xlglXlzzInfo.setStatus("1");//1为已读
-		if(com.css.base.utils.StringUtils.isNotBlank(xlglSubDocTracking.getBaoming())){
-			xlglXlzzInfo.setBaoming(xlglSubDocTracking.getBaoming());
-		}
+
 		}
 		xlglXlzzInfo.setFbDept(deptName);
+
+
 		map.put("fileId", id);
 		map.put("pictureType","2");
 		List<XlglPicture> list = xlglPictureService.queryAllInfoByInfoId(map);
 		jsonObject.put("pictureList", list);
 		jsonObject.put("xlglXlzzInfo", xlglXlzzInfo);
+
 		//jsonObject.put("isBm",xlglSubDocTracking.getBaoming());
 		Response.json(jsonObject);
 	}
@@ -358,22 +365,38 @@ public class XlglXlzzInfoController {
 
 	/**
 	 * 强装兴装大讲堂列表
-	 * type  1是已报名 2是延后
+	 * type  0是未开始 1是历史学习
 	 */
 	@ResponseBody
 	@RequestMapping("/getDjtList")
 	public void getDjtList(String type){
+		Map<String,Object> map1 = new HashMap<>();
 		String userId = CurrentUser.getUserId();
 		JSONArray jsonArray = new JSONArray();
 		//查出所有的文id
-		List<String> listInfoIds = xlglSubDocTrackingService.queryAllInfos(userId,type);
+		map1.put("userId",userId);
+		map1.put("type",type);
+		SimpleDateFormat format  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		map1.put("time",format.format(new Date()));
+		List<XlglSubDocTracking> listInfoIds = xlglSubDocTrackingService.queryAllInfos(map1);
 		if(listInfoIds != null && listInfoIds.size() > 0){
-			for(String infoId : listInfoIds){
+			for(XlglSubDocTracking xlglSubDocTracking : listInfoIds){
 				JSONObject jsonObject = new JSONObject();
 				Map<String,Object> map = new HashMap<String,Object>();
-				map.put("infoId",infoId);
+				map.put("infoId",xlglSubDocTracking.getInfoId());
 				List<XlglPicture> listPicture = xlglPictureService.queryAllInfoByInfoId(map);
+				if(listPicture.size() ==0){//未上传
+					jsonObject.put("isUpload",true);
+				}else {
+					jsonObject.put("isUpload",false);
+				}
+				jsonObject.put("picturePath",xlglSubDocTracking.getPicturePath());
+				jsonObject.put("baoming",xlglSubDocTracking.getBaoming());//2是需补课
 				jsonObject.put("listPicture",listPicture);
+				jsonObject.put("type",type);
+				jsonObject.put("title",xlglSubDocTracking.getTitle());
+				jsonObject.put("startTime",xlglSubDocTracking.getExerciseTime());
+				jsonObject.put("sendPeople",xlglSubDocTracking.getSenderName());
 				jsonArray.add(jsonObject);
 			}
 		}

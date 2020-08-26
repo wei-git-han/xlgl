@@ -66,6 +66,17 @@ public class XlglXlzzInfo implements Serializable {
 	//发布单位
 	private String fbDept;
 
+	//延后原因
+	private String reason;
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
 	public String getFbDept() {
 		return fbDept;
 	}

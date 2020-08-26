@@ -8,9 +8,9 @@
 	</select>
 
 	<select id="queryAllInfoByInfoId" resultType="com.css.app.xlgl.entity.XlglPicture">
-		select * from XLGL_PICTURE where 1=1
+		select * from XLGL_PICTURE where PICTURE_TYPE ='0'
 		<if test="fileId != null">
-			and FILE_ID = #{fileId}
+			and FILE_ID = #{infoId}
 		</if>
 		<if test="pictureType != null">
 			and PICTURE_TYPE = #{pictureType}
