@@ -83,16 +83,21 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 	}
 
 	@Override
+	public List<XlglSubDocTracking> queryAllYear(Map<String,Object> map1){
+		return xlglSubDocTrackingDao.queryAllYear(map1);
+	}
+
+	@Override
 	public int queryCount(String fileId){
 		return xlglSubDocTrackingDao.queryCount(fileId);
 	}
 	@Override
-	public int queryAllCount(String userId){
-		return xlglSubDocTrackingDao.queryAllCount(userId);
+	public int queryAllCount(String userId,String year){
+		return xlglSubDocTrackingDao.queryAllCount(userId,year);
 	}
 	@Override
-	public int quereyWcCount(String userId){
-		return xlglSubDocTrackingDao.quereyWcCount(userId);
+	public int quereyWcCount(String userId,String year){
+		return xlglSubDocTrackingDao.quereyWcCount(userId,year);
 	}
 
 	@Override

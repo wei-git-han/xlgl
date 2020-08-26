@@ -1,10 +1,7 @@
 package com.css.app.xlgl.controller;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -384,6 +381,8 @@ public class XlglDocumentZbjlController {
     @ResponseBody
     @RequestMapping("/getXlCoreList")
     public void getXlCoreList(){
+        Calendar calendar = Calendar.getInstance();
+        String year = String.valueOf(calendar.get(Calendar.YEAR));
         String organId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
         //获取局内所有的人
         List<BaseAppUser> list = baseAppUserService.queryAllUserIdAndName(organId);
@@ -399,8 +398,8 @@ public class XlglDocumentZbjlController {
                 jsonObject.put("deptName",deptName);
                 String userId = CurrentUser.getUserId();
                 //强装兴装大讲堂得分 ------------------start
-                int sum = xlglSubDocTrackingService.queryAllCount(userId);
-                int count = xlglSubDocTrackingService.quereyWcCount(userId);
+                int sum = xlglSubDocTrackingService.queryAllCount(userId,year);
+                int count = xlglSubDocTrackingService.quereyWcCount(userId,year);
                 float f = count/sum;//强装兴装大讲堂得分
                 String dj = "优秀，目前写死";
                 jsonObject.put("f",f);

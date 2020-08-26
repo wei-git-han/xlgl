@@ -366,10 +366,11 @@ public class XlglXlzzInfoController {
 	/**
 	 * 强装兴装大讲堂列表
 	 * type  0是未开始 1是历史学习
+	 * flag 0是大讲堂信息 1是历年课堂
 	 */
 	@ResponseBody
 	@RequestMapping("/getDjtList")
-	public void getDjtList(String type){
+	public void getDjtList(String type,String flag){
 		Map<String,Object> map1 = new HashMap<>();
 		String userId = CurrentUser.getUserId();
 		JSONArray jsonArray = new JSONArray();
@@ -378,7 +379,13 @@ public class XlglXlzzInfoController {
 		map1.put("type",type);
 		SimpleDateFormat format  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		map1.put("time",format.format(new Date()));
-		List<XlglSubDocTracking> listInfoIds = xlglSubDocTrackingService.queryAllInfos(map1);
+		List<XlglSubDocTracking> listInfoIds = null;
+		if("0".equals(flag)){
+			listInfoIds = xlglSubDocTrackingService.queryAllInfos(map1);
+		}else {
+			listInfoIds = xlglSubDocTrackingService.queryAllYear(map1);
+		}
+		//List<XlglSubDocTracking> listInfoIds = xlglSubDocTrackingService.queryAllInfos(map1);
 		if(listInfoIds != null && listInfoIds.size() > 0){
 			for(XlglSubDocTracking xlglSubDocTracking : listInfoIds){
 				JSONObject jsonObject = new JSONObject();
@@ -425,11 +432,18 @@ public class XlglXlzzInfoController {
 	@ResponseBody
 	@RequestMapping("/getWcl")
 	public void getWcl(){
+		Calendar calendar = Calendar.getInstance();
+		String year = String.valueOf(calendar.get(Calendar.YEAR));
+		JSONObject jsonObject = new JSONObject();
 		String userId = CurrentUser.getUserId();
-		int sum = xlglSubDocTrackingService.queryAllCount(userId);
-		int count = xlglSubDocTrackingService.quereyWcCount(userId);
+		int sum = xlglSubDocTrackingService.queryAllCount(userId,year);//所有的课程
+		int count = xlglSubDocTrackingService.quereyWcCount(userId,year);//已参训的课程
+		int bk = sum - count;
 		float f = count/sum;
-		Response.json("lv",f);
+		jsonObject.put("wcl",f);
+		jsonObject.put("ywc",count);
+		jsonObject.put("bk",bk);
+		Response.json(jsonObject);
 
 	}
 

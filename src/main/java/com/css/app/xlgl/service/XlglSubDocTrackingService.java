@@ -41,11 +41,13 @@ public interface XlglSubDocTrackingService {
 
 	List<XlglSubDocTracking> queryAllInfos(Map<String,Object> map1);
 
+	List<XlglSubDocTracking> queryAllYear(Map<String,Object> map1);
+
 	int queryCount(String fileId);
 
-	int queryAllCount(String userId);
+	int queryAllCount(String userId,String year);
 
-	int quereyWcCount(String userId);
+	int quereyWcCount(String userId,String year);
 
 	int queryCurrentYear(Map<String,Object> map);
 
