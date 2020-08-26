@@ -104,7 +104,7 @@ public class XlglExamExamineController {
 				XlglExamMainAnswer xlglExamMainAnswer = queryList.get(0);
 				if(xlglExamMainAnswer.getIsNotExam().equals("1")) {
 					xlglExamExamine.setUserStatus("1");
-				}else if(xlglExamMainAnswer.getMakeupStatus().equals("1")) {
+				}else if(xlglExamMainAnswer.getMakeupStatus().equals("1") && xlglExamMainAnswer.getIsNotExam().equals("1")) {
 					xlglExamExamine.setUserStatus("3");
 				}else {
 					xlglExamExamine.setUserStatus("2");
@@ -113,8 +113,8 @@ public class XlglExamExamineController {
 				xlglExamExamine.setUserStatus("2");
 			}
 			//当前考试是否发起补考
-			if(xlglExamExamine.getOverStatus() != null &&xlglExamExamine.getOverStatus().equals("2")) {
-				List<XlglExamExamineMakeup> makeupList = xlglExamExamineMakeupService.queryList(mapAnswer);
+			List<XlglExamExamineMakeup> makeupList = xlglExamExamineMakeupService.queryList(mapAnswer);
+			if(makeupList.size()>0 &&xlglExamExamine.getOverStatus().equals("2")) {
 				String id = makeupList.get(0).getId();
 				xlglExamExamine.setMakeupId(id);
 			}
@@ -133,15 +133,29 @@ public class XlglExamExamineController {
 			}
 			Integer raio =((numberInto/queryTotal)*100);
 			xlglExamExamine.setRatio(raio.toString()+"%");
-			
-			if(xlglExamExamine.getExamineEndDate() !=null && xlglExamExamine.getIssueStatus() !=null
-					&&xlglExamExamine.getExamineEndDate().before(date) ) {
-				XlglExamExamine ex = new XlglExamExamine();
-				ex.setId(xlglExamExamine.getId());
-				ex.setOverStatus("1");
-				xlglExamExamine.setOverStatus("1");
-				xlglExamExamineService.update(ex);
+			//更改状态
+			if(makeupList.size()>0) {//查看是否有补考，如果有补考则以补考结束时间为准
+				XlglExamExamineMakeup xlglExamExamineMakeup = makeupList.get(0);
+				if(xlglExamExamineMakeup.getMakeUpEndDate() !=null 
+						&& xlglExamExamineMakeup.getMakeUpEndDate().before(date) ) {
+					XlglExamExamine ex = new XlglExamExamine();
+					ex.setId(xlglExamExamine.getId());
+					ex.setOverStatus("1");
+					xlglExamExamine.setOverStatus("1");
+					xlglExamExamineService.update(ex);
+					xlglExamExamine.setExamineEndDate(xlglExamExamineMakeup.getMakeUpEndDate());
+				}
+			}else {
+				if(xlglExamExamine.getExamineEndDate() !=null && xlglExamExamine.getIssueStatus() !=null
+						&&xlglExamExamine.getExamineEndDate().before(date) ) {
+					XlglExamExamine ex = new XlglExamExamine();
+					ex.setId(xlglExamExamine.getId());
+					ex.setOverStatus("1");
+					xlglExamExamine.setOverStatus("1");
+					xlglExamExamineService.update(ex);
+				}
 			}
+			
 		}
 		Response.json("page",pageUtil);
 	}
@@ -157,13 +171,28 @@ public class XlglExamExamineController {
 		//查询列表数据
 		List<XlglExamExamine> xlglExamExamineList = xlglExamExamineService.queryList(map);
 		for (XlglExamExamine xlglExamExamine : xlglExamExamineList) {
-			if(xlglExamExamine.getExamineEndDate() !=null && xlglExamExamine.getIssueStatus() !=null
-					&&xlglExamExamine.getExamineEndDate().before(new Date()) ) {
-				XlglExamExamine ex = new XlglExamExamine();
-				ex.setId(xlglExamExamine.getId());
-				ex.setOverStatus("1");
-				xlglExamExamine.setOverStatus("1");
-				xlglExamExamineService.update(ex);
+			map.put("examineId", xlglExamExamine.getId());
+			//当前考试是否发起补考
+			List<XlglExamExamineMakeup> makeupList = xlglExamExamineMakeupService.queryList(map);
+			if(makeupList.size()>0) {//查看是否有补考，如果有补考则以补考结束时间为准
+				XlglExamExamineMakeup xlglExamExamineMakeup = makeupList.get(0);
+				if(xlglExamExamineMakeup.getMakeUpEndDate() !=null 
+						&& xlglExamExamineMakeup.getMakeUpEndDate().before(new Date()) ) {
+					XlglExamExamine ex = new XlglExamExamine();
+					ex.setId(xlglExamExamine.getId());
+					ex.setOverStatus("1");
+					xlglExamExamine.setOverStatus("1");
+					xlglExamExamineService.update(ex);
+				}
+			}else {
+				if(xlglExamExamine.getExamineEndDate() !=null && xlglExamExamine.getIssueStatus() !=null
+						&&xlglExamExamine.getExamineEndDate().before(new Date()) ) {
+					XlglExamExamine ex = new XlglExamExamine();
+					ex.setId(xlglExamExamine.getId());
+					ex.setOverStatus("1");
+					xlglExamExamine.setOverStatus("1");
+					xlglExamExamineService.update(ex);
+				}
 			}
 		}
 		map.put("status", "0");
@@ -282,12 +311,19 @@ public class XlglExamExamineController {
 	@ResponseBody
 	@RequestMapping("/view/examine")
 	public void viewExamine(String examineId,String isNotExam,String makeupExamineId,String makeupStatus) {
-		JSONObject jsonObject = getExamine(examineId);
+		JSONObject jsonObject = new JSONObject ();
 		Map<String, Object> map = new HashMap<>();
 		String userId = CurrentUser.getUserId();
 		map.put("examineId", examineId);
 		map.put("replyUserId", userId);
 		map.put("isNotExam",'0');
+		List<XlglExamExamineMakeup> makeupList = xlglExamExamineMakeupService.queryList(map);
+		if(makeupList.size()>0) {
+			XlglExamExamineMakeup xlglExamExamineMakeup = makeupList.get(0);
+			jsonObject = getExamine(examineId,xlglExamExamineMakeup.getId());
+		}else {
+			jsonObject = getExamine(examineId,null);
+		}
 		List<XlglExamMainAnswer> queryList = xlglExamMainAnswerService.queryList(map);
 		if(queryList.size()>0) {
 			XlglExamMainAnswer xlglExamMainAnswer = queryList.get(0);
@@ -302,16 +338,21 @@ public class XlglExamExamineController {
 	@ResponseBody
 	@RequestMapping("/view")
 	public void view(String examineId) {
-		JSONObject jsonObject = getExamine(examineId);
+		JSONObject jsonObject = getExamine(examineId,null);
 		Response.json(jsonObject);
 		
 	}
 	
-	private JSONObject getExamine(String examineId) {
+	private JSONObject getExamine(String examineId,String makeUpId) {
 		JSONObject jsonObject = new JSONObject();
 		Map<String, Object> map = new HashMap<String,Object>();
-		map.put("examineId", examineId);
-		map.put("makeUpStatus", "0");
+		if(StringUtils.isNotBlank(makeUpId)) {
+			map.put("makeUpStatus", "1");
+		}else {
+			map.put("examineId", examineId);
+			map.put("makeUpStatus", "0");
+		}
+		map.put("makeUpId", makeUpId);
 		XlglExamExamine xlglExamExamine = xlglExamExamineService.queryObject(examineId);
 		List<XlglExamExaminetopic> queryList = xlglExamExaminetopicService.queryList(map);
 		List<XlglExamExaminetopic> listType1 = new ArrayList<XlglExamExaminetopic>();
@@ -389,7 +430,12 @@ public class XlglExamExamineController {
 			xlglExamExamine.setIssueStatus("0"); //为空时默认保存
 		}
 		xlglExamExamine.setStatus(status);
-		xlglExamExamine.setOverStatus("99");
+		if(xlglExamExamine.getExamineStartDate().before(new Date())) {
+			xlglExamExamine.setOverStatus("0");
+		}else {
+			xlglExamExamine.setOverStatus("99");
+		}
+		
 		if(StringUtils.isNotBlank(xlglExamExamine.getId())) {//修改
 			xlglExamExamine.setUpdateUser(userId);
 			xlglExamExamine.setUpdateDate(date);
@@ -406,6 +452,7 @@ public class XlglExamExamineController {
 			xlglExamExamine.setUpdateUser(userId);
 			xlglExamExamine.setUpdateDate(date);
 			xlglExamExamine.setId(random);
+			xlglExamExamine.setStatus("1");
 			xlglExamExamineService.save(xlglExamExamine);
 		}	
 			for (int i = 0; i < typeAndNum.length; i++) {

@@ -99,7 +99,8 @@ public class XlglExamExaminetopicServiceImpl implements XlglExamExaminetopicServ
 				examineTopic.setTopicColumn(xlglExamTopic.getTopicColumn());
 				examineTopic.setTopicOption(xlglExamTopic.getTopicOption());
 				examineTopic.setTopicResult(xlglExamTopic.getTopicResult());
-				examineTopic.setFractionalNumber((int)map.get("fractionalNumber"));
+				String fractionalNumber = (String)map.get("fractionalNumber");
+				examineTopic.setFractionalNumber(Integer.parseInt(fractionalNumber));
 				examineTopic.setCreateDate(date);
 				examineTopic.setCreateUser(userId);
 				examineTopic.setUpdateDate(date);
@@ -128,7 +129,8 @@ public class XlglExamExaminetopicServiceImpl implements XlglExamExaminetopicServ
 						examineTopic.setTopicColumn(xlglExamTopic.getTopicColumn());
 						examineTopic.setTopicOption(xlglExamTopic.getTopicOption());
 						examineTopic.setTopicResult(xlglExamTopic.getTopicResult());
-						examineTopic.setFractionalNumber((int)map.get("fractionalNumber"));
+						String fractionalNumber = (String)map.get("fractionalNumber");
+						examineTopic.setFractionalNumber(Integer.parseInt(fractionalNumber));
 						examineTopic.setCreateDate(date);
 						examineTopic.setCreateUser(userId);
 						examineTopic.setUpdateDate(date);
