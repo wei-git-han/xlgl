@@ -40,7 +40,8 @@
 			"SUB_DEPT_ID", 
 			"IDEA_ADD_FLAG",
 			"IS_SEND",
-			"INSTRACTION"
+			"INSTRACTION",
+			"EXERCISE_TIME"
 		)
 		values
 		(
@@ -59,7 +60,8 @@
 			#{subDeptId}, 
 			#{ideaAddFlag},
 			#{isSend},
-			#{instraction}
+			#{instraction},
+			#{exerciseTime}
 		)
 	</insert>
 
@@ -80,7 +82,8 @@
             <if test="subDeptId != null">"SUB_DEPT_ID" = #{subDeptId},</if>
             <if test="ideaAddFlag != null">"IDEA_ADD_FLAG" = #{ideaAddFlag},</if>
             <if test="isSend != null">"IS_SEND" = #{isSend},</if>
-            <if test="instraction != null">"INSTRACTION" = #{instraction}</if>
+            <if test="instraction != null">"INSTRACTION" = #{instraction},</if>
+            <if test="exerciseTime != null">"EXERCISE_TIME" = #{exerciseTime}</if>
         </set>
         where ID = #{id}
     </update>

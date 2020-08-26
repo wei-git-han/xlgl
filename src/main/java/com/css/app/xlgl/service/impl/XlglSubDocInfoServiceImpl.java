@@ -53,6 +53,12 @@ public class XlglSubDocInfoServiceImpl implements XlglSubDocInfoService {
 	}
 
 	@Override
+	public List<XlglSubDocInfo> queryAllClass(String orgId,String year){
+		return xlglSubDocInfoDao.queryAllClass(orgId,year);
+	}
+
+
+	@Override
 	public List<XlglSubDocInfo> queryListForJu(Map<String,Object> map){
 		return xlglSubDocInfoDao.queryListForJu(map);
 	}

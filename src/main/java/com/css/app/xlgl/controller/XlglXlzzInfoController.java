@@ -13,10 +13,9 @@ import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.addbase.apporgan.util.OrgUtil;
 import com.css.addbase.apporgmapped.service.BaseAppOrgMappedService;
 import com.css.addbase.orgservice.OrgService;
-import com.css.app.xlgl.entity.XlglPicture;
-import com.css.app.xlgl.entity.XlglSubDocTracking;
-import com.css.app.xlgl.entity.XlglXlzzInfo;
+import com.css.app.xlgl.entity.*;
 import com.css.app.xlgl.service.XlglPictureService;
+import com.css.app.xlgl.service.XlglSubDocInfoService;
 import com.css.app.xlgl.service.XlglSubDocTrackingService;
 import com.css.app.xlgl.service.XlglXlzzInfoService;
 import com.css.base.utils.*;
@@ -64,6 +63,8 @@ public class XlglXlzzInfoController {
 	private BaseAppConfigService baseAppConfigService;
 	@Autowired
 	private XlglPictureService xlglPictureService;
+	@Autowired
+	private XlglSubDocInfoService xlglSubDocInfoService;
 	
 	/**
 	 * 列表
@@ -370,13 +371,14 @@ public class XlglXlzzInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getDjtList")
-	public void getDjtList(String type,String flag){
+	public void getDjtList(String type,String flag,String search){
 		Map<String,Object> map1 = new HashMap<>();
 		String userId = CurrentUser.getUserId();
 		JSONArray jsonArray = new JSONArray();
 		//查出所有的文id
 		map1.put("userId",userId);
 		map1.put("type",type);
+		map1.put("search",search);
 		SimpleDateFormat format  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		map1.put("time",format.format(new Date()));
 		List<XlglSubDocTracking> listInfoIds = null;
@@ -397,9 +399,15 @@ public class XlglXlzzInfoController {
 				}else {
 					jsonObject.put("isUpload",false);
 				}
+				String pictrueIds = "";
+				if(listPicture != null && listPicture.size() > 0){
+					for(XlglPicture xlglPicture : listPicture){
+						pictrueIds +=xlglPicture.getPictureId()+",";
+					}
+				}
 				jsonObject.put("picturePath",xlglSubDocTracking.getPicturePath());
 				jsonObject.put("baoming",xlglSubDocTracking.getBaoming());//2是需补课
-				jsonObject.put("listPicture",listPicture);
+				jsonObject.put("listPictureIds",pictrueIds);
 				jsonObject.put("type",type);
 				jsonObject.put("title",xlglSubDocTracking.getTitle());
 				jsonObject.put("startTime",xlglSubDocTracking.getExerciseTime());
@@ -474,6 +482,31 @@ public class XlglXlzzInfoController {
 		jsonObject.put("ywc",ycx+ybm);
 		jsonObject.put("bk",count - ybm - ycx);
 		Response.json(jsonObject);
+	}
+
+
+	@ResponseBody
+	@RequestMapping("/getPerDeptWcl")
+	public void getPerDeptWcl(){
+		Map<String,Object> map = new HashMap<>();
+		Calendar calendar = Calendar.getInstance();
+		String year = String.valueOf(calendar.get(Calendar.YEAR));
+		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
+		List<XlglSubDocInfo> list = xlglSubDocInfoService.queryAllClass(orgId,year);
+		int s = 0;
+		int cxCount = 0;
+		if(list != null && list.size() > 0){
+//			for(XlglSubDocInfo xlglSubDocInfo : list){
+//				//String exerciseTime = xlglSubDocInfo.getExerciseTime();//每一个的截止时间
+				int count = baseAppUserService.queryListAllYxCount();//有效的人数，不能计算出每一个课程在有效期之前的有效人数
+//				int cxCount = xlglSubDocTrackingService.queryAllYx(xlglSubDocInfo.getInfoId(),year);//参训人数
+//
+//			}
+			int size = list.size();
+			s = count * size;//总的有效人
+			cxCount = xlglSubDocTrackingService.queryAllYx(year);
+		}
+
 	}
 
 

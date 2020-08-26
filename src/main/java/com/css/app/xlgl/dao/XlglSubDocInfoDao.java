@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.css.base.dao.BaseDao;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 import java.util.Map;
@@ -28,4 +29,7 @@ public interface XlglSubDocInfoDao extends BaseDao<XlglSubDocInfo> {
 
     @Delete("delete from XLGL_SUB_DOC_INFO where SUB_DEPT_ID = #{0} and INFO_ID = #{1}")
     void deleteSub(String orgId,String fileId);
+
+    @Select("select * from XLGL_SUB_DOC_INFO where SUB_DEPT_ID = #{0} and EXERCISE_TIME like '%'||#{1}||'%'")
+    List<XlglSubDocInfo> queryAllClass(String orgId,String year);
 }

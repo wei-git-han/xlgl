@@ -156,6 +156,7 @@ public class XlglDocumentZbjlController {
                     xlglSubDocInfo.setExerciseTime(xlglXlzzInfo.getExerciseTime());
                     xlglSubDocInfo.setPicturePath(xlglXlzzInfo.getPicturePath());
                     xlglSubDocInfo.setIsSend("0");
+                    xlglSubDocInfo.setExerciseTime(xlglXlzzInfo.getExerciseTime());
                     xlglSubDocInfoService.save(xlglSubDocInfo);
                 }
                 //获取局管理员,给局管理员发送消息提醒

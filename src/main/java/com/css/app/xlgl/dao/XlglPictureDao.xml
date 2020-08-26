@@ -9,10 +9,10 @@
 
 	<select id="queryAllInfoByInfoId" resultType="com.css.app.xlgl.entity.XlglPicture">
 		select * from XLGL_PICTURE where PICTURE_TYPE ='0'
-		<if test="fileId != null">
+		<if test="infoId != null and infoId != ''">
 			and FILE_ID = #{infoId}
 		</if>
-		<if test="pictureType != null">
+		<if test="pictureType != null and pictureType !=''">
 			and PICTURE_TYPE = #{pictureType}
 		</if>
 

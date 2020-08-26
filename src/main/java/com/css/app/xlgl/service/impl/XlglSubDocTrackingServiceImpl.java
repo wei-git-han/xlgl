@@ -113,5 +113,10 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 		return xlglSubDocTrackingDao.queryBmCount(map);
 	}
 
+	@Override
+	public int queryAllYx(String year){
+		return xlglSubDocTrackingDao.queryAllYx(year);
+	}
+
 
 }

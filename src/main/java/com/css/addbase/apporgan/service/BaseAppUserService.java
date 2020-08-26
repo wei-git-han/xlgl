@@ -125,5 +125,7 @@ public interface BaseAppUserService {
 
 	List<BaseAppUser> queryAllExcelList(Map<String,Object> map);
 
+	int queryListAllYxCount();
+
 
 }
