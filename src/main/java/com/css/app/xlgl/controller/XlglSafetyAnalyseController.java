@@ -232,7 +232,9 @@ public class XlglSafetyAnalyseController {
 	}
 	
 
-	
+	/**
+	 * 部门树
+	 * */
 	@RequestMapping(value = "/tree")
 	@ResponseBody
 	public Object getDeptTree(HttpServletRequest request) {

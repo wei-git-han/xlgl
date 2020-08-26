@@ -60,7 +60,8 @@
 			"STATUS",
 			"OVER_STATUS",
 			"EXAMINE_END_DATE",
-			"ISSUE_DATE"
+			"ISSUE_DATE",
+			"LIANXI_TYPE"
 		)
 		values
 		(
@@ -79,7 +80,8 @@
 			#{status},
 			#{overStatus},
 			#{examineEndDate},
-			#{issueDate}
+			#{issueDate},
+			#{lianxiType}
 		)
 	</insert>
 	 
@@ -100,6 +102,7 @@
 			<if test="status != null">"STATUS" = #{status}, </if>
 			<if test="examineEndDate != null">"EXAMINE_END_DATE" = #{examineEndDate}, </if>
 			<if test="issueDate != null">"ISSUE_DATE" = #{issueDate}, </if>
+			<if test="lianxiType != null">"LIANXI_TYPE" = #{lianxiType}, </if>
 			<if test="overStatus != null">"OVER_STATUS" = #{overStatus} </if>
 		</set>
 		where id = #{id}

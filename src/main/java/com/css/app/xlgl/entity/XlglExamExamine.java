@@ -47,6 +47,8 @@ public class XlglExamExamine implements Serializable {
 	private Date issueDate;
 	//状态 0：考试，1：练习
 	private String status;
+	//练习状态 0：模拟练习， 1自主练习
+	private String lianxiType;
 
 	
 	//已参加人数
@@ -284,6 +286,12 @@ public class XlglExamExamine implements Serializable {
 	}
 	public void setUpdateUserName(String updateUserName) {
 		this.updateUserName = updateUserName;
+	}
+	public String getLianxiType() {
+		return lianxiType;
+	}
+	public void setLianxiType(String lianxiType) {
+		this.lianxiType = lianxiType;
 	}
 	
 

@@ -307,16 +307,18 @@ public class XlglExamExamineController {
 	 * @param isNotExam 未考状态0：没考，1:考了
 	 * @param makeupExamineId 补考id
 	 * @param makeupStatus //补考考状态0：没补考考，1:补考了
+	 * @param status 状态 0：考试，1：练习
 	 * */
 	@ResponseBody
 	@RequestMapping("/view/examine")
-	public void viewExamine(String examineId,String isNotExam,String makeupExamineId,String makeupStatus) {
+	public void viewExamine(String examineId,String isNotExam,String makeupExamineId,String makeupStatus,String status) {
 		JSONObject jsonObject = new JSONObject ();
 		Map<String, Object> map = new HashMap<>();
 		String userId = CurrentUser.getUserId();
 		map.put("examineId", examineId);
 		map.put("replyUserId", userId);
 		map.put("isNotExam",'0');
+		map.put("status", status);
 		List<XlglExamExamineMakeup> makeupList = xlglExamExamineMakeupService.queryList(map);
 		if(makeupList.size()>0) {
 			XlglExamExamineMakeup xlglExamExamineMakeup = makeupList.get(0);
@@ -404,23 +406,23 @@ public class XlglExamExamineController {
 	 * @param IssueStatus 0：保存，1：发布
 	 * @param status 状态 0：考试，1：练习
 	 * @param typeAndNum 题类型，题数量，题分数
+	 * @param lianxiType 0：模拟练习，1：自主练习
 	 */
 	@ResponseBody
 	@RequestMapping("/saveOrUpdate")
 	public void saveExamineAndTopic(XlglExamExamine xlglExamExamine,String IssueStatus,String[] typeAndNum,String status ){
+		try {
+		JSONObject jsonObject = new JSONObject();
 		String random = UUIDUtils.random();
+		jsonObject.put("examineId", random);
 		String userId = CurrentUser.getUserId();
 		Date date = new Date();	
-		if(status.equals("0")) {
+		if(StringUtils.isNotBlank(status)&&status.equals("0")) {
 			SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-		try {
-				Date startDate = format.parse(xlglExamExamine.getExamineStartDateStr());
-				Date endDate = format.parse(xlglExamExamine.getExamineEndDateStr());
-				xlglExamExamine.setExamineStartDate(startDate);
-				xlglExamExamine.setExamineEndDate(endDate);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
+			Date startDate = format.parse(xlglExamExamine.getExamineStartDateStr());
+			Date endDate = format.parse(xlglExamExamine.getExamineEndDateStr());
+			xlglExamExamine.setExamineStartDate(startDate);
+			xlglExamExamine.setExamineEndDate(endDate);
 		}
 		if(StringUtils.isNotBlank(IssueStatus)) {
 			xlglExamExamine.setIssueStatus(IssueStatus);
@@ -430,7 +432,7 @@ public class XlglExamExamineController {
 			xlglExamExamine.setIssueStatus("0"); //为空时默认保存
 		}
 		xlglExamExamine.setStatus(status);
-		if(xlglExamExamine.getExamineStartDate().before(new Date())) {
+		if(xlglExamExamine.getExamineStartDate() !=null&&xlglExamExamine.getExamineStartDate().before(new Date())) {
 			xlglExamExamine.setOverStatus("0");
 		}else {
 			xlglExamExamine.setOverStatus("99");
@@ -452,7 +454,6 @@ public class XlglExamExamineController {
 			xlglExamExamine.setUpdateUser(userId);
 			xlglExamExamine.setUpdateDate(date);
 			xlglExamExamine.setId(random);
-			xlglExamExamine.setStatus("1");
 			xlglExamExamineService.save(xlglExamExamine);
 		}	
 			for (int i = 0; i < typeAndNum.length; i++) {
@@ -509,10 +510,16 @@ public class XlglExamExamineController {
 			xlglExamMainAnswer.setIsNotExam("0");
 			xlglExamMainAnswer.setCreateUser(CurrentUser.getUserId());
 			xlglExamMainAnswer.setUpdateUser(CurrentUser.getUserId());
+			xlglExamMainAnswer.setLianxiType(xlglExamExamine.getLianxiType());
 			xlglExamMainAnswerService.save(xlglExamMainAnswer);
 		}
-		
-		Response.ok();
+		jsonObject.put("code", "0");
+		jsonObject.put("msg", "success");
+		Response.json(jsonObject);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Response.error();
+		}
 	}
 	
 	/**
