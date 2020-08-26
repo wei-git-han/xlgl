@@ -13,15 +13,15 @@ import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.addbase.apporgan.util.OrgUtil;
 import com.css.addbase.apporgmapped.service.BaseAppOrgMappedService;
 import com.css.addbase.orgservice.OrgService;
-import com.css.app.xlgl.entity.XlglPicture;
-import com.css.app.xlgl.entity.XlglSubDocTracking;
-import com.css.app.xlgl.entity.XlglXlzzInfo;
+import com.css.app.xlgl.entity.*;
 import com.css.app.xlgl.service.XlglPictureService;
+import com.css.app.xlgl.service.XlglSubDocInfoService;
 import com.css.app.xlgl.service.XlglSubDocTrackingService;
 import com.css.app.xlgl.service.XlglXlzzInfoService;
 import com.css.base.utils.*;
 import com.google.gson.JsonObject;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.cookie.SM;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -64,13 +64,14 @@ public class XlglXlzzInfoController {
 	private BaseAppConfigService baseAppConfigService;
 	@Autowired
 	private XlglPictureService xlglPictureService;
+	@Autowired
+	private XlglSubDocInfoService xlglSubDocInfoService;
 	
 	/**
 	 * 列表
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	@RequiresPermissions("xlglxlzzinfo:list")
 	public void list(Integer page, Integer limit){
 		Map<String, Object> map = new HashMap<>();
 		PageHelper.startPage(page, limit);
@@ -88,16 +89,39 @@ public class XlglXlzzInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/info")
-	public void info(String id){
+	public void info(String id) {
+		JSONObject jsonObject = new JSONObject();
+		Map<String, Object> map = new HashMap<>();
 		String loginUser = CurrentUser.getUserId();
+		String deptName = CurrentUser.getOrgName();
 		XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(id);
 		//打开的同时，更新打开人的状态为已读
-		XlglSubDocTracking xlglSubDocTracking = xlglSubDocTrackingService.queryInfo(id,loginUser);
-		xlglSubDocTracking.setRead("1");
-		xlglSubDocTrackingService.update(xlglSubDocTracking);
+		XlglSubDocTracking xlglSubDocTracking = xlglSubDocTrackingService.queryInfo(id, loginUser);
+		if(xlglSubDocTracking != null){
+		if (xlglSubDocTracking != null) {
+			xlglSubDocTracking.setRead("1");
+			xlglSubDocTrackingService.update(xlglSubDocTracking);
+			if(StringUtils.isNotBlank(xlglSubDocTracking.getBaoming())){
+				xlglXlzzInfo.setBaoming(xlglSubDocTracking.getBaoming());
+			}
+			if(StringUtils.isNotBlank(xlglSubDocTracking.getReason())){
+				xlglXlzzInfo.setReason(xlglSubDocTracking.getReason());
+			}
+		}
 		xlglXlzzInfo.setStatus("1");//1为已读
-		xlglXlzzInfo.setBaoming(xlglSubDocTracking.getBaoming());
-		Response.json("xlglXlzzInfo", xlglXlzzInfo);
+
+		}
+		xlglXlzzInfo.setFbDept(deptName);
+
+
+		map.put("fileId", id);
+		map.put("pictureType","2");
+		List<XlglPicture> list = xlglPictureService.queryAllInfoByInfoId(map);
+		jsonObject.put("pictureList", list);
+		jsonObject.put("xlglXlzzInfo", xlglXlzzInfo);
+
+		//jsonObject.put("isBm",xlglSubDocTracking.getBaoming());
+		Response.json(jsonObject);
 	}
 
 	/**
@@ -125,15 +149,22 @@ public class XlglXlzzInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public void save(XlglXlzzInfo xlglXlzzInfo,String pIds,String type){
-		String fId = UUIDUtils.random();
-		xlglXlzzInfo.setId(fId);
-		xlglXlzzInfo.setCreateTime(new Date());
-		xlglXlzzInfoService.save(xlglXlzzInfo);
+	public void save(XlglXlzzInfo xlglXlzzInfo,String pIds,String type,String pidNames){
+		JSONObject jsonObject = new JSONObject();
+		String fId = null;
+		if(StringUtils.isNotBlank(xlglXlzzInfo.getId())){
+			xlglXlzzInfoService.update(xlglXlzzInfo);
+		}else {
+			fId = UUIDUtils.random();
+			xlglXlzzInfo.setId(fId);
+			xlglXlzzInfo.setCreateTime(new Date());
+			xlglXlzzInfoService.save(xlglXlzzInfo);
+		}
 		//保存上传图片，视频，文件
 		if(StringUtils.isNotBlank(pIds)) {
 			String[] ids = pIds.split(",");
 			String[] types = type.split(",");
+			String[] names = pidNames.split(",");
 			xlglPictureService.deleteBatch(ids);
 			for (int i = 0; i < ids.length; i++) {
 				XlglPicture xlglPicture = new XlglPicture();
@@ -142,6 +173,7 @@ public class XlglXlzzInfoController {
 				xlglPicture.setIsFirst("0");
 				xlglPicture.setPictureId(ids[i]);
 				xlglPicture.setSort("0");
+				xlglPicture.setPictureName(names[i]);
 				String typePicture = types[i];
 				if("video/mp4".equals(typePicture)){
 					xlglPicture.setPictureType("0");
@@ -153,7 +185,9 @@ public class XlglXlzzInfoController {
 				xlglPictureService.save(xlglPicture);
 			}
 		}
-		Response.json("result","success");
+		jsonObject.put("fileId",fId);
+		jsonObject.put("result","success");
+		Response.json(jsonObject);
 	}
 	
 	/**
@@ -333,27 +367,59 @@ public class XlglXlzzInfoController {
 
 	/**
 	 * 强装兴装大讲堂列表
-	 * type  1是已报名 2是延后
+	 * type  0是未开始 1是历史学习
+	 * flag 0是大讲堂信息 1是历年课堂
 	 */
 	@ResponseBody
 	@RequestMapping("/getDjtList")
-	public void getDjtList(String type){
+	public void getDjtList(String type,String flag,String search) {
+		Map<String, Object> map1 = new HashMap<>();
 		String userId = CurrentUser.getUserId();
 		JSONArray jsonArray = new JSONArray();
 		//查出所有的文id
-		List<String> listInfoIds = xlglSubDocTrackingService.queryAllInfos(userId,type);
-		if(listInfoIds != null && listInfoIds.size() > 0){
-			for(String infoId : listInfoIds){
+		map1.put("userId", userId);
+		map1.put("type", type);
+		map1.put("search", search);
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		map1.put("time", format.format(new Date()));
+		List<XlglSubDocTracking> listInfoIds = null;
+		if ("0".equals(flag)) {
+			listInfoIds = xlglSubDocTrackingService.queryAllInfos(map1);
+		} else {
+			listInfoIds = xlglSubDocTrackingService.queryAllYear(map1);
+		}
+		//List<XlglSubDocTracking> listInfoIds = xlglSubDocTrackingService.queryAllInfos(map1);
+		if (listInfoIds != null && listInfoIds.size() > 0) {
+			for (XlglSubDocTracking xlglSubDocTracking : listInfoIds) {
 				JSONObject jsonObject = new JSONObject();
-				Map<String,Object> map = new HashMap<String,Object>();
-				map.put("infoId",infoId);
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("infoId", xlglSubDocTracking.getInfoId());
 				List<XlglPicture> listPicture = xlglPictureService.queryAllInfoByInfoId(map);
-				jsonObject.put("listPicture",listPicture);
+				if (listPicture.size() == 0) {//未上传
+					jsonObject.put("isUpload", true);
+				} else {
+					jsonObject.put("isUpload", false);
+				}
+				List list = new ArrayList();
+				String pictrueIds = "";
+				if (listPicture != null && listPicture.size() > 0) {
+					for (XlglPicture xlglPicture : listPicture) {
+						list.add(xlglPicture.getPictureId());
+					}
+				}
+				jsonObject.put("picturePath", xlglSubDocTracking.getPicturePath());
+				jsonObject.put("baoming", xlglSubDocTracking.getBaoming());//2是需补课
+				jsonObject.put("listPictureIds", list);
+				jsonObject.put("type", type);
+				jsonObject.put("title", xlglSubDocTracking.getTitle());
+				jsonObject.put("startTime", xlglSubDocTracking.getExerciseTime());
+				jsonObject.put("sendPeople", xlglSubDocTracking.getSenderName());
+				jsonObject.put("infoId", xlglSubDocTracking.getInfoId());
 				jsonArray.add(jsonObject);
 			}
 		}
 
-		Response.json("result",jsonArray);
+		Response.json("result", jsonArray);
 	}
 
 	/**
@@ -376,38 +442,86 @@ public class XlglXlzzInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getWcl")
-	public void getWcl(){
+	public void getWcl() {
+		int sum = 0;
+		int count = 0;
+		int bk = 0;
+		Calendar calendar = Calendar.getInstance();
+		String year = String.valueOf(calendar.get(Calendar.YEAR));
+		JSONObject jsonObject = new JSONObject();
 		String userId = CurrentUser.getUserId();
-		int sum = xlglSubDocTrackingService.queryAllCount(userId);
-		int count = xlglSubDocTrackingService.quereyWcCount(userId);
-		float f = count/sum;
-		Response.json("lv",f);
+		sum = xlglSubDocTrackingService.queryAllCount(userId, year);//所有的课程
+		count = xlglSubDocTrackingService.quereyWcCount(userId, year);//已参训的课程
+		if (sum > 0) {
+			bk = sum - count;
+			float f = count / sum;
+			jsonObject.put("wcl", f);
+			jsonObject.put("ywc", count);
+			jsonObject.put("bk", bk);
+		} else {
+			jsonObject.put("wcl", "0");
+			jsonObject.put("ywc", "0");
+			jsonObject.put("bk", "0");
+		}
+		Response.json(jsonObject);
 
 	}
 
 	/**
-	 * 训练组织列表参训完成率
+	 * 训练组织列表参训完成率,已完成，需补考
 	 */
 	@ResponseBody
 	@RequestMapping("/getCxwcl")
-	public void getCxwcl(){
-		Map<String,Object> map = new HashMap<>();
+	public void getCxwcl() {
+		JSONObject jsonObject = new JSONObject();
+		Map<String, Object> map = new HashMap<>();
 		String userId = CurrentUser.getUserId();
 		SimpleDateFormat sd = new SimpleDateFormat("yyyy");
 		Date date = new Date();
 		String year = sd.format(date);
-		map.put("userId",userId);
-		map.put("year",year);
+		map.put("userId", userId);
+		map.put("year", year);
 		int count = xlglSubDocTrackingService.queryCurrentYear(map);//本年度大讲堂数+日常训练数
 
 		int ycx = xlglSubDocTrackingService.queryCxCount(map);//已参训的大讲堂数
 
 		int ybm = xlglSubDocTrackingService.queryBmCount(map);
-
-		float f= (ycx + ybm) / count;
-
-		Response.json("lv",f);
+		float f = 0.0f;
+		if (count > 0) {
+			f = (ycx + ybm) / count;
+		}
+		jsonObject.put("wcl",f);
+		jsonObject.put("ywc",ycx+ybm);
+		jsonObject.put("bk",count - ybm - ycx);
+		Response.json(jsonObject);
 	}
+
+
+	@ResponseBody
+	@RequestMapping("/getPerDeptWcl")
+	public void getPerDeptWcl(){
+		Map<String,Object> map = new HashMap<>();
+		Calendar calendar = Calendar.getInstance();
+		String year = String.valueOf(calendar.get(Calendar.YEAR));
+		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
+		List<XlglSubDocInfo> list = xlglSubDocInfoService.queryAllClass(orgId,year);
+		int s = 0;
+		int cxCount = 0;
+		if(list != null && list.size() > 0){
+//			for(XlglSubDocInfo xlglSubDocInfo : list){
+//				//String exerciseTime = xlglSubDocInfo.getExerciseTime();//每一个的截止时间
+				int count = baseAppUserService.queryListAllYxCount();//有效的人数，不能计算出每一个课程在有效期之前的有效人数
+//				int cxCount = xlglSubDocTrackingService.queryAllYx(xlglSubDocInfo.getInfoId(),year);//参训人数
+//
+//			}
+			int size = list.size();
+			s = count * size;//总的有效人
+			cxCount = xlglSubDocTrackingService.queryAllYx(year);
+		}
+
+	}
+
+
 
 
 	

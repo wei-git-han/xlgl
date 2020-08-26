@@ -51,5 +51,10 @@ public class XlglUrgentNoticeServiceImpl implements XlglUrgentNoticeService {
 	public XlglUrgentNotice queryNotice(){
 		return xlglUrgentNoticeDao.queryNotice();
 	}
+
+	@Override
+	public void deleteAll(){
+		xlglUrgentNoticeDao.deleteAll();
+	}
 	
 }

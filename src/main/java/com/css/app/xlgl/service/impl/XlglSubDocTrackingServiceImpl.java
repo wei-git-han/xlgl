@@ -73,8 +73,18 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 	}
 
 	@Override
-	public List<String> queryAllInfos(String userId,String type){
-		return xlglSubDocTrackingDao.queryAllInfos(userId,type);
+	public List<XlglSubDocTracking> queryListForPerson1(Map<String,Object> map){
+		return xlglSubDocTrackingDao.queryListForPerson1(map);
+	}
+
+	@Override
+	public List<XlglSubDocTracking> queryAllInfos(Map<String,Object> map1){
+		return xlglSubDocTrackingDao.queryAllInfos(map1);
+	}
+
+	@Override
+	public List<XlglSubDocTracking> queryAllYear(Map<String,Object> map1){
+		return xlglSubDocTrackingDao.queryAllYear(map1);
 	}
 
 	@Override
@@ -82,12 +92,12 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 		return xlglSubDocTrackingDao.queryCount(fileId);
 	}
 	@Override
-	public int queryAllCount(String userId){
-		return xlglSubDocTrackingDao.queryAllCount(userId);
+	public int queryAllCount(String userId,String year){
+		return xlglSubDocTrackingDao.queryAllCount(userId,year);
 	}
 	@Override
-	public int quereyWcCount(String userId){
-		return xlglSubDocTrackingDao.quereyWcCount(userId);
+	public int quereyWcCount(String userId,String year){
+		return xlglSubDocTrackingDao.quereyWcCount(userId,year);
 	}
 
 	@Override
@@ -101,6 +111,11 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 	@Override
 	public int queryBmCount(Map<String,Object> map){
 		return xlglSubDocTrackingDao.queryBmCount(map);
+	}
+
+	@Override
+	public int queryAllYx(String year){
+		return xlglSubDocTrackingDao.queryAllYx(year);
 	}
 
 

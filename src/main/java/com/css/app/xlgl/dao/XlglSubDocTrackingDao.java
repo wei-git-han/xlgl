@@ -33,20 +33,29 @@ public interface XlglSubDocTrackingDao extends BaseDao<XlglSubDocTracking> {
 
     List<XlglSubDocTracking> queryListForPerson(Map<String,Object> map);
 
-    @Select("select INFO_ID from XLGL_SUB_DOC_TRACKING where RECEIVER_ID = #{0} and BAOMING = #{1}")
-    List<String> queryAllInfos(String userId,String type);
+    List<XlglSubDocTracking> queryListForPerson1(Map<String,Object> map);
+
+    //@Select("select INFO_ID from XLGL_SUB_DOC_TRACKING where RECEIVER_ID = #{0} and BAOMING = #{1}")
+    List<XlglSubDocTracking> queryAllInfos(Map<String,Object> map1);
+
+
+    List<XlglSubDocTracking> queryAllYear(Map<String,Object> map1);
 
     @Select("select count(1) from XLGL_SUB_DOC_TRACKING where INFO_ID = #{0} and IS_WORK = '1'")
     int queryCount(String fileId);
 
-    @Select("select count(1) from XLGL_SUB_DOC_TRACKING where RECEIVER_ID = #{0}")
-    int queryAllCount(String userId);
-    @Select("select count(1) from XLGL_SUB_DOC_TRACKING where RECEIVER_ID = #{0} and IS_WORK = '1'")
-    int quereyWcCount(String userId);
+    //@Select("select * from BASE_APP_ORGAN where ISDELETE=0 and TREE_PATH like '%'||#{deptId}||'%' ")
+    @Select("select count(1) from XLGL_SUB_DOC_TRACKING where RECEIVER_ID = #{0} and EXERCISE_TIME like '%'||#{1}||'%'" )
+    int queryAllCount(String userId,String year);
+    @Select("select count(1) from XLGL_SUB_DOC_TRACKING where RECEIVER_ID = #{0} and IS_WORK = '1' and EXERCISE_TIME like '%'||#{1}||'%'")
+    int quereyWcCount(String userId,String year);
 
     int queryCurrentYear(Map<String,Object> map);
 
     int queryCxCount(Map<String,Object> map);
 
     int queryBmCount(Map<String,Object> map);
+
+    @Select("select count(1) from XLGL_SUB_DOC_TRACKING where IS_WORK = '1' and EXERCISE_TIME like '%'||#{0}||'%'")
+    int queryAllYx(String year);
 }

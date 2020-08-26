@@ -7,6 +7,34 @@
 		select * from XLGL_SUB_DOC_TRACKING where ID = #{value}
 	</select>
 
+	<select id="queryAllInfos" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
+		select * from XLGL_SUB_DOC_TRACKING where 1=1
+		<if test="userId != null and userId !=''">
+			and RECEIVER_ID = #{userId}
+		</if>
+		<if test='type == "0"'>
+			and EXERCISE_TIME > to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
+		</if>
+		<if test='type =="1"'>
+			and EXERCISE_TIME &lt; to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
+		</if>
+
+		<if test="search != null and search !=''">
+			and TITLE  = #{search}
+		</if>
+
+	</select>
+
+	<select id="queryAllYear" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
+		select * from XLGL_SUB_DOC_TRACKING where 1=1
+		<if test="userId != null and userId !=''">
+			and RECEIVER_ID = #{userId}
+		</if>
+		<if test="search != null and search !=''">
+			and TITLE  = #{search}
+		</if>
+	</select>
+
 	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
 		select * from XLGL_SUB_DOC_TRACKING 
 		<if test="offset != null and limit != null">
@@ -14,7 +42,7 @@
 		</if>
 	</select>
 
-	<select id="queryCurrentYear" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
+	<select id="queryCurrentYear" resultType="int">
 		select count(1) from XLGL_SUB_DOC_TRACKING where 1=1
 		<if test="userId != null and userId !=''">
 			and RECEIVER_ID =#{userId}
@@ -24,7 +52,7 @@
 		</if>
 	</select>
 
-	<select id="queryCxCount" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
+	<select id="queryCxCount" resultType="int">
 		select count(1) from XLGL_SUB_DOC_TRACKING where 1=1
 		<if test="userId != null and userId !=''">
 			and RECEIVER_ID =#{userId}
@@ -35,7 +63,7 @@
 		and IS_WORK = '1' and TRACKING_TYPE = '0'
 	</select>
 
-	<select id="queryBmCount" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
+	<select id="queryBmCount" resultType="int">
 		select count(1) from XLGL_SUB_DOC_TRACKING where 1=1
 		<if test="userId != null and userId !=''">
 			and RECEIVER_ID =#{userId}
@@ -46,13 +74,35 @@
 		and BAOMING = '1' and TRACKING_TYPE = '1'
 	</select>
 
-	<select id="queryListForPerson" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
+	<select id="queryListForPerson1" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
 		select * from XLGL_SUB_DOC_TRACKING where 1=1
 		<if test="userId != null and userId != ''">
 			 and RECEIVER_ID =#{userId}
 		</if>
-		<if test="type != null and type !=''">
-			and TRACKING_TYPE = #{type}
+		<if test="time != null ">
+			and EXERCISE_TIME &lt; to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
+		</if>
+		<if test="search != null and search !=''">
+			and TITLE = #{search}
+		</if>
+		<if test="xltype != null and xltype !=''">
+			and XL_TYPE = #{xltype}
+		</if>
+	</select>
+
+	<select id="queryListForPerson" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
+		select * from XLGL_SUB_DOC_TRACKING where 1=1
+		<if test="userId != null and userId != ''">
+			and RECEIVER_ID =#{userId}
+		</if>
+		<if test="time != null ">
+			and EXERCISE_TIME > to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
+		</if>
+		<if test="search != null and search !=''">
+			and TITLE = #{search}
+		</if>
+		<if test="xltype != null and xltype !=''">
+			and XL_TYPE = #{xltype}
 		</if>
 	</select>
 
@@ -100,7 +150,11 @@
 			"BAOMING",
 			"REASON",
 			"TITLE",
-			"IS_WORK"
+			"IS_WORK",
+			"XL_TYPE",
+			"PICUTRE_PATH",
+			"EXERCISE_TIME",
+			"INSTRACTION"
 		)
 		values
 		(
@@ -125,7 +179,11 @@
 			#{baoming},
 			#{reason},
 			#{title},
-			#{isWork}
+			#{isWork},
+			#{xlType},
+			#{picturePath},
+			#{exerciseTime},
+			#{instraction}
 		)
 	</insert>
 	 
@@ -146,13 +204,17 @@
 			<if test="recDeptId != null">"REC_DEPT_ID" = #{recDeptId}, </if>
 			<if test="previousStatus != null">"PREVIOUS_STATUS" = #{previousStatus}, </if>
 			<if test="senderId != null">"SENDER_ID" = #{senderId}, </if>
-			<if test="recDeptName != null">"REC_DEPT_NAME" = #{recDeptName}</if>
-			<if test="read != null">"READ" = #{read}</if>
-			<if test="infoId != null">"INFO_ID" = #{infoId}</if>
-			<if test="baoming != null">"BAOMING" = #{baoming}</if>
-			<if test="reason != null">"REASON" = #{reason}</if>
-			<if test="title != null">"TITLE" = #{title}</if>
-			<if test="isWork != null">"IS_WORK" = #{isWork}</if>
+			<if test="recDeptName != null">"REC_DEPT_NAME" = #{recDeptName},</if>
+			<if test="read != null">"READ" = #{read},</if>
+			<if test="infoId != null">"INFO_ID" = #{infoId},</if>
+			<if test="baoming != null">"BAOMING" = #{baoming},</if>
+			<if test="reason != null">"REASON" = #{reason},</if>
+			<if test="title != null">"TITLE" = #{title},</if>
+			<if test="isWork != null">"IS_WORK" = #{isWork},</if>
+			<if test="xlType != null">"XL_TYPE" = #{xlType},</if>
+			<if test="picturePath != null">"PICUTRE_PATH" = #{picturePath},</if>
+			<if test="exerciseTime != null">"EXERCISE_TIME" = #{exerciseTime},</if>
+			<if test="instraction != null">"INSTRACTION" = #{instraction}</if>
 		</set>
 		where ID = #{id}
 	</update>

@@ -29,7 +29,11 @@ public interface XlglSubDocInfoService {
 
 	List<String> queryAllSubDeptIds(String fileId);
 
+	List<XlglSubDocInfo> queryAllClass(String orgId,String year);
+
 	List<XlglSubDocInfo> queryListForJu(Map<String,Object> map);
 
 	List<XlglSubDocInfo> queryListForPerson(Map<String,Object> map);
+
+	void deleteSub(String orgId,String fileId);
 }

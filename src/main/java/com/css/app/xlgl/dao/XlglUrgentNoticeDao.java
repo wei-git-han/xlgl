@@ -2,6 +2,7 @@ package com.css.app.xlgl.dao;
 
 
 import com.css.app.xlgl.entity.XlglUrgentNotice;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.css.base.dao.BaseDao;
@@ -19,4 +20,7 @@ public interface XlglUrgentNoticeDao extends BaseDao<XlglUrgentNotice> {
 
     @Select("select * from XLGL_URGENT_NOTICE")
     XlglUrgentNotice queryNotice();
+
+    @Delete("delete from XLGL_URGENT_NOTICE")
+    void deleteAll();
 }

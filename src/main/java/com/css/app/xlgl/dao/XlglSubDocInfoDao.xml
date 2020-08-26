@@ -39,7 +39,9 @@
 			"DOC_STATUS", 
 			"SUB_DEPT_ID", 
 			"IDEA_ADD_FLAG",
-			"IS_SEND"
+			"IS_SEND",
+			"INSTRACTION",
+			"EXERCISE_TIME"
 		)
 		values
 		(
@@ -57,7 +59,9 @@
 			#{docStatus}, 
 			#{subDeptId}, 
 			#{ideaAddFlag},
-			#{isSend}
+			#{isSend},
+			#{instraction},
+			#{exerciseTime}
 		)
 	</insert>
 
@@ -76,8 +80,10 @@
             <if test="undertakerName != null">"UNDERTAKER_NAME" = #{undertakerName},</if>
             <if test="docStatus != null">"DOC_STATUS" = #{docStatus},</if>
             <if test="subDeptId != null">"SUB_DEPT_ID" = #{subDeptId},</if>
-            <if test="ideaAddFlag != null">"IDEA_ADD_FLAG" = #{ideaAddFlag}</if>
-            <if test="isSend != null">"IS_SEND" = #{isSend}</if>
+            <if test="ideaAddFlag != null">"IDEA_ADD_FLAG" = #{ideaAddFlag},</if>
+            <if test="isSend != null">"IS_SEND" = #{isSend},</if>
+            <if test="instraction != null">"INSTRACTION" = #{instraction},</if>
+            <if test="exerciseTime != null">"EXERCISE_TIME" = #{exerciseTime}</if>
         </set>
         where ID = #{id}
     </update>
@@ -87,7 +93,7 @@
 	</delete>
 
     <delete id="deleteBatch">
-        delete from XLGL_SUB_DOC_INFO where ID in
+        delete from XLGL_SUB_DOC_INFO where INFO_ID in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -141,13 +147,17 @@ left join
         )
         e on a.INFO_ID = e.info_id
 where
-        1=1
+        1=1 and a.IS_SEND = '0'
         <if test="orgId != null and orgId != ''">
             and a.SUB_DEPT_ID = #{orgId}
         </if>
         <if test="search != null and search != ''">
-            and b.DOC_TITLE like '%'||#{search}||'%'
+            and b.TITLE like '%'||#{search}||'%'
         </if>
+        <if test="xltype != null and xltype != ''">
+            and b.XLTYPE like '%'||#{xltype}||'%'
+        </if>
+
         order by a.CREATED_TIME desc
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}

@@ -187,5 +187,11 @@ public class BaseAppUserServiceImpl implements BaseAppUserService {
 	public List<BaseAppUser> queryAllExcelList(Map<String,Object> map){
 		return baseAppUserDao.queryAllExcelList(map);
 	}
+
+	@Override
+	public int queryListAllYxCount(){
+		return baseAppUserDao.queryListAllYxCount();
+	}
+
 	
 }

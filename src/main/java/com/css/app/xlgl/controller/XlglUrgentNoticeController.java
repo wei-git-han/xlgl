@@ -85,6 +85,7 @@ public class XlglUrgentNoticeController {
 	@ResponseBody
 	@RequestMapping("/save")
 	public void save(XlglUrgentNotice xlglUrgentNotice){
+		xlglUrgentNoticeService.deleteAll();//保存之前先删掉，只保存一条数据
 		xlglUrgentNotice.setId(UUIDUtils.random());
 		xlglUrgentNotice.setCreator(CurrentUser.getUserId());
 		xlglUrgentNotice.setCreatedTime(new Date());

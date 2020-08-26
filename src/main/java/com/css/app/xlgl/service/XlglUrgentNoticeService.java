@@ -28,4 +28,6 @@ public interface XlglUrgentNoticeService {
 	void deleteBatch(String[] ids);
 
 	XlglUrgentNotice queryNotice();
+
+	void deleteAll();
 }

@@ -37,6 +37,17 @@ public class XlglPicture implements Serializable {
 	//上传人名称
 	private String userName;
 
+	//未上传
+	private String isUpLoad;
+
+	public String getIsUpLoad() {
+		return isUpLoad;
+	}
+
+	public void setIsUpLoad(String isUpLoad) {
+		this.isUpLoad = isUpLoad;
+	}
+
 	/**
 	 * 设置：
 	 */

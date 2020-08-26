@@ -4,8 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.xlgl.entity.XlglSubDocInfo;
 import com.css.app.xlgl.service.XlglSubDocInfoService;
+import com.css.base.utils.*;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,10 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.stereotype.Controller;
 
-import com.css.base.utils.PageUtils;
-import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
-import com.css.base.utils.Response;
 
 
 /**
@@ -28,17 +27,18 @@ import com.css.base.utils.Response;
  * @date 2020-08-11 11:04:56
  */
 @Controller
-@RequestMapping("/xlglsubdocinfo")
+@RequestMapping("/app/xlgl/xlglsubdocinfo")
 public class XlglSubDocInfoController {
 	@Autowired
 	private XlglSubDocInfoService xlglSubDocInfoService;
+	@Autowired
+	private BaseAppUserService baseAppUserService;
 	
 	/**
 	 * 列表
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	@RequiresPermissions("xlglsubdocinfo:list")
 	public void list(Integer page, Integer limit){
 		Map<String, Object> map = new HashMap<>();
 		PageHelper.startPage(page, limit);
@@ -56,8 +56,7 @@ public class XlglSubDocInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/info/{id}")
-	@RequiresPermissions("xlglsubdocinfo:info")
-	public void info(@PathVariable("id") String id){
+	public void info(String id){
 		XlglSubDocInfo xlglSubDocInfo = xlglSubDocInfoService.queryObject(id);
 		Response.json("xlglSubDocInfo", xlglSubDocInfo);
 	}
@@ -67,8 +66,7 @@ public class XlglSubDocInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	@RequiresPermissions("xlglsubdocinfo:save")
-	public void save(@RequestBody XlglSubDocInfo xlglSubDocInfo){
+	public void save(XlglSubDocInfo xlglSubDocInfo){
 		xlglSubDocInfo.setId(UUIDUtils.random());
 		xlglSubDocInfoService.save(xlglSubDocInfo);
 		
@@ -80,8 +78,7 @@ public class XlglSubDocInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	@RequiresPermissions("xlglsubdocinfo:update")
-	public void update(@RequestBody XlglSubDocInfo xlglSubDocInfo){
+	public void update(XlglSubDocInfo xlglSubDocInfo){
 		xlglSubDocInfoService.update(xlglSubDocInfo);
 		
 		Response.ok();
@@ -92,11 +89,13 @@ public class XlglSubDocInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	@RequiresPermissions("xlglsubdocinfo:delete")
-	public void delete(@RequestBody String[] ids){
-		xlglSubDocInfoService.deleteBatch(ids);
-		
-		Response.ok();
+	public void delete(String id) {
+		String orgId = null;
+		if (StringUtils.isNotBlank(id)) {
+			orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
+			xlglSubDocInfoService.deleteSub(orgId, id);
+		}
+		Response.json("result", "success");
 	}
 	
 }
