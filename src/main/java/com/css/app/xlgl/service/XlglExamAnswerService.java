@@ -30,4 +30,6 @@ public interface XlglExamAnswerService {
 	void deleteBatch(String[] ids);
 	
 	void saveBatch(@Param("list")List<XlglExamAnswer> list);
+	
+	int queryCorrectStatus(Map<String, Object> map);
 }

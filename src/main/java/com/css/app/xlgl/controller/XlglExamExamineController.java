@@ -454,6 +454,14 @@ public class XlglExamExamineController {
 			xlglExamExamine.setUpdateUser(userId);
 			xlglExamExamine.setUpdateDate(date);
 			xlglExamExamine.setId(random);
+			if(xlglExamExamine.getExamineAllNumber() == null) {
+				Integer sum=0;
+				for (int i = 0; i < typeAndNum.length; i++) {
+					String[] split2 = typeAndNum[i].split("-");
+					sum += Integer.parseInt(split2[1])*Integer.parseInt(split2[2]);		
+				}
+				xlglExamExamine.setExamineAllNumber(sum);
+			}
 			xlglExamExamineService.save(xlglExamExamine);
 		}	
 			for (int i = 0; i < typeAndNum.length; i++) {

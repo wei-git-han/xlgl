@@ -93,6 +93,29 @@ public class XlglExamAnswerController {
 		jsonObject = getAllAnswer(examineId);
 		Response.json(jsonObject);
 	}
+	
+	/**
+	 * 用户答完题的试卷信息答题过程中试卷详情
+	 */
+	@ResponseBody
+	@RequestMapping("/view/infoLianXi")
+	public void viewinfoLianXi(String examineId,String lianxiType){
+		JSONObject jsonObject = new JSONObject();
+		jsonObject = getAllAnswer(examineId);
+		jsonObject.put("lianxiType", lianxiType);
+		Map<String, Object> map = new HashMap<String,Object>();
+		map.put("examineId", examineId);
+		if(lianxiType.equals("1")) {
+			map.put("correctStatus", "0");
+			int right = xlglExamAnswerService.queryCorrectStatus(map);
+			map.put("correctStatus", "1");
+			int error = xlglExamAnswerService.queryCorrectStatus(map);
+			jsonObject.put("right", right);
+			jsonObject.put("error", error);
+		}
+		jsonObject.put("", "");
+		Response.json(jsonObject);
+	}
 	private JSONObject getAllAnswer(String examineId) {
 		JSONObject jsonObject = new JSONObject();
 		Map<String, Object> map = new HashMap<String,Object>();
@@ -310,6 +333,7 @@ public class XlglExamAnswerController {
 		XlglExamMainAnswer queryObject = xlglExamMainAnswerService.queryObject(mainAnswerId);
 		XlglExamExamine xlglExamExamine = xlglExamExamineService.queryObject(queryObject.getExamineId());
 		jsonObject.put("examineId", xlglExamExamine.getId());
+		jsonObject.put("lianxiType", xlglExamExamine.getLianxiType());
 		for (XlglExamAnswer eanswer : parseArray) {
 			eanswer.setId(UUIDUtils.random());
 			eanswer.setMainAnswerId(mainAnswerId);
@@ -359,6 +383,7 @@ public class XlglExamAnswerController {
 		jsonObject.put("msg", "success");
 		Response.json(jsonObject);
 		}catch (Exception e) {
+			e.printStackTrace();
 			Response.error();
 		}
 	}
