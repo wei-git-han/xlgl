@@ -21,4 +21,7 @@ import java.util.Map;
 public interface XlglPictureDao extends BaseDao<XlglPicture> {
 
     List<XlglPicture> queryAllInfoByInfoId(Map<String,Object> map);
+
+    @Select("select * from XLGL_PICTURE where PICTURE_ID = #{0}")
+    XlglPicture queryVedio(String id);
 }

@@ -63,22 +63,42 @@ public class XlglKtapController {
 	
 	
 	/**
-	 * 信息
+	 * 课堂安排一进来先调这个接口，无参数
 	 */
 	@ResponseBody
-	@RequestMapping("/info/{id}")
-	@RequiresPermissions("xlglktap:info")
-	public void info(@PathVariable("id") String id){
-		XlglKtap xlglKtap = xlglKtapService.queryObject(id);
-		Response.json("xlglKtap", xlglKtap);
+	@RequestMapping("/info")
+	public void info(){
+		JSONObject jsonObject = new JSONObject();
+		String isHave = "";
+		String fileId = null;
+		Map<String,Object> map = new HashMap<>();
+		List<XlglKtap> xlglKtap = xlglKtapService.queryList(map);
+		if(xlglKtap != null && xlglKtap.size() > 0){
+			jsonObject.put("id",xlglKtap.get(0).getId());
+			isHave = "yes";
+			fileId = xlglKtap.get(0).getFileId();
+			if(StringUtils.isNotBlank(fileId)){
+				HTTPFile httpFiles = new HTTPFile(fileId);
+				if(httpFiles!=null) {
+					jsonObject.put("formatId", fileId);
+					jsonObject.put("downFormatIdUrl", httpFiles.getAssginDownloadURL(true));
+				}
+			}
+		}else {
+			isHave = "no";
+		}
+		jsonObject.put("isHave",isHave);
+		jsonObject.put("fileId",fileId);
+
+		Response.json(jsonObject);
 	}
 
 	/**
-	 * 保存
+	 * 上传接口
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public void save(XlglZbgl xlglZbgl, @RequestParam(required = false) MultipartFile[] pdf){
+	public void save(String id,@RequestParam(required = false)MultipartFile[] pdf){
 		String formatDownPath = "";// 版式文件下载路径
 		String retFormatId = null;// 返回的版式文件id
 		String streamId = null;// 流式文件id
@@ -122,19 +142,23 @@ public class XlglKtapController {
 							formatDownPath = httpFiles.getAssginDownloadURL(true);
 						}
 					}
-					XlglKtap xlglKtap = xlglKtapService.queryObject(xlglZbgl.getId());
-					if(xlglZbgl == null){
-						xlglZbgl.setId(UUIDUtils.random());
-						xlglZbgl.setCreatedTime(new Date());
-						xlglZbgl.setFileId(formatId);
-						xlglZbgl.setFileName(fileName);
-						xlglZbgl.setCreator(CurrentUser.getUserId());
-						xlglKtapService.save(xlglKtap);
-					}else {
-						xlglZbgl.setFileId(formatId);
-						xlglZbgl.setFileName(fileName);
-						xlglZbgl.setCreatedTime(new Date());
+					XlglKtap xlglKtap = new XlglKtap();
+					if(StringUtils.isNotBlank(id)){
+						xlglKtap = xlglKtapService.queryObject(id);
+					}
+					if(StringUtils.isNotBlank(xlglKtap.getId())){
+
+						xlglKtap.setFileId(formatId);
+						xlglKtap.setFileName(fileName);
+						xlglKtap.setCreatedTime(new Date());
 						xlglKtapService.update(xlglKtap);
+					}else {
+						xlglKtap.setId(UUIDUtils.random());
+						xlglKtap.setCreatedTime(new Date());
+						xlglKtap.setFileId(formatId);
+						xlglKtap.setFileName(fileName);
+						xlglKtap.setCreator(CurrentUser.getUserId());
+						xlglKtapService.save(xlglKtap);
 					}
 
 				}

@@ -52,5 +52,10 @@ public class XlglConfirmServiceImpl implements XlglConfirmService {
 	public XlglConfirmDto queryPerDeptInfo(Map<String,Object> map){
 		return xlglConfirmDao.queryPerDeptInfo(map);
 	}
+
+	@Override
+	public String queryConfromForJu(Map<String,Object> map){
+		return xlglConfirmDao.queryConfromForJu(map);
+	}
 	
 }

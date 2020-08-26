@@ -116,6 +116,10 @@ public interface BaseAppUserService {
 
 	int queryBmCout(String deptId,String infoId,String status );
 
+	int queryYjs(String deptId,String infoId);
+
+	int queryWjs(String deptId,String infoId);
+
 	String queryByUserId(String userId);
 
 	int queryListAllYx(Map<String,Object> map);
@@ -126,6 +130,8 @@ public interface BaseAppUserService {
 	List<BaseAppUser> queryAllExcelList(Map<String,Object> map);
 
 	int queryListAllYxCount();
+
+	int getAllZbSum();
 
 
 }

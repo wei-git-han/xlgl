@@ -72,5 +72,10 @@ public class XlglPictureServiceImpl implements XlglPictureService {
 	public List<XlglPicture> queryAllInfoByInfoId(Map<String,Object> map){
 		return xlglPictureDao.queryAllInfoByInfoId(map);
 	}
+
+	@Override
+	public XlglPicture queryVedio(String id){
+		return xlglPictureDao.queryVedio(id);
+	}
 	
 }

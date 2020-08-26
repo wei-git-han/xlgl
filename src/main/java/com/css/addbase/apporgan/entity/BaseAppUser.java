@@ -40,7 +40,8 @@ public class BaseAppUser implements Serializable {
 	private String sex;
 	
 	private String telephone;
-	
+
+	// 0不在编，1在编
 	private String sfzb;
 	
 	private String sfzw;
@@ -56,7 +57,17 @@ public class BaseAppUser implements Serializable {
 	private String endTime;
 	//是否在位 0：不在，1:在位
 	private String reign;
-	
+	//是否已读
+	private String read;
+
+	public String getRead() {
+		return read;
+	}
+
+	public void setRead(String read) {
+		this.read = read;
+	}
+
 	/**
 	 * 设置：主键
 	 */

@@ -20,4 +20,6 @@ import java.util.Map;
 public interface XlglConfirmDao extends BaseDao<XlglConfirm> {
 
     XlglConfirmDto queryPerDeptInfo(Map<String,Object> map);
+
+    String queryConfromForJu(Map<String,Object> map);
 }
