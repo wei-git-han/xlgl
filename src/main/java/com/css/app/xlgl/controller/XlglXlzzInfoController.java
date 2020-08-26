@@ -21,6 +21,7 @@ import com.css.app.xlgl.service.XlglXlzzInfoService;
 import com.css.base.utils.*;
 import com.google.gson.JsonObject;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.cookie.SM;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -439,18 +440,27 @@ public class XlglXlzzInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getWcl")
-	public void getWcl(){
+	public void getWcl() {
+		int sum = 0;
+		int count = 0;
+		int bk = 0;
 		Calendar calendar = Calendar.getInstance();
 		String year = String.valueOf(calendar.get(Calendar.YEAR));
 		JSONObject jsonObject = new JSONObject();
 		String userId = CurrentUser.getUserId();
-		int sum = xlglSubDocTrackingService.queryAllCount(userId,year);//所有的课程
-		int count = xlglSubDocTrackingService.quereyWcCount(userId,year);//已参训的课程
-		int bk = sum - count;
-		float f = count/sum;
-		jsonObject.put("wcl",f);
-		jsonObject.put("ywc",count);
-		jsonObject.put("bk",bk);
+		sum = xlglSubDocTrackingService.queryAllCount(userId, year);//所有的课程
+		count = xlglSubDocTrackingService.quereyWcCount(userId, year);//已参训的课程
+		if (sum > 0) {
+			bk = sum - count;
+			float f = count / sum;
+			jsonObject.put("wcl", f);
+			jsonObject.put("ywc", count);
+			jsonObject.put("bk", bk);
+		} else {
+			jsonObject.put("wcl", "0");
+			jsonObject.put("ywc", "0");
+			jsonObject.put("bk", "0");
+		}
 		Response.json(jsonObject);
 
 	}
