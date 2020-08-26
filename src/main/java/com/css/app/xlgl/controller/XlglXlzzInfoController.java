@@ -413,6 +413,7 @@ public class XlglXlzzInfoController {
 				jsonObject.put("title",xlglSubDocTracking.getTitle());
 				jsonObject.put("startTime",xlglSubDocTracking.getExerciseTime());
 				jsonObject.put("sendPeople",xlglSubDocTracking.getSenderName());
+				jsonObject.put("infoId",xlglSubDocTracking.getInfoId());
 				jsonArray.add(jsonObject);
 			}
 		}
