@@ -336,6 +336,14 @@ public class XlglXlzzInfoController {
 
 		jsonObject2.put("ycx",ycx);
 		jsonObject2.put("bk",bk);
+		int sum = ycx + bk;
+		float t = 0.0f;
+		if(sum > 0){
+			t = ycx/(ycx+bk);
+		}else {
+			t = 0.0f;
+		}
+		jsonObject2.put("cxl",t);//参训率
 		jsonObject2.put("listTotal",listTotal);
 		jsonObject2.put("confirm",confirm);
 		jsonObject2.put("ybm",ybm);
