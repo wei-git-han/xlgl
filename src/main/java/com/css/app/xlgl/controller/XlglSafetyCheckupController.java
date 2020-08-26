@@ -28,7 +28,7 @@ import com.css.app.xlgl.service.XlglSafetyCheckupService;
  * @date 2020-08-21 15:52:37
  */
 @Controller
-@RequestMapping("/xlglsafetycheckup")
+@RequestMapping("/app/xlgl/xlglsafetycheckup")
 public class XlglSafetyCheckupController {
 	@Autowired
 	private XlglSafetyCheckupService xlglSafetyCheckupService;
@@ -88,7 +88,7 @@ public class XlglSafetyCheckupController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	public void delete(@RequestBody String[] ids){
+	public void delete(String[] ids){
 		xlglSafetyCheckupService.deleteBatch(ids);
 		
 		Response.ok();
