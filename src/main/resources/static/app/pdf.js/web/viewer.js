@@ -10068,7 +10068,7 @@ function getUrlParam2(name) {
   return null;
 }
 var DEFAULT_URL = "";
-DEFAULT_URL = getUrlParam2('fileUrl')||'http://172.16.1.36:11009/app/demo.pdf'
+// DEFAULT_URL = getUrlParam2('fileUrl')||'http://172.16.1.36:11009/app/demo.pdf'
 ;
 var pdfjsWebApp = void 0;
 {
