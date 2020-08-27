@@ -186,6 +186,10 @@ public class TestController {
         jsonObject.put("dj",dj);
         jsonObject.put("BMI",BMI);
         jsonObject.put("hg",hg);
+        jsonObject.put("shang",shang);
+        jsonObject.put("zuo",zuo);
+        jsonObject.put("pao",pao);
+        jsonObject.put("changpao",changpao);
         Response.json(jsonObject);
 
         return jsonObject;
