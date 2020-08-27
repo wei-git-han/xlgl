@@ -85,7 +85,7 @@ public class XlglCarsManagerController {
 	@RequestMapping("/save")
 	public void save(XlglCarsManager xlglCarsManager){
 		xlglCarsManager.setId(UUIDUtils.random());
-		xlglCarsManager.setCreaetdTime(new Date());
+		xlglCarsManager.setCreatedTime(new Date());
 		xlglCarsManagerService.save(xlglCarsManager);
 		Response.json("xlglCarsManager",xlglCarsManager);
 	}
@@ -107,11 +107,10 @@ public class XlglCarsManagerController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	@RequiresPermissions("xlglcarsmanager:delete")
-	public void delete(@RequestBody String[] ids){
+	public void delete(String id){
+		String[] ids = id.split(",");
 		xlglCarsManagerService.deleteBatch(ids);
-		
-		Response.ok();
+		Response.json("result","success");
 	}
 
 	/**
@@ -123,22 +122,21 @@ public class XlglCarsManagerController {
 	 *            文件
 	 */
 	@ResponseBody
-	@RequestMapping("/uploadFile")
-	public void savePDF(String fileId, @RequestParam(required = false) MultipartFile[] pdf) {
+	@RequestMapping("/uploadFile111")
+	public void savePDF(@RequestParam(required = false) MultipartFile[] file) {
 		String formatDownPath = "";// 版式文件下载路径
 		String retFormatId = null;// 返回的版式文件id
 		String streamId = null;// 流式文件id
 		String formatId = null;// 版式文件id
 		JSONObject json = new JSONObject();
-		if (StringUtils.isNotBlank(fileId)) {
-			if (pdf != null && pdf.length > 0) {
-				for (int i = 0; i < pdf.length; i++) {
-					String fileName = pdf[i].getOriginalFilename();
+			if (file != null && file.length > 0) {
+				for (int i = 0; i < file.length; i++) {
+					String fileName = file[i].getOriginalFilename();
 					// 获取文件后缀
 					String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
 					// 如果文件是流式则流式转换为版式
 					if (!StringUtils.equals("ofd", fileType)) {
-						streamId = FileBaseUtil.fileServiceUpload(pdf[i]);
+						streamId = FileBaseUtil.fileServiceUpload(file[i]);
 						HTTPFile hf = new HTTPFile(streamId);
 						try {
 							String path = appConfig.getLocalFilePath() + UUIDUtils.random() + "." + hf.getSuffix();
@@ -158,7 +156,7 @@ public class XlglCarsManagerController {
 							e.printStackTrace();
 						}
 					} else {
-						formatId = FileBaseUtil.fileServiceUpload(pdf[i]);
+						formatId = FileBaseUtil.fileServiceUpload(file[i]);
 					}
 					if (StringUtils.isNotBlank(formatId)) {
 						if (i == 0) {
@@ -170,22 +168,55 @@ public class XlglCarsManagerController {
 							}
 						}
 						// 保存文件相关数据
-						XlglCarsManager file = new XlglCarsManager();
-						file.setId(fileId);
-						file.setInfoId(fileId);
-						file.setFileName(fileName);
-						file.setFileServerFormatId(formatId);
-						xlglCarsManagerService.save(file);
+						XlglCarsManager file1 = new XlglCarsManager();
+						file1.setId(UUIDUtils.random());
+						//file.setInfoId(fileId);
+						file1.setFileName(fileName);
+						file1.setFileServerFormatId(formatId);
+						xlglCarsManagerService.save(file1);
 					}
 				}
 				json.put("smjId", retFormatId);
 				json.put("smjFilePath", formatDownPath);
 				json.put("result", "success");
 			}
-		} else {
-			json.put("result", "fail");
-		}
+
 		Response.json(json);
 	}
-	
+
+	@ResponseBody
+	@RequestMapping("/uploadFile")
+	public void upLoad(@RequestParam(required = false) MultipartFile[] file) {
+		JSONObject json = new JSONObject();
+		String fileId = FileBaseUtil.fileServiceUpload(file[0]);
+		String fileName = file[0].getOriginalFilename();
+		json.put("fileId", fileId);
+		XlglCarsManager file1 = new XlglCarsManager();
+		file1.setId(UUIDUtils.random());
+		file1.setInfoId(fileId);
+		file1.setFileName(fileName);
+		//file1.setFileServerFormatId(formatId);
+		xlglCarsManagerService.save(file1);
+		Response.json(json);
+	}
+
+	@ResponseBody
+	@RequestMapping("/downLoad")
+	public void downLoad(String fileId) {
+		HTTPFile httpFile = new HTTPFile(fileId);
+		String fileName = httpFile.getFileName();
+		Response.download(fileName, httpFile.getInputSteam());
+	}
+
+	//获取文件列表
+	@ResponseBody
+	@RequestMapping("/getFileList")
+	public void getFileList(){
+		Map<String,Object> map = new HashMap<>();
+		List<XlglCarsManager> list = xlglCarsManagerService.queryList(map);
+		Response.json("list",list);
+
+	}
+
+
 }

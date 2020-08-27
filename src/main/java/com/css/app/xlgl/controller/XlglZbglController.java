@@ -12,6 +12,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.AppConfig;
 import com.css.addbase.FileBaseUtil;
 import com.css.addbase.suwell.OfdTransferUtil;
+import com.css.app.xlgl.entity.XlglCarsManager;
 import com.css.app.xlgl.entity.XlglPicture;
 import com.css.app.xlgl.entity.XlglZbgl;
 import com.css.app.xlgl.service.XlglZbglService;
@@ -164,11 +165,45 @@ public class XlglZbglController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	@RequiresPermissions("xlglzbgl:delete")
-	public void delete(@RequestBody String[] ids){
+	public void delete(String id){
+		String[] ids = id.split(",");
 		xlglZbglService.deleteBatch(ids);
-		
-		Response.ok();
+		Response.json("result","success");
+	}
+
+	@ResponseBody
+	@RequestMapping("/uploadFile")
+	public void upLoad(@RequestParam(required = false) MultipartFile[] file) {
+		JSONObject json = new JSONObject();
+		String fileId = FileBaseUtil.fileServiceUpload(file[0]);
+		String fileName = file[0].getOriginalFilename();
+		json.put("fileId", fileId);
+		XlglZbgl file1 = new XlglZbgl();
+		xlglZbglService.deleteAll();//上传之前先删除之前的
+		file1.setId(UUIDUtils.random());
+		file1.setFileId(fileId);
+		file1.setFileName(fileName);
+		//file1.setFileServerFormatId(formatId);
+		xlglZbglService.save(file1);
+		Response.json(json);
+	}
+
+	@ResponseBody
+	@RequestMapping("/downLoad")
+	public void downLoad(String fileId) {
+		HTTPFile httpFile = new HTTPFile(fileId);
+		String fileName = httpFile.getFileName();
+		Response.download(fileName, httpFile.getInputSteam());
+	}
+
+	//获取文件列表
+	@ResponseBody
+	@RequestMapping("/getFileList")
+	public void getFileList(){
+		Map<String,Object> map = new HashMap<>();
+		List<XlglZbgl> list = xlglZbglService.queryList(map);
+		Response.json("list",list);
+
 	}
 	
 }

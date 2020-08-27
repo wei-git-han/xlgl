@@ -6,6 +6,7 @@ import com.css.base.utils.Response;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.NativeWebRequest;
 
 @Controller
 @RequestMapping("/app/xlgl/getCore")
@@ -24,14 +25,30 @@ public class TestController {
     public JSONObject getSumCore(int age, int up, int sit, int sRun, int tRun, int sex, int type ){
         JSONObject jsonObject = new JSONObject();
         int sum = 0;
+        int shang = 0;
+        int zuo = 0;
+        int pao = 0;
+        int changpao = 0;
         if("0".equals(sex)){
-            sum = getManSumCore(age,up,sit,sRun,tRun);
+            JSONObject js = new JSONObject();
+            js = getManSumCore(age,up,sit,sRun,tRun);
+            sum = (int) js.get("sum");
+            shang = (int)js.get("y");
+            zuo = (int)js.get("z");
+            pao = (int)js.get("s");
+            changpao = (int)js.get("r");
         }else {
-            sum = getWomanSumCore(age,up,sit,sRun,tRun);
+            JSONObject js = new JSONObject();
+            js  = getWomanSumCore(age,up,sit,sRun,tRun);
+            sum = (int) js.get("sum");
+            shang = (int)js.get("o");
+            zuo = (int)js.get("m");
+            pao = (int)js.get("a");
+            changpao = (int)js.get("w");
         }
         String dj = null;
         if("1".equals(type)){
-            if(up < 65 || sit < 65 || sRun < 65 || tRun < 65 || sum < 260){
+            if(shang < 65 || zuo < 65 || pao < 65 || changpao < 65 || sum < 260){
                 dj = "不及格";
             }else if(sum >= 260 && sum < 340){
                 dj = "及格";
@@ -47,7 +64,7 @@ public class TestController {
                 dj = "特1级";
             }
         }else if("2".equals(type)){
-            if(up < 60 || sit < 60 || sRun < 60 || tRun < 60 || sum < 240){
+            if(shang < 60 || zuo < 60 || pao < 60 || changpao < 60 || sum < 240){
                 dj = "不及格";
             }else if(sum >= 240 && sum < 320){
                 dj = "及格";
@@ -63,7 +80,7 @@ public class TestController {
                 dj = "特1级";
             }
         }else if("3".equals(type)){
-            if(up < 55 || sit < 55 || sRun < 55 || tRun < 55 || sum < 220){
+            if(shang < 55 || zuo < 55 || pao < 55 || changpao < 55 || sum < 220){
                 dj = "不及格";
             }else if(sum >= 220 && sum < 300){
                 dj = "及格";
@@ -94,7 +111,8 @@ public class TestController {
      * @param tRun
      * @return
      */
-    public int getManSumCore(int age,int up,int sit,int sRun,int tRun){
+    public JSONObject getManSumCore(int age,int up,int sit,int sRun,int tRun){
+        JSONObject jsonObject = new JSONObject();
         int y =  getManCore(age, up);//男子引体向上
         System.out.println(y);
         int z =  getManywqz(age,sit);//男子仰卧起坐
@@ -104,7 +122,12 @@ public class TestController {
         int r =  getManRunCore(age,tRun);//男子3000米跑
         System.out.println(r);
         int sum = y+r+s+z;
-        return sum;
+        jsonObject.put("y",y);
+        jsonObject.put("z",z);
+        jsonObject.put("s",s);
+        jsonObject.put("r",r);
+        jsonObject.put("sum",sum);
+        return jsonObject;
     }
 
     /**
@@ -116,7 +139,8 @@ public class TestController {
      * @param tRun
      * @return
      */
-    public int getWomanSumCore(int age,int up,int sit,int sRun,int tRun){
+    public JSONObject getWomanSumCore(int age,int up,int sit,int sRun,int tRun){
+        JSONObject jsonObject = new JSONObject();
         int o = getWoMenDgqbCore(age,up);//女子单杠曲臂悬垂
         System.out.println(o);
         int m = getWomenCore(age,sit);//女子仰卧起坐
@@ -125,9 +149,14 @@ public class TestController {
         System.out.println(a);
         int w = getWomen3Run(age,tRun);//女子3000米跑
         System.out.println(w);
+        jsonObject.put("o",o);
+        jsonObject.put("m",m);
+        jsonObject.put("a",a);
+        jsonObject.put("w",w);
 
         int sum = o+m+a+w;
-        return sum;
+        jsonObject.put("sum",sum);
+        return jsonObject;
     }
 
     /**

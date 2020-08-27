@@ -46,5 +46,9 @@ public class XlglZbglServiceImpl implements XlglZbglService {
 	public void deleteBatch(String[] ids){
 		xlglZbglDao.deleteBatch(ids);
 	}
+	@Override
+	public void deleteAll(){
+		xlglZbglDao.deleteAll();
+	}
 	
 }
