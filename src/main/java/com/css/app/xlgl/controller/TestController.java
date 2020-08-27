@@ -22,7 +22,7 @@ public class TestController {
      */
     @ResponseBody
     @RequestMapping("/getSumCore")
-    public JSONObject getSumCore(int age, int up, int sit, int sRun, int tRun, int sex, int type,String wight,String high ){
+    public JSONObject getSumCore(int age, int ytxs, int ywqz, int sxp, int cp, int sex, int type,String wight,String high ){
         JSONObject jsonObject = new JSONObject();
         int sum = 0;
         int shang = 0;
@@ -33,7 +33,7 @@ public class TestController {
         String hg = "";
         if("0".equals(sex)){
             JSONObject js = new JSONObject();
-            js = getManSumCore(age,up,sit,sRun,tRun);
+            js = getManSumCore(age,ytxs,ywqz,sxp*10,cp*100);
             sum = (int) js.get("sum");
             shang = (int)js.get("y");
             zuo = (int)js.get("z");
@@ -82,7 +82,7 @@ public class TestController {
             }
         }else {
             JSONObject js = new JSONObject();
-            js  = getWomanSumCore(age,up,sit,sRun,tRun);
+            js  = getWomanSumCore(age,ytxs,ywqz,sxp*10,cp*100);
             sum = (int) js.get("sum");
             shang = (int)js.get("o");
             zuo = (int)js.get("m");
