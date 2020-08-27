@@ -1,5 +1,6 @@
 package com.css.app.xlgl.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -9,9 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.css.app.xlgl.dto.PersonalFileDto;
 import com.css.app.xlgl.entity.PersonalFile;
+import com.css.app.xlgl.entity.XlglExamSubject;
 import com.css.app.xlgl.service.PersonalFileService;
 import com.css.app.xlgl.service.XlglExamMainAnswerService;
+import com.css.app.xlgl.service.XlglExamSubjectService;
 import com.css.base.entity.SSOUser;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.Response;
@@ -20,12 +24,14 @@ import com.css.base.utils.Response;
  * 训练档案-个人训练档案
  * */
 @Controller
-@RequestMapping("/personalfile")
+@RequestMapping("app/xlgl/personalfile")
 public class PersonalFileController {
 	@Autowired
 	private XlglExamMainAnswerService xlglExamMainAnswerService;
 	@Autowired
 	private PersonalFileService personalFileService;
+	@Autowired
+	private XlglExamSubjectService xlglExamSubjectService;
 	/**
 	 * 训练档案-个人训练档案 列表
 	 * 
@@ -37,9 +43,27 @@ public class PersonalFileController {
 		JSONObject jsonObject = new JSONObject();
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		map.put("replyUserId", ssoUser.getUserId());
+		List<XlglExamSubject> subjectList = xlglExamSubjectService.queryList(null);
+		
 		List<PersonalFile> queryList = personalFileService.queryList(map);
-		jsonObject.put("personalFileList", queryList);
-		jsonObject.put("userName", ssoUser.getFullname());
+		
+		List<PersonalFileDto> list =new ArrayList<PersonalFileDto>();
+		for (XlglExamSubject xlglExamSubject : subjectList) {
+			List<PersonalFile> PersonalFilelist =new ArrayList<PersonalFile>();
+			for (PersonalFile personalFile : queryList) {
+				if(xlglExamSubject.getSubjectName().equals(personalFile.getExamineSubjectName())) {
+					PersonalFilelist.add(personalFile);
+				}
+			}
+			if(PersonalFilelist.size()>0) {
+				PersonalFileDto personalFileDto = new PersonalFileDto();
+				personalFileDto.setExamineSubjectName(xlglExamSubject.getSubjectName());
+				personalFileDto.setList(PersonalFilelist);
+				list.add(personalFileDto);
+			}	
+		}
+		jsonObject.put("personalFileList", list);
+		jsonObject.put("currentUserName", ssoUser.getFullname());
 		jsonObject.put("orgName", ssoUser.getOrgName());
 		Response.json(jsonObject);
 	}

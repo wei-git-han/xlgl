@@ -32,7 +32,8 @@
 			join XLGL_EXAM_MAIN_ANSWER b 
 			on a.id=b.examine_id
 		where  
-			b.MAKEUP_STATUS = '0'
+		b.ISNOTEXAM = '1'and a.status= '0'
+		and a.OVER_STATUS = '1' 
 		<if test="replyUserId != null and replyUserId !=''">
 			and b.REPLY_USER_ID = #{replyUserId}
 		</if>
@@ -42,7 +43,7 @@
 		
 	</select>
 	
-	<select id="getTitleList" resultType="int">
+	<select id="getTitleList" resultType="com.css.app.xlgl.entity.PersonalFile">
 		select 
 		a.EXAMINE_SUBJECT_ID as examineSubjectId,
 		a.EXAMINE_SUBJECT_NAME as examineSubjectName
@@ -50,7 +51,8 @@
 		join XLGL_EXAM_MAIN_ANSWER b 
 			on a.id=b.examine_id
 		where  
-			b.MAKEUP_STATUS = '0'
+		b.ISNOTEXAM = '1'and a.status= '0'
+		and a.OVER_STATUS = '1' 
 		<if test="replyUserId != null and replyUserId !=''">
 			and b.REPLY_USER_ID = #{replyUserId}
 		</if>
@@ -60,7 +62,7 @@
 			group by a.EXAMINE_SUBJECT_ID,a.EXAMINE_SUBJECT_NAME;
 	</select>
 	
-	<select id="queryListBySubjectId" resultType="int">
+	<select id="queryListBySubjectId" resultType="com.css.app.xlgl.entity.PersonalFile">
 		select 
 		a.examine_name as examineName,
 		a.EXAMINE_SUBJECT_ID as examineSubjectId,
@@ -70,7 +72,8 @@
 		join XLGL_EXAM_MAIN_ANSWER b 
 			on a.id=b.examine_id
 		where  
-			b.MAKEUP_STATUS = '0'
+		b.ISNOTEXAM = '1'and a.status= '0'
+		and a.OVER_STATUS = '1' 
 		<if test="replyUserId != null and replyUserId !=''">
 			and b.REPLY_USER_ID = #{replyUserId}
 		</if>
@@ -78,14 +81,14 @@
 			and b.LEVEL = #{level}
 		</if> 
 		<if test="subjectId != null and subjectId !=''">
-			and b.EXAMINE_SUBJECT_ID = #{subjectId}
+			and a.EXAMINE_SUBJECT_ID = #{subjectId}
 		</if> 
 		
 	</select>
 	
 	<select id="queryRanking" resultType="com.css.app.xlgl.entity.PersonalFile">
 		select 
-			row_number()over (order by fraction desc)as ranking,
+			row_number()over (order by totalFraction desc)as ranking,
 			replyUserId,
 			replyUserName,
 			totalFraction 
@@ -96,7 +99,7 @@
 				REPLY_USER_NAME as replyUserName 
 			from XLGL_EXAM_MAIN_ANSWER    
 				where  
-				MAKEUP_STATUS = '0'
+				ISNOTEXAM = '1'
 			group by REPLY_USER_ID,REPLY_USER_NAME) 
 		
 	</select>
