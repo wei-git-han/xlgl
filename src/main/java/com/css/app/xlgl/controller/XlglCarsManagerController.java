@@ -207,6 +207,12 @@ public class XlglCarsManagerController {
 		Response.json(json);
 	}
 
+	/**
+	 * 下载功能，只能预览
+	 * @param fileId
+	 * @param response
+	 * @throws IOException
+	 */
 	@ResponseBody
 	@RequestMapping("/downLoad")
 	public void downLoad(String fileId,HttpServletResponse response) throws IOException {
@@ -233,7 +239,10 @@ public class XlglCarsManagerController {
 		}
 	}
 
-
+	/**
+	 * 真正下载文件，不用预览
+	 * @param fileId
+	 */
 	@ResponseBody
 	@RequestMapping("/downLoadFile")
 	public void downLoad(String fileId) {
