@@ -194,13 +194,13 @@ public class XlglZbglController {
 		Response.json(json);
 	}
 
-//	@ResponseBody
-//	@RequestMapping("/downLoad")
-//	public void downLoad(String fileId) {
-//		HTTPFile httpFile = new HTTPFile(fileId);
-//		String fileName = httpFile.getFileName();
-//		Response.download(fileName, httpFile.getInputSteam());
-//	}
+	@ResponseBody
+	@RequestMapping("/downLoadFile")
+	public void downLoad(String fileId) {
+		HTTPFile httpFile = new HTTPFile(fileId);
+		String fileName = httpFile.getFileName();
+		Response.download(fileName, httpFile.getInputSteam());
+	}
 
 	@ResponseBody
 	@RequestMapping("/downLoad")

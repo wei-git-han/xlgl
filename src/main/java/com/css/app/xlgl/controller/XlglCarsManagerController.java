@@ -216,7 +216,7 @@ public class XlglCarsManagerController {
 		String fileName = httpFile.getFileName();
 		response.reset();
 		response.setContentType("application/octet-stream");
-		response.setCharacterEncoding("utf-8");
+		response.setCharacterEncoding("UTF-8");
 		response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
 		os = response.getOutputStream();
 		BufferedInputStream bis = new BufferedInputStream(httpFile.getInputSteam());
@@ -231,6 +231,15 @@ public class XlglCarsManagerController {
 		} finally {
 			bis.close();
 		}
+	}
+
+
+	@ResponseBody
+	@RequestMapping("/downLoadFile")
+	public void downLoad(String fileId) {
+		HTTPFile httpFile = new HTTPFile(fileId);
+		String fileName = httpFile.getFileName();
+		Response.download(fileName, httpFile.getInputSteam());
 	}
 
 	//获取文件列表
