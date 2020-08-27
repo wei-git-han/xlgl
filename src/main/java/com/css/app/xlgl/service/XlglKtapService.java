@@ -26,4 +26,6 @@ public interface XlglKtapService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+
+	void deleteAll();
 }

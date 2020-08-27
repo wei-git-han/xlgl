@@ -1,7 +1,9 @@
 package com.css.app.xlgl.controller;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.AppConfig;
 import com.css.addbase.FileBaseUtil;
 import com.css.addbase.suwell.OfdTransferUtil;
+import com.css.app.xlgl.entity.XlglCarsManager;
 import com.css.app.xlgl.entity.XlglKtap;
 import com.css.app.xlgl.entity.XlglZbgl;
 import com.css.app.xlgl.service.XlglKtapService;
@@ -28,6 +31,8 @@ import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 import com.css.base.utils.Response;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -74,22 +79,10 @@ public class XlglKtapController {
 		Map<String,Object> map = new HashMap<>();
 		List<XlglKtap> xlglKtap = xlglKtapService.queryList(map);
 		if(xlglKtap != null && xlglKtap.size() > 0){
-			jsonObject.put("id",xlglKtap.get(0).getId());
-			isHave = "yes";
 			fileId = xlglKtap.get(0).getFileId();
-			if(StringUtils.isNotBlank(fileId)){
-				HTTPFile httpFiles = new HTTPFile(fileId);
-				if(httpFiles!=null) {
-					jsonObject.put("formatId", fileId);
-					jsonObject.put("downFormatIdUrl", httpFiles.getAssginDownloadURL(true));
-				}
-			}
-		}else {
-			isHave = "no";
 		}
-		jsonObject.put("isHave",isHave);
 		jsonObject.put("fileId",fileId);
-
+		jsonObject.put("reuslt","success");
 		Response.json(jsonObject);
 	}
 
@@ -97,7 +90,7 @@ public class XlglKtapController {
 	 * 上传接口
 	 */
 	@ResponseBody
-	@RequestMapping("/save")
+	@RequestMapping("/save111")
 	public void save(String id,@RequestParam(required = false)MultipartFile[] pdf){
 		String formatDownPath = "";// 版式文件下载路径
 		String retFormatId = null;// 返回的版式文件id
@@ -170,6 +163,58 @@ public class XlglKtapController {
 
 
 		Response.json(json);
+	}
+
+	@ResponseBody
+	@RequestMapping("/uploadFile")
+	public void upLoad(@RequestParam(required = false) MultipartFile[] pdf) {
+		JSONObject json = new JSONObject();
+		String fileId = FileBaseUtil.fileServiceUpload(pdf[0]);
+		String fileName = pdf[0].getOriginalFilename();
+		json.put("fileId", fileId);
+		xlglKtapService.deleteAll();
+		XlglKtap xlglKtap = new XlglKtap();
+		xlglKtap.setId(UUIDUtils.random());
+		xlglKtap.setFileId(fileId);
+		xlglKtap.setFileName(fileName);
+		xlglKtap.setCreatedTime(new Date());
+		xlglKtap.setCreator(CurrentUser.getUsername());
+		//file1.setFileServerFormatId(formatId);
+		xlglKtapService.save(xlglKtap);
+		json.put("fileId",xlglKtap.getFileId());
+		Response.json(json);
+	}
+
+	/**
+	 * 下载功能，只能预览
+	 * @param fileId
+	 * @param response
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping("/downLoad")
+	public void downLoad(String fileId,HttpServletResponse response) throws IOException {
+		OutputStream os = null;
+		byte[] buff = new byte[1024];
+		HTTPFile httpFile = new HTTPFile(fileId);
+		String fileName = httpFile.getFileName();
+		response.reset();
+		response.setContentType("application/octet-stream");
+		response.setCharacterEncoding("UTF-8");
+		response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+		os = response.getOutputStream();
+		BufferedInputStream bis = new BufferedInputStream(httpFile.getInputSteam());
+		int i = 0;
+		try {
+			while ((i = bis.read(buff)) != -1) {
+				os.write(buff, 0, i);
+				os.flush();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			bis.close();
+		}
 	}
 	
 	/**
