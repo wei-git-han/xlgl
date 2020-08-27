@@ -47,8 +47,8 @@ See https://github.com/adobe-type-tools/cmap-resources
       }
       var DEFAULT_URL = '';
       jQuery(document).ready(function() {
-      var fileId = getUrlParam2('fileId')
-      DEFAULT_URL= window.location.host+'app/xlgl/xlglcarsmanager/downLoad?fileId=' + fileId
+      DEFAULT_URL = window.location.host+'/app/xlgl/xlglcarsmanager/downLoad'+window.location.search
+      console.log('pdf文件路径'+DEFAULT_URL)
     })
     </script>
     <script src="viewer.js"></script>
