@@ -136,10 +136,10 @@ public class XlglRuleController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	public void delete(String[] ids){
+	public void delete(String id){
+		String[] ids = id.split(",");
 		xlglRuleService.deleteBatch(ids);
-		
-		Response.ok();
+		Response.json("result","success");
 	}
 
 	/**
