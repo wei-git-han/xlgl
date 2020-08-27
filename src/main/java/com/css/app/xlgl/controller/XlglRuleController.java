@@ -229,6 +229,7 @@ public class XlglRuleController {
 		file1.setFileName(fileName);
 		file1.setUploadUser(CurrentUser.getUsername());
 		file1.setType(type);
+		file1.setCreatedTime(new Date());
 		xlglRuleService.save(file1);
 		Response.json(json);
 	}

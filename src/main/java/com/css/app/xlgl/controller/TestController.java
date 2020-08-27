@@ -22,13 +22,15 @@ public class TestController {
      */
     @ResponseBody
     @RequestMapping("/getSumCore")
-    public JSONObject getSumCore(int age, int up, int sit, int sRun, int tRun, int sex, int type ){
+    public JSONObject getSumCore(int age, int up, int sit, int sRun, int tRun, int sex, int type,String wight,String high ){
         JSONObject jsonObject = new JSONObject();
         int sum = 0;
         int shang = 0;
         int zuo = 0;
         int pao = 0;
         int changpao = 0;
+        float BMI = 0.0f;
+        String hg = "";
         if("0".equals(sex)){
             JSONObject js = new JSONObject();
             js = getManSumCore(age,up,sit,sRun,tRun);
@@ -37,6 +39,47 @@ public class TestController {
             zuo = (int)js.get("z");
             pao = (int)js.get("s");
             changpao = (int)js.get("r");
+            int w = Integer.parseInt(wight);
+            int h = Integer.parseInt(high);
+            int j = h * h;
+            BMI = w/j;
+            if(age < 24){
+                if(BMI >= 18.5 && BMI <=25.9){
+                    hg = "合格";
+                }else {
+                    hg = "不合格";
+                }
+            }else if(age >= 25 && age <=29){
+                if(BMI >= 18.5 && BMI <=26.9){
+                    hg = "合格";
+                }else {
+                    hg = "不合格";
+                }
+            }else if(age >= 30 && age <=39){
+                if(BMI >= 18.5 && BMI <=27.9){
+                    hg = "合格";
+                }else {
+                    hg = "不合格";
+                }
+            }else if(age >= 40 && age <=49){
+                if(BMI >= 18.5 && BMI <=28.9){
+                    hg = "合格";
+                }else {
+                    hg = "不合格";
+                }
+            }else if(age >= 50 && age <=59){
+                if(BMI >= 18.5 && BMI <=29.4){
+                    hg = "合格";
+                }else {
+                    hg = "不合格";
+                }
+            }else if(age >= 60){
+                if(BMI >= 18.5 && BMI <=29.9){
+                    hg = "合格";
+                }else {
+                    hg = "不合格";
+                }
+            }
         }else {
             JSONObject js = new JSONObject();
             js  = getWomanSumCore(age,up,sit,sRun,tRun);
@@ -45,6 +88,47 @@ public class TestController {
             zuo = (int)js.get("m");
             pao = (int)js.get("a");
             changpao = (int)js.get("w");
+            int w = Integer.parseInt(wight);
+            int h = Integer.parseInt(high);
+            int j = h * h;
+            BMI = w/j;
+            if(age < 24){
+                if(BMI >= 18.5 && BMI <=23.9){
+                    hg = "合格";
+                }else {
+                    hg = "不合格";
+                }
+            }else if(age >= 25 && age <=29){
+                if(BMI >= 18.5 && BMI <=24.9){
+                    hg = "合格";
+                }else {
+                    hg = "不合格";
+                }
+            }else if(age >= 30 && age <=39){
+                if(BMI >= 18.5 && BMI <=25.9){
+                    hg = "合格";
+                }else {
+                    hg = "不合格";
+                }
+            }else if(age >= 40 && age <=49){
+                if(BMI >= 18.5 && BMI <=26.9){
+                    hg = "合格";
+                }else {
+                    hg = "不合格";
+                }
+            }else if(age >= 50 && age <=59){
+                if(BMI >= 18.5 && BMI <=27.4){
+                    hg = "合格";
+                }else {
+                    hg = "不合格";
+                }
+            }else if(age >= 60){
+                if(BMI >= 18.5 && BMI <=27.9){
+                    hg = "合格";
+                }else {
+                    hg = "不合格";
+                }
+            }
         }
         String dj = null;
         if("1".equals(type)){
@@ -96,8 +180,12 @@ public class TestController {
                 dj = "特1级";
             }
         }
+
+
         jsonObject.put("score",sum);
         jsonObject.put("dj",dj);
+        jsonObject.put("BMI",BMI);
+        jsonObject.put("hg",hg);
         Response.json(jsonObject);
 
         return jsonObject;

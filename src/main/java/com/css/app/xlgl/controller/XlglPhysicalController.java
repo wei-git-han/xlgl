@@ -78,6 +78,17 @@ public class XlglPhysicalController {
 		Response.json("xlglPhysical", xlglPhysical);
 	}
 
+	@ResponseBody
+	@RequestMapping("/getUserInfo")
+	public void getUserInfo(){
+		JSONObject jsonObject = new JSONObject();
+		String userId = CurrentUser.getUserId();
+		String userName = CurrentUser.getUsername();
+		jsonObject.put("userId",userId);
+		jsonObject.put("userName",userName);
+		Response.json(jsonObject);
+	}
+
 	//(int age,int up,int sit,int sRun,int tRun,int sex,int type )
 	/**
 	 * 保存
@@ -88,6 +99,7 @@ public class XlglPhysicalController {
 	public void save(XlglPhysical xlglPhysical){
 		xlglPhysical.setId(UUIDUtils.random());
 		xlglPhysical.setCreator(CurrentUser.getUserId());
+		xlglPhysical.setName(CurrentUser.getUsername());
 		xlglPhysical.setCreatedTime(new Date());
 		xlglPhysical.setUserId(CurrentUser.getUserId());
 		xlglPhysical.setNormal("0");//1是正式导入，0是自己保存
