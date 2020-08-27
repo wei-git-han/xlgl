@@ -14,6 +14,7 @@ import com.css.addbase.suwell.OfdTransferUtil;
 import com.css.app.xlgl.entity.XlglCarsManager;
 import com.css.app.xlgl.entity.XlglPicture;
 import com.css.app.xlgl.entity.XlglRule;
+import com.css.app.xlgl.service.XlglCarsManagerService;
 import com.css.app.xlgl.service.XlglRuleService;
 import com.css.base.utils.CurrentUser;
 import org.apache.commons.io.FileUtils;
@@ -46,6 +47,8 @@ public class XlglRuleController {
 	private XlglRuleService xlglRuleService;
 	@Autowired
 	private AppConfig appConfig;
+	@Autowired
+	private XlglCarsManagerService xlglCarsManagerService;
 	
 	/**
 	 * 列表
@@ -139,6 +142,7 @@ public class XlglRuleController {
 	public void delete(String id){
 		String[] ids = id.split(",");
 		xlglRuleService.deleteBatch(ids);
+		xlglCarsManagerService.deleteBatch(ids);
 		Response.json("result","success");
 	}
 
