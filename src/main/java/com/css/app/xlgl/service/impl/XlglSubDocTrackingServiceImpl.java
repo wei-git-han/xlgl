@@ -118,5 +118,25 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 		return xlglSubDocTrackingDao.queryAllYx(year);
 	}
 
+	@Override
+	public int queryAllCx(String fileId){
+		return xlglSubDocTrackingDao.queryAllCx(fileId);
+	}
+
+	@Override
+	public int queryAllYh(String fileId){
+		return xlglSubDocTrackingDao.queryAllYh(fileId);
+	}
+
+	@Override
+	public int queryAllCxByInfoId(String fileId,String orgId){
+		return xlglSubDocTrackingDao.queryAllCxByInfoId(fileId,orgId);
+	}
+
+	@Override
+	public int queryAllBkByInfoId(String fileId,String orgId){
+		return xlglSubDocTrackingDao.queryAllBkByInfoId(fileId,orgId);
+	}
+
 
 }

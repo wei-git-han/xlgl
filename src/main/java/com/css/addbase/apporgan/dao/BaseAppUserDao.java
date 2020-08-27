@@ -108,14 +108,20 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 
 	List<BaseAppUser> queryAllUserIdAndName(String deptId);
 
-	@Select("select  t.*,d.BAOMING,d.INFO_ID from BASE_APP_USER t left join XLGL_SUB_DOC_TRACKING d on t.USER_ID = d.RECEIVER_ID and and d.INFO_ID = #{1} where  t.ORGANID in  (  select id from BASE_APP_ORGAN start with ID = #{0} and ISDELETE=0 connect by prior ID = PARENT_ID )")
+	@Select("select  t.*,d.BAOMING,d.INFO_ID,d.READ,d.IS_WORK from BASE_APP_USER t left join XLGL_SUB_DOC_TRACKING d on t.USER_ID = d.RECEIVER_ID  and d.INFO_ID = #{1} where  t.ORGANID in  (  select id from BASE_APP_ORGAN start with ID = #{0} and ISDELETE=0 connect by prior ID = PARENT_ID )")
 	List<BaseAppUser> queryAllUserByDeptId(String deptId,String infoId);
 
-	@Select("select  t.*,d.BAOMING,d.INFO_ID from BASE_APP_USER t left join XLGL_SUB_DOC_TRACKING d on t.USER_ID = d.RECEIVER_ID  and d.INFO_ID = #{1} where  t.ORGANID in  (  select id from BASE_APP_ORGAN where ID = #{0})")
+	@Select("select  t.*,d.BAOMING,d.INFO_ID,d.READ,d.IS_WORK from BASE_APP_USER t left join XLGL_SUB_DOC_TRACKING d on t.USER_ID = d.RECEIVER_ID  and d.INFO_ID = #{1} where  t.ORGANID in  (  select id from BASE_APP_ORGAN where ID = #{0})")
 	List<BaseAppUser> queryAllJuUserByDeptId(String deptId,String infoId);
 
-	@Select("select  count(*) from BASE_APP_USER t left join XLGL_SUB_DOC_TRACKING d on t.USER_ID = d.RECEIVER_ID and and d.INFO_ID = #{1} and d.baoming = #{2} where  t.ORGANID in  (  select id from BASE_APP_ORGAN start with ID = #{0} and ISDELETE=0 connect by prior ID = PARENT_ID)")
+	@Select("select  count(*) from BASE_APP_USER t left join XLGL_SUB_DOC_TRACKING d on t.USER_ID = d.RECEIVER_ID  and d.INFO_ID = #{1} and d.baoming = #{2} where  t.ORGANID in  (  select id from BASE_APP_ORGAN start with ID = #{0} and ISDELETE=0 connect by prior ID = PARENT_ID)")
 	int queryBmCout(String deptId,String infoId,String status);
+
+	@Select("select  count(*) from BASE_APP_USER t left join XLGL_SUB_DOC_TRACKING d on t.USER_ID = d.RECEIVER_ID  and d.INFO_ID = #{1} and d.READ = '1' where  t.ORGANID in  (  select id from BASE_APP_ORGAN start with ID = #{0} and ISDELETE=0 connect by prior ID = PARENT_ID)")
+	int queryYjs(String deptId,String infoId);
+
+	@Select("select  count(*) from BASE_APP_USER t left join XLGL_SUB_DOC_TRACKING d on t.USER_ID = d.RECEIVER_ID  and d.INFO_ID = #{1} and d.READ = '0' where  t.ORGANID in  (  select id from BASE_APP_ORGAN start with ID = #{0} and ISDELETE=0 connect by prior ID = PARENT_ID)")
+	int queryWjs(String deptId,String infoId);
 
 	@Select("select ORGANID from BASE_APP_USER where USER_ID = #{0}")
 	String queryByUserId(String userId);
@@ -129,4 +135,7 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 
 	@Select("select  count(*) from BASE_APP_USER where SFYX = '0'")
 	int queryListAllYxCount();
+
+	@Select("select  count(*) from BASE_APP_USER where SFZB = '1'")
+	int getAllZbSum();
 }

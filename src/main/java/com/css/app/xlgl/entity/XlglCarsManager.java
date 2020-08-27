@@ -18,7 +18,7 @@ public class XlglCarsManager implements Serializable {
 	//
 	private String id;
 	//创建时间
-	private Date creaetdTime;
+	private Date createdTime;
 	//上传人
 	private String uploadUser;
 	//文件标题
@@ -82,17 +82,12 @@ public class XlglCarsManager implements Serializable {
 	public String getId() {
 		return id;
 	}
-	/**
-	 * 设置：创建时间
-	 */
-	public void setCreaetdTime(Date creaetdTime) {
-		this.creaetdTime = creaetdTime;
-	}
-	/**
-	 * 获取：创建时间
-	 */
-	public Date getCreaetdTime() {
-		return creaetdTime;
+
+	public Date getCreatedTime() {
+		return createdTime;
 	}
 
+	public void setCreatedTime(Date createdTime) {
+		this.createdTime = createdTime;
+	}
 }

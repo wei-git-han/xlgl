@@ -25,7 +25,9 @@
 			"USER_ID", 
 			"USER_NAME", 
 			"DEPT_NAME", 
-			"CREATED_TIME"
+			"CREATED_TIME",
+			"SCORE",
+			"JUDGE"
 		)
 		values
 		(
@@ -33,7 +35,9 @@
 			#{userId}, 
 			#{userName}, 
 			#{deptName}, 
-			#{createdTime}
+			#{createdTime},
+			#{score},
+			#{judge}
 		)
 	</insert>
 	 
@@ -43,7 +47,9 @@
 			<if test="userId != null">"USER_ID" = #{userId}, </if>
 			<if test="userName != null">"USER_NAME" = #{userName}, </if>
 			<if test="deptName != null">"DEPT_NAME" = #{deptName}, </if>
-			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}</if>
+			<if test="createdTime != null">"CREATED_TIME" = #{createdTime},</if>
+			<if test="score != null">"SCORE" = #{score},</if>
+			<if test="judge != null">"JUDGE" = #{judge}</if>
 		</set>
 		where ID = #{id}
 	</update>

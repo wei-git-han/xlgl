@@ -6,6 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
+import com.css.addbase.apporgmapped.service.BaseAppOrgMappedService;
+import com.css.app.db.config.service.AdminSetService;
 import com.css.app.xlgl.dto.XlglConfirmDto;
 import com.css.app.xlgl.entity.XlglConfirm;
 import com.css.app.xlgl.service.XlglConfirmService;
@@ -43,6 +45,10 @@ public class XlglConfirmController {
 	private BaseAppOrganService baseAppOrganService;
 	@Autowired
 	private XlglSubDocTrackingService xlglSubDocTrackingService;
+	@Autowired
+	private AdminSetService adminSetService;
+	@Autowired
+	private BaseAppOrgMappedService baseAppOrgMappedService;
 	/**
 	 * 列表
 	 */
@@ -77,8 +83,16 @@ public class XlglConfirmController {
 	 */
 	@ResponseBody
 	@RequestMapping("/xlglConfirm")
-	public void xlglConfirm(@RequestBody XlglConfirm xlglConfirm) {
-		String deptId = baseAppUserService.queryByUserId(CurrentUser.getUserId());
+	public void xlglConfirm(XlglConfirm xlglConfirm) {
+		String deptId = null;
+		//获取当前人的管理员类型（0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员）
+		String adminFlag = adminSetService.getAdminTypeByUserId(CurrentUser.getUserId());
+		if("2".equals(adminFlag)){
+			deptId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
+		}else if("4".equals(adminFlag)){
+			deptId = baseAppUserService.queryByUserId(CurrentUser.getUserId());
+		}
+		//String deptId = baseAppUserService.queryByUserId(CurrentUser.getUserId());
 		BaseAppOrgan organ = baseAppOrganService.queryObject(deptId);//获取部门信息
 		List<Map<String, Object>> infoList = xlglSubDocTrackingService.queryBmInfo(xlglConfirm.getInfoid(), deptId);
 		if (infoList != null && infoList.size() > 0) {

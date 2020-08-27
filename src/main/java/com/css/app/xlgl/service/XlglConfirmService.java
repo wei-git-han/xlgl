@@ -29,4 +29,6 @@ public interface XlglConfirmService {
 	void deleteBatch(String[] ids);
 
 	XlglConfirmDto queryPerDeptInfo(Map<String,Object> map);
+
+	String queryConfromForJu(Map<String,Object> map);
 }

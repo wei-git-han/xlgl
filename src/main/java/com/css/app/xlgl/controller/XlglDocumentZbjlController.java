@@ -226,7 +226,7 @@ public class XlglDocumentZbjlController {
                 tracking.setSenDeptName(loginUserDeptName);
                 tracking.setReceiverId(receiverId);
                 tracking.setReceiverName(receiverName);
-                tracking.setRecDeptId(userOrganId);
+                tracking.setRecDeptId(organId);
                 tracking.setRecDeptName(deptName);
                 tracking.setSubId(subId);
                 tracking.setTrackingType("1");
@@ -239,7 +239,7 @@ public class XlglDocumentZbjlController {
                 tracking.setPicturePath(xlglXlzzInfo.getPicturePath());
                 tracking.setExerciseTime(xlglXlzzInfo.getExerciseTime());
                 tracking.setInstraction(subInfo.getInstraction());
-                tracking.setRead("0");
+                tracking.setRead("0");//0是未接受，1是已接受
                 tracking.setIsWork("0");//0是未参训
                 xlglSubDocTrackingService.save(tracking);
 

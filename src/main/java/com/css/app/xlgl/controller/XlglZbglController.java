@@ -1,7 +1,9 @@
 package com.css.app.xlgl.controller;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.AppConfig;
 import com.css.addbase.FileBaseUtil;
 import com.css.addbase.suwell.OfdTransferUtil;
+import com.css.app.xlgl.entity.XlglCarsManager;
 import com.css.app.xlgl.entity.XlglPicture;
 import com.css.app.xlgl.entity.XlglZbgl;
 import com.css.app.xlgl.service.XlglZbglService;
@@ -28,6 +31,8 @@ import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 import com.css.base.utils.Response;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -164,11 +169,73 @@ public class XlglZbglController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	@RequiresPermissions("xlglzbgl:delete")
-	public void delete(@RequestBody String[] ids){
+	public void delete(String id){
+		String[] ids = id.split(",");
 		xlglZbglService.deleteBatch(ids);
-		
-		Response.ok();
+		Response.json("result","success");
+	}
+
+	@ResponseBody
+	@RequestMapping("/uploadFile")
+	public void upLoad(@RequestParam(required = false) MultipartFile[] file) {
+		JSONObject json = new JSONObject();
+		String fileId = FileBaseUtil.fileServiceUpload(file[0]);
+		String fileName = file[0].getOriginalFilename();
+		json.put("fileId", fileId);
+		XlglZbgl file1 = new XlglZbgl();
+		xlglZbglService.deleteAll();//上传之前先删除之前的
+		file1.setId(UUIDUtils.random());
+		file1.setFileId(fileId);
+		file1.setFileName(fileName);
+		//file1.setFileServerFormatId(formatId);
+		file1.setCreatedTime(new Date());
+		file1.setCreator(CurrentUser.getUsername());
+		xlglZbglService.save(file1);
+		Response.json(json);
+	}
+
+	@ResponseBody
+	@RequestMapping("/downLoadFile")
+	public void downLoad(String fileId) {
+		HTTPFile httpFile = new HTTPFile(fileId);
+		String fileName = httpFile.getFileName();
+		Response.download(fileName, httpFile.getInputSteam());
+	}
+
+	@ResponseBody
+	@RequestMapping("/downLoad")
+	public void downLoad(String fileId,HttpServletResponse response) throws IOException {
+		OutputStream os = null;
+		byte[] buff = new byte[1024];
+		HTTPFile httpFile = new HTTPFile(fileId);
+		String fileName = httpFile.getFileName();
+		response.reset();
+		response.setContentType("application/octet-stream");
+		response.setCharacterEncoding("utf-8");
+		response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+		os = response.getOutputStream();
+		BufferedInputStream bis = new BufferedInputStream(httpFile.getInputSteam());
+		int i = 0;
+		try {
+			while ((i = bis.read(buff)) != -1) {
+				os.write(buff, 0, i);
+				os.flush();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			bis.close();
+		}
+	}
+
+	//获取文件列表
+	@ResponseBody
+	@RequestMapping("/getFileList")
+	public void getFileList(){
+		Map<String,Object> map = new HashMap<>();
+		List<XlglZbgl> list = xlglZbglService.queryList(map);
+		Response.json("list",list);
+
 	}
 	
 }

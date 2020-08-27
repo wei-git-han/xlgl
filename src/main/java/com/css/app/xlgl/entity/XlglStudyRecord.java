@@ -25,6 +25,26 @@ public class XlglStudyRecord implements Serializable {
 	private String deptName;
 	//上传时间
 	private Date createdTime;
+	//分数
+	private String score;
+	//等级
+	private String judge;
+
+	public String getScore() {
+		return score;
+	}
+
+	public void setScore(String score) {
+		this.score = score;
+	}
+
+	public String getJudge() {
+		return judge;
+	}
+
+	public void setJudge(String judge) {
+		this.judge = judge;
+	}
 
 	/**
 	 * 设置：

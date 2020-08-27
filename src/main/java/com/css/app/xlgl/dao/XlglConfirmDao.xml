@@ -22,6 +22,16 @@
         and INFOID = #{infoId}
 	</select>
 
+	<select id="queryConfromForJu" resultType="String">
+		select
+
+        STATUS
+        from
+        XLGL_CONFIRM where
+        DEPTID = #{deptId}
+        and INFOID = #{infoId}
+	</select>
+
 	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglConfirm">
 		select * from XLGL_CONFIRM 
 		<if test="offset != null and limit != null">

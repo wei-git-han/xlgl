@@ -170,6 +170,16 @@ public class BaseAppUserServiceImpl implements BaseAppUserService {
 	}
 
 	@Override
+	public int queryYjs(String deptId,String infoId){
+		return baseAppUserDao.queryYjs(deptId,infoId);
+	}
+
+	@Override
+	public int queryWjs(String deptId,String infoId){
+		return baseAppUserDao.queryWjs(deptId,infoId);
+	}
+
+	@Override
 	public String queryByUserId(String userId){
 		return baseAppUserDao.queryByUserId(userId);
 	}
@@ -193,5 +203,11 @@ public class BaseAppUserServiceImpl implements BaseAppUserService {
 		return baseAppUserDao.queryListAllYxCount();
 	}
 
-	
+	@Override
+	public int getAllZbSum(){
+		return baseAppUserDao.getAllZbSum();
+	}
+
+
+
 }

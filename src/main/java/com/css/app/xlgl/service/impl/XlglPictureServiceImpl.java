@@ -88,5 +88,9 @@ public class XlglPictureServiceImpl implements XlglPictureService {
 		// TODO Auto-generated method stub
 		return xlglPictureDao.deleteByPictureId(id);
 	}
+	public XlglPicture queryVedio(String id){
+		return xlglPictureDao.queryVedio(id);
+
+	}
 	
 }
