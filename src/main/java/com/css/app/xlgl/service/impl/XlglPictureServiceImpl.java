@@ -1,15 +1,19 @@
 package com.css.app.xlgl.service.impl;
 
-import com.css.app.xlgl.dao.XlglPictureDao;
-import com.css.app.xlgl.entity.XlglPicture;
-import com.css.app.xlgl.service.XlglPictureService;
-import com.css.base.utils.UUIDUtils;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
+import com.css.app.xlgl.dao.XlglPictureDao;
+import com.css.app.xlgl.entity.XlglPicture;
+import com.css.app.xlgl.service.XlglPictureService;
+import com.css.base.utils.CurrentUser;
+import com.css.base.utils.UUIDUtils;
+
+import cn.com.css.filestore.impl.HTTPFile;
 
 
 
@@ -57,11 +61,17 @@ public class XlglPictureServiceImpl implements XlglPictureService {
 	@Override
 	public void savePicture(String fileId, String pictureId, String pictureType) {
 		XlglPicture xlglPicture = new XlglPicture();
+		HTTPFile httpFile = new HTTPFile(pictureId);
+		String fileName = httpFile.getFileName();
 		xlglPicture.setId(UUIDUtils.random());
 		xlglPicture.setFileId(fileId);
 		xlglPicture.setPictureId(pictureId);
 		xlglPicture.setPictureType(pictureType);
 		xlglPicture.setIsFirst("0");
+		xlglPicture.setPictureName(fileName);
+		xlglPicture.setCreateTime(new Date());
+		xlglPicture.setUserId(CurrentUser.getUserId());
+		xlglPicture.setUserName(CurrentUser.getUsername());
 		Integer valueOf=xlglPictureDao.queryTotal(null)+1;
 		xlglPicture.setSort(valueOf.toString());
 		xlglPictureDao.save(xlglPicture);
@@ -71,6 +81,12 @@ public class XlglPictureServiceImpl implements XlglPictureService {
 	@Override
 	public List<XlglPicture> queryAllInfoByInfoId(Map<String,Object> map){
 		return xlglPictureDao.queryAllInfoByInfoId(map);
+	}
+
+	@Override
+	public int deleteByPictureId(Object id) {
+		// TODO Auto-generated method stub
+		return xlglPictureDao.deleteByPictureId(id);
 	}
 	
 }

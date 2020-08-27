@@ -424,12 +424,14 @@ public class XlglExamExamineController {
 			xlglExamExamine.setExamineStartDate(startDate);
 			xlglExamExamine.setExamineEndDate(endDate);
 		}
-		if(StringUtils.isNotBlank(IssueStatus)) {
-			xlglExamExamine.setIssueStatus(IssueStatus);
-			if(IssueStatus.equals("1"))
-				xlglExamExamine.setIssueDate(date);
-		}else {
-			xlglExamExamine.setIssueStatus("0"); //为空时默认保存
+		if(status.equals("0")) {
+			if(StringUtils.isNotBlank(IssueStatus)) {
+				xlglExamExamine.setIssueStatus(IssueStatus);
+				if(IssueStatus.equals("1"))
+					xlglExamExamine.setIssueDate(date);
+			}else {
+				xlglExamExamine.setIssueStatus("0"); //为空时默认保存
+			}
 		}
 		xlglExamExamine.setStatus(status);
 		if(xlglExamExamine.getExamineStartDate() !=null&&xlglExamExamine.getExamineStartDate().before(new Date())) {

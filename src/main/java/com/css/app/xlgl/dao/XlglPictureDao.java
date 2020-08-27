@@ -21,4 +21,6 @@ import java.util.Map;
 public interface XlglPictureDao extends BaseDao<XlglPicture> {
 
     List<XlglPicture> queryAllInfoByInfoId(Map<String,Object> map);
+    
+    int deleteByPictureId(Object id);
 }

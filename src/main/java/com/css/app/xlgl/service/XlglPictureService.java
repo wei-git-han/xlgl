@@ -31,4 +31,6 @@ public interface XlglPictureService {
 	void savePicture(String fileId,String pictureId ,String pictureType);
 
 	List<XlglPicture> queryAllInfoByInfoId(Map<String,Object> map);
+	
+	  int deleteByPictureId(Object id);
 }

@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.css.app.xlgl.dto.AccessoryFileDto;
+
 
 
 /**
@@ -48,8 +50,14 @@ public class XlglWarTactic implements Serializable {
 	private Integer viewNumber;
 	
 	
+	//封面名称
+	private String coverFileName;
+	//视频名称
+	private String videoFileName;
 	//附件上传
-	private List<String> accessoryFileArray;
+	private List<AccessoryFileDto> accessoryFileArray;
+	//附件上传名称
+	private List<String> accessoryFileNameArray;
 	//已读、未读标志 0：未读，1：已读
 	private String readStatus;
 	/**
@@ -220,12 +228,6 @@ public class XlglWarTactic implements Serializable {
 	public String getCreateOrganId() {
 		return createOrganId;
 	}
-	public List<String> getAccessoryFileArray() {
-		return accessoryFileArray;
-	}
-	public void setAccessoryFileArray(List<String> accessoryFileArray) {
-		this.accessoryFileArray = accessoryFileArray;
-	}
 	public Integer getViewNumber() {
 		return viewNumber;
 	}
@@ -237,6 +239,30 @@ public class XlglWarTactic implements Serializable {
 	}
 	public void setReadStatus(String readStatus) {
 		this.readStatus = readStatus;
+	}
+	public String getCoverFileName() {
+		return coverFileName;
+	}
+	public void setCoverFileName(String coverFileName) {
+		this.coverFileName = coverFileName;
+	}
+	public String getVideoFileName() {
+		return videoFileName;
+	}
+	public void setVideoFileName(String videoFileName) {
+		this.videoFileName = videoFileName;
+	}
+	public List<String> getAccessoryFileNameArray() {
+		return accessoryFileNameArray;
+	}
+	public void setAccessoryFileNameArray(List<String> accessoryFileNameArray) {
+		this.accessoryFileNameArray = accessoryFileNameArray;
+	}
+	public List<AccessoryFileDto> getAccessoryFileArray() {
+		return accessoryFileArray;
+	}
+	public void setAccessoryFileArray(List<AccessoryFileDto> accessoryFileArray) {
+		this.accessoryFileArray = accessoryFileArray;
 	}
 	
 	

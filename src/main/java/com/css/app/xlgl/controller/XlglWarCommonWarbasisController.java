@@ -1,8 +1,10 @@
 package com.css.app.xlgl.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,8 +21,12 @@ import com.css.base.utils.CurrentUser;
 import com.css.base.utils.PageUtils;
 import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
+
+import cn.com.css.filestore.impl.HTTPFile;
+
 import com.css.base.utils.Response;
 import com.css.base.utils.StringUtils;
+import com.css.app.xlgl.dto.AccessoryFileDto;
 import com.css.app.xlgl.entity.XlglPicture;
 import com.css.app.xlgl.entity.XlglWarCommonQueue;
 import com.css.app.xlgl.entity.XlglWarCommonQueueRead;
@@ -39,7 +45,7 @@ import com.css.app.xlgl.service.XlglWarCommonWarbasisService;
  * @date 2020-08-19 10:14:39
  */
 @Controller
-@RequestMapping("/xlglwarcommonwarbasis")
+@RequestMapping("app/xlgl/xlglwarcommonwarbasis")
 public class XlglWarCommonWarbasisController {
 	@Autowired
 	private XlglWarCommonWarbasisService xlglWarCommonWarbasisService;
@@ -53,8 +59,9 @@ public class XlglWarCommonWarbasisController {
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	public void list(Integer page, Integer limit){
+	public void list(Integer page, Integer limit,String title){
 		Map<String, Object> map = new HashMap<>();
+		map.put("title", title);
 		PageHelper.startPage(page, limit);
 		//查询列表数据
 		List<XlglWarCommonWarbasis> xlglWarCommonWarbasisList = xlglWarCommonWarbasisService.queryList(map);
@@ -71,18 +78,25 @@ public class XlglWarCommonWarbasisController {
 				xlglWarCommonWarbasis.setReadStatus("0");
 			}
 			fileMap.put("id", xlglWarCommonWarbasis.getId());
-			List<XlglPicture> queryList = xlglPictureService.queryList(map);
-			List<String> list = new ArrayList<String>();
+			List<XlglPicture> queryList = xlglPictureService.queryList(fileMap);
+			
+			List<AccessoryFileDto> list = new LinkedList<AccessoryFileDto>();
 			for (XlglPicture xlglPicture : queryList) { //1:图片，2：视频，3：附件，4：封面
 				if(xlglPicture.getPictureType().equals("2")) {
 					xlglWarCommonWarbasis.setVideoFile(xlglPicture.getPictureId());
+					xlglWarCommonWarbasis.setVideoFileName(xlglPicture.getPictureName());
 				}else if(xlglPicture.getPictureType().equals("3")) {
-					list.add(xlglPicture.getPictureId());
+					AccessoryFileDto accessoryFileDto = new AccessoryFileDto();
+					accessoryFileDto.setFileId(xlglPicture.getPictureId());
+					accessoryFileDto.setFileName(xlglPicture.getPictureName());
+					list.add(accessoryFileDto);
 				}else if(xlglPicture.getPictureType().equals("4")) {
 					xlglWarCommonWarbasis.setCoverFile(xlglPicture.getPictureId());
+					xlglWarCommonWarbasis.setCoverFileName(xlglPicture.getPictureName());
 				}
 			}
 			xlglWarCommonWarbasis.setAccessoryFileArray(list);
+
 		}
 		Response.json("page",pageUtil);
 	}
@@ -99,9 +113,34 @@ public class XlglWarCommonWarbasisController {
 		map.put("warbasisId", id);
 		map.put("readUserId", ssoUser.getUserId());
 		XlglWarCommonWarbasis xlglWarCommonWarbasis = xlglWarCommonWarbasisService.queryObject(id);
+		//获取图片、视频、或封面
+		Map<String, Object> fileMap = new HashMap<>();
+		fileMap.put("id", xlglWarCommonWarbasis.getId());
+		
+		List<XlglPicture> pictureList = xlglPictureService.queryList(fileMap);
+		
+		List<AccessoryFileDto> list = new LinkedList<AccessoryFileDto>();
+		for (XlglPicture xlglPicture : pictureList) { //1:图片，2：视频，3：附件，4：封面
+			if(xlglPicture.getPictureType().equals("2")) {
+				xlglWarCommonWarbasis.setVideoFile(xlglPicture.getPictureId());
+				xlglWarCommonWarbasis.setVideoFileName(xlglPicture.getPictureName());
+			}else if(xlglPicture.getPictureType().equals("3")) {
+				AccessoryFileDto accessoryFileDto = new AccessoryFileDto();
+				accessoryFileDto.setFileId(xlglPicture.getPictureId());
+				accessoryFileDto.setFileName(xlglPicture.getPictureName());
+				list.add(accessoryFileDto);
+			}else if(xlglPicture.getPictureType().equals("4")) {
+				xlglWarCommonWarbasis.setCoverFile(xlglPicture.getPictureId());
+				xlglWarCommonWarbasis.setCoverFileName(xlglPicture.getPictureName());
+			}
+		}
+		xlglWarCommonWarbasis.setAccessoryFileArray(list);
+
+		
+		//修改浏览次数
 		if(xlglWarCommonWarbasis.getViewNumber() !=null) {
 			xlglWarCommonWarbasis.setViewNumber(xlglWarCommonWarbasis.getViewNumber()+1);
-		}else {
+		}else {	
 			xlglWarCommonWarbasis.setViewNumber(1);
 		}
 		xlglWarCommonWarbasisService.update(xlglWarCommonWarbasis);
@@ -133,7 +172,7 @@ public class XlglWarCommonWarbasisController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public void save(XlglWarCommonWarbasis xlglWarCommonWarbasis,String coverFile,String videoFile,String[] accessoryFile){
+	public void save(XlglWarCommonWarbasis xlglWarCommonWarbasis,String coverFile,String videoFile,String[] accessoryArray){
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		Date date = new Date();
 		String random = UUIDUtils.random();
@@ -150,8 +189,8 @@ public class XlglWarCommonWarbasisController {
 		if(StringUtils.isNotBlank(videoFile)) {
 			xlglPictureService.savePicture(random,videoFile,"2");
 		}
-		if(accessoryFile !=null) {
-			for (String string : accessoryFile) {
+		if(accessoryArray !=null) {
+			for (String string : accessoryArray) {
 				xlglPictureService.savePicture(random,string,"3");
 			}
 		}
@@ -160,12 +199,26 @@ public class XlglWarCommonWarbasisController {
 	
 	/**
 	 * 修改
+	 * @param deleAccessoryId 删除附件id
+	 * @param accessoryFile 新增附件id
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	public void update(XlglWarCommonWarbasis xlglWarCommonWarbasis){
+	public void update(XlglWarCommonWarbasis xlglWarCommonWarbasis,String[] deleAccessoryId,String[] accessoryFileId ){
+		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		xlglWarCommonWarbasis.setUpdateUser(CurrentUser.getUserId());
+		xlglWarCommonWarbasis.setUpdateDate(format);
 		xlglWarCommonWarbasisService.update(xlglWarCommonWarbasis);
-		
+		if(deleAccessoryId.length >0) {
+			for (String string : deleAccessoryId) {
+				xlglPictureService.deleteByPictureId(string);
+			}
+		}
+		if(accessoryFileId.length>0) {
+			for (String string : accessoryFileId) {
+				xlglPictureService.savePicture(xlglWarCommonWarbasis.getId(), string, "3");
+			}
+		}
 		Response.ok();
 	}
 	
@@ -176,7 +229,21 @@ public class XlglWarCommonWarbasisController {
 	@RequestMapping("/delete")
 	public void delete(String[] ids){
 		xlglWarCommonWarbasisService.deleteBatch(ids);
-		
+		for (String string : ids) {
+			//获取图片、视频、或封面
+			Map<String, Object> fileMap = new HashMap<>();
+			fileMap.put("id", string);
+			List<XlglPicture> pictureList = xlglPictureService.queryList(fileMap);
+			for (XlglPicture xlglPicture : pictureList) {
+				//删除文件服务器上文件
+				HTTPFile httpFile = new HTTPFile(xlglPicture.getPictureId());
+				boolean delete = httpFile.delete();
+				if(delete) {
+					//删除文件表中记录
+					xlglPictureService.delete(xlglPicture.getId());
+				}
+			}
+		}
 		Response.ok();
 	}
 	

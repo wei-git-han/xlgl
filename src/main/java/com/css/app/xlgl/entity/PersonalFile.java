@@ -3,12 +3,19 @@ package com.css.app.xlgl.entity;
 import java.io.Serializable;
 
 public class PersonalFile implements Serializable{
+	//科目id
 	private String examineSubjectId;
+	//科目名称
 	private String examineSubjectName;
+	//考试名称
 	private String examineName;
+	//总分数
 	private Integer fractionSum;
+	//用户id
 	private String createUserId;
+	//用户名称
 	private String userName;
+	//等级
 	private String level;
 	//排名
 	private String ranking;

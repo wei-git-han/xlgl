@@ -93,5 +93,9 @@
 			#{id}
 		</foreach>
 	</delete>
+	
+	<delete id="deleteByPictureId">
+		delete from XLGL_PICTURE where PICTURE_ID = #{value}
+	</delete>
 
 </mapper>

@@ -1,8 +1,10 @@
 package com.css.app.xlgl.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,8 +21,12 @@ import com.css.base.utils.CurrentUser;
 import com.css.base.utils.PageUtils;
 import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
+
+import cn.com.css.filestore.impl.HTTPFile;
+
 import com.css.base.utils.Response;
 import com.css.base.utils.StringUtils;
+import com.css.app.xlgl.dto.AccessoryFileDto;
 import com.css.app.xlgl.entity.XlglPicture;
 import com.css.app.xlgl.entity.XlglWarCommonQueueRead;
 import com.css.app.xlgl.entity.XlglWarSpecialty;
@@ -38,7 +44,7 @@ import com.css.app.xlgl.service.XlglWarSpecialtyService;
  * @date 2020-08-14 16:50:25
  */
 @Controller
-@RequestMapping("/xlglwarspecialty")
+@RequestMapping("app/xlgl/xlglwarspecialty")
 public class XlglWarSpecialtyController {
 	@Autowired
 	private XlglWarSpecialtyService xlglWarSpecialtyService;
@@ -52,8 +58,9 @@ public class XlglWarSpecialtyController {
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	public void list(Integer page, Integer limit){
+	public void list(Integer page, Integer limit,String title){
 		Map<String, Object> map = new HashMap<>();
+		map.put("title", title);
 		PageHelper.startPage(page, limit);
 		
 		//查询列表数据
@@ -70,15 +77,21 @@ public class XlglWarSpecialtyController {
 				xlglWarSpecialty.setReadStatus("0");
 			}
 			fileMap.put("id", xlglWarSpecialty.getId());
-			List<XlglPicture> queryList = xlglPictureService.queryList(map);
-			List<String> list = new ArrayList<String>();
+			List<XlglPicture> queryList = xlglPictureService.queryList(fileMap);
+			
+			List<AccessoryFileDto> list = new LinkedList<AccessoryFileDto>();
 			for (XlglPicture xlglPicture : queryList) { //1:图片，2：视频，3：附件，4：封面
 				if(xlglPicture.getPictureType().equals("2")) {
 					xlglWarSpecialty.setVideoFile(xlglPicture.getPictureId());
+					xlglWarSpecialty.setVideoFileName(xlglPicture.getPictureName());
 				}else if(xlglPicture.getPictureType().equals("3")) {
-					list.add(xlglPicture.getPictureId());
+					AccessoryFileDto accessoryFileDto = new AccessoryFileDto();
+					accessoryFileDto.setFileId(xlglPicture.getPictureId());
+					accessoryFileDto.setFileName(xlglPicture.getPictureName());
+					list.add(accessoryFileDto);
 				}else if(xlglPicture.getPictureType().equals("4")) {
 					xlglWarSpecialty.setCoverFile(xlglPicture.getPictureId());
+					xlglWarSpecialty.setCoverFileName(xlglPicture.getPictureName());
 				}
 			}
 			xlglWarSpecialty.setAccessoryFileArray(list);
@@ -99,12 +112,35 @@ public class XlglWarSpecialtyController {
 		map.put("specialtyId", id);
 		map.put("readUserId", ssoUser.getUserId());
 		XlglWarSpecialty xlglWarSpecialty = xlglWarSpecialtyService.queryObject(id);
-		xlglWarSpecialty.setViewNumber(xlglWarSpecialty.getViewNumber()+1);
+		//获取图片、视频、或封面
+		Map<String, Object> fileMap = new HashMap<>();
+		fileMap.put("id", xlglWarSpecialty.getId());
+		
+		List<XlglPicture> pictureList = xlglPictureService.queryList(fileMap);
+		
+		List<AccessoryFileDto> list = new LinkedList<AccessoryFileDto>();
+		for (XlglPicture xlglPicture : pictureList) { //1:图片，2：视频，3：附件，4：封面
+			if(xlglPicture.getPictureType().equals("2")) {
+				xlglWarSpecialty.setVideoFile(xlglPicture.getPictureId());
+				xlglWarSpecialty.setVideoFileName(xlglPicture.getPictureName());
+			}else if(xlglPicture.getPictureType().equals("3")) {
+				AccessoryFileDto accessoryFileDto = new AccessoryFileDto();
+				accessoryFileDto.setFileId(xlglPicture.getPictureId());
+				accessoryFileDto.setFileName(xlglPicture.getPictureName());
+				list.add(accessoryFileDto);
+			}else if(xlglPicture.getPictureType().equals("4")) {
+				xlglWarSpecialty.setCoverFile(xlglPicture.getPictureId());
+				xlglWarSpecialty.setCoverFileName(xlglPicture.getPictureName());
+			}
+		}
+		xlglWarSpecialty.setAccessoryFileArray(list);
+
+		//修改浏览次数
 		if(xlglWarSpecialty.getViewNumber() !=null) {
 			xlglWarSpecialty.setViewNumber(xlglWarSpecialty.getViewNumber()+1);
 		}else {
-			xlglWarSpecialty.setViewNumber(1);
-		}
+		
+		}	xlglWarSpecialty.setViewNumber(1);
 		xlglWarSpecialtyService.update(xlglWarSpecialty);
 		//已读记录表
 		List<XlglWarSpecialtyRead> queryList = xlglWarSpecialtyReadService.queryList(map);
@@ -135,7 +171,7 @@ public class XlglWarSpecialtyController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public void save(XlglWarSpecialty xlglWarSpecialty,String coverFile,String videoFile,String[] accessoryFile){
+	public void save(XlglWarSpecialty xlglWarSpecialty,String coverFile,String videoFile,String[] accessoryArray){
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		Date date = new Date();
 		String random = UUIDUtils.random();
@@ -152,8 +188,8 @@ public class XlglWarSpecialtyController {
 		if(StringUtils.isNotBlank(videoFile)) {
 			xlglPictureService.savePicture(random,videoFile,"2");
 		}
-		if(accessoryFile !=null) {
-			for (String string : accessoryFile) {
+		if(accessoryArray !=null) {
+			for (String string : accessoryArray) {
 				xlglPictureService.savePicture(random,string,"3");
 			}
 		}
@@ -162,12 +198,26 @@ public class XlglWarSpecialtyController {
 	
 	/**
 	 * 修改
+	 * @param deleAccessoryId 删除附件id
+	 * @param accessoryFile 新增附件id
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	public void update(XlglWarSpecialty xlglWarSpecialty){
+	public void update(XlglWarSpecialty xlglWarSpecialty,String[] deleAccessoryId,String[] accessoryFileId){
+		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		xlglWarSpecialty.setUpdateUser(CurrentUser.getUserId());
+		xlglWarSpecialty.setUpdateDate(format);
 		xlglWarSpecialtyService.update(xlglWarSpecialty);
-		
+		if(deleAccessoryId.length >0) {
+			for (String string : deleAccessoryId) {
+				xlglPictureService.deleteByPictureId(string);
+			}
+		}
+		if(accessoryFileId.length>0) {
+			for (String string : accessoryFileId) {
+				xlglPictureService.savePicture(xlglWarSpecialty.getId(), string, "3");
+			}
+		}
 		Response.ok();
 	}
 	
@@ -178,7 +228,21 @@ public class XlglWarSpecialtyController {
 	@RequestMapping("/delete")
 	public void delete(String[] ids){
 		xlglWarSpecialtyService.deleteBatch(ids);
-		
+		for (String string : ids) {
+			//获取图片、视频、或封面
+			Map<String, Object> fileMap = new HashMap<>();
+			fileMap.put("id", string);
+			List<XlglPicture> pictureList = xlglPictureService.queryList(fileMap);
+			for (XlglPicture xlglPicture : pictureList) {
+				//删除文件服务器上文件
+				HTTPFile httpFile = new HTTPFile(xlglPicture.getPictureId());
+				boolean delete = httpFile.delete();
+				if(delete) {
+					//删除文件表中记录
+					xlglPictureService.delete(xlglPicture.getId());
+				}
+			}
+		}
 		Response.ok();
 	}
 	

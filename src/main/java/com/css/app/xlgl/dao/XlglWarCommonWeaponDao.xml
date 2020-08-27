@@ -9,6 +9,10 @@
 
 	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglWarCommonWeapon">
 		select * from XLGL_WAR_COMMON_WEAPON 
+				where 1 = 1
+		<if test="title != null and title != ''">
+		 and TACTIC_TITLE like '%'||#{title}||'%'
+		</if>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
