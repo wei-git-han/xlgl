@@ -188,6 +188,8 @@ public class XlglZbglController {
 		file1.setFileId(fileId);
 		file1.setFileName(fileName);
 		//file1.setFileServerFormatId(formatId);
+		file1.setCreatedTime(new Date());
+		file1.setCreator(CurrentUser.getUsername());
 		xlglZbglService.save(file1);
 		Response.json(json);
 	}

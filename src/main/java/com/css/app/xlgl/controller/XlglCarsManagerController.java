@@ -19,6 +19,7 @@ import com.css.app.xlgl.entity.XlglCarsManager;
 import com.css.app.xlgl.entity.XlglPicture;
 import com.css.app.xlgl.service.XlglCarsManagerService;
 import com.css.app.xlgl.service.XlglPictureService;
+import com.css.base.utils.CurrentUser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -199,6 +200,8 @@ public class XlglCarsManagerController {
 		file1.setId(UUIDUtils.random());
 		file1.setInfoId(fileId);
 		file1.setFileName(fileName);
+		file1.setCreatedTime(new Date());
+		file1.setUploadUser(CurrentUser.getUsername());
 		//file1.setFileServerFormatId(formatId);
 		xlglCarsManagerService.save(file1);
 		Response.json(json);
