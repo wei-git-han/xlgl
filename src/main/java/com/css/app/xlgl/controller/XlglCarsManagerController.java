@@ -1,7 +1,9 @@
 package com.css.app.xlgl.controller;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +31,8 @@ import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 import com.css.base.utils.Response;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -202,10 +206,33 @@ public class XlglCarsManagerController {
 
 	@ResponseBody
 	@RequestMapping("/downLoad")
-	public void downLoad(String fileId) {
+	public void downLoad(String fileId,HttpServletResponse response) throws IOException {
+		OutputStream os = null;
+		byte[] buff = new byte[1024];
 		HTTPFile httpFile = new HTTPFile(fileId);
 		String fileName = httpFile.getFileName();
-		Response.download(fileName, httpFile.getInputSteam());
+		response.reset();
+		response.setContentType("application/octet-stream");
+		response.setCharacterEncoding("utf-8");
+		response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+		os = response.getOutputStream();
+		BufferedInputStream bis = new BufferedInputStream(httpFile.getInputSteam());
+		int i = 0;
+		try {
+			while ((i = bis.read(buff)) != -1) {
+				os.write(buff,0,i);
+				os.flush();
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			bis.close();
+		}
+
+
+		//Response.download(fileName, httpFile.getInputSteam());
+
 	}
 
 	//获取文件列表
