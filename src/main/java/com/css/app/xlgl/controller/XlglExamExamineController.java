@@ -317,7 +317,7 @@ public class XlglExamExamineController {
 		String userId = CurrentUser.getUserId();
 		map.put("examineId", examineId);
 		map.put("replyUserId", userId);
-		map.put("isNotExam",'0');
+		map.put("isNotExam",isNotExam);
 		map.put("status", status);
 		List<XlglExamExamineMakeup> makeupList = xlglExamExamineMakeupService.queryList(map);
 		if(makeupList.size()>0) {
