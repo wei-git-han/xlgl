@@ -1,7 +1,9 @@
 package com.css.app.xlgl.controller;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.*;
 
 import cn.com.css.filestore.impl.HTTPFile;
@@ -9,6 +11,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.AppConfig;
 import com.css.addbase.FileBaseUtil;
 import com.css.addbase.suwell.OfdTransferUtil;
+import com.css.app.xlgl.entity.XlglCarsManager;
 import com.css.app.xlgl.entity.XlglPicture;
 import com.css.app.xlgl.entity.XlglRule;
 import com.css.app.xlgl.service.XlglRuleService;
@@ -25,6 +28,8 @@ import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 import com.css.base.utils.Response;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -66,7 +71,27 @@ public class XlglRuleController {
 		PageUtils pageUtil = new PageUtils(xlglRuleList);
 		Response.json("page",pageUtil);
 	}
-	
+
+	//获取文件列表
+	//type : 0:全军管理法规；1:装备发展部管理法规；2：常用资料；3：其他法规
+	@ResponseBody
+	@RequestMapping("/getFileList")
+	public void getFileList(Integer page, Integer limit,String type){
+		List<XlglRule> xlglRuleList = new ArrayList<>();
+		Map<String, Object> map = new HashMap<>();
+		map.put("type",type);
+		PageHelper.startPage(page, limit);
+		if("1".equals(type)){
+			xlglRuleList = xlglRuleService.queryAll(map);
+		}else {
+			//查询列表数据
+			xlglRuleList = xlglRuleService.queryList(map);
+		}
+
+		PageUtils pageUtil = new PageUtils(xlglRuleList);
+		Response.json("page",pageUtil);
+
+	}
 	
 	/**
 	 * 信息
@@ -190,5 +215,58 @@ public class XlglRuleController {
 		}
 		Response.json(json);
 	}
+
+	@ResponseBody
+	@RequestMapping("/uploadFile")
+	public void upLoad(@RequestParam(required = false) MultipartFile[] file,String type) {
+		JSONObject json = new JSONObject();
+		String fileId = FileBaseUtil.fileServiceUpload(file[0]);
+		String fileName = file[0].getOriginalFilename();
+		json.put("fileId", fileId);
+		XlglRule file1 = new XlglRule();
+		file1.setId(UUIDUtils.random());
+		file1.setInfoId(fileId);
+		file1.setFileName(fileName);
+		file1.setUploadUser(CurrentUser.getUsername());
+		file1.setType(type);
+		xlglRuleService.save(file1);
+		Response.json(json);
+	}
+
+	@ResponseBody
+	@RequestMapping("/downLoad")
+	public void downLoad(String fileId,HttpServletResponse response) throws IOException {
+		OutputStream os = null;
+		byte[] buff = new byte[1024];
+		HTTPFile httpFile = new HTTPFile(fileId);
+		String fileName = httpFile.getFileName();
+		response.reset();
+		response.setContentType("application/octet-stream");
+		response.setCharacterEncoding("UTF-8");
+		response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+		os = response.getOutputStream();
+		BufferedInputStream bis = new BufferedInputStream(httpFile.getInputSteam());
+		int i = 0;
+		try {
+			while ((i = bis.read(buff)) != -1) {
+				os.write(buff, 0, i);
+				os.flush();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			bis.close();
+		}
+	}
+
+
+	@ResponseBody
+	@RequestMapping("/downLoadFile")
+	public void downLoad(String fileId) {
+		HTTPFile httpFile = new HTTPFile(fileId);
+		String fileName = httpFile.getFileName();
+		Response.download(fileName, httpFile.getInputSteam());
+	}
+
 	
 }
