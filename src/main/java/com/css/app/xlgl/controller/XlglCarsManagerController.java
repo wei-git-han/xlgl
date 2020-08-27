@@ -220,19 +220,14 @@ public class XlglCarsManagerController {
 		int i = 0;
 		try {
 			while ((i = bis.read(buff)) != -1) {
-				os.write(buff,0,i);
+				os.write(buff, 0, i);
 				os.flush();
-
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			bis.close();
 		}
-
-
-		//Response.download(fileName, httpFile.getInputSteam());
-
 	}
 
 	//获取文件列表
