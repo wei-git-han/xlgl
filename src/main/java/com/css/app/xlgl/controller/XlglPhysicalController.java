@@ -140,10 +140,10 @@ public class XlglPhysicalController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	public void delete(String[] id){
-		xlglPhysicalService.deleteBatch(id);
-		
-		Response.ok();
+	public void delete(String id){
+		String[] ids = id.split(",");
+		xlglPhysicalService.deleteBatch(ids);
+		Response.json("result","success");
 	}
 
 	/**
