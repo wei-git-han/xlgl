@@ -1,13 +1,16 @@
 package com.css.app.xlgl.controller;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONArray;
+import com.css.addbase.FileBaseUtil;
+import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.orgservice.OrgService;
 import com.css.addbase.orgservice.Organ;
 import com.css.app.xlgl.entity.XlglPicture;
@@ -29,6 +34,7 @@ import com.css.base.entity.SSOUser;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.PageUtils;
 import com.css.base.utils.Response;
+import com.css.base.utils.StringUtils;
 import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 
@@ -54,6 +60,8 @@ public class XlglSafetyAnalyseController {
 	private XlglPictureService xlglPictureService;
 	@Autowired
 	private XlglSafetyCheckupService xlglSafetyCheckupService;
+	@Autowired
+	private BaseAppOrganService baseAppOrganService;
 	
 	/**
 	 * 列表
@@ -127,12 +135,50 @@ public class XlglSafetyAnalyseController {
 		Response.ok();
 	}
 	/**
+	 * 详情里文件列表
+	 * */
+	@ResponseBody
+	@RequestMapping("/infoList")
+	public void infoList(String organId,String id){
+		Map<String, Object> map = new HashMap<>();
+		map.put("organId", organId);	
+		List<XlglSafetyAnalyse> list = new ArrayList<XlglSafetyAnalyse>();
+		//查询列表数据
+		List<XlglSafetyAnalyse> xlglSafetyAnalyseList = xlglSafetyAnalyseService.queryList(map);
+		for (XlglSafetyAnalyse xlglSafetyAnalyse : xlglSafetyAnalyseList) {
+			map.put("id", xlglSafetyAnalyse.getId());
+			List<XlglPicture> queryList = xlglPictureService.queryList(map);
+			for (XlglPicture xlglPicture : queryList) {
+				XlglSafetyAnalyse xsa = new XlglSafetyAnalyse();
+				xsa.setFileIds(xlglPicture.getPictureId());
+				xsa.setFileName(xlglPicture.getPictureName());
+				xsa.setId(xlglPicture.getId());
+				xsa.setUploadDate(xlglPicture.getCreateTime());
+				xsa.setCreateUsername(xlglPicture.getUserName());
+				xsa.setCreateUser(xlglPicture.getUserId());
+				list.add(xsa);
+			}
+		}
+		Response.json(list);
+	}
+	/**
 	 * 修改
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
 	public void update(XlglSafetyAnalyse xlglSafetyAnalyse){
 		xlglSafetyAnalyseService.update(xlglSafetyAnalyse);
+		
+		Response.ok();
+	}
+	
+	/**
+	 * 删除文件
+	 */
+	@ResponseBody
+	@RequestMapping("/deletePicture")
+	public void deletePicture(String[] ids){
+		xlglPictureService.deleteBatch(ids);
 		
 		Response.ok();
 	}
@@ -154,22 +200,59 @@ public class XlglSafetyAnalyseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/uploadPicture")
-	public void uploadPicture(@RequestParam(value="file",required=false) MultipartFile[] file ){
+	public void uploadPicture(@RequestParam(value="file",required=false) MultipartFile file ,String content,String id){
 		JSONObject json = new JSONObject();
-		LinkedList<String> filePathList = new LinkedList<String>();
-		LinkedList<String> fileidList = new LinkedList<String>();
+		String userId = CurrentUser.getUserId();
+		SSOUser ssoUser = CurrentUser.getSSOUser();
+		Date date = new Date();
+		
+		String random = UUIDUtils.random();
+		XlglSafetyAnalyse xlglSafetyAnalyse = new XlglSafetyAnalyse();
+		XlglPicture xlglPicture = new XlglPicture();
+		xlglPicture.setId(UUIDUtils.random());
 		try {
-			for (MultipartFile multipartFile : file) {
-				 HTTPFile httpFile=HTTPFile.save( multipartFile.getInputStream(),multipartFile.getOriginalFilename());
-				 filePathList.add(httpFile.getFilePath()); 
-				 fileidList.add(httpFile.getFileId());
+			if(file !=null) {
+				String fileId = FileBaseUtil.fileServiceUpload(file);
+				String fileName = file.getOriginalFilename();
+				 json.put("fileId",fileId);
+				 json.put("fileName", fileName);
+				 xlglSafetyAnalyse.setStatus("1");
+				 xlglSafetyAnalyse.setUploadDate(date);
+				 xlglPicture.setPictureId(fileId);
+				 xlglPicture.setPictureName(fileName);
+				 xlglPicture.setUserId(userId);
+				 xlglPicture.setUserName(ssoUser.getFullname());
+				 xlglPicture.setCreateTime(date);
+		
+			}else {
+				xlglSafetyAnalyse.setUploadDate(date);
+				xlglSafetyAnalyse.setStatus("0");
+			}	
+			if(StringUtils.isNotBlank(id)) {
+				 xlglPicture.setFileId(id);
+			}else {
+				 xlglPicture.setFileId(random);
+				 xlglSafetyAnalyse.setId(random);
+				 xlglSafetyAnalyse.setUpdateUser(userId);
+				 xlglSafetyAnalyse.setUpdateDate(date);
+				 xlglSafetyAnalyse.setUploadUser(userId);
+				 xlglSafetyAnalyse.setCreateUser(userId);
+				 xlglSafetyAnalyse.setCreateDate(date);
+				 xlglSafetyAnalyse.setOrganId(ssoUser.getOrganId());
+				 xlglSafetyAnalyse.setOrganName(ssoUser.getOrgName());
+				 xlglSafetyAnalyse.setContent(content);
+				 xlglSafetyAnalyse.setCreateUsername(ssoUser.getFullname());
+				 xlglSafetyAnalyseService.save(xlglSafetyAnalyse);
 			}
-			 json.put("filePath",filePathList);
-			 json.put("fileid", fileidList);
-			 Response.json(json);
-		} catch (IOException e) {
+			 xlglPictureService.save(xlglPicture);
+	
+		} catch (Exception e) {
 			e.printStackTrace();
+			Response.error();
 		}
+		json.put("code", "0");
+		json.put("msg", "success");
+		Response.json(json);
 	}
 	
 	/**
@@ -178,45 +261,38 @@ public class XlglSafetyAnalyseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/upload")
-	public void uploadPicture(@RequestParam(value="file",required=false) MultipartFile file ){
+	public void upload(@RequestParam(value="file",required=false) MultipartFile file,String orgId){
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		Date date = new Date();
 		JSONObject json = new JSONObject();
-		Map<String, Object> map = new HashMap<>();
-		map.put("orgId", ssoUser.getOrganId());
-		List<XlglSafetyCheckup> queryList = xlglSafetyCheckupService.queryList(map);
-		 String filePath = "";
+		Organ organ = orgService.getOrgan(orgId);
 		 String fileId = "";
 		 String fileName = "";
 		try {
-			 HTTPFile httpFile=HTTPFile.save( file.getInputStream(),file.getOriginalFilename());
-			 filePath = httpFile.getFilePath();
-			 fileId = httpFile.getFileId();
-			 fileName = httpFile.getFileName();
+			 fileId = FileBaseUtil.fileServiceUpload(file);
+			 fileName = file.getOriginalFilename();
+			 json.put("fileId", fileId);
 			
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
+			Response.error();
 		}
-		if(queryList.size()>0) {
-			XlglSafetyCheckup xlglSafetyCheckup = queryList.get(0);
-			xlglSafetyCheckup.setFileId(fileId);
-			xlglSafetyCheckup.setFileName(fileName);
-			xlglSafetyCheckup.setUpdateDate(date);
-			xlglSafetyCheckup.setUpdateUser(ssoUser.getUserId());
-			xlglSafetyCheckupService.update(xlglSafetyCheckup);
-		}else {
 			XlglSafetyCheckup xlglSafetyCheckup = new XlglSafetyCheckup();
 			xlglSafetyCheckup.setFileId(fileId);
 			xlglSafetyCheckup.setFileName(fileName);
-			xlglSafetyCheckup.setOrgId(ssoUser.getOrganId());
-			xlglSafetyCheckup.setOrgName(ssoUser.getOrgName());
+			xlglSafetyCheckup.setOrgId(orgId);
+			xlglSafetyCheckup.setOrgName(organ.getOrganName());
 			xlglSafetyCheckup.setCreateUser(ssoUser.getUserId());
 			xlglSafetyCheckup.setCreateDate(date);
 			xlglSafetyCheckup.setUpdateDate(date);
 			xlglSafetyCheckup.setUpdateUser(ssoUser.getUserId());
+			xlglSafetyCheckup.setCreateUserName(ssoUser.getFullname());
+			xlglSafetyCheckup.setId(UUIDUtils.random());
 			xlglSafetyCheckupService.save(xlglSafetyCheckup);
-		}
-		 Response.ok();
+		
+		json.put("code", "0");
+		json.put("msg", "success");
+		Response.json(json);
 	}
 	
 	/**
@@ -230,7 +306,38 @@ public class XlglSafetyAnalyseController {
 		String filePath = httpFile.getFilePath();
 		Response.json(filePath);
 	}
-	
+
+	/**
+	 * 下载功能，只能预览
+	 * @param fileId
+	 * @param response
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping("/downLoad")
+	public void downLoad(String fileId,HttpServletResponse response) throws IOException {
+		OutputStream os = null;
+		byte[] buff = new byte[1024];
+		HTTPFile httpFile = new HTTPFile(fileId);
+		String fileName = httpFile.getFileName();
+		response.reset();
+		response.setContentType("application/octet-stream");
+		response.setCharacterEncoding("UTF-8");
+		response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+		os = response.getOutputStream();
+		BufferedInputStream bis = new BufferedInputStream(httpFile.getInputSteam());
+		int i = 0;
+		try {
+			while ((i = bis.read(buff)) != -1) {
+				os.write(buff, 0, i);
+				os.flush();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			bis.close();
+		}
+	}
 
 	/**
 	 * 部门树
@@ -238,7 +345,8 @@ public class XlglSafetyAnalyseController {
 	@RequestMapping(value = "/tree")
 	@ResponseBody
 	public Object getDeptTree(HttpServletRequest request) {
-		JSONObject list=  getOrganTree("root");
+		Map<String, Object> map = new HashMap<>();
+		JSONObject list=  getOrganTree("root",map);
 		JSONObject json = new JSONObject();
 		json.put("opened", true);
 		list.put("state", json);
@@ -246,18 +354,22 @@ public class XlglSafetyAnalyseController {
 	}
 	
 	
-	public JSONObject getOrganTree(String id){
+	public JSONObject getOrganTree(String id,Map<String, Object> map){
 		JSONObject result = new JSONObject();
 		JSONArray jsons = new JSONArray();
 		Organ organ = orgService.getOrgan(id);
 		result.put("id", organ.getOrganId());
 		result.put("text", organ.getOrganName());
-		Organ[] organs = orgService.getSubOrg(id, true, true);
+		Organ[] organs = orgService.getSubOrg(id, false, true);
 		for (Organ sysOrgan:organs) {
-			JSONObject json = new JSONObject();
-			json.put("id", sysOrgan.getOrganId());
-			json.put("text", sysOrgan.getOrganName());
-		    jsons.add(getOrganTree(sysOrgan.getOrganId()));
+			if(!map.containsKey(sysOrgan.getOrganId())) {
+				map.put(sysOrgan.getOrganId(), "");
+				JSONObject json = new JSONObject();
+				json.put("id", sysOrgan.getOrganId());
+				json.put("text", sysOrgan.getOrganName());
+			    jsons.add(getOrganTree(sysOrgan.getOrganId(),map));
+			}
+			
 		}
 		if (jsons.size()>0) {
 			result.put("children", jsons);

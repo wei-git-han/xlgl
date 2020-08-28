@@ -1,5 +1,6 @@
 package com.css.app.xlgl.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Controller;
 import com.css.base.utils.PageUtils;
 import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
+
+import net.sf.json.JSONObject;
+
 import com.css.base.utils.Response;
 import com.css.app.xlgl.entity.XlglSafetyCheckup;
 import com.css.app.xlgl.service.XlglSafetyCheckupService;
@@ -95,7 +99,7 @@ public class XlglSafetyCheckupController {
 	}
 	
 	/**
-	 * 信息
+	 * 文件列表
 	 */
 	@ResponseBody
 	@RequestMapping("/infoByOrganId")
@@ -104,6 +108,33 @@ public class XlglSafetyCheckupController {
 		map.put("orgId", organId);
 		List<XlglSafetyCheckup> queryList = xlglSafetyCheckupService.queryList(map);
 		Response.json("xlglSafetyCheckup", queryList.get(0));
+	}
+	
+	/**
+	 * 最近一次上传的文件
+	 */
+	@ResponseBody
+	@RequestMapping("/infoByOrganIdOne")
+	public void infoByOrganIdOne(String organId){
+		JSONObject json = new JSONObject();
+		Map<String, Object> map = new HashMap<>();
+		map.put("orgId", organId);
+		List<XlglSafetyCheckup> queryList = xlglSafetyCheckupService.queryList(map);
+		if(queryList.size()>0) {
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			XlglSafetyCheckup xlglSafetyCheckup = queryList.get(0);
+			String createDateStr = format.format(xlglSafetyCheckup.getCreateDate());
+			String updateDateStr = format.format(xlglSafetyCheckup.getUpdateDate());
+			xlglSafetyCheckup.setCreateDateStr(createDateStr);
+			xlglSafetyCheckup.setUpdateDateStr(updateDateStr);
+			json.put("xlglSafetyCheckup", xlglSafetyCheckup);
+			json.put("code", "0");
+			json.put("msg", "success");
+		}else {
+			json.put("code", "200");
+			json.put("msg", "success");
+		}
+		Response.json(json);
 	}
 	
 }
