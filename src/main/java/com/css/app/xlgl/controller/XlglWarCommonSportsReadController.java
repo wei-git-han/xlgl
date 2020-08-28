@@ -28,7 +28,7 @@ import com.css.app.xlgl.service.XlglWarCommonSportsReadService;
  * @date 2020-08-17 10:26:33
  */
 @Controller
-@RequestMapping("/xlglwarcommonsportsread")
+@RequestMapping("app/xlgl/xlglwarcommonsportsread")
 public class XlglWarCommonSportsReadController {
 	@Autowired
 	private XlglWarCommonSportsReadService xlglWarCommonSportsReadService;

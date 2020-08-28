@@ -57,7 +57,11 @@
 			"UPDATE_USER", 
 			"UPDATE_DATE", 
 			"ISSUE_STATUS",
-			"STATUS"
+			"STATUS",
+			"OVER_STATUS",
+			"EXAMINE_END_DATE",
+			"ISSUE_DATE",
+			"LIANXI_TYPE"
 		)
 		values
 		(
@@ -73,7 +77,11 @@
 			#{updateUser}, 
 			#{updateDate}, 
 			#{issueStatus},
-			#{status}
+			#{status},
+			#{overStatus},
+			#{examineEndDate},
+			#{issueDate},
+			#{lianxiType}
 		)
 	</insert>
 	 
@@ -90,8 +98,12 @@
 			<if test="createDate != null">"CREATE_DATE" = #{createDate}, </if>
 			<if test="updateUser != null">"UPDATE_USER" = #{updateUser}, </if>
 			<if test="updateDate != null">"UPDATE_DATE" = #{updateDate}, </if>
-			<if test="issueStatus != null">"ISSUE_STATUS" = #{issueStatus},</if>
-			<if test="status != null">"STATUS" = #{status}</if>
+			<if test="issueStatus != null">"ISSUE_STATUS" = #{issueStatus}, </if>
+			<if test="status != null">"STATUS" = #{status}, </if>
+			<if test="examineEndDate != null">"EXAMINE_END_DATE" = #{examineEndDate}, </if>
+			<if test="issueDate != null">"ISSUE_DATE" = #{issueDate}, </if>
+			<if test="lianxiType != null">"LIANXI_TYPE" = #{lianxiType}, </if>
+			<if test="overStatus != null">"OVER_STATUS" = #{overStatus} </if>
 		</set>
 		where id = #{id}
 	</update>

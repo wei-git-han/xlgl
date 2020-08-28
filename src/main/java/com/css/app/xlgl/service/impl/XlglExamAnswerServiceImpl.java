@@ -53,5 +53,17 @@ public class XlglExamAnswerServiceImpl implements XlglExamAnswerService {
 		xlglExamAnswerDao.saveBatch(list);
 		
 	}
+
+	@Override
+	public int queryCorrectStatus(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return xlglExamAnswerDao.queryCorrectStatus(map);
+	}
+
+	@Override
+	public int deleteByExamineId(Object id) {
+		// TODO Auto-generated method stub
+		return xlglExamAnswerDao.deleteByExamineId(id);
+	}
 	
 }

@@ -1,6 +1,7 @@
 package com.css.app.xlgl.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -18,5 +19,9 @@ import com.css.base.dao.BaseDao;
 @Mapper
 public interface XlglExamAnswerDao extends BaseDao<XlglExamAnswer> {
 	void saveBatch(@Param("list")List<XlglExamAnswer> list);
+	
+	int queryCorrectStatus(Map<String, Object> map);
+	
+	int deleteByExamineId(Object id);
 	
 }

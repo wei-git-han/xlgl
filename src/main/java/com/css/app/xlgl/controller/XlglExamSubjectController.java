@@ -105,7 +105,6 @@ public class XlglExamSubjectController {
 			map.put("topicType", delType);
 			xlglExamTopicService.deleteByType(map);
 		}
-	
 		Response.ok();
 	}
 	
@@ -139,6 +138,7 @@ public class XlglExamSubjectController {
 				split[0]=xlglExamSubject.getSubjectType();
 				xlglExamSubject.setSubjectTypeAll(split);
 			}
+			jsons.add(json);
 			if(split.length>0) {
 				JSONArray jsonTypeArray = new JSONArray();
 				for (String string : split) {
@@ -168,7 +168,6 @@ public class XlglExamSubjectController {
 					jsonTypeArray.add(jsontype);
 					json.put("children", jsonTypeArray);
 				}
-				jsons.add(json);
 			}
 		}
 		Response.json(jsons);
@@ -203,4 +202,20 @@ public class XlglExamSubjectController {
 		
 		Response.json("findList", map);
 	}
+
+	/**
+	 * 获得科目说明
+	 * */
+	@ResponseBody
+	@RequestMapping("/getSubjectState")
+	public void getSubjectState(String id){
+		JSONObject jsonbject = new JSONObject();
+		XlglExamSubject queryObject = xlglExamSubjectService.queryObject(id);
+		if(queryObject != null) {
+			jsonbject.put("id", queryObject.getId());
+			jsonbject.put("state", queryObject.getState());
+		}
+		Response.json(jsonbject);
+	}
+	
 }

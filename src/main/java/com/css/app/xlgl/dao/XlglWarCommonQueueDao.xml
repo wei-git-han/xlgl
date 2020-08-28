@@ -9,6 +9,10 @@
 
 	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglWarCommonQueue">
 		select * from XLGL_WAR_COMMON_QUEUE 
+		where 1 = 1
+		<if test="title != null and title != ''">
+		 and TACTIC_TITLE like '%'||#{title}||'%'
+		</if>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
@@ -35,7 +39,8 @@
 			"CONTENT", 
 			"TACTIC_TITLE", 
 			"VIDEO_FILE", 
-			"CREATE_ORGAN_ID"
+			"CREATE_ORGAN_ID",
+			"VIEW_NUMBER"
 		)
 		values
 		(
@@ -53,7 +58,8 @@
 			#{content}, 
 			#{tacticTitle}, 
 			#{videoFile}, 
-			#{createOrganId}
+			#{createOrganId},
+			#{viewNumber}
 		)
 	</insert>
 	 
@@ -73,6 +79,7 @@
 			<if test="content != null">"CONTENT" = #{content}, </if>
 			<if test="tacticTitle != null">"TACTIC_TITLE" = #{tacticTitle}, </if>
 			<if test="videoFile != null">"VIDEO_FILE" = #{videoFile}, </if>
+			<if test="viewNumber != null">"VIEW_NUMBER" = #{viewNumber}, </if>
 			<if test="createOrganId != null">"CREATE_ORGAN_ID" = #{createOrganId}</if>
 		</set>
 		where id = #{id}

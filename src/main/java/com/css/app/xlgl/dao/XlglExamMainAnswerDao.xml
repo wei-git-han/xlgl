@@ -75,7 +75,8 @@
 			"CREATE_USER",
 			"UPDATE_USER",
 			"STATUS",
-			"ISNOTEXAM"
+			"ISNOTEXAM",
+			"LIANXI_TYPE"
 		)
 		values
 		(
@@ -94,7 +95,8 @@
 			#{createUser},
 			#{updateUser},
 			#{status},
-			#{isNotExam}
+			#{isNotExam},
+			#{lianxiType}
 		)
 	</insert>
 	 
@@ -115,6 +117,7 @@
 			<if test="createUser != null">"CREATE_USER" = #{createUser}, </if>
 			<if test="updateUser != null">"UPDATE_USER" = #{updateUser}, </if>
 			<if test="status != null">"STATUS" = #{status}, </if>
+			<if test="lianxiType != null">"LIANXI_TYPE" = #{lianxiType}, </if>
 			<if test="isNotExam != null">"ISNOTEXAM" = #{isNotExam}</if>
 		</set>
 		where id = #{id}
@@ -159,7 +162,11 @@
 			"CREATE_DATE", 
 			"UPDATE_DATE", 
 			"MAKEUP_STATUS", 
-			"MAKEUP_EXAMINE_ID"
+			"MAKEUP_EXAMINE_ID",
+			"CREATE_USER",
+			"UPDATE_USER",
+			"STATUS",
+			"ISNOTEXAM"
 		)
 		values
 		<foreach collection="list" item="item" index="index" open="" close="" separator=",">
@@ -175,7 +182,11 @@
 			#{item.createDate}, 
 			#{item.updateDate}, 
 			#{item.makeupStatus}, 
-			#{item.makeupExamineId}
+			#{item.makeupExamineId},
+			#{item.createUser},
+			#{item.updateUser},
+			#{item.status},
+			#{item.isNotExam}
 		)
 		</foreach>
 	</insert>

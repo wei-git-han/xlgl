@@ -32,5 +32,10 @@ public interface XlglPictureService {
 
 	List<XlglPicture> queryAllInfoByInfoId(Map<String,Object> map);
 
+	
+	  int deleteByPictureId(Object id);
+
+
 	XlglPicture queryVedio(String id);
+
 }

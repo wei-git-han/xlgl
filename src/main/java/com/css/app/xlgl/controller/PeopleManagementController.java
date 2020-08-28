@@ -59,41 +59,59 @@ public class PeopleManagementController {
 		Map<String, Object> hashmap = new HashMap<>();
 		hashmap.put("userId", userId);
 		List<XlglAdminSet> queryList2 = adminSetService.queryList(hashmap);
-		XlglAdminSet xlglAdminSet = queryList2.get(0);
-		//管理员类型（1：部管理员；2：局管理员；3：参谋）
 		boolean status = false;
-		if(xlglAdminSet !=null) {
-			switch (xlglAdminSet.getAdminType()) {
-			case "1":
+		if(queryList2.size()>0) {
+			XlglAdminSet xlglAdminSet = queryList2.get(0);
+			//管理员类型（1：部管理员；2：局管理员；3：参谋）
+			if(xlglAdminSet !=null) {
+				switch (xlglAdminSet.getAdminType()) {
+				case "1":
+						status = true;
+					break;
+				case "2":
 					status = true;
 				break;
-			case "2":
-				status = true;
-			break;
-			case "4":
-				status = true;
-			break;
-			default:
+				case "4":
+					status = true;
 				break;
+				default:
+					break;
+				}
 			}
 		}
+		
 		LinkedMultiValueMap<String, Object> linkeMap = new LinkedMultiValueMap<String,Object>();
 		Map<String, Object> map = new HashMap<>();
 		PageHelper.startPage(page, limit);
 		List<BaseAppOrgan> queryList = baseAppOrganService.queryList(map);
 		PageUtils pageUtil = new PageUtils(queryList);
 		for (BaseAppOrgan baseAppOrgan : queryList) {
-			if(!status) {
-				String str =baseAppOrgan.getId().equals(xlglAdminSet.getDeptId())?"1":"0";
+			if(status) {
+				String str = "0";
+				if(queryList2.size()>0) {
+					 str =baseAppOrgan.getId().equals(queryList2.get(0).getDeptId())?"1":"0";
+				}
 				baseAppOrgan.setStatus(str);
 			}else {
 				baseAppOrgan.setStatus("1");
 			}
 			linkeMap.add("organId", baseAppOrgan.getId());
 			JSONObject jsonData = this.getNumber(linkeMap);
-			Integer yzwrs=(Integer)jsonData.get("yzwrs");
-			Integer qjrs=(Integer)jsonData.get("qjrs");
-			Integer xjrs=(Integer)jsonData.get("xjrs");
+			Integer yzwrs=0;
+			Integer qjrs=0;
+			Integer xjrs=0;
+			Object object = jsonData.get("yzwrs");
+			Object object2 = jsonData.get("qjrs");
+			Object object3 = jsonData.get("xjrs");
+			if( object!=null) {
+				yzwrs = (Integer)object;
+			}
+			if( object2!=null) {
+				yzwrs = (Integer)object2;
+			}
+			if( object3!=null) {
+				yzwrs = (Integer)object3;
+			}
 			int userIdList = this.userIdNumber();//实际在位人数
 			int zwRate = (userIdList /yzwrs)*100; //人员在位率
 			baseAppOrgan.setYzwrs(yzwrs);
@@ -159,7 +177,11 @@ public class PeopleManagementController {
 		}
 		JSONObject jsonData = this.getNumber(map);
 		int userIdList = this.userIdNumber();//实际在位人数
-		Integer object = (Integer)jsonData.get("zwrs");//应在位人数
+		Integer object = 0;
+		if(jsonData!=null) {
+			Object object2 = jsonData.get("zwrs");
+			object =(Integer)object2;//应在位人数
+		}
 		int zwRate = (userIdList /object)*100;
 		jsonData.put("zwlv", zwRate);
 		Response.json(jsonData);

@@ -28,7 +28,7 @@ import com.css.app.xlgl.service.XlglWarCommonQueueReadService;
  * @date 2020-08-17 10:26:33
  */
 @Controller
-@RequestMapping("/xlglwarcommonqueueread")
+@RequestMapping("app/xlgl/xlglwarcommonqueueread")
 public class XlglWarCommonQueueReadController {
 	@Autowired
 	private XlglWarCommonQueueReadService xlglWarCommonQueueReadService;
