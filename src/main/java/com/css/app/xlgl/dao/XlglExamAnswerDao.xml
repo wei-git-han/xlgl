@@ -13,6 +13,9 @@
 		<if test="examineId != null and examineId !=''">
 			 and EXAMINE_ID = #{examineId}
 		</if>
+		<if test="replyUserId != null and replyUserId !=''">
+			 and REPLY_USER_ID = #{replyUserId}
+		</if>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
@@ -91,6 +94,10 @@
 		where id = #{id}
 	</update>
 	
+	<delete id="deleteByExamineId">
+		delete from XLGL_EXAM_ANSWER where EXAMINE_ID = #{value}
+	</delete>
+	
 	<delete id="delete">
 		delete from XLGL_EXAM_ANSWER where id = #{value}
 	</delete>
@@ -149,5 +156,19 @@
 		)
 		</foreach>
 	</insert>
+	
+	<select id="queryCorrectStatus" resultType="int">
+		select count(*) from XLGL_EXAM_ANSWER 
+		where 1 = 1
+		<if test="examineId != null and examineId !=''">
+			 and EXAMINE_ID = #{examineId}
+		</if>
+		<if test="replyUserId != null and replyUserId !=''">
+			 and REPLY_USER_ID = #{replyUserId}
+		</if>
+		<if test="correctStatus != null and correctStatus !=''">
+			 and CORRECT_STATUS = #{correctStatus}
+		</if>
+	</select>
 
 </mapper>

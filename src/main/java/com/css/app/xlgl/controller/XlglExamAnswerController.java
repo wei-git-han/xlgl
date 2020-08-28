@@ -1,6 +1,7 @@
 package com.css.app.xlgl.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.css.app.xlgl.dto.XlglExamExaminetopicDto;
 import com.css.app.xlgl.entity.XlglExamAnswer;
 import com.css.app.xlgl.entity.XlglExamExamine;
+import com.css.app.xlgl.entity.XlglExamExaminetopic;
 import com.css.app.xlgl.entity.XlglExamMainAnswer;
 import com.css.app.xlgl.service.XlglExamAnswerService;
 import com.css.app.xlgl.service.XlglExamExamineService;
@@ -88,14 +90,84 @@ public class XlglExamAnswerController {
 	@RequestMapping("/view/info")
 	public void viewinfo(String examineId){
 		JSONObject jsonObject = new JSONObject();
-		Map<String, Object> map = new HashMap<>();
-		map.put("examineId", examineId);
-		List<XlglExamAnswer> xlglExamAnswerList = xlglExamAnswerService.queryList(map);
-		XlglExamExamine queryObject = xlglExamExamineService.queryObject(examineId);
-		jsonObject.put("list", xlglExamAnswerList);
-		jsonObject.put("examine", queryObject);
+		jsonObject = getAllAnswer(examineId);
 		Response.json(jsonObject);
 	}
+	
+	/**
+	 * 用户答完题的试卷信息答题过程中试卷详情
+	 */
+	@ResponseBody
+	@RequestMapping("/view/infoLianXi")
+	public void viewinfoLianXi(String examineId,String lianxiType){
+		JSONObject jsonObject = new JSONObject();
+		jsonObject = getAllAnswer(examineId);
+		jsonObject.put("lianxiType", lianxiType);
+		Map<String, Object> map = new HashMap<String,Object>();
+		map.put("examineId", examineId);
+		if(lianxiType.equals("1")) {
+			map.put("correctStatus", "0");
+			int right = xlglExamAnswerService.queryCorrectStatus(map);
+			map.put("correctStatus", "1");
+			int error = xlglExamAnswerService.queryCorrectStatus(map);
+			jsonObject.put("right", right);
+			jsonObject.put("error", error);
+		}
+		jsonObject.put("", "");
+		Response.json(jsonObject);
+	}
+	private JSONObject getAllAnswer(String examineId) {
+		JSONObject jsonObject = new JSONObject();
+		Map<String, Object> map = new HashMap<String,Object>();
+		map.put("examineId", examineId);
+		map.put("replyUserId", CurrentUser.getUserId());
+		map.put("makeUpStatus", "0");
+		List<XlglExamAnswer> list = xlglExamAnswerService.queryList(map);
+		XlglExamExamine xlglExamExamine = xlglExamExamineService.queryObject(examineId);
+		List<XlglExamAnswer> listType1 = new ArrayList<XlglExamAnswer>();
+		List<XlglExamAnswer> listType2 = new ArrayList<XlglExamAnswer>();
+		List<XlglExamAnswer> listType3 = new ArrayList<XlglExamAnswer>();
+		List<XlglExamAnswer> listType4 = new ArrayList<XlglExamAnswer>();
+		for (XlglExamAnswer xlglExamAnswer : list) {
+			HashMap<String, Object> hashMap = new HashMap<String,Object>();
+			if(StringUtils.isNotBlank(xlglExamAnswer.getTopicOption()) 
+					&& xlglExamAnswer.getTopicOption().contains(",")) {
+				String[] split = xlglExamAnswer.getTopicOption().split(",");
+				for (String str : split) {
+					if(str.contains(":")) {
+						String[] split2 = str.split(":");
+						hashMap.put(split2[0], split2[1]);
+					}
+				}
+			}
+			xlglExamAnswer.setTopicOptionMap(hashMap);
+			switch (xlglExamAnswer.getTopicType()) {
+			case "1":	
+				listType1.add(xlglExamAnswer);
+				break;
+			case "2":
+				listType2.add(xlglExamAnswer);
+				break;
+			case "3":
+				listType3.add(xlglExamAnswer);
+				break;
+			case "4":
+				listType4.add(xlglExamAnswer);
+				break;
+			default:
+				break;
+			}
+		}
+		List<XlglExamExaminetopicDto> listCount = xlglExamExaminetopicService.findCountBySubjectId(map);
+		jsonObject.put("listType1", listType1);
+		jsonObject.put("listType2", listType2);
+		jsonObject.put("listType3", listType3);
+		jsonObject.put("listType4", listType4);
+		jsonObject.put("topicCount", listCount);
+		jsonObject.put("xlglExamExamine", xlglExamExamine);
+		return jsonObject;
+	}
+	
 	
 	/**
 	 * 保存
@@ -134,15 +206,20 @@ public class XlglExamAnswerController {
 	/**
 	 * 用户考试完成保存
 	 * @param xlglExamAnswer 前端传jsonarray,
+	 * @param mainAnswerId 成绩单id
+	 * @param status 0：考试，1：练习
+	 * @param makeupStatus  0：没补考考，1:补考了
 	 */
 	@ResponseBody
 	@RequestMapping("/saveBatch")
-	public void saveBath(String xlglExamAnswer,String mainAnswerId){
+	public void saveBath(String xlglExamAnswer,String mainAnswerId,String status,String makeupStatus){
 		JSONObject jsonObject = new JSONObject();
 		List<XlglExamAnswer> parseArray = JSONArray.parseArray(xlglExamAnswer, XlglExamAnswer.class);
 		Integer sum = 0;
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		Date date = new Date();
+		XlglExamMainAnswer queryObject = xlglExamMainAnswerService.queryObject(mainAnswerId);
+		XlglExamExamine xlglExamExamine = xlglExamExamineService.queryObject(queryObject.getExamineId());
 		for (XlglExamAnswer eanswer : parseArray) {
 			eanswer.setId(UUIDUtils.random());
 			eanswer.setMainAnswerId(mainAnswerId);
@@ -152,6 +229,7 @@ public class XlglExamAnswerController {
 			eanswer.setOrganId(ssoUser.getOrganId());
 			eanswer.setOrganName(ssoUser.getOrgName());
 			eanswer.setReplyUserName(ssoUser.getFullname());
+			eanswer.setExamineId(xlglExamExamine.getId());
 			if(StringUtils.isNotBlank(eanswer.getReply())) {
 				eanswer.setStatus("1");
 				eanswer = getRightReply(eanswer);
@@ -160,14 +238,15 @@ public class XlglExamAnswerController {
 				}
 			}else {
 				eanswer.setStatus("0");
+				eanswer.setCorrectStatus("1");
 			}
 		}
 		String level ="";
-		if(sum >=85) {
+		if(sum >=(xlglExamExamine.getExamineAllNumber()*0.9)) {
 			level="优秀";
-		}else if(85 >sum && sum >=70 ) {
+		}else if((xlglExamExamine.getExamineAllNumber()*0.9) >sum && sum >=(xlglExamExamine.getExamineAllNumber()*0.75) ) {
 			level="优良";
-		}else if(70 >sum && sum >=60){
+		}else if((xlglExamExamine.getExamineAllNumber()*0.75) >sum && sum >=(xlglExamExamine.getExamineAllNumber()*0.6)){
 			level="及格";
 		}else {
 			level="不及格";
@@ -175,11 +254,21 @@ public class XlglExamAnswerController {
 		XlglExamMainAnswer xlglExamMainAnswer = new XlglExamMainAnswer();
 		xlglExamMainAnswer.setLevel(level);
 		xlglExamMainAnswer.setFractionsum(sum);
-		xlglExamMainAnswer.setMakeupStatus("1");
+		if(StringUtils.isNotBlank(makeupStatus)) {
+			xlglExamMainAnswer.setMakeupStatus(makeupStatus);
+		}else {
+			xlglExamMainAnswer.setMakeupStatus("0");
+		}
+		if(StringUtils.isNotBlank(status)) {
+			xlglExamMainAnswer.setStatus(status);
+		}else {
+			xlglExamMainAnswer.setStatus("0");
+		}
+		xlglExamMainAnswer.setIsNotExam("1");
 		xlglExamMainAnswer.setUpdateDate(date);
+		xlglExamMainAnswer.setId(mainAnswerId);
 		xlglExamMainAnswerService.update(xlglExamMainAnswer);
 		xlglExamAnswerService.saveBatch(parseArray);
-		XlglExamMainAnswer queryObject = xlglExamMainAnswerService.queryObject(mainAnswerId);
 		jsonObject.put("mainAnswer", queryObject);
 		jsonObject.put("answerList", parseArray);
 		Map<String, Object> map = new HashMap<String,Object>();
@@ -187,7 +276,9 @@ public class XlglExamAnswerController {
 		map.put("makeUpStatus", "0");
 		List<XlglExamExaminetopicDto> listCount = xlglExamExaminetopicService.findCountBySubjectId(map);
 		jsonObject.put("listCount", listCount);
-		Response.json(jsonObject);
+		jsonObject.put("code", 0);
+		//Response.json(jsonObject);
+		Response.ok();
 	}
 	/**
 	 * 判断用户答题是否正确
@@ -222,6 +313,86 @@ public class XlglExamAnswerController {
 		}
 		return eanswer;
 		
+	}
+	
+	/**
+	 * 用户练习考试完成保存
+	 * @param xlglExamAnswer 前端传jsonarray,
+	 * @param mainAnswerId 成绩单id
+	 * @param status 0：考试，1：练习
+	 */
+	@ResponseBody
+	@RequestMapping("/saveBatchLIANXI")
+	public void saveBathLIANXI(String xlglExamAnswer,String mainAnswerId,String status){
+		try {
+		JSONObject jsonObject = new JSONObject();
+		List<XlglExamAnswer> parseArray = JSONArray.parseArray(xlglExamAnswer, XlglExamAnswer.class);
+		Integer sum = 0;
+		SSOUser ssoUser = CurrentUser.getSSOUser();
+		Date date = new Date();
+		XlglExamMainAnswer queryObject = xlglExamMainAnswerService.queryObject(mainAnswerId);
+		XlglExamExamine xlglExamExamine = xlglExamExamineService.queryObject(queryObject.getExamineId());
+		jsonObject.put("examineId", xlglExamExamine.getId());
+		jsonObject.put("lianxiType", xlglExamExamine.getLianxiType());
+		Map<String, Object> map = new HashMap<>();
+		map.put("examineId", xlglExamExamine.getId());
+		map.put("replyUserId", ssoUser.getUserId());
+		List<XlglExamAnswer> queryList = xlglExamAnswerService.queryList(map);
+		if(queryList.size()>0) {
+			xlglExamAnswerService.deleteByExamineId(xlglExamExamine.getId());
+		}
+		for (XlglExamAnswer eanswer : parseArray) {
+			eanswer.setId(UUIDUtils.random());
+			eanswer.setMainAnswerId(mainAnswerId);
+			eanswer.setReplyUserId(ssoUser.getUserId());
+			eanswer.setCreateDate(date);
+			eanswer.setUpdateDate(date);
+			eanswer.setOrganId(ssoUser.getOrganId());
+			eanswer.setOrganName(ssoUser.getOrgName());
+			eanswer.setReplyUserName(ssoUser.getFullname());
+			eanswer.setExamineId(xlglExamExamine.getId());
+			if(StringUtils.isNotBlank(eanswer.getReply())) {
+				eanswer.setStatus("1");
+				eanswer = getRightReply(eanswer);
+				if(eanswer.getCorrectStatus().equals("0")) {
+					sum +=eanswer.getFraction();
+				}
+			}else {
+				eanswer.setStatus("0");
+				eanswer.setCorrectStatus("1");
+			}
+		}
+		XlglExamMainAnswer xlglExamMainAnswer = new XlglExamMainAnswer();
+		String level ="";
+		if(StringUtils.isNotBlank(xlglExamExamine.getLianxiType()) && xlglExamExamine.getLianxiType().equals("0")) {
+			if(sum >=(xlglExamExamine.getExamineAllNumber()*0.9)) {
+				level="优秀";
+			}else if((xlglExamExamine.getExamineAllNumber()*0.9) >sum && sum >=(xlglExamExamine.getExamineAllNumber()*0.75) ) {
+				level="优良";
+			}else if((xlglExamExamine.getExamineAllNumber()*0.75) >sum && sum >=(xlglExamExamine.getExamineAllNumber()*0.6)){
+				level="及格";
+			}else {
+				level="不及格";
+			}
+			xlglExamMainAnswer.setLevel(level);
+			xlglExamMainAnswer.setFractionsum(sum);
+		}
+		xlglExamMainAnswer.setMakeupStatus("0");
+		
+		xlglExamMainAnswer.setStatus(status);
+		xlglExamMainAnswer.setIsNotExam("1");
+		xlglExamMainAnswer.setUpdateDate(date);
+		xlglExamMainAnswer.setId(mainAnswerId);
+		xlglExamMainAnswerService.update(xlglExamMainAnswer);
+		xlglExamAnswerService.saveBatch(parseArray);
+		jsonObject.put("mainAnswerId", queryObject.getId());	
+		jsonObject.put("code", 0);
+		jsonObject.put("msg", "success");
+		Response.json(jsonObject);
+		}catch (Exception e) {
+			e.printStackTrace();
+			Response.error();
+		}
 	}
 	
 }

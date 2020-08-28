@@ -13,6 +13,9 @@
 		<if test="examineId != null and examineId !=''">
 			  and EXAMINE_ID = #{examineId}
 		</if>
+		<if test="makeUpId != null and makeUpId !=''">
+			  and MAKEUP_ID = #{makeUpId}
+		</if>
 		<if test="makeUpStatus != null and makeUpStatus !=''">
 			  and MAKEUP_STATUS = #{makeUpStatus}
 		</if>

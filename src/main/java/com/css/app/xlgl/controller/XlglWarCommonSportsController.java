@@ -1,8 +1,10 @@
 package com.css.app.xlgl.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,8 +21,12 @@ import com.css.base.utils.CurrentUser;
 import com.css.base.utils.PageUtils;
 import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
+
+import cn.com.css.filestore.impl.HTTPFile;
+
 import com.css.base.utils.Response;
 import com.css.base.utils.StringUtils;
+import com.css.app.xlgl.dto.AccessoryFileDto;
 import com.css.app.xlgl.entity.XlglPicture;
 import com.css.app.xlgl.entity.XlglWarCommonQueue;
 import com.css.app.xlgl.entity.XlglWarCommonQueueRead;
@@ -39,7 +45,7 @@ import com.css.app.xlgl.service.XlglWarCommonSportsService;
  * @date 2020-08-17 09:53:19
  */
 @Controller
-@RequestMapping("/xlglwarcommonsports")
+@RequestMapping("app/xlgl/xlglwarcommonsports")
 public class XlglWarCommonSportsController {
 	@Autowired
 	private XlglWarCommonSportsService xlglWarCommonSportsService;
@@ -54,8 +60,9 @@ public class XlglWarCommonSportsController {
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	public void list(Integer page, Integer limit){
+	public void list(Integer page, Integer limit,String title){
 		Map<String, Object> map = new HashMap<>();
+		map.put("title", title);
 		PageHelper.startPage(page, limit);
 		//查询列表数据
 		List<XlglWarCommonSports> xlglWarCommonSportsList = xlglWarCommonSportsService.queryList(map);
@@ -72,18 +79,25 @@ public class XlglWarCommonSportsController {
 				xlglWarCommonSports.setReadStatus("0");
 			}
 			fileMap.put("id", xlglWarCommonSports.getId());
-			List<XlglPicture> queryList = xlglPictureService.queryList(map);
-			List<String> list = new ArrayList<String>();
+			List<XlglPicture> queryList = xlglPictureService.queryList(fileMap);
+			
+			List<AccessoryFileDto> list = new LinkedList<AccessoryFileDto>();
 			for (XlglPicture xlglPicture : queryList) { //1:图片，2：视频，3：附件，4：封面
 				if(xlglPicture.getPictureType().equals("2")) {
 					xlglWarCommonSports.setVideoFile(xlglPicture.getPictureId());
+					xlglWarCommonSports.setVideoFileName(xlglPicture.getPictureName());
 				}else if(xlglPicture.getPictureType().equals("3")) {
-					list.add(xlglPicture.getPictureId());
+					AccessoryFileDto accessoryFileDto = new AccessoryFileDto();
+					accessoryFileDto.setFileId(xlglPicture.getPictureId());
+					accessoryFileDto.setFileName(xlglPicture.getPictureName());
+					list.add(accessoryFileDto);
 				}else if(xlglPicture.getPictureType().equals("4")) {
 					xlglWarCommonSports.setCoverFile(xlglPicture.getPictureId());
+					xlglWarCommonSports.setCoverFileName(xlglPicture.getPictureName());
 				}
 			}
 			xlglWarCommonSports.setAccessoryFileArray(list);
+
 		}
 		
 		Response.json("page",pageUtil);
@@ -101,7 +115,31 @@ public class XlglWarCommonSportsController {
 		map.put("sportsId", id);
 		map.put("readUserId", ssoUser.getUserId());
 		XlglWarCommonSports xlglWarCommonSports = xlglWarCommonSportsService.queryObject(id);
-		xlglWarCommonSports.setViewNumber(xlglWarCommonSports.getViewNumber()+1);
+		//获取图片、视频、或封面
+		Map<String, Object> fileMap = new HashMap<>();
+		fileMap.put("id", xlglWarCommonSports.getId());
+		
+		List<XlglPicture> pictureList = xlglPictureService.queryList(fileMap);
+		
+		List<AccessoryFileDto> list = new LinkedList<AccessoryFileDto>();
+		for (XlglPicture xlglPicture : pictureList) { //1:图片，2：视频，3：附件，4：封面
+			if(xlglPicture.getPictureType().equals("2")) {
+				xlglWarCommonSports.setVideoFile(xlglPicture.getPictureId());
+				xlglWarCommonSports.setVideoFileName(xlglPicture.getPictureName());
+			}else if(xlglPicture.getPictureType().equals("3")) {
+				AccessoryFileDto accessoryFileDto = new AccessoryFileDto();
+				accessoryFileDto.setFileId(xlglPicture.getPictureId());
+				accessoryFileDto.setFileName(xlglPicture.getPictureName());
+				list.add(accessoryFileDto);
+			}else if(xlglPicture.getPictureType().equals("4")) {
+				xlglWarCommonSports.setCoverFile(xlglPicture.getPictureId());
+				xlglWarCommonSports.setCoverFileName(xlglPicture.getPictureName());
+			}
+		}
+		xlglWarCommonSports.setAccessoryFileArray(list);
+
+		
+		//修改浏览次数
 		if(xlglWarCommonSports.getViewNumber() !=null) {
 			xlglWarCommonSports.setViewNumber(xlglWarCommonSports.getViewNumber()+1);
 		}else {
@@ -137,7 +175,7 @@ public class XlglWarCommonSportsController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public void save(XlglWarCommonSports xlglWarCommonSports,String coverFile,String videoFile,String[] accessoryFile){
+	public void save(XlglWarCommonSports xlglWarCommonSports,String coverFile,String videoFile,String[] accessoryArray){
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		Date date = new Date();
 		String random = UUIDUtils.random();
@@ -154,8 +192,8 @@ public class XlglWarCommonSportsController {
 		if(StringUtils.isNotBlank(videoFile)) {
 			xlglPictureService.savePicture(random,videoFile,"2");
 		}
-		if(accessoryFile !=null) {
-			for (String string : accessoryFile) {
+		if(accessoryArray !=null) {
+			for (String string : accessoryArray) {
 				xlglPictureService.savePicture(random,string,"3");
 			}
 		}
@@ -164,12 +202,26 @@ public class XlglWarCommonSportsController {
 	
 	/**
 	 * 修改
+	 * @param deleAccessoryId 删除附件id
+	 * @param accessoryFile 新增附件id
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	public void update(XlglWarCommonSports xlglWarCommonSports){
+	public void update(XlglWarCommonSports xlglWarCommonSports,String[] deleAccessoryId,String[] accessoryFileId ){
+		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		xlglWarCommonSports.setUpdateUser(CurrentUser.getUserId());
+		xlglWarCommonSports.setUpdateDate(format);
 		xlglWarCommonSportsService.update(xlglWarCommonSports);
-		
+		if(deleAccessoryId.length >0) {
+			for (String string : deleAccessoryId) {
+				xlglPictureService.deleteByPictureId(string);
+			}
+		}
+		if(accessoryFileId.length>0) {
+			for (String string : accessoryFileId) {
+				xlglPictureService.savePicture(xlglWarCommonSports.getId(), string, "3");
+			}
+		}
 		Response.ok();
 	}
 	
@@ -180,7 +232,21 @@ public class XlglWarCommonSportsController {
 	@RequestMapping("/delete")
 	public void delete(String[] ids){
 		xlglWarCommonSportsService.deleteBatch(ids);
-		
+		for (String string : ids) {
+			//获取图片、视频、或封面
+			Map<String, Object> fileMap = new HashMap<>();
+			fileMap.put("id", string);
+			List<XlglPicture> pictureList = xlglPictureService.queryList(fileMap);
+			for (XlglPicture xlglPicture : pictureList) {
+				//删除文件服务器上文件
+				HTTPFile httpFile = new HTTPFile(xlglPicture.getPictureId());
+				boolean delete = httpFile.delete();
+				if(delete) {
+					//删除文件表中记录
+					xlglPictureService.delete(xlglPicture.getId());
+				}
+			}
+		}
 		Response.ok();
 	}
 	

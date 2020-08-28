@@ -45,5 +45,10 @@ public class XlglKtapServiceImpl implements XlglKtapService {
 	public void deleteBatch(String[] ids){
 		xlglKtapDao.deleteBatch(ids);
 	}
+	@Override
+	public void deleteAll(){
+		xlglKtapDao.deleteAll();
+	}
+
 	
 }

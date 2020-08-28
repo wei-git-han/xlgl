@@ -57,4 +57,12 @@ public interface XlglSubDocTrackingService {
 
 	int queryAllYx(String year);
 
+	int queryAllCx(String fileId);
+
+	int queryAllYh(String fileId);
+
+	int queryAllCxByInfoId(String fileId,String orgId);
+
+	int queryAllBkByInfoId(String fileId,String orgId);
+
 }

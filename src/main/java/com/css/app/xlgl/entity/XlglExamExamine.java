@@ -39,7 +39,7 @@ public class XlglExamExamine implements Serializable {
 	private Date updateDate;
 	//是否发布0:没发布，1发布
 	private String issueStatus;
-	//考试是否结束 0：没结束进行中，1：已结束已完结 2 :补考开始
+	//考试是否结束 0：没结束进行中，1：已结束已完结 2 :补考开始，99：未开始
 	private String overStatus;
 	//考试结束时间
 	private Date examineEndDate;
@@ -47,6 +47,8 @@ public class XlglExamExamine implements Serializable {
 	private Date issueDate;
 	//状态 0：考试，1：练习
 	private String status;
+	//练习状态 0：模拟练习， 1自主练习
+	private String lianxiType;
 
 	
 	//已参加人数
@@ -59,7 +61,13 @@ public class XlglExamExamine implements Serializable {
 	private String examineStartDateStr;
 	//考试结束时间
 	private String examineEndDateStr;
-
+	
+	//用户考试状态  1：已完成，2：未考试，3：已补考
+	private String userStatus;
+	//补考id
+	private String makeupId;
+	//编辑人名称
+	private String updateUserName;
 
 	
 
@@ -260,6 +268,30 @@ public class XlglExamExamine implements Serializable {
 	}
 	public void setExamineEndDateStr(String examineEndDateStr) {
 		this.examineEndDateStr = examineEndDateStr;
+	}
+	public String getUserStatus() {
+		return userStatus;
+	}
+	public void setUserStatus(String userStatus) {
+		this.userStatus = userStatus;
+	}
+	public String getMakeupId() {
+		return makeupId;
+	}
+	public void setMakeupId(String makeupId) {
+		this.makeupId = makeupId;
+	}
+	public String getUpdateUserName() {
+		return updateUserName;
+	}
+	public void setUpdateUserName(String updateUserName) {
+		this.updateUserName = updateUserName;
+	}
+	public String getLianxiType() {
+		return lianxiType;
+	}
+	public void setLianxiType(String lianxiType) {
+		this.lianxiType = lianxiType;
 	}
 	
 

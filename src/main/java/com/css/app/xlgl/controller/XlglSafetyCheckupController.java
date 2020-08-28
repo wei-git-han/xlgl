@@ -28,7 +28,7 @@ import com.css.app.xlgl.service.XlglSafetyCheckupService;
  * @date 2020-08-21 15:52:37
  */
 @Controller
-@RequestMapping("/xlglsafetycheckup")
+@RequestMapping("/app/xlgl/xlglsafetycheckup")
 public class XlglSafetyCheckupController {
 	@Autowired
 	private XlglSafetyCheckupService xlglSafetyCheckupService;
@@ -88,10 +88,22 @@ public class XlglSafetyCheckupController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	public void delete(@RequestBody String[] ids){
+	public void delete(String[] ids){
 		xlglSafetyCheckupService.deleteBatch(ids);
 		
 		Response.ok();
+	}
+	
+	/**
+	 * 信息
+	 */
+	@ResponseBody
+	@RequestMapping("/infoByOrganId")
+	public void infoByOrganId(String organId){
+		Map<String, Object> map = new HashMap<>();
+		map.put("orgId", organId);
+		List<XlglSafetyCheckup> queryList = xlglSafetyCheckupService.queryList(map);
+		Response.json("xlglSafetyCheckup", queryList.get(0));
 	}
 	
 }

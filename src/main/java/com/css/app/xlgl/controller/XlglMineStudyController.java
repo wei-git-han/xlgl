@@ -131,7 +131,7 @@ public class XlglMineStudyController {
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("orgId",orgId);
 		List<BaseAppUser> infoList = baseAppUserService.queryAllExcelList(map);
-		File tempFile = new File(filePath, "军事体育成绩清单.xls");
+		File tempFile = new File(filePath, "自学成绩清单.xls");
 		if (tempFile.exists()) {
 			tempFile.delete();
 		} else {

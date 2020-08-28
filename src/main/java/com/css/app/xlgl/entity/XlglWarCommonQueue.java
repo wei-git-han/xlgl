@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.css.app.xlgl.dto.AccessoryFileDto;
+
 
 
 /**
@@ -49,15 +51,22 @@ public class XlglWarCommonQueue implements Serializable {
 	//观看次数
 	private Integer viewNumber;
 	
-	
+	//封面名称
+	private String coverFileName;
+	//视频名称
+	private String videoFileName;
 	//封面上传
 	private List<String> coverFileArray;
 	//视频上传
 	private List<String> videoFileArray;
+
 	//附件上传
-	private List<String> accessoryFileArray;
+	private List<String> accessoryFileNameArray;
 	//已读、未读标志 0：未读，1：已读
 	private String readStatus;
+	//附件上传
+	private List<AccessoryFileDto> accessoryFileArray;
+	
 
 	/**
 	 * 设置：
@@ -251,10 +260,11 @@ public class XlglWarCommonQueue implements Serializable {
 	public void setVideoFileArray(List<String> videoFileArray) {
 		this.videoFileArray = videoFileArray;
 	}
-	public List<String> getAccessoryFileArray() {
+
+	public List<AccessoryFileDto> getAccessoryFileArray() {
 		return accessoryFileArray;
 	}
-	public void setAccessoryFileArray(List<String> accessoryFileArray) {
+	public void setAccessoryFileArray(List<AccessoryFileDto> accessoryFileArray) {
 		this.accessoryFileArray = accessoryFileArray;
 	}
 	public Integer getViewNumber() {
@@ -268,6 +278,24 @@ public class XlglWarCommonQueue implements Serializable {
 	}
 	public void setReadStatus(String readStatus) {
 		this.readStatus = readStatus;
+	}
+	public String getCoverFileName() {
+		return coverFileName;
+	}
+	public void setCoverFileName(String coverFileName) {
+		this.coverFileName = coverFileName;
+	}
+	public String getVideoFileName() {
+		return videoFileName;
+	}
+	public void setVideoFileName(String videoFileName) {
+		this.videoFileName = videoFileName;
+	}
+	public List<String> getAccessoryFileNameArray() {
+		return accessoryFileNameArray;
+	}
+	public void setAccessoryFileNameArray(List<String> accessoryFileNameArray) {
+		this.accessoryFileNameArray = accessoryFileNameArray;
 	}
 	
 	

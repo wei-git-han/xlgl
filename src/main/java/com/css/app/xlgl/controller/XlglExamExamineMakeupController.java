@@ -93,7 +93,8 @@ public class XlglExamExamineMakeupController {
 			xlglExamExamineMakeup.setSort(0);
 		}
 		
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+			XlglExamExamine queryObject = xlglExamExamineService.queryObject(xlglExamExamineMakeup.getExamineId());
 		try {
 				Date startDate = format.parse(xlglExamExamineMakeup.getMakeUpStartDateStr());
 				Date endDate = format.parse(xlglExamExamineMakeup.getMakeUpEndDateStr());
@@ -104,18 +105,19 @@ public class XlglExamExamineMakeupController {
 			}
 		
 		xlglExamExamineMakeupService.save(xlglExamExamineMakeup);
-		XlglExamExamine queryObject = xlglExamExamineService.queryObject(xlglExamExamineMakeup.getExamineId());
+	
+		queryObject.setOverStatus("2");
+	
+		xlglExamExamineService.update(queryObject);
 		queryObject.setOverStatus("2");
 		for (int i = 0; i < typeAndNum.length; i++) {
 			Map<String,Object> map = new HashMap<String,Object>();
 			String[] split2 = typeAndNum[i].split("-");
-			Integer fractionalNumber =Integer.parseInt(split2[2]) /Integer.parseInt(split2[1]);
 			map.put("subjectId", queryObject.getExamineSubjectId());
 			map.put("topicType", split2[0]);
 			map.put("topicNumber", split2[1]);
-			map.put("fractionalNumber", fractionalNumber);
+			map.put("fractionalNumber", split2[2]);
 			List<XlglExamExaminetopic> randomExtract = xlglExamExaminetopicService.randomExtract(map, queryObject.getId(),random);
-			xlglExamExamineService.update(queryObject);
 			if(randomExtract.size()>0) {
 				xlglExamExaminetopicService.saveBatch(randomExtract);
 			}

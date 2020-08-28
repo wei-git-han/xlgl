@@ -40,6 +40,27 @@ public class XlglPicture implements Serializable {
 	//未上传
 	private String isUpLoad;
 
+	//该视频对应的文的title
+	private String title;
+	//该视频对应文的上课时间
+	private String exerciseTime;
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getExerciseTime() {
+		return exerciseTime;
+	}
+
+	public void setExerciseTime(String exerciseTime) {
+		this.exerciseTime = exerciseTime;
+	}
+
 	public String getIsUpLoad() {
 		return isUpLoad;
 	}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        html,body{
+            height:100%;
+            margin:0;
+            padding:0px;
+        }
+        #filePath{
+            height: 28px;
+            line-height: 28px;
+            width: 200px;
+        }
+        #fileDiv{
+            position:absolute;
+            top:50px;
+            left:0;
+            bottom:0;
+            width:100%;
+        }
+    </style>
+</head>
+<body onload="initObject()">
+    <div style="position:relative;height:99.5%;">
+        <div id="fileDiv"></div>
+    </div>
+    <script src="js/jquery.min.js"></script>
+    <script src="suwell/suwell.js"></script>
+    <script src="suwell/suwell_ofdReader.js"></script>
+    <script>
+        var ocx;
+        function initObject()
+        {
+            //注意：插件宽高设固定值。
+            ocx = suwell.ofdReaderInit("fileDiv","100%","100%");
+
+            if(ocx){
+                var time = setInterval(function() {
+                    if (ocx.version()) {
+                        clearInterval(time);
+                        openFile()
+                        console.log(ocx.version());
+                    }
+                }, 100);
+
+            }
+        }
+        //打开文件。可以实现打开本地文件。也可实现打开远程文件。
+        function openFile(){
+            ocx.openFile("C:/Users/lenovo/WebstormProjects/openLocalFile/data/20200325-测试文件fsfsf.ofd",false);
+        }
+
+    </script>
+</body>
+</html>
