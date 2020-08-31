@@ -34,4 +34,8 @@ public interface XlglPhysicalService {
 	public InputStream createExcelInfoFile(List<BaseAppUser> list, String fileName) throws Exception;
 
 	List<XlglPhysical> importExcle(InputStream is,String id) throws Exception;
+
+	XlglPhysical queryByUserId(String userId,String year);
+
+
 }

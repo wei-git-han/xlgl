@@ -8,7 +8,10 @@
 	</select>
 
 	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglMineStudy">
-		select * from XLGL_MINE_STUDY 
+		select * from XLGL_MINE_STUDY where 1=1
+		<if test="replyUserId != null and replyUserId !=''">
+			and USER_ID = #{replyUserId}
+		</if>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>

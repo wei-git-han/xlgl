@@ -1,7 +1,9 @@
 package com.css.app.xlgl.controller;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.*;
 
 import cn.com.css.filestore.impl.HTTPFile;
@@ -28,6 +30,8 @@ import org.springframework.stereotype.Controller;
 
 import com.github.pagehelper.PageHelper;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -130,15 +134,21 @@ public class XlglPhysicalController {
 		Response.json("result","success");
 	}
 
+	public void downloadFile(String fileId) {
+		HTTPFile httpFile = new HTTPFile(fileId);
+		String fileName = httpFile.getFileName();
+		Response.download(fileName, httpFile.getInputSteam());
+	}
+
 	/**
 	 * 军事体育成绩先导出
 	 */
 	@ResponseBody
 	@RequestMapping("/exportList")
-	public void exportList(){
+	public void exportList(String deptId,HttpServletResponse response){
 		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("orgId",orgId);
+		map.put("orgId",deptId);
 		List<BaseAppUser> infoList = baseAppUserService.queryAllExcelList(map);
 		File tempFile = new File(filePath, "军事体育成绩清单.xls");
 		if (tempFile.exists()) {
@@ -150,14 +160,29 @@ public class XlglPhysicalController {
 		InputStream is;
 		try {
 			is = xlglPhysicalService.createExcelInfoFile(infoList, tempFile.getAbsolutePath());
-			is.close();
-			resultMap.put("fileUrl", tempFile.getAbsoluteFile());
-			resultMap.put("fileName", tempFile.getName());
-			resultMap.put("result", "success");
+            OutputStream os = null;
+            byte[] buff = new byte[1024];
+            response.reset();
+            response.setContentType("application/octet-stream");
+            response.setCharacterEncoding("UTF-8");
+            response.addHeader("Content-Disposition", "attachment;filename="
+                    + new String(tempFile.getName().getBytes(),"ISO-8859-1"));
+            os = response.getOutputStream();
+            BufferedInputStream bis = new BufferedInputStream(is);
+            int i = 0;
+            try {
+                while ((i = bis.read(buff)) != -1) {
+                    os.write(buff, 0, i);
+                    os.flush();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                bis.close();
+            }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Response.json(resultMap);
 	}
 
 
