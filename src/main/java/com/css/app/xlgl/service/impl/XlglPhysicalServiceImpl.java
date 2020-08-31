@@ -216,5 +216,10 @@ public class XlglPhysicalServiceImpl implements XlglPhysicalService {
 		is.close();
 		return list;
 	}
+
+	@Override
+	public XlglPhysical queryByUserId(String userId,String year){
+		return xlglPhysicalDao.queryByUserId(userId,year);
+	}
 	
 }

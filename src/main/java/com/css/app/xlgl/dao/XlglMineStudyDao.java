@@ -5,6 +5,7 @@ import com.css.app.xlgl.entity.XlglMineStudy;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.css.base.dao.BaseDao;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * 训练管理自学表
@@ -17,4 +18,7 @@ import com.css.base.dao.BaseDao;
 public interface XlglMineStudyDao extends BaseDao<XlglMineStudy> {
 
     void deleteAllRecord(String[] ids);
+
+    @Select("select * from XLGL_MINE_STUDY where USER_ID = #{0} and CREATED_TIME liek '%'||#{1}||'%'")
+    XlglMineStudy queryByUserId(String userId,String year);
 }

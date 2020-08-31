@@ -167,5 +167,10 @@ public class XlglMineStudyServiceImpl implements XlglMineStudyService {
 		is.close();
 		return list;
 	}
+
+	@Override
+	public XlglMineStudy queryByUserId(String userId,String year){
+		return xlglMineStudyDao.queryByUserId(userId,year);
+	}
 	
 }

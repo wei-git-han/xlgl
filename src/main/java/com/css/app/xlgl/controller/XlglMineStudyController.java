@@ -1,7 +1,9 @@
 package com.css.app.xlgl.controller;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +33,8 @@ import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 import com.css.base.utils.Response;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -126,10 +130,10 @@ public class XlglMineStudyController {
 	 */
 	@ResponseBody
 	@RequestMapping("/exportList")
-	public void exportList(){
+	public void exportList(String deptId,HttpServletResponse response){
 		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("orgId",orgId);
+		map.put("orgId",deptId);
 		List<BaseAppUser> infoList = baseAppUserService.queryAllExcelList(map);
 		File tempFile = new File(filePath, "自学成绩清单.xls");
 		if (tempFile.exists()) {
@@ -141,10 +145,26 @@ public class XlglMineStudyController {
 		InputStream is;
 		try {
 			is = xlglMineStudyService.createExcelInfoFile(infoList, tempFile.getAbsolutePath());
-			is.close();
-			resultMap.put("fileUrl", tempFile.getAbsoluteFile());
-			resultMap.put("fileName", tempFile.getName());
-			resultMap.put("result", "success");
+			OutputStream os = null;
+			byte[] buff = new byte[1024];
+			response.reset();
+			response.setContentType("application/octet-stream");
+			response.setCharacterEncoding("UTF-8");
+			response.addHeader("Content-Disposition", "attachment;filename="
+					+ new String(tempFile.getName().getBytes(),"ISO-8859-1"));
+			os = response.getOutputStream();
+			BufferedInputStream bis = new BufferedInputStream(is);
+			int i = 0;
+			try {
+				while ((i = bis.read(buff)) != -1) {
+					os.write(buff, 0, i);
+					os.flush();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				bis.close();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

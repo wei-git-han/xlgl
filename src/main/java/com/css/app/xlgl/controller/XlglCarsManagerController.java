@@ -14,7 +14,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.AppConfig;
 import com.css.addbase.FileBaseUtil;
 import com.css.addbase.suwell.OfdTransferUtil;
-import com.css.app.db.business.entity.DocumentFile;
 import com.css.app.xlgl.entity.XlglCarsManager;
 import com.css.app.xlgl.entity.XlglPicture;
 import com.css.app.xlgl.service.XlglCarsManagerService;
