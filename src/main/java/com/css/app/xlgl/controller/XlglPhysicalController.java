@@ -145,10 +145,10 @@ public class XlglPhysicalController {
 	 */
 	@ResponseBody
 	@RequestMapping("/exportList")
-	public void exportList(String deptId,HttpServletResponse response){
+	public void exportList(String fileId,HttpServletResponse response){
 		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("orgId",deptId);
+		map.put("orgId",fileId);
 		List<BaseAppUser> infoList = baseAppUserService.queryAllExcelList(map);
 		File tempFile = new File(filePath, "军事体育成绩清单.xls");
 		if (tempFile.exists()) {
@@ -192,7 +192,7 @@ public class XlglPhysicalController {
 
 	@ResponseBody
 	@RequestMapping("/importExcel")
-	public void importExcel(@RequestParam(value="file",required = false) MultipartFile file) {
+	public void importExcel(@RequestParam(required = false) MultipartFile file) {
 		JSONObject jsonObject = new JSONObject();
 		try {
 			//文件上传记录
@@ -200,7 +200,7 @@ public class XlglPhysicalController {
 			String id = UUIDUtils.random();
 			xlglPhysicalRecord.setId(id);
 			xlglPhysicalRecord.setUpUserId(CurrentUser.getUserId());
-			xlglPhysicalRecord.setUpUserName(CurrentUser.getOrgName());
+			xlglPhysicalRecord.setUpDeptName(CurrentUser.getOrgName());
 			xlglPhysicalRecord.setUpUserName(CurrentUser.getUsername());
 			String fileId = FileBaseUtil.fileServiceUpload(file);
 			HTTPFile httpFile = new HTTPFile(fileId);
