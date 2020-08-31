@@ -46,5 +46,10 @@ public class XlglXlzzInfoServiceImpl implements XlglXlzzInfoService {
 	public void deleteBatch(String[] ids){
 		xlglXlzzInfoDao.deleteBatch(ids);
 	}
+
+	@Override
+	public List<XlglXlzzInfo> queryTopOne(){
+		return xlglXlzzInfoDao.queryTopOne();
+	}
 	
 }

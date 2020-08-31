@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.css.app.xlgl.entity.*;
+import com.css.app.xlgl.service.*;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,18 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.css.app.xlgl.dto.AccessoryFileDto;
-import com.css.app.xlgl.entity.XlglExamExamine;
-import com.css.app.xlgl.entity.XlglPicture;
-import com.css.app.xlgl.entity.XlglWarCommonQueue;
-import com.css.app.xlgl.entity.XlglWarSpecialty;
-import com.css.app.xlgl.entity.XlglWarTactic;
-import com.css.app.xlgl.entity.XlglWarTacticRead;
-import com.css.app.xlgl.service.XlglExamExamineService;
-import com.css.app.xlgl.service.XlglPictureService;
-import com.css.app.xlgl.service.XlglWarCommonQueueService;
-import com.css.app.xlgl.service.XlglWarSpecialtyService;
-import com.css.app.xlgl.service.XlglWarTacticReadService;
-import com.css.app.xlgl.service.XlglWarTacticService;
 import com.css.base.entity.SSOUser;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.PageUtils;
@@ -59,6 +49,8 @@ public class XlglWarTacticController {
 	private XlglWarCommonQueueService xlglWarCommonQueueService;
 	@Autowired
 	private XlglExamExamineService xlglExamExamineService;
+	@Autowired
+	private XlglXlzzInfoService xlglXlzzInfoService;
 	/**
 	 * 列表
 	 */
@@ -267,7 +259,7 @@ public class XlglWarTacticController {
 		List<XlglWarTactic> warTacticList = xlglWarTacticService.queryList(null);
 		if(warTacticList.size()>0) {
 			XlglWarTactic xlglWarTactic = warTacticList.get(0);
-			json.put("XlglWarTactic", xlglWarTactic);
+			json.put("XlglWarTactic", xlglWarTactic.getTacticTitle());
 		}
 		map.put("status", "0");
 		map.put("issueStatus", "1");
@@ -275,21 +267,36 @@ public class XlglWarTacticController {
 		List<XlglExamExamine> examineList = xlglExamExamineService.queryList(map);
 		if(examineList.size()>0) {
 			XlglExamExamine xlglExamExamine = examineList.get(0);
-			json.put("xlglExamExamine", xlglExamExamine);
+			json.put("xlglExamExamine", xlglExamExamine.getExamineName());
 		}
 		//专业训练
 		List<XlglWarSpecialty> warSpecialtyList = xlglWarSpecialtyService.queryList(null);
 		if(warSpecialtyList.size()>0) {
 			XlglWarSpecialty xlglWarSpecialty = warSpecialtyList.get(0);
-			json.put("xlglWarSpecialty", xlglWarSpecialty);
+			json.put("xlglWarSpecialty", xlglWarSpecialty.getTacticTitle());
 		}
 		//共同训练
 		List<XlglWarCommonQueue> queryList = xlglWarCommonQueueService.queryList(null);
 		if(queryList.size()>0) {
 			XlglWarCommonQueue xlglWarCommonQueue = queryList.get(0);
-			json.put("xlglWarCommonQueue", xlglWarCommonQueue);
+			json.put("xlglWarCommonQueue", xlglWarCommonQueue.getTacticTitle());
 		}
-		
+		//训练组织
+		List<XlglXlzzInfo> xlglXlzzInfoList = xlglXlzzInfoService.queryTopOne();
+		if(xlglXlzzInfoList != null && xlglXlzzInfoList.size() > 0){
+			XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoList.get(0);
+			json.put("xlzz",xlglXlzzInfo.getTitle());
+		}
+		//强装兴装大讲堂
+		List<XlglPicture> xlglPictureList = xlglPictureService.queryTopOne();
+		if(xlglPictureList != null && xlglPictureList.size() > 0){
+			XlglPicture xlglPicture = xlglPictureList.get(0);
+			json.put("djt",xlglPicture.getTitle());
+		}
+
+		//训练档案
+
+		Response.json(json);
 	}
 	
 }

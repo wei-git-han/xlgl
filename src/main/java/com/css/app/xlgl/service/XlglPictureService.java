@@ -38,4 +38,6 @@ public interface XlglPictureService {
 
 	XlglPicture queryVedio(String id);
 
+	List<XlglPicture> queryTopOne();
+
 }
