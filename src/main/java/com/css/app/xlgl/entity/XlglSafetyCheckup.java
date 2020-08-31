@@ -33,7 +33,15 @@ public class XlglSafetyCheckup implements Serializable {
 	private String updateUser;
 	//修改时间
 	private Date updateDate;
-
+	//文件上传的用户名称
+	private String createUserName;
+	
+	
+	
+	//创建时间
+	private String createDateStr;
+	//修改时间
+	private String updateDateStr;
 	/**
 	 * 设置：
 	 */
@@ -142,4 +150,23 @@ public class XlglSafetyCheckup implements Serializable {
 	public Date getUpdateDate() {
 		return updateDate;
 	}
+	public String getCreateUserName() {
+		return createUserName;
+	}
+	public void setCreateUserName(String createUserName) {
+		this.createUserName = createUserName;
+	}
+	public String getCreateDateStr() {
+		return createDateStr;
+	}
+	public void setCreateDateStr(String createDateStr) {
+		this.createDateStr = createDateStr;
+	}
+	public String getUpdateDateStr() {
+		return updateDateStr;
+	}
+	public void setUpdateDateStr(String updateDateStr) {
+		this.updateDateStr = updateDateStr;
+	}
+	
 }

@@ -41,6 +41,8 @@ public class XlglSafetyAnalyse implements Serializable {
 	private String content;
 	//文件ids
 	private String fileIds;
+	//文件名称
+	private String fileName;
 
 	/**
 	 * 设置：
@@ -197,6 +199,12 @@ public class XlglSafetyAnalyse implements Serializable {
 	 */
 	public void setFileIds(String fileIds) {
 		this.fileIds = fileIds;
+	}
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 	
 }

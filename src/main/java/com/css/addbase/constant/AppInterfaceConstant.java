@@ -676,4 +676,10 @@ public class AppInterfaceConstant {
      * @date 2020年8月19日
      * */
     public final static String WEB_INTERFACE_QXJ_statistics = "/app/qxjgl/leaveOrBack/getXLGLNumber";
+    /**
+     * @author 李振楠
+     * @date 2020年8月28日
+     * */
+    public final static String WEB_TXL = "/txlUser/listuser";
+    
 }

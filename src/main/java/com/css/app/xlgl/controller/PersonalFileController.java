@@ -166,7 +166,19 @@ public class PersonalFileController {
 		String userId = ssoUser.getUserId();
 		for (PersonalFile personalFile : queryRanking) {
 			if(personalFile.getReplyUserId().equals(userId)) {
-				jsonObject.put("totalFraction", personalFile);
+				jsonObject.put("totalFraction", personalFile.getTotalFraction());
+				String totalFraction = personalFile.getTotalFraction();//得总分
+				Integer fractionSum = personalFile.getFractionSum();//所有考试总分
+				int parseInt = Integer.parseInt(totalFraction);
+				if(parseInt >=fractionSum*0.9) {
+					jsonObject.put("level", "优秀");
+				}else if(parseInt < fractionSum*0.9  && parseInt >=fractionSum*0.75) {
+					jsonObject.put("level", "优良");
+				}else if(fractionSum*0.75 > parseInt && parseInt >= fractionSum*0.6) {
+					jsonObject.put("level", "良好");
+				}else {
+					jsonObject.put("level", "差");
+				}
 				break;
 			}
 		}

@@ -91,16 +91,21 @@
 			row_number()over (order by totalFraction desc)as ranking,
 			replyUserId,
 			replyUserName,
-			totalFraction 
+			totalFraction ,
+			fractionSum
 		from 
 			( select 
-				sum(FRACTIONSUM) as totalFraction,
-				REPLY_USER_ID as replyUserId,
-				REPLY_USER_NAME as replyUserName 
-			from XLGL_EXAM_MAIN_ANSWER    
+				sum(b.FRACTIONSUM) as totalFraction,
+				b.REPLY_USER_ID as replyUserId,
+				b.REPLY_USER_NAME as replyUserName,
+				sum(a.EXAMINE_ALL_NUMBER)as fractionSum
+				from XLGL_EXAM_EXAMINE  a 
+		join XLGL_EXAM_MAIN_ANSWER b 
+		on a.id=b.examine_id
 				where  
-				ISNOTEXAM = '1'
-			group by REPLY_USER_ID,REPLY_USER_NAME) 
+			 b.ISNOTEXAM = '1' and a.status= '0'
+			and a.OVER_STATUS = '1'  
+			group by b.REPLY_USER_ID,b.REPLY_USER_NAME) 
 		
 	</select>
 </mapper>

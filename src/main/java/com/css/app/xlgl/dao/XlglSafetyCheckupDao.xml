@@ -34,7 +34,8 @@
 			"CREATE_USER", 
 			"CREATE_DATE", 
 			"UPDATE_USER", 
-			"UPDATE_DATE"
+			"UPDATE_DATE",
+			"CREATE_USER_NAME"
 		)
 		values
 		(
@@ -46,7 +47,8 @@
 			#{createUser}, 
 			#{createDate}, 
 			#{updateUser}, 
-			#{updateDate}
+			#{updateDate},
+			#{createUserName}
 		)
 	</insert>
 	 
@@ -60,6 +62,7 @@
 			<if test="createUser != null">"CREATE_USER" = #{createUser}, </if>
 			<if test="createDate != null">"CREATE_DATE" = #{createDate}, </if>
 			<if test="updateUser != null">"UPDATE_USER" = #{updateUser}, </if>
+			<if test="createUserName != null">"CREATE_USER_NAME" = #{createUserName}, </if>
 			<if test="updateDate != null">"UPDATE_DATE" = #{updateDate}</if>
 		</set>
 		where id = #{id}

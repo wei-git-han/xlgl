@@ -22,9 +22,12 @@
 			and to_char(UPLOAD_DATE,'yyyy') = to_char(sysdate,'yyyy') 
 			and (to_char(UPLOAD_DATE,'MM') = 7 or to_char(UPLOAD_DATE,'MM') = 8 or to_char(UPLOAD_DATE,'MM') = 9)
 		</if>
-			<if test="quarter != null and quarter == '4'">
+		<if test="quarter != null and quarter == '4'">
 			and to_char(UPLOAD_DATE,'yyyy') = to_char(sysdate,'yyyy') 
 			and (to_char(UPLOAD_DATE,'MM') = 10 or to_char(UPLOAD_DATE,'MM') = 11 or to_char(UPLOAD_DATE,'MM') = 12)
+		</if>
+		<if test="organId != null">
+			and ORGAN_ID = #{organId}
 		</if>
 		order by UPLOAD_DATE
 		<if test="offset != null and limit != null">
@@ -51,7 +54,8 @@
 			"ORGAN_NAME", 
 			"CREATE_DATE", 
 			"CONTENT",
-			"FILE_IDS"
+			"FILE_IDS",
+			"FILE_NAME"
 		)
 		values
 		(
@@ -67,7 +71,8 @@
 			#{organName}, 
 			#{createDate}, 
 			#{content},
-			#{fileIds}
+			#{fileIds},
+			#{fileName}
 		)
 	</insert>
 	 
@@ -85,6 +90,7 @@
 			<if test="organName != null">"ORGAN_NAME" = #{organName}, </if>
 			<if test="createDate != null">"CREATE_DATE" = #{createDate}, </if>
 			<if test="content != null">"CONTENT" = #{content},</if>
+			<if test="fileName != null">"FILE_NAME" = #{fileName},</if>
 			<if test="fileIds != null">"FILE_IDS" = #{fileIds}</if>
 		</set>
 		where id = #{id}

@@ -13,6 +13,7 @@
 		<if test="title != null and title != ''">
 		 and TACTIC_TITLE like '%'||#{title}||'%'
 		</if>
+				order by UPDATE_DATE desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
