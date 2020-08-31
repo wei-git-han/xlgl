@@ -94,12 +94,10 @@ public class XlglStudyRecordController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	public void delete(@RequestBody String id){
+	public void delete(String id){
 		String[] ids = id.split(",");
 		xlglStudyRecordService.deleteBatch(ids);
-
 		xlglMineStudyService.deleteAllRecord(ids);
-		
 		Response.json("result","success");
 	}
 	

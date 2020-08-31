@@ -214,6 +214,7 @@ public class XlglPhysicalController {
 
 			xlglPhysicalRecord.setCreatedTime(new Date());
 			xlglPhysicalRecordService.save(xlglPhysicalRecord);
+			Response.json("fileId",fileId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
