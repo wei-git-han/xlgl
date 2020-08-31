@@ -35,4 +35,6 @@ public interface XlglMineStudyService {
 	List<XlglMineStudy> importExcle(InputStream is, String id) throws Exception;
 
 	void deleteAllRecord(String[] ids);
+
+	XlglMineStudy queryByUserId(String userId,String year);
 }

@@ -18,16 +18,8 @@ import com.css.addbase.msg.service.MsgTipService;
 import com.css.addbase.orgservice.OrgService;
 import com.css.app.db.business.entity.SubDocInfo;
 import com.css.app.db.config.service.AdminSetService;
-import com.css.app.xlgl.entity.XlglDocumentZbjl;
-import com.css.app.xlgl.entity.XlglExamMainAnswer;
-import com.css.app.xlgl.entity.XlglSubDocInfo;
-import com.css.app.xlgl.entity.XlglSubDocTracking;
-import com.css.app.xlgl.entity.XlglXlzzInfo;
-import com.css.app.xlgl.service.XlglDocumentZbjlService;
-import com.css.app.xlgl.service.XlglExamMainAnswerService;
-import com.css.app.xlgl.service.XlglSubDocInfoService;
-import com.css.app.xlgl.service.XlglSubDocTrackingService;
-import com.css.app.xlgl.service.XlglXlzzInfoService;
+import com.css.app.xlgl.entity.*;
+import com.css.app.xlgl.service.*;
 import com.css.base.utils.*;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.codehaus.groovy.util.HashCodeHelper;
@@ -82,6 +74,8 @@ public class XlglDocumentZbjlController {
     private XlglXlzzInfoService xlglXlzzInfoService;
 	@Autowired
 	private XlglExamMainAnswerService xlglExamMainAnswerService;
+    @Autowired
+    private XlglPhysicalService xlglPhysicalService;
 	
 	/**
 	 * 列表
@@ -402,10 +396,27 @@ public class XlglDocumentZbjlController {
                 int sum = xlglSubDocTrackingService.queryAllCount(userId,year);
                 int count = xlglSubDocTrackingService.quereyWcCount(userId,year);
                 float f = count/sum;//强装兴装大讲堂得分
-                String dj = "优秀，目前写死";
-                jsonObject.put("f",f);
-                jsonObject.put("dj",dj);
+                String dj = "";
+                jsonObject.put("djt",f);
+                jsonObject.put("djtdj",dj);
+                if(f<0.6){
+                    dj = "不及格";
+                }else if(f>=0.6 && f<0.75){
+                    dj = "及格";
+                }else if(f >=0.75 && f<0.9){
+                    dj = "良好";
+                }else{
+                    dj = "优秀";
+                }
                 //强装兴装大讲堂得分 ------------------end
+
+                //军事体育成绩得分----------------------start
+                XlglPhysical xlglPhysical = xlglPhysicalService.queryByUserId(userId,year);
+                String jtScore = xlglPhysical.getAllScore();
+                String jtDj = xlglPhysical.getAllJudge();
+                jsonObject.put("jtScore",jtScore);//得分
+                jsonObject.put("jtDj",jtDj);//等级
+                //军事体育成绩得分-----------------------end
 
                 //共同训练，专业训练，战略训练，军事训练 ------------------start
                 String gongtongxunlian = "99";
