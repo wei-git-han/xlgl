@@ -56,9 +56,9 @@ public class XlglDocumentZbjlController {
     private MsgTipService msgService;
     @Autowired
     private MsgTipUtil msgUtil;
-    @Value("${csse.dccb.appId}")
+    @Value("${csse.xlgl.appId}")
     private  String appId;
-    @Value("${csse.dccb.appSecret}")
+    @Value("${csse.xlgl.appSecret}")
     private  String clientSecret;
     @Autowired
     private BaseAppUserService baseAppUserService;

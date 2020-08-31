@@ -22,10 +22,10 @@ public class XlglAdminSetServiceImpl implements XlglAdminSetService {
 	@Autowired
 	private XlglAdminSetDao adminSetDao;
 	
-	@Value("${csse.dccb.appId}")
+	@Value("${csse.xlgl.appId}")
 	private  String appId;
 	
-	@Value("${csse.dccb.appSecret}")
+	@Value("${csse.xlgl.appSecret}")
 	private  String clientSecret;
 	
 	@Override
