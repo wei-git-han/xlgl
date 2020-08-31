@@ -16,8 +16,6 @@ import com.css.addbase.msg.MsgTipUtil;
 import com.css.addbase.msg.entity.MsgTip;
 import com.css.addbase.msg.service.MsgTipService;
 import com.css.addbase.orgservice.OrgService;
-import com.css.app.db.business.entity.SubDocInfo;
-import com.css.app.db.config.service.AdminSetService;
 import com.css.app.xlgl.entity.*;
 import com.css.app.xlgl.service.*;
 import com.css.base.utils.*;
@@ -53,7 +51,7 @@ public class XlglDocumentZbjlController {
     @Autowired
     private XlglSubDocInfoService xlglSubDocInfoService;
     @Autowired
-    private AdminSetService adminSetService;
+    private XlglAdminSetService adminSetService;
     @Autowired
     private MsgTipService msgService;
     @Autowired

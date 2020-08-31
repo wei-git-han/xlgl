@@ -6,7 +6,6 @@ import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
-import com.css.app.db.business.service.DocumentSzpsService;
 import com.css.app.xlgl.config.entity.XlglRoleSet;
 import com.css.app.xlgl.config.service.XlglRoleSetService;
 import com.css.app.xlgl.util.XlglDefined;
@@ -47,9 +46,6 @@ public class XlglRoleSetController {
 	
 	@Autowired
 	private BaseAppUserService baseAppUserService;
-	
-	@Autowired
-	private DocumentSzpsService documentSzpsService;
 	/**
 	 * 列表
 	 */

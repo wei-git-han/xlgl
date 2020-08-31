@@ -7,9 +7,9 @@ import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.addbase.apporgmapped.service.BaseAppOrgMappedService;
-import com.css.app.db.config.service.AdminSetService;
 import com.css.app.xlgl.dto.XlglConfirmDto;
 import com.css.app.xlgl.entity.XlglConfirm;
+import com.css.app.xlgl.service.XlglAdminSetService;
 import com.css.app.xlgl.service.XlglConfirmService;
 import com.css.app.xlgl.service.XlglSubDocTrackingService;
 import com.css.base.utils.CurrentUser;
@@ -46,7 +46,7 @@ public class XlglConfirmController {
 	@Autowired
 	private XlglSubDocTrackingService xlglSubDocTrackingService;
 	@Autowired
-	private AdminSetService adminSetService;
+	private XlglAdminSetService adminSetService;
 	@Autowired
 	private BaseAppOrgMappedService baseAppOrgMappedService;
 	/**
