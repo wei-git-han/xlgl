@@ -22,6 +22,7 @@
 		<if test="status != null and status !=''">
 			  and STATUS = #{status}
 		</if>	
+			order by UPDATE_DATE desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
