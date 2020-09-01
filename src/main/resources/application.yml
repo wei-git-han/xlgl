@@ -64,8 +64,8 @@ csse:
     oauth2:
       client:
         accessTokenUri: ${csse.mircoservice.zuul}/api/uaa/oauth/token
-        clientId: ${csse.dccb.appId}
-        clientSecret: ${csse.dccb.appSecret}
+        clientId: ${csse.xlgl.appId}
+        clientSecret: ${csse.xlgl.appSecret}
     fileservice:
       servers: http://172.16.201.140:7003
       tempDirPath: c:/temp/storetemp/
@@ -92,8 +92,8 @@ msg:
     
 #文件服务配置
 css.oauth2.accessTokenUri: ${csse.mircoservice.zuul}/api/uaa/oauth/token
-css.oauth2.clientId: ${csse.dccb.appId}
-css.oauth2.clientSecret: ${csse.dccb.appSecret}
+css.oauth2.clientId: ${csse.xlgl.appId}
+css.oauth2.clientSecret: ${csse.xlgl.appSecret}
 
 #文件服务地址配置
 css.fileService.host: ${csse.fileservice.domain}
@@ -128,8 +128,8 @@ csse.dmdba.url: 172.16.201.140:5236
 
 #文件服务----------------------------------start
 #文件服务的clientId,与公文处理应用进行共用；
-csse.dccb.appId: legacycpk.csse.zbfzbbgt_zyyy_app1a_gwcl
-csse.dccb.appSecret: 2C0DB8B2-C752-4f63-AA9E-919BE5B8233A
+csse.xlgl.appId: legacycpk.csse.zbfzbbgt_zyyy_app1a_gwcl
+csse.xlgl.appSecret: 2C0DB8B2-C752-4f63-AA9E-919BE5B8233A
 #文件服务所在的服务器ip或域名
 csse.fileservice.domain: 172.16.201.140
 #文件服务端口

@@ -26,4 +26,6 @@ public interface XlglXlzzInfoService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+
+	List<XlglXlzzInfo> queryTopOne();
 }

@@ -64,14 +64,11 @@ public class XlglMineStudyController {
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	@RequiresPermissions("xlglminestudy:list")
 	public void list(Integer page, Integer limit){
 		Map<String, Object> map = new HashMap<>();
 		PageHelper.startPage(page, limit);
-		
 		//查询列表数据
 		List<XlglMineStudy> xlglMineStudyList = xlglMineStudyService.queryList(map);
-		
 		PageUtils pageUtil = new PageUtils(xlglMineStudyList);
 		Response.json("page",pageUtil);
 	}
@@ -118,11 +115,10 @@ public class XlglMineStudyController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	@RequiresPermissions("xlglminestudy:delete")
-	public void delete(@RequestBody String[] ids){
+	public void delete(String id){
+		String[] ids = id.split(",");
 		xlglMineStudyService.deleteBatch(ids);
-		
-		Response.ok();
+		Response.json("result","success");
 	}
 
 	/**
@@ -178,7 +174,7 @@ public class XlglMineStudyController {
 
 	@ResponseBody
 	@RequestMapping("/importExcel")
-	public void importExcel(@RequestParam(value="file",required = false) MultipartFile file) {
+	public void importExcel(@RequestParam(required = false) MultipartFile file) {
 		JSONObject jsonObject = new JSONObject();
 		try {
 			//文件上传记录
@@ -200,6 +196,7 @@ public class XlglMineStudyController {
 
 			xlglStudyRecord.setCreatedTime(new Date());
 			xlglStudyRecordService.save(xlglStudyRecord);
+			Response.json("fileId",fileId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

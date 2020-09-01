@@ -111,20 +111,24 @@ public class PersonalFileController {
 		int total = personalFileService.queryTotal(map);
 		map.put("level", "1");
 		int levelTotal = personalFileService.queryTotal(map);
-		Integer levelrate = (levelTotal/total)*100;
 		String level ="";
-		if(levelrate >= 85) {
-			level = "优秀";
-		}else if(70 <= levelrate && levelrate < 85){
-			level = "优良";
-		}else if(60 <= levelrate && levelrate < 70) {
-			level = "及格";
-		}else {
-			level = "不及格";
+		if(total > 0){
+			Integer levelrate = (levelTotal/total)*100;
+
+			if(levelrate >= 85) {
+				level = "优秀";
+			}else if(70 <= levelrate && levelrate < 85){
+				level = "优良";
+			}else if(60 <= levelrate && levelrate < 70) {
+				level = "及格";
+			}else {
+				level = "不及格";
+			}
+			jsonObject.put("levelrate", levelrate);//优秀比率
 		}
 		jsonObject.put("level", level);//优秀等级
 		jsonObject.put("total", total);//已考科目总数
-		jsonObject.put("levelrate", levelrate);//优秀比率
+
 		Response.json(jsonObject);
 	}
 	

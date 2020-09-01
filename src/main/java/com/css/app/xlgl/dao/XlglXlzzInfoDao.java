@@ -5,6 +5,9 @@ import com.css.app.xlgl.entity.XlglXlzzInfo;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.css.base.dao.BaseDao;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
  * 训练组织基本信息表
@@ -15,5 +18,7 @@ import com.css.base.dao.BaseDao;
  */
 @Mapper
 public interface XlglXlzzInfoDao extends BaseDao<XlglXlzzInfo> {
-	
+
+    @Select("select top 1 * from XLGL_XLZZ_INFO order by CREATE_TIME desc")
+    List<XlglXlzzInfo> queryTopOne();
 }

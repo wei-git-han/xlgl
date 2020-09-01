@@ -86,7 +86,7 @@ public class AppConfig {
 	 * @return
 	 */
 	public String getAppId(){
-		return env.getProperty("csse.dccb.appId");
+		return env.getProperty("csse.xlgl.appId");
 	}
 	
 	/**
@@ -94,6 +94,6 @@ public class AppConfig {
 	 * @return
 	 */
 	public String getAppSecret(){
-		return env.getProperty("csse.dccb.appSecret");
+		return env.getProperty("csse.xlgl.appSecret");
 	}
 }
