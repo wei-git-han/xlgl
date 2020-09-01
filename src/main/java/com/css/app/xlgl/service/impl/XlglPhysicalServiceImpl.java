@@ -183,31 +183,33 @@ public class XlglPhysicalServiceImpl implements XlglPhysicalService {
 		Workbook wb =new HSSFWorkbook(is);
 		Sheet sheet = wb.getSheetAt(0); // 遍历第一个Sheet
 		String title = sheet.getRow(0).getCell(0).getStringCellValue();//标题，用于判断是哪一类题
-			for(int i = 2 ;i<=sheet.getLastRowNum(); i ++) {
+			for(int i = 1 ;i<=sheet.getLastRowNum(); i ++) {
 				XlglPhysical xlglPhysical = new XlglPhysical ();
 				xlglPhysical.setId(UUIDUtils.random());
 				String steCell0 = sheet.getRow(i).getCell(0).getStringCellValue(); //姓名
 				String steCell1 = sheet.getRow(i).getCell(1).getStringCellValue(); //性别
-				String steCell2 = sheet.getRow(i).getCell(2).getStringCellValue(); //身高
-				String steCell3 = sheet.getRow(i).getCell(3).getStringCellValue(); //体重
-				String steCell4 = sheet.getRow(i).getCell(4).getStringCellValue(); //引体向上
-				String steCell5 = sheet.getRow(i).getCell(5).getStringCellValue(); //仰卧起坐
-				String steCell6 = sheet.getRow(i).getCell(6).getStringCellValue(); //30*2米
-				String steCell7 = sheet.getRow(i).getCell(7).getStringCellValue(); //3000米
-				String steCell8 = sheet.getRow(i).getCell(8).getStringCellValue(); //类别
-				String steCell9 = sheet.getRow(i).getCell(9).getStringCellValue(); //userId
-				String steCell10 = sheet.getRow(i).getCell(10).getStringCellValue(); //人员所在部门名称
+				String steCell2 = sheet.getRow(i).getCell(2).getNumericCellValue()+""; //年龄
+				String steCell3 = sheet.getRow(i).getCell(3).getNumericCellValue()+""; //身高
+				String steCell4 = sheet.getRow(i).getCell(4).getNumericCellValue()+""; //体重
+				String steCell5 = sheet.getRow(i).getCell(5).getNumericCellValue()+""; //引体向上
+				String steCell6 = sheet.getRow(i).getCell(6).getNumericCellValue()+""; //仰卧起坐
+				String steCell7 = sheet.getRow(i).getCell(7).getNumericCellValue()+""; //30*2米
+				String steCell8 = sheet.getRow(i).getCell(8).getNumericCellValue()+""; //3000米
+				//String steCell9 = sheet.getRow(i).getCell(9).getStringCellValue(); //类别
+				String steCell10 = sheet.getRow(i).getCell(10).getStringCellValue(); //人员id
+				String steCell11 = sheet.getRow(i).getCell(11).getStringCellValue();//人员部门
 				xlglPhysical.setName(steCell0);
 				xlglPhysical.setSex(steCell1);
-				xlglPhysical.setHigh(steCell2);
-				xlglPhysical.setWight(steCell3);
-				xlglPhysical.setUp(steCell4);
-				xlglPhysical.setSit(steCell5);
-				xlglPhysical.setSrun(steCell6);
-				xlglPhysical.setTrun(steCell7);
-				xlglPhysical.setType(steCell8);
-				xlglPhysical.setUserId(steCell9);
-				xlglPhysical.setDeptName(steCell10);
+				xlglPhysical.setHigh(steCell3);
+				xlglPhysical.setWight(steCell4);
+				xlglPhysical.setUp(steCell5);
+				xlglPhysical.setSit(steCell6);
+				xlglPhysical.setSrun(steCell7);
+				xlglPhysical.setTrun(steCell8);
+				//xlglPhysical.setType(steCell9);
+				xlglPhysical.setUserId(steCell10);
+				xlglPhysical.setDeptName(steCell11);
+				xlglPhysical.setAge(steCell2);
 				xlglPhysical.setUpId(id);//每次上传的id
 				xlglPhysical.setNormal("1");//1是正式导入，0是自己保存
 				list.add(xlglPhysical);

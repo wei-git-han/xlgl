@@ -152,8 +152,8 @@ public class XlglMineStudyServiceImpl implements XlglMineStudyService {
 			xlglMineStudy.setId(UUIDUtils.random());
 			String steCell0 = sheet.getRow(i).getCell(0).getStringCellValue(); //姓名
 			String steCell1 = sheet.getRow(i).getCell(1).getStringCellValue(); //部门名称
-			String steCell2 = sheet.getRow(i).getCell(2).getStringCellValue(); //分数
-			String steCell3 = sheet.getRow(i).getCell(3).getStringCellValue(); //等级
+			String steCell2 = sheet.getRow(i).getCell(2).getNumericCellValue()+""; //分数
+			String steCell3 = sheet.getRow(i).getCell(3).getNumericCellValue()+""; //等级
 			String steCell4 = sheet.getRow(i).getCell(4).getStringCellValue(); //人员id
 			xlglMineStudy.setUserName(steCell0);
 			xlglMineStudy.setDeptName(steCell1);

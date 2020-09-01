@@ -48,8 +48,7 @@ public class XlglPhysicalRecordController {
 		//查询列表数据
 		List<XlglPhysicalRecord> xlglPhysicalRecordList = xlglPhysicalRecordService.queryList(map);
 		
-		PageUtils pageUtil = new PageUtils(xlglPhysicalRecordList);
-		Response.json("page",pageUtil);
+		Response.json("xlglPhysicalRecordList",xlglPhysicalRecordList);
 	}
 	
 	
