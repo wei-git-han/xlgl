@@ -27,7 +27,7 @@ public interface XlglPictureDao extends BaseDao<XlglPicture> {
     @Select("select * from XLGL_PICTURE where PICTURE_ID = #{0}")
     XlglPicture queryVedio(String id);
 
-    @Select("select top 1 * from XLGL_PICTURE order by CREATE_TIME desc")
+    @Select("select top 1 * from XLGL_PICTURE where PICTURE_TYPE = '0' order by CREATE_TIME desc")
     List<XlglPicture> queryTopOne();
 
 }
