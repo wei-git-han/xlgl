@@ -40,4 +40,6 @@ public interface XlglPictureService {
 
 	List<XlglPicture> queryTopOne();
 
+	XlglPicture queryByInfo(Map<String,Object> map);
+
 }

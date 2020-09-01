@@ -30,4 +30,6 @@ public interface XlglPictureDao extends BaseDao<XlglPicture> {
     @Select("select top 1 * from XLGL_PICTURE where PICTURE_TYPE = '0' order by CREATE_TIME desc")
     List<XlglPicture> queryTopOne();
 
+    XlglPicture queryByInfo(Map<String,Object> map);
+
 }

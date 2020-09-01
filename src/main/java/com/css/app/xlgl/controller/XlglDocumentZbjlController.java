@@ -163,7 +163,7 @@ public class XlglDocumentZbjlController {
                         if (msg != null) {
                             String msgUrl = "";
                             for (String userId : userIds) {
-                                msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId, appId, clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "", "true");
+                                //msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId, appId, clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "", "true");
                             }
                         }
                     }
@@ -244,7 +244,7 @@ public class XlglDocumentZbjlController {
                 if (msg != null) {
                     String msgUrl = "";
                     if (StringUtils.isNotBlank(receiverId)) {
-                        msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, receiverId, appId, clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "", "true");
+                        //msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, receiverId, appId, clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "", "true");
                     }
                 }
 

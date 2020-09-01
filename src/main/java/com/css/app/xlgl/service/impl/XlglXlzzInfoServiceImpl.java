@@ -51,5 +51,10 @@ public class XlglXlzzInfoServiceImpl implements XlglXlzzInfoService {
 	public List<XlglXlzzInfo> queryTopOne(){
 		return xlglXlzzInfoDao.queryTopOne();
 	}
+
+	@Override
+	public void deleteById(String id){
+		xlglXlzzInfoDao.deleteById(id);
+	}
 	
 }
