@@ -117,6 +117,10 @@ public class XlglDocumentZbjlController {
             String organId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
             BaseAppOrgan org = baseAppOrganService.queryObject(organId);
             //添加转办记录
+            XlglDocumentZbjl xlglDocumentZbjl1 = xlglDocumentZbjlService.queryByInfoId(fileId);
+            if(xlglDocumentZbjl1 != null){
+                xlglDocumentZbjlService.deleteByInfoId(fileId);
+            }
             XlglDocumentZbjl xlglDocumentZbjl = new XlglDocumentZbjl();
             xlglDocumentZbjl.setId(UUIDUtils.random());
             xlglDocumentZbjl.setInfoId(fileId);
