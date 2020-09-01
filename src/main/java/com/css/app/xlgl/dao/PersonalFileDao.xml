@@ -10,6 +10,8 @@
 		a.examine_name as examineName,
 		b.FRACTIONSUM as fractionSum,
 		a.create_user as createUserId,
+		b.UPDATE_DATE,
+		to_char(b.UPDATE_DATE,'yyyy'),
 		us.truename as userName
 	from XLGL_EXAM_EXAMINE  a 
 	join XLGL_EXAM_MAIN_ANSWER b 
@@ -23,7 +25,9 @@
 		<if test="replyUserId != null and replyUserId !=''">
 			and b.REPLY_USER_ID = #{replyUserId}
 		</if>
-	
+		<if test="year != null and year !=''">
+			and to_char(sysdate,'yyyy')	= to_char(b.UPDATE_DATE,'yyyy')
+		</if>
 	</select>
 	
 	<select id="queryTotal" resultType="int">

@@ -65,7 +65,7 @@
 	<update id="update" parameterType="com.css.app.xlgl.entity.XlglWarTactic">
 		update XLGL_WAR_TACTIC 
 		<set>
-			<if test="accessoryFile != null">"ACCESSORY_FILE" = #{accessoryFile}, </if>
+<!-- 			<if test="accessoryFile != null">"ACCESSORY_FILE" = #{accessoryFile}, </if> -->
 			<if test="createUser != null">"CREATE_USER" = #{createUser}, </if>
 			<if test="updateDate != null">"UPDATE_DATE" = #{updateDate}, </if>
 			<if test="coverFile != null">"COVER_FILE" = #{coverFile}, </if>

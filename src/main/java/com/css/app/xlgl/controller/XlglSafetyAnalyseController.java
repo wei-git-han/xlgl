@@ -269,8 +269,10 @@ public class XlglSafetyAnalyseController {
 		 String fileId = "";
 		 String fileName = "";
 		try {
-			 fileId = FileBaseUtil.fileServiceUpload(file);
+			 HTTPFile httpFile=HTTPFile.save(file.getInputStream(),file.getOriginalFilename());
+			 //fileId = FileBaseUtil.fileServiceUpload(file);
 			 fileName = file.getOriginalFilename();
+			 fileId = httpFile.getFileId();
 			 json.put("fileId", fileId);
 			
 		} catch (Exception e) {
@@ -303,8 +305,7 @@ public class XlglSafetyAnalyseController {
 	@RequestMapping("/downloadPicture")
 	public void downloadPicture(String fileId){
 		HTTPFile httpFile = new HTTPFile(fileId);
-		String filePath = httpFile.getFilePath();
-		Response.json(filePath);
+		Response.download(httpFile.getFileName(), httpFile.getInputSteam());
 	}
 
 	/**
@@ -315,28 +316,10 @@ public class XlglSafetyAnalyseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/downLoad")
-	public void downLoad(String fileId,HttpServletResponse response) throws IOException {
-		OutputStream os = null;
-		byte[] buff = new byte[1024];
+	public void downLoad(String fileId)  {
 		HTTPFile httpFile = new HTTPFile(fileId);
 		String fileName = httpFile.getFileName();
-		response.reset();
-		response.setContentType("application/octet-stream");
-		response.setCharacterEncoding("UTF-8");
-		response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
-		os = response.getOutputStream();
-		BufferedInputStream bis = new BufferedInputStream(httpFile.getInputSteam());
-		int i = 0;
-		try {
-			while ((i = bis.read(buff)) != -1) {
-				os.write(buff, 0, i);
-				os.flush();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			bis.close();
-		}
+		Response.download(fileName, httpFile.getInputSteam());
 	}
 
 	/**
