@@ -200,24 +200,37 @@ public class XlglWarCommonWeaponController {
 	
 	/**
 	 * 修改
-	 * @param deleAccessoryId 删除附件id
-	 * @param accessoryFile 新增附件id
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	public void update(XlglWarCommonWeapon xlglWarCommonWeapon,String[] deleAccessoryId,String[] accessoryFileId ){
+	public void update(XlglWarCommonWeapon xlglWarCommonWeapon){
 		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		xlglWarCommonWeapon.setUpdateUser(CurrentUser.getUserId());
 		xlglWarCommonWeapon.setUpdateDate(format);
 		xlglWarCommonWeaponService.update(xlglWarCommonWeapon);
-		if(deleAccessoryId.length >0) {
-			for (String string : deleAccessoryId) {
-				xlglPictureService.deleteByPictureId(string);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("id", xlglWarCommonWeapon.getId());
+		List<XlglPicture> queryList = xlglPictureService.queryList(map);
+		if(queryList.size()>0) {
+			for (XlglPicture xlglPicture : queryList) {
+				xlglPictureService.delete(xlglPicture.getId());
 			}
 		}
-		if(accessoryFileId.length>0) {
-			for (String string : accessoryFileId) {
-				xlglPictureService.savePicture(xlglWarCommonWeapon.getId(), string, "3");
+		if(StringUtils.isNotBlank(xlglWarCommonWeapon.getCoverFile())) {
+			xlglPictureService.savePicture(xlglWarCommonWeapon.getId(),xlglWarCommonWeapon.getCoverFile(),"4");
+		}
+		if(StringUtils.isNotBlank(xlglWarCommonWeapon.getVideoFile())) {
+			xlglPictureService.savePicture(xlglWarCommonWeapon.getId(),xlglWarCommonWeapon.getVideoFile(),"2");
+		}
+		if(StringUtils.isNotBlank(xlglWarCommonWeapon.getAccessoryFile())) {
+			if(xlglWarCommonWeapon.getAccessoryFile().contains(",")) {
+				String[] split = xlglWarCommonWeapon.getAccessoryFile().split(",");
+				for (String string : split) {
+					xlglPictureService.savePicture(xlglWarCommonWeapon.getId(),string,"3");
+				}
+			}else {
+				xlglPictureService.savePicture(xlglWarCommonWeapon.getId(),xlglWarCommonWeapon.getAccessoryFile(),"3");
 			}
 		}
 		Response.ok();

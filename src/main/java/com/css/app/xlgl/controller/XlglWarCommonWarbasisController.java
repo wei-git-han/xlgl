@@ -199,24 +199,36 @@ public class XlglWarCommonWarbasisController {
 	
 	/**
 	 * 修改
-	 * @param deleAccessoryId 删除附件id
-	 * @param accessoryFile 新增附件id
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	public void update(XlglWarCommonWarbasis xlglWarCommonWarbasis,String[] deleAccessoryId,String[] accessoryFileId ){
+	public void update(XlglWarCommonWarbasis xlglWarCommonWarbasis){
 		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		xlglWarCommonWarbasis.setUpdateUser(CurrentUser.getUserId());
 		xlglWarCommonWarbasis.setUpdateDate(format);
 		xlglWarCommonWarbasisService.update(xlglWarCommonWarbasis);
-		if(deleAccessoryId.length >0) {
-			for (String string : deleAccessoryId) {
-				xlglPictureService.deleteByPictureId(string);
+		Map<String, Object> map = new HashMap<>();
+		map.put("id", xlglWarCommonWarbasis.getId());
+		List<XlglPicture> queryList = xlglPictureService.queryList(map);
+		if(queryList.size()>0) {
+			for (XlglPicture xlglPicture : queryList) {
+				xlglPictureService.delete(xlglPicture.getId());
 			}
 		}
-		if(accessoryFileId.length>0) {
-			for (String string : accessoryFileId) {
-				xlglPictureService.savePicture(xlglWarCommonWarbasis.getId(), string, "3");
+		if(StringUtils.isNotBlank(xlglWarCommonWarbasis.getCoverFile())) {
+			xlglPictureService.savePicture(xlglWarCommonWarbasis.getId(),xlglWarCommonWarbasis.getCoverFile(),"4");
+		}
+		if(StringUtils.isNotBlank(xlglWarCommonWarbasis.getVideoFile())) {
+			xlglPictureService.savePicture(xlglWarCommonWarbasis.getId(),xlglWarCommonWarbasis.getVideoFile(),"2");
+		}
+		if(StringUtils.isNotBlank(xlglWarCommonWarbasis.getAccessoryFile())) {
+			if(xlglWarCommonWarbasis.getAccessoryFile().contains(",")) {
+				String[] split = xlglWarCommonWarbasis.getAccessoryFile().split(",");
+				for (String string : split) {
+					xlglPictureService.savePicture(xlglWarCommonWarbasis.getId(),string,"3");
+				}
+			}else {
+				xlglPictureService.savePicture(xlglWarCommonWarbasis.getId(),xlglWarCommonWarbasis.getAccessoryFile(),"3");
 			}
 		}
 		Response.ok();

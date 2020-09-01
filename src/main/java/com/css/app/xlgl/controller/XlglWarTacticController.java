@@ -1,6 +1,7 @@
 package com.css.app.xlgl.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -205,27 +206,38 @@ public class XlglWarTacticController {
 	
 	/**
 	 * 修改
-	 * @param deleAccessoryId 删除附件id
-	 * @param accessoryFile 新增附件id
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	public void update(XlglWarTactic xlglWarTactic,String[] deleAccessoryId,String[] accessoryFileId ){
+	public void update(XlglWarTactic xlglWarTactic){
 		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		xlglWarTactic.setUpdateUser(CurrentUser.getUserId());
 		xlglWarTactic.setUpdateDate(format);
 		xlglWarTacticService.update(xlglWarTactic);
-		if(deleAccessoryId.length >0) {
-			for (String string : deleAccessoryId) {
-				xlglPictureService.deleteByPictureId(string);
+		Map<String, Object> map = new HashMap<>();
+		map.put("id", xlglWarTactic.getId());
+		List<XlglPicture> queryList = xlglPictureService.queryList(map);
+		if(queryList.size()>0) {
+			for (XlglPicture xlglPicture : queryList) {
+				xlglPictureService.delete(xlglPicture.getId());
 			}
 		}
-		if(accessoryFileId.length>0) {
-			for (String string : accessoryFileId) {
-				xlglPictureService.savePicture(xlglWarTactic.getId(), string, "3");
+		if(StringUtils.isNotBlank(xlglWarTactic.getCoverFile())) {
+			xlglPictureService.savePicture(xlglWarTactic.getId(),xlglWarTactic.getCoverFile(),"4");
+		}
+		if(StringUtils.isNotBlank(xlglWarTactic.getVideoFile())) {
+			xlglPictureService.savePicture(xlglWarTactic.getId(),xlglWarTactic.getVideoFile(),"2");
+		}
+		if(StringUtils.isNotBlank(xlglWarTactic.getAccessoryFile())) {
+			if(xlglWarTactic.getAccessoryFile().contains(",")) {
+				String[] split = xlglWarTactic.getAccessoryFile().split(",");
+				for (String string : split) {
+					xlglPictureService.savePicture(xlglWarTactic.getId(),string,"3");
+				}
+			}else {
+				xlglPictureService.savePicture(xlglWarTactic.getId(),xlglWarTactic.getAccessoryFile(),"3");
 			}
 		}
-		
 		Response.ok();
 	}
 	

@@ -202,24 +202,36 @@ public class XlglWarCommonSportsController {
 	
 	/**
 	 * 修改
-	 * @param deleAccessoryId 删除附件id
-	 * @param accessoryFile 新增附件id
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	public void update(XlglWarCommonSports xlglWarCommonSports,String[] deleAccessoryId,String[] accessoryFileId ){
+	public void update(XlglWarCommonSports xlglWarCommonSports){
 		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		xlglWarCommonSports.setUpdateUser(CurrentUser.getUserId());
 		xlglWarCommonSports.setUpdateDate(format);
 		xlglWarCommonSportsService.update(xlglWarCommonSports);
-		if(deleAccessoryId.length >0) {
-			for (String string : deleAccessoryId) {
-				xlglPictureService.deleteByPictureId(string);
+		Map<String, Object> map = new HashMap<>();
+		map.put("id", xlglWarCommonSports.getId());
+		List<XlglPicture> queryList = xlglPictureService.queryList(map);
+		if(queryList.size()>0) {
+			for (XlglPicture xlglPicture : queryList) {
+				xlglPictureService.delete(xlglPicture.getId());
 			}
 		}
-		if(accessoryFileId.length>0) {
-			for (String string : accessoryFileId) {
-				xlglPictureService.savePicture(xlglWarCommonSports.getId(), string, "3");
+		if(StringUtils.isNotBlank(xlglWarCommonSports.getCoverFile())) {
+			xlglPictureService.savePicture(xlglWarCommonSports.getId(),xlglWarCommonSports.getCoverFile(),"4");
+		}
+		if(StringUtils.isNotBlank(xlglWarCommonSports.getVideoFile())) {
+			xlglPictureService.savePicture(xlglWarCommonSports.getId(),xlglWarCommonSports.getVideoFile(),"2");
+		}
+		if(StringUtils.isNotBlank(xlglWarCommonSports.getAccessoryFile())) {
+			if(xlglWarCommonSports.getAccessoryFile().contains(",")) {
+				String[] split = xlglWarCommonSports.getAccessoryFile().split(",");
+				for (String string : split) {
+					xlglPictureService.savePicture(xlglWarCommonSports.getId(),string,"3");
+				}
+			}else {
+				xlglPictureService.savePicture(xlglWarCommonSports.getId(),xlglWarCommonSports.getAccessoryFile(),"3");
 			}
 		}
 		Response.ok();

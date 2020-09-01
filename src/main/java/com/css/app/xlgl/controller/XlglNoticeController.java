@@ -314,7 +314,6 @@ public class XlglNoticeController {
 			map.put("id",id);
 			if(StringUtils.isNotBlank(id)){
 				list = xlglPictureService.queryList(map);
-
 			}
 		}
 		Response.json("list",list);

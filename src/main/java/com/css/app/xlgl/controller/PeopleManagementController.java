@@ -34,6 +34,7 @@ import com.css.addbase.constant.AppConstant;
 import com.css.addbase.constant.AppInterfaceConstant;
 import com.css.app.xlgl.dto.TxlUserDto;
 import com.css.app.xlgl.entity.XlglAdminSet;
+import com.css.app.xlgl.entity.XlglExamAnswer;
 import com.css.app.xlgl.service.XlglAdminSetService;
 import com.css.base.utils.CrossDomainUtil;
 import com.css.base.utils.CurrentUser;
@@ -67,8 +68,13 @@ public class PeopleManagementController {
 	 * 
 	 * 各单位人员情况统计列表
 	 * */
+	@ResponseBody
 	@RequestMapping("/list")
 	public void list(Integer page, Integer limit) {
+		Map<String, Object> map = new HashMap<>();
+		PageHelper.startPage(page, limit);
+		List<BaseAppOrgan> queryList = baseAppOrganService.queryList(map);
+		PageUtils pageUtil = new PageUtils(queryList);
 
 		String userId = CurrentUser.getUserId();
 		Map<String, Object> hashmap = new HashMap<>();
@@ -94,11 +100,49 @@ public class PeopleManagementController {
 				}
 			}
 		}
-		Map<String, Object> map = new HashMap<>();
-		PageHelper.startPage(page, limit);
-		List<BaseAppOrgan> queryList = baseAppOrganService.queryList(map);
-		PageUtils pageUtil = new PageUtils(queryList);
-		queryList = getBaseAppOrganList(queryList,queryList2,status);
+
+		LinkedMultiValueMap<String, Object> linkeMap = new LinkedMultiValueMap<String,Object>();
+		for (BaseAppOrgan baseAppOrgan : queryList) {
+				if(status) {
+					String str = "0";
+					if(queryList2.size()>0) {
+						 str =baseAppOrgan.getId().equals(queryList2.get(0).getDeptId())?"1":"0";
+					}
+					baseAppOrgan.setStatus(str);
+				}else {
+					baseAppOrgan.setStatus("1");
+				}
+			linkeMap.add("organId", baseAppOrgan.getId());
+			JSONObject jsonData = this.getNumber(linkeMap);
+			Integer yzwrs=0;
+			Integer qjrs=0;
+			Integer xjrs=0;
+			Object object = jsonData.get("yzwrs");
+			Object object2 = jsonData.get("qjrs");
+			Object object3 = jsonData.get("xjrs");
+			if( object!=null) {
+				yzwrs = (Integer)object;
+			}
+			if( object2!=null) {
+				yzwrs = (Integer)object2;
+			}
+			if( object3!=null) {
+				yzwrs = (Integer)object3;
+			}
+			int userIdList = this.userIdNumber();//实际在位人数
+			if(userIdList == 0 || yzwrs ==0) {
+				int zwRate = 0;
+				baseAppOrgan.setZwrate(zwRate);
+			}else {
+				int zwRate = (userIdList /yzwrs)*100; //人员在位率
+				baseAppOrgan.setZwrate(zwRate);
+			}
+			baseAppOrgan.setYzwrs(yzwrs);
+			baseAppOrgan.setQjrs(qjrs);
+			baseAppOrgan.setXjrs(xjrs);
+			baseAppOrgan.setSjzwrs(userIdList);
+		
+		}
 		Response.json("page",pageUtil);
 	}
 	
@@ -134,12 +178,18 @@ public class PeopleManagementController {
 				yzwrs = (Integer)object3;
 			}
 			int userIdList = this.userIdNumber();//实际在位人数
-			int zwRate = (userIdList /yzwrs)*100; //人员在位率
+			if(userIdList == 0 || yzwrs ==0) {
+				int zwRate = 0;
+				baseAppOrgan.setZwrate(zwRate);
+			}else {
+				int zwRate = (userIdList /yzwrs)*100; //人员在位率
+				baseAppOrgan.setZwrate(zwRate);
+			}
 			baseAppOrgan.setYzwrs(yzwrs);
 			baseAppOrgan.setQjrs(qjrs);
 			baseAppOrgan.setXjrs(xjrs);
 			baseAppOrgan.setSjzwrs(userIdList);
-			baseAppOrgan.setZwrate(zwRate);
+		
 		}
 		return queryList;
 	}
@@ -231,7 +281,8 @@ public class PeopleManagementController {
 	 * 在线人
 	 */
 	private  int userIdNumber() {
-		return getUserArray().size();
+		int size = getUserArray().size();
+		return size;
 	}
 	/**
 	 * 获得在位用户
@@ -271,9 +322,20 @@ public class PeopleManagementController {
 	 * */
 	@ResponseBody
 	@RequestMapping("/export")
-	public void export() {
+	public void export(String[] organIds) {
 		List<BaseAppOrgan> queryList = baseAppOrganService.queryList(null);
 		queryList = getBaseAppOrganList(queryList,null,null);
+		List<BaseAppOrgan> list = new ArrayList<BaseAppOrgan>();
+		if(organIds.length >0) {
+			for (BaseAppOrgan baseAppOrgan : queryList) {
+				for (String String : organIds) {
+					if(baseAppOrgan.getId().equals("organId")) {
+						list.add(baseAppOrgan);
+					}
+				}
+			}
+		}
+		
 		File tempFile = new File(filePath, "人员管理-各单位人员情况统计表.xls");
 		if (tempFile.exists()) {
 			tempFile.delete();
@@ -284,7 +346,11 @@ public class PeopleManagementController {
 		InputStream is;
 		String[] title ={"序号","部门名称","应在位人数","实际在位人数","人员在位率","请假人数","休假人数"};
 		try {
-			is = createExcelList(queryList,title,tempFile.getAbsolutePath());
+			if(list.size()>0) {
+				is = createExcelList(list,title,tempFile.getAbsolutePath());
+			}else {
+				is = createExcelList(queryList,title,tempFile.getAbsolutePath());
+			}	
 			is.close();
 			resultMap.put("fileUrl", tempFile.getAbsoluteFile());
 			resultMap.put("fileName", tempFile.getName());
@@ -344,13 +410,56 @@ public class PeopleManagementController {
 	}
 	
 	/**
-	 * 	organName：部门名称
-		fullname：用户名称
-		mobile：移动电话
-		post：职务
-		telephone：座机
-		address 地址（没有房间号，先用地址吧）
-		isShow：是否在位
+	 * 本局的单位人员情况-全局点击查看功能后
+	 * 导出功能
+	 * */
+	@ResponseBody
+	@RequestMapping("/exportPeople")
+	public void exportPeople(String organId,String[] ids) {
+		LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String,Object>();
+		map.add("orgid", organId);
+		JSONObject txl = getTXL(map);
+		JSONArray object =(JSONArray) txl.get("rows");
+		String string = object.toString();
+		ArrayList<TxlUserDto> arrayList = new ArrayList<TxlUserDto>();
+		List<TxlUserDto> parseArray = JSONArray.parseArray(string, TxlUserDto.class);
+		if(ids.length>0) {
+			for (TxlUserDto txlUserDto : parseArray) {
+				for (String str : ids) {
+					if(txlUserDto.getUserid().equals(str)) {
+						arrayList.add(txlUserDto);
+					}
+				}
+			}
+		}
+		File tempFile = new File(filePath, "人员管理-本单位人员情况情况统计表.xls");
+		if (tempFile.exists()) {
+			tempFile.delete();
+		} else {
+			tempFile.getParentFile().mkdirs();
+		}
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		InputStream is;
+		String[] title ={"用户名称","职务","座机","手机号","房间号","部门名称","在位情况"};
+		try {
+			if(arrayList.size()>0){
+				is = createExcelInfoFlie(arrayList,title,tempFile.getAbsolutePath());
+			}else {
+				is = createExcelInfoFlie(parseArray,title,tempFile.getAbsolutePath());
+			}
+			
+			is.close();
+			resultMap.put("fileUrl", tempFile.getAbsoluteFile());
+			resultMap.put("fileName", tempFile.getName());
+			resultMap.put("result", "success");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		Response.json(resultMap);
+	}
+	
+	/**
+	 * 本局的单位人员情况-全局点击查看功能后导出
 	 * */
 	private InputStream createExcelInfoFlie(List<TxlUserDto> list, String[] title ,String fileName) throws Exception {
 		FileOutputStream fout = null;

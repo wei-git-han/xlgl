@@ -203,21 +203,37 @@ public class XlglWarSpecialtyController {
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	public void update(XlglWarSpecialty xlglWarSpecialty,String[] deleAccessoryId,String[] accessoryFileId){
+	public void update(XlglWarSpecialty xlglWarSpecialty){
 		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		xlglWarSpecialty.setUpdateUser(CurrentUser.getUserId());
 		xlglWarSpecialty.setUpdateDate(format);
 		xlglWarSpecialtyService.update(xlglWarSpecialty);
-		if(deleAccessoryId.length >0) {
-			for (String string : deleAccessoryId) {
-				xlglPictureService.deleteByPictureId(string);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("id", xlglWarSpecialty.getId());
+		List<XlglPicture> queryList = xlglPictureService.queryList(map);
+		if(queryList.size()>0) {
+			for (XlglPicture xlglPicture : queryList) {
+				xlglPictureService.delete(xlglPicture.getId());
 			}
 		}
-		if(accessoryFileId.length>0) {
-			for (String string : accessoryFileId) {
-				xlglPictureService.savePicture(xlglWarSpecialty.getId(), string, "3");
+		if(StringUtils.isNotBlank(xlglWarSpecialty.getCoverFile())) {
+			xlglPictureService.savePicture(xlglWarSpecialty.getId(),xlglWarSpecialty.getCoverFile(),"4");
+		}
+		if(StringUtils.isNotBlank(xlglWarSpecialty.getVideoFile())) {
+			xlglPictureService.savePicture(xlglWarSpecialty.getId(),xlglWarSpecialty.getVideoFile(),"2");
+		}
+		if(StringUtils.isNotBlank(xlglWarSpecialty.getAccessoryFile())) {
+			if(xlglWarSpecialty.getAccessoryFile().contains(",")) {
+				String[] split = xlglWarSpecialty.getAccessoryFile().split(",");
+				for (String string : split) {
+					xlglPictureService.savePicture(xlglWarSpecialty.getId(),string,"3");
+				}
+			}else {
+				xlglPictureService.savePicture(xlglWarSpecialty.getId(),xlglWarSpecialty.getAccessoryFile(),"3");
 			}
 		}
+		
 		Response.ok();
 	}
 	

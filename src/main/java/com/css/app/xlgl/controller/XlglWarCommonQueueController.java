@@ -196,25 +196,38 @@ public class XlglWarCommonQueueController {
 	
 	/**
 	 * 修改
-	 * @param deleAccessoryId 删除附件id
-	 * @param accessoryFile 新增附件id
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	public void update(XlglWarCommonQueue xlglWarCommonQueue,String[] deleAccessoryId,String[] accessoryFileId){
+	public void update(XlglWarCommonQueue xlglWarCommonQueue){
 		xlglWarCommonQueue.setUpdateDate(CurrentUser.getUserId());
 		xlglWarCommonQueue.setUpdateUser(new Date());
 		xlglWarCommonQueueService.update(xlglWarCommonQueue);
-		if(deleAccessoryId.length >0) {
-			for (String string : deleAccessoryId) {
-				xlglPictureService.deleteByPictureId(string);
+		Map<String, Object> map = new HashMap<>();
+		map.put("id", xlglWarCommonQueue.getId());
+		List<XlglPicture> queryList = xlglPictureService.queryList(map);
+		if(queryList.size()>0) {
+			for (XlglPicture xlglPicture : queryList) {
+				xlglPictureService.delete(xlglPicture.getId());
 			}
 		}
-		if(accessoryFileId.length>0) {
-			for (String string : accessoryFileId) {
-				xlglPictureService.savePicture(xlglWarCommonQueue.getId(), string, "3");
+		if(StringUtils.isNotBlank(xlglWarCommonQueue.getCoverFile())) {
+			xlglPictureService.savePicture(xlglWarCommonQueue.getId(),xlglWarCommonQueue.getCoverFile(),"4");
+		}
+		if(StringUtils.isNotBlank(xlglWarCommonQueue.getVideoFile())) {
+			xlglPictureService.savePicture(xlglWarCommonQueue.getId(),xlglWarCommonQueue.getVideoFile(),"2");
+		}
+		if(StringUtils.isNotBlank(xlglWarCommonQueue.getAccessoryFile())) {
+			if(xlglWarCommonQueue.getAccessoryFile().contains(",")) {
+				String[] split = xlglWarCommonQueue.getAccessoryFile().split(",");
+				for (String string : split) {
+					xlglPictureService.savePicture(xlglWarCommonQueue.getId(),string,"3");
+				}
+			}else {
+				xlglPictureService.savePicture(xlglWarCommonQueue.getId(),xlglWarCommonQueue.getAccessoryFile(),"3");
 			}
 		}
+		Response.ok();
 		Response.ok();
 	}
 	
