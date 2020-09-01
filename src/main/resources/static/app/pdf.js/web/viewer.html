@@ -36,7 +36,21 @@ See https://github.com/adobe-type-tools/cmap-resources
 <!-- This snippet is used in production (included from viewer.html) -->
 <link rel="resource" type="application/l10n" href="locale/locale.properties">
 <script src="../build/pdf.js"></script>
-
+    <script src="../../openFile/js/jquery.min.js"></script>
+    <script>
+        function getUrlParam2(name){
+            var reg=new RegExp("(^|&)"+name+"=([^&]*)(&|$)","i");
+            var r=window.location.search.substr(1).match(reg);
+            //if(r!=null)return unescape(r[2]);
+            if(r!=null)return decodeURI(r[2]);
+            return null;
+        }
+        var DEFAULT_URL = '';
+        jQuery(document).ready(function() {
+            DEFAULT_URL =window.location.origin+'/app/xlgl/xlglcarsmanager/downLoad'+window.location.search
+            console.log('pdf文件路径'+DEFAULT_URL)
+        })
+    </script>
 
     <script src="viewer.js"></script>
 
