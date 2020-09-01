@@ -46,5 +46,15 @@ public class XlglDocumentZbjlServiceImpl implements XlglDocumentZbjlService {
 	public void deleteBatch(String[] ids){
 		xlglDocumentZbjlDao.deleteBatch(ids);
 	}
+	@Override
+	public XlglDocumentZbjl queryByInfoId(String fileId){
+		return xlglDocumentZbjlDao.queryByInfoId(fileId);
+	}
+
+	@Override
+	public void deleteByInfoId(String fileId){
+		xlglDocumentZbjlDao.deleteByInfoId(fileId);
+	}
+
 	
 }

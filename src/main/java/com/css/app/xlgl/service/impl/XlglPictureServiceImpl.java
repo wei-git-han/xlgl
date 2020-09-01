@@ -98,5 +98,9 @@ public class XlglPictureServiceImpl implements XlglPictureService {
 	public List<XlglPicture> queryTopOne(){
 		return xlglPictureDao.queryTopOne();
 	}
-	
+
+	@Override
+	public XlglPicture queryByInfo(Map<String,Object> map){
+		return xlglPictureDao.queryByInfo(map);
+	}
 }

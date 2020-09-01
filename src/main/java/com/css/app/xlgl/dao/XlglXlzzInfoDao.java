@@ -2,6 +2,7 @@ package com.css.app.xlgl.dao;
 
 
 import com.css.app.xlgl.entity.XlglXlzzInfo;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.css.base.dao.BaseDao;
@@ -21,4 +22,7 @@ public interface XlglXlzzInfoDao extends BaseDao<XlglXlzzInfo> {
 
     @Select("select top 1 * from XLGL_XLZZ_INFO order by CREATE_TIME desc")
     List<XlglXlzzInfo> queryTopOne();
+
+    @Delete("delete from XLGL_XLZZ_INFO where ID = #{0}")
+    void deleteById(String id);
 }

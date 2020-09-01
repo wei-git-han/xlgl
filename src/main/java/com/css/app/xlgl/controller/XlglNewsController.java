@@ -3,6 +3,7 @@ package com.css.app.xlgl.controller;
 import java.io.IOException;
 import java.util.*;
 
+import com.css.addbase.FileBaseUtil;
 import com.css.app.xlgl.entity.XlglPicture;
 import com.css.app.xlgl.service.XlglPictureService;
 import com.netflix.discovery.converters.Auto;
@@ -145,6 +146,19 @@ public class XlglNewsController {
 		map.put("type",type);
 		PageHelper.startPage(page, pagesize);
 		List<XlglNews> xlglNewsList = xlglNewsService.queryList(map);
+		if(xlglNewsList != null && xlglNewsList.size() > 0) {
+			for (XlglNews xlglNews : xlglNewsList) {
+				String id = xlglNews.getId();
+				Map<String, Object> map1 = new HashMap<>();
+				map1.put("FILE_ID", id);
+				XlglPicture xlglPicture = xlglPictureService.queryByInfo(map1);
+				if (xlglPicture != null) {
+					if (StringUtils.isNotBlank(xlglPicture.getPictureId())) {
+						xlglNews.setPicturePath(xlglPicture.getPictureId());
+					}
+				}
+			}
+		}
 		GwPageUtils pageUtil = new GwPageUtils(xlglNewsList);
 		Response.json(pageUtil);
 	}
@@ -165,6 +179,15 @@ public class XlglNewsController {
 			hits+=1;
 			xlglNews.setHits(hits);
 			xlglNewsService.update(xlglNews);
+			Map<String, Object> map1 = new HashMap<>();
+			map1.put("FILE_ID", id);
+			XlglPicture xlglPicture = xlglPictureService.queryByInfo(map1);
+			if (xlglPicture != null) {
+				if (StringUtils.isNotBlank(xlglPicture.getPictureId())) {
+					xlglNews.setPicturePath(xlglPicture.getPictureId());
+					xlglNews.setPictureName(xlglPicture.getPictureName());
+				}
+			}
 			Response.json("xlglNews",xlglNews);
 		}
 	}
@@ -173,7 +196,8 @@ public class XlglNewsController {
 	
 	@ResponseBody
 	@RequestMapping("saveOrUpdate")
-	public void saveOrUpdate(XlglNews xlglNews,String pIds){
+	public void saveOrUpdate(XlglNews xlglNews,String pIds,String picutureName){
+		JSONObject jsonObject = new JSONObject();
 		//判断是新增还是修改,id不为空则是修改，为空则是新增
 		String id = xlglNews.getId();
 		if(!StringUtils.isEmpty(id)){
@@ -229,6 +253,7 @@ public class XlglNewsController {
 					xlglPicture.setIsFirst("0");
 					xlglPicture.setPictureId(ids[i]);
 					xlglPicture.setSort("0");
+					xlglPicture.setPictureName(picutureName);
 					xlglPictureService.save(xlglPicture);
 				}
 			}
@@ -289,8 +314,19 @@ public class XlglNewsController {
 		Response.json(pageUtil);
 	}
 
+	@ResponseBody
+	@RequestMapping("/upLoadFile")
+	public void upLoad(@RequestParam(value = "pdf", required = false) MultipartFile pdf) {
+		com.alibaba.fastjson.JSONObject json = new com.alibaba.fastjson.JSONObject();
+		String fileId = FileBaseUtil.fileServiceUpload(pdf);
+		json.put("fileId", fileId);
+		json.put("picutureName",pdf.getOriginalFilename());
+		Response.json(json);
+	}
 
-	
+
+
+
 	/**
 	 * 保存图片
 	 * @param file
