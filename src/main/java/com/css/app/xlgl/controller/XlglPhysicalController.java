@@ -424,6 +424,7 @@ public class XlglPhysicalController {
 		jsonObject.put("zuo",zuo);
 		jsonObject.put("pao",pao);
 		jsonObject.put("changpao",changpao);
+		jsonObject.put("result","success");
 		Response.json(jsonObject);
 
 	}
