@@ -44,4 +44,6 @@ public interface XlglPictureService {
 
 	void deleteByInfoId(String infoId);
 
+	List<XlglPicture> queryAllVedioByInfoId(Map<String,Object> map);
+
 }

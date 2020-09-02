@@ -28,6 +28,14 @@
 
 	</select>
 
+	<select id="queryAllVedioByInfoId" resultType="com.css.app.xlgl.entity.XlglPicture">
+		select * from XLGL_PICTURE where 1=1 and PICTURE_TYPE = '0'
+		<if test="infoId != null and infoId !=''">
+			and FILE_ID = #{infoId}
+		</if>
+
+	</select>
+
 	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglPicture">
 		select * from XLGL_PICTURE where 1=1
 		<if test="id != null and id !=''">

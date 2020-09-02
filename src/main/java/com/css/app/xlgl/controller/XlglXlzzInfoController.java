@@ -150,14 +150,17 @@ public class XlglXlzzInfoController {
 				if ("0".equals(type)) {
 					jsVedio.put("pictureId", xlglPicture.getPictureId());
 					jsVedio.put("pictureName", xlglPicture.getPictureName());
+					jsVedio.put("type","video/mp4");
 					listVedio.add(jsVedio);
 				} else if ("1".equals(type)) {
 					jsPicture.put("pictureId", xlglPicture.getPictureId());
 					jsPicture.put("pictureName", xlglPicture.getPictureName());
+					jsPicture.put("type","image/png");
 					listPicture.add(jsPicture);
 				} else {
 					jsFile.put("pictureId", xlglPicture.getPictureId());
 					jsFile.put("pictureName", xlglPicture.getPictureName());
+					jsFile.put("type","application/ofd");
 					listFile.add(jsFile);
 				}
 			}
@@ -535,7 +538,7 @@ public class XlglXlzzInfoController {
 				JSONObject jsonObject = new JSONObject();
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("infoId", xlglSubDocTracking.getInfoId());
-				List<XlglPicture> listPicture = xlglPictureService.queryAllInfoByInfoId(map);
+				List<XlglPicture> listPicture = xlglPictureService.queryAllVedioByInfoId(map);
 				if (listPicture.size() == 0) {//未上传
 					jsonObject.put("isUpload", true);
 				} else {
