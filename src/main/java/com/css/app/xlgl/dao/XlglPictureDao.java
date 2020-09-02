@@ -2,6 +2,7 @@ package com.css.app.xlgl.dao;
 
 
 import com.css.app.xlgl.entity.XlglPicture;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.css.base.dao.BaseDao;
@@ -31,5 +32,8 @@ public interface XlglPictureDao extends BaseDao<XlglPicture> {
     List<XlglPicture> queryTopOne();
 
     XlglPicture queryByInfo(Map<String,Object> map);
+
+    @Delete("delete from XLGL_PICTURE where FILE_ID = #{0}")
+    void deleteByInfoId(String infoId);
 
 }

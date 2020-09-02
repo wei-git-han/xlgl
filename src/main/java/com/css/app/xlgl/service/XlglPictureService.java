@@ -42,4 +42,6 @@ public interface XlglPictureService {
 
 	XlglPicture queryByInfo(Map<String,Object> map);
 
+	void deleteByInfoId(String infoId);
+
 }

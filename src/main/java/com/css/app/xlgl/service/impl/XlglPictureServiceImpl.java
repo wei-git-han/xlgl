@@ -103,4 +103,9 @@ public class XlglPictureServiceImpl implements XlglPictureService {
 	public XlglPicture queryByInfo(Map<String,Object> map){
 		return xlglPictureDao.queryByInfo(map);
 	}
+
+	@Override
+	public void deleteByInfoId(String infoId){
+		xlglPictureDao.deleteByInfoId(infoId);
+	}
 }
