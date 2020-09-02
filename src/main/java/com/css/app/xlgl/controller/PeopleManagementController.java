@@ -326,10 +326,10 @@ public class PeopleManagementController {
 		List<BaseAppOrgan> queryList = baseAppOrganService.queryList(null);
 		queryList = getBaseAppOrganList(queryList,null,null);
 		List<BaseAppOrgan> list = new ArrayList<BaseAppOrgan>();
-		if(organIds.length >0) {
+		if(organIds !=null) {
 			for (BaseAppOrgan baseAppOrgan : queryList) {
-				for (String String : organIds) {
-					if(baseAppOrgan.getId().equals("organId")) {
+				for (String str : organIds) {
+					if(baseAppOrgan.getId().equals(str)) {
 						list.add(baseAppOrgan);
 					}
 				}
@@ -419,10 +419,10 @@ public class PeopleManagementController {
 		LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String,Object>();
 		map.add("orgid", organId);
 		JSONObject txl = getTXL(map);
-		String string = txl.get("rows").toString();
+		String jsonArray = txl.getJSONArray("rows").toString();
 		ArrayList<TxlUserDto> arrayList = new ArrayList<TxlUserDto>();
-		List<TxlUserDto> parseArray = JSONArray.parseArray(string, TxlUserDto.class);
-		if(ids.length>0) {
+		List<TxlUserDto> parseArray = JSONArray.parseArray(jsonArray, TxlUserDto.class);
+		if(ids !=null) {
 			for (TxlUserDto txlUserDto : parseArray) {
 				for (String str : ids) {
 					if(txlUserDto.getUserid().equals(str)) {
