@@ -578,17 +578,21 @@ public class XlglXlzzInfoController {
 		map.put("id",infoId);
 		map.put("type","1");
 		XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(infoId);
-		XlglPicture xlglPicture = xlglPictureService.queryVedio(id);
+		if(StringUtils.isNotBlank(id)){
+			XlglPicture xlglPicture = xlglPictureService.queryVedio(id);
+			xlglPicture.setTitle(xlglXlzzInfo.getTitle());
+			xlglPicture.setExerciseTime(xlglXlzzInfo.getExerciseTime());
+			jsonObject.put("xlglPicture",xlglPicture);
+		}
 		List<XlglPicture> list = xlglPictureService.queryList(map);
 		XlglSubDocTracking xlglSubDocTracking = xlglSubDocTrackingService.queryInfo(infoId,CurrentUser.getUserId());
 		if(xlglSubDocTracking != null){
 			xlglSubDocTracking.setIsWork("1");
 			xlglSubDocTrackingService.update(xlglSubDocTracking);
 		}
-		xlglPicture.setTitle(xlglXlzzInfo.getTitle());
-		xlglPicture.setExerciseTime(xlglXlzzInfo.getExerciseTime());
+		jsonObject.put("title",xlglXlzzInfo.getTitle());
+		jsonObject.put("time",xlglXlzzInfo.getExerciseTime());
 		jsonObject.put("list",list);
-		jsonObject.put("xlglPicture",xlglPicture);
 		Response.json(jsonObject);
 
 	}

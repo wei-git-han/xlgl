@@ -74,6 +74,8 @@ public class XlglDocumentZbjlController {
 	private XlglExamMainAnswerService xlglExamMainAnswerService;
     @Autowired
     private XlglPhysicalService xlglPhysicalService;
+    @Autowired
+    private XlglPictureService xlglPictureService;
 	
 	/**
 	 * 列表
@@ -128,7 +130,7 @@ public class XlglDocumentZbjlController {
             xlglDocumentZbjl.setReceiverNames(deptNames);
             xlglDocumentZbjl.setCreatedTime(new Date());
             xlglDocumentZbjl.setOrgName(org.getName());
-            xlglDocumentZbjlService.save(xlglDocumentZbjl);
+            //xlglDocumentZbjlService.save(xlglDocumentZbjl);
 
             XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(fileId);
             xlglXlzzInfo.setTodeptName(deptNames);
@@ -208,7 +210,7 @@ public class XlglDocumentZbjlController {
                 xl.setOrgName(subInfo.getSubDeptName());
                 xl.setSubId(subId);
                 xl.setCreatedTime(new Date());
-                xlglDocumentZbjlService.save(xl);
+                //xlglDocumentZbjlService.save(xl);
                 //流转记录
                 XlglSubDocTracking tracking = new XlglSubDocTracking();
                 String loginUserName = CurrentUser.getUsername();
@@ -363,6 +365,17 @@ public class XlglDocumentZbjlController {
         }else if("1".equals(type)){
             PageHelper.startPage(page,pagesize);
             list = xlglSubDocTrackingService.queryListForPerson1(map);
+        }
+        if(list != null && list.size() > 0){
+            for(XlglSubDocTracking xlglSubDocTracking : list){
+                Map<String,Object> mapList = new HashMap<>();
+                String fileId = xlglSubDocTracking.getInfoId();
+                mapList.put("fileId",fileId);
+                List<XlglPicture> pictureList = xlglPictureService.queryList(mapList);
+                if(pictureList != null && pictureList.size() > 0){
+                    xlglSubDocTracking.setPicturePath(pictureList.get(0).getPictureId());
+                }
+            }
         }
 
         GwPageUtils pageUtil = new GwPageUtils(list);
