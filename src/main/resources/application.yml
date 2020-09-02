@@ -140,7 +140,7 @@ csse.fileservice.tempPath: c:/temp/storetemp/
 filePath: D:/download/ 
 #文件服务----------------------------------end
 #训练管理应用号由第三方提供，应用号与私有密钥一致 
-HuiYiappId:beb7da4ced7c42a085c3c99697f9aa42
+HuiYiappId: beb7da4ced7c42a085c3c99697f9aa42
 
 #本war的所有应用日志输出路径
 csse.log.path: c:/temp/storetemp/zf_one_number_app.log
