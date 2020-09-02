@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.stereotype.Controller;
 
 import com.github.pagehelper.PageHelper;
+import org.springframework.web.context.request.NativeWebRequest;
 import org.thymeleaf.processor.ITextNodeProcessorMatcher;
 
 
@@ -115,12 +116,35 @@ public class XlglXlzzInfoController {
 
 
 		map.put("fileId", id);
-		map.put("pictureType","2");
 		List<XlglPicture> list = xlglPictureService.queryAllInfoByInfoId(map);
-		jsonObject.put("pictureList", list);
+		List listVedio = new ArrayList();
+		List listPicture = new ArrayList();
+		List listFile = new ArrayList();
+		if(list != null && list.size() > 0){
+			for(XlglPicture xlglPicture : list){
+				JSONObject jsVedio = new JSONObject();
+				JSONObject jsPicture = new JSONObject();
+				JSONObject jsFile = new JSONObject();
+				String type = xlglPicture.getPictureType();
+				if("0".equals(type)){
+					jsVedio.put("pictureId",xlglPicture.getPictureId());
+					jsVedio.put("pictureName",xlglPicture.getPictureName());
+					listVedio.add(jsVedio);
+				} else if("1".equals(type)){
+					jsPicture.put("pictureId",xlglPicture.getPictureId());
+					jsPicture.put("pictureName",xlglPicture.getPictureName());
+					listPicture.add(jsPicture);
+				}else{
+					jsFile.put("pictureId",xlglPicture.getPictureId());
+					jsFile.put("pictureName",xlglPicture.getPictureName());
+					listFile.add(jsFile);
+				}
+			}
+		}
+		jsonObject.put("listVedio", listVedio);
+		jsonObject.put("listPicture", listPicture);
+		jsonObject.put("listFile", listFile);
 		jsonObject.put("xlglXlzzInfo", xlglXlzzInfo);
-
-		//jsonObject.put("isBm",xlglSubDocTracking.getBaoming());
 		Response.json(jsonObject);
 	}
 
@@ -175,9 +199,10 @@ public class XlglXlzzInfoController {
 				xlglPicture.setSort("0");
 				xlglPicture.setPictureName(names[i]);
 				String typePicture = types[i];
-				if("video/mp4".equals(typePicture)){
+				String[] pictureType = typePicture.split("/");
+				if("video".equals(pictureType[0])){
 					xlglPicture.setPictureType("0");
-				}else if("image/png".equals(typePicture)){
+				}else if("image".equals(pictureType[0])){
 					xlglPicture.setPictureType("1");
 				}else {
 					xlglPicture.setPictureType("2");
