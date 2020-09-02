@@ -325,6 +325,17 @@ public class XlglNoticeController {
 	}
 	
 	/**
+	 * 删除附件
+	 * */
+	@ResponseBody
+	@RequestMapping("/deletePicture")
+	public void deletePicture(String picId){
+		xlglPictureService.deleteByPictureId(picId);
+		HTTPFile httpFile = new HTTPFile(picId);
+		httpFile.delete();
+		Response.ok();
+	}
+	/**
 	 * 查询草稿箱
 	 * @param page
 	 * @param pagesize
