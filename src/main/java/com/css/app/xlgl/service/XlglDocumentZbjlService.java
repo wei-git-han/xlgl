@@ -26,4 +26,8 @@ public interface XlglDocumentZbjlService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+
+	XlglDocumentZbjl queryByInfoId(String fileId);
+
+	void deleteByInfoId(String fileId);
 }

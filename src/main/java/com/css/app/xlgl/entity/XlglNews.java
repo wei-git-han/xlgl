@@ -42,6 +42,8 @@ public class XlglNews implements Serializable{
 	private Integer hits;
 	//图片地址
 	private String picturePath;
+	//图片名字
+	private String pictureName;
 	//是否置顶
 	private Integer isTop;
 	//发布部门id
@@ -144,7 +146,12 @@ public class XlglNews implements Serializable{
 	public void setReleaseDept(String releaseDept) {
 		this.releaseDept = releaseDept;
 	}
-	
-	
-	
+
+	public String getPictureName() {
+		return pictureName;
+	}
+
+	public void setPictureName(String pictureName) {
+		this.pictureName = pictureName;
+	}
 }

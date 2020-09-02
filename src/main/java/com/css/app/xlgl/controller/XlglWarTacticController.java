@@ -8,9 +8,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSON;
 import com.css.app.xlgl.entity.*;
 import com.css.app.xlgl.service.*;
-import org.json.JSONObject;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -166,7 +167,7 @@ public class XlglWarTacticController {
 	 * 保存
 	 * @param coverFile 封面上传id
 	 * @param videoFile 视频上传id
-	 * @param accessoryFile 多个附件上传id 
+	 * @param accessoryArray 多个附件上传id
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
@@ -266,12 +267,12 @@ public class XlglWarTacticController {
 	@RequestMapping("/getIndexName")
 	public void getIndexName() {
 		Map<String, Object> map = new HashMap<>();
-		JSONObject json = new JSONObject();
+		JSONObject jsonObject = new JSONObject();
 		//战略训练
 		List<XlglWarTactic> warTacticList = xlglWarTacticService.queryList(null);
 		if(warTacticList.size()>0) {
 			XlglWarTactic xlglWarTactic = warTacticList.get(0);
-			json.put("XlglWarTactic", xlglWarTactic.getTacticTitle());
+			jsonObject.put("XlglWarTactic", xlglWarTactic.getTacticTitle());
 		}
 		map.put("status", "0");
 		map.put("issueStatus", "1");
@@ -279,36 +280,35 @@ public class XlglWarTacticController {
 		List<XlglExamExamine> examineList = xlglExamExamineService.queryList(map);
 		if(examineList.size()>0) {
 			XlglExamExamine xlglExamExamine = examineList.get(0);
-			json.put("xlglExamExamine", xlglExamExamine.getExamineName());
+			jsonObject.put("xlglExamExamine", xlglExamExamine.getExamineName());
 		}
 		//专业训练
 		List<XlglWarSpecialty> warSpecialtyList = xlglWarSpecialtyService.queryList(null);
 		if(warSpecialtyList.size()>0) {
 			XlglWarSpecialty xlglWarSpecialty = warSpecialtyList.get(0);
-			json.put("xlglWarSpecialty", xlglWarSpecialty.getTacticTitle());
+			jsonObject.put("xlglWarSpecialty", xlglWarSpecialty.getTacticTitle());
 		}
 		//共同训练
 		List<XlglWarCommonQueue> queryList = xlglWarCommonQueueService.queryList(null);
 		if(queryList.size()>0) {
 			XlglWarCommonQueue xlglWarCommonQueue = queryList.get(0);
-			json.put("xlglWarCommonQueue", xlglWarCommonQueue.getTacticTitle());
+			jsonObject.put("xlglWarCommonQueue", xlglWarCommonQueue.getTacticTitle());
 		}
 		//训练组织
 		List<XlglXlzzInfo> xlglXlzzInfoList = xlglXlzzInfoService.queryTopOne();
 		if(xlglXlzzInfoList != null && xlglXlzzInfoList.size() > 0){
 			XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoList.get(0);
-			json.put("xlzz",xlglXlzzInfo.getTitle());
+			jsonObject.put("xlzz",xlglXlzzInfo.getTitle());
 		}
 		//强装兴装大讲堂
 		List<XlglPicture> xlglPictureList = xlglPictureService.queryTopOne();
 		if(xlglPictureList != null && xlglPictureList.size() > 0){
 			XlglPicture xlglPicture = xlglPictureList.get(0);
-			json.put("djt",xlglPicture.getTitle());
+			jsonObject.put("djt",xlglPicture.getPictureName());
 		}
 
 		//训练档案
-
-		Response.json(json);
+		Response.json(jsonObject);
 	}
 	
 }

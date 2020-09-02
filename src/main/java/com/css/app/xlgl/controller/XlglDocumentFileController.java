@@ -388,9 +388,12 @@ public class XlglDocumentFileController{
 	@ResponseBody
 	@RequestMapping("/downLoad")
 	public void downLoad(String fileId) {
-		HTTPFile httpFile = new HTTPFile(fileId);
-		String fileName = httpFile.getFileName();
-		Response.download(fileName, httpFile.getInputSteam());
+		if(StringUtils.isNotBlank(fileId)){
+			HTTPFile httpFile = new HTTPFile(fileId);
+			String fileName = httpFile.getFileName();
+			Response.download(fileName, httpFile.getInputSteam());
+		}
+
 	}
 	
 	/**

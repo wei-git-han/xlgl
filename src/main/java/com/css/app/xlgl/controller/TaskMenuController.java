@@ -193,4 +193,22 @@ public class TaskMenuController {
         return jsons;
     }
 
+    /**
+     * 判断登录人是否有权限
+     */
+    @ResponseBody
+    @RequestMapping("/getIsHavePerssion")
+    public void getIsHavePerssion(){
+        Map<String,Object> map = new HashMap<>();
+        String userId = CurrentUser.getUserId();
+        map.put("userId",userId);
+        List<DocumentMenuPermission> list = documentMenuPermissionService.queryList(map);
+        if(list != null && list.size() > 0){
+            Response.json("result","success");
+        }else {
+            Response.json("result","fail");
+        }
+
+    }
+
 }

@@ -1,9 +1,6 @@
 package com.css.app.xlgl.controller;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.entity.BaseAppUser;
@@ -12,6 +9,7 @@ import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.xlgl.entity.XlglMineStudy;
 import com.css.app.xlgl.entity.XlglPhysical;
 import com.css.app.xlgl.service.*;
+import com.css.base.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -267,8 +265,15 @@ public class PersonalFileController {
 		//训练考核优秀率----end
 
 		//体育成绩-----start
-		XlglPhysical xlglPhysical = xlglPhysicalService.queryByUserId(userId,year);
-		int levelTy = Integer.parseInt(xlglPhysical.getAllScore());
+		Map<String,Object> mapPhysical = new HashMap<>();
+		mapPhysical.put("userId",userId);
+		mapPhysical.put("year",year);
+		List<XlglPhysical> xlglPhysicalList = xlglPhysicalService.queryList(mapPhysical);
+		if(xlglPhysicalList != null && xlglPhysicalList.size() > 0){
+			int levelTy = 0;
+			if(StringUtils.isNotBlank(xlglPhysicalList.get(0).getAllScore())){
+				levelTy = Integer.parseInt(xlglPhysicalList.get(0).getAllScore());
+			}
 		String dj = "";
 		if(levelTy >= 260 && levelTy < 340){
 			dj = "及格";
@@ -289,11 +294,18 @@ public class PersonalFileController {
 			dj = "特1级";
 			yxSum +=1;
 		}
+		}
 		//体育成绩------end
 
 		//自学成绩----start
 		XlglMineStudy xlglMineStudy = xlglMineStudyService.queryByUserId(userId,year);
-		int levelStudy = Integer.parseInt(xlglMineStudy.getScore());
+		int levelStudy = 0;
+		if(xlglMineStudy != null){
+			if(StringUtils.isNotBlank(xlglMineStudy.getScore())){
+				levelStudy	= Integer.parseInt(xlglMineStudy.getScore());
+			}
+
+
 		String studyDj = "";
 		if(levelStudy >=90 && levelStudy <=100){
 			studyDj = "优秀";
@@ -306,6 +318,7 @@ public class PersonalFileController {
 			jgSum +=1;
 		}else {
 			studyDj = "不及格";
+		}
 		}
 		//自学成绩-----end
 

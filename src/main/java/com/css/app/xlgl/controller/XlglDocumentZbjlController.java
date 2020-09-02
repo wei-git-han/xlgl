@@ -117,6 +117,10 @@ public class XlglDocumentZbjlController {
             String organId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
             BaseAppOrgan org = baseAppOrganService.queryObject(organId);
             //添加转办记录
+            XlglDocumentZbjl xlglDocumentZbjl1 = xlglDocumentZbjlService.queryByInfoId(fileId);
+            if(xlglDocumentZbjl1 != null){
+                xlglDocumentZbjlService.deleteByInfoId(fileId);
+            }
             XlglDocumentZbjl xlglDocumentZbjl = new XlglDocumentZbjl();
             xlglDocumentZbjl.setId(UUIDUtils.random());
             xlglDocumentZbjl.setInfoId(fileId);
@@ -159,7 +163,7 @@ public class XlglDocumentZbjlController {
                         if (msg != null) {
                             String msgUrl = "";
                             for (String userId : userIds) {
-                                msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId, appId, clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "", "true");
+                                //msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId, appId, clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "", "true");
                             }
                         }
                     }
@@ -240,7 +244,7 @@ public class XlglDocumentZbjlController {
                 if (msg != null) {
                     String msgUrl = "";
                     if (StringUtils.isNotBlank(receiverId)) {
-                        msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, receiverId, appId, clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "", "true");
+                        //msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, receiverId, appId, clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "", "true");
                     }
                 }
 
@@ -410,10 +414,19 @@ public class XlglDocumentZbjlController {
 
                 //军事体育成绩得分----------------------start
                 XlglPhysical xlglPhysical = xlglPhysicalService.queryByUserId(userId,year);
-                String jtScore = xlglPhysical.getAllScore();
-                String jtDj = xlglPhysical.getAllJudge();
-                jsonObject.put("jtScore",jtScore);//得分
-                jsonObject.put("jtDj",jtDj);//等级
+                if(xlglPhysical != null) {
+                    String jtScore = "0";
+                    if (StringUtils.isNotBlank(xlglPhysical.getAllScore())) {
+                        jtScore = xlglPhysical.getAllScore();
+                    }
+                    String jtDj = "0";
+                    if (StringUtils.isNotBlank(xlglPhysical.getAllJudge())) {
+                        jtDj = xlglPhysical.getAllJudge();
+                    }
+
+                    jsonObject.put("jtScore", jtScore);//得分
+                    jsonObject.put("jtDj", jtDj);//等级
+                }
                 //军事体育成绩得分-----------------------end
 
                 //共同训练，专业训练，战略训练，军事训练 ------------------start
@@ -432,10 +445,18 @@ public class XlglDocumentZbjlController {
                 List<XlglExamMainAnswer> tacticalList = xlglExamMainAnswerService.findListBySubjectId(map);
                 map.put("examineSubjectName", "军事训练");
                 List<XlglExamMainAnswer> warList = xlglExamMainAnswerService.findListBySubjectId(map);
-                jsonObject.put("common", commonList.get(0));
-                jsonObject.put("specialty", specialtyList.get(0));
-                jsonObject.put("tactical", tacticalList.get(0));
-                jsonObject.put("war", warList.get(0));
+                if(commonList != null && commonList.size() > 0){
+                    jsonObject.put("common", commonList.get(0));
+                }
+                if(specialtyList != null && specialtyList.size() > 0){
+                    jsonObject.put("specialty", specialtyList.get(0));
+                }
+                if(tacticalList != null && tacticalList.size() > 0){
+                    jsonObject.put("tactical", tacticalList.get(0));
+                }
+                if(warList != null && warList.size()>0){
+                    jsonObject.put("war", warList.get(0));
+                }
                 jsonArray.add(jsonObject);
 
             }

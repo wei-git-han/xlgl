@@ -4,9 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.xlgl.entity.XlglSubDocInfo;
+import com.css.app.xlgl.entity.XlglSubDocTracking;
 import com.css.app.xlgl.service.XlglSubDocInfoService;
+import com.css.app.xlgl.service.XlglSubDocTrackingService;
+import com.css.app.xlgl.service.XlglXlzzInfoService;
 import com.css.base.utils.*;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +37,10 @@ public class XlglSubDocInfoController {
 	private XlglSubDocInfoService xlglSubDocInfoService;
 	@Autowired
 	private BaseAppUserService baseAppUserService;
+	@Autowired
+	private XlglXlzzInfoService xlglXlzzInfoService;
+	@Autowired
+	private XlglSubDocTrackingService xlglSubDocTrackingService;
 	
 	/**
 	 * 列表
@@ -85,17 +93,38 @@ public class XlglSubDocInfoController {
 	}
 	
 	/**
-	 * 删除
+	 * 删除，局管理员的删除
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
 	public void delete(String id) {
+		Map<String,Object> map = new HashMap<>();
 		String orgId = null;
 		if (StringUtils.isNotBlank(id)) {
 			orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
+			map.put("INFO_ID",id);
+			List<XlglSubDocTracking> list = xlglSubDocTrackingService.queryList(map);
+			if(list != null && list.size() > 0){
+				Response.json("result","false");
+			}
 			xlglSubDocInfoService.deleteSub(orgId, id);
 		}
 		Response.json("result", "success");
+	}
+
+	@ResponseBody
+	@RequestMapping("/deleteZhu")
+	public void deleteZhu(String id){
+		Map<String,Object> map = new HashMap<>();
+		map.put("id",id);
+		List<XlglSubDocInfo> list = xlglSubDocInfoService.queryList(map);
+		if(list != null && list.size() > 0){
+			Response.json("result","false");
+		}else {
+			xlglXlzzInfoService.deleteById(id);
+			Response.json("result","success");
+		}
+
 	}
 	
 }
