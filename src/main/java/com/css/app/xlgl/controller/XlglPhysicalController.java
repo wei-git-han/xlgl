@@ -233,7 +233,7 @@ public class XlglPhysicalController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getSumCore")
-	public void getSumCore(@RequestParam(required = false) String age,@RequestParam(required = false) String ytxs,@RequestParam(required = false) String ywqz,@RequestParam(required = false) String sxp,@RequestParam(required = false) String cp,@RequestParam(required = false) String sex,@RequestParam(required = false) String type,@RequestParam(required = false) String wight,@RequestParam(required = false) String high ){
+	public void getSumCore(@RequestParam(required = false) String age,@RequestParam(required = false) String ytxs,@RequestParam(required = false) String ywqz,@RequestParam(required = false) String sxp,@RequestParam(required = false) String cpf,@RequestParam(required = false) String cpm,@RequestParam(required = false) String sex,@RequestParam(required = false) String type,@RequestParam(required = false) String wight,@RequestParam(required = false) String high ){
 		JSONObject jsonObject = new JSONObject();
 		int sum = 0;
 		int shang = 0;
@@ -243,12 +243,26 @@ public class XlglPhysicalController {
 		float BMI = 0.0f;
 		String hg = "";
 		int age1 = Integer.parseInt(age);
-		float s = Float.parseFloat(sxp) * 10;
+		float s = 0.0f;
+		if(StringUtils.isNotBlank(sxp)){
+			s = Float.parseFloat(sxp) * 10;
+		}
 		int sxp1 = Math.round(s);
-		float f = Float.parseFloat(cp) * 100;
+		float f = 0.0f;
+		String string = "";
+		if(StringUtils.isNotBlank(cpm) && StringUtils.isNotBlank(cpf)){
+			string = cpf+"."+cpm;
+			f = Float.parseFloat(string) * 100;
+		}
 		int cp1 = Math.round(f);
-		int ytxs1 = Integer.parseInt(ytxs);
-		int ywqz1 = Integer.parseInt(ywqz);
+		int ytxs1 = 0;
+		if(StringUtils.isNotBlank(ytxs)){
+			ytxs1 = Integer.parseInt(ytxs);
+		}
+		int ywqz1 = 0;
+		if(StringUtils.isNotBlank(ywqz)){
+			ywqz1 = Integer.parseInt(ywqz);
+		}
 		if("0".equals(sex)){
 			JSONObject js = new JSONObject();
 			js = getManSumCore(age1,ytxs1,ywqz1,sxp1*10,cp1*100);
