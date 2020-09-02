@@ -191,6 +191,26 @@ public class XlglNewsController {
 			Response.json("xlglNews",xlglNews);
 		}
 	}
+
+	/**
+	 * 编辑
+	 * @param id
+	 */
+	@ResponseBody
+	@RequestMapping("/edit")
+	public void edit(String id){
+		XlglNews xlglNews = xlglNewsService.queryObject(id);
+		Map<String, Object> map1 = new HashMap<>();
+		map1.put("FILE_ID", id);
+		XlglPicture xlglPicture = xlglPictureService.queryByInfo(map1);
+		if (xlglPicture != null) {
+			if (StringUtils.isNotBlank(xlglPicture.getPictureId())) {
+				xlglNews.setPicturePath(xlglPicture.getPictureId());
+				xlglNews.setPictureName(xlglPicture.getPictureName());
+			}
+		}
+		Response.json("xlglNews",xlglNews);
+	}
 	
 	
 	
@@ -198,6 +218,7 @@ public class XlglNewsController {
 	@RequestMapping("saveOrUpdate")
 	public void saveOrUpdate(XlglNews xlglNews,String pIds,String picutureName){
 		JSONObject jsonObject = new JSONObject();
+		String fId = UUIDUtils.random();
 		//判断是新增还是修改,id不为空则是修改，为空则是新增
 		String id = xlglNews.getId();
 		if(!StringUtils.isEmpty(id)){
@@ -208,7 +229,7 @@ public class XlglNewsController {
 			String releaseDeptid="";
 			String releaseDept="";
 			//设置id
-			String fId = UUIDUtils.random();
+
 			xlglNews.setId(fId);
 			//设置发布时间
 			xlglNews.setReleaseDate(new Date());
@@ -243,21 +264,29 @@ public class XlglNewsController {
 			xlglNews.setReleaseDept(releaseDept);
 			xlglNewsService.save(xlglNews);
 
-			if(StringUtils.isNotBlank(pIds)) {
-				String[] ids = pIds.split(",");
-				xlglPictureService.deleteBatch(ids);
-				for (int i = 0; i < ids.length; i++) {
-					XlglPicture xlglPicture = new XlglPicture();
-					xlglPicture.setId(UUIDUtils.random());
-					xlglPicture.setFileId(fId);
-					xlglPicture.setIsFirst("0");
-					xlglPicture.setPictureId(ids[i]);
-					xlglPicture.setSort("0");
-					xlglPicture.setPictureName(picutureName);
-					xlglPictureService.save(xlglPicture);
-				}
-			}
 
+
+		}
+		if(StringUtils.isNotBlank(pIds)) {
+			String[] ids = pIds.split(",");
+			//xlglPictureService.deleteBatch(ids);
+			if(StringUtils.isNotBlank(id)) {
+				xlglPictureService.deleteByInfoId(id);
+			}
+			for (int i = 0; i < ids.length; i++) {
+				XlglPicture xlglPicture = new XlglPicture();
+				xlglPicture.setId(UUIDUtils.random());
+				if(StringUtils.isNotBlank(id)) {
+					xlglPicture.setFileId(id);
+				}else {
+					xlglPicture.setFileId(fId);
+				}
+				xlglPicture.setIsFirst("0");
+				xlglPicture.setPictureId(ids[i]);
+				xlglPicture.setSort("0");
+				xlglPicture.setPictureName(picutureName);
+				xlglPictureService.save(xlglPicture);
+			}
 		}
 		Response.json("result","success");
 		
