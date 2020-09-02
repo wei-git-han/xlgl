@@ -83,6 +83,29 @@ public class XlglXlzzInfoController {
 		PageUtils pageUtil = new PageUtils(xlglXlzzInfoList);
 		Response.json("page",pageUtil);
 	}
+
+	/**
+	 *是否有编辑权限
+	 */
+	@ResponseBody
+	@RequestMapping("/getIsHavePerssion")
+	public void getIsHavePerssion(String id) {
+		String currentUserId = CurrentUser.getUserId();
+		XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(id);
+		if (xlglXlzzInfo != null) {
+			if (StringUtils.isNotBlank(xlglXlzzInfo.getCreator())) {
+				if (currentUserId.equals(xlglXlzzInfo.getCreator())) {
+					Response.json("result", "success");
+				} else {
+					Response.json("result", "fail");
+				}
+			} else {
+				Response.json("result", "fail");
+			}
+		} else {
+			Response.json("result", "fail");
+		}
+	}
 	
 	
 	/**
@@ -98,45 +121,43 @@ public class XlglXlzzInfoController {
 		XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(id);
 		//打开的同时，更新打开人的状态为已读
 		XlglSubDocTracking xlglSubDocTracking = xlglSubDocTrackingService.queryInfo(id, loginUser);
-		if(xlglSubDocTracking != null){
 		if (xlglSubDocTracking != null) {
-			xlglSubDocTracking.setRead("1");
-			xlglSubDocTrackingService.update(xlglSubDocTracking);
-			if(StringUtils.isNotBlank(xlglSubDocTracking.getBaoming())){
-				xlglXlzzInfo.setBaoming(xlglSubDocTracking.getBaoming());
+			if (xlglSubDocTracking != null) {
+				xlglSubDocTracking.setRead("1");
+				xlglSubDocTrackingService.update(xlglSubDocTracking);
+				if (StringUtils.isNotBlank(xlglSubDocTracking.getBaoming())) {
+					xlglXlzzInfo.setBaoming(xlglSubDocTracking.getBaoming());
+				}
+				if (StringUtils.isNotBlank(xlglSubDocTracking.getReason())) {
+					xlglXlzzInfo.setReason(xlglSubDocTracking.getReason());
+				}
 			}
-			if(StringUtils.isNotBlank(xlglSubDocTracking.getReason())){
-				xlglXlzzInfo.setReason(xlglSubDocTracking.getReason());
-			}
-		}
-		xlglXlzzInfo.setStatus("1");//1为已读
+			xlglXlzzInfo.setStatus("1");//1为已读
 
 		}
 		xlglXlzzInfo.setFbDept(deptName);
-
-
 		map.put("fileId", id);
 		List<XlglPicture> list = xlglPictureService.queryAllInfoByInfoId(map);
 		List listVedio = new ArrayList();
 		List listPicture = new ArrayList();
 		List listFile = new ArrayList();
-		if(list != null && list.size() > 0){
-			for(XlglPicture xlglPicture : list){
+		if (list != null && list.size() > 0) {
+			for (XlglPicture xlglPicture : list) {
 				JSONObject jsVedio = new JSONObject();
 				JSONObject jsPicture = new JSONObject();
 				JSONObject jsFile = new JSONObject();
 				String type = xlglPicture.getPictureType();
-				if("0".equals(type)){
-					jsVedio.put("pictureId",xlglPicture.getPictureId());
-					jsVedio.put("pictureName",xlglPicture.getPictureName());
+				if ("0".equals(type)) {
+					jsVedio.put("pictureId", xlglPicture.getPictureId());
+					jsVedio.put("pictureName", xlglPicture.getPictureName());
 					listVedio.add(jsVedio);
-				} else if("1".equals(type)){
-					jsPicture.put("pictureId",xlglPicture.getPictureId());
-					jsPicture.put("pictureName",xlglPicture.getPictureName());
+				} else if ("1".equals(type)) {
+					jsPicture.put("pictureId", xlglPicture.getPictureId());
+					jsPicture.put("pictureName", xlglPicture.getPictureName());
 					listPicture.add(jsPicture);
-				}else{
-					jsFile.put("pictureId",xlglPicture.getPictureId());
-					jsFile.put("pictureName",xlglPicture.getPictureName());
+				} else {
+					jsFile.put("pictureId", xlglPicture.getPictureId());
+					jsFile.put("pictureName", xlglPicture.getPictureName());
 					listFile.add(jsFile);
 				}
 			}
@@ -177,10 +198,12 @@ public class XlglXlzzInfoController {
 		JSONObject jsonObject = new JSONObject();
 		String fId = null;
 		if(StringUtils.isNotBlank(xlglXlzzInfo.getId())){
+			fId = xlglXlzzInfo.getId();
 			xlglXlzzInfoService.update(xlglXlzzInfo);
 		}else {
 			fId = UUIDUtils.random();
 			xlglXlzzInfo.setId(fId);
+			xlglXlzzInfo.setCreator(CurrentUser.getUserId());
 			xlglXlzzInfo.setCreateTime(new Date());
 			xlglXlzzInfoService.save(xlglXlzzInfo);
 		}
@@ -189,7 +212,7 @@ public class XlglXlzzInfoController {
 			String[] ids = pIds.split(",");
 			String[] types = type.split(",");
 			String[] names = pidNames.split(",");
-			xlglPictureService.deleteBatch(ids);
+			xlglPictureService.deleteByInfoId(fId);
 			for (int i = 0; i < ids.length; i++) {
 				XlglPicture xlglPicture = new XlglPicture();
 				xlglPicture.setId(UUIDUtils.random());
@@ -232,11 +255,10 @@ public class XlglXlzzInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	@RequiresPermissions("xlglxlzzinfo:delete")
-	public void delete(@RequestBody String[] ids){
+	public void delete(String id){
+		String[] ids = id.split(",");
 		xlglXlzzInfoService.deleteBatch(ids);
-		
-		Response.ok();
+		Response.json("result","success");
 	}
 
 
