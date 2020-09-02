@@ -73,7 +73,7 @@
 			<if test="content != null">"CONTENT" = #{content}, </if>
 			<if test="target != null">"TARGET" = #{target}, </if>
 			<if test="videoFile != null">"VIDEO_FILE" = #{videoFile}, </if>
-			<if test="accessoryFile != null">"ACCESSORY_FILE" = #{accessoryFile}, </if>
+	<!-- 		<if test="accessoryFile != null">"ACCESSORY_FILE" = #{accessoryFile}, </if> -->
 			<if test="coverFile != null">"COVER_FILE" = #{coverFile}, </if>
 			<if test="createUser != null">"CREATE_USER" = #{createUser}, </if>
 			<if test="createDate != null">"CREATE_DATE" = #{createDate}, </if>

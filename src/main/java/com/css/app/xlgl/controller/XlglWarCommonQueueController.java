@@ -228,7 +228,6 @@ public class XlglWarCommonQueueController {
 			}
 		}
 		Response.ok();
-		Response.ok();
 	}
 	
 	/**

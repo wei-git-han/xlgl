@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.apporgan.entity.BaseAppOrgan;
-import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.addbase.apporgmapped.entity.BaseAppOrgMapped;
@@ -34,7 +32,6 @@ import com.css.addbase.constant.AppConstant;
 import com.css.addbase.constant.AppInterfaceConstant;
 import com.css.app.xlgl.dto.TxlUserDto;
 import com.css.app.xlgl.entity.XlglAdminSet;
-import com.css.app.xlgl.entity.XlglExamAnswer;
 import com.css.app.xlgl.service.XlglAdminSetService;
 import com.css.base.utils.CrossDomainUtil;
 import com.css.base.utils.CurrentUser;
@@ -112,7 +109,9 @@ public class PeopleManagementController {
 				}else {
 					baseAppOrgan.setStatus("1");
 				}
-			linkeMap.add("organId", baseAppOrgan.getId());
+			if(!baseAppOrgan.getId().equals("root")) {
+				linkeMap.add("organId", baseAppOrgan.getId());
+			}
 			JSONObject jsonData = this.getNumber(linkeMap);
 			Integer yzwrs=0;
 			Integer qjrs=0;
@@ -200,18 +199,13 @@ public class PeopleManagementController {
 	 * */
 	@ResponseBody
 	@RequestMapping("/qxjUserInfoList")
-	public void qxjUserInfoList(Integer page, Integer limit,String organId) {
+	public void qxjUserInfoList(String page, String limit,String organId) {
 		LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String,Object>();
 		map.add("orgid", organId);
 		map.add("page", page);
 		map.add("rows", limit);
-		/* Map<String, Object> hashmap = new HashMap<>();
-		 * hashmap.put("organId", organId);
-		 * PageHelper.startPage(page, limit);
-		List<BaseAppUser> queryListByOrganid = baseAppUserService.queryListByOrganid(hashmap);
-		PageUtils pageUtil = new PageUtils(queryListByOrganid);*/
 		JSONObject txl = getTXL(map);
-	
+		
 		Response.json(txl);
 	}
 
@@ -234,8 +228,14 @@ public class PeopleManagementController {
 			Object object2 = jsonData.get("zwrs");
 			object =(Integer)object2;//应在位人数
 		}
-		int zwRate = (userIdList /object)*100;
-		jsonData.put("zwlv", zwRate);
+		
+		if(userIdList == 0 || object == 0) {
+			int zwRate = 0;
+			jsonData.put("zwlv", zwRate);
+		}else {
+			int zwRate = (userIdList /object)*100;
+			jsonData.put("zwlv", zwRate);
+		}
 		Response.json(jsonData);
 	}
 	
@@ -292,14 +292,14 @@ public class PeopleManagementController {
 		LinkedMultiValueMap<String,Object> infoMap = new LinkedMultiValueMap<String,Object>();
 		infoMap.add("arch", "arm64");
 		BaseAppOrgMapped mapped = (BaseAppOrgMapped) baseAppOrgMappedService.orgMappedByOrgId(null, "root",
-				AppInterfaceConstant.APP_XLGLZXR);
-		if(mapped != null){
+				AppInterfaceConstant.APP_XLGL);
+		/*if(mapped != null){
 			String url = mapped.getUrl() + AppInterfaceConstant.WEB_INTERFACE_XLGLZXR;
-			String returnString = CrossDomainUtil.postJSONString(url, infoMap);
+			String returnString = CrossDomainUtil.postJSONString(url, null);
 			String accounts = returnString.substring(1,returnString.length()-1).replace("\"", "");
 			String [] accountArray = accounts.split("\\s*,\\s*");
 			accountList = new ArrayList<String>(Arrays.asList(accountArray));
-		}
+		}*/
 		return accountList;
 	} 
 	
@@ -326,10 +326,10 @@ public class PeopleManagementController {
 		List<BaseAppOrgan> queryList = baseAppOrganService.queryList(null);
 		queryList = getBaseAppOrganList(queryList,null,null);
 		List<BaseAppOrgan> list = new ArrayList<BaseAppOrgan>();
-		if(organIds.length >0) {
+		if(organIds !=null) {
 			for (BaseAppOrgan baseAppOrgan : queryList) {
-				for (String String : organIds) {
-					if(baseAppOrgan.getId().equals("organId")) {
+				for (String str : organIds) {
+					if(baseAppOrgan.getId().equals(str)) {
 						list.add(baseAppOrgan);
 					}
 				}
@@ -419,11 +419,10 @@ public class PeopleManagementController {
 		LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String,Object>();
 		map.add("orgid", organId);
 		JSONObject txl = getTXL(map);
-		JSONArray object =(JSONArray) txl.get("rows");
-		String string = object.toString();
+		String jsonArray = txl.getJSONArray("rows").toString();
 		ArrayList<TxlUserDto> arrayList = new ArrayList<TxlUserDto>();
-		List<TxlUserDto> parseArray = JSONArray.parseArray(string, TxlUserDto.class);
-		if(ids.length>0) {
+		List<TxlUserDto> parseArray = JSONArray.parseArray(jsonArray, TxlUserDto.class);
+		if(ids !=null) {
 			for (TxlUserDto txlUserDto : parseArray) {
 				for (String str : ids) {
 					if(txlUserDto.getUserid().equals(str)) {

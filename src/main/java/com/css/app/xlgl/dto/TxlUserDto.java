@@ -95,6 +95,60 @@ public class TxlUserDto implements Serializable {
 
 	//
 	private String pyName;
+	
+	
+	public TxlUserDto() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public TxlUserDto(String userid, String fullname, String account, String password, String sex, String organid,
+			String orderid, String dn, String isdelete, String ca, Integer ismanager, String tokenid, String spid,
+			String sn, String ip, Date startdate, Date enddate, String useruuid, String useremail, String seclevel,
+			Integer failedlogincount, Date editpwdtime, String mobile, Long timestamp, String type, String post,
+			String telephone, String address, String dept, String organName, String orgName, String isSc, String isShow,
+			String rights, String remarks, String mobileTwo, String telephoneTwo, JSONObject jsonData, String pyName) {
+		super();
+		this.userid = userid;
+		this.fullname = fullname;
+		this.account = account;
+		this.password = password;
+		this.sex = sex;
+		this.organid = organid;
+		this.orderid = orderid;
+		this.dn = dn;
+		this.isdelete = isdelete;
+		this.ca = ca;
+		this.ismanager = ismanager;
+		this.tokenid = tokenid;
+		this.spid = spid;
+		this.sn = sn;
+		this.ip = ip;
+		this.startdate = startdate;
+		this.enddate = enddate;
+		this.useruuid = useruuid;
+		this.useremail = useremail;
+		this.seclevel = seclevel;
+		this.failedlogincount = failedlogincount;
+		this.editpwdtime = editpwdtime;
+		this.mobile = mobile;
+		this.timestamp = timestamp;
+		this.type = type;
+		this.post = post;
+		this.telephone = telephone;
+		this.address = address;
+		this.dept = dept;
+		this.organName = organName;
+		this.orgName = orgName;
+		this.isSc = isSc;
+		this.isShow = isShow;
+		this.rights = rights;
+		this.remarks = remarks;
+		this.mobileTwo = mobileTwo;
+		this.telephoneTwo = telephoneTwo;
+		this.jsonData = jsonData;
+		this.pyName = pyName;
+	}
 
 	public String getPyName() {
 		return pyName;

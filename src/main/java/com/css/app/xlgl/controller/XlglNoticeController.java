@@ -1,6 +1,7 @@
 package com.css.app.xlgl.controller;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -219,7 +220,7 @@ public class XlglNoticeController {
 	
 	
 	@ResponseBody
-	@RequestMapping("saveOrUpdate")
+	@RequestMapping("/saveOrUpdate")
 	public void saveOrUpdate(XlglNotice xlglNotice,String pIds){
 		//判断是新增还是修改,id不为空则是修改，为空则是新增
 		String id = xlglNotice.getId();
@@ -244,6 +245,8 @@ public class XlglNoticeController {
 					xlglPicture.setIsFirst("0");
 					xlglPicture.setPictureId(ids[i]);
 					xlglPicture.setSort("0");
+					HTTPFile httpFile = new HTTPFile(ids[i]);
+					xlglPicture.setPictureName(httpFile.getFileName());
 					xlglPictureService.save(xlglPicture);
 				}
 			}
@@ -291,6 +294,8 @@ public class XlglNoticeController {
 					xlglPicture.setFileId(fId);
 					xlglPicture.setIsFirst("0");
 					xlglPicture.setPictureId(ids[i]);
+					HTTPFile httpFile = new HTTPFile(ids[i]);
+					xlglPicture.setPictureName(httpFile.getFileName());
 					xlglPicture.setSort("0");
 					xlglPictureService.save(xlglPicture);
 				}
@@ -320,6 +325,17 @@ public class XlglNoticeController {
 	}
 	
 	/**
+	 * 删除附件
+	 * */
+	@ResponseBody
+	@RequestMapping("/deletePicture")
+	public void deletePicture(String picId){
+		xlglPictureService.deleteByPictureId(picId);
+		HTTPFile httpFile = new HTTPFile(picId);
+		httpFile.delete();
+		Response.ok();
+	}
+	/**
 	 * 查询草稿箱
 	 * @param page
 	 * @param pagesize
@@ -343,9 +359,11 @@ public class XlglNoticeController {
 	@RequestMapping("/uploadPicture")
 	public void uploadPicture(@RequestParam(value="file",required=false) MultipartFile file ){
 		JSONObject json = new JSONObject();
+		String originalFilename = file.getOriginalFilename();
 		try {
 			 HTTPFile httpFile=HTTPFile.save( file.getInputStream(),file.getOriginalFilename());
 			 String filePath = httpFile.getFilePath();
+			 json.put("fileName", originalFilename);
 			 json.put("filePath", filePath);
 			 json.put("fileid", httpFile.getFileId());
 			 Response.json(json);
@@ -362,7 +380,6 @@ public class XlglNoticeController {
 	@RequestMapping("/downloadPicture")
 	public void downloadPicture(String fileId){
 		HTTPFile httpFile = new HTTPFile(fileId);
-		String filePath = httpFile.getFilePath();
-		Response.json(filePath);
+		Response.download(httpFile.getFileName(), httpFile.getInputSteam());
 	}
 }

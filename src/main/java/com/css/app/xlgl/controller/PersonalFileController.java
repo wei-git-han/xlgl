@@ -58,9 +58,17 @@ public class PersonalFileController {
 		JSONObject jsonObject = new JSONObject();
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		map.put("replyUserId", ssoUser.getUserId());
+		map.put("year", "1");
 		List<XlglExamSubject> subjectList = xlglExamSubjectService.queryList(null);
 		
+		Calendar date = Calendar.getInstance();
+		String year = String.valueOf(date.get(Calendar.YEAR));
+		
 		List<PersonalFile> queryList = personalFileService.queryList(map);
+		Integer numberAll = 0;
+		for (PersonalFile personalFile : queryList) {
+			numberAll += personalFile.getFractionSum();
+		}
 		List<XlglPhysical> queryPhysicalList = xlglPhysicalService.queryList(map);//军事体育成绩
 		List<XlglMineStudy> xlglMineStudyList  = xlglMineStudyService.queryList(map);//自学成绩
 		List<PersonalFileDto> list =new ArrayList<PersonalFileDto>();
@@ -95,6 +103,8 @@ public class PersonalFileController {
 		jsonObject.put("personalFileList", list);
 		jsonObject.put("currentUserName", ssoUser.getFullname());
 		jsonObject.put("orgName", ssoUser.getOrgName());
+		jsonObject.put("numberAll", numberAll);//总分
+		jsonObject.put("year", year);
 		Response.json(jsonObject);
 	}
 	/**

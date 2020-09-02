@@ -659,13 +659,14 @@ public class AppInterfaceConstant {
     public final static String APP_QXJGL = "xlglqxj";
     
     public final static String APP_XLGLZXR = "xlglzxr";
+    public final static String APP_XLGL = "xlgl";
     
     
     /**
      * @author 李振楠
      * @date 2020年8月13日
      * */
-    public final static String WEB_INTERFACE_QXJ_USER_INFO_QJDAYS = "/leave/apply/countXiuJiaDays";
+    public final static String WEB_INTERFACE_QXJ_USER_INFO_QJDAYS = "/leave/apply/countXiuJiaDaysXLGL";
     /**
      * @author 李振楠
      * @date 2020年8月13日
@@ -680,6 +681,6 @@ public class AppInterfaceConstant {
      * @author 李振楠
      * @date 2020年8月28日
      * */
-    public final static String WEB_TXL = "/txlUser/listuser";
+    public final static String WEB_TXL = "/txlUser/listuserXLGL";
     
 }
