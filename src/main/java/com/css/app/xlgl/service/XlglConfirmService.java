@@ -31,4 +31,6 @@ public interface XlglConfirmService {
 	XlglConfirmDto queryPerDeptInfo(Map<String,Object> map);
 
 	String queryConfromForJu(Map<String,Object> map);
+
+	List<XlglConfirm> queryByInfoIdAndDeptId(String deptId,String InfoId);
 }

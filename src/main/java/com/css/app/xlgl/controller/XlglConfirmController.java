@@ -83,7 +83,7 @@ public class XlglConfirmController {
 	 */
 	@ResponseBody
 	@RequestMapping("/xlglConfirm")
-	public void xlglConfirm(XlglConfirm xlglConfirm) {
+	public void xlglConfirm(String infoId) {
 		String deptId = null;
 		//获取当前人的管理员类型（0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员）
 		String adminFlag = adminSetService.getAdminTypeByUserId(CurrentUser.getUserId());
@@ -94,25 +94,51 @@ public class XlglConfirmController {
 		}
 		//String deptId = baseAppUserService.queryByUserId(CurrentUser.getUserId());
 		BaseAppOrgan organ = baseAppOrganService.queryObject(deptId);//获取部门信息
-		List<Map<String, Object>> infoList = xlglSubDocTrackingService.queryBmInfo(xlglConfirm.getInfoid(), deptId);
-		if (infoList != null && infoList.size() > 0) {
-			for (Map<String, Object> map : infoList) {
-				String baoming = (String) map.get("baoming");
-				String wbm = (String) map.get("wbm");
-				String qj = (String) map.get("qj");
-				xlglConfirm.setConfirmCount(baoming);
-				xlglConfirm.setNoConfirmCount(wbm);
-				xlglConfirm.setQjCount(qj);
-			}
-		}
+//		List<Map<String, Object>> infoList = xlglSubDocTrackingService.queryBmInfo(xlglConfirm.getInfoid(), deptId);
+//		if (infoList != null && infoList.size() > 0) {
+//			for (Map<String, Object> map : infoList) {
+//				String baoming = (String) map.get("baoming");
+//				String wbm = (String) map.get("wbm");
+//				String qj = (String) map.get("qj");
+//				xlglConfirm.setConfirmCount(baoming);
+//				xlglConfirm.setNoConfirmCount(wbm);
+//				xlglConfirm.setQjCount(qj);
+//			}
+//		}
+		XlglConfirm xlglConfirm = new XlglConfirm();
 		xlglConfirm.setDeptid(deptId);
 		xlglConfirm.setCreatedtime(new Date());
 		xlglConfirm.setCreator(CurrentUser.getUserId());
 		xlglConfirm.setCreatorname(CurrentUser.getUsername());
 		xlglConfirm.setDeptname(organ.getName());
 		xlglConfirm.setId(UUIDUtils.random());
+		xlglConfirm.setStatus("1");
+		xlglConfirm.setInfoid(infoId);
 		xlglConfirmService.save(xlglConfirm);
 		Response.json("result", "success");
+	}
+
+
+	/**
+	 * 判断确认按钮是否显示
+	 * @param deptId
+	 */
+	@ResponseBody
+	@RequestMapping("/isHaveButton")
+	public void isHaveButton(String deptId){
+		String organId = "";
+		//获取当前人的管理员类型（0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员）
+		String adminFlag = adminSetService.getAdminTypeByUserId(CurrentUser.getUserId());
+		if("2".equals(adminFlag)){
+			organId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
+		}else if("4".equals(adminFlag)){
+			organId = baseAppUserService.queryByUserId(CurrentUser.getUserId());
+		}
+		if(deptId.equals(organId)){
+			Response.json("result",true);
+		}else{
+			Response.json("result",false);
+		}
 	}
 	
 	/**

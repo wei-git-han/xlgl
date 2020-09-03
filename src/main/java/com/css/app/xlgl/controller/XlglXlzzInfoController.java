@@ -305,7 +305,8 @@ public class XlglXlzzInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getDateForJu")
-	public void getDateForJu(String infoId){
+	public void getDateForJu(String id){
+		String infoId = id;
 		int ybm = 0;
 		int wbm = 0;
 		JSONObject jsonObject2 = new JSONObject();
@@ -320,6 +321,7 @@ public class XlglXlzzInfoController {
 				String deptName = list.get(i).getName();
 				int sum = baseAppUserService.queryBmCout(deptId,infoId,"1");//已报名
 				int nsum = baseAppUserService.queryBmCout(deptId,infoId,"0");//未报名
+				int yhSum = baseAppUserService.queryBmCout(deptId,infoId,"2");//延后报名
 				ybm += sum;
 				wbm += nsum;
 				int yjs = baseAppUserService.queryYjs(deptId,infoId);//已接受
@@ -340,12 +342,21 @@ public class XlglXlzzInfoController {
 //				} else {
 //					listUser = baseAppUserService.queryAllUserByDeptId(deptId,infoId);
 //				}
+
+				List<XlglConfirm> xlglConfirmList = xlglConfirmService.queryByInfoIdAndDeptId(deptId,infoId);
+				if(xlglConfirmList != null && xlglConfirmList.size() > 0){
+					jsonObject.put("confirm",true);
+				}else {
+					jsonObject.put("confirm",false);
+				}
 				jsonObject.put("sum",sum);//已报名
 				jsonObject.put("nsum",nsum);//未报名
+				jsonObject.put("yhSum",yhSum);//延后报名
 				jsonObject.put("yjs",yjs);
 				jsonObject.put("wjs",wjs);
 				jsonObject.put("deptName",deptName);
-				jsonObject.put("isConfirm",status);
+				jsonObject.put("deptId",deptId);
+				//jsonObject.put("isConfirm",status);
 				//jsonObject.put("listUser",listUser);
 				listTotal.add(jsonObject);
 			}
@@ -400,6 +411,130 @@ public class XlglXlzzInfoController {
 		jsonObject2.put("wbm",wbm);
 		jsonObject2.put("listAllUser",listAllUser);
 		Response.json(jsonObject2);
+
+	}
+
+	/**
+	 * 训练跟踪部管理员看到的信息
+	 * 所有的局的信息
+	 * @param id
+	 */
+	@ResponseBody
+	@RequestMapping("/getDateForAll")
+	public void getDateForAll(String id){
+		JSONArray jsonArray = new JSONArray();
+		List<BaseAppOrgan> allList = baseAppOrganService.queryAllDeptIds();
+		if(allList != null && allList.size() > 0){
+			for(BaseAppOrgan baseAppOrgan : allList){
+				String judeptId = baseAppOrgan.getId();//获取局id
+				String infoId = id;
+				int ybm = 0;
+				int wbm = 0;
+				JSONObject jsonObject2 = new JSONObject();
+				String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
+				//获取了该局所有的部门id
+				List<BaseAppOrgan> list = baseAppOrganService.queryAllDeptId(judeptId);
+				List listTotal = new ArrayList();
+				if(list != null && list.size() > 0){
+					for(int i=0;i<list.size();i++){
+						JSONObject jsonObject = new JSONObject();
+						String deptId = list.get(i).getId();
+						String deptName = list.get(i).getName();
+						int sum = baseAppUserService.queryBmCout(deptId,infoId,"1");//已报名
+						int nsum = baseAppUserService.queryBmCout(deptId,infoId,"0");//未报名
+						int yhSum = baseAppUserService.queryBmCout(deptId,infoId,"2");//延后报名
+						ybm += sum;
+						wbm += nsum;
+						int yjs = baseAppUserService.queryYjs(deptId,infoId);//已接受
+						int wjs = baseAppUserService.queryWjs(deptId,infoId);//未接受
+						Map<String,Object> map = new HashMap<String,Object>();
+						map.put("deptId",deptId);
+						map.put("infoId",infoId);
+						XlglConfirmDto xlglConfirmDto = xlglConfirmService.queryPerDeptInfo(map);
+						String status = null;
+						if(xlglConfirmDto != null){
+							status = xlglConfirmDto.getStatus();
+						}else {
+							status = "0";
+						}
+//				List<BaseAppUser> listUser = null;
+//				if (i == 0) {
+//					listUser = baseAppUserService.queryAllJuUserByDeptId(deptId,infoId);
+//				} else {
+//					listUser = baseAppUserService.queryAllUserByDeptId(deptId,infoId);
+//				}
+
+						List<XlglConfirm> xlglConfirmList = xlglConfirmService.queryByInfoIdAndDeptId(deptId,infoId);
+						if(xlglConfirmList != null && xlglConfirmList.size() > 0){
+							jsonObject.put("confirm",true);
+						}else {
+							jsonObject.put("confirm",false);
+						}
+						jsonObject.put("sum",sum);//已报名
+						jsonObject.put("nsum",nsum);//未报名
+						jsonObject.put("yhSum",yhSum);//延后报名
+						jsonObject.put("yjs",yjs);
+						jsonObject.put("wjs",wjs);
+						jsonObject.put("deptName",deptName);
+						jsonObject.put("deptId",deptId);
+						//jsonObject.put("isConfirm",status);
+						//jsonObject.put("listUser",listUser);
+						listTotal.add(jsonObject);
+					}
+				}
+				Map<String,Object> map1 = new HashMap<String,Object>();
+				String organId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
+				int ycx = xlglSubDocTrackingService.queryAllCxByInfoId(infoId,judeptId);//局内已参训
+				int bk = xlglSubDocTrackingService.queryAllBkByInfoId(infoId,judeptId);//局内未参训
+				map1.put("deptId",organId);
+				map1.put("infoId",infoId);
+				String confirm = xlglConfirmService.queryConfromForJu(map1);//局的已确认情况
+				if(StringUtils.isNotBlank(confirm) && "1".equals(confirm)){
+					confirm = "1";
+				}else {
+					confirm = "0";
+				}
+
+				//获取了该局所有的部门id
+				List<BaseAppOrgan> list3 = baseAppOrganService.queryAllDeptId(judeptId);
+				List listAllUser = new ArrayList();
+				if (list3 != null && list3.size() > 0) {
+					for (int i = 0; i < list3.size(); i++) {
+						List<BaseAppUser> listUser = null;
+						JSONObject jsonObject = new JSONObject();
+						String deptId = list3.get(i).getId();
+						String deptName = list3.get(i).getName();
+						if (i == 0) {
+							listUser = baseAppUserService.queryAllJuUserByDeptId(deptId,infoId);
+						} else {
+							listUser = baseAppUserService.queryAllUserByDeptId(deptId,infoId);
+						}
+						jsonObject.put("listUser",listUser);
+						jsonObject.put("deptName",deptName);
+						listAllUser.add(jsonObject);
+					}
+
+				}
+
+				jsonObject2.put("ycx",ycx);
+				jsonObject2.put("bk",bk);
+				int sum = ycx + bk;
+				float t = 0.0f;
+				if(sum > 0){
+					t = ycx/(ycx+bk);
+				}else {
+					t = 0.0f;
+				}
+				jsonObject2.put("cxl",t);//参训率
+				jsonObject2.put("listTotal",listTotal);
+				jsonObject2.put("confirm",confirm);
+				jsonObject2.put("ybm",ybm);
+				jsonObject2.put("wbm",wbm);
+				jsonObject2.put("listAllUser",listAllUser);
+				jsonArray.add(jsonObject2);
+			}
+		}
+		Response.json(jsonArray);
 
 	}
 
