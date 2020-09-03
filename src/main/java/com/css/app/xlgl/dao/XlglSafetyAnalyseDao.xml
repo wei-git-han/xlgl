@@ -10,19 +10,19 @@
 	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglSafetyAnalyse">
 		select * from XLGL_SAFETY_ANALYSE 
 		where 1 = 1
-		<if test="quarter != null and quarter == '1'">
+		<if test="quarter != null and quarter == 1">
 			and to_char(UPLOAD_DATE,'yyyy') = to_char(sysdate,'yyyy') 
 			and (to_char(UPLOAD_DATE,'MM') = 1 or to_char(UPLOAD_DATE,'MM') = 2 or to_char(UPLOAD_DATE,'MM') = 3)
 		</if>
-		<if test="quarter != null and quarter == '2'">
+		<if test="quarter != null and quarter == 2">
 			and to_char(UPLOAD_DATE,'yyyy') = to_char(sysdate,'yyyy') 
 			and (to_char(UPLOAD_DATE,'MM') = 4 or to_char(UPLOAD_DATE,'MM') = 5 or to_char(UPLOAD_DATE,'MM') = 6)
 		</if>
-			<if test="quarter != null and quarter == '3'">
+			<if test="quarter != null and quarter == 3">
 			and to_char(UPLOAD_DATE,'yyyy') = to_char(sysdate,'yyyy') 
 			and (to_char(UPLOAD_DATE,'MM') = 7 or to_char(UPLOAD_DATE,'MM') = 8 or to_char(UPLOAD_DATE,'MM') = 9)
 		</if>
-		<if test="quarter != null and quarter == '4'">
+		<if test="quarter != null and quarter == 4">
 			and to_char(UPLOAD_DATE,'yyyy') = to_char(sysdate,'yyyy') 
 			and (to_char(UPLOAD_DATE,'MM') = 10 or to_char(UPLOAD_DATE,'MM') = 11 or to_char(UPLOAD_DATE,'MM') = 12)
 		</if>
