@@ -67,15 +67,15 @@ public class XlglXlzzInfoController {
 	private XlglSubDocInfoService xlglSubDocInfoService;
 	@Autowired
 	private XlglConfirmService xlglConfirmService;
-	
+
 	/**
 	 * 列表
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	public void list(Integer page, Integer limit){
+	public void list(Integer page, Integer pagesize){
 		Map<String, Object> map = new HashMap<>();
-		PageHelper.startPage(page, limit);
+		PageHelper.startPage(page, pagesize);
 		
 		//查询列表数据
 		List<XlglXlzzInfo> xlglXlzzInfoList = xlglXlzzInfoService.queryList(map);
@@ -311,6 +311,7 @@ public class XlglXlzzInfoController {
 		int wbm = 0;
 		JSONObject jsonObject2 = new JSONObject();
 		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
+		String orgName = baseAppOrganService.queryObject(orgId).getName();
 		//获取了该局所有的部门id
 		List<BaseAppOrgan> list = baseAppOrganService.queryAllDeptId(orgId);
 		List listTotal = new ArrayList();
@@ -410,6 +411,7 @@ public class XlglXlzzInfoController {
 		jsonObject2.put("ybm",ybm);
 		jsonObject2.put("wbm",wbm);
 		jsonObject2.put("listAllUser",listAllUser);
+		jsonObject2.put("junName",orgName);
 		Response.json(jsonObject2);
 
 	}
@@ -423,10 +425,12 @@ public class XlglXlzzInfoController {
 	@RequestMapping("/getDateForAll")
 	public void getDateForAll(String id){
 		JSONArray jsonArray = new JSONArray();
+		JSONObject object = new JSONObject();
 		List<BaseAppOrgan> allList = baseAppOrganService.queryAllDeptIds();
 		if(allList != null && allList.size() > 0){
 			for(BaseAppOrgan baseAppOrgan : allList){
 				String judeptId = baseAppOrgan.getId();//获取局id
+				String juName = baseAppOrgan.getName();//获取局名字
 				String infoId = id;
 				int ybm = 0;
 				int wbm = 0;
@@ -450,13 +454,13 @@ public class XlglXlzzInfoController {
 						Map<String,Object> map = new HashMap<String,Object>();
 						map.put("deptId",deptId);
 						map.put("infoId",infoId);
-						XlglConfirmDto xlglConfirmDto = xlglConfirmService.queryPerDeptInfo(map);
-						String status = null;
-						if(xlglConfirmDto != null){
-							status = xlglConfirmDto.getStatus();
-						}else {
-							status = "0";
-						}
+//						XlglConfirmDto xlglConfirmDto = xlglConfirmService.queryPerDeptInfo(map);
+//						String status = null;
+//						if(xlglConfirmDto != null){
+//							status = xlglConfirmDto.getStatus();
+//						}else {
+//							status = "0";
+//						}
 //				List<BaseAppUser> listUser = null;
 //				if (i == 0) {
 //					listUser = baseAppUserService.queryAllJuUserByDeptId(deptId,infoId);
@@ -531,10 +535,13 @@ public class XlglXlzzInfoController {
 				jsonObject2.put("ybm",ybm);
 				jsonObject2.put("wbm",wbm);
 				jsonObject2.put("listAllUser",listAllUser);
+				jsonObject2.put("juName",juName);
 				jsonArray.add(jsonObject2);
 			}
 		}
-		Response.json(jsonArray);
+		object.put("result","success");
+		object.put("list",jsonArray);
+		Response.json(object);
 
 	}
 
