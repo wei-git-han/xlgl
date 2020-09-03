@@ -17,7 +17,7 @@
 			  and TOPIC_TYPE = #{topicType}
 			</if>
 			<if test="topicColumn != null and topicColumn !=''">
-			  and TOPIC_COLUMN like "%"#{topicColumn}"%"
+			  and TOPIC_COLUMN like '%'||#{topicColumn}||'%'
 			</if>
 			
 		
