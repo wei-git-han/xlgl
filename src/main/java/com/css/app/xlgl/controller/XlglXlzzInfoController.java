@@ -329,13 +329,13 @@ public class XlglXlzzInfoController {
 				Map<String,Object> map = new HashMap<String,Object>();
 				map.put("deptId",deptId);
 				map.put("infoId",infoId);
-				XlglConfirmDto xlglConfirmDto = xlglConfirmService.queryPerDeptInfo(map);
-				String status = null;
-				if(xlglConfirmDto != null){
-					status = xlglConfirmDto.getStatus();
-				}else {
-					status = "0";
-				}
+//				XlglConfirmDto xlglConfirmDto = xlglConfirmService.queryPerDeptInfo(map);
+//				String status = null;
+//				if(xlglConfirmDto != null){
+//					status = xlglConfirmDto.getStatus();
+//				}else {
+//					status = "0";
+//				}
 //				List<BaseAppUser> listUser = null;
 //				if (i == 0) {
 //					listUser = baseAppUserService.queryAllJuUserByDeptId(deptId,infoId);
