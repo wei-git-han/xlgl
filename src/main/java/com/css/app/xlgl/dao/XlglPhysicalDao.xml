@@ -52,7 +52,12 @@
 			"AGE",
 			"DEPT_NAME",
 			"UP_ID",
-			"NORMAL"
+			"NORMAL",
+			"YTXS",
+			"YWQZ",
+			"SXP",
+			"CPF",
+			"CPM"
 		)
 		values
 		(
@@ -78,7 +83,12 @@
 			#{age},
 			#{deptName},
 			#{upId},
-			#{normal}
+			#{normal},
+			#{ytxs},
+			#{ywqz},
+			#{sxp},
+			#{cpf},
+			#{cpm}
 		)
 	</insert>
 	 
@@ -107,6 +117,11 @@
 			<if test="deptName != null">"DEPT_NAME" = #{deptName}</if>
 			<if test="upId != null">"UP_ID" = #{upId}</if>
 			<if test="normal != null">"NORMAL" = #{normal}</if>
+			<if test="ytxs != null">"YTXS" = #{ytxs}</if>
+			<if test="ywqz != null">"YWQZ" = #{ywqz}</if>
+			<if test="sxp != null">"SXP" = #{sxp}</if>
+			<if test="cpf != null">"CPF" = #{cpf}</if>
+			<if test="cpm != null">"CPM" = #{cpm}</if>
 		</set>
 		where ID = #{id}
 	</update>

@@ -322,9 +322,10 @@ public class XlglPhysicalController {
 			zuo = (int)js.get("m");
 			pao = (int)js.get("a");
 			changpao = (int)js.get("w");
-			int w = Integer.parseInt(wight);
-			int h = Integer.parseInt(high);
-			int j = h * h;
+			float t = Float.parseFloat(wight);
+			int w = Math.round(t);
+			float h = Float.parseFloat(high);
+			float j = h * h;
 			BMI = w/j;
 			if(age1 < 24){
 				if(BMI >= 18.5 && BMI <=23.9){
