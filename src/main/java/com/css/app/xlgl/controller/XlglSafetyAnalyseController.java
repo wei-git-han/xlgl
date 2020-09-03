@@ -107,7 +107,7 @@ public class XlglSafetyAnalyseController {
 		Date date = new Date();
 		String random = UUIDUtils.random();
 		xlglSafetyAnalyse.setId(random);
-		if(fileIds.length>0) {
+		if(fileIds !=null) {
 			xlglSafetyAnalyse.setStatus("1");
 		}else {
 			xlglSafetyAnalyse.setStatus("0");
@@ -120,17 +120,21 @@ public class XlglSafetyAnalyseController {
 		xlglSafetyAnalyse.setUploadDate(date);
 		xlglSafetyAnalyse.setUploadUser(userId);
 		xlglSafetyAnalyseService.save(xlglSafetyAnalyse);
-		for (int i = 0; i < fileIds.length; i++) {
-			XlglPicture xlglPicture = new XlglPicture();
-			xlglPicture.setId(UUIDUtils.random());
-			xlglPicture.setFileId(random);
-			xlglPicture.setIsFirst("1");
-			xlglPicture.setPictureId(fileIds[i]);
-			xlglPicture.setSort("0");
-			xlglPicture.setCreateTime(date);
-			xlglPicture.setUserId(userId);
-			xlglPicture.setUserName(username);
-			xlglPictureService.save(xlglPicture);
+		if(fileIds !=null) {
+			for (int i = 0; i < fileIds.length; i++) {
+				XlglPicture xlglPicture = new XlglPicture();
+				xlglPicture.setId(UUIDUtils.random());
+				xlglPicture.setFileId(random);
+				xlglPicture.setIsFirst("1");
+				xlglPicture.setPictureId(fileIds[i]);
+				HTTPFile httpFile = new HTTPFile(fileIds[i]);
+				xlglPicture.setPictureName(httpFile.getFileName());
+				xlglPicture.setSort("0");
+				xlglPicture.setCreateTime(date);
+				xlglPicture.setUserId(userId);
+				xlglPicture.setUserName(username);
+				xlglPictureService.save(xlglPicture);
+			}
 		}
 		Response.ok();
 	}
@@ -200,59 +204,23 @@ public class XlglSafetyAnalyseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/uploadPicture")
-	public void uploadPicture(@RequestParam(value="file",required=false) MultipartFile file ,String content,String id){
+	public void uploadPicture(@RequestParam(value="file",required=false) MultipartFile file ){
 		JSONObject json = new JSONObject();
-		String userId = CurrentUser.getUserId();
-		SSOUser ssoUser = CurrentUser.getSSOUser();
-		Date date = new Date();
-		
-		String random = UUIDUtils.random();
-		XlglSafetyAnalyse xlglSafetyAnalyse = new XlglSafetyAnalyse();
-		XlglPicture xlglPicture = new XlglPicture();
-		xlglPicture.setId(UUIDUtils.random());
-		try {
-			if(file !=null) {
-				String fileId = FileBaseUtil.fileServiceUpload(file);
-				String fileName = file.getOriginalFilename();
-				 json.put("fileId",fileId);
-				 json.put("fileName", fileName);
-				 xlglSafetyAnalyse.setStatus("1");
-				 xlglSafetyAnalyse.setUploadDate(date);
-				 xlglPicture.setPictureId(fileId);
-				 xlglPicture.setPictureName(fileName);
-				 xlglPicture.setUserId(userId);
-				 xlglPicture.setUserName(ssoUser.getFullname());
-				 xlglPicture.setCreateTime(date);
-		
-			}else {
-				xlglSafetyAnalyse.setUploadDate(date);
-				xlglSafetyAnalyse.setStatus("0");
-			}	
-			if(StringUtils.isNotBlank(id)) {
-				 xlglPicture.setFileId(id);
-			}else {
-				 xlglPicture.setFileId(random);
-				 xlglSafetyAnalyse.setId(random);
-				 xlglSafetyAnalyse.setUpdateUser(userId);
-				 xlglSafetyAnalyse.setUpdateDate(date);
-				 xlglSafetyAnalyse.setUploadUser(userId);
-				 xlglSafetyAnalyse.setCreateUser(userId);
-				 xlglSafetyAnalyse.setCreateDate(date);
-				 xlglSafetyAnalyse.setOrganId(ssoUser.getOrganId());
-				 xlglSafetyAnalyse.setOrganName(ssoUser.getOrgName());
-				 xlglSafetyAnalyse.setContent(content);
-				 xlglSafetyAnalyse.setCreateUsername(ssoUser.getFullname());
-				 xlglSafetyAnalyseService.save(xlglSafetyAnalyse);
-			}
-			 xlglPictureService.save(xlglPicture);
-	
-		} catch (Exception e) {
+		 try {
+			HTTPFile httpFile=HTTPFile.save(file.getInputStream(),file.getOriginalFilename());
+			String fileName = httpFile.getFileName();
+			String fileId = httpFile.getFileId();
+			json.put("fileName", fileName);
+			json.put("fileId", fileId);
+			json.put("code", "0");
+			json.put("msg", "success");
+			
+		} catch (IOException e) {
 			e.printStackTrace();
-			Response.error();
+			json.put("code", "500");
+			json.put("msg", "error");
 		}
-		json.put("code", "0");
-		json.put("msg", "success");
-		Response.json(json);
+		 Response.json(json);
 	}
 	
 	/**
