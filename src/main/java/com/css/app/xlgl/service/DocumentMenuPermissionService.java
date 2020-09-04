@@ -28,4 +28,6 @@ public interface DocumentMenuPermissionService {
 	void deleteBatch(String[] ids);
 	
 	void deleteByUserId(String uid);
+
+	List<String> queryAllList(String userId);
 }

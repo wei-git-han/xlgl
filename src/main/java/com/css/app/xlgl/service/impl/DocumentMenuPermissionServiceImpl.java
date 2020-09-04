@@ -52,5 +52,10 @@ public class DocumentMenuPermissionServiceImpl implements DocumentMenuPermission
 	public void deleteByUserId(String uid){
 		documentMenuPermissionDao.deleteByUserId(uid);
 	}
+
+	@Override
+	public List<String> queryAllList(String userId){
+		return documentMenuPermissionDao.queryAllList(userId);
+	}
 	
 }
