@@ -525,18 +525,30 @@ public class XlglDocumentZbjlController {
                 if(commonList != null && commonList.size() > 0){
                     jsonObject.put("commonSum", commonList.get(0).getFractionsum());
                     jsonObject.put("commonLevel", commonList.get(0).getLevel());
+                }else {
+                    jsonObject.put("commonSum", "0");
+                    jsonObject.put("commonLevel", "--");
                 }
                 if(specialtyList != null && specialtyList.size() > 0){
                     jsonObject.put("specialtySum", specialtyList.get(0).getFractionsum());
                     jsonObject.put("specialtyLevel", specialtyList.get(0).getLevel());
+                }else {
+                    jsonObject.put("specialtySum", "0");
+                    jsonObject.put("specialtyLevel", "--");
                 }
                 if(tacticalList != null && tacticalList.size() > 0){
                     jsonObject.put("tacticalSum", tacticalList.get(0).getFractionsum());
                     jsonObject.put("tacticalLevel", tacticalList.get(0).getLevel());
+                }else {
+                    jsonObject.put("tacticalSum", "0");
+                    jsonObject.put("tacticalLevel", "--");
                 }
                 if(warList != null && warList.size()>0){
                     jsonObject.put("warSum", warList.get(0).getFractionsum());
                     jsonObject.put("warLevel", warList.get(0).getLevel());
+                }else{
+                    jsonObject.put("warSum", "0");
+                    jsonObject.put("warLevel", "--");
                 }
 
                 //共同训练，专业训练，战略训练，军事训练 ------------------end
