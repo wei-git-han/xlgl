@@ -9,7 +9,7 @@
 	</select>
 
 	<select id="queryYxCount" resultType="int">
-		select * from BASE_APP_USER where
+		select count(1) from BASE_APP_USER where
         ORGANID in
         (
                 select

@@ -133,7 +133,7 @@ public interface BaseAppUserService {
 
 	int getAllZbSum();
 
-	int queryYxCount(String orgId);
+	int queryYxCount(Map<String, Object> map);
 
 
 }

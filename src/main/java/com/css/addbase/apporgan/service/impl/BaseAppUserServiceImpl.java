@@ -209,8 +209,8 @@ public class BaseAppUserServiceImpl implements BaseAppUserService {
 	}
 
 	@Override
-	public int queryYxCount(String orgId){
-		return baseAppUserDao.queryYxCount(orgId);
+	public int queryYxCount(Map<String, Object> map){
+		return baseAppUserDao.queryYxCount(map);
 	}
 
 

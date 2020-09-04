@@ -844,10 +844,11 @@ public class XlglXlzzInfoController {
 
 	public Float getCurrentDoneInfo(String infoId,String orgId){
 		Map<String, Object> map = new HashMap<>();
-		//String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
-		int yxCount = baseAppUserService.queryYxCount(orgId);//当前局的有效人数
 		map.put("infoId", infoId);
 		map.put("orgId", orgId);
+		//String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
+		int yxCount = baseAppUserService.queryYxCount(map);//当前局的有效人数
+
 		int cxCount = xlglSubDocTrackingService.queryCxAllCount(map);//当前课堂参训人数
 		float DoneLv = cxCount / yxCount;
 		return DoneLv;

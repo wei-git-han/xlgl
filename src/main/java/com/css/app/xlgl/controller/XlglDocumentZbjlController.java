@@ -457,7 +457,7 @@ public class XlglDocumentZbjlController {
                 int sum = xlglSubDocTrackingService.queryAllCount(userId,year);
                 int count = xlglSubDocTrackingService.quereyWcCount(userId,year);
                 float f = count/sum;//强装兴装大讲堂得分
-                String dj = "";
+                String dj = "--";
                 if(f<0.6){
                     dj = "不及格";
                 }else if(f>=0.6 && f<0.75){
@@ -475,37 +475,37 @@ public class XlglDocumentZbjlController {
 
                 //军事体育成绩得分----------------------start
                 XlglPhysical xlglPhysical = xlglPhysicalService.queryByUserId(userId,year);
+                String jtScore = "0";
+                String jtDj = "--";
                 if(xlglPhysical != null) {
-                    String jtScore = "0";
                     if (StringUtils.isNotBlank(xlglPhysical.getAllScore())) {
                         jtScore = xlglPhysical.getAllScore();
                     }
-                    String jtDj = "0";
                     if (StringUtils.isNotBlank(xlglPhysical.getAllJudge())) {
                         jtDj = xlglPhysical.getAllJudge();
                     }
-
-                    jsonObject.put("jtScore", jtScore);//得分
-                    jsonObject.put("jtDj", jtDj);//等级
                 }
+                jsonObject.put("jtScore", jtScore);//得分
+                jsonObject.put("jtDj", jtDj);//等级
                 //军事体育成绩得分-----------------------end
 
 
 
                 //自学成绩得分------------------------------start
                 XlglMineStudy xlglMineStudy = xlglMineStudyService.queryByUserId(userId,year);
+                String studyScore = "0";
+                String studyDj = "--";
                 if(xlglMineStudy != null){
-                    String studyScore = "0";
                     if(StringUtils.isNotBlank(xlglMineStudy.getScore())){
                         studyScore = xlglMineStudy.getScore();//自学成绩得分
                     }
-                    String studyDj = "";
                     if(StringUtils.isNotBlank(xlglMineStudy.getDj())){
                         studyDj = xlglMineStudy.getDj();//自学成绩等级
                     }
-                    jsonObject.put("studyScore",studyScore);
-                    jsonObject.put("studyDj",studyDj);
+
                 }
+                jsonObject.put("studyScore",studyScore);
+                jsonObject.put("studyDj",studyDj);
                 //自学成绩得分-------------------------------end
 
 
