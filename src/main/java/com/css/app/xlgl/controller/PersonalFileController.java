@@ -2,6 +2,7 @@ package com.css.app.xlgl.controller;
 
 import java.util.*;
 
+import com.alibaba.fastjson.JSONArray;
 import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
@@ -385,6 +386,7 @@ public class PersonalFileController {
 	public void getAllDeptInfo(){
 		List listAll = new ArrayList();
 		List<BaseAppOrgan> list = baseAppOrganService.findByParentId("root");
+		//所有局
 		if(list != null && list.size() > 0){
 			for(BaseAppOrgan baseAppOrgan : list){
 				String deptId = baseAppOrgan.getId();
@@ -392,7 +394,23 @@ public class PersonalFileController {
 				listAll.add(jsonObject);
 			}
 		}
-		Response.json(listAll);
+		//当前局
+		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());//当前登录人的局id
+		JSONObject js = getAllYxl(orgId);
+		JSONObject jsCurrentDept = new JSONObject();
+		List list2 = new ArrayList();
+		jsCurrentDept.put("highSum",js.get("highSum"));//优秀人数
+		jsCurrentDept.put("midSum",js.get("midSum"));//优良人数
+		jsCurrentDept.put("lowSum",js.get("lowSum"));//及格人数
+		jsCurrentDept.put("yxLv",js.get("yxLv"));//优秀率
+		jsCurrentDept.put("ylLv",js.get("ylLv"));//优良率
+		jsCurrentDept.put("jgLv",js.get("jgLv"));//及格率
+        list2.add(jsCurrentDept);
+		JSONObject result = new JSONObject();
+		result.put("listAll",listAll);
+		result.put("listCurrent",list2);
+		result.put("result","success");
+		Response.json(result);
 	}
 
 }

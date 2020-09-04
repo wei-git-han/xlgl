@@ -79,6 +79,8 @@ public class XlglDocumentZbjlController {
     private XlglPictureService xlglPictureService;
     @Autowired
     private XlglConfirmService xlglConfirmService;
+    @Autowired
+    private XlglMineStudyService xlglMineStudyService;
 	
 	/**
 	 * 列表
@@ -438,13 +440,14 @@ public class XlglDocumentZbjlController {
                 String deptName = organ.getName();//部门名称
                 jsonObject.put("deptName",deptName);
                 String userId = CurrentUser.getUserId();
+
+
+
                 //强装兴装大讲堂得分 ------------------start
                 int sum = xlglSubDocTrackingService.queryAllCount(userId,year);
                 int count = xlglSubDocTrackingService.quereyWcCount(userId,year);
                 float f = count/sum;//强装兴装大讲堂得分
                 String dj = "";
-                jsonObject.put("djt",f);
-                jsonObject.put("djtdj",dj);
                 if(f<0.6){
                     dj = "不及格";
                 }else if(f>=0.6 && f<0.75){
@@ -454,7 +457,11 @@ public class XlglDocumentZbjlController {
                 }else{
                     dj = "优秀";
                 }
+                jsonObject.put("djt",f);
+                jsonObject.put("djtdj",dj);
                 //强装兴装大讲堂得分 ------------------end
+
+
 
                 //军事体育成绩得分----------------------start
                 XlglPhysical xlglPhysical = xlglPhysicalService.queryByUserId(userId,year);
@@ -473,12 +480,28 @@ public class XlglDocumentZbjlController {
                 }
                 //军事体育成绩得分-----------------------end
 
+
+
+                //自学成绩得分------------------------------start
+                XlglMineStudy xlglMineStudy = xlglMineStudyService.queryByUserId(userId,year);
+                if(xlglMineStudy != null){
+                    String studyScore = "0";
+                    if(StringUtils.isNotBlank(xlglMineStudy.getScore())){
+                        studyScore = xlglMineStudy.getScore();//自学成绩得分
+                    }
+                    String studyDj = "";
+                    if(StringUtils.isNotBlank(xlglMineStudy.getDj())){
+                        studyDj = xlglMineStudy.getDj();//自学成绩等级
+                    }
+                    jsonObject.put("studyScore",studyScore);
+                    jsonObject.put("studyDj",studyDj);
+                }
+                //自学成绩得分-------------------------------end
+
+
+
+
                 //共同训练，专业训练，战略训练，军事训练 ------------------start
-                String gongtongxunlian = "99";
-                String gongtongxunliandengji = "优秀";
-                jsonObject.put("gongtongxunlian",gongtongxunlian);
-                jsonObject.put("gongtongxunliandengji",gongtongxunliandengji);
-                //共同训练，专业训练，战略训练，军事训练 ------------------end
                 Map<String, Object> map = new HashMap<String,Object>();
                 map.put("replyUserId", baseAppUser.getUserId());
                 map.put("examineSubjectName", "共同训练");
@@ -501,6 +524,8 @@ public class XlglDocumentZbjlController {
                 if(warList != null && warList.size()>0){
                     jsonObject.put("war", warList.get(0));
                 }
+
+                //共同训练，专业训练，战略训练，军事训练 ------------------end
                 jsonArray.add(jsonObject);
 
             }
