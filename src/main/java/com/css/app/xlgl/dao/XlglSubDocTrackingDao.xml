@@ -25,6 +25,30 @@
 
 	</select>
 
+	<select id="queryCxAllCount" resultType="int">
+		select count(1) from XLGL_SUB_DOC_TRACKING where 1=1
+		<if test="infoId != null and infoId !=''">
+			and INFO_ID = #{infoId}
+		</if>
+		and RECEIVER_ID in
+		(
+		select
+		USER_ID
+		from
+		BASE_APP_USER
+		where
+		ORGANID in
+		(
+		select
+		id
+		from
+		BASE_APP_ORGAN start
+		with ID = #{orgId}
+		and ISDELETE=0 connect by prior ID = PARENT_ID
+		)) and IS_WORK = '1'
+
+	</select>
+
 	<select id="queryAllYear" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
 		select * from XLGL_SUB_DOC_TRACKING where 1=1
 		<if test="userId != null and userId !=''">
