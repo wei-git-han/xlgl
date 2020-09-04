@@ -423,12 +423,22 @@ public class XlglDocumentZbjlController {
      */
     @ResponseBody
     @RequestMapping("/getXlCoreList")
-    public void getXlCoreList(){
+    public void getXlCoreList(String orgId){
+        String deptId = "";
         Calendar calendar = Calendar.getInstance();
         String year = String.valueOf(calendar.get(Calendar.YEAR));
         String organId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
+        if(StringUtils.isNotBlank(orgId)){
+            if(orgId.equals(organId)){
+                deptId = organId;
+            }else {
+                deptId = orgId;
+            }
+        }else {
+            deptId = organId;
+        }
         //获取局内所有的人
-        List<BaseAppUser> list = baseAppUserService.queryAllUserIdAndName(organId);
+        List<BaseAppUser> list = baseAppUserService.queryAllUserIdAndName(deptId);
         JSONArray jsonArray = new JSONArray();
         if(list != null && list.size() > 0){
             for(BaseAppUser baseAppUser : list){
