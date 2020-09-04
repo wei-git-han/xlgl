@@ -2,6 +2,7 @@ package com.css.app.xlgl.dao;
 
 
 import com.css.app.xlgl.entity.XlglSubDocInfo;
+import com.css.app.xlgl.entity.XlglSubDocTracking;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -32,4 +33,7 @@ public interface XlglSubDocInfoDao extends BaseDao<XlglSubDocInfo> {
 
     @Select("select * from XLGL_SUB_DOC_INFO where SUB_DEPT_ID = #{0} and EXERCISE_TIME like '%'||#{1}||'%'")
     List<XlglSubDocInfo> queryAllClass(String orgId,String year);
+
+    @Select("select * from XLGL_SUB_DOC_TRACKING where RECEIVER_ID = #{1} and INFO_ID = #{0}")
+    List<XlglSubDocTracking> queryByInfoIdAndUserId(String infoId,String userId);
 }

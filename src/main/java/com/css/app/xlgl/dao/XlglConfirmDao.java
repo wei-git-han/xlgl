@@ -6,7 +6,9 @@ import com.css.app.xlgl.entity.XlglConfirm;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.css.base.dao.BaseDao;
+import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,4 +24,7 @@ public interface XlglConfirmDao extends BaseDao<XlglConfirm> {
     XlglConfirmDto queryPerDeptInfo(Map<String,Object> map);
 
     String queryConfromForJu(Map<String,Object> map);
+
+    @Select("select * from XLGL_CONFIRM where DEPTID = #{0} and INFOID = #{1}")
+    List<XlglConfirm> queryByInfoIdAndDeptId(String deptId,String infoId);
 }

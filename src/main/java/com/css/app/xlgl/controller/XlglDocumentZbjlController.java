@@ -20,6 +20,7 @@ import com.css.app.xlgl.entity.*;
 import com.css.app.xlgl.service.*;
 import com.css.base.utils.*;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.aspectj.weaver.ast.And;
 import org.codehaus.groovy.util.HashCodeHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -74,6 +75,10 @@ public class XlglDocumentZbjlController {
 	private XlglExamMainAnswerService xlglExamMainAnswerService;
     @Autowired
     private XlglPhysicalService xlglPhysicalService;
+    @Autowired
+    private XlglPictureService xlglPictureService;
+    @Autowired
+    private XlglConfirmService xlglConfirmService;
 	
 	/**
 	 * 列表
@@ -128,7 +133,7 @@ public class XlglDocumentZbjlController {
             xlglDocumentZbjl.setReceiverNames(deptNames);
             xlglDocumentZbjl.setCreatedTime(new Date());
             xlglDocumentZbjl.setOrgName(org.getName());
-            xlglDocumentZbjlService.save(xlglDocumentZbjl);
+            //xlglDocumentZbjlService.save(xlglDocumentZbjl);
 
             XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(fileId);
             xlglXlzzInfo.setTodeptName(deptNames);
@@ -208,7 +213,7 @@ public class XlglDocumentZbjlController {
                 xl.setOrgName(subInfo.getSubDeptName());
                 xl.setSubId(subId);
                 xl.setCreatedTime(new Date());
-                xlglDocumentZbjlService.save(xl);
+                //xlglDocumentZbjlService.save(xl);
                 //流转记录
                 XlglSubDocTracking tracking = new XlglSubDocTracking();
                 String loginUserName = CurrentUser.getUsername();
@@ -254,6 +259,32 @@ public class XlglDocumentZbjlController {
             Response.json("result", "faild");
         }
 
+    }
+
+    /**
+     * 人员是否参训状态修改
+     * @param infoId  文id
+     * @param userId   用户id
+     * @param isWork   0是未参训，1是已参训
+     */
+    @ResponseBody
+    @RequestMapping("/updateStatus")
+    public void updateStatus(String infoId,String userId,String isWork){
+       String deptId = baseAppUserService.queryByUserId(CurrentUser.getUserId());
+       List<XlglConfirm> xlglConfirmList = xlglConfirmService.queryByInfoIdAndDeptId(deptId,infoId);
+       if(xlglConfirmList != null && xlglConfirmList.size() > 0){
+           Response.json("result","confirm");
+       }else {
+           List<XlglSubDocTracking> list = xlglSubDocInfoService.queryByInfoIdAndUserId(infoId, userId);
+           if (list != null && list.size() > 0) {
+               XlglSubDocTracking xlglSubDocTracking = list.get(0);
+               xlglSubDocTracking.setIsWork(isWork);
+               xlglSubDocTrackingService.update(xlglSubDocTracking);
+               Response.json("result", "success");
+           } else {
+               Response.json("result", "fail");
+           }
+       }
     }
 	
 	/**
@@ -363,6 +394,19 @@ public class XlglDocumentZbjlController {
         }else if("1".equals(type)){
             PageHelper.startPage(page,pagesize);
             list = xlglSubDocTrackingService.queryListForPerson1(map);
+        }
+        if(list != null && list.size() > 0){
+            for(XlglSubDocTracking xlglSubDocTracking : list){
+                Map<String,Object> mapList = new HashMap<>();
+                String fileId = xlglSubDocTracking.getInfoId();
+                mapList.put("fileId",fileId);
+//                List<XlglPicture> pictureList = xlglPictureService.queryList(mapList);
+//                if(pictureList != null && pictureList.size() > 0){
+//                    xlglSubDocTracking.setPicturePath(pictureList.get(0).getPictureId());
+//                }
+                XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(fileId);
+                xlglSubDocTracking.setPicturePath(xlglXlzzInfo.getPicturePath());
+            }
         }
 
         GwPageUtils pageUtil = new GwPageUtils(list);

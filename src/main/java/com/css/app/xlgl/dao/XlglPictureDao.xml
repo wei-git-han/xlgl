@@ -47,6 +47,9 @@
 		<if test="pictureId != pictureId and pictureId !=''">
 			and PICTURE_ID = #{pictureId}
 		</if>
+		<if test="fileId != null and fileId !=''">
+			and FILE_ID = #{fileId}
+		</if>
 		
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}

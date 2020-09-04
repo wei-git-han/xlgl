@@ -1,12 +1,11 @@
 package com.css.app.xlgl.controller;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.alibaba.fastjson.JSON;
+import com.css.app.xlgl.service.XlglAdminSetService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +26,7 @@ import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 import com.css.base.utils.Response;
 import com.css.base.utils.StringUtils;
+import org.unbescape.css.CssIdentifierEscapeLevel;
 
 
 /**
@@ -41,6 +41,8 @@ public class TaskMenuController {
     private TaskMenuService taskMenuService;
     @Autowired
     private DocumentMenuPermissionService documentMenuPermissionService;
+    @Autowired
+    private XlglAdminSetService adminSetService;
 
     /**
      * 列表
@@ -168,6 +170,49 @@ public class TaskMenuController {
     public void authMenu() {
         List<TaskMenu> menus = taskMenuService.queryAuthList(CurrentUser.getUserId());
         JSONArray jsons = getMenuChildren(menus, "root");
+        /////////////////////////////////////////////////
+        //获取当前人的管理员类型（0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员;4:处管理员）
+        String adminFlag = adminSetService.getAdminTypeByUserId(CurrentUser.getUserId());
+        if("4".equals(adminFlag)){//处管理员只显示处管理员配置菜单
+            JSONObject jsonObject = jsons.getJSONObject(4);
+            JSONArray jsonArray = (JSONArray) jsonObject.get("children");
+            jsonArray.remove(0);
+            jsonArray.remove(0);
+            jsonArray.remove(1);
+            jsonArray.remove(1);
+            jsonArray.remove(1);
+            System.out.println(jsonArray);
+        }else if("2".equals(adminFlag) && !"1".equals(adminFlag)){//局管理员显示局管理员配置和处管理员配置菜单
+            JSONObject jsonObject = jsons.getJSONObject(4);
+            JSONArray jsonArray = (JSONArray) jsonObject.get("children");
+            jsonArray.remove(0);//这么写的原因是，每次删除一个，集合长度就变了，得按新的集合来删
+            jsonArray.remove(1);
+            jsonArray.remove(1);
+            jsonArray.remove(1);
+            jsonArray.remove(1);
+            System.out.println(jsonArray);
+        }else if("1".equals(adminFlag)){//部管理员显示所有
+            jsons = jsons;
+        }else {
+            jsons.remove(4);
+        }
+
+        if(!"1".equals(adminFlag)){//非部管理员不显示体育成绩导入和自学成绩导入菜单
+           JSONArray jsonArray = (JSONArray)jsons.getJSONObject(0).get("children");
+           JSONArray jsonArray1 = (JSONArray) jsonArray.getJSONObject(7).get("children");
+           jsonArray1.remove(0);
+           jsonArray1.remove(0);
+        }
+        if(!"1".equals(adminFlag)){//非部管理员，只显示考核清单菜单
+            JSONArray jsonArray = (JSONArray)jsons.getJSONObject(0).get("children");
+            JSONArray jsonArray1 = (JSONArray) jsonArray.getJSONObject(6).get("children");
+            jsonArray1.remove(1);
+            jsonArray1.remove(1);
+        }
+
+
+
+        /////////////////////////////
         Response.json(jsons);
 
     }

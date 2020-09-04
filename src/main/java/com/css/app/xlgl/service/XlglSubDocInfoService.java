@@ -2,6 +2,7 @@ package com.css.app.xlgl.service;
 
 
 import com.css.app.xlgl.entity.XlglSubDocInfo;
+import com.css.app.xlgl.entity.XlglSubDocTracking;
 
 import java.util.List;
 import java.util.Map;
@@ -36,4 +37,6 @@ public interface XlglSubDocInfoService {
 	List<XlglSubDocInfo> queryListForPerson(Map<String,Object> map);
 
 	void deleteSub(String orgId,String fileId);
+
+	List<XlglSubDocTracking> queryByInfoIdAndUserId(String infoId,String userId);
 }

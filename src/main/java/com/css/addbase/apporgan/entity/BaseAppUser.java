@@ -60,6 +60,17 @@ public class BaseAppUser implements Serializable {
 	//是否已读
 	private String read;
 
+	//是否参训
+	private String isWork;
+
+	public String getIsWork() {
+		return isWork;
+	}
+
+	public void setIsWork(String isWork) {
+		this.isWork = isWork;
+	}
+
 	public String getRead() {
 		return read;
 	}

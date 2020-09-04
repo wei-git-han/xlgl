@@ -9,7 +9,7 @@
 
 	<select id="queryList" resultType="com.css.app.xlgl.entity.DocumentMenuPermission">
 		select * from DOCUMENT_MENU_PERMISSION where 1=1
-		<if test="userId = null and userId !=''">
+		<if test="userId != null and userId !=''">
 			and USER_ID = #{userId}
 		</if>
 		<if test="offset != null and limit != null">

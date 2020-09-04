@@ -2,6 +2,7 @@ package com.css.app.xlgl.service.impl;
 
 import com.css.app.xlgl.dao.XlglSubDocInfoDao;
 import com.css.app.xlgl.entity.XlglSubDocInfo;
+import com.css.app.xlgl.entity.XlglSubDocTracking;
 import com.css.app.xlgl.service.XlglSubDocInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -71,6 +72,11 @@ public class XlglSubDocInfoServiceImpl implements XlglSubDocInfoService {
 	@Override
 	public void deleteSub(String orgId,String fileId){
 		xlglSubDocInfoDao.deleteSub(orgId,fileId);
+	}
+
+	@Override
+	public List<XlglSubDocTracking> queryByInfoIdAndUserId(String infoId,String userId){
+		return xlglSubDocInfoDao.queryByInfoIdAndUserId(infoId,userId);
 	}
 
 }

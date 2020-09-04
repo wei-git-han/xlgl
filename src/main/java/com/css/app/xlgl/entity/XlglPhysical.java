@@ -65,6 +65,57 @@ public class XlglPhysical implements Serializable {
 	//是否是正式上传还是自己保存  0是自己保存  1是上传
 	private String normal;
 
+	//引体向上个数
+	private String ytxs;
+	//仰卧起坐个数
+	private String ywqz;
+	//蛇形跑时间
+	private String sxp;
+	//3000米长跑用时分
+	private String cpf;
+	//3000米长跑用时秒
+	private String cpm;
+
+	public String getYtxs() {
+		return ytxs;
+	}
+
+	public void setYtxs(String ytxs) {
+		this.ytxs = ytxs;
+	}
+
+	public String getYwqz() {
+		return ywqz;
+	}
+
+	public void setYwqz(String ywqz) {
+		this.ywqz = ywqz;
+	}
+
+	public String getSxp() {
+		return sxp;
+	}
+
+	public void setSxp(String sxp) {
+		this.sxp = sxp;
+	}
+
+	public String getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
+
+	public String getCpm() {
+		return cpm;
+	}
+
+	public void setCpm(String cpm) {
+		this.cpm = cpm;
+	}
+
 	public String getNormal() {
 		return normal;
 	}
