@@ -208,6 +208,11 @@ public class BaseAppUserServiceImpl implements BaseAppUserService {
 		return baseAppUserDao.getAllZbSum();
 	}
 
+	@Override
+	public int queryYxCount(Map<String, Object> map){
+		return baseAppUserDao.queryYxCount(map);
+	}
+
 
 
 }

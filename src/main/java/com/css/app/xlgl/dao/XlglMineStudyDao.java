@@ -19,6 +19,6 @@ public interface XlglMineStudyDao extends BaseDao<XlglMineStudy> {
 
     void deleteAllRecord(String[] ids);
 
-    @Select("select * from XLGL_MINE_STUDY where USER_ID = #{0} and CREATED_TIME like '%'||#{1}||'%'")
+    @Select("select top 1* from XLGL_MINE_STUDY where USER_ID = #{0} and CREATED_TIME like '%'||#{1}||'%'")
     XlglMineStudy queryByUserId(String userId,String year);
 }

@@ -5,6 +5,9 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.css.app.xlgl.entity.DocumentMenuPermission;
 import com.css.base.dao.BaseDao;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
  * 
@@ -16,4 +19,7 @@ import com.css.base.dao.BaseDao;
 @Mapper
 public interface DocumentMenuPermissionDao extends BaseDao<DocumentMenuPermission> {
 	void deleteByUserId(String uid);
+
+	@Select("select MENU_ID from DOCUMENT_MENU_PERMISSION where USER_ID = #{0}")
+	List<String> queryAllList(String userId);
 }

@@ -70,4 +70,6 @@ public interface XlglSubDocTrackingDao extends BaseDao<XlglSubDocTracking> {
 
     @Select("select count(1) from XLGL_SUB_DOC_TRACKING where IS_WORK = '0' and INFO_ID = #{0}")
     int queryAllYh(String fileId);
+
+    int queryCxAllCount(Map<String,Object> map);
 }

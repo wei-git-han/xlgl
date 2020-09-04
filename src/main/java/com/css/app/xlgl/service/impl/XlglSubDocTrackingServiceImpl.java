@@ -138,5 +138,10 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 		return xlglSubDocTrackingDao.queryAllBkByInfoId(fileId,orgId);
 	}
 
+	@Override
+	public int queryCxAllCount(Map<String,Object> map){
+		return xlglSubDocTrackingDao.queryCxAllCount(map);
+	}
+
 
 }
