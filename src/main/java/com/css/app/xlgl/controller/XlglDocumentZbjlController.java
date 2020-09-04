@@ -523,16 +523,20 @@ public class XlglDocumentZbjlController {
                 map.put("examineSubjectName", "军事训练");
                 List<XlglExamMainAnswer> warList = xlglExamMainAnswerService.findListBySubjectId(map);
                 if(commonList != null && commonList.size() > 0){
-                    jsonObject.put("common", commonList.get(0));
+                    jsonObject.put("commonSum", commonList.get(0).getFractionsum());
+                    jsonObject.put("commonLevel", commonList.get(0).getLevel());
                 }
                 if(specialtyList != null && specialtyList.size() > 0){
-                    jsonObject.put("specialty", specialtyList.get(0));
+                    jsonObject.put("specialtySum", specialtyList.get(0).getFractionsum());
+                    jsonObject.put("specialtyLevel", specialtyList.get(0).getLevel());
                 }
                 if(tacticalList != null && tacticalList.size() > 0){
-                    jsonObject.put("tactical", tacticalList.get(0));
+                    jsonObject.put("tacticalSum", tacticalList.get(0).getFractionsum());
+                    jsonObject.put("tacticalLevel", tacticalList.get(0).getLevel());
                 }
                 if(warList != null && warList.size()>0){
-                    jsonObject.put("war", warList.get(0));
+                    jsonObject.put("warSum", warList.get(0).getFractionsum());
+                    jsonObject.put("warLevel", warList.get(0).getLevel());
                 }
 
                 //共同训练，专业训练，战略训练，军事训练 ------------------end
