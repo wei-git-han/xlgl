@@ -350,7 +350,8 @@ public class PersonalFileController {
 		int midSum = 0;//优良
 		int lowSum = 0;//及格
 		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
-		List<BaseAppUser> list = baseAppUserService.queryAllUserIdAndName(orgId);
+		String name = baseAppOrganService.queryObject(deptId).getName();
+		List<BaseAppUser> list = baseAppUserService.queryAllUserIdAndName(deptId);
 		if(list != null && list.size() > 0){
 			for(BaseAppUser baseAppUser : list) {
 				String userId = baseAppUser.getUserId();
@@ -368,6 +369,7 @@ public class PersonalFileController {
 		float yxLv = highSum/sum;
 		float ylLv = midSum/sum;
 		float jgLv = lowSum/sum;
+		jsonObject.put("name",name);
 		jsonObject.put("highSum",highSum);//优秀人数
 		jsonObject.put("midSum",midSum);//优良人数
 		jsonObject.put("lowSum",lowSum);//及格人数
@@ -384,28 +386,43 @@ public class PersonalFileController {
 	@ResponseBody
 	@RequestMapping("/getAllDeptInfo")
 	public void getAllDeptInfo(){
+		List list2 = new ArrayList();
+		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
 		List listAll = new ArrayList();
 		List<BaseAppOrgan> list = baseAppOrganService.findByParentId("root");
 		//所有局
 		if(list != null && list.size() > 0){
 			for(BaseAppOrgan baseAppOrgan : list){
 				String deptId = baseAppOrgan.getId();
+
 				JSONObject jsonObject = getAllYxl(deptId);
+				if(orgId.equals(deptId)){//当前登录人所在的局的信息
+					JSONObject jsCurrentDept = new JSONObject();
+					jsCurrentDept.put("name",jsonObject.get("name"));
+					jsCurrentDept.put("highSum",jsonObject.get("highSum"));//优秀人数
+					jsCurrentDept.put("midSum",jsonObject.get("midSum"));//优良人数
+					jsCurrentDept.put("lowSum",jsonObject.get("lowSum"));//及格人数
+					jsCurrentDept.put("yxLv",jsonObject.get("yxLv"));//优秀率
+					jsCurrentDept.put("ylLv",jsonObject.get("ylLv"));//优良率
+					jsCurrentDept.put("jgLv",jsonObject.get("jgLv"));//及格率
+					list2.add(jsCurrentDept);
+				}
 				listAll.add(jsonObject);
 			}
 		}
 		//当前局
-		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());//当前登录人的局id
-		JSONObject js = getAllYxl(orgId);
-		JSONObject jsCurrentDept = new JSONObject();
-		List list2 = new ArrayList();
-		jsCurrentDept.put("highSum",js.get("highSum"));//优秀人数
-		jsCurrentDept.put("midSum",js.get("midSum"));//优良人数
-		jsCurrentDept.put("lowSum",js.get("lowSum"));//及格人数
-		jsCurrentDept.put("yxLv",js.get("yxLv"));//优秀率
-		jsCurrentDept.put("ylLv",js.get("ylLv"));//优良率
-		jsCurrentDept.put("jgLv",js.get("jgLv"));//及格率
-        list2.add(jsCurrentDept);
+//		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());//当前登录人的局id
+//		JSONObject js = getAllYxl(orgId);
+//		JSONObject jsCurrentDept = new JSONObject();
+
+//		jsCurrentDept.put("name",js.get("name"));
+//		jsCurrentDept.put("highSum",js.get("highSum"));//优秀人数
+//		jsCurrentDept.put("midSum",js.get("midSum"));//优良人数
+//		jsCurrentDept.put("lowSum",js.get("lowSum"));//及格人数
+//		jsCurrentDept.put("yxLv",js.get("yxLv"));//优秀率
+//		jsCurrentDept.put("ylLv",js.get("ylLv"));//优良率
+//		jsCurrentDept.put("jgLv",js.get("jgLv"));//及格率
+
 		JSONObject result = new JSONObject();
 		result.put("listAll",listAll);
 		result.put("listCurrent",list2);

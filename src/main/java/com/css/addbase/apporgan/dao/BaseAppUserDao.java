@@ -138,4 +138,6 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 
 	@Select("select  count(*) from BASE_APP_USER where SFZB = '1'")
 	int getAllZbSum();
+
+	int queryYxCount(String orgId);
 }

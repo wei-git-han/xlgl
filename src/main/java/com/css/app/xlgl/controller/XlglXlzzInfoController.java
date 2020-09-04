@@ -826,6 +826,61 @@ public class XlglXlzzInfoController {
 	}
 
 
+//	@ResponseBody
+//	@RequestMapping("/getCurrentDoneInfo")
+//	public void getCurrentDoneInfo(String infoId) {
+//		JSONObject jsonObject = new JSONObject();
+//		Map<String, Object> map = new HashMap<>();
+//		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
+//		int yxCount = baseAppUserService.queryYxCount(orgId);//当前局的有效人数
+//		map.put("infoId", infoId);
+//		map.put("orgId", orgId);
+//		int cxCount = xlglSubDocTrackingService.queryCxAllCount(map);//当前课堂参训人数
+//		float DoneLv = cxCount / yxCount;
+//		jsonObject.put("wcl", DoneLv);
+//		jsonObject.put("result", "success");
+//		Response.json(jsonObject);
+//	}
+
+	public Float getCurrentDoneInfo(String infoId,String orgId){
+		Map<String, Object> map = new HashMap<>();
+		//String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
+		int yxCount = baseAppUserService.queryYxCount(orgId);//当前局的有效人数
+		map.put("infoId", infoId);
+		map.put("orgId", orgId);
+		int cxCount = xlglSubDocTrackingService.queryCxAllCount(map);//当前课堂参训人数
+		float DoneLv = cxCount / yxCount;
+		return DoneLv;
+	}
+
+	/**
+	 * 大讲堂完成情况
+	 * @param infoId
+	 */
+	@ResponseBody
+	@RequestMapping("/getAllDeptDoneInfo")
+	public void getAllDeptDoneInfo(String infoId) {
+		List listAll = new ArrayList();
+		JSONObject json = new JSONObject();
+		List<BaseAppOrgan> list = baseAppOrganService.queryAllDeptIds();
+		if (list != null && list.size() > 0) {
+			for (BaseAppOrgan baseAppOrgan : list) {
+				JSONObject jsonObject = new JSONObject();
+				String orgId = baseAppOrgan.getId();
+				String orgName = baseAppOrgan.getName();
+				float t = getCurrentDoneInfo(infoId, orgId);
+				jsonObject.put("name", orgName);
+				jsonObject.put("wcl", t);
+				listAll.add(jsonObject);
+			}
+		}
+		json.put("result", "success");
+		json.put("list", listAll);
+		Response.json(json);
+
+	}
+
+
 
 
 	
