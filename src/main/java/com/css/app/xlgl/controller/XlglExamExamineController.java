@@ -292,7 +292,9 @@ public class XlglExamExamineController {
 	@ResponseBody
 	@RequestMapping("/delete")
 	public void delete(String[] ids){
-		xlglExamExamineService.deleteBatch(ids);
+		for (String string : ids) {
+			xlglExamExamineService.delete(string);
+		}
 		String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		logger.info("当前删除操作人："+CurrentUser.getUsername()+"---id:"+CurrentUser.getUserId()+"--时间是："+date);
 		/*for (int i = 0; i < ids.length; i++) {
