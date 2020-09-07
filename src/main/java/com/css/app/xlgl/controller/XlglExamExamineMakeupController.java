@@ -107,7 +107,7 @@ public class XlglExamExamineMakeupController {
 		xlglExamExamineMakeupService.save(xlglExamExamineMakeup);
 	
 		queryObject.setOverStatus("2");
-	
+		queryObject.setMakeupStatus("1");
 		xlglExamExamineService.update(queryObject);
 		queryObject.setOverStatus("2");
 		for (int i = 0; i < typeAndNum.length; i++) {
