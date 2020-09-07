@@ -79,9 +79,17 @@ public class XlglXlzzInfoController {
 		
 		//查询列表数据
 		List<XlglXlzzInfo> xlglXlzzInfoList = xlglXlzzInfoService.queryList(map);
+		if(xlglXlzzInfoList != null && xlglXlzzInfoList.size() > 0){
+			for(XlglXlzzInfo xlglXlzzInfo : xlglXlzzInfoList){
+				xlglXlzzInfo.setInfoId(xlglXlzzInfo.getId());
+			}
+		}
 		
-		PageUtils pageUtil = new PageUtils(xlglXlzzInfoList);
-		Response.json("page",pageUtil);
+//		PageUtils pageUtil = new PageUtils(xlglXlzzInfoList);
+//		Response.json("page",pageUtil);
+
+		GwPageUtils pageUtil = new GwPageUtils(xlglXlzzInfoList);
+		Response.json(pageUtil);
 	}
 
 	/**

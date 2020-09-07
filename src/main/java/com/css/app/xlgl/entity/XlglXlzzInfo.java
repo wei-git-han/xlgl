@@ -69,6 +69,17 @@ public class XlglXlzzInfo implements Serializable {
 	//延后原因
 	private String reason;
 
+	//infoid和id 相同，为了前端好取值
+	private String infoId;
+
+	public String getInfoId() {
+		return infoId;
+	}
+
+	public void setInfoId(String infoId) {
+		this.infoId = infoId;
+	}
+
 	public String getReason() {
 		return reason;
 	}
