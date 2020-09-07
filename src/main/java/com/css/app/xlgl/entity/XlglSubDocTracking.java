@@ -74,6 +74,17 @@ public class XlglSubDocTracking implements Serializable {
 	//本单位补充说明
 	private String instraction;
 
+	//排序
+	private String sort;
+
+	public String getSort() {
+		return sort;
+	}
+
+	public void setSort(String sort) {
+		this.sort = sort;
+	}
+
 	public String getXltype() {
 		return xltype;
 	}

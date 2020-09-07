@@ -33,6 +33,8 @@ public interface XlglSubDocTrackingService {
 
 	XlglSubDocTracking queryStatusByInfoIdAndUserId(String infoId,String userId);
 
+	XlglSubDocTracking querySortByInfoIdAndUserId(String infoId,String userId);
+
 	List<Map<String,Object>> queryBmInfo(String infoId,String deptId);
 
 	List<XlglSubDocTracking> queryListForPerson(Map<String,Object> map);
@@ -66,5 +68,7 @@ public interface XlglSubDocTrackingService {
 	int queryAllBkByInfoId(String fileId,String orgId);
 
 	int queryCxAllCount(Map<String,Object> map);
+
+	List<XlglSubDocTracking> queryBySort(Map<String,Object> map);
 
 }

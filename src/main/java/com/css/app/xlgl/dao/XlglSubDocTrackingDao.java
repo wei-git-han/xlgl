@@ -29,6 +29,9 @@ public interface XlglSubDocTrackingDao extends BaseDao<XlglSubDocTracking> {
     @Select("select * from XLGL_SUB_DOC_TRACKING where INFO_ID = #{0} and RECEIVER_ID = #{1}")
     XlglSubDocTracking queryStatusByInfoIdAndUserId(String infoId,String userId);
 
+    @Select("select ROW_NUMBER() OVER(order by t.EXERCISE_TIME desc ) as SORT,t.* from XLGL_SUB_DOC_TRACKING t where INFO_ID = #{0} and RECEIVER_ID = #{1}")
+    XlglSubDocTracking querySortByInfoIdAndUserId(String infoId,String usreId);
+
     List<Map<String,Object>> queryBmInfo(String infoId,String deptId);
 
     List<XlglSubDocTracking> queryListForPerson(Map<String,Object> map);
@@ -72,4 +75,6 @@ public interface XlglSubDocTrackingDao extends BaseDao<XlglSubDocTracking> {
     int queryAllYh(String fileId);
 
     int queryCxAllCount(Map<String,Object> map);
+
+    List<XlglSubDocTracking> queryBySort(Map<String,Object> map);
 }

@@ -63,6 +63,11 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 	}
 
 	@Override
+	public XlglSubDocTracking querySortByInfoIdAndUserId(String infoId,String userId){
+		return xlglSubDocTrackingDao.querySortByInfoIdAndUserId(infoId,userId);
+	}
+
+	@Override
 	public List<Map<String,Object>> queryBmInfo(String infoId,String deptId){
 		return xlglSubDocTrackingDao.queryBmInfo(infoId,deptId);
 	}
@@ -141,6 +146,11 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 	@Override
 	public int queryCxAllCount(Map<String,Object> map){
 		return xlglSubDocTrackingDao.queryCxAllCount(map);
+	}
+
+	@Override
+	public List<XlglSubDocTracking> queryBySort(Map<String,Object> map){
+		return xlglSubDocTrackingDao.queryBySort(map);
 	}
 
 

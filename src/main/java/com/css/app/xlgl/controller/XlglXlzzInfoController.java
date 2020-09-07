@@ -122,7 +122,7 @@ public class XlglXlzzInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/info")
-	public void info(String id) {
+	public void info(String id,String flag) {
 		JSONObject jsonObject = new JSONObject();
 		Map<String, Object> map = new HashMap<>();
 		String loginUser = CurrentUser.getUserId();
@@ -175,38 +175,60 @@ public class XlglXlzzInfoController {
 			}
 		}
 
-		if(StringUtils.isNotBlank(xlglXlzzInfo.getSort())){
-			String preId = "";
-			String sufId = "";
-			String sort = xlglXlzzInfo.getSort();
-			int sortInt = Integer.parseInt(sort);
-			Map<String,Object> mapSort = new HashMap<>();
-			int sortPre = sortInt - 1;
-			int sortSuf = sortInt + 1;
-			mapSort.put("sortPre",String.valueOf(sortPre));
-			mapSort.put("sortSuf",String.valueOf(sortSuf));
-			List<XlglXlzzInfo> listSort = xlglXlzzInfoService.queryBySort(mapSort);
-			if(listSort != null && listSort.size() > 0){
-				for(XlglXlzzInfo xlglXlzzInfo1 : listSort){
-					String sortNew = xlglXlzzInfo1.getSort();
-					if(StringUtils.isNotBlank(sortNew)){
-						if(sortNew.equals(String.valueOf(sortPre))){
-							preId = xlglXlzzInfo1.getId();
-						}else if(sortNew.equals(String.valueOf(sortSuf))){
-							sufId = xlglXlzzInfo1.getId();
+		if("1".equals(flag)) {//全部的上下翻页
+			if (StringUtils.isNotBlank(xlglXlzzInfo.getSort())) {
+				String preId = "";
+				String sufId = "";
+				String sort = xlglXlzzInfo.getSort();
+				int sortInt = Integer.parseInt(sort);
+				Map<String, Object> mapSort = new HashMap<>();
+				int sortPre = sortInt - 1;
+				int sortSuf = sortInt + 1;
+				mapSort.put("sortPre", String.valueOf(sortPre));
+				mapSort.put("sortSuf", String.valueOf(sortSuf));
+				List<XlglXlzzInfo> listSort = xlglXlzzInfoService.queryBySort(mapSort);
+				if (listSort != null && listSort.size() > 0) {
+					for (XlglXlzzInfo xlglXlzzInfo1 : listSort) {
+						String sortNew = xlglXlzzInfo1.getSort();
+						if (StringUtils.isNotBlank(sortNew)) {
+							if (sortNew.equals(String.valueOf(sortPre))) {
+								preId = xlglXlzzInfo1.getId();
+							} else if (sortNew.equals(String.valueOf(sortSuf))) {
+								sufId = xlglXlzzInfo1.getId();
+							}
 						}
 					}
 				}
+				if (StringUtils.isBlank(preId)) {
+					preId = "no preId";
+				}
+				if (StringUtils.isBlank(sufId)) {
+					sufId = "no sufId";
+				}
+				jsonObject.put("preId", preId);
+				jsonObject.put("sufId", sufId);
 			}
-			if(StringUtils.isBlank(preId)){
-				preId = "no preId";
+		}else if("0".equals(flag)){
+			XlglSubDocTracking Tracking = xlglSubDocTrackingService.querySortByInfoIdAndUserId(id,CurrentUser.getUserId());
+			if(Tracking != null){
+				if(StringUtils.isNotBlank(Tracking.getSort())){
+					Map<String,Object> mapSort = new HashMap<>();
+					String sort = Tracking.getSort();
+					String sortPre = String.valueOf(Integer.parseInt(sort) - 1);
+					String sortSuf = String.valueOf(Integer.parseInt(sort) + 1);
+					mapSort.put("sortPre",sortPre);
+					mapSort.put("sortSuf",sortSuf);
+					List<XlglSubDocTracking> subDocTrackingList = xlglSubDocTrackingService.queryBySort(mapSort);
+					if(subDocTrackingList != null && subDocTrackingList.size() > 0){
+//						for(XlglSubDocTracking xlglSubDocTracking1 : ){
+//
+//						}
+					}
+				}
 			}
-			if(StringUtils.isBlank(sufId)){
-				sufId = "no sufId";
-			}
-			jsonObject.put("preId",preId);
-			jsonObject.put("sufId",sufId);
+
 		}
+
 
 
 		jsonObject.put("listVedio", listVedio);
