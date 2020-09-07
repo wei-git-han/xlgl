@@ -65,7 +65,7 @@ public class XlglSubDocTracking implements Serializable {
 	private String isWork;
 
 	//训练类型 0是大讲堂，1是日常军事训练
-	private String xlType;
+	private String xltype;
 	//首页图片地址
 	private String picturePath;
 	//训练开始时间
@@ -74,12 +74,12 @@ public class XlglSubDocTracking implements Serializable {
 	//本单位补充说明
 	private String instraction;
 
-	public String getXlType() {
-		return xlType;
+	public String getXltype() {
+		return xltype;
 	}
 
-	public void setXlType(String xlType) {
-		this.xlType = xlType;
+	public void setXltype(String xltype) {
+		this.xltype = xltype;
 	}
 
 	public String getPicturePath() {

@@ -114,7 +114,7 @@
 			and TITLE = #{search}
 		</if>
 		<if test="xltype != null and xltype !=''">
-			and XL_TYPE = #{xltype}
+			and XLTYPE = #{xltype}
 		</if>
 	</select>
 
@@ -130,7 +130,7 @@
 			and TITLE = #{search}
 		</if>
 		<if test="xltype != null and xltype !=''">
-			and XL_TYPE = #{xltype}
+			and XLTYPE = #{xltype}
 		</if>
 	</select>
 
@@ -179,7 +179,7 @@
 			"REASON",
 			"TITLE",
 			"IS_WORK",
-			"XL_TYPE",
+			"XLTYPE",
 			"PICUTRE_PATH",
 			"EXERCISE_TIME",
 			"INSTRACTION"
@@ -208,7 +208,7 @@
 			#{reason},
 			#{title},
 			#{isWork},
-			#{xlType},
+			#{xltype},
 			#{picturePath},
 			#{exerciseTime},
 			#{instraction}
@@ -239,7 +239,7 @@
 			<if test="reason != null">"REASON" = #{reason},</if>
 			<if test="title != null">"TITLE" = #{title},</if>
 			<if test="isWork != null">"IS_WORK" = #{isWork},</if>
-			<if test="xlType != null">"XL_TYPE" = #{xlType},</if>
+			<if test="xltype != null">"XLTYPE" = #{xltype},</if>
 			<if test="picturePath != null">"PICUTRE_PATH" = #{picturePath},</if>
 			<if test="exerciseTime != null">"EXERCISE_TIME" = #{exerciseTime},</if>
 			<if test="instraction != null">"INSTRACTION" = #{instraction}</if>

@@ -30,4 +30,6 @@ public interface XlglXlzzInfoService {
 	List<XlglXlzzInfo> queryTopOne();
 
 	void deleteById(String id);
+
+	List<XlglXlzzInfo> queryBySort(Map<String,Object> map);
 }

@@ -54,10 +54,11 @@ public class XlglRoleSetController {
 	public void list(Integer page, Integer pagesize){
 		String deptId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
 		Map<String, Object> map = new HashMap<>();
-		map.put("roleParam", "roleParam");
-		if(StringUtils.isNotBlank(deptId)) {
-			map.put("deptId", deptId);
-		}
+		//一下代码暂且注释掉，不知做啥用
+//		map.put("roleParam", "roleParam");
+//		if(StringUtils.isNotBlank(deptId)) {
+//			map.put("deptId", deptId);
+//		}
 		PageHelper.startPage(page, pagesize);
 		List<XlglRoleSet> roleSetList = xlglRoleSetService.queryList(map);
 		GwPageUtils pageUtil = new GwPageUtils(roleSetList);

@@ -9,6 +9,7 @@ import com.css.base.dao.BaseDao;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 训练组织基本信息表
@@ -25,4 +26,6 @@ public interface XlglXlzzInfoDao extends BaseDao<XlglXlzzInfo> {
 
     @Delete("delete from XLGL_XLZZ_INFO where ID = #{0}")
     void deleteById(String id);
+
+    List<XlglXlzzInfo> queryBySort(Map<String,Object> map);
 }

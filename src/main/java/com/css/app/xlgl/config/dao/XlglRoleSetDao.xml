@@ -28,8 +28,8 @@
 		<if test="roleFlag == '1'.toString()">
 			,SORT asc
 		</if>
-		<if test="offset != null and limit != null">
-			limit #{offset}, #{limit}
+		<if test="page != null and pagesize != null">
+			limit #{page}, #{pagesize}
 		</if>
 	</select>
 	

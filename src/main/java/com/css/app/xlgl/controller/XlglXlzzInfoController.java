@@ -79,9 +79,17 @@ public class XlglXlzzInfoController {
 		
 		//查询列表数据
 		List<XlglXlzzInfo> xlglXlzzInfoList = xlglXlzzInfoService.queryList(map);
+		if(xlglXlzzInfoList != null && xlglXlzzInfoList.size() > 0){
+			for(XlglXlzzInfo xlglXlzzInfo : xlglXlzzInfoList){
+				xlglXlzzInfo.setInfoId(xlglXlzzInfo.getId());
+			}
+		}
 		
-		PageUtils pageUtil = new PageUtils(xlglXlzzInfoList);
-		Response.json("page",pageUtil);
+//		PageUtils pageUtil = new PageUtils(xlglXlzzInfoList);
+//		Response.json("page",pageUtil);
+
+		GwPageUtils pageUtil = new GwPageUtils(xlglXlzzInfoList);
+		Response.json(pageUtil);
 	}
 
 	/**
@@ -110,6 +118,7 @@ public class XlglXlzzInfoController {
 	
 	/**
 	 * 信息
+	 * type 0:我的训练；1：全部训练；2：局待转发
 	 */
 	@ResponseBody
 	@RequestMapping("/info")
@@ -165,6 +174,41 @@ public class XlglXlzzInfoController {
 				}
 			}
 		}
+
+		if(StringUtils.isNotBlank(xlglXlzzInfo.getSort())){
+			String preId = "";
+			String sufId = "";
+			String sort = xlglXlzzInfo.getSort();
+			int sortInt = Integer.parseInt(sort);
+			Map<String,Object> mapSort = new HashMap<>();
+			int sortPre = sortInt - 1;
+			int sortSuf = sortInt + 1;
+			mapSort.put("sortPre",String.valueOf(sortPre));
+			mapSort.put("sortSuf",String.valueOf(sortSuf));
+			List<XlglXlzzInfo> listSort = xlglXlzzInfoService.queryBySort(mapSort);
+			if(listSort != null && listSort.size() > 0){
+				for(XlglXlzzInfo xlglXlzzInfo1 : listSort){
+					String sortNew = xlglXlzzInfo1.getSort();
+					if(StringUtils.isNotBlank(sortNew)){
+						if(sortNew.equals(String.valueOf(sortPre))){
+							preId = xlglXlzzInfo1.getId();
+						}else if(sortNew.equals(String.valueOf(sortSuf))){
+							sufId = xlglXlzzInfo1.getId();
+						}
+					}
+				}
+			}
+			if(StringUtils.isBlank(preId)){
+				preId = "no preId";
+			}
+			if(StringUtils.isBlank(sufId)){
+				sufId = "no sufId";
+			}
+			jsonObject.put("preId",preId);
+			jsonObject.put("sufId",sufId);
+		}
+
+
 		jsonObject.put("listVedio", listVedio);
 		jsonObject.put("listPicture", listPicture);
 		jsonObject.put("listFile", listFile);

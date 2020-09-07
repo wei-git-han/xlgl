@@ -238,7 +238,7 @@ public class XlglDocumentZbjlController {
                 tracking.setBaoming("0");
                 tracking.setTitle(xlglXlzzInfo.getTitle());
                 tracking.setTrackingType(xlglXlzzInfo.getXltype());//训练类型
-                tracking.setXlType(xlglXlzzInfo.getXltype());
+                tracking.setXltype(xlglXlzzInfo.getXltype());
                 tracking.setPicturePath(xlglXlzzInfo.getPicturePath());
                 tracking.setExerciseTime(xlglXlzzInfo.getExerciseTime());
                 tracking.setInstraction(subInfo.getInstraction());
