@@ -4,14 +4,27 @@
 <mapper namespace="com.css.app.xlgl.dao.XlglXlzzInfoDao">
 
 	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglXlzzInfo">
-		select * from XLGL_XLZZ_INFO where ID = #{value}
+		select ROW_NUMBER() OVER(order by t.CREATE_TIME desc ) as SORT,t.* from XLGL_XLZZ_INFO t where ID = #{value}
 	</select>
 
 	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglXlzzInfo">
-		select * from XLGL_XLZZ_INFO 
+		select * from XLGL_XLZZ_INFO  order by CREATE_TIME desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
+	</select>
+
+	<select id="queryBySort" resultType="com.css.app.xlgl.entity.XlglXlzzInfo">
+		select * from
+        (select ROW_NUMBER() OVER(order by t.CREATE_TIME desc ) as SORT, t.* from XLGL_XLZZ_INFO t )
+     where 1=1
+     <if test="sortPre != null and sortPre !=''">
+		 and SORT = #{sortPre}
+	 </if>
+	  <if test="sortSuf != null and sortSuf !=''">
+		  or SORT = #{sortSuf}
+	  </if>
+	  order by CREATE_TIME desc;
 	</select>
 	
  	<select id="queryTotal" resultType="int">

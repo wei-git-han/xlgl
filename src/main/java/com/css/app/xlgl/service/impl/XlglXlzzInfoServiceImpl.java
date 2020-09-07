@@ -56,5 +56,10 @@ public class XlglXlzzInfoServiceImpl implements XlglXlzzInfoService {
 	public void deleteById(String id){
 		xlglXlzzInfoDao.deleteById(id);
 	}
+
+	@Override
+	public List<XlglXlzzInfo> queryBySort(Map<String,Object> map){
+		return xlglXlzzInfoDao.queryBySort(map);
+	}
 	
 }
