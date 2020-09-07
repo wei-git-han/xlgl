@@ -173,29 +173,27 @@ public class TaskMenuController {
         /////////////////////////////////////////////////
         //获取当前人的管理员类型（0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员;4:处管理员）
         String adminFlag = adminSetService.getAdminTypeByUserId(CurrentUser.getUserId());
-//        if("4".equals(adminFlag)){//处管理员只显示处管理员配置菜单
-//            JSONObject jsonObject = jsons.getJSONObject(4);
-//            JSONArray jsonArray = (JSONArray) jsonObject.get("children");
-//            jsonArray.remove(0);
-//            jsonArray.remove(0);
-//            jsonArray.remove(1);
-//            jsonArray.remove(1);
-//            jsonArray.remove(1);
-//            System.out.println(jsonArray);
-//        }else if("2".equals(adminFlag) && !"1".equals(adminFlag)){//局管理员显示局管理员配置和处管理员配置菜单
-//            JSONObject jsonObject = jsons.getJSONObject(4);
-//            JSONArray jsonArray = (JSONArray) jsonObject.get("children");
-//            jsonArray.remove(0);//这么写的原因是，每次删除一个，集合长度就变了，得按新的集合来删
-//            jsonArray.remove(1);
-//            jsonArray.remove(1);
-//            jsonArray.remove(1);
-//            jsonArray.remove(1);
-//            System.out.println(jsonArray);
-//        }else if("1".equals(adminFlag)){//部管理员显示所有
-//            jsons = jsons;
-//        }else {
-//            jsons.remove(4);
-//        }
+        if("4".equals(adminFlag)){//处管理员只显示处管理员配置菜单
+            JSONObject jsonObject = jsons.getJSONObject(4);
+            JSONArray jsonArray = (JSONArray) jsonObject.get("children");
+            jsonArray.remove(0);
+            jsonArray.remove(0);
+            jsonArray.remove(1);
+            jsonArray.remove(1);
+            //jsonArray.remove(1);
+            System.out.println(jsonArray);
+        }else if("2".equals(adminFlag) && !"1".equals(adminFlag)){//局管理员显示局管理员配置和处管理员配置菜单
+            JSONObject jsonObject = jsons.getJSONObject(4);
+            JSONArray jsonArray = (JSONArray) jsonObject.get("children");
+            jsonArray.remove(0);//这么写的原因是，每次删除一个，集合长度就变了，得按新的集合来删
+            jsonArray.remove(1);
+            jsonArray.remove(1);
+            jsonArray.remove(1);
+            //jsonArray.remove(1);
+            System.out.println(jsonArray);
+        }else if("1".equals(adminFlag)){//部管理员显示所有
+            jsons = jsons;
+        }
 
         if(!"1".equals(adminFlag)){//非部管理员不显示体育成绩导入和自学成绩导入菜单
            JSONArray jsonArray = (JSONArray)jsons.getJSONObject(0).get("children");
@@ -254,6 +252,21 @@ public class TaskMenuController {
             Response.json("result","fail");
         }
 
+    }
+
+    /**
+     * 获取某人的菜单权限
+     * @param userId
+     */
+    @ResponseBody
+    @RequestMapping("/getPeoplePermissionList")
+    public void getPeoplePermissionList(String userId){
+        List<String> list = documentMenuPermissionService.queryAllList(userId);
+        if(list != null && list.size() > 0){
+            Response.json("result",list);
+        }else{
+            Response.json("result","no");
+        }
     }
 
 }
