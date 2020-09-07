@@ -4,8 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ import com.css.addbase.apporgmapped.entity.BaseAppOrgMapped;
 import com.css.addbase.apporgmapped.service.BaseAppOrgMappedService;
 import com.css.addbase.constant.AppConstant;
 import com.css.addbase.constant.AppInterfaceConstant;
+import com.css.app.xlgl.dto.QXJPeopleManagementDto;
 import com.css.app.xlgl.dto.TxlUserDto;
 import com.css.app.xlgl.entity.XlglAdminSet;
 import com.css.app.xlgl.service.XlglAdminSetService;
@@ -200,12 +202,37 @@ public class PeopleManagementController {
 	@ResponseBody
 	@RequestMapping("/qxjUserInfoList")
 	public void qxjUserInfoList(String page, String limit,String organId) {
+		JSONObject jsonObject = new JSONObject();
 		LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String,Object>();
 		map.add("orgid", organId);
 		map.add("page", page);
 		map.add("rows", limit);
 		JSONObject txl = getTXL(map);
-		
+		String jsonArray = txl.getJSONArray("rows").toString();
+		List<TxlUserDto> parseArray = JSONArray.parseArray(jsonArray, TxlUserDto.class);
+		List<TxlUserDto> list = new ArrayList<TxlUserDto>();
+		for (TxlUserDto txlUserDto : parseArray) {
+			LinkedMultiValueMap<String, Object> hashmap = new LinkedMultiValueMap<String,Object>();
+			hashmap.add("userId", txlUserDto.getUserid());
+			// 获取办件开放的接口
+			String elecPath = baseAppOrgMappedService.getWebUrl(AppConstant.APP_QXJGL, AppInterfaceConstant.WEB_INTERFACE_QXJ_USER_INFO_QJDAYS);
+			JSONObject jsonData = CrossDomainUtil.getJsonData(elecPath,map);
+			String string = jsonData.toString();
+			QXJPeopleManagementDto parseObject = JSONObject.parseObject(string, QXJPeopleManagementDto.class);
+			txlUserDto.setQXJweixiujiaDays(parseObject.getWeixiujiaDays());
+			txlUserDto.setQXJtotalDays(parseObject.getTotalDays());
+			txlUserDto.setQXJxiuJiaDays(parseObject.getXiuJiaDays());
+			if(parseObject.getType() !=null) {
+				txlUserDto.setQXJtype(parseObject.getType());
+				txlUserDto.setQXJstartDate(parseObject.getStartDate());
+				txlUserDto.setQXJendDate(parseObject.getEndDate());
+			}
+			list.add(txlUserDto);
+		}
+		jsonObject.put("rows", list);
+		jsonObject.put("page", txl.getString("page"));
+		jsonObject.put("total", txl.getString("total"));
+		jsonObject.put("manager", txl.getBoolean("manager"));
 		Response.json(txl);
 	}
 
@@ -335,8 +362,8 @@ public class PeopleManagementController {
 				}
 			}
 		}
-		
-		File tempFile = new File(filePath, "人员管理-各单位人员情况统计表.xls");
+		String format = new SimpleDateFormat("yyyy-MM-ddHHmmss").format(new Date());
+		File tempFile = new File(filePath, "人员管理-各单位人员情况统计表-"+format+".xls");
 		if (tempFile.exists()) {
 			tempFile.delete();
 		} else {
@@ -431,7 +458,8 @@ public class PeopleManagementController {
 				}
 			}
 		}
-		File tempFile = new File(filePath, "人员管理-本单位人员情况情况统计表.xls");
+		String format = new SimpleDateFormat("yyyy-MM-ddHHmmss").format(new Date());
+		File tempFile = new File(filePath, "人员管理-本单位人员情况情况统计表-"+format+".xls");
 		if (tempFile.exists()) {
 			tempFile.delete();
 		} else {

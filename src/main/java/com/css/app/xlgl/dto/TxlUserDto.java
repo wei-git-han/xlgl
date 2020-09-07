@@ -96,59 +96,31 @@ public class TxlUserDto implements Serializable {
 	//
 	private String pyName;
 	
+	// 已休假天数
+	private String QXJxiuJiaDays;
+
+	// 应休天数
+	private String QXJtotalDays;
+
+	// 未请假天数
+	private String QXJweixiujiaDays;
+
+	// 请假类别
+	private String QXJtype;
+
+	// 请假开始时间
+	private Date QXJstartDate;
+	// 请假结束时间
+	private Date QXJendDate;
+	
 	
 	public TxlUserDto() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
 
-	public TxlUserDto(String userid, String fullname, String account, String password, String sex, String organid,
-			String orderid, String dn, String isdelete, String ca, Integer ismanager, String tokenid, String spid,
-			String sn, String ip, Date startdate, Date enddate, String useruuid, String useremail, String seclevel,
-			Integer failedlogincount, Date editpwdtime, String mobile, Long timestamp, String type, String post,
-			String telephone, String address, String dept, String organName, String orgName, String isSc, String isShow,
-			String rights, String remarks, String mobileTwo, String telephoneTwo, JSONObject jsonData, String pyName) {
-		super();
-		this.userid = userid;
-		this.fullname = fullname;
-		this.account = account;
-		this.password = password;
-		this.sex = sex;
-		this.organid = organid;
-		this.orderid = orderid;
-		this.dn = dn;
-		this.isdelete = isdelete;
-		this.ca = ca;
-		this.ismanager = ismanager;
-		this.tokenid = tokenid;
-		this.spid = spid;
-		this.sn = sn;
-		this.ip = ip;
-		this.startdate = startdate;
-		this.enddate = enddate;
-		this.useruuid = useruuid;
-		this.useremail = useremail;
-		this.seclevel = seclevel;
-		this.failedlogincount = failedlogincount;
-		this.editpwdtime = editpwdtime;
-		this.mobile = mobile;
-		this.timestamp = timestamp;
-		this.type = type;
-		this.post = post;
-		this.telephone = telephone;
-		this.address = address;
-		this.dept = dept;
-		this.organName = organName;
-		this.orgName = orgName;
-		this.isSc = isSc;
-		this.isShow = isShow;
-		this.rights = rights;
-		this.remarks = remarks;
-		this.mobileTwo = mobileTwo;
-		this.telephoneTwo = telephoneTwo;
-		this.jsonData = jsonData;
-		this.pyName = pyName;
-	}
+
 
 	public String getPyName() {
 		return pyName;
@@ -616,6 +588,92 @@ public class TxlUserDto implements Serializable {
 	public void setJsonData(JSONObject jsonData) {
 		this.jsonData = jsonData;
 	}
+
+
+
+
+	public String getQXJxiuJiaDays() {
+		return QXJxiuJiaDays;
+	}
+
+
+
+
+	public void setQXJxiuJiaDays(String qXJxiuJiaDays) {
+		QXJxiuJiaDays = qXJxiuJiaDays;
+	}
+
+
+
+
+	public String getQXJtotalDays() {
+		return QXJtotalDays;
+	}
+
+
+
+
+	public void setQXJtotalDays(String qXJtotalDays) {
+		QXJtotalDays = qXJtotalDays;
+	}
+
+
+
+
+	public String getQXJweixiujiaDays() {
+		return QXJweixiujiaDays;
+	}
+
+
+
+
+	public void setQXJweixiujiaDays(String qXJweixiujiaDays) {
+		QXJweixiujiaDays = qXJweixiujiaDays;
+	}
+
+
+
+
+	public String getQXJtype() {
+		return QXJtype;
+	}
+
+
+
+
+	public void setQXJtype(String qXJtype) {
+		QXJtype = qXJtype;
+	}
+
+
+
+
+	public Date getQXJstartDate() {
+		return QXJstartDate;
+	}
+
+
+
+
+	public void setQXJstartDate(Date qXJstartDate) {
+		QXJstartDate = qXJstartDate;
+	}
+
+
+
+
+	public Date getQXJendDate() {
+		return QXJendDate;
+	}
+
+
+
+
+	public void setQXJendDate(Date qXJendDate) {
+		QXJendDate = qXJendDate;
+	}
+
+
 	
 	
 }
