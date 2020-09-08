@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.XlglExposureDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglExposure">
+		select * from XLGL_EXPOSURE where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglExposure">
+		select * from XLGL_EXPOSURE 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+	<select id="queryListInfo" resultType="com.css.app.xlgl.entity.XlglExposure">
+		select * from XLGL_EXPOSURE 
+		order by UPDATE_DATE desc
+		limit 1
+		
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_EXPOSURE 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglExposure">
+		insert into XLGL_EXPOSURE
+		(
+			"id", 
+			"UPDATE_DATE", 
+			"UPDATE_USERID", 
+			"CREATE_USERID", 
+			"CREATE_USERNAME", 
+			"CREATE_DATE", 
+			"CONTENT"
+		)
+		values
+		(
+			#{id}, 
+			#{updateDate}, 
+			#{updateUserid}, 
+			#{createUserid}, 
+			#{createUsername}, 
+			#{createDate}, 
+			#{content}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.XlglExposure">
+		update XLGL_EXPOSURE 
+		<set>
+			<if test="updateDate != null">"UPDATE_DATE" = #{updateDate}, </if>
+			<if test="updateUserid != null">"UPDATE_USERID" = #{updateUserid}, </if>
+			<if test="createUserid != null">"CREATE_USERID" = #{createUserid}, </if>
+			<if test="createUsername != null">"CREATE_USERNAME" = #{createUsername}, </if>
+			<if test="createDate != null">"CREATE_DATE" = #{createDate}, </if>
+			<if test="content != null">"CONTENT" = #{content}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_EXPOSURE where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_EXPOSURE where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
