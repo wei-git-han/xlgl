@@ -148,9 +148,10 @@ public class XlglSafetyAnalyseController {
 		map.put("organId", organId);	
 		List<XlglSafetyAnalyse> list = new ArrayList<XlglSafetyAnalyse>();
 		//查询列表数据
-		List<XlglSafetyAnalyse> xlglSafetyAnalyseList = xlglSafetyAnalyseService.queryList(map);
-		for (XlglSafetyAnalyse xlglSafetyAnalyse : xlglSafetyAnalyseList) {
-			map.put("id", xlglSafetyAnalyse.getId());
+		//List<XlglSafetyAnalyse> xlglSafetyAnalyseList = xlglSafetyAnalyseService.queryList(map);
+		XlglSafetyAnalyse queryObject = xlglSafetyAnalyseService.queryObject(id);
+		//for (XlglSafetyAnalyse xlglSafetyAnalyse : xlglSafetyAnalyseList) {
+			map.put("id", queryObject.getId());
 			List<XlglPicture> queryList = xlglPictureService.queryList(map);
 			for (XlglPicture xlglPicture : queryList) {
 				XlglSafetyAnalyse xsa = new XlglSafetyAnalyse();
@@ -162,7 +163,7 @@ public class XlglSafetyAnalyseController {
 				xsa.setCreateUser(xlglPicture.getUserId());
 				list.add(xsa);
 			}
-		}
+		//}
 		Response.json(list);
 	}
 	/**
@@ -170,9 +171,27 @@ public class XlglSafetyAnalyseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	public void update(XlglSafetyAnalyse xlglSafetyAnalyse){
+	public void update(XlglSafetyAnalyse xlglSafetyAnalyse,String [] fileIds){
+		String userId = CurrentUser.getUserId();
+		String username = CurrentUser.getUsername();
+		Date date = new Date();
 		xlglSafetyAnalyseService.update(xlglSafetyAnalyse);
-		
+		if(fileIds !=null) {
+			for (int i = 0; i < fileIds.length; i++) {
+				XlglPicture xlglPicture = new XlglPicture();
+				xlglPicture.setId(UUIDUtils.random());
+				xlglPicture.setFileId(xlglSafetyAnalyse.getId());
+				xlglPicture.setIsFirst("1");
+				xlglPicture.setPictureId(fileIds[i]);
+				HTTPFile httpFile = new HTTPFile(fileIds[i]);
+				xlglPicture.setPictureName(httpFile.getFileName());
+				xlglPicture.setSort("0");
+				xlglPicture.setCreateTime(date);
+				xlglPicture.setUserId(userId);
+				xlglPicture.setUserName(username);
+				xlglPictureService.save(xlglPicture);
+			}
+		}
 		Response.ok();
 	}
 	

@@ -70,18 +70,18 @@ public class XlglExamExamineController {
 
 	/**
 	 * 考核清单列表
-	 * @param issueDate 发布时间
+	 * @param time 发布时间
 	 * @param examineName 考试名称
 	 * @param status 0：考试，1:练习xlglexamanswer
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	public void list(Integer page, Integer limit,String issueDate,String examineName,String status){
+	public void list(Integer page, Integer limit,String time,String examineName,String status){
 		Map<String, Object> map = new HashMap<>();
 		Date date = new Date();
 		String userId = CurrentUser.getUserId();
 		int queryTotal = xlglExamExamineService.findCount();//总用户人数
-		map.put("issueDate", issueDate);
+		map.put("issueDate", time);
 		map.put("examineName", examineName);
 		map.put("issueStatus", "1");
 		map.put("status", status);
@@ -420,11 +420,19 @@ public class XlglExamExamineController {
 		String userId = CurrentUser.getUserId();
 		Date date = new Date();	
 		if(StringUtils.isNotBlank(status)&&status.equals("0")) {
-			SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-			Date startDate = format.parse(xlglExamExamine.getExamineStartDateStr());
-			Date endDate = format.parse(xlglExamExamine.getExamineEndDateStr());
-			xlglExamExamine.setExamineStartDate(startDate);
-			xlglExamExamine.setExamineEndDate(endDate);
+			if(xlglExamExamine.getExamineStartDateStr().contains(".")) {
+				SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+				Date startDate = format.parse(xlglExamExamine.getExamineStartDateStr());
+				Date endDate = format.parse(xlglExamExamine.getExamineEndDateStr());
+				xlglExamExamine.setExamineStartDate(startDate);
+				xlglExamExamine.setExamineEndDate(endDate);
+			}else if(xlglExamExamine.getExamineStartDateStr().contains("-")) {
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Date startDate = format.parse(xlglExamExamine.getExamineStartDateStr());
+				Date endDate = format.parse(xlglExamExamine.getExamineEndDateStr());
+				xlglExamExamine.setExamineStartDate(startDate);
+				xlglExamExamine.setExamineEndDate(endDate);
+			}
 		}
 		if(status.equals("0")) {
 			if(StringUtils.isNotBlank(IssueStatus)) {
@@ -441,10 +449,11 @@ public class XlglExamExamineController {
 		}else {
 			xlglExamExamine.setOverStatus("99");
 		}
-		
+		boolean boole = true;
 		if(StringUtils.isNotBlank(xlglExamExamine.getId())) {//修改
 			xlglExamExamine.setUpdateUser(userId);
 			xlglExamExamine.setUpdateDate(date);
+			xlglExamExamine.setMakeupStatus("0");
 			xlglExamExamineService.update(xlglExamExamine);
 			if(typeAndNum.length >0) {
 				Map<String, Object> map = new HashMap<String,Object>();
@@ -453,6 +462,8 @@ public class XlglExamExamineController {
 				xlglExamExaminetopicService.deleteByExamineId(map);
 			}
 		}else {
+			boole = false;
+			xlglExamExamine.setMakeupStatus("0");
 			xlglExamExamine.setCreateUser(userId);
 			xlglExamExamine.setCreateDate(date);
 			xlglExamExamine.setUpdateUser(userId);
@@ -487,7 +498,11 @@ public class XlglExamExamineController {
 			for (BaseAppUser baseAppUser : queryList) {
 				XlglExamMainAnswer xlglExamMainAnswer = new XlglExamMainAnswer();
 				xlglExamMainAnswer.setId(UUIDUtils.random());
-				xlglExamMainAnswer.setExamineId(random);
+				if(boole) {
+					xlglExamMainAnswer.setExamineId(xlglExamExamine.getId());
+				}else {
+					xlglExamMainAnswer.setExamineId(random);
+				}
 				xlglExamMainAnswer.setOrganId(baseAppUser.getOrganid());
 				xlglExamMainAnswer.setOrganName(baseAppOrganService.queryObject(baseAppUser.getOrganid()).getName());
 				xlglExamMainAnswer.setReplyUserId(baseAppUser.getId());

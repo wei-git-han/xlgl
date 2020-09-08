@@ -668,7 +668,7 @@ public class AppInterfaceConstant {
      * */
     public final static String WEB_INTERFACE_QXJ_USER_INFO_QJDAYS = "/leave/apply/countXiuJiaDaysXLGL";
     /**
-     * @author 李振楠
+     * @author 李振楠 已弃用
      * @date 2020年8月13日
      * */
     public final static String WEB_INTERFACE_QXJ_USER_INFO_LIST = "/leave/apply/qxjUserInfoList";
