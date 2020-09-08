@@ -29,7 +29,7 @@ import com.github.pagehelper.PageHelper;
  * @date 2020-09-08 10:41:01
  */
 @Controller
-@RequestMapping("app/xlgl/xlglexposure")
+@RequestMapping("/app/xlgl/xlglexposure")
 public class XlglExposureController {
 	@Autowired
 	private XlglExposureService xlglExposureService;
