@@ -176,114 +176,114 @@ public class XlglXlzzInfoController {
 			}
 		}
 
-		if("2".equals(flag)) {//全部的上下翻页
-			if (StringUtils.isNotBlank(xlglXlzzInfo.getSort())) {
-				String preId = "";
-				String sufId = "";
-				String sort = xlglXlzzInfo.getSort();
-				int sortInt = Integer.parseInt(sort);
-				Map<String, Object> mapSort = new HashMap<>();
-				int sortPre = sortInt - 1;
-				int sortSuf = sortInt + 1;
-				mapSort.put("sortPre", String.valueOf(sortPre));
-				mapSort.put("sortSuf", String.valueOf(sortSuf));
-				List<XlglXlzzInfo> listSort = xlglXlzzInfoService.queryBySort(mapSort);
-				if (listSort != null && listSort.size() > 0) {
-					for (XlglXlzzInfo xlglXlzzInfo1 : listSort) {
-						String sortNew = xlglXlzzInfo1.getSort();
-						if (StringUtils.isNotBlank(sortNew)) {
-							if (sortNew.equals(String.valueOf(sortPre))) {
-								preId = xlglXlzzInfo1.getId();
-							} else if (sortNew.equals(String.valueOf(sortSuf))) {
-								sufId = xlglXlzzInfo1.getId();
-							}
-						}
-					}
-				}
-				if (StringUtils.isBlank(preId)) {
-					preId = "no";
-				}
-				if (StringUtils.isBlank(sufId)) {
-					sufId = "no";
-				}
-				jsonObject.put("preId", preId);
-				jsonObject.put("sufId", sufId);
-			}
-		}else if("1".equals(flag)){//我的训练
-			XlglSubDocTracking Tracking = xlglSubDocTrackingService.querySortByInfoIdAndUserId(id,CurrentUser.getUserId());
-			if(Tracking != null){
-				if(StringUtils.isNotBlank(Tracking.getSort())){
-					String preId = "";
-					String sufId = "";
-					Map<String,Object> mapSort = new HashMap<>();
-					String sort = Tracking.getSort();
-					String sortPre = String.valueOf(Integer.parseInt(sort) - 1);
-					String sortSuf = String.valueOf(Integer.parseInt(sort) + 1);
-					mapSort.put("sortPre",sortPre);
-					mapSort.put("sortSuf",sortSuf);
-					mapSort.put("receiveId",CurrentUser.getUserId());
-					List<XlglSubDocTracking> subDocTrackingList = xlglSubDocTrackingService.queryBySort(mapSort);
-					if(subDocTrackingList != null && subDocTrackingList.size() > 0){
-						for(XlglSubDocTracking xlglSubDocTracking1 : subDocTrackingList){
-								String sortNew = xlglSubDocTracking1.getSort();
-							if (StringUtils.isNotBlank(sortNew)) {
-								if (sortNew.equals(String.valueOf(sortPre))) {
-									preId = xlglSubDocTracking1.getInfoId();
-								} else if (sortNew.equals(String.valueOf(sortSuf))) {
-									sufId = xlglSubDocTracking1.getInfoId();
-								}
-							}
-						}
-					}
-					if (StringUtils.isBlank(preId)) {
-						preId = "no";
-					}
-					if (StringUtils.isBlank(sufId)) {
-						sufId = "no";
-					}
-					jsonObject.put("preId", preId);
-					jsonObject.put("sufId", sufId);
-				}
-			}
-
-		}else if("0".equals(flag)){
-			String deptId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
-			XlglSubDocInfo xlglSubDocInfo = xlglSubDocInfoService.querySortByInfoIdAndDeptId(id,deptId);
-			if(xlglSubDocInfo != null){
-				String preId = "";
-				String sufId = "";
-				String sort = xlglSubDocInfo.getSort();
-				if(StringUtils.isNotBlank(sort)){
-					Map<String,Object> mapSort = new HashedMap();
-					String sortPre = String.valueOf(Integer.parseInt(sort) - 1);
-					String sortSuf = String.valueOf(Integer.parseInt(sort) - 1);
-					mapSort.put("sortPre",sortPre);
-					mapSort.put("sortSuf",sortSuf);
-					mapSort.put("orgId",deptId);
-					List<XlglSubDocInfo> subDocInfoList = xlglSubDocInfoService.queryBySort(mapSort);
-					if(subDocInfoList != null && subDocInfoList.size() > 0){
-						for(XlglSubDocInfo xlglSubDocInfo1 : subDocInfoList){
-							String sortNew = xlglSubDocInfo1.getSort();
-							if(StringUtils.isNotBlank(sortNew)){
-								if(sortPre.equals(sortNew)){
-									preId = xlglSubDocInfo1.getInfoId();
-								}else if(sortSuf.equals(sortNew)){
-									sufId = xlglSubDocInfo1.getInfoId();
-								}
-							}
-						}
-					}
-					if (StringUtils.isBlank(preId)) {
-						preId = "no";
-					}
-					if (StringUtils.isBlank(sufId)) {
-						sufId = "no";
-					}
-					jsonObject.put("preId", preId);
-					jsonObject.put("sufId", sufId);
-				}
-			}
-		}
+//		if("2".equals(flag)) {//全部的上下翻页
+//			if (StringUtils.isNotBlank(xlglXlzzInfo.getSort())) {
+//				String preId = "";
+//				String sufId = "";
+//				String sort = xlglXlzzInfo.getSort();
+//				int sortInt = Integer.parseInt(sort);
+//				Map<String, Object> mapSort = new HashMap<>();
+//				int sortPre = sortInt - 1;
+//				int sortSuf = sortInt + 1;
+//				mapSort.put("sortPre", String.valueOf(sortPre));
+//				mapSort.put("sortSuf", String.valueOf(sortSuf));
+//				List<XlglXlzzInfo> listSort = xlglXlzzInfoService.queryBySort(mapSort);
+//				if (listSort != null && listSort.size() > 0) {
+//					for (XlglXlzzInfo xlglXlzzInfo1 : listSort) {
+//						String sortNew = xlglXlzzInfo1.getSort();
+//						if (StringUtils.isNotBlank(sortNew)) {
+//							if (sortNew.equals(String.valueOf(sortPre))) {
+//								preId = xlglXlzzInfo1.getId();
+//							} else if (sortNew.equals(String.valueOf(sortSuf))) {
+//								sufId = xlglXlzzInfo1.getId();
+//							}
+//						}
+//					}
+//				}
+//				if (StringUtils.isBlank(preId)) {
+//					preId = "no";
+//				}
+//				if (StringUtils.isBlank(sufId)) {
+//					sufId = "no";
+//				}
+//				jsonObject.put("preId", preId);
+//				jsonObject.put("sufId", sufId);
+//			}
+//		}else if("1".equals(flag)){//我的训练
+//			XlglSubDocTracking Tracking = xlglSubDocTrackingService.querySortByInfoIdAndUserId(id,CurrentUser.getUserId());
+//			if(Tracking != null){
+//				if(StringUtils.isNotBlank(Tracking.getSort())){
+//					String preId = "";
+//					String sufId = "";
+//					Map<String,Object> mapSort = new HashMap<>();
+//					String sort = Tracking.getSort();
+//					String sortPre = String.valueOf(Integer.parseInt(sort) - 1);
+//					String sortSuf = String.valueOf(Integer.parseInt(sort) + 1);
+//					mapSort.put("sortPre",sortPre);
+//					mapSort.put("sortSuf",sortSuf);
+//					mapSort.put("receiveId",CurrentUser.getUserId());
+//					List<XlglSubDocTracking> subDocTrackingList = xlglSubDocTrackingService.queryBySort(mapSort);
+//					if(subDocTrackingList != null && subDocTrackingList.size() > 0){
+//						for(XlglSubDocTracking xlglSubDocTracking1 : subDocTrackingList){
+//								String sortNew = xlglSubDocTracking1.getSort();
+//							if (StringUtils.isNotBlank(sortNew)) {
+//								if (sortNew.equals(String.valueOf(sortPre))) {
+//									preId = xlglSubDocTracking1.getInfoId();
+//								} else if (sortNew.equals(String.valueOf(sortSuf))) {
+//									sufId = xlglSubDocTracking1.getInfoId();
+//								}
+//							}
+//						}
+//					}
+//					if (StringUtils.isBlank(preId)) {
+//						preId = "no";
+//					}
+//					if (StringUtils.isBlank(sufId)) {
+//						sufId = "no";
+//					}
+//					jsonObject.put("preId", preId);
+//					jsonObject.put("sufId", sufId);
+//				}
+//			}
+//
+//		}else if("0".equals(flag)){
+//			String deptId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
+//			XlglSubDocInfo xlglSubDocInfo = xlglSubDocInfoService.querySortByInfoIdAndDeptId(id,deptId);
+//			if(xlglSubDocInfo != null){
+//				String preId = "";
+//				String sufId = "";
+//				String sort = xlglSubDocInfo.getSort();
+//				if(StringUtils.isNotBlank(sort)){
+//					Map<String,Object> mapSort = new HashedMap();
+//					String sortPre = String.valueOf(Integer.parseInt(sort) - 1);
+//					String sortSuf = String.valueOf(Integer.parseInt(sort) - 1);
+//					mapSort.put("sortPre",sortPre);
+//					mapSort.put("sortSuf",sortSuf);
+//					mapSort.put("orgId",deptId);
+//					List<XlglSubDocInfo> subDocInfoList = xlglSubDocInfoService.queryBySort(mapSort);
+//					if(subDocInfoList != null && subDocInfoList.size() > 0){
+//						for(XlglSubDocInfo xlglSubDocInfo1 : subDocInfoList){
+//							String sortNew = xlglSubDocInfo1.getSort();
+//							if(StringUtils.isNotBlank(sortNew)){
+//								if(sortPre.equals(sortNew)){
+//									preId = xlglSubDocInfo1.getInfoId();
+//								}else if(sortSuf.equals(sortNew)){
+//									sufId = xlglSubDocInfo1.getInfoId();
+//								}
+//							}
+//						}
+//					}
+//					if (StringUtils.isBlank(preId)) {
+//						preId = "no";
+//					}
+//					if (StringUtils.isBlank(sufId)) {
+//						sufId = "no";
+//					}
+//					jsonObject.put("preId", preId);
+//					jsonObject.put("sufId", sufId);
+//				}
+//			}
+//		}
 
 
 
