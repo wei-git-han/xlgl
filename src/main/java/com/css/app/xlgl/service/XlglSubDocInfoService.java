@@ -39,4 +39,8 @@ public interface XlglSubDocInfoService {
 	void deleteSub(String orgId,String fileId);
 
 	List<XlglSubDocTracking> queryByInfoIdAndUserId(String infoId,String userId);
+
+	XlglSubDocInfo querySortByInfoIdAndDeptId(String infoId,String userId);
+
+	List<XlglSubDocInfo> queryBySort(Map<String,Object> map);
 }

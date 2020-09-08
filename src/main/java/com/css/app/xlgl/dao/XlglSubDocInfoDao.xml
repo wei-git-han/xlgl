@@ -7,6 +7,19 @@
 		select * from XLGL_SUB_DOC_INFO where ID = #{value}
 	</select>
 
+    <select id="queryBySort" resultType="com.css.app.xlgl.entity.XlglSubDocInfo">
+        select * from ( select ROW_NUMBER() OVER(order by t.EXERCISE_TIME desc ) as SORT, t.* from XLGL_SUB_DOC_INFO t  where 1=1
+        <if test="orgId != null and orgId !=''">
+            and t.SUB_DEPT_ID = #{orgId}
+        </if> ) where 1=1
+        <if test="sortPre != null and sortPre !=''">
+            and SORT = #{sortPre}
+        </if>
+        <if test="sortSuf != null and sortSuf !=''">
+            or SORT = #{sortSuf}
+        </if>
+    </select>
+
     <select id="queryList" resultType="com.css.app.xlgl.entity.XlglSubDocInfo">
         select * from XLGL_SUB_DOC_INFO where 1=1
 

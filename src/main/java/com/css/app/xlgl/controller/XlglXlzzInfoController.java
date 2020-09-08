@@ -18,6 +18,7 @@ import com.css.app.xlgl.entity.*;
 import com.css.app.xlgl.service.*;
 import com.css.base.utils.*;
 import com.google.gson.JsonObject;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.cookie.SM;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -118,7 +119,7 @@ public class XlglXlzzInfoController {
 	
 	/**
 	 * 信息
-	 * type 0:我的训练；1：全部训练；2：局待转发
+	 * flag 0:局待转发；1：我的训练；2：全部训练
 	 */
 	@ResponseBody
 	@RequestMapping("/info")
@@ -175,7 +176,7 @@ public class XlglXlzzInfoController {
 			}
 		}
 
-		if("1".equals(flag)) {//全部的上下翻页
+		if("2".equals(flag)) {//全部的上下翻页
 			if (StringUtils.isNotBlank(xlglXlzzInfo.getSort())) {
 				String preId = "";
 				String sufId = "";
@@ -200,33 +201,88 @@ public class XlglXlzzInfoController {
 					}
 				}
 				if (StringUtils.isBlank(preId)) {
-					preId = "no preId";
+					preId = "no";
 				}
 				if (StringUtils.isBlank(sufId)) {
-					sufId = "no sufId";
+					sufId = "no";
 				}
 				jsonObject.put("preId", preId);
 				jsonObject.put("sufId", sufId);
 			}
-		}else if("0".equals(flag)){
+		}else if("1".equals(flag)){//我的训练
 			XlglSubDocTracking Tracking = xlglSubDocTrackingService.querySortByInfoIdAndUserId(id,CurrentUser.getUserId());
 			if(Tracking != null){
 				if(StringUtils.isNotBlank(Tracking.getSort())){
+					String preId = "";
+					String sufId = "";
 					Map<String,Object> mapSort = new HashMap<>();
 					String sort = Tracking.getSort();
 					String sortPre = String.valueOf(Integer.parseInt(sort) - 1);
 					String sortSuf = String.valueOf(Integer.parseInt(sort) + 1);
 					mapSort.put("sortPre",sortPre);
 					mapSort.put("sortSuf",sortSuf);
+					mapSort.put("receiveId",CurrentUser.getUserId());
 					List<XlglSubDocTracking> subDocTrackingList = xlglSubDocTrackingService.queryBySort(mapSort);
 					if(subDocTrackingList != null && subDocTrackingList.size() > 0){
-//						for(XlglSubDocTracking xlglSubDocTracking1 : ){
-//
-//						}
+						for(XlglSubDocTracking xlglSubDocTracking1 : subDocTrackingList){
+								String sortNew = xlglSubDocTracking1.getSort();
+							if (StringUtils.isNotBlank(sortNew)) {
+								if (sortNew.equals(String.valueOf(sortPre))) {
+									preId = xlglSubDocTracking1.getInfoId();
+								} else if (sortNew.equals(String.valueOf(sortSuf))) {
+									sufId = xlglSubDocTracking1.getInfoId();
+								}
+							}
+						}
 					}
+					if (StringUtils.isBlank(preId)) {
+						preId = "no";
+					}
+					if (StringUtils.isBlank(sufId)) {
+						sufId = "no";
+					}
+					jsonObject.put("preId", preId);
+					jsonObject.put("sufId", sufId);
 				}
 			}
 
+		}else if("0".equals(flag)){
+			String deptId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
+			XlglSubDocInfo xlglSubDocInfo = xlglSubDocInfoService.querySortByInfoIdAndDeptId(id,deptId);
+			if(xlglSubDocInfo != null){
+				String preId = "";
+				String sufId = "";
+				String sort = xlglSubDocInfo.getSort();
+				if(StringUtils.isNotBlank(sort)){
+					Map<String,Object> mapSort = new HashedMap();
+					String sortPre = String.valueOf(Integer.parseInt(sort) - 1);
+					String sortSuf = String.valueOf(Integer.parseInt(sort) - 1);
+					mapSort.put("sortPre",sortPre);
+					mapSort.put("sortSuf",sortSuf);
+					mapSort.put("orgId",deptId);
+					List<XlglSubDocInfo> subDocInfoList = xlglSubDocInfoService.queryBySort(mapSort);
+					if(subDocInfoList != null && subDocInfoList.size() > 0){
+						for(XlglSubDocInfo xlglSubDocInfo1 : subDocInfoList){
+							String sortNew = xlglSubDocInfo1.getSort();
+							if(StringUtils.isNotBlank(sortNew)){
+								if(sortPre.equals(sortNew)){
+									preId = xlglSubDocInfo1.getInfoId();
+								}else if(sortSuf.equals(sortNew)){
+									sufId = xlglSubDocInfo1.getInfoId();
+								}
+							}
+						}
+					}
+					if (StringUtils.isBlank(preId)) {
+						preId = "no";
+					}
+					if (StringUtils.isBlank(sufId)) {
+						sufId = "no";
+					}
+					jsonObject.put("preId", preId);
+					jsonObject.put("sufId", sufId);
+				}
+			}
 		}
 
 

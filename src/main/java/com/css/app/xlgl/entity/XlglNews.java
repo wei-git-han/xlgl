@@ -50,6 +50,27 @@ public class XlglNews implements Serializable{
 	private String releaseDeptid;
 	//发布部门
 	private String releaseDept;
+	//是否显示编辑按钮 0不显示，1显示
+	private String isEdit;
+	//删除按钮显示 0是不显示，1是显示
+	private String isDelete;
+
+	public String getIsDelete() {
+		return isDelete;
+	}
+
+	public void setIsDelete(String isDelete) {
+		this.isDelete = isDelete;
+	}
+
+	public String getIsEdit() {
+		return isEdit;
+	}
+
+	public void setIsEdit(String isEdit) {
+		this.isEdit = isEdit;
+	}
+
 	public String getId() {
 		return id;
 	}

@@ -5,6 +5,7 @@ import java.util.*;
 
 import com.css.addbase.FileBaseUtil;
 import com.css.app.xlgl.entity.XlglPicture;
+import com.css.app.xlgl.service.XlglAdminSetService;
 import com.css.app.xlgl.service.XlglPictureService;
 import com.netflix.discovery.converters.Auto;
 import org.apache.commons.lang.StringUtils;
@@ -48,6 +49,8 @@ public class XlglNewsController {
 	private BaseAppUserService baseAppUserService;
 	@Autowired
 	private XlglPictureService xlglPictureService;
+	@Autowired
+	private XlglAdminSetService adminSetService;
 	
 	
 	/**
@@ -142,6 +145,9 @@ public class XlglNewsController {
 	@ResponseBody
 	@RequestMapping("list")
 	public void list(Integer page, Integer pagesize,String type){
+		String userId = CurrentUser.getUserId();
+		//获取当前人的管理员类型（0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员;4:处管理员）
+		String adminFlag = adminSetService.getAdminTypeByUserId(userId);
 		HashMap<String, Object> map = new HashMap<String,Object>();
 		map.put("type",type);
 		PageHelper.startPage(page, pagesize);
@@ -157,6 +163,19 @@ public class XlglNewsController {
 						xlglNews.setPicturePath(xlglPicture.getPictureId());
 					}
 				}
+				//1是显示，0是不显示
+				String releaseUserid = xlglNews.getReleaseUserid();
+				if(userId.equals(releaseUserid)){
+					xlglNews.setIsEdit("1");
+				}else {
+					xlglNews.setIsEdit("0");
+				}
+				if(userId.equals(releaseUserid) || "1".equals(adminFlag)){
+					xlglNews.setIsDelete("1");
+				}else {
+					xlglNews.setIsDelete("0");
+				}
+
 			}
 		}
 		GwPageUtils pageUtil = new GwPageUtils(xlglNewsList);

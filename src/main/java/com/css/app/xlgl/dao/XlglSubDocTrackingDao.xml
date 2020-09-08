@@ -26,7 +26,17 @@
 	</select>
 
 	<select id="queryBySort" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
-
+		select * from ( select ROW_NUMBER() OVER(order by t.EXERCISE_TIME desc ) as SORT, t.* from XLGL_SUB_DOC_TRACKING t where 1=1
+            <if test="receiveId != null and receiveId !=''">
+				and RECEIVER_ID = #{receiveId}
+			</if> )
+         where 1=1
+		<if test="sortPre != null and sortPre !=''">
+			and SORT = #{sortPre}
+		</if>
+		<if test="sortSuf != null and sortSuf !=''">
+			or SORT = #{sortSuf}
+		</if>
 
 	</select>
 

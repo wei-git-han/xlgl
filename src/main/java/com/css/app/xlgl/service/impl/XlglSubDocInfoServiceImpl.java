@@ -79,4 +79,14 @@ public class XlglSubDocInfoServiceImpl implements XlglSubDocInfoService {
 		return xlglSubDocInfoDao.queryByInfoIdAndUserId(infoId,userId);
 	}
 
+	@Override
+	public XlglSubDocInfo querySortByInfoIdAndDeptId(String infoId,String deptId){
+		return xlglSubDocInfoDao.querySortByInfoIdAndDeptId(infoId,deptId);
+	}
+
+	@Override
+	public List<XlglSubDocInfo> queryBySort(Map<String,Object> map){
+		return xlglSubDocInfoDao.queryBySort(map);
+	}
+
 }

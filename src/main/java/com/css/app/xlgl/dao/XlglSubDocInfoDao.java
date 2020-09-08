@@ -36,4 +36,8 @@ public interface XlglSubDocInfoDao extends BaseDao<XlglSubDocInfo> {
 
     @Select("select * from XLGL_SUB_DOC_TRACKING where RECEIVER_ID = #{1} and INFO_ID = #{0}")
     List<XlglSubDocTracking> queryByInfoIdAndUserId(String infoId,String userId);
+    @Select("select * from ( select ROW_NUMBER() OVER(order by t.EXERCISE_TIME desc ) as SORT, t.* from XLGL_SUB_DOC_INFO t where t.SUB_DEPT_ID = #{1}) where INFO_ID = #{0}")
+    XlglSubDocInfo querySortByInfoIdAndDeptId(String infoId,String deptId);
+
+    List<XlglSubDocInfo> queryBySort(Map<String,Object> map);
 }

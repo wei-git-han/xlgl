@@ -29,7 +29,7 @@ public interface XlglSubDocTrackingDao extends BaseDao<XlglSubDocTracking> {
     @Select("select * from XLGL_SUB_DOC_TRACKING where INFO_ID = #{0} and RECEIVER_ID = #{1}")
     XlglSubDocTracking queryStatusByInfoIdAndUserId(String infoId,String userId);
 
-    @Select("select ROW_NUMBER() OVER(order by t.EXERCISE_TIME desc ) as SORT,t.* from XLGL_SUB_DOC_TRACKING t where INFO_ID = #{0} and RECEIVER_ID = #{1}")
+    @Select("select * from ( select ROW_NUMBER() OVER(order by t.EXERCISE_TIME desc ) as SORT, t.*  from XLGL_SUB_DOC_TRACKING t  where RECEIVER_ID = #{1} ) where INFO_ID = #{0}")
     XlglSubDocTracking querySortByInfoIdAndUserId(String infoId,String usreId);
 
     List<Map<String,Object>> queryBmInfo(String infoId,String deptId);
