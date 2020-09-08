@@ -96,18 +96,15 @@ public class TxlUserDto implements Serializable {
 	//
 	private String pyName;
 	
+	
 	// 已休假天数
 	private String QXJxiuJiaDays;
-
 	// 应休天数
 	private String QXJtotalDays;
-
 	// 未请假天数
 	private String QXJweixiujiaDays;
-
 	// 请假类别
 	private String QXJtype;
-
 	// 请假开始时间
 	private Date QXJstartDate;
 	// 请假结束时间
@@ -584,94 +581,46 @@ public class TxlUserDto implements Serializable {
 	public JSONObject getJsonData() {
 		return jsonData;
 	}
-
 	public void setJsonData(JSONObject jsonData) {
 		this.jsonData = jsonData;
 	}
-
-
-
-
 	public String getQXJxiuJiaDays() {
 		return QXJxiuJiaDays;
 	}
-
-
-
-
 	public void setQXJxiuJiaDays(String qXJxiuJiaDays) {
 		QXJxiuJiaDays = qXJxiuJiaDays;
 	}
-
-
-
-
 	public String getQXJtotalDays() {
 		return QXJtotalDays;
 	}
-
-
-
-
 	public void setQXJtotalDays(String qXJtotalDays) {
 		QXJtotalDays = qXJtotalDays;
 	}
-
-
-
-
 	public String getQXJweixiujiaDays() {
 		return QXJweixiujiaDays;
 	}
-
-
-
-
 	public void setQXJweixiujiaDays(String qXJweixiujiaDays) {
 		QXJweixiujiaDays = qXJweixiujiaDays;
 	}
-
-
-
-
 	public String getQXJtype() {
 		return QXJtype;
 	}
-
-
-
-
 	public void setQXJtype(String qXJtype) {
 		QXJtype = qXJtype;
 	}
-
-
-
-
 	public Date getQXJstartDate() {
 		return QXJstartDate;
 	}
-
-
-
-
 	public void setQXJstartDate(Date qXJstartDate) {
 		QXJstartDate = qXJstartDate;
 	}
-
-
-
-
 	public Date getQXJendDate() {
 		return QXJendDate;
 	}
-
-
-
-
 	public void setQXJendDate(Date qXJendDate) {
 		QXJendDate = qXJendDate;
 	}
+
 
 
 	

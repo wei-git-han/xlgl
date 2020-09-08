@@ -233,7 +233,7 @@ public class PeopleManagementController {
 		jsonObject.put("page", txl.getString("page"));
 		jsonObject.put("total", txl.getString("total"));
 		jsonObject.put("manager", txl.getBoolean("manager"));
-		Response.json(txl);
+		Response.json(jsonObject);
 	}
 
 	/**
