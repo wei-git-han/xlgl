@@ -144,12 +144,13 @@ public class XlglNewsController {
 	 */
 	@ResponseBody
 	@RequestMapping("list")
-	public void list(Integer page, Integer pagesize,String type){
+	public void list(Integer page, Integer pagesize,String type,String orgId){
 		String userId = CurrentUser.getUserId();
 		//获取当前人的管理员类型（0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员;4:处管理员）
 		String adminFlag = adminSetService.getAdminTypeByUserId(userId);
 		HashMap<String, Object> map = new HashMap<String,Object>();
 		map.put("type",type);
+		map.put("orgId",orgId);
 		PageHelper.startPage(page, pagesize);
 		List<XlglNews> xlglNewsList = xlglNewsService.queryList(map);
 		if(xlglNewsList != null && xlglNewsList.size() > 0) {

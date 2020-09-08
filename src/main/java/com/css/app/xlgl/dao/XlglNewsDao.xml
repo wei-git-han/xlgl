@@ -23,6 +23,9 @@
 		<if test="type != null and type != ''">
 			and NEWS_TYPE = #{type}
 		</if>
+		<if test="orgId != null and orgId !=''">
+			and RELEASE_ORGANID = #{orgId}
+		</if>
 		order by is_top desc, release_date desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
@@ -51,7 +54,7 @@
 	
 	<!--根据局统计本月发布新闻数  -->
 	<select id="queryTotalMonthByOrgan" resultMap="totalMap">
-		select RELEASE_ORGAN releaseOrgan,count(*) nums from XLGL_NEWS where IS_RELEASE='1' and to_char(RELEASE_DATE,'yyyy-MM')=to_char(sysdate,'yyyy-MM') group by RELEASE_ORGAN
+		select RELEASE_ORGAN releaseOrgan,count(*) nums, RELEASE_ORGANID from XLGL_NEWS where IS_RELEASE='1' and to_char(RELEASE_DATE,'yyyy-MM')=to_char(sysdate,'yyyy-MM') group by RELEASE_ORGAN,RELEASE_ORGANID
 	</select>
 	
 	<!--查询本周发布新闻数  -->
