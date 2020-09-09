@@ -300,6 +300,18 @@ public class XlglXlzzInfoController {
 	}
 
 	/**
+	 * 参训受训图片，附件，视频删除
+	 * @param infoId  文id
+	 * @param pictureId   视频，附件，图片id
+	 */
+	@ResponseBody
+	@RequestMapping("/deleteVedioOrFileOrPicture")
+	public void deleteVedioOrFileOrPicture(String infoId,String pictureId){
+		xlglPictureService.deleteVedioOrFileOrPicture(infoId,pictureId);
+		Response.json("result","success");
+	}
+
+	/**
 	 * 查询某个文件所有的图片
 	 * @param infoId
 	 */
@@ -854,6 +866,7 @@ public class XlglXlzzInfoController {
 	/**
 	 * 强装大讲堂详情页
 	 * infoId 文id，id 视频保存的id（picture表的id）
+	 * type 0大讲堂，1日常军事训练
 	 */
 	@ResponseBody
 	@RequestMapping("/getInfo")
@@ -871,6 +884,7 @@ public class XlglXlzzInfoController {
 		}
 		List<XlglPicture> list = xlglPictureService.queryList(map);
 		XlglSubDocTracking xlglSubDocTracking = xlglSubDocTrackingService.queryInfo(infoId,CurrentUser.getUserId());
+		//日常军事训练的，打开就代表参训了
 		if(xlglSubDocTracking != null){
 			xlglSubDocTracking.setIsWork("1");
 			xlglSubDocTrackingService.update(xlglSubDocTracking);

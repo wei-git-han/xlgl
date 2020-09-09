@@ -62,6 +62,16 @@ public class BaseAppUser implements Serializable {
 
 	//是否参训
 	private String isWork;
+	//部门
+	private String deptName;
+
+	public String getDeptName() {
+		return deptName;
+	}
+
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
+	}
 
 	public String getIsWork() {
 		return isWork;

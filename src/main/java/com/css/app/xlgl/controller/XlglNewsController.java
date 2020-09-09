@@ -350,6 +350,7 @@ public class XlglNewsController {
 	
 	/**
 	 * 查询草稿箱
+	 * 只能查询自己发布的草稿
 	 * @param page
 	 * @param pagesize
 	 */
@@ -357,6 +358,7 @@ public class XlglNewsController {
 	@RequestMapping("queryDrafts")
 	public void queryDrafts(Integer page, Integer pagesize){
 		HashMap<String, Object> map = new HashMap<String,Object>();
+		map.put("userId",CurrentUser.getUserId());
 		PageHelper.startPage(page, pagesize);
 		List<XlglNews> xlglNewsList = xlglNewsService.queryDrafts(map);
 		GwPageUtils pageUtil = new GwPageUtils(xlglNewsList);
