@@ -73,7 +73,7 @@
 			<if test="releaseOrgan != null">"RELEASE_ORGAN" = #{releaseOrgan}, </if>
 			<if test="content != null">"CONTENT" = #{content}, </if>
 			<if test="contenttext != null">"CONTENTTEXT" = #{contenttext},</if>
-			<if test="viewNumber != null">"VIEW_NUMBER" = #{viewNumber}</if>
+			<if test="viewNumber != null">"VIEW_NUMBER" = #{viewNumber},</if>
 			<if test="creator != null">"CREATOR" = #{creator}</if>
 
 		</set>
