@@ -8,10 +8,11 @@
 	</select>
 
     <select id="queryBySort" resultType="com.css.app.xlgl.entity.XlglSubDocInfo">
-        select * from ( select ROW_NUMBER() OVER(order by t.EXERCISE_TIME desc ) as SORT, t.* from XLGL_SUB_DOC_INFO t  where 1=1
+        select * from ( select ROW_NUMBER() OVER(order by t.EXERCISE_TIME desc ) as SORT, t.* from XLGL_SUB_DOC_INFO t  where 1 = 1
         <if test="orgId != null and orgId !=''">
             and t.SUB_DEPT_ID = #{orgId}
-        </if> ) where 1=1
+        </if>
+        and IS_SEND  = '0' ) where 1 = 1
         <if test="sortPre != null and sortPre !=''">
             and SORT = #{sortPre}
         </if>

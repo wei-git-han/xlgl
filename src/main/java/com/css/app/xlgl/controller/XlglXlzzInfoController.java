@@ -259,7 +259,7 @@ public class XlglXlzzInfoController {
 				if(StringUtils.isNotBlank(sort)){
 					Map<String,Object> mapSort = new HashedMap();
 					String sortPre = String.valueOf(Integer.parseInt(sort) - 1);
-					String sortSuf = String.valueOf(Integer.parseInt(sort) - 1);
+					String sortSuf = String.valueOf(Integer.parseInt(sort) + 1);
 					SimpleDateFormat format  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					mapSort.put("sortPre",sortPre);
 					mapSort.put("sortSuf",sortSuf);
