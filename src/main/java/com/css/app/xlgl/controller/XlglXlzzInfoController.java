@@ -130,6 +130,7 @@ public class XlglXlzzInfoController {
 		String loginUser = CurrentUser.getUserId();
 		String deptName = CurrentUser.getOrgName();
 		XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(id);
+		String instraction = "";
 		//打开的同时，更新打开人的状态为已读
 		XlglSubDocTracking xlglSubDocTracking = xlglSubDocTrackingService.queryInfo(id, loginUser);
 		if (xlglSubDocTracking != null) {
@@ -144,7 +145,7 @@ public class XlglXlzzInfoController {
 				}
 			}
 			xlglXlzzInfo.setStatus("1");//1为已读
-
+			instraction = xlglSubDocTracking.getInstraction();
 		}
 		xlglXlzzInfo.setFbDept(xlglXlzzInfo.getZjdept());
 		map.put("fileId", id);
@@ -291,12 +292,11 @@ public class XlglXlzzInfoController {
 		}
 
 
-
 		jsonObject.put("listVedio", listVedio);
 		jsonObject.put("listPicture", listPicture);
 		jsonObject.put("listFile", listFile);
 		jsonObject.put("xlglXlzzInfo", xlglXlzzInfo);
-		jsonObject.put("instraction",xlglSubDocTracking.getInstraction());
+		jsonObject.put("instraction",instraction);
 		Response.json(jsonObject);
 	}
 

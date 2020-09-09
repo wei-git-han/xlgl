@@ -1,5 +1,7 @@
 package com.css.app.xlgl.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +10,7 @@ import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.xlgl.entity.XlglSubDocInfo;
 import com.css.app.xlgl.entity.XlglSubDocTracking;
+import com.css.app.xlgl.entity.XlglXlzzInfo;
 import com.css.app.xlgl.service.XlglSubDocInfoService;
 import com.css.app.xlgl.service.XlglSubDocTrackingService;
 import com.css.app.xlgl.service.XlglXlzzInfoService;
@@ -117,6 +120,9 @@ public class XlglSubDocInfoController {
 	public void deleteZhu(String id){
 		Map<String,Object> map = new HashMap<>();
 		map.put("id",id);
+		SimpleDateFormat format  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		map.put("time",format.format(new Date()));
+		//XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryDelete(id);
 		List<XlglSubDocInfo> list = xlglSubDocInfoService.queryList(map);
 		if(list != null && list.size() > 0){
 			Response.json("result","false");

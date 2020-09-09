@@ -148,7 +148,7 @@ public class XlglDocumentZbjlController {
                 String[] idAndName = ids[i].split(",");
                 String deptId = idAndName[0];
                 String deptName = idAndName[1];
-                if (!subDeptIds.contains(deptId)) {
+                if (!subDeptIds.contains(deptId)) {//防止多次分发，多次分发只是分发新增的那些
                     XlglSubDocInfo xlglSubDocInfo = new XlglSubDocInfo();
                     xlglSubDocInfo.setId(UUIDUtils.random());
                     xlglSubDocInfo.setInfoId(fileId);
@@ -218,6 +218,8 @@ public class XlglDocumentZbjlController {
                 //xlglDocumentZbjlService.save(xl);
                 //流转记录
                 XlglSubDocTracking tracking = new XlglSubDocTracking();
+                //多次分发，先删除该文件上次分发的
+                xlglSubDocTrackingService.deleteByInfoIdAndUserId(fileId,CurrentUser.getUserId());
                 String loginUserName = CurrentUser.getUsername();
                 String loginUserDeptId = CurrentUser.getDepartmentId();
                 String loginUserDeptName = CurrentUser.getOrgName();

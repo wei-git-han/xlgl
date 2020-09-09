@@ -71,4 +71,6 @@ public interface XlglSubDocTrackingService {
 
 	List<XlglSubDocTracking> queryBySort(Map<String,Object> map);
 
+	void deleteByInfoIdAndUserId(String infoId,String userId);
+
 }

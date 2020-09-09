@@ -153,5 +153,11 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 		return xlglSubDocTrackingDao.queryBySort(map);
 	}
 
+	@Override
+	public void deleteByInfoIdAndUserId(String infoId,String userId){
+		xlglSubDocTrackingDao.deleteByInfoIdAndUserId(infoId,userId);
+
+	}
+
 
 }
