@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -25,9 +27,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.apporgan.entity.BaseAppOrgan;
+import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
-import com.css.addbase.apporgmapped.entity.BaseAppOrgMapped;
 import com.css.addbase.apporgmapped.service.BaseAppOrgMappedService;
 import com.css.addbase.constant.AppConstant;
 import com.css.addbase.constant.AppInterfaceConstant;
@@ -39,6 +41,8 @@ import com.css.base.utils.CrossDomainUtil;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.PageUtils;
 import com.css.base.utils.Response;
+import com.css.base.utils.RestTemplateUtil;
+import com.css.base.utils.StringUtils;
 import com.github.pagehelper.PageHelper;
 /**
  * 
@@ -62,6 +66,8 @@ public class PeopleManagementController {
 	
 	@Value("${filePath}")
 	private String filePath;
+	@Value("${csse.mircoservice.zaiwei}")
+	private String urls;
 
 	/**
 	 * 
@@ -71,6 +77,7 @@ public class PeopleManagementController {
 	@RequestMapping("/list")
 	public void list(Integer page, Integer limit) {
 		Map<String, Object> map = new HashMap<>();
+		map.put("parentId", "root");
 		PageHelper.startPage(page, limit);
 		List<BaseAppOrgan> queryList = baseAppOrganService.queryList(map);
 		PageUtils pageUtil = new PageUtils(queryList);
@@ -98,22 +105,23 @@ public class PeopleManagementController {
 					break;
 				}
 			}
-		}
-
-		LinkedMultiValueMap<String, Object> linkeMap = new LinkedMultiValueMap<String,Object>();
+		}	
+		List<String> list = getUserArray();
 		for (BaseAppOrgan baseAppOrgan : queryList) {
+			LinkedMultiValueMap<String, Object> linkeMap = new LinkedMultiValueMap<String,Object>();
 				if(status) {
 					String str = "0";
 					if(queryList2.size()>0) {
-						 str =baseAppOrgan.getId().equals(queryList2.get(0).getDeptId())?"1":"0";
+						List<String> queryListByTREEPATH = baseAppOrganService.queryListByTREEPATH(baseAppOrgan.getId());
+						if(queryListByTREEPATH.contains(CurrentUser.getSSOUser().getOrganId())) {
+							str = "1";
+						}
 					}
 					baseAppOrgan.setStatus(str);
 				}else {
 					baseAppOrgan.setStatus("1");
 				}
-			if(!baseAppOrgan.getId().equals("root")) {
 				linkeMap.add("organId", baseAppOrgan.getId());
-			}
 			JSONObject jsonData = this.getNumber(linkeMap);
 			Integer yzwrs=0;
 			Integer qjrs=0;
@@ -125,17 +133,19 @@ public class PeopleManagementController {
 				yzwrs = (Integer)object;
 			}
 			if( object2!=null) {
-				yzwrs = (Integer)object2;
+				qjrs = (Integer)object2;
 			}
 			if( object3!=null) {
-				yzwrs = (Integer)object3;
+				xjrs = (Integer)object3;
 			}
-			int userIdList = this.userIdNumber();//实际在位人数
+			int userIdList = this.userIdNumber(baseAppOrgan.getId(),list);//实际在位人数
 			if(userIdList == 0 || yzwrs ==0) {
-				int zwRate = 0;
-				baseAppOrgan.setZwrate(zwRate);
+				baseAppOrgan.setZwrate("0");
 			}else {
-				int zwRate = (userIdList /yzwrs)*100; //人员在位率
+				DecimalFormat decimalFormat = new DecimalFormat("0.00");
+				String zwRate = decimalFormat.format(((float)userIdList/yzwrs)*100);
+				//long zwr =((long)userIdList /(long)yzwrs);
+				//float zwRate = zwr*100; //人员在位率
 				baseAppOrgan.setZwrate(zwRate);
 			}
 			baseAppOrgan.setYzwrs(yzwrs);
@@ -149,12 +159,16 @@ public class PeopleManagementController {
 	
 	private List<BaseAppOrgan> getBaseAppOrganList(List<BaseAppOrgan> queryList,List<XlglAdminSet> queryList2,Boolean status) {
 		LinkedMultiValueMap<String, Object> linkeMap = new LinkedMultiValueMap<String,Object>();
+		List<String> list = getUserArray();
 		for (BaseAppOrgan baseAppOrgan : queryList) {
 			if(status != null) {
 				if(status) {
 					String str = "0";
 					if(queryList2.size()>0) {
-						 str =baseAppOrgan.getId().equals(queryList2.get(0).getDeptId())?"1":"0";
+						List<String> queryListByTREEPATH = baseAppOrganService.queryListByTREEPATH(baseAppOrgan.getId());
+						if(queryListByTREEPATH.contains(CurrentUser.getSSOUser().getOrganId())) {
+							str = "1";
+						}
 					}
 					baseAppOrgan.setStatus(str);
 				}else {
@@ -178,12 +192,15 @@ public class PeopleManagementController {
 			if( object3!=null) {
 				yzwrs = (Integer)object3;
 			}
-			int userIdList = this.userIdNumber();//实际在位人数
+			int userIdList = this.userIdNumber(baseAppOrgan.getId(),list);//实际在位人数
 			if(userIdList == 0 || yzwrs ==0) {
-				int zwRate = 0;
-				baseAppOrgan.setZwrate(zwRate);
+				
+				baseAppOrgan.setZwrate("0");
 			}else {
-				int zwRate = (userIdList /yzwrs)*100; //人员在位率
+				DecimalFormat decimalFormat = new DecimalFormat("0.00");
+				String zwRate = decimalFormat.format(((float)userIdList/yzwrs)*100);
+				//long zwr =((long)userIdList /(long)yzwrs);
+				//float zwRate = zwr*100; //人员在位率
 				baseAppOrgan.setZwrate(zwRate);
 			}
 			baseAppOrgan.setYzwrs(yzwrs);
@@ -211,6 +228,7 @@ public class PeopleManagementController {
 		String jsonArray = txl.getJSONArray("rows").toString();
 		List<TxlUserDto> parseArray = JSONArray.parseArray(jsonArray, TxlUserDto.class);
 		List<TxlUserDto> list = new ArrayList<TxlUserDto>();
+		List<String> userArray = getUserArray();
 		for (TxlUserDto txlUserDto : parseArray) {
 			LinkedMultiValueMap<String, Object> hashmap = new LinkedMultiValueMap<String,Object>();
 			hashmap.add("userId", txlUserDto.getUserid());
@@ -227,8 +245,14 @@ public class PeopleManagementController {
 				txlUserDto.setQXJstartDate(parseObject.getStartDate());
 				txlUserDto.setQXJendDate(parseObject.getEndDate());
 			}
+			if(userArray.contains(txlUserDto.getAccount())) {
+				txlUserDto.setIsShow("1");
+			}else {
+				txlUserDto.setIsShow("0");
+			}
 			list.add(txlUserDto);
 		}
+	
 		jsonObject.put("rows", list);
 		jsonObject.put("page", txl.getString("page"));
 		jsonObject.put("total", txl.getString("total"));
@@ -248,19 +272,22 @@ public class PeopleManagementController {
 			String organId = CurrentUser.getSSOUser().getOrganId();
 			map.add("organId", organId);
 		}
+		List<String> list = getUserArray();
 		JSONObject jsonData = this.getNumber(map);
-		int userIdList = this.userIdNumber();//实际在位人数
+		int userIdList = this.userIdNumber(null,list);//实际在位人数
 		Integer object = 0;
 		if(jsonData!=null) {
-			Object object2 = jsonData.get("zwrs");
+			Object object2 = jsonData.get("yzwrs");
 			object =(Integer)object2;//应在位人数
 		}
 		
-		if(userIdList == 0 || object == 0) {
-			int zwRate = 0;
-			jsonData.put("zwlv", zwRate);
+		if(userIdList == 0 && object == 0 && object !=null) {
+			jsonData.put("zwlv", "0");
 		}else {
-			int zwRate = (userIdList /object)*100;
+			DecimalFormat decimalFormat = new DecimalFormat("0.00");
+			String zwRate = decimalFormat.format(((float)userIdList/object)*100);
+			//long zwr =((long)userIdList /(long)yzwrs);
+			//float zwRate = zwr*100; //人员在位率
 			jsonData.put("zwlv", zwRate);
 		}
 		Response.json(jsonData);
@@ -280,13 +307,17 @@ public class PeopleManagementController {
 		Integer yzwrs=(Integer)jsonData.get("yzwrs");
 		Integer qjrs=(Integer)jsonData.get("qjrs");
 		Integer xjrs=(Integer)jsonData.get("xjrs");
-		int userIdList = this.userIdNumber();//实际在位人数
-		int zwRate = (userIdList /yzwrs)*100; //人员在位率
+		List<String> list = getUserArray();
+		int userIdList = this.userIdNumber(organId,list);//实际在位人数
+		DecimalFormat decimalFormat = new DecimalFormat("0.00");
+		String zwRate = decimalFormat.format(((float)userIdList/yzwrs)*100);
+		//long zwr =((long)userIdList /(long)yzwrs);
+		//float zwRate = zwr*100; //人员在位率
+		baseAppOrgan.setZwrate(zwRate);
 		baseAppOrgan.setYzwrs(yzwrs);
 		baseAppOrgan.setQjrs(qjrs);
 		baseAppOrgan.setXjrs(xjrs);
 		baseAppOrgan.setSjzwrs(userIdList);
-		baseAppOrgan.setZwrate(zwRate);
 		Response.json("baseAppOrgan",baseAppOrgan);
 	}
 	
@@ -307,9 +338,22 @@ public class PeopleManagementController {
 	/**
 	 * 在线人
 	 */
-	private  int userIdNumber() {
-		int size = getUserArray().size();
-		return size;
+	private  int userIdNumber(String organId,List<String> list) {
+		int i = 0;
+		if(StringUtils.isNotBlank(organId)) {
+			Map<String,Object> map =new HashMap<String,Object>();
+			map.put("organid", organId);
+			List<BaseAppUser> queryListByOrganid = baseAppUserService.queryListByOrganid(map);
+			for (BaseAppUser baseAppUser : queryListByOrganid) {
+				if(list.contains(baseAppUser.getAccount())) {
+					i++;
+				}
+			}
+		}else {
+			i=list.size();
+		}
+		
+		return i;
 	}
 	/**
 	 * 获得在位用户
@@ -317,17 +361,20 @@ public class PeopleManagementController {
 	private List<String> getUserArray() {
 		List<String> accountList = new ArrayList<String>();
 		LinkedMultiValueMap<String,Object> infoMap = new LinkedMultiValueMap<String,Object>();
-		infoMap.add("arch", "arm64");
-		BaseAppOrgMapped mapped = (BaseAppOrgMapped) baseAppOrgMappedService.orgMappedByOrgId(null, "root",
-				AppInterfaceConstant.APP_XLGL);
-		/*if(mapped != null){
-			String url = mapped.getUrl() + AppInterfaceConstant.WEB_INTERFACE_XLGLZXR;
-			String returnString = CrossDomainUtil.postJSONString(url, null);
-			String accounts = returnString.substring(1,returnString.length()-1).replace("\"", "");
-			String [] accountArray = accounts.split("\\s*,\\s*");
-			accountList = new ArrayList<String>(Arrays.asList(accountArray));
-		}*/
-		return accountList;
+		infoMap.add("_content_type", "application/x-www-form-urlencoded");
+		String url = urls + AppInterfaceConstant.WEB_INTERFACE_XLGLZXR;
+		    try {
+		        //请假人数远程服务地址(获取在线人数)
+		        String reJson = RestTemplateUtil.postJSONString(url, infoMap);
+		        String accounts = reJson.substring(1,reJson.length()-1).replace("\"", "");
+		        String [] accountArray = accounts.split("\\s*,\\s*");
+		        accountList = new ArrayList<String>(Arrays.asList(accountArray));
+		    } catch (Exception e) {
+		       // logger.info("PersonManagementController在线人员ID-LIST");
+		        e.printStackTrace();
+		    }
+		    return accountList;
+	
 	} 
 	
 	/**
@@ -350,7 +397,9 @@ public class PeopleManagementController {
 	@ResponseBody
 	@RequestMapping("/export")
 	public void export(String[] organIds) {
-		List<BaseAppOrgan> queryList = baseAppOrganService.queryList(null);
+		Map<String, Object> map = new HashMap<>();
+		map.put("parentId", "root");
+		List<BaseAppOrgan> queryList = baseAppOrganService.queryList(map);
 		queryList = getBaseAppOrganList(queryList,null,null);
 		List<BaseAppOrgan> list = new ArrayList<BaseAppOrgan>();
 		if(organIds !=null) {

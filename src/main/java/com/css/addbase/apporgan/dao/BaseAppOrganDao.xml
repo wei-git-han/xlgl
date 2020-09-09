@@ -98,5 +98,15 @@
 			#{ids}
 		</foreach>
 	</select>
+	
+	<select id="queryListByTREEPATH" resultType="String">
+			select 
+ 				id 
+ 			from 
+ 				BASE_APP_ORGAN 
+ 			where 
+ 				TREE_PATH like '%'||#{orgId}||'%'
+ 				and isdelete = 0
+	</select>
 
 </mapper>

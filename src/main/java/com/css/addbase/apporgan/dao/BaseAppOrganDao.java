@@ -1,6 +1,5 @@
 package com.css.addbase.apporgan.dao;
 
-import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +7,7 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.base.dao.BaseDao;
 
 /**
@@ -68,4 +68,6 @@ public interface BaseAppOrganDao extends BaseDao<BaseAppOrgan> {
 
 	@Select("select * from BASE_APP_ORGAN where id = #{0}")
 	BaseAppOrgan queryDeptNameByUserId(String orgId);
+	
+	List<String> queryListByTREEPATH(String orgId);
 }

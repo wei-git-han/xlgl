@@ -1,5 +1,6 @@
 package com.css.app.xlgl.controller;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -568,23 +569,50 @@ public class XlglExamExamineController {
 		if(StringUtils.isNotBlank(number)) {
 			numberInto=Integer.parseInt(number);
 		}
+		DecimalFormat format = new DecimalFormat("0.00");
+		String raio;
+		if(numberInto == 0 || queryTotal ==0) {
+			raio = "0";
+		}else {
+			raio = format.format(((float)numberInto/queryTotal)*100);//参考率
+		}
+		
 		Integer numberIntoNot =queryTotal-numberInto;//需要补考人数
-		Integer raio =(numberInto/queryTotal)*100;//参考率
+		//Integer raio =(numberInto/queryTotal)*100;
 		map.put("level", "1");
 		int total1 = xlglExamMainAnswerService.queryTotal(map);//优秀人数
 		map.put("level", "2");
 		int total2 = xlglExamMainAnswerService.queryTotal(map);//优良人数
 		map.put("level", "3");
 		int total3 = xlglExamMainAnswerService.queryTotal(map);//及格人数
-		Integer total1Raio = (total1/numberInto) *100;
+		String total1Raio;
+		if(numberInto == 0 || total1 ==0) {
+			total1Raio = "0";
+		}else {
+			total1Raio = format.format(((float)total1/numberInto)*100);//优秀率
+		}
+		String total2Raio;
+		if(numberInto == 0 || total2 ==0) {
+			total2Raio = "0";
+		}else {
+			total2Raio = format.format(((float)total2/numberInto)*100);//优良率
+		}
+		
+		String total3Raio;
+		if(numberInto == 0 || total3 ==0) {
+			total3Raio = "0";
+		}else {
+			total3Raio = format.format(((float)total3/numberInto)*100);//及格率
+		}
+		/*Integer total1Raio = (total1/numberInto) *100;
 		Integer total2Raio = (total2/numberInto) *100;
-		Integer total3Raio = (total3/numberInto) *100;
-		jsonObject.put("raioAll", raio);
+		Integer total2Raio = (total3/numberInto) *100;*/
+		jsonObject.put("raioAll", Float.valueOf(raio));
 		jsonObject.put("peopleNum" , numberInto);
 		jsonObject.put("fillUpNum", numberIntoNot);
-		jsonObject.put("excellent", total1Raio);
-		jsonObject.put("fine", total2Raio);
-		jsonObject.put("pass", total3Raio);
+		jsonObject.put("excellent",Float.valueOf(total1Raio) );
+		jsonObject.put("fine", Float.valueOf(total2Raio));
+		jsonObject.put("pass", Float.valueOf(total3Raio));
 		XlglExamExamine queryObject = xlglExamExamineService.queryObject(examineId);
 		jsonObject.put("examine", queryObject);
 		Response.json(jsonObject);

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.css.app.xlgl.entity.XlglExamSubject;
+import com.css.app.xlgl.entity.XlglExamTopic;
 import com.css.app.xlgl.service.XlglExamSubjectService;
 import com.css.app.xlgl.service.XlglExamTopicService;
 import com.css.base.utils.CurrentUser;
@@ -218,4 +219,46 @@ public class XlglExamSubjectController {
 		Response.json(jsonbject);
 	}
 	
+	
+	/**
+	 * 获得科目下每道题型下在题库中的数量
+	 * */
+	@ResponseBody
+	@RequestMapping("/getTopicNumber")
+	public void getTopicNumber(String id){
+		Map<String ,Object> map =new HashMap<String ,Object>();
+		JSONObject jsonbject = new JSONObject();
+		XlglExamSubject queryObject = xlglExamSubjectService.queryObject(id);
+		map.put("subjectId", queryObject.getId());
+		List<XlglExamTopic> queryList = xlglExamTopicService.queryList(map);
+		String subjectType = queryObject.getSubjectType();
+		int type1=0;
+		int type2=0;
+		int type3=0;
+		int type4=0;
+		if(subjectType.contains(",")) {
+			String[] split = subjectType.split(",");
+			for (String string : split) {
+				for (XlglExamTopic xlglExamTopic : queryList) {
+					if(string.equals(xlglExamTopic.getTopicType()) && string.equals("1")) {
+						type1 ++;
+					}
+					if(string.equals(xlglExamTopic.getTopicType()) && string.equals("2")) {
+						type2 ++;
+					}
+					if(string.equals(xlglExamTopic.getTopicType()) && string.equals("3")) {
+						type3 ++;
+					}
+					if(string.equals(xlglExamTopic.getTopicType()) && string.equals("4")) {
+						type4 ++;
+					}
+				}
+			}
+		}
+		jsonbject.put("1", type1);
+		jsonbject.put("2", type2);
+		jsonbject.put("3", type3);
+		jsonbject.put("4", type4);
+		Response.json(jsonbject);
+	}
 }
