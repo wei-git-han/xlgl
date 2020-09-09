@@ -28,6 +28,12 @@
         <if test="id != null and id !=''">
             and INFO_ID = #{id}
         </if>
+        <if test="infoId != null and infoId !=''">
+            and INFO_ID = #{infoId}
+        </if>
+        <if test="deptId != null and deptId !=''">
+            and SUB_DEPT_ID = #{deptId}
+        </if>
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}
         </if>

@@ -43,7 +43,8 @@
 			"RELEASE_ORGAN", 
 			"CONTENT", 
 			"CONTENTTEXT",
-			"VIEW_NUMBER"
+			"VIEW_NUMBER",
+			"CREATOR"
 		)
 		values
 		(
@@ -56,7 +57,8 @@
 			#{releaseOrgan}, 
 			#{content}, 
 			#{contenttext},
-			#{viewNumber}
+			#{viewNumber},
+			#{creator}
 		)
 	</insert>
 	 
@@ -72,7 +74,8 @@
 			<if test="content != null">"CONTENT" = #{content}, </if>
 			<if test="contenttext != null">"CONTENTTEXT" = #{contenttext},</if>
 			<if test="viewNumber != null">"VIEW_NUMBER" = #{viewNumber}</if>
-			
+			<if test="creator != null">"CREATOR" = #{creator}</if>
+
 		</set>
 		where ID = #{id}
 	</update>

@@ -43,6 +43,17 @@ public class XlglNotice implements Serializable {
 	//
 	private String releaseTimeStr;
 
+	//发布人
+	private String creator;
+
+	public String getCreator() {
+		return creator;
+	}
+
+	public void setCreator(String creator) {
+		this.creator = creator;
+	}
+
 	/**
 	 * 设置：主键id
 	 */

@@ -146,7 +146,7 @@ public class XlglXlzzInfoController {
 			xlglXlzzInfo.setStatus("1");//1为已读
 
 		}
-		xlglXlzzInfo.setFbDept(deptName);
+		xlglXlzzInfo.setFbDept(xlglXlzzInfo.getZjdept());
 		map.put("fileId", id);
 		List<XlglPicture> list = xlglPictureService.queryAllInfoByInfoId(map);
 		List listVedio = new ArrayList();
@@ -296,6 +296,7 @@ public class XlglXlzzInfoController {
 		jsonObject.put("listPicture", listPicture);
 		jsonObject.put("listFile", listFile);
 		jsonObject.put("xlglXlzzInfo", xlglXlzzInfo);
+		jsonObject.put("instraction",xlglSubDocTracking.getInstraction());
 		Response.json(jsonObject);
 	}
 
@@ -347,6 +348,7 @@ public class XlglXlzzInfoController {
 			xlglXlzzInfo.setId(fId);
 			xlglXlzzInfo.setCreator(CurrentUser.getUserId());
 			xlglXlzzInfo.setCreateTime(new Date());
+			xlglXlzzInfo.setZjdept(CurrentUser.getOrgName());
 			xlglXlzzInfoService.save(xlglXlzzInfo);
 		}
 		//保存上传图片，视频，文件
@@ -567,6 +569,18 @@ public class XlglXlzzInfoController {
 		JSONObject object = new JSONObject();
 		List<BaseAppOrgan> allList = baseAppOrganService.queryAllDeptIds();
 		if(allList != null && allList.size() > 0){
+			for(int i=0;i<allList.size();i++){
+				Map<String,Object> objectMap = new HashedMap();
+				String deptId = allList.get(i).getId();
+				objectMap.put("deptId",deptId);
+				objectMap.put("infoId",id);
+				List<XlglSubDocInfo> subDocInfoList = xlglSubDocInfoService.queryList(objectMap);
+				if(subDocInfoList.size() == 0){
+					allList.remove(i);
+				}
+			}
+		}
+		if(allList != null && allList.size() > 0){
 			for(BaseAppOrgan baseAppOrgan : allList){
 				String judeptId = baseAppOrgan.getId();//获取局id
 				String juName = baseAppOrgan.getName();//获取局名字
@@ -583,9 +597,9 @@ public class XlglXlzzInfoController {
 						JSONObject jsonObject = new JSONObject();
 						String deptId = list.get(i).getId();
 						String deptName = list.get(i).getName();
-						int sum = baseAppUserService.queryBmCout(deptId,infoId,"1");//已报名
-						int nsum = baseAppUserService.queryBmCout(deptId,infoId,"0");//未报名
-						int yhSum = baseAppUserService.queryBmCout(deptId,infoId,"2");//延后报名
+						int sum = baseAppUserService.queryBmCout(infoId,"1",deptId);//已报名
+						int nsum = baseAppUserService.queryBmCout(infoId,"0",deptId);//未报名
+						int yhSum = baseAppUserService.queryBmCout(infoId,"2",deptId);//延后报名
 						ybm += sum;
 						wbm += nsum;
 						int yjs = baseAppUserService.queryYjs(deptId,infoId);//已接受

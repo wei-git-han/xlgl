@@ -284,6 +284,7 @@ public class XlglNoticeController {
 			//设置发布部门id和发布部门
 			xlglNotice.setReleaseOrganid(releaseOrganid);
 			xlglNotice.setReleaseOrgan(releaseOrgan);
+			xlglNotice.setCreator(CurrentUser.getUsername());
 			xlglNoticeService.save(xlglNotice);
 			if(StringUtils.isNotBlank(pIds)) {
 				String[] ids = pIds.split(",");
