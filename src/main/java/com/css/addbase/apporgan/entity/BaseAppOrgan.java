@@ -37,7 +37,7 @@ public class BaseAppOrgan implements Serializable {
 	//实际在位人数
 	private Integer sjzwrs;
 	//人员在位率
-	private Integer zwrate;
+	private String zwrate;
 	//请假人数
 	private Integer qjrs;
 	//休假人数
@@ -171,12 +171,6 @@ public class BaseAppOrgan implements Serializable {
 	public void setSjzwrs(Integer sjzwrs) {
 		this.sjzwrs = sjzwrs;
 	}
-	public Integer getZwrate() {
-		return zwrate;
-	}
-	public void setZwrate(Integer zwrate) {
-		this.zwrate = zwrate;
-	}
 	public Integer getQjrs() {
 		return qjrs;
 	}
@@ -195,6 +189,13 @@ public class BaseAppOrgan implements Serializable {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+	public String getZwrate() {
+		return zwrate;
+	}
+	public void setZwrate(String zwrate) {
+		this.zwrate = zwrate;
+	}
+
 	
 	
 }
