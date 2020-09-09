@@ -40,4 +40,7 @@ public interface XlglSubDocInfoDao extends BaseDao<XlglSubDocInfo> {
     XlglSubDocInfo querySortByInfoIdAndDeptId(String infoId,String deptId);
 
     List<XlglSubDocInfo> queryBySort(Map<String,Object> map);
+
+    @Delete("delete from XLGL_SUB_DOC_TRACKING where INFO_ID = #{0}")
+    void deleteByInfoId(String id);
 }

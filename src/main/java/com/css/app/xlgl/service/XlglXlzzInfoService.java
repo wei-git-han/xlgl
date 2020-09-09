@@ -32,4 +32,6 @@ public interface XlglXlzzInfoService {
 	void deleteById(String id);
 
 	List<XlglXlzzInfo> queryBySort(Map<String,Object> map);
+
+	XlglXlzzInfo queryDelete(Map<String,Object> map);
 }

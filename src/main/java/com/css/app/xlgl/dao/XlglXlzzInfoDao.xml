@@ -14,6 +14,16 @@
 		</if>
 	</select>
 
+	<select id="queryDelete" resultType="com.css.app.xlgl.entity.XlglXlzzInfo">
+		select * from XLGL_XLZZ_INFO where 1 = 1
+		<if test="id != null and id !=''">
+			and ID = #{id}
+		</if>
+		<if test="time != null and time !=''">
+			and EXERCISE_TIME &lt; to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
+		</if>
+	</select>
+
 	<select id="queryBySort" resultType="com.css.app.xlgl.entity.XlglXlzzInfo">
 		select * from
         (select ROW_NUMBER() OVER(order by t.CREATE_TIME desc ) as SORT, t.* from XLGL_XLZZ_INFO t )

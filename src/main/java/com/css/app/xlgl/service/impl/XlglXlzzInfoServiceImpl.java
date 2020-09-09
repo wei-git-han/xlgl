@@ -61,5 +61,11 @@ public class XlglXlzzInfoServiceImpl implements XlglXlzzInfoService {
 	public List<XlglXlzzInfo> queryBySort(Map<String,Object> map){
 		return xlglXlzzInfoDao.queryBySort(map);
 	}
-	
+
+	@Override
+	public XlglXlzzInfo queryDelete(Map<String,Object> map){
+		return xlglXlzzInfoDao.queryDelete(map);
+	}
+
+
 }

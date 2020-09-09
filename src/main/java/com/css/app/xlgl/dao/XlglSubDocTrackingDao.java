@@ -81,4 +81,10 @@ public interface XlglSubDocTrackingDao extends BaseDao<XlglSubDocTracking> {
 
     @Delete("delete from XLGL_SUB_DOC_TRACKING where INFO_ID = #{0} and RECEIVER_ID = #{1}")
     void deleteByInfoIdAndUserId(String infoId,String userId);
+
+    @Delete("delete from XLGL_SUB_DOC_TRACKING where INFO_ID = #{0}")
+    void deleteByInfoId(String id);
+
+    @Delete("delete from   XLGL_SUB_DOC_TRACKING where  INFO_ID = #{0} and REC_DEPT_ID in  (select id from BASE_APP_ORGAN start with ID = #{1}  and ISDELETE=0 connect by prior ID = PARENT_ID)")
+    void deleteByInfoIdAndOrgId(String orgId,String id);
 }

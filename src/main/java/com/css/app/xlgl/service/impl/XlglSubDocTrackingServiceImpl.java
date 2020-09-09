@@ -159,5 +159,15 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 
 	}
 
+	@Override
+	public void deleteByInfoId(String id){
+		xlglSubDocTrackingDao.deleteByInfoId(id);
+	}
+
+	@Override
+	public void deleteByInfoIdAndOrgId(String orgId,String id){
+		xlglSubDocTrackingDao.deleteByInfoIdAndOrgId(orgId,id);
+	}
+
 
 }

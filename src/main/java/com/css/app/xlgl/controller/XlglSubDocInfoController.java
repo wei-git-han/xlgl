@@ -97,24 +97,43 @@ public class XlglSubDocInfoController {
 	
 	/**
 	 * 删除，局管理员的删除
+	 * 局分发的也都删除
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
 	public void delete(String id) {
-		Map<String,Object> map = new HashMap<>();
+//		Map<String,Object> map = new HashMap<>();
+//		String orgId = null;
+//		if (StringUtils.isNotBlank(id)) {
+//			orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
+//			map.put("INFO_ID",id);
+//			List<XlglSubDocTracking> list = xlglSubDocTrackingService.queryList(map);
+//			if(list != null && list.size() > 0){
+//				Response.json("result","false");
+//			}
+//			xlglSubDocInfoService.deleteSub(orgId, id);
+//		}
+//		Response.json("result", "success");
 		String orgId = null;
-		if (StringUtils.isNotBlank(id)) {
+		Map<String,Object> map = new HashMap<>();
+		map.put("id",id);
+		SimpleDateFormat format  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		map.put("time",format.format(new Date()));
+		XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryDelete(map);
+		if(xlglXlzzInfo != null) {//不为空，说明开始时间大于当前时间，才能删除
 			orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
-			map.put("INFO_ID",id);
-			List<XlglSubDocTracking> list = xlglSubDocTrackingService.queryList(map);
-			if(list != null && list.size() > 0){
-				Response.json("result","false");
-			}
 			xlglSubDocInfoService.deleteSub(orgId, id);
+			xlglSubDocTrackingService.deleteByInfoIdAndOrgId(orgId,id);
+			Response.json("result", "success");
+		}else {
+			Response.json("result", "false");
 		}
-		Response.json("result", "success");
 	}
 
+	/**
+	 * 主文件删除的话，所有的分支都删除
+	 * @param id
+	 */
 	@ResponseBody
 	@RequestMapping("/deleteZhu")
 	public void deleteZhu(String id){
@@ -122,13 +141,14 @@ public class XlglSubDocInfoController {
 		map.put("id",id);
 		SimpleDateFormat format  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		map.put("time",format.format(new Date()));
-		//XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryDelete(id);
-		List<XlglSubDocInfo> list = xlglSubDocInfoService.queryList(map);
-		if(list != null && list.size() > 0){
-			Response.json("result","false");
-		}else {
+		XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryDelete(map);
+		if(xlglXlzzInfo != null){//不为空，说明开始时间大于当前时间，才能删除
 			xlglXlzzInfoService.deleteById(id);
+			xlglSubDocInfoService.deleteByInfoId(id);
+			xlglSubDocTrackingService.deleteByInfoId(id);
 			Response.json("result","success");
+		}else {
+			Response.json("result","false");
 		}
 
 	}

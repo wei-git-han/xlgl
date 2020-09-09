@@ -89,4 +89,9 @@ public class XlglSubDocInfoServiceImpl implements XlglSubDocInfoService {
 		return xlglSubDocInfoDao.queryBySort(map);
 	}
 
+	@Override
+	public void deleteByInfoId(String id){
+		xlglSubDocInfoDao.deleteByInfoId(id);
+	}
+
 }

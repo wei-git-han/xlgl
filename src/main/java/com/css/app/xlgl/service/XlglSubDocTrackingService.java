@@ -73,4 +73,8 @@ public interface XlglSubDocTrackingService {
 
 	void deleteByInfoIdAndUserId(String infoId,String userId);
 
+	void deleteByInfoId(String id);
+
+	void deleteByInfoIdAndOrgId(String orgId,String id);
+
 }
