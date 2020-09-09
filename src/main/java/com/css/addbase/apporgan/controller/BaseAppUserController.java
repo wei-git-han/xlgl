@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Set;
 
 import com.css.app.xlgl.service.XlglAdminSetService;
+import com.css.base.utils.GwPageUtils;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,7 +65,7 @@ public class BaseAppUserController {
 	 */
 	@RequestMapping(value = "/list")
 	@ResponseBody
-	public void getList(String organId) {
+	public void getList(Integer page, Integer pagesize,String organId) {
 		if (StringUtils.isEmpty(organId)) {
 			organId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
 		}
@@ -73,6 +75,7 @@ public class BaseAppUserController {
 			map.put("orgIds", organId.split(","));
 		}
 		//List<BaseAppUser> users = baseAppUserService.findByOrganid(organId);
+		PageHelper.startPage(page, pagesize);
 		List<BaseAppUser> users = baseAppUserService.queryList(map);
 		JSONObject result = new JSONObject();
 		result.put("page", 1);
@@ -88,9 +91,12 @@ public class BaseAppUserController {
 			json.put("sfzb", user.getSfzb());
 			json.put("sfyx",user.getSfyx());
 			jsons.add(json);
+			user.setDeptName(baseAppOrganService.queryObject(user.getOrganid()).getName());
 		}
-		result.put("rows", jsons);
-		Response.json(result);
+		//result.put("rows", jsons);
+		//Response.json(result);
+		GwPageUtils pageUtil = new GwPageUtils(users);
+		Response.json(pageUtil);
 	}
 	
 	/**

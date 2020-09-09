@@ -8,16 +8,18 @@
 	</select>
 
     <select id="queryBySort" resultType="com.css.app.xlgl.entity.XlglSubDocInfo">
-        select * from ( select ROW_NUMBER() OVER(order by t.EXERCISE_TIME desc ) as SORT, t.* from XLGL_SUB_DOC_INFO t  where 1=1
+        select * from ( select ROW_NUMBER() OVER(order by t.EXERCISE_TIME desc ) as SORT, t.* from XLGL_SUB_DOC_INFO t  where 1 = 1
         <if test="orgId != null and orgId !=''">
             and t.SUB_DEPT_ID = #{orgId}
-        </if> ) where 1=1
+        </if>
+        and IS_SEND  = '0' ) where 1 = 1
         <if test="sortPre != null and sortPre !=''">
             and SORT = #{sortPre}
         </if>
         <if test="sortSuf != null and sortSuf !=''">
             or SORT = #{sortSuf}
         </if>
+        order by EXERCISE_TIME desc
     </select>
 
     <select id="queryList" resultType="com.css.app.xlgl.entity.XlglSubDocInfo">
@@ -25,6 +27,12 @@
 
         <if test="id != null and id !=''">
             and INFO_ID = #{id}
+        </if>
+        <if test="infoId != null and infoId !=''">
+            and INFO_ID = #{infoId}
+        </if>
+        <if test="deptId != null and deptId !=''">
+            and SUB_DEPT_ID = #{deptId}
         </if>
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}
@@ -175,7 +183,7 @@ where
             and b.XLTYPE like '%'||#{xltype}||'%'
         </if>
 
-        order by a.CREATED_TIME desc
+        order by a.EXERCISE_TIME desc
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}
         </if>

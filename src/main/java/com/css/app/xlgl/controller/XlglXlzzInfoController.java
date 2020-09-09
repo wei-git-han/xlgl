@@ -18,6 +18,7 @@ import com.css.app.xlgl.entity.*;
 import com.css.app.xlgl.service.*;
 import com.css.base.utils.*;
 import com.google.gson.JsonObject;
+import com.sun.org.apache.xerces.internal.xs.LSInputList;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.cookie.SM;
@@ -145,7 +146,7 @@ public class XlglXlzzInfoController {
 			xlglXlzzInfo.setStatus("1");//1为已读
 
 		}
-		xlglXlzzInfo.setFbDept(deptName);
+		xlglXlzzInfo.setFbDept(xlglXlzzInfo.getZjdept());
 		map.put("fileId", id);
 		List<XlglPicture> list = xlglPictureService.queryAllInfoByInfoId(map);
 		List listVedio = new ArrayList();
@@ -176,114 +177,118 @@ public class XlglXlzzInfoController {
 			}
 		}
 
-//		if("2".equals(flag)) {//全部的上下翻页
-//			if (StringUtils.isNotBlank(xlglXlzzInfo.getSort())) {
-//				String preId = "";
-//				String sufId = "";
-//				String sort = xlglXlzzInfo.getSort();
-//				int sortInt = Integer.parseInt(sort);
-//				Map<String, Object> mapSort = new HashMap<>();
-//				int sortPre = sortInt - 1;
-//				int sortSuf = sortInt + 1;
-//				mapSort.put("sortPre", String.valueOf(sortPre));
-//				mapSort.put("sortSuf", String.valueOf(sortSuf));
-//				List<XlglXlzzInfo> listSort = xlglXlzzInfoService.queryBySort(mapSort);
-//				if (listSort != null && listSort.size() > 0) {
-//					for (XlglXlzzInfo xlglXlzzInfo1 : listSort) {
-//						String sortNew = xlglXlzzInfo1.getSort();
-//						if (StringUtils.isNotBlank(sortNew)) {
-//							if (sortNew.equals(String.valueOf(sortPre))) {
-//								preId = xlglXlzzInfo1.getId();
-//							} else if (sortNew.equals(String.valueOf(sortSuf))) {
-//								sufId = xlglXlzzInfo1.getId();
-//							}
-//						}
-//					}
-//				}
-//				if (StringUtils.isBlank(preId)) {
-//					preId = "no";
-//				}
-//				if (StringUtils.isBlank(sufId)) {
-//					sufId = "no";
-//				}
-//				jsonObject.put("preId", preId);
-//				jsonObject.put("sufId", sufId);
-//			}
-//		}else if("1".equals(flag)){//我的训练
-//			XlglSubDocTracking Tracking = xlglSubDocTrackingService.querySortByInfoIdAndUserId(id,CurrentUser.getUserId());
-//			if(Tracking != null){
-//				if(StringUtils.isNotBlank(Tracking.getSort())){
-//					String preId = "";
-//					String sufId = "";
-//					Map<String,Object> mapSort = new HashMap<>();
-//					String sort = Tracking.getSort();
-//					String sortPre = String.valueOf(Integer.parseInt(sort) - 1);
-//					String sortSuf = String.valueOf(Integer.parseInt(sort) + 1);
-//					mapSort.put("sortPre",sortPre);
-//					mapSort.put("sortSuf",sortSuf);
-//					mapSort.put("receiveId",CurrentUser.getUserId());
-//					List<XlglSubDocTracking> subDocTrackingList = xlglSubDocTrackingService.queryBySort(mapSort);
-//					if(subDocTrackingList != null && subDocTrackingList.size() > 0){
-//						for(XlglSubDocTracking xlglSubDocTracking1 : subDocTrackingList){
-//								String sortNew = xlglSubDocTracking1.getSort();
-//							if (StringUtils.isNotBlank(sortNew)) {
-//								if (sortNew.equals(String.valueOf(sortPre))) {
-//									preId = xlglSubDocTracking1.getInfoId();
-//								} else if (sortNew.equals(String.valueOf(sortSuf))) {
-//									sufId = xlglSubDocTracking1.getInfoId();
-//								}
-//							}
-//						}
-//					}
-//					if (StringUtils.isBlank(preId)) {
-//						preId = "no";
-//					}
-//					if (StringUtils.isBlank(sufId)) {
-//						sufId = "no";
-//					}
-//					jsonObject.put("preId", preId);
-//					jsonObject.put("sufId", sufId);
-//				}
-//			}
-//
-//		}else if("0".equals(flag)){
-//			String deptId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
-//			XlglSubDocInfo xlglSubDocInfo = xlglSubDocInfoService.querySortByInfoIdAndDeptId(id,deptId);
-//			if(xlglSubDocInfo != null){
-//				String preId = "";
-//				String sufId = "";
-//				String sort = xlglSubDocInfo.getSort();
-//				if(StringUtils.isNotBlank(sort)){
-//					Map<String,Object> mapSort = new HashedMap();
-//					String sortPre = String.valueOf(Integer.parseInt(sort) - 1);
-//					String sortSuf = String.valueOf(Integer.parseInt(sort) - 1);
-//					mapSort.put("sortPre",sortPre);
-//					mapSort.put("sortSuf",sortSuf);
-//					mapSort.put("orgId",deptId);
-//					List<XlglSubDocInfo> subDocInfoList = xlglSubDocInfoService.queryBySort(mapSort);
-//					if(subDocInfoList != null && subDocInfoList.size() > 0){
-//						for(XlglSubDocInfo xlglSubDocInfo1 : subDocInfoList){
-//							String sortNew = xlglSubDocInfo1.getSort();
-//							if(StringUtils.isNotBlank(sortNew)){
-//								if(sortPre.equals(sortNew)){
-//									preId = xlglSubDocInfo1.getInfoId();
-//								}else if(sortSuf.equals(sortNew)){
-//									sufId = xlglSubDocInfo1.getInfoId();
-//								}
-//							}
-//						}
-//					}
-//					if (StringUtils.isBlank(preId)) {
-//						preId = "no";
-//					}
-//					if (StringUtils.isBlank(sufId)) {
-//						sufId = "no";
-//					}
-//					jsonObject.put("preId", preId);
-//					jsonObject.put("sufId", sufId);
-//				}
-//			}
-//		}
+		if("2".equals(flag)) {//全部的上下翻页
+			if (StringUtils.isNotBlank(xlglXlzzInfo.getSort())) {
+				String preId = "";
+				String sufId = "";
+				String sort = xlglXlzzInfo.getSort();
+				int sortInt = Integer.parseInt(sort);
+				Map<String, Object> mapSort = new HashMap<>();
+				int sortPre = sortInt - 1;
+				int sortSuf = sortInt + 1;
+				mapSort.put("sortPre", String.valueOf(sortPre));
+				mapSort.put("sortSuf", String.valueOf(sortSuf));
+				List<XlglXlzzInfo> listSort = xlglXlzzInfoService.queryBySort(mapSort);
+				if (listSort != null && listSort.size() > 0) {
+					for (XlglXlzzInfo xlglXlzzInfo1 : listSort) {
+						String sortNew = xlglXlzzInfo1.getSort();
+						if (StringUtils.isNotBlank(sortNew)) {
+							if (sortNew.equals(String.valueOf(sortPre))) {
+								preId = xlglXlzzInfo1.getId();
+							} else if (sortNew.equals(String.valueOf(sortSuf))) {
+								sufId = xlglXlzzInfo1.getId();
+							}
+						}
+					}
+				}
+				if (StringUtils.isBlank(preId)) {
+					preId = "no";
+				}
+				if (StringUtils.isBlank(sufId)) {
+					sufId = "no";
+				}
+				jsonObject.put("preId", preId);
+				jsonObject.put("sufId", sufId);
+			}
+		}else if("1".equals(flag)){//我的训练
+			XlglSubDocTracking Tracking = xlglSubDocTrackingService.querySortByInfoIdAndUserId(id,CurrentUser.getUserId());
+			if(Tracking != null){
+				if(StringUtils.isNotBlank(Tracking.getSort())){
+					String preId = "";
+					String sufId = "";
+					Map<String,Object> mapSort = new HashMap<>();
+					String sort = Tracking.getSort();
+					String sortPre = String.valueOf(Integer.parseInt(sort) - 1);
+					String sortSuf = String.valueOf(Integer.parseInt(sort) + 1);
+					SimpleDateFormat format  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					mapSort.put("sortPre",sortPre);
+					mapSort.put("sortSuf",sortSuf);
+					mapSort.put("receiveId",CurrentUser.getUserId());
+					mapSort.put("time",format.format(new Date()));
+					List<XlglSubDocTracking> subDocTrackingList = xlglSubDocTrackingService.queryBySort(mapSort);
+					if(subDocTrackingList != null && subDocTrackingList.size() > 0){
+						for(XlglSubDocTracking xlglSubDocTracking1 : subDocTrackingList){
+								String sortNew = xlglSubDocTracking1.getSort();
+							if (StringUtils.isNotBlank(sortNew)) {
+								if (sortNew.equals(String.valueOf(sortPre))) {
+									preId = xlglSubDocTracking1.getInfoId();
+								} else if (sortNew.equals(String.valueOf(sortSuf))) {
+									sufId = xlglSubDocTracking1.getInfoId();
+								}
+							}
+						}
+					}
+					if (StringUtils.isBlank(preId)) {
+						preId = "no";
+					}
+					if (StringUtils.isBlank(sufId)) {
+						sufId = "no";
+					}
+					jsonObject.put("preId", preId);
+					jsonObject.put("sufId", sufId);
+				}
+			}
+
+		}else if("0".equals(flag)){//0:局待转发
+			String deptId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
+			XlglSubDocInfo xlglSubDocInfo = xlglSubDocInfoService.querySortByInfoIdAndDeptId(id,deptId);
+			if(xlglSubDocInfo != null){
+				String preId = "";
+				String sufId = "";
+				String sort = xlglSubDocInfo.getSort();
+				if(StringUtils.isNotBlank(sort)){
+					Map<String,Object> mapSort = new HashedMap();
+					String sortPre = String.valueOf(Integer.parseInt(sort) - 1);
+					String sortSuf = String.valueOf(Integer.parseInt(sort) + 1);
+					SimpleDateFormat format  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					mapSort.put("sortPre",sortPre);
+					mapSort.put("sortSuf",sortSuf);
+					mapSort.put("orgId",deptId);
+					mapSort.put("time",format.format(new Date()));
+					List<XlglSubDocInfo> subDocInfoList = xlglSubDocInfoService.queryBySort(mapSort);
+					if(subDocInfoList != null && subDocInfoList.size() > 0){
+						for(XlglSubDocInfo xlglSubDocInfo1 : subDocInfoList){
+							String sortNew = xlglSubDocInfo1.getSort();
+							if(StringUtils.isNotBlank(sortNew)){
+								if(sortPre.equals(sortNew)){
+									preId = xlglSubDocInfo1.getInfoId();
+								}else if(sortSuf.equals(sortNew)){
+									sufId = xlglSubDocInfo1.getInfoId();
+								}
+							}
+						}
+					}
+					if (StringUtils.isBlank(preId)) {
+						preId = "no";
+					}
+					if (StringUtils.isBlank(sufId)) {
+						sufId = "no";
+					}
+					jsonObject.put("preId", preId);
+					jsonObject.put("sufId", sufId);
+				}
+			}
+		}
 
 
 
@@ -291,7 +296,20 @@ public class XlglXlzzInfoController {
 		jsonObject.put("listPicture", listPicture);
 		jsonObject.put("listFile", listFile);
 		jsonObject.put("xlglXlzzInfo", xlglXlzzInfo);
+		jsonObject.put("instraction",xlglSubDocTracking.getInstraction());
 		Response.json(jsonObject);
+	}
+
+	/**
+	 * 参训受训图片，附件，视频删除
+	 * @param infoId  文id
+	 * @param pictureId   视频，附件，图片id
+	 */
+	@ResponseBody
+	@RequestMapping("/deleteVedioOrFileOrPicture")
+	public void deleteVedioOrFileOrPicture(String infoId,String pictureId){
+		xlglPictureService.deleteVedioOrFileOrPicture(infoId,pictureId);
+		Response.json("result","success");
 	}
 
 	/**
@@ -330,6 +348,7 @@ public class XlglXlzzInfoController {
 			xlglXlzzInfo.setId(fId);
 			xlglXlzzInfo.setCreator(CurrentUser.getUserId());
 			xlglXlzzInfo.setCreateTime(new Date());
+			xlglXlzzInfo.setZjdept(CurrentUser.getOrgName());
 			xlglXlzzInfoService.save(xlglXlzzInfo);
 		}
 		//保存上传图片，视频，文件
@@ -550,6 +569,18 @@ public class XlglXlzzInfoController {
 		JSONObject object = new JSONObject();
 		List<BaseAppOrgan> allList = baseAppOrganService.queryAllDeptIds();
 		if(allList != null && allList.size() > 0){
+			for(int i=0;i<allList.size();i++){
+				Map<String,Object> objectMap = new HashedMap();
+				String deptId = allList.get(i).getId();
+				objectMap.put("deptId",deptId);
+				objectMap.put("infoId",id);
+				List<XlglSubDocInfo> subDocInfoList = xlglSubDocInfoService.queryList(objectMap);
+				if(subDocInfoList.size() == 0){
+					allList.remove(i);
+				}
+			}
+		}
+		if(allList != null && allList.size() > 0){
 			for(BaseAppOrgan baseAppOrgan : allList){
 				String judeptId = baseAppOrgan.getId();//获取局id
 				String juName = baseAppOrgan.getName();//获取局名字
@@ -566,9 +597,9 @@ public class XlglXlzzInfoController {
 						JSONObject jsonObject = new JSONObject();
 						String deptId = list.get(i).getId();
 						String deptName = list.get(i).getName();
-						int sum = baseAppUserService.queryBmCout(deptId,infoId,"1");//已报名
-						int nsum = baseAppUserService.queryBmCout(deptId,infoId,"0");//未报名
-						int yhSum = baseAppUserService.queryBmCout(deptId,infoId,"2");//延后报名
+						int sum = baseAppUserService.queryBmCout(infoId,"1",deptId);//已报名
+						int nsum = baseAppUserService.queryBmCout(infoId,"0",deptId);//未报名
+						int yhSum = baseAppUserService.queryBmCout(infoId,"2",deptId);//延后报名
 						ybm += sum;
 						wbm += nsum;
 						int yjs = baseAppUserService.queryYjs(deptId,infoId);//已接受
@@ -780,7 +811,7 @@ public class XlglXlzzInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getDjtList")
-	public void getDjtList(String type,String flag,String search) {
+	public void getDjtList(Integer page, Integer limit,String type,String flag,String search) {
 		Map<String, Object> map1 = new HashMap<>();
 		String userId = CurrentUser.getUserId();
 		JSONArray jsonArray = new JSONArray();
@@ -791,6 +822,7 @@ public class XlglXlzzInfoController {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		map1.put("time", format.format(new Date()));
 		List<XlglSubDocTracking> listInfoIds = null;
+		PageHelper.startPage(page, limit);
 		if ("0".equals(flag)) {
 			listInfoIds = xlglSubDocTrackingService.queryAllInfos(map1);
 		} else {
@@ -805,8 +837,10 @@ public class XlglXlzzInfoController {
 				List<XlglPicture> listPicture = xlglPictureService.queryAllVedioByInfoId(map);
 				if (listPicture.size() == 0) {//未上传
 					jsonObject.put("isUpload", true);
+					xlglSubDocTracking.setIsUpload("true");
 				} else {
 					jsonObject.put("isUpload", false);
+					xlglSubDocTracking.setIsUpload("false");
 				}
 				List list = new ArrayList();
 				String pictrueIds = "";
@@ -824,15 +858,29 @@ public class XlglXlzzInfoController {
 				jsonObject.put("sendPeople", xlglSubDocTracking.getSenderName());
 				jsonObject.put("infoId", xlglSubDocTracking.getInfoId());
 				jsonArray.add(jsonObject);
+
+				xlglSubDocTracking.setType(type);
+				xlglSubDocTracking.setListPictureIds(list);
+
 			}
 		}
-
-		Response.json("result", jsonArray);
+		//一个文里面可能有多个视频，在大讲堂里面，一个视频算一条数据，要把所有的视频数遍历出来，没有视频的也得算一条数据
+		int sum = 0;
+		if(listInfoIds != null && listInfoIds.size() > 0) {
+			for (int i = 0; i < listInfoIds.size(); i++) {
+				sum += listInfoIds.get(i).getListPictureIds().size() == 0 ? 1 : listInfoIds.get(i).getListPictureIds().size();
+			}
+		}
+		PageUtils pageUtil = new PageUtils(listInfoIds);
+		pageUtil.setTotalCount(sum);
+		Response.json("page", pageUtil);
+		//Response.json("result", jsonArray);
 	}
 
 	/**
 	 * 强装大讲堂详情页
 	 * infoId 文id，id 视频保存的id（picture表的id）
+	 * type 0大讲堂，1日常军事训练
 	 */
 	@ResponseBody
 	@RequestMapping("/getInfo")
@@ -850,6 +898,7 @@ public class XlglXlzzInfoController {
 		}
 		List<XlglPicture> list = xlglPictureService.queryList(map);
 		XlglSubDocTracking xlglSubDocTracking = xlglSubDocTrackingService.queryInfo(infoId,CurrentUser.getUserId());
+		//日常军事训练的，打开就代表参训了
 		if(xlglSubDocTracking != null){
 			xlglSubDocTracking.setIsWork("1");
 			xlglSubDocTrackingService.update(xlglSubDocTracking);

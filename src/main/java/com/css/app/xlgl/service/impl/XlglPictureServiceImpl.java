@@ -113,4 +113,9 @@ public class XlglPictureServiceImpl implements XlglPictureService {
 	public List<XlglPicture> queryAllVedioByInfoId(Map<String,Object> map){
 		return xlglPictureDao.queryAllVedioByInfoId(map);
 	}
+
+	@Override
+	public void deleteVedioOrFileOrPicture(String infoId,String id){
+		xlglPictureDao.deleteVedioOrFileOrPicture(infoId,id);
+	}
 }

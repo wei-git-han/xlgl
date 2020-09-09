@@ -2,7 +2,7 @@ package com.css.app.xlgl.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-
+import java.util.List;
 
 
 /**
@@ -76,6 +76,39 @@ public class XlglSubDocTracking implements Serializable {
 
 	//排序
 	private String sort;
+
+	//是否上传了视频
+	private String isUpload;
+
+	//视频id集合
+	private List<String> listPictureIds;
+
+	//type  0是未开始 1是历史学习
+	private String type;
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public List<String> getListPictureIds() {
+		return listPictureIds;
+	}
+
+	public void setListPictureIds(List<String> listPictureIds) {
+		this.listPictureIds = listPictureIds;
+	}
+
+	public String getIsUpload() {
+		return isUpload;
+	}
+
+	public void setIsUpload(String isUpload) {
+		this.isUpload = isUpload;
+	}
 
 	public String getSort() {
 		return sort;

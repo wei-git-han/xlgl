@@ -165,8 +165,8 @@ public class BaseAppUserServiceImpl implements BaseAppUserService {
 	}
 
 	@Override
-	public int queryBmCout(String deptId,String infoId,String status){
-		return baseAppUserDao.queryBmCout(deptId,infoId,status);
+	public int queryBmCout(String infoId,String status,String deptId){
+		return baseAppUserDao.queryBmCout(infoId,status,deptId);
 	}
 
 	@Override
