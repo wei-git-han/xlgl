@@ -191,21 +191,22 @@ public class TaskMenuController {
             jsonArray.remove(1);
             //jsonArray.remove(1);
             System.out.println(jsonArray);
-        }else if("1".equals(adminFlag)){//部管理员显示所有
+        }else if("1".equals(adminFlag) || "".equals(adminFlag)){//部管理员显示所有
             jsons = jsons;
         }
-
-        if(!"1".equals(adminFlag)){//非部管理员不显示体育成绩导入和自学成绩导入菜单
-           JSONArray jsonArray = (JSONArray)jsons.getJSONObject(0).get("children");
-           JSONArray jsonArray1 = (JSONArray) jsonArray.getJSONObject(7).get("children");
-           jsonArray1.remove(0);
-           jsonArray1.remove(0);
-        }
-        if(!"1".equals(adminFlag)){//非部管理员，只显示考核清单菜单
-            JSONArray jsonArray = (JSONArray)jsons.getJSONObject(0).get("children");
-            JSONArray jsonArray1 = (JSONArray) jsonArray.getJSONObject(6).get("children");
-            jsonArray1.remove(1);
-            jsonArray1.remove(1);
+        if(!"".equals(adminFlag)) {
+            if (!"1".equals(adminFlag)) {//非部管理员不显示体育成绩导入和自学成绩导入菜单
+                JSONArray jsonArray = (JSONArray) jsons.getJSONObject(0).get("children");
+                JSONArray jsonArray1 = (JSONArray) jsonArray.getJSONObject(7).get("children");
+                jsonArray1.remove(0);
+                jsonArray1.remove(0);
+            }
+            if (!"1".equals(adminFlag)) {//非部管理员，只显示考核清单菜单
+                JSONArray jsonArray = (JSONArray) jsons.getJSONObject(0).get("children");
+                JSONArray jsonArray1 = (JSONArray) jsonArray.getJSONObject(6).get("children");
+                jsonArray1.remove(1);
+                jsonArray1.remove(1);
+            }
         }
 
 

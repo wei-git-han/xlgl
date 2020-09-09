@@ -18,6 +18,7 @@
         <if test="sortSuf != null and sortSuf !=''">
             or SORT = #{sortSuf}
         </if>
+        order by EXERCISE_TIME desc
     </select>
 
     <select id="queryList" resultType="com.css.app.xlgl.entity.XlglSubDocInfo">
@@ -175,7 +176,7 @@ where
             and b.XLTYPE like '%'||#{xltype}||'%'
         </if>
 
-        order by a.CREATED_TIME desc
+        order by a.EXERCISE_TIME desc
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}
         </if>
