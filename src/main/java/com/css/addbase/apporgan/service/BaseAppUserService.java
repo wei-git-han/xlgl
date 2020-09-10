@@ -135,5 +135,7 @@ public interface BaseAppUserService {
 
 	int queryYxCount(Map<String, Object> map);
 
+	BaseAppUser query(String userId);
+
 
 }

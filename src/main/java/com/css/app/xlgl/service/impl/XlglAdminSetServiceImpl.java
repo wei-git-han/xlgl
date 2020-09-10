@@ -122,5 +122,11 @@ public class XlglAdminSetServiceImpl implements XlglAdminSetService {
 		// TODO Auto-generated method stub
 		return adminSetDao.queryChuAdminList(userId);
 	}
+
+	@Override
+	public XlglAdminSet queryByUserId(String userId){
+		return adminSetDao.queryByUserId(userId);
+	}
+
 	
 }

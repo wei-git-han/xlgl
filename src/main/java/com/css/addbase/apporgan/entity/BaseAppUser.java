@@ -65,6 +65,17 @@ public class BaseAppUser implements Serializable {
 	//部门
 	private String deptName;
 
+	//延后原因
+	private String reason;
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
 	public String getDeptName() {
 		return deptName;
 	}

@@ -195,9 +195,11 @@ public class XlglNewsController {
 		//查询目前的点击量
 		synchronized (id) {
 			XlglNews xlglNews = xlglNewsService.queryObject(id);
-			Integer hits = xlglNews.getHits();
-			hits+=1;
-			xlglNews.setHits(hits);
+			if("1".equals(xlglNews.getIsRelease())){//只有正式发布了，才记录点击量
+				Integer hits = xlglNews.getHits();
+				hits+=1;
+				xlglNews.setHits(hits);
+			}
 			xlglNewsService.update(xlglNews);
 			Map<String, Object> map1 = new HashMap<>();
 			map1.put("FILE_ID", id);
@@ -242,6 +244,7 @@ public class XlglNewsController {
 		//判断是新增还是修改,id不为空则是修改，为空则是新增
 		String id = xlglNews.getId();
 		if(!StringUtils.isEmpty(id)){
+			xlglNews.setReleaseDate(new Date());
 			xlglNewsService.update(xlglNews);
 		}else{
 			String releaseOrganid="";

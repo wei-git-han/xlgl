@@ -219,7 +219,7 @@ public class XlglDocumentZbjlController {
                 //流转记录
                 XlglSubDocTracking tracking = new XlglSubDocTracking();
                 //多次分发，先删除该文件上次分发的
-                xlglSubDocTrackingService.deleteByInfoIdAndUserId(fileId,CurrentUser.getUserId());
+                xlglSubDocTrackingService.deleteByInfoIdAndUserId(fileId,receiverId);
                 String loginUserName = CurrentUser.getUsername();
                 String loginUserDeptId = CurrentUser.getDepartmentId();
                 String loginUserDeptName = CurrentUser.getOrgName();
@@ -231,7 +231,7 @@ public class XlglDocumentZbjlController {
                 tracking.setSenDeptName(loginUserDeptName);
                 tracking.setReceiverId(receiverId);
                 tracking.setReceiverName(receiverName);
-                tracking.setRecDeptId(organId);
+                tracking.setRecDeptId(userOrganId);
                 tracking.setRecDeptName(deptName);
                 tracking.setSubId(subId);
                 //tracking.setTrackingType("1");
@@ -274,22 +274,47 @@ public class XlglDocumentZbjlController {
      */
     @ResponseBody
     @RequestMapping("/updateStatus")
-    public void updateStatus(String infoId,String userId,String isWork){
-       String deptId = baseAppUserService.queryByUserId(CurrentUser.getUserId());
-       List<XlglConfirm> xlglConfirmList = xlglConfirmService.queryByInfoIdAndDeptId(deptId,infoId);
-       if(xlglConfirmList != null && xlglConfirmList.size() > 0){
-           Response.json("result","confirm");
-       }else {
-           List<XlglSubDocTracking> list = xlglSubDocInfoService.queryByInfoIdAndUserId(infoId, userId);
-           if (list != null && list.size() > 0) {
-               XlglSubDocTracking xlglSubDocTracking = list.get(0);
-               xlglSubDocTracking.setIsWork(isWork);
-               xlglSubDocTrackingService.update(xlglSubDocTracking);
-               Response.json("result", "success");
-           } else {
-               Response.json("result", "fail");
-           }
-       }
+    public void updateStatus(String infoId,String userId,String isWork) {
+        //0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员;4:处管理员
+        String adminFlag = adminSetService.getAdminTypeByUserId(CurrentUser.getUserId());
+        BaseAppUser baseAppUser = baseAppUserService.query(userId);
+        String userDept = "";//被修改人的部门id
+        if(baseAppUser != null){
+            userDept = baseAppUser.getOrganid();
+        }
+        String dept = "";//当前登录人的部门id，当前登录人是处管理员的前提下，查下他的部门id和被修改人的部门id是否一致，一致说明是同一个处，否则不是
+        //同一个处的处管理员才能修改
+        if("4".equals(adminFlag) ){
+            XlglAdminSet xlglAdminSet = adminSetService.queryByUserId(CurrentUser.getUserId());
+            dept = xlglAdminSet.getDeptId();
+        }
+        boolean t = false;
+        if(userDept.equals(dept)){
+            t = true;
+        }else {
+            t = false;
+        }
+        if (userId.equals(CurrentUser.getUserId()) || "1".equals(adminFlag) || "2".equals(adminFlag) || t) {
+            String deptId = baseAppUserService.queryByUserId(CurrentUser.getUserId());
+            List<XlglConfirm> xlglConfirmList = xlglConfirmService.queryByInfoIdAndDeptId(deptId, infoId);
+            if (xlglConfirmList != null && xlglConfirmList.size() > 0) {
+                Response.json("result", "confirm");
+            } else {
+                List<XlglSubDocTracking> list = xlglSubDocInfoService.queryByInfoIdAndUserId(infoId, userId);
+                if (list != null && list.size() > 0) {
+                    XlglSubDocTracking xlglSubDocTracking = list.get(0);
+                    xlglSubDocTracking.setIsWork(isWork);//已参训
+                    xlglSubDocTracking.setBaoming("1");//已报名
+                    xlglSubDocTracking.setRead("1");//已接收
+                    xlglSubDocTrackingService.update(xlglSubDocTracking);
+                    Response.json("result", "success");
+                } else {
+                    Response.json("result", "fail");
+                }
+            }
+        }else{
+            Response.json("result","no Perssion");
+        }
     }
 	
 	/**
@@ -325,16 +350,25 @@ public class XlglDocumentZbjlController {
      */
 	@ResponseBody
     @RequestMapping("/baoming")
-	public void baoming(String infoId,String subId,String baoming,String reason){
-	    String userId = CurrentUser.getUserId();
-	    XlglSubDocTracking xlglSubDocTracking = xlglSubDocTrackingService.querybaoming(infoId,subId,userId);
-	    xlglSubDocTracking.setBaoming(baoming);
-	    if("2".equals(baoming) && StringUtils.isNotBlank(reason)){
-	        xlglSubDocTracking.setReason(reason);
+	public void baoming(String infoId,String subId,String baoming,String reason) {
+        String userId = CurrentUser.getUserId();
+        XlglSubDocTracking xlglSubDocTracking = xlglSubDocTrackingService.querybaoming(infoId, subId, userId);
+        if (xlglSubDocTracking != null) {
+            xlglSubDocTracking.setBaoming(baoming);
+            String xlType = xlglSubDocTracking.getXltype();
+            if (StringUtils.isNotBlank(xlType)) {
+                if ("1".equals(xlType)) {
+                    xlglSubDocTracking.setIsWork("1");//日常军事训练的，已报名就代表已参训
+                }
+            }
+            if ("2".equals(baoming) && StringUtils.isNotBlank(reason)) {
+                xlglSubDocTracking.setReason(reason);
+            }
+            xlglSubDocTrackingService.update(xlglSubDocTracking);
+            Response.json("result", "success");
+        } else {
+            Response.json("result", "fail");
         }
-        xlglSubDocTrackingService.update(xlglSubDocTracking);
-	    Response.json("result","success");
-
     }
 
     /**

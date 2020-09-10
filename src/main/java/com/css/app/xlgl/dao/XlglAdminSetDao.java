@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.css.app.xlgl.entity.XlglAdminSet;
 import com.css.base.dao.BaseDao;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * 管理员设置表
@@ -23,4 +24,7 @@ public interface XlglAdminSetDao extends BaseDao<XlglAdminSet> {
 	List<String> queryUserIdByOrgId(String orgId);
 	
 	List<XlglAdminSet> queryChuAdminList(String userId);
+
+	@Select("select * from XLGL_ADMIN_SET where USER_ID = #{0}")
+	XlglAdminSet queryByUserId(String userId);
 }

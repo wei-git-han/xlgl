@@ -55,6 +55,8 @@ public interface XlglSubDocTrackingService {
 
 	int queryCxCount(Map<String,Object> map);
 
+	int queryBkCount(Map<String,Object> map);
+
 	int queryBmCount(Map<String,Object> map);
 
 	int queryAllYx(String year);
