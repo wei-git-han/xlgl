@@ -28,7 +28,9 @@ import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.xlgl.entity.XlglNotice;
+import com.css.app.xlgl.entity.XlglNoticeRead;
 import com.css.app.xlgl.entity.XlglPicture;
+import com.css.app.xlgl.service.XlglNoticeReadService;
 import com.css.app.xlgl.service.XlglNoticeService;
 import com.css.app.xlgl.service.XlglPictureService;
 import com.css.base.utils.CurrentUser;
@@ -62,6 +64,8 @@ public class XlglNoticeController {
 	private BaseAppUserService baseAppUserService;
 	@Autowired
 	private XlglPictureService xlglPictureService;
+	@Autowired
+	private XlglNoticeReadService xlglNoticeReadService;
 	
 
 	/**
@@ -163,8 +167,16 @@ public class XlglNoticeController {
 		}else {
 			xlglNotice.setViewNumber(1);
 		}
-		
 		xlglNoticeService.update(xlglNotice);
+		Map<String, Object> map = new HashMap<>();
+		map.put("noticeId", id);
+		//查询列表数据
+		List<XlglNoticeRead> xlglNoticeReadList = xlglNoticeReadService.queryList(map);
+		int i = 0;
+		if(xlglNoticeReadList.size()>0) {
+			i = xlglNoticeReadList.size();
+		}
+		xlglNotice.setUserReadNumber(i);
 		Response.json("xlglNotice", xlglNotice);
 	}
 	
