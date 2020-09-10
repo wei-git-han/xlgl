@@ -107,7 +107,7 @@ public class XlglSafetyAnalyseController {
 		Date date = new Date();
 		String random = UUIDUtils.random();
 		xlglSafetyAnalyse.setId(random);
-		if(fileIds !=null) {
+		if(fileIds !=null && fileIds.length >0) {
 			xlglSafetyAnalyse.setStatus("1");
 		}else {
 			xlglSafetyAnalyse.setStatus("0");
@@ -175,8 +175,13 @@ public class XlglSafetyAnalyseController {
 		String userId = CurrentUser.getUserId();
 		String username = CurrentUser.getUsername();
 		Date date = new Date();
+		if(fileIds !=null && fileIds.length >0) {
+			xlglSafetyAnalyse.setStatus("1");
+		}else {
+			xlglSafetyAnalyse.setStatus("0");
+		}
 		xlglSafetyAnalyseService.update(xlglSafetyAnalyse);
-		if(fileIds !=null) {
+		if(fileIds !=null && fileIds.length >0) {
 			for (int i = 0; i < fileIds.length; i++) {
 				XlglPicture xlglPicture = new XlglPicture();
 				xlglPicture.setId(UUIDUtils.random());
