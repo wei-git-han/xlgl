@@ -1,8 +1,6 @@
 package com.css.app.xlgl.controller;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,8 +17,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONArray;
-import com.css.addbase.FileBaseUtil;
+import com.alibaba.fastjson.JSONObject;
+import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
+import com.css.addbase.apporgan.util.OrgUtil;
 import com.css.addbase.orgservice.OrgService;
 import com.css.addbase.orgservice.Organ;
 import com.css.app.xlgl.entity.XlglPicture;
@@ -39,7 +38,7 @@ import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 
 import cn.com.css.filestore.impl.HTTPFile;
-import net.sf.json.JSONObject;
+
 
 
 /**
@@ -62,6 +61,7 @@ public class XlglSafetyAnalyseController {
 	private XlglSafetyCheckupService xlglSafetyCheckupService;
 	@Autowired
 	private BaseAppOrganService baseAppOrganService;
+	private com.alibaba.fastjson.JSONObject organTree;
 	
 	/**
 	 * 列表
@@ -320,14 +320,46 @@ public class XlglSafetyAnalyseController {
 	@RequestMapping(value = "/tree")
 	@ResponseBody
 	public Object getDeptTree(HttpServletRequest request) {
-		Map<String, Object> map = new HashMap<>();
+		/*Map<String, Object> map = new HashMap<>();
 		JSONObject list=  getOrganTree("root",map);
 		JSONObject json = new JSONObject();
 		json.put("opened", true);
-		list.put("state", json);
+		list.put("state", json);*/
+		List<BaseAppOrgan> organs = baseAppOrganService.queryList(null);
+		JSONObject list = OrgUtil.getOrganTree(organs,"root",false,true);
 		return list;
 	}
 	
+	/**
+	 * 当前用户属于哪一局的人员
+	 * */
+	@ResponseBody
+	@RequestMapping("/getUserOrganByRoot")
+	public void getUserOrganByRoot() {
+		JSONObject json = new JSONObject();
+		String organId = CurrentUser.getSSOUser().getOrganId();
+		BaseAppOrgan queryObject = baseAppOrganService.queryObject(organId);
+		List<BaseAppOrgan> list = new ArrayList<BaseAppOrgan>();
+		if(queryObject !=null) {
+			String treePath = queryObject.getTreePath();
+			if(treePath.contains(",")) {
+				String[] split = treePath.split(",");
+				String[] str = new String[split.length];
+				for (int i = 0; i < split.length; i++) {
+					if(StringUtils.isNotBlank(split[i])) {
+						str[i] = split[i];
+					}
+				}		
+				list = baseAppOrganService.queryListByIds(str);
+			}
+		}
+		for (BaseAppOrgan baseAppOrgan : list) {
+			if(baseAppOrgan.getParentId() !=null && baseAppOrgan.getParentId().equals("root")) {
+				json.put("organId", baseAppOrgan.getId());
+			}
+		}
+		Response.json(json);
+	}
 	
 	public JSONObject getOrganTree(String id,Map<String, Object> map){
 		JSONObject result = new JSONObject();

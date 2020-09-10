@@ -22,6 +22,8 @@ public class Organ {
 	private String type;
 	@JSONField(serialize = false)
 	private Long timestamp;
+	@JSONField(serialize = false)
+	private String parentId;
 	
 	public String getOrganId() {
 		return organId;
@@ -117,6 +119,14 @@ public class Organ {
 
 	public void setTimestamp(Long timestamp) {
 		this.timestamp = timestamp;
+	}
+
+	public String getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
 	}
 	
 
