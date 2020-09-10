@@ -20,7 +20,7 @@
 			and ID = #{id}
 		</if>
 		<if test="time != null and time !=''">
-			and EXERCISE_TIME &lt; to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
+			and EXERCISE_TIME > to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
 		</if>
 	</select>
 
