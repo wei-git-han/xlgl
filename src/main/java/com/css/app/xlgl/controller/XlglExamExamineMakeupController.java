@@ -96,8 +96,8 @@ public class XlglExamExamineMakeupController {
 			SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 			XlglExamExamine queryObject = xlglExamExamineService.queryObject(xlglExamExamineMakeup.getExamineId());
 		try {
-				Date startDate = format.parse(xlglExamExamineMakeup.getMakeUpStartDateStr());
-				Date endDate = format.parse(xlglExamExamineMakeup.getMakeUpEndDateStr());
+				Date endDate = format.parse(xlglExamExamineMakeup.getMakeUpStartDateStr());
+				Date startDate = format.parse(xlglExamExamineMakeup.getMakeUpEndDateStr());
 				xlglExamExamineMakeup.setMakeUpStartDate(startDate);
 				xlglExamExamineMakeup.setMakeUpEndDate(endDate);
 			} catch (ParseException e) {
