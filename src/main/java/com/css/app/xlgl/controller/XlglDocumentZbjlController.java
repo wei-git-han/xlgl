@@ -219,7 +219,7 @@ public class XlglDocumentZbjlController {
                 //流转记录
                 XlglSubDocTracking tracking = new XlglSubDocTracking();
                 //多次分发，先删除该文件上次分发的
-                xlglSubDocTrackingService.deleteByInfoIdAndUserId(fileId,CurrentUser.getUserId());
+                xlglSubDocTrackingService.deleteByInfoIdAndUserId(fileId,receiverId);
                 String loginUserName = CurrentUser.getUsername();
                 String loginUserDeptId = CurrentUser.getDepartmentId();
                 String loginUserDeptName = CurrentUser.getOrgName();

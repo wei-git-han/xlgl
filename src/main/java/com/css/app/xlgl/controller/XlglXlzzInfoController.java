@@ -299,9 +299,9 @@ public class XlglXlzzInfoController {
 		String nowTime = format1.format(date);//获取当前时间
 		Integer integer = xlTime.compareTo(nowTime);
 		if(integer > 0){//大于0，说明训练时间晚于当前时间，返回true，说明不超时
-			jsonObject.put("time", true);
+			jsonObject.put("time", "1");
 		}else {
-			jsonObject.put("time", false);
+			jsonObject.put("time", "0");
 		}
 
 
