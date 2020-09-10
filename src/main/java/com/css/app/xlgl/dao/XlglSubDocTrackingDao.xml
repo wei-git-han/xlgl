@@ -112,7 +112,7 @@
 		<if test="year != null and year !=''">
 			and CREATED_TIME like '%'||#{year}||'%'
 		</if>
-		and IS_WORK = '1' and TRACKING_TYPE = '0'
+		and IS_WORK = '1'
 	</select>
 
 	<select id="queryBmCount" resultType="int">

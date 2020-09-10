@@ -234,7 +234,7 @@ public class XlglDocumentZbjlController {
                 tracking.setRecDeptId(organId);
                 tracking.setRecDeptName(deptName);
                 tracking.setSubId(subId);
-                tracking.setTrackingType("1");
+                //tracking.setTrackingType("1");
                 tracking.setPreviousStatus(subInfo.getDocStatus());
                 tracking.setUndertaker(subInfo.getUndertaker());
                 tracking.setBaoming("0");
@@ -246,6 +246,7 @@ public class XlglDocumentZbjlController {
                 tracking.setInstraction(subInfo.getInstraction());
                 tracking.setRead("0");//0是未接受，1是已接受
                 tracking.setIsWork("0");//0是未参训
+                tracking.setCreatedTime(new Date());
                 xlglSubDocTrackingService.save(tracking);
 
                 //发送消息提醒
