@@ -147,7 +147,9 @@ public class XlglXlzzInfoController {
 			xlglXlzzInfo.setStatus("1");//1为已读
 			instraction = xlglSubDocTracking.getInstraction();
 		}
-		xlglXlzzInfo.setFbDept(xlglXlzzInfo.getZjdept());
+		if(StringUtils.isNotBlank(xlglXlzzInfo.getZjdept())){
+			xlglXlzzInfo.setFbDept(xlglXlzzInfo.getZjdept());
+		}
 		map.put("fileId", id);
 		List<XlglPicture> list = xlglPictureService.queryAllInfoByInfoId(map);
 		List listVedio = new ArrayList();
@@ -289,6 +291,17 @@ public class XlglXlzzInfoController {
 					jsonObject.put("sufId", sufId);
 				}
 			}
+		}
+
+		String xlTime = xlglXlzzInfo.getExerciseTime();//获取训练时间
+		Date date = new Date();
+		SimpleDateFormat format1  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String nowTime = format1.format(date);//获取当前时间
+		Integer integer = xlTime.compareTo(nowTime);
+		if(integer > 0){//大于0，说明训练时间晚于当前时间，返回true，说明不超时
+			jsonObject.put("time", true);
+		}else {
+			jsonObject.put("time", false);
 		}
 
 
