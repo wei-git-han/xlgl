@@ -63,7 +63,7 @@ public class XlglExamMainAnswerController {
 		Map<String, Object> map = new HashMap<>();	
 		map.put("examineId", examineId);
 		map.put("level", level);
-		map.put("makeupStatus", makeupStatus);
+		//map.put("makeupStatus", makeupStatus);
 		map.put("replyUserName", replyUserName);
 		map.put("organName", organName);
 		map.put("isNotExam", isNotExam);
@@ -71,7 +71,6 @@ public class XlglExamMainAnswerController {
 		PageHelper.startPage(page, limit);
 		//查询列表数据
 		List<XlglExamMainAnswer> xlglExamMainAnswerList = xlglExamMainAnswerService.queryList(map);
-		
 		PageUtils pageUtil = new PageUtils(xlglExamMainAnswerList);
 		Response.json("page",pageUtil);
 	}
