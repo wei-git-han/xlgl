@@ -41,9 +41,9 @@ public class XlglNoticeReadController {
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	public void list(Integer page, Integer limit,String noticeId){
+	public void list(Integer page, Integer limit,String id){
 		Map<String, Object> map = new HashMap<>();
-		map.put("noticeId", noticeId);
+		map.put("noticeId", id);
 		PageHelper.startPage(page, limit);
 		
 		//查询列表数据
@@ -70,14 +70,14 @@ public class XlglNoticeReadController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public void save(String noticeId){
+	public void save(String id){
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		//判断是否已读过，已读就不更新表了
-		XlglNoticeRead xlgl = xlglNoticeReadService.queryIsRead(noticeId,ssoUser.getUserId());
+		XlglNoticeRead xlgl = xlglNoticeReadService.queryIsRead(id,ssoUser.getUserId());
 		if(xlgl == null){
 		XlglNoticeRead xlglNoticeRead = new XlglNoticeRead();
 		xlglNoticeRead.setId(UUIDUtils.random());
-		xlglNoticeRead.setNoticeId(noticeId);
+		xlglNoticeRead.setNoticeId(id);
 		xlglNoticeRead.setReadDate(new Date());
 		xlglNoticeRead.setReadUserId(ssoUser.getUserId());
 		xlglNoticeRead.setReadUserName(ssoUser.getFullname());

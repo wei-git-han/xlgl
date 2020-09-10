@@ -17,6 +17,6 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface XlglNoticeReadDao extends BaseDao<XlglNoticeRead> {
 
-    @Select("select * from XLGL_NOTICE_READ where READ_USER_ID = #{0} and NOTICE_ID = #{1}")
+    @Select("select * from XLGL_NOTICE_READ where READ_USER_ID = #{1} and NOTICE_ID = #{0}")
     XlglNoticeRead queryIsRead(String noticeId,String userId);
 }

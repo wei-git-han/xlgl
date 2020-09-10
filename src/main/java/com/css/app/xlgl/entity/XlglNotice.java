@@ -45,6 +45,9 @@ public class XlglNotice implements Serializable {
 
 	//发布人
 	private String creator;
+	
+	//阅读人数
+	private Integer userReadNumber;
 
 	public String getCreator() {
 		return creator;
@@ -179,6 +182,14 @@ public class XlglNotice implements Serializable {
 	}
 	public void setReleaseTimeStr(String releaseTimeStr) {
 		this.releaseTimeStr = releaseTimeStr;
+	}
+
+	public Integer getUserReadNumber() {
+		return userReadNumber;
+	}
+
+	public void setUserReadNumber(Integer userReadNumber) {
+		this.userReadNumber = userReadNumber;
 	}
 	
 	
