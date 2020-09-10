@@ -356,8 +356,11 @@ public class XlglSafetyAnalyseController {
 		for (BaseAppOrgan baseAppOrgan : list) {
 			if(baseAppOrgan.getParentId() !=null && baseAppOrgan.getParentId().equals("root")) {
 				json.put("organId", baseAppOrgan.getId());
+				json.put("organName", baseAppOrgan.getName());
 			}
 		}
+		json.put("userName", CurrentUser.getUsername());
+		json.put("userId", CurrentUser.getUserId());
 		Response.json(json);
 	}
 	
