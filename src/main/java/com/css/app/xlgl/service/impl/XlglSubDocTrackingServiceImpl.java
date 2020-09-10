@@ -113,6 +113,11 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 	public int queryCxCount(Map<String,Object> map){
 		return xlglSubDocTrackingDao.queryCxCount(map);
 	}
+
+	@Override
+	public int queryBkCount(Map<String,Object> map){
+		return xlglSubDocTrackingDao.queryBkCount(map);
+	}
 	@Override
 	public int queryBmCount(Map<String,Object> map){
 		return xlglSubDocTrackingDao.queryBmCount(map);

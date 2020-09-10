@@ -115,6 +115,17 @@
 		and IS_WORK = '1'
 	</select>
 
+	<select id="queryBkCount" resultType="int">
+		select count(1) from XLGL_SUB_DOC_TRACKING where 1=1
+		<if test="userId != null and userId !=''">
+			and RECEIVER_ID =#{userId}
+		</if>
+		<if test="year != null and year !=''">
+			and CREATED_TIME like '%'||#{year}||'%'
+		</if>
+		and BAOMING = '2'
+	</select>
+
 	<select id="queryBmCount" resultType="int">
 		select count(1) from XLGL_SUB_DOC_TRACKING where 1=1
 		<if test="userId != null and userId !=''">

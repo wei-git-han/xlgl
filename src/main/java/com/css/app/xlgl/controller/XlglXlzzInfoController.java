@@ -1,5 +1,6 @@
 package com.css.app.xlgl.controller;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -969,17 +970,15 @@ public class XlglXlzzInfoController {
 		map.put("userId", userId);
 		map.put("year", year);
 		int count = xlglSubDocTrackingService.queryCurrentYear(map);//本年度大讲堂数+日常训练数
-
-		int ycx = xlglSubDocTrackingService.queryCxCount(map);//已参训的大讲堂数
-
-		int ybm = xlglSubDocTrackingService.queryBmCount(map);
-		float f = 0.0f;
+		int ycx = xlglSubDocTrackingService.queryCxCount(map);//已参训的大讲堂数和日常军事训练数(已完成)
+		int bk = xlglSubDocTrackingService.queryBkCount(map);//延后参训数（补考数）
+		int f = 0;
 		if (count > 0) {
-			f = (ycx + ybm) / count;
+			f = (int) ((new BigDecimal((float) ycx / count).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()) * 100);
 		}
-		jsonObject.put("wcl",f);
-		jsonObject.put("ywc",ycx+ybm);
-		jsonObject.put("bk",count - ybm - ycx);
+		jsonObject.put("wcl", f);
+		jsonObject.put("ywc", ycx);
+		jsonObject.put("bk", bk);
 		Response.json(jsonObject);
 	}
 

@@ -213,6 +213,11 @@ public class BaseAppUserServiceImpl implements BaseAppUserService {
 		return baseAppUserDao.queryYxCount(map);
 	}
 
+	@Override
+	public BaseAppUser query(String userId){
+		return baseAppUserDao.query(userId);
+	}
+
 
 
 }

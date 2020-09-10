@@ -114,8 +114,11 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 	@Select("select  t.*,d.BAOMING,d.INFO_ID,d.READ,d.IS_WORK from BASE_APP_USER t left join XLGL_SUB_DOC_TRACKING d on t.USER_ID = d.RECEIVER_ID  and d.INFO_ID = #{1} where  t.ORGANID in  (  select id from BASE_APP_ORGAN where ID = #{0})")
 	List<BaseAppUser> queryAllJuUserByDeptId(String deptId,String infoId);
 
-	@Select("select  count(*) from BASE_APP_USER t left join XLGL_SUB_DOC_TRACKING d on t.USER_ID = d.RECEIVER_ID  and d.INFO_ID = #{0} and d.baoming = #{1} where  d.REC_DEPT_ID in  (  select id from BASE_APP_ORGAN start with ID = #{2} and ISDELETE=0 connect by prior ID = PARENT_ID)")
+	@Select("select  count(*) from BASE_APP_USER t left join XLGL_SUB_DOC_TRACKING d on t.USER_ID = d.RECEIVER_ID  and d.INFO_ID = #{0} and d.baoming = #{1} where  d.REC_DEPT_ID  = #{2}")
 	int queryBmCout(String infoId,String status,String deptId);
+
+//	@Select("select  count(*) from BASE_APP_USER t left join XLGL_SUB_DOC_TRACKING d on t.USER_ID = d.RECEIVER_ID  and d.INFO_ID = #{0} and d.baoming = #{1} where  d.REC_DEPT_ID in  (  select id from BASE_APP_ORGAN start with ID = #{2} and ISDELETE=0 connect by prior ID = PARENT_ID)")
+//	int queryBmCout(String infoId,String status,String deptId);
 
 	@Select("select  count(*) from BASE_APP_USER t left join XLGL_SUB_DOC_TRACKING d on t.USER_ID = d.RECEIVER_ID  and d.INFO_ID = #{1} and d.READ = '1' where  d.REC_DEPT_ID in  (  select id from BASE_APP_ORGAN start with ID = #{0} and ISDELETE=0 connect by prior ID = PARENT_ID)")
 	int queryYjs(String deptId,String infoId);
@@ -140,4 +143,7 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 	int getAllZbSum();
 
 	int queryYxCount(Map<String, Object> map);
+
+	@Select("select  * from BASE_APP_USER where USER_ID = #{0}")
+	BaseAppUser query(String userId);
 }
