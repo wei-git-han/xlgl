@@ -552,7 +552,7 @@ public class XlglXlzzInfoController {
 		jsonObject2.put("ybm",ybm);
 		jsonObject2.put("wbm",wbm);
 		jsonObject2.put("listAllUser",listAllUser);
-		jsonObject2.put("junName",orgName);
+		jsonObject2.put("juName",orgName);
 		Response.json(jsonObject2);
 
 	}
@@ -560,26 +560,27 @@ public class XlglXlzzInfoController {
 	/**
 	 * 训练跟踪部管理员看到的信息
 	 * 所有的局的信息
+	 * 每次只显示一个局的，避免页面混乱
 	 * @param id
 	 */
 	@ResponseBody
 	@RequestMapping("/getDateForAll")
-	public void getDateForAll(String id){
+	public void getDateForAll(String id,String orgId){
 		JSONArray jsonArray = new JSONArray();
 		JSONObject object = new JSONObject();
-		List<BaseAppOrgan> allList = baseAppOrganService.queryAllDeptIds();
-		if(allList != null && allList.size() > 0){
-			for(int i=0;i<allList.size();i++){
-				Map<String,Object> objectMap = new HashedMap();
-				String deptId = allList.get(i).getId();
-				objectMap.put("deptId",deptId);
-				objectMap.put("infoId",id);
-				List<XlglSubDocInfo> subDocInfoList = xlglSubDocInfoService.queryList(objectMap);
-				if(subDocInfoList.size() == 0){
-					allList.remove(i);
-				}
-			}
-		}
+		List<BaseAppOrgan> allList = baseAppOrganService.queryPerDept(orgId);
+//		if(allList != null && allList.size() > 0){
+//			for(int i=0;i<allList.size();i++){
+//				Map<String,Object> objectMap = new HashedMap();
+//				String deptId = allList.get(i).getId();
+//				objectMap.put("deptId",deptId);
+//				objectMap.put("infoId",id);
+//				List<XlglSubDocInfo> subDocInfoList = xlglSubDocInfoService.queryList(objectMap);
+//				if(subDocInfoList.size() == 0){
+//					allList.remove(i);
+//				}
+//			}
+//		}
 		if(allList != null && allList.size() > 0){
 			for(BaseAppOrgan baseAppOrgan : allList){
 				String judeptId = baseAppOrgan.getId();//获取局id
@@ -588,7 +589,7 @@ public class XlglXlzzInfoController {
 				int ybm = 0;
 				int wbm = 0;
 				JSONObject jsonObject2 = new JSONObject();
-				String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
+				//String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
 				//获取了该局所有的部门id
 				List<BaseAppOrgan> list = baseAppOrganService.queryAllDeptId(judeptId);
 				List listTotal = new ArrayList();

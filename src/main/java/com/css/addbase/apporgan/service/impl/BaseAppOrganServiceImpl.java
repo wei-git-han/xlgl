@@ -124,4 +124,9 @@ public class BaseAppOrganServiceImpl implements BaseAppOrganService {
 		return baseAppOrganDao.queryListByTREEPATH(orgId);
 	}
 
+	@Override
+	public List<BaseAppOrgan> queryPerDept(String deptId){
+		return baseAppOrganDao.queryPerDept(deptId);
+	}
+
 }
