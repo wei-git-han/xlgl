@@ -34,7 +34,7 @@
 	  <if test="sortSuf != null and sortSuf !=''">
 		  or SORT = #{sortSuf}
 	  </if>
-	  order by CREATE_TIME desc;
+	  order by CREATE_TIME desc
 	</select>
 	
  	<select id="queryTotal" resultType="int">

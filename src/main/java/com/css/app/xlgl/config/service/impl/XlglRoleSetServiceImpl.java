@@ -63,5 +63,10 @@ public class XlglRoleSetServiceImpl implements XlglRoleSetService {
 		}
 		return roleType;
 	}
+
+	@Override
+	public XlglRoleSet queryByuserId(String userId){
+		return  roleSetDao.queryByuserId(userId);
+	}
 	
 }

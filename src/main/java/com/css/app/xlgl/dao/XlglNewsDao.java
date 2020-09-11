@@ -60,4 +60,6 @@ public interface XlglNewsDao extends BaseDao<XlglNews> {
 	 * @return
 	 */
 	List<XlglNews> queryDrafts(Map<String, Object> map);
+
+	List<XlglNews> querySort(Map<String,Object> map);
 }

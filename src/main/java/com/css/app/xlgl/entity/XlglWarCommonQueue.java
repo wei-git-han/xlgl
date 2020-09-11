@@ -66,7 +66,17 @@ public class XlglWarCommonQueue implements Serializable {
 	private String readStatus;
 	//附件上传
 	private List<AccessoryFileDto> accessoryFileArray;
-	
+
+	//训练类型 0是教学视频，1是示例纠错
+	private String type;
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 
 	/**
 	 * 设置：

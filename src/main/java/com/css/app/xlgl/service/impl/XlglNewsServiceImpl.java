@@ -105,4 +105,9 @@ public class XlglNewsServiceImpl implements XlglNewsService {
 		return xlglNewsDao.queryDrafts(map);
 	}
 
+	@Override
+	public List<XlglNews> querySort(Map<String,Object> map){
+		return xlglNewsDao.querySort(map);
+	}
+
 }
