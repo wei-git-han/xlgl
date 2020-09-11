@@ -16,6 +16,8 @@ import com.css.addbase.msg.MsgTipUtil;
 import com.css.addbase.msg.entity.MsgTip;
 import com.css.addbase.msg.service.MsgTipService;
 import com.css.addbase.orgservice.OrgService;
+import com.css.app.xlgl.config.entity.XlglRoleSet;
+import com.css.app.xlgl.config.service.XlglRoleSetService;
 import com.css.app.xlgl.entity.*;
 import com.css.app.xlgl.service.*;
 import com.css.base.utils.*;
@@ -81,6 +83,8 @@ public class XlglDocumentZbjlController {
     private XlglConfirmService xlglConfirmService;
     @Autowired
     private XlglMineStudyService xlglMineStudyService;
+    @Autowired
+    private XlglRoleSetService xlglRoleSetService;
 	
 	/**
 	 * 列表
@@ -596,6 +600,25 @@ public class XlglDocumentZbjlController {
 
         Response.json(jsonArray);
 
+    }
+
+    /**
+     * 获取当前登录人的角色
+     * flag 角色标识（3：局长；4：局秘书；5：处长；6：参谋；2：首长秘书；1：首长；）
+     */
+    @ResponseBody
+    @RequestMapping("/getRoleSet")
+    public void getRoleSet() {
+        JSONObject jsonObject = new JSONObject();
+        String flag = "";
+        String userId = CurrentUser.getUserId();
+        XlglRoleSet xlglRoleSet = xlglRoleSetService.queryByuserId(userId);
+        if (xlglRoleSet != null) {
+            flag = xlglRoleSet.getRoleFlag();
+            jsonObject.put("flag", flag);
+        } else {
+            jsonObject.put("flag", "no");
+        }
     }
 
 

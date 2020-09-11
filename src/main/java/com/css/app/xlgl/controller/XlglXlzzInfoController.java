@@ -475,9 +475,9 @@ public class XlglXlzzInfoController {
 				JSONObject jsonObject = new JSONObject();
 				String deptId = list.get(i).getId();
 				String deptName = list.get(i).getName();
-				int sum = baseAppUserService.queryBmCout(deptId,infoId,"1");//已报名
-				int nsum = baseAppUserService.queryBmCout(deptId,infoId,"0");//未报名
-				int yhSum = baseAppUserService.queryBmCout(deptId,infoId,"2");//延后报名
+				int sum = baseAppUserService.queryBmCout(infoId,"1",deptId);//已报名
+				int nsum = baseAppUserService.queryBmCout(infoId,"0",deptId);//未报名
+				int yhSum = baseAppUserService.queryBmCout(infoId,"2",deptId);//延后报名
 				ybm += sum;
 				wbm += nsum;
 				int yjs = baseAppUserService.queryYjs(deptId,infoId);//已接受

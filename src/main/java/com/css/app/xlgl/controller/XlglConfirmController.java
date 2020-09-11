@@ -7,7 +7,10 @@ import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.addbase.apporgmapped.service.BaseAppOrgMappedService;
+import com.css.app.xlgl.config.entity.XlglRoleSet;
+import com.css.app.xlgl.config.service.XlglRoleSetService;
 import com.css.app.xlgl.dto.XlglConfirmDto;
+import com.css.app.xlgl.entity.Org;
 import com.css.app.xlgl.entity.XlglConfirm;
 import com.css.app.xlgl.service.XlglAdminSetService;
 import com.css.app.xlgl.service.XlglConfirmService;
@@ -49,6 +52,8 @@ public class XlglConfirmController {
 	private XlglAdminSetService adminSetService;
 	@Autowired
 	private BaseAppOrgMappedService baseAppOrgMappedService;
+	@Autowired
+	private XlglRoleSetService xlglRoleSetService;
 	/**
 	 * 列表
 	 */
@@ -122,25 +127,54 @@ public class XlglConfirmController {
 	/**
 	 * 判断确认按钮是否显示
 	 * @param deptId
+	 * flag 角色标识（3：局长；4：局秘书；5：处长；6：参谋；2：首长秘书；1：首长；）
 	 */
 	@ResponseBody
 	@RequestMapping("/isHaveButton")
 	public void isHaveButton(String deptId){
+//		String organId = "";
+//		//获取当前人的管理员类型（0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员）
+//		String adminFlag = adminSetService.getAdminTypeByUserId(CurrentUser.getUserId());
+//		if("2".equals(adminFlag)){
+//			organId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
+//		}else if("4".equals(adminFlag)){
+//			organId = baseAppUserService.queryByUserId(CurrentUser.getUserId());
+//		}
+//		if(deptId.equals(organId)){
+//			Response.json("result",true);
+//		}else{
+//			Response.json("result",false);
+//		}
 		String organId = "";
-		//获取当前人的管理员类型（0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员）
-		String adminFlag = adminSetService.getAdminTypeByUserId(CurrentUser.getUserId());
-		if("2".equals(adminFlag)){
-			organId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
-		}else if("4".equals(adminFlag)){
-			organId = baseAppUserService.queryByUserId(CurrentUser.getUserId());
+		JSONObject jsonObject = new JSONObject();
+		String flag = "";
+		String userId = CurrentUser.getUserId();
+		XlglRoleSet xlglRoleSet = xlglRoleSetService.queryByuserId(userId);
+		if (xlglRoleSet != null) {
+			flag = xlglRoleSet.getRoleFlag();
 		}
-		if(deptId.equals(organId)){
-			Response.json("result",true);
-		}else{
-			Response.json("result",false);
+		if ("3".equals(flag)) {//如果是局长角色就显示确认按钮
+			Response.json("result", true);
+		} else if ("5".equals(flag)) {//判断是否是处长角色
+			organId = baseAppUserService.queryByUserId(CurrentUser.getUserId());//当前登录人的处部门id
+			if (deptId.equals(organId)) {
+				Response.json("result", true);
+			} else {
+				Response.json("result", false);
+			}
 		}
+
+
+
+//		if (xlglRoleSet != null) {
+//			flag = xlglRoleSet.getRoleFlag();
+//			jsonObject.put("flag", flag);
+//		} else {
+//			jsonObject.put("flag", "no");
+//		}
 	}
-	
+
+
 	/**
 	 * 修改
 	 */
