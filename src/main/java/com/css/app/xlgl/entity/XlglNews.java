@@ -58,6 +58,27 @@ public class XlglNews implements Serializable{
 	//排序
 	private String sort;
 
+	//前一页id
+	private String preId;
+	//下一页id
+	private String sufId;
+
+	public String getPreId() {
+		return preId;
+	}
+
+	public void setPreId(String preId) {
+		this.preId = preId;
+	}
+
+	public String getSufId() {
+		return sufId;
+	}
+
+	public void setSufId(String sufId) {
+		this.sufId = sufId;
+	}
+
 	public String getSort() {
 		return sort;
 	}
