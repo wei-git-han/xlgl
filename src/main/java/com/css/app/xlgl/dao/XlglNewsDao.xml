@@ -9,7 +9,7 @@
 	</resultMap>
 	
 	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglNews">
-		select * from XLGL_NEWS where ID = #{value}
+		 select * from ( select ROW_NUMBER() OVER(order by t.RELEASE_DATE desc ) as SORT, t.* from XLGL_NEWS t  ) where ID = #{id}
 	</select>
 
 	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglNews">

@@ -214,7 +214,7 @@ public class XlglNewsController {
 		}
 	}
 
-	/**
+	/**17310508135
 	 * 编辑
 	 * @param id
 	 */
