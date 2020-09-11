@@ -176,11 +176,13 @@ public class XlglWarCommonWeaponController {
 	public void save(XlglWarCommonWeapon xlglWarCommonWeapon,String coverFile,String videoFile,String[] accessoryArray){
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		Date date = new Date();
+		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
 		String random = UUIDUtils.random();
 		xlglWarCommonWeapon.setId(random);
 		xlglWarCommonWeapon.setCreateOrganId(ssoUser.getOrganId());
 		xlglWarCommonWeapon.setCreateOrganName(ssoUser.getOrgName());
 		xlglWarCommonWeapon.setCreateDate(date);
+		xlglWarCommonWeapon.setUpdateDate(format);
 		xlglWarCommonWeapon.setCreateUser(ssoUser.getUserId());
 		xlglWarCommonWeapon.setPublishDate(date);
 		xlglWarCommonWeaponService.save(xlglWarCommonWeapon);

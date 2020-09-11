@@ -180,6 +180,8 @@ public class XlglWarCommonWarbasisController {
 		xlglWarCommonWarbasis.setCreateOrganId(ssoUser.getOrganId());
 		xlglWarCommonWarbasis.setCreateOrganName(ssoUser.getOrgName());
 		xlglWarCommonWarbasis.setCreateDate(date);
+		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+		xlglWarCommonWarbasis.setUpdateDate(format);
 		xlglWarCommonWarbasis.setCreateUser(ssoUser.getUserId());
 		xlglWarCommonWarbasis.setPublishDate(date);
 		xlglWarCommonWarbasisService.save(xlglWarCommonWarbasis);

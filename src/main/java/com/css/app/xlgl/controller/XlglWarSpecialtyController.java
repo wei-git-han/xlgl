@@ -179,6 +179,8 @@ public class XlglWarSpecialtyController {
 		xlglWarSpecialty.setCreateOrganId(ssoUser.getOrganId());
 		xlglWarSpecialty.setCreateOrganName(ssoUser.getOrgName());
 		xlglWarSpecialty.setCreateDate(date);
+		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+		xlglWarSpecialty.setUpdateDate(format);
 		xlglWarSpecialty.setCreateUser(ssoUser.getUserId());
 		xlglWarSpecialty.setPublishDate(date);
 		xlglWarSpecialtyService.save(xlglWarSpecialty);
