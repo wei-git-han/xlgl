@@ -866,7 +866,12 @@ public class XlglXlzzInfoController {
 				}
 				jsonObject.put("picturePath", xlglSubDocTracking.getPicturePath());
 				jsonObject.put("baoming", xlglSubDocTracking.getBaoming());//2是需补课
-				jsonObject.put("listPictureIds", list);
+				if(listPicture != null && listPicture.size() > 0){
+					xlglSubDocTracking.setListPictureIds(listPicture.get(0).getPictureId());
+				}else{
+					xlglSubDocTracking.setListPictureIds("");
+				}
+				//jsonObject.put("listPictureIds", list);
 				jsonObject.put("type", type);
 				jsonObject.put("title", xlglSubDocTracking.getTitle());
 				jsonObject.put("startTime", xlglSubDocTracking.getExerciseTime());
@@ -875,19 +880,19 @@ public class XlglXlzzInfoController {
 				jsonArray.add(jsonObject);
 
 				xlglSubDocTracking.setType(type);
-				xlglSubDocTracking.setListPictureIds(list);
+
 
 			}
 		}
 		//一个文里面可能有多个视频，在大讲堂里面，一个视频算一条数据，要把所有的视频数遍历出来，没有视频的也得算一条数据
-		int sum = 0;
-		if(listInfoIds != null && listInfoIds.size() > 0) {
-			for (int i = 0; i < listInfoIds.size(); i++) {
-				sum += listInfoIds.get(i).getListPictureIds().size() == 0 ? 1 : listInfoIds.get(i).getListPictureIds().size();
-			}
-		}
+//		int sum = 0;
+//		if(listInfoIds != null && listInfoIds.size() > 0) {
+//			for (int i = 0; i < listInfoIds.size(); i++) {
+//				sum += listInfoIds.get(i).getListPictureIds().size() == 0 ? 1 : listInfoIds.get(i).getListPictureIds().size();
+//			}
+//		}
 		PageUtils pageUtil = new PageUtils(listInfoIds);
-		pageUtil.setTotalCount(sum);
+		//pageUtil.setTotalCount(sum);
 		Response.json("page", pageUtil);
 		//Response.json("result", jsonArray);
 	}
@@ -912,6 +917,7 @@ public class XlglXlzzInfoController {
 			jsonObject.put("xlglPicture",xlglPicture);
 		}
 		List<XlglPicture> list = xlglPictureService.queryList(map);
+		//训练类型  0是大讲堂，1是日常军事训练
 		XlglSubDocTracking xlglSubDocTracking = xlglSubDocTrackingService.queryInfo(infoId,CurrentUser.getUserId());
 		//日常军事训练的，打开就代表参训了
 		if(xlglSubDocTracking != null){
@@ -921,6 +927,7 @@ public class XlglXlzzInfoController {
 		jsonObject.put("title",xlglXlzzInfo.getTitle());
 		jsonObject.put("time",xlglXlzzInfo.getExerciseTime());
 		jsonObject.put("list",list);
+		jsonObject.put("xlglXlzzInfo",xlglXlzzInfo);
 		Response.json(jsonObject);
 
 	}
@@ -1062,6 +1069,22 @@ public class XlglXlzzInfoController {
 		json.put("result", "success");
 		json.put("list", listAll);
 		Response.json(json);
+
+	}
+
+	/**大讲堂点开视频，看完后触发本接口，更改状态为已参训
+	 * infoId 文的id
+	 * @param infoId
+	 */
+	@ResponseBody
+	@RequestMapping("/updateStatusForDjt")
+	public void updateStatusForDjt(String infoId) {
+		String userId = CurrentUser.getUserId();
+		XlglSubDocTracking xlglSubDocTracking = xlglSubDocTrackingService.queryDjtInfo(infoId, userId);
+		if (xlglSubDocTracking != null) {
+			xlglSubDocTracking.setIsWork("1");
+		}
+		Response.json("result", "success");
 
 	}
 

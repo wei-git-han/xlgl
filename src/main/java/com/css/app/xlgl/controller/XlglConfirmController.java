@@ -90,38 +90,47 @@ public class XlglConfirmController {
 	@RequestMapping("/xlglConfirm")
 	public void xlglConfirm(String infoId) {
 		String deptId = null;
-		//获取当前人的管理员类型（0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员）
-		String adminFlag = adminSetService.getAdminTypeByUserId(CurrentUser.getUserId());
-		if("2".equals(adminFlag)){
-			deptId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
-		}else if("4".equals(adminFlag)){
-			deptId = baseAppUserService.queryByUserId(CurrentUser.getUserId());
-		}
-		//String deptId = baseAppUserService.queryByUserId(CurrentUser.getUserId());
+		deptId = baseAppUserService.queryByUserId(CurrentUser.getUserId());
 		BaseAppOrgan organ = baseAppOrganService.queryObject(deptId);//获取部门信息
-//		List<Map<String, Object>> infoList = xlglSubDocTrackingService.queryBmInfo(xlglConfirm.getInfoid(), deptId);
-//		if (infoList != null && infoList.size() > 0) {
-//			for (Map<String, Object> map : infoList) {
-//				String baoming = (String) map.get("baoming");
-//				String wbm = (String) map.get("wbm");
-//				String qj = (String) map.get("qj");
-//				xlglConfirm.setConfirmCount(baoming);
-//				xlglConfirm.setNoConfirmCount(wbm);
-//				xlglConfirm.setQjCount(qj);
-//			}
-//		}
-		XlglConfirm xlglConfirm = new XlglConfirm();
-		xlglConfirm.setDeptid(deptId);
-		xlglConfirm.setCreatedtime(new Date());
-		xlglConfirm.setCreator(CurrentUser.getUserId());
-		xlglConfirm.setCreatorname(CurrentUser.getUsername());
-		xlglConfirm.setDeptname(organ.getName());
-		xlglConfirm.setId(UUIDUtils.random());
-		xlglConfirm.setStatus("1");
-		xlglConfirm.setInfoid(infoId);
-		xlglConfirmService.save(xlglConfirm);
+		JSONObject jsonObject = new JSONObject();
+		String flag = "";
+		String userId = CurrentUser.getUserId();
+		XlglRoleSet xlglRoleSet = xlglRoleSetService.queryByuserId(userId);
+		if (xlglRoleSet != null) {
+			if ("5".equals(xlglRoleSet.getRoleFlag())) {//处长角色//处长只确认本处的
+				XlglConfirm xlglConfirm = new XlglConfirm();
+				xlglConfirm.setDeptid(deptId);
+				xlglConfirm.setCreatedtime(new Date());
+				xlglConfirm.setCreator(CurrentUser.getUserId());
+				xlglConfirm.setCreatorname(CurrentUser.getUsername());
+				xlglConfirm.setDeptname(organ.getName());
+				xlglConfirm.setId(UUIDUtils.random());
+				xlglConfirm.setStatus("1");
+				xlglConfirm.setInfoid(infoId);
+				xlglConfirmService.save(xlglConfirm);
+			} else if ("3".equals(xlglRoleSet.getRoleFlag())) {//局长角色//局长点确认，会确认所有的处
+				String orgId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
+				List<BaseAppOrgan> appOrganList = baseAppOrganService.queryAllDeptId(orgId);
+				if (appOrganList != null && appOrganList.size() > 0) {
+					for (BaseAppOrgan baseAppOrgan : appOrganList) {
+						String departmentId = baseAppOrgan.getId();
+						XlglConfirm xlglConfirm = new XlglConfirm();
+						xlglConfirm.setDeptid(departmentId);
+						xlglConfirm.setCreatedtime(new Date());
+						xlglConfirm.setCreator(CurrentUser.getUserId());
+						xlglConfirm.setCreatorname(CurrentUser.getUsername());
+						xlglConfirm.setDeptname(organ.getName());
+						xlglConfirm.setId(UUIDUtils.random());
+						xlglConfirm.setStatus("1");
+						xlglConfirm.setInfoid(infoId);
+						xlglConfirmService.save(xlglConfirm);
+					}
+				}
+			}
+		}
 		Response.json("result", "success");
 	}
+
 
 
 	/**

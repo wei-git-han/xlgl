@@ -79,4 +79,6 @@ public interface XlglSubDocTrackingService {
 
 	void deleteByInfoIdAndOrgId(String orgId,String id);
 
+	XlglSubDocTracking queryDjtInfo(String infoId,String userId);
+
 }

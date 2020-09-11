@@ -174,5 +174,10 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 		xlglSubDocTrackingDao.deleteByInfoIdAndOrgId(orgId,id);
 	}
 
+	@Override
+	public XlglSubDocTracking queryDjtInfo(String infoId,String userId){
+		return xlglSubDocTrackingDao.queryDjtInfo(infoId,userId);
+	}
+
 
 }

@@ -1,5 +1,7 @@
 package com.css.app.xlgl.entity;
 
+import com.amazonaws.services.ec2.model.SummaryStatus;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -81,10 +83,22 @@ public class XlglSubDocTracking implements Serializable {
 	private String isUpload;
 
 	//视频id集合
-	private List<String> listPictureIds;
+	private String listPictureIds;
 
 	//type  0是未开始 1是历史学习
 	private String type;
+
+	//报名状态  read和baoming二合一
+	//0已接收、1未接受、2已报名、3延后参训
+	private String sumStatus;
+
+	public String getSumStatus() {
+		return sumStatus;
+	}
+
+	public void setSumStatus(String sumStatus) {
+		this.sumStatus = sumStatus;
+	}
 
 	public String getType() {
 		return type;
@@ -94,11 +108,11 @@ public class XlglSubDocTracking implements Serializable {
 		this.type = type;
 	}
 
-	public List<String> getListPictureIds() {
+	public String getListPictureIds() {
 		return listPictureIds;
 	}
 
-	public void setListPictureIds(List<String> listPictureIds) {
+	public void setListPictureIds(String listPictureIds) {
 		this.listPictureIds = listPictureIds;
 	}
 
