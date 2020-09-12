@@ -52,6 +52,12 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 		return xlglSubDocTrackingDao.queryInfo(id,userId);
 	}
 
+
+	@Override
+	public XlglSubDocTracking queryInfomation(String id,String userId){
+		return xlglSubDocTrackingDao.queryInfomation(id,userId);
+	}
+
 	@Override
 	public XlglSubDocTracking querybaoming(String infoId,String subId,String userId){
 		return xlglSubDocTrackingDao.querybaoming(infoId,subId,userId);
