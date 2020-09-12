@@ -245,7 +245,7 @@ public class XlglDocumentZbjlController {
                 tracking.setTitle(xlglXlzzInfo.getTitle());
                 tracking.setTrackingType(xlglXlzzInfo.getXltype());//训练类型
                 tracking.setXltype(xlglXlzzInfo.getXltype());
-                tracking.setPicturePath(xlglXlzzInfo.getPicturePath());
+                tracking.setPicutrePath(xlglXlzzInfo.getPicturePath());
                 tracking.setExerciseTime(xlglXlzzInfo.getExerciseTime());
                 tracking.setInstraction(subInfo.getInstraction());
                 tracking.setRead("0");//0是未接受，1是已接受
@@ -466,7 +466,7 @@ public class XlglDocumentZbjlController {
 //                    xlglSubDocTracking.setPicturePath(pictureList.get(0).getPictureId());
 //                }
                 XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(fileId);
-                xlglSubDocTracking.setPicturePath(xlglXlzzInfo.getPicturePath());
+                xlglSubDocTracking.setPicutrePath(xlglXlzzInfo.getPicturePath());
                 //0已接收、1未接受、2已报名、3延后参训
                 String read = xlglSubDocTracking.getRead();
                 String baoming = xlglSubDocTracking.getBaoming();
