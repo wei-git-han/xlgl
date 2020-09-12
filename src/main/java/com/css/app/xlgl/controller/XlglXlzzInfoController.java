@@ -686,9 +686,10 @@ public class XlglXlzzInfoController {
 								String isWork = baseAppUser.getIsWork();
 								String baoming = baseAppUser.getBaoming();
 								String read = baseAppUser.getRead();
-								if (StringUtils.isNotBlank(isWork) && "1".equals(isWork)) {
-									baseAppUser.setStatus("2");//已参训
-								} else if (StringUtils.isNotBlank(baoming) && !"0".equals(baoming)) {
+//								if (StringUtils.isNotBlank(isWork) && "1".equals(isWork)) {
+//									baseAppUser.setStatus("2");//已参训
+//								} else
+									if (StringUtils.isNotBlank(baoming) && !"0".equals(baoming)) {
 									if ("1".equals(baoming)) {
 										baseAppUser.setStatus("0");//已报名
 									} else if ("2".equals(baoming)) {
@@ -700,6 +701,12 @@ public class XlglXlzzInfoController {
 									} else if ("1".equals(read)) {
 										baseAppUser.setStatus("4");//已接受
 									}
+								}
+
+								if("1".equals(isWork)){
+								baseAppUser.setSfcx("1");//1是已参训
+								}else {
+									baseAppUser.setSfcx("0");//0是已参训
 								}
 							}
 						}
@@ -1101,6 +1108,49 @@ public class XlglXlzzInfoController {
 		json.put("list", listAll);
 		Response.json(json);
 
+	}
+
+	@ResponseBody
+	@RequestMapping("/getAllDeptAllDoneInfo")
+	public void getAllDeptAllDoneInfo(String allInfoIds) {
+		JSONObject json = new JSONObject();
+		List listAll = new ArrayList();
+		List<BaseAppOrgan> list = baseAppOrganService.queryAllDeptIds();
+		if (list != null && list.size() > 0) {
+			for (BaseAppOrgan baseAppOrgan : list) {
+				JSONObject jsonObject = new JSONObject();
+				String orgId = baseAppOrgan.getId();
+				String orgName = baseAppOrgan.getName();
+				float f = getSum(allInfoIds);
+				jsonObject.put("name", orgName);
+				jsonObject.put("wcl", f);
+				listAll.add(jsonObject);
+			}
+		}
+		json.put("result", "success");
+		json.put("list", listAll);
+		Response.json(json);
+
+
+	}
+	public float getSum(String allInfoIds) {
+		int cxSum = 0;//总的参训人数
+		int sum = 0;//总的有效人数
+		Map<String, Object> map = new HashMap<>();
+		String[] infoIds = allInfoIds.split(",");
+		if (infoIds != null && infoIds.length > 0) {
+			for (int i = 0; i < infoIds.length; i++) {
+				String infoId = infoIds[i];
+				int yxSum = xlglSubDocTrackingService.queryCxCount(map);
+				cxSum += yxSum;
+			}
+			sum = baseAppUserService.queryListAllYxCount() * infoIds.length;
+		}
+		float DoneLv = 0.0f;
+		if (sum > 0) {
+			DoneLv = (int) ((new BigDecimal((float) cxSum / sum).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()) * 100);
+		}
+		return DoneLv;
 	}
 
 	/**大讲堂点开视频，看完后触发本接口，更改状态为已参训

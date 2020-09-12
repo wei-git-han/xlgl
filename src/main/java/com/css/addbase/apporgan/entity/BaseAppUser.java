@@ -71,6 +71,17 @@ public class BaseAppUser implements Serializable {
 	//总的状态
 	private String status;
 
+	//是否参训
+	private String sfcx;
+
+	public String getSfcx() {
+		return sfcx;
+	}
+
+	public void setSfcx(String sfcx) {
+		this.sfcx = sfcx;
+	}
+
 	public String getStatus() {
 		return status;
 	}
