@@ -176,6 +176,8 @@ public class XlglWarCommonQueueController {
 		xlglWarCommonQueue.setCreateOrganId(ssoUser.getOrganId());
 		xlglWarCommonQueue.setCreateOrganName(ssoUser.getOrgName());
 		xlglWarCommonQueue.setCreateDate(date);
+		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+		xlglWarCommonQueue.setUpdateDate(format);
 		xlglWarCommonQueue.setCreateUser(ssoUser.getUserId());
 		xlglWarCommonQueue.setPublishDate(date);
 		xlglWarCommonQueueService.save(xlglWarCommonQueue);
