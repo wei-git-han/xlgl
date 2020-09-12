@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.css.app.xlgl.config.entity.XlglRoleSet;
+import com.css.app.xlgl.config.service.XlglRoleSetService;
 import com.css.app.xlgl.service.XlglAdminSetService;
 import com.css.base.utils.GwPageUtils;
 import com.github.pagehelper.PageHelper;
@@ -58,6 +60,8 @@ public class BaseAppUserController {
 	private BaseAppConfigService baseAppConfigService;
 	@Autowired
 	private XlglAdminSetService adminSetService;
+	@Autowired
+	private XlglRoleSetService xlglRoleSetService;
 	
 	/**
 	 * 获取指定部门下的人员列表
@@ -231,6 +235,17 @@ public class BaseAppUserController {
     		userJson.put("result","success");
     		userJson.put("adminFlag",adminFlag);
     	}
+    	XlglRoleSet  xlglRoleSet =xlglRoleSetService.queryByuserId(CurrentUser.getUserId());
+    	if(xlglRoleSet != null){
+    		if(StringUtils.isNotBlank(xlglRoleSet.getRoleFlag())){
+    			String roleFlag = xlglRoleSet.getRoleFlag();
+    			if("1".equals(roleFlag) || "3".equals(roleFlag)){//首长和局长
+    				userJson.put("roleFlag",true);
+				}else {
+    				userJson.put("roleFlag",false);
+				}
+			}
+		}
     	Response.json(userJson);
     }
 	
