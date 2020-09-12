@@ -111,7 +111,7 @@ public class XlglWarCommonWeaponController {
 	public void info(String id){
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		Map<String, Object> map = new HashMap<>();
-		map.put("queueId", id);
+		map.put("weaponId", id);
 		map.put("readUserId", ssoUser.getUserId());
 		XlglWarCommonWeapon xlglWarCommonWeapon = xlglWarCommonWeaponService.queryObject(id);
 		//获取图片、视频、或封面
@@ -176,11 +176,13 @@ public class XlglWarCommonWeaponController {
 	public void save(XlglWarCommonWeapon xlglWarCommonWeapon,String coverFile,String videoFile,String[] accessoryArray){
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		Date date = new Date();
+		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
 		String random = UUIDUtils.random();
 		xlglWarCommonWeapon.setId(random);
 		xlglWarCommonWeapon.setCreateOrganId(ssoUser.getOrganId());
 		xlglWarCommonWeapon.setCreateOrganName(ssoUser.getOrgName());
 		xlglWarCommonWeapon.setCreateDate(date);
+		xlglWarCommonWeapon.setUpdateDate(format);
 		xlglWarCommonWeapon.setCreateUser(ssoUser.getUserId());
 		xlglWarCommonWeapon.setPublishDate(date);
 		xlglWarCommonWeaponService.save(xlglWarCommonWeapon);

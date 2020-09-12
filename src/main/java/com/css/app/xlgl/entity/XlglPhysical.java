@@ -76,6 +76,17 @@ public class XlglPhysical implements Serializable {
 	//3000米长跑用时秒
 	private String cpm;
 
+	//上一年
+	private String lastYear;
+
+	public String getLastYear() {
+		return lastYear;
+	}
+
+	public void setLastYear(String lastYear) {
+		this.lastYear = lastYear;
+	}
+
 	public String getYtxs() {
 		return ytxs;
 	}

@@ -36,4 +36,6 @@ public interface XlglAdminSetService {
 	String getAdminTypeByUserId(String userId);
 	
 	String getAgentLeagerId(String userId);
+
+	XlglAdminSet queryByUserId(String userId);
 }

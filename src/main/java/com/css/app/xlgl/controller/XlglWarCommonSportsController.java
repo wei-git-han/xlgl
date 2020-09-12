@@ -183,6 +183,8 @@ public class XlglWarCommonSportsController {
 		xlglWarCommonSports.setCreateOrganId(ssoUser.getOrganId());
 		xlglWarCommonSports.setCreateOrganName(ssoUser.getOrgName());
 		xlglWarCommonSports.setCreateDate(date);
+		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+		xlglWarCommonSports.setUpdateDate(format);
 		xlglWarCommonSports.setCreateUser(ssoUser.getUserId());
 		xlglWarCommonSports.setPublishDate(date);
 		xlglWarCommonSportsService.save(xlglWarCommonSports);

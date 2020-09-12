@@ -20,6 +20,7 @@ import com.css.app.xlgl.entity.XlglPhysicalRecord;
 import com.css.app.xlgl.service.XlglPhysicalRecordService;
 import com.css.app.xlgl.service.XlglPhysicalService;
 import com.css.base.utils.*;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.poi.hssf.eventusermodel.examples.XLS2CSVmra;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,15 +101,33 @@ public class XlglPhysicalController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public void save(XlglPhysical xlglPhysical){
-		xlglPhysical.setId(UUIDUtils.random());
+	public void save(XlglPhysical xlglPhysical) {
+		Calendar calendar = Calendar.getInstance();
+		String year = String.valueOf(calendar.get(Calendar.YEAR));
+		Map<String,Object> map = new HashedMap();
+		JSONObject jsonObject = new JSONObject();
+		String id = UUIDUtils.random();
+		xlglPhysical.setId(id);
 		xlglPhysical.setCreator(CurrentUser.getUserId());
 		xlglPhysical.setName(CurrentUser.getUsername());
 		xlglPhysical.setCreatedTime(new Date());
 		xlglPhysical.setUserId(CurrentUser.getUserId());
 		xlglPhysical.setNormal("0");//1是正式导入，0是自己保存
+		xlglPhysical.setLastYear(String.valueOf(Integer.parseInt(year) - 1));
 		xlglPhysicalService.save(xlglPhysical);
-		Response.json("result","success");
+		XlglPhysical xlglPhysical1 = xlglPhysicalService.queryObject(id);
+		if (xlglPhysical1 != null) {
+			jsonObject.put("tx", xlglPhysical1.getJudge());
+			jsonObject.put("dj", xlglPhysical1.getAllJudge());
+		}
+
+		map.put("age",xlglPhysical.getAge());
+		map.put("score",xlglPhysical.getAllScore());
+		map.put("year",String.valueOf(Integer.parseInt(year) - 1));
+		String sort = xlglPhysicalService.querySort(map);
+		jsonObject.put("sort",sort);
+		jsonObject.put("result", "success");
+		Response.json(jsonObject);
 	}
 	
 	/**
@@ -277,7 +296,7 @@ public class XlglPhysicalController {
 			int h = Math.round(h1);
 			float j = h1 * h1;
 			BMI = w/j;
-			if(age1 < 24){
+			if(age1 <= 24){
 				if(BMI >= 18.5 && BMI <=25.9){
 					hg = "合格";
 				}else {
@@ -327,7 +346,7 @@ public class XlglPhysicalController {
 			float h = Float.parseFloat(high);
 			float j = h * h;
 			BMI = w/j;
-			if(age1 < 24){
+			if(age1 <= 24){
 				if(BMI >= 18.5 && BMI <=23.9){
 					hg = "合格";
 				}else {

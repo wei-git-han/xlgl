@@ -71,4 +71,6 @@ public interface XlglNewsService {
 	 * @return
 	 */
 	List<XlglNews> queryDrafts(Map<String, Object> map);
+
+	List<XlglNews> querySort(Map<String,Object> map);
 }

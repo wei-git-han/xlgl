@@ -55,6 +55,38 @@ public class XlglNews implements Serializable{
 	//删除按钮显示 0是不显示，1是显示
 	private String isDelete;
 
+	//排序
+	private String sort;
+
+	//前一页id
+	private String preId;
+	//下一页id
+	private String sufId;
+
+	public String getPreId() {
+		return preId;
+	}
+
+	public void setPreId(String preId) {
+		this.preId = preId;
+	}
+
+	public String getSufId() {
+		return sufId;
+	}
+
+	public void setSufId(String sufId) {
+		this.sufId = sufId;
+	}
+
+	public String getSort() {
+		return sort;
+	}
+
+	public void setSort(String sort) {
+		this.sort = sort;
+	}
+
 	public String getIsDelete() {
 		return isDelete;
 	}

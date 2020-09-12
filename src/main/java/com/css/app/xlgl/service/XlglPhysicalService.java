@@ -37,5 +37,7 @@ public interface XlglPhysicalService {
 
 	XlglPhysical queryByUserId(String userId,String year);
 
+	String querySort(Map<String,Object> map);
+
 
 }

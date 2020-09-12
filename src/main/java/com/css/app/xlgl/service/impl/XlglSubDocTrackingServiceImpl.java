@@ -52,6 +52,12 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 		return xlglSubDocTrackingDao.queryInfo(id,userId);
 	}
 
+
+	@Override
+	public XlglSubDocTracking queryInfomation(String id,String userId){
+		return xlglSubDocTrackingDao.queryInfomation(id,userId);
+	}
+
 	@Override
 	public XlglSubDocTracking querybaoming(String infoId,String subId,String userId){
 		return xlglSubDocTrackingDao.querybaoming(infoId,subId,userId);
@@ -113,6 +119,11 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 	public int queryCxCount(Map<String,Object> map){
 		return xlglSubDocTrackingDao.queryCxCount(map);
 	}
+
+	@Override
+	public int queryBkCount(Map<String,Object> map){
+		return xlglSubDocTrackingDao.queryBkCount(map);
+	}
 	@Override
 	public int queryBmCount(Map<String,Object> map){
 		return xlglSubDocTrackingDao.queryBmCount(map);
@@ -167,6 +178,11 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 	@Override
 	public void deleteByInfoIdAndOrgId(String orgId,String id){
 		xlglSubDocTrackingDao.deleteByInfoIdAndOrgId(orgId,id);
+	}
+
+	@Override
+	public XlglSubDocTracking queryDjtInfo(String infoId,String userId){
+		return xlglSubDocTrackingDao.queryDjtInfo(infoId,userId);
 	}
 
 

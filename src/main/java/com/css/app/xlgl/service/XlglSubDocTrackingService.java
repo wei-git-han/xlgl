@@ -29,6 +29,9 @@ public interface XlglSubDocTrackingService {
 
 	XlglSubDocTracking queryInfo(String id,String userId);
 
+
+	XlglSubDocTracking queryInfomation(String id,String userId);
+
 	XlglSubDocTracking querybaoming(String infoId,String subId,String userId);
 
 	XlglSubDocTracking queryStatusByInfoIdAndUserId(String infoId,String userId);
@@ -55,6 +58,8 @@ public interface XlglSubDocTrackingService {
 
 	int queryCxCount(Map<String,Object> map);
 
+	int queryBkCount(Map<String,Object> map);
+
 	int queryBmCount(Map<String,Object> map);
 
 	int queryAllYx(String year);
@@ -76,5 +81,7 @@ public interface XlglSubDocTrackingService {
 	void deleteByInfoId(String id);
 
 	void deleteByInfoIdAndOrgId(String orgId,String id);
+
+	XlglSubDocTracking queryDjtInfo(String infoId,String userId);
 
 }

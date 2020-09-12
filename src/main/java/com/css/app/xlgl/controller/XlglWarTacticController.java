@@ -179,6 +179,8 @@ public class XlglWarTacticController {
 		xlglWarTactic.setCreateOrganId(ssoUser.getOrganId());
 		xlglWarTactic.setCreateOrganName(ssoUser.getOrgName());
 		xlglWarTactic.setCreateDate(date);
+		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+		xlglWarTactic.setUpdateDate(format);
 		xlglWarTactic.setCreateUser(ssoUser.getUserId());
 		xlglWarTactic.setPublishDate(date);
 		xlglWarTacticService.save(xlglWarTactic);

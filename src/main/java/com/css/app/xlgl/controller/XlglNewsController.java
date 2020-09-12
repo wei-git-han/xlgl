@@ -8,6 +8,7 @@ import com.css.app.xlgl.entity.XlglPicture;
 import com.css.app.xlgl.service.XlglAdminSetService;
 import com.css.app.xlgl.service.XlglPictureService;
 import com.netflix.discovery.converters.Auto;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -195,9 +196,46 @@ public class XlglNewsController {
 		//查询目前的点击量
 		synchronized (id) {
 			XlglNews xlglNews = xlglNewsService.queryObject(id);
-			Integer hits = xlglNews.getHits();
-			hits+=1;
-			xlglNews.setHits(hits);
+			if(xlglNews != null){
+				if(StringUtils.isNotBlank(xlglNews.getSort())){
+					String preId = "";
+					String sufId = "";
+					String sort = xlglNews.getSort();
+					int sortInt = Integer.parseInt(sort);
+					Map<String,Object> mapSort = new HashedMap();
+					int sortPre = sortInt - 1;
+					int sortSuf = sortInt + 1;
+					mapSort.put("sortPre",String.valueOf(sortPre));
+					mapSort.put("sortSuf",String.valueOf(sortSuf));
+					mapSort.put("id",id);
+					List<XlglNews> newsList = xlglNewsService.querySort(mapSort);
+					if(newsList != null && newsList.size()>0){
+						for(XlglNews xlglNews1 : newsList){
+							String sortNew = xlglNews1.getSort();
+							if(StringUtils.isNotBlank(sortNew)){
+								if(sortNew.equals(String.valueOf(sortPre))){
+									preId = xlglNews1.getId();
+								}else if(sortNew.equals(String.valueOf(sortSuf))){
+									sufId = xlglNews1.getId();
+								}
+							}
+						}
+					}
+					if (StringUtils.isBlank(preId)) {
+						preId = "no";
+					}
+					if (StringUtils.isBlank(sufId)) {
+						sufId = "no";
+					}
+					xlglNews.setPreId(preId);
+					xlglNews.setSufId(sufId);
+				}
+			}
+			if("1".equals(xlglNews.getIsRelease())){//只有正式发布了，才记录点击量
+				Integer hits = xlglNews.getHits();
+				hits+=1;
+				xlglNews.setHits(hits);
+			}
 			xlglNewsService.update(xlglNews);
 			Map<String, Object> map1 = new HashMap<>();
 			map1.put("FILE_ID", id);
@@ -212,7 +250,7 @@ public class XlglNewsController {
 		}
 	}
 
-	/**
+	/**17310508135
 	 * 编辑
 	 * @param id
 	 */
@@ -242,6 +280,7 @@ public class XlglNewsController {
 		//判断是新增还是修改,id不为空则是修改，为空则是新增
 		String id = xlglNews.getId();
 		if(!StringUtils.isEmpty(id)){
+			xlglNews.setReleaseDate(new Date());
 			xlglNewsService.update(xlglNews);
 		}else{
 			String releaseOrganid="";

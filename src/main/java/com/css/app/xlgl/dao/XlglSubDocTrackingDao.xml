@@ -8,16 +8,23 @@
 	</select>
 
 	<select id="queryAllInfos" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
-		select * from XLGL_SUB_DOC_TRACKING where 1=1
+		select * from XLGL_SUB_DOC_TRACKING where 1=1 and XLTYPE = '0'
 		<if test="userId != null and userId !=''">
 			and RECEIVER_ID = #{userId}
 		</if>
-		<if test='type == "0"'>
-			and EXERCISE_TIME > to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
-		</if>
-		<if test='type =="1"'>
-			and EXERCISE_TIME &lt; to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
-		</if>
+		<!--<if test='type == "0"'>-->
+			<!--and EXERCISE_TIME > to_date(#{time},'yyyy-mm-dd HH24:mi:ss')-->
+		<!--</if>-->
+		<!--<if test='type =="1"'>-->
+			<!--and EXERCISE_TIME &lt; to_date(#{time},'yyyy-mm-dd HH24:mi:ss')-->
+		<!--</if>-->
+
+        <if test="type == 0">
+            and IS_WORK  = '0'
+        </if>
+        <if test="type == 1">
+            and IS_WORK = '1'
+        </if>
 
 		<if test="search != null and search !=''">
 			and TITLE  = #{search}
@@ -113,6 +120,17 @@
 			and CREATED_TIME like '%'||#{year}||'%'
 		</if>
 		and IS_WORK = '1'
+	</select>
+
+	<select id="queryBkCount" resultType="int">
+		select count(1) from XLGL_SUB_DOC_TRACKING where 1=1
+		<if test="userId != null and userId !=''">
+			and RECEIVER_ID =#{userId}
+		</if>
+		<if test="year != null and year !=''">
+			and CREATED_TIME like '%'||#{year}||'%'
+		</if>
+		and BAOMING = '2'
 	</select>
 
 	<select id="queryBmCount" resultType="int">
@@ -235,7 +253,7 @@
 			#{title},
 			#{isWork},
 			#{xltype},
-			#{picturePath},
+			#{picutrePath},
 			#{exerciseTime},
 			#{instraction}
 		)
@@ -266,7 +284,7 @@
 			<if test="title != null">"TITLE" = #{title},</if>
 			<if test="isWork != null">"IS_WORK" = #{isWork},</if>
 			<if test="xltype != null">"XLTYPE" = #{xltype},</if>
-			<if test="picturePath != null">"PICUTRE_PATH" = #{picturePath},</if>
+			<if test="picutrePath != null">"PICUTRE_PATH" = #{picutrePath},</if>
 			<if test="exerciseTime != null">"EXERCISE_TIME" = #{exerciseTime},</if>
 			<if test="instraction != null">"INSTRACTION" = #{instraction}</if>
 		</set>
