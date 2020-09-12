@@ -36,12 +36,11 @@ import com.css.app.xlgl.service.XlglPictureService;
 import com.css.app.xlgl.service.XlglWarCommonWeaponReadService;
 import com.css.app.xlgl.service.XlglWarCommonWeaponService;
 
-
 /**
  * 军事训练-共同训练-轻武器操作
  * 
  * @author 中软信息系统工程有限公司
- * @email 
+ * @email
  * @date 2020-08-19 10:14:38
  */
 @Controller
@@ -53,19 +52,18 @@ public class XlglWarCommonWeaponController {
 	private XlglPictureService xlglPictureService;
 	@Autowired
 	private XlglWarCommonWeaponReadService xlglWarCommonWeaponReadService;
-	
-	
+
 	/**
 	 * 列表
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	public void list(Integer page, Integer limit,String title){
+	public void list(Integer page, Integer limit, String title) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("title", title);
 		PageHelper.startPage(page, limit);
-		
-		//查询列表数据
+
+		// 查询列表数据
 		List<XlglWarCommonWeapon> xlglWarCommonWeaponList = xlglWarCommonWeaponService.queryList(map);
 		PageUtils pageUtil = new PageUtils(xlglWarCommonWeaponList);
 		Map<String, Object> fileMap = new HashMap<>();
@@ -74,83 +72,96 @@ public class XlglWarCommonWeaponController {
 		for (XlglWarCommonWeapon xlglWarCommonWeapon : xlglWarCommonWeaponList) {
 			hashMap.put("weaponId", xlglWarCommonWeapon.getId());
 			List<XlglWarCommonWeaponRead> readList = xlglWarCommonWeaponReadService.queryList(hashMap);
-			if(readList.size() >0) {
+			if (readList.size() > 0) {
 				xlglWarCommonWeapon.setReadStatus("1");
-			}else {
+			} else {
 				xlglWarCommonWeapon.setReadStatus("0");
 			}
 			fileMap.put("id", xlglWarCommonWeapon.getId());
 			List<XlglPicture> queryList = xlglPictureService.queryList(fileMap);
 
 			List<AccessoryFileDto> list = new LinkedList<AccessoryFileDto>();
-			for (XlglPicture xlglPicture : queryList) { //1:图片，2：视频，3：附件，4：封面
-				if(xlglPicture.getPictureType().equals("2")) {
+			for (XlglPicture xlglPicture : queryList) { // 1:图片，2：视频，3：附件，4：封面
+				if (xlglPicture.getPictureType().equals("2")) {
 					xlglWarCommonWeapon.setVideoFile(xlglPicture.getPictureId());
 					xlglWarCommonWeapon.setVideoFileName(xlglPicture.getPictureName());
-				}else if(xlglPicture.getPictureType().equals("3")) {
+				} else if (xlglPicture.getPictureType().equals("3")) {
 					AccessoryFileDto accessoryFileDto = new AccessoryFileDto();
 					accessoryFileDto.setFileId(xlglPicture.getPictureId());
 					accessoryFileDto.setFileName(xlglPicture.getPictureName());
 					list.add(accessoryFileDto);
-				}else if(xlglPicture.getPictureType().equals("4")) {
+				} else if (xlglPicture.getPictureType().equals("4")) {
 					xlglWarCommonWeapon.setCoverFile(xlglPicture.getPictureId());
 					xlglWarCommonWeapon.setCoverFileName(xlglPicture.getPictureName());
 				}
 			}
 			xlglWarCommonWeapon.setAccessoryFileArray(list);
 		}
-		Response.json("page",pageUtil);
+		Response.json("page", pageUtil);
 	}
-	
-	
+
 	/**
 	 * 信息
 	 */
 	@ResponseBody
 	@RequestMapping("/info")
-	public void info(String id){
+	public void info(String id) {
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		Map<String, Object> map = new HashMap<>();
 		map.put("weaponId", id);
 		map.put("readUserId", ssoUser.getUserId());
 		XlglWarCommonWeapon xlglWarCommonWeapon = xlglWarCommonWeaponService.queryObject(id);
-		//获取图片、视频、或封面
+		// 获取图片、视频、或封面
 		Map<String, Object> fileMap = new HashMap<>();
 		fileMap.put("id", xlglWarCommonWeapon.getId());
-		
+
 		List<XlglPicture> pictureList = xlglPictureService.queryList(fileMap);
-		
+
 		List<AccessoryFileDto> list = new LinkedList<AccessoryFileDto>();
-		for (XlglPicture xlglPicture : pictureList) { //1:图片，2：视频，3：附件，4：封面
-			if(xlglPicture.getPictureType().equals("2")) {
+		for (XlglPicture xlglPicture : pictureList) { // 1:图片，2：视频，3：附件，4：封面
+			if (xlglPicture.getPictureType().equals("2")) {
 				xlglWarCommonWeapon.setVideoFile(xlglPicture.getPictureId());
 				xlglWarCommonWeapon.setVideoFileName(xlglPicture.getPictureName());
-			}else if(xlglPicture.getPictureType().equals("3")) {
+			} else if (xlglPicture.getPictureType().equals("3")) {
 				AccessoryFileDto accessoryFileDto = new AccessoryFileDto();
 				accessoryFileDto.setFileId(xlglPicture.getPictureId());
 				accessoryFileDto.setFileName(xlglPicture.getPictureName());
 				list.add(accessoryFileDto);
-			}else if(xlglPicture.getPictureType().equals("4")) {
+			} else if (xlglPicture.getPictureType().equals("4")) {
 				xlglWarCommonWeapon.setCoverFile(xlglPicture.getPictureId());
 				xlglWarCommonWeapon.setCoverFileName(xlglPicture.getPictureName());
 			}
 		}
 		xlglWarCommonWeapon.setAccessoryFileArray(list);
-		
-		//修改浏览次数
-		if(xlglWarCommonWeapon.getViewNumber() !=null) {
-			xlglWarCommonWeapon.setViewNumber(xlglWarCommonWeapon.getViewNumber()+1);
-		}else {
+
+		// 修改浏览次数
+		if (xlglWarCommonWeapon.getViewNumber() != null) {
+			xlglWarCommonWeapon.setViewNumber(xlglWarCommonWeapon.getViewNumber() + 1);
+		} else {
 			xlglWarCommonWeapon.setViewNumber(1);
 		}
 		xlglWarCommonWeaponService.update(xlglWarCommonWeapon);
-		//已读记录表
+
+		Response.json("xlglWarCommonWeapon", xlglWarCommonWeapon);
+	}
+
+	/**
+	 * 修改已学未学习状态
+	 */
+	@ResponseBody
+	@RequestMapping("/updateRead")
+	public void updateRead(String id) {
+		SSOUser ssoUser = CurrentUser.getSSOUser();
+		Map<String, Object> map = new HashMap<>();
+		map.put("weaponId", id);
+		map.put("readUserId", ssoUser.getUserId());
+		// 已读记录表
 		List<XlglWarCommonWeaponRead> queryList = xlglWarCommonWeaponReadService.queryList(map);
-		if(queryList.size()>0) {
+		if (queryList.size() > 0) {
 			XlglWarCommonWeaponRead xlglWarCommonWeaponRead = queryList.get(0);
 			xlglWarCommonWeaponRead.setReadDate(new Date());
 			xlglWarCommonWeaponReadService.update(xlglWarCommonWeaponRead);
-		}else {
+		} else {
 			XlglWarCommonWeaponRead xlglWarCommonWeaponRead = new XlglWarCommonWeaponRead();
 			xlglWarCommonWeaponRead.setId(UUIDUtils.random());
 			xlglWarCommonWeaponRead.setWeaponId(id);
@@ -161,19 +172,23 @@ public class XlglWarCommonWeaponController {
 			xlglWarCommonWeaponRead.setReadDate(new Date());
 			xlglWarCommonWeaponReadService.save(xlglWarCommonWeaponRead);
 		}
-		
-		Response.json("xlglWarCommonWeapon", xlglWarCommonWeapon);
+		Response.ok();
 	}
-	
+
 	/**
 	 * 保存
-	 * @param coverFile 封面上传id
-	 * @param videoFile 视频上传id
-	 * @param accessoryFile 多个附件上传id 
+	 * 
+	 * @param coverFile
+	 *            封面上传id
+	 * @param videoFile
+	 *            视频上传id
+	 * @param accessoryFile
+	 *            多个附件上传id
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public void save(XlglWarCommonWeapon xlglWarCommonWeapon,String coverFile,String videoFile,String[] accessoryArray){
+	public void save(XlglWarCommonWeapon xlglWarCommonWeapon, String coverFile, String videoFile,
+			String[] accessoryArray) {
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		Date date = new Date();
 		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
@@ -186,81 +201,82 @@ public class XlglWarCommonWeaponController {
 		xlglWarCommonWeapon.setCreateUser(ssoUser.getUserId());
 		xlglWarCommonWeapon.setPublishDate(date);
 		xlglWarCommonWeaponService.save(xlglWarCommonWeapon);
-		if(StringUtils.isNotBlank(coverFile)) {
-			xlglPictureService.savePicture(random,coverFile,"4");
+		if (StringUtils.isNotBlank(coverFile)) {
+			xlglPictureService.savePicture(random, coverFile, "4");
 		}
-		if(StringUtils.isNotBlank(videoFile)) {
-			xlglPictureService.savePicture(random,videoFile,"2");
+		if (StringUtils.isNotBlank(videoFile)) {
+			xlglPictureService.savePicture(random, videoFile, "2");
 		}
-		if(accessoryArray !=null) {
+		if (accessoryArray != null) {
 			for (String string : accessoryArray) {
-				xlglPictureService.savePicture(random,string,"3");
+				xlglPictureService.savePicture(random, string, "3");
 			}
 		}
 		Response.ok();
 	}
-	
+
 	/**
 	 * 修改
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	public void update(XlglWarCommonWeapon xlglWarCommonWeapon){
+	public void update(XlglWarCommonWeapon xlglWarCommonWeapon) {
 		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		xlglWarCommonWeapon.setUpdateUser(CurrentUser.getUserId());
 		xlglWarCommonWeapon.setUpdateDate(format);
 		xlglWarCommonWeaponService.update(xlglWarCommonWeapon);
-		
+
 		Map<String, Object> map = new HashMap<>();
 		map.put("id", xlglWarCommonWeapon.getId());
 		List<XlglPicture> queryList = xlglPictureService.queryList(map);
-		if(queryList.size()>0) {
+		if (queryList.size() > 0) {
 			for (XlglPicture xlglPicture : queryList) {
 				xlglPictureService.delete(xlglPicture.getId());
 			}
 		}
-		if(StringUtils.isNotBlank(xlglWarCommonWeapon.getCoverFile())) {
-			xlglPictureService.savePicture(xlglWarCommonWeapon.getId(),xlglWarCommonWeapon.getCoverFile(),"4");
+		if (StringUtils.isNotBlank(xlglWarCommonWeapon.getCoverFile())) {
+			xlglPictureService.savePicture(xlglWarCommonWeapon.getId(), xlglWarCommonWeapon.getCoverFile(), "4");
 		}
-		if(StringUtils.isNotBlank(xlglWarCommonWeapon.getVideoFile())) {
-			xlglPictureService.savePicture(xlglWarCommonWeapon.getId(),xlglWarCommonWeapon.getVideoFile(),"2");
+		if (StringUtils.isNotBlank(xlglWarCommonWeapon.getVideoFile())) {
+			xlglPictureService.savePicture(xlglWarCommonWeapon.getId(), xlglWarCommonWeapon.getVideoFile(), "2");
 		}
-		if(StringUtils.isNotBlank(xlglWarCommonWeapon.getAccessoryFile())) {
-			if(xlglWarCommonWeapon.getAccessoryFile().contains(",")) {
+		if (StringUtils.isNotBlank(xlglWarCommonWeapon.getAccessoryFile())) {
+			if (xlglWarCommonWeapon.getAccessoryFile().contains(",")) {
 				String[] split = xlglWarCommonWeapon.getAccessoryFile().split(",");
 				for (String string : split) {
-					xlglPictureService.savePicture(xlglWarCommonWeapon.getId(),string,"3");
+					xlglPictureService.savePicture(xlglWarCommonWeapon.getId(), string, "3");
 				}
-			}else {
-				xlglPictureService.savePicture(xlglWarCommonWeapon.getId(),xlglWarCommonWeapon.getAccessoryFile(),"3");
+			} else {
+				xlglPictureService.savePicture(xlglWarCommonWeapon.getId(), xlglWarCommonWeapon.getAccessoryFile(),
+						"3");
 			}
 		}
 		Response.ok();
 	}
-	
+
 	/**
 	 * 删除
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	public void delete(String[] ids){
+	public void delete(String[] ids) {
 		xlglWarCommonWeaponService.deleteBatch(ids);
 		for (String string : ids) {
-			//获取图片、视频、或封面
+			// 获取图片、视频、或封面
 			Map<String, Object> fileMap = new HashMap<>();
 			fileMap.put("id", string);
 			List<XlglPicture> pictureList = xlglPictureService.queryList(fileMap);
 			for (XlglPicture xlglPicture : pictureList) {
-				//删除文件服务器上文件
+				// 删除文件服务器上文件
 				HTTPFile httpFile = new HTTPFile(xlglPicture.getPictureId());
 				boolean delete = httpFile.delete();
-				if(delete) {
-					//删除文件表中记录
+				if (delete) {
+					// 删除文件表中记录
 					xlglPictureService.delete(xlglPicture.getId());
 				}
 			}
 		}
 		Response.ok();
 	}
-	
+
 }
