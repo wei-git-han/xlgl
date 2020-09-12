@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.AppConfig;
 import com.css.addbase.appconfig.service.BaseAppConfigService;
 import com.css.app.xlgl.entity.XlglZbgl;
@@ -39,7 +40,7 @@ public class MainPageController {
 	public void list(Integer page, Integer limit){
 		
 		String pageStr=configService.getValue("mainPage");
-		JSONArray ja=JSONArray.parseArray(pageStr);
+		Object ja=JSONObject.parse(pageStr);
 		Response.json("mainPage",ja);
 	}
 	
