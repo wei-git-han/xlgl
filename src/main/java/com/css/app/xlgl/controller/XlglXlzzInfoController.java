@@ -703,10 +703,10 @@ public class XlglXlzzInfoController {
 									}
 								}
 
-								if("1".equals(isWork)){
-								baseAppUser.setSfcx("1");//1是已参训
-								}else {
-									baseAppUser.setSfcx("0");//0是已参训
+								if ("1".equals(isWork)) {
+									baseAppUser.setSfcx("1");//1是已参训
+								} else if("2".equals(baoming)){
+									baseAppUser.setSfcx("0");//0是延后参训
 								}
 							}
 						}

@@ -89,15 +89,24 @@ public class XlglSubDocInfoController {
 			stutas = true;
 		}
 		if(StringUtils.isNotBlank(baoming)) {
-			map.put("baoming", baoming);
+			if("3".equals(baoming)){
+				map.put("read","1");
+			}else if("2".equals(baoming)){
+				map.put("read","0");
+			}else if("0".equals(baoming)){
+				map.put("baoming","1");
+			}else if("1".equals(baoming)){
+				map.put("baoming","2");
+			}
 			stutas = true;
 		}
-		List<XlglSubDocInfo> xlglSubDocInfoList  = new ArrayList<XlglSubDocInfo>();
+		List<XlglSubDocTracking> xlglSubDocTrackingList  = new ArrayList<XlglSubDocTracking>();
 		if(stutas) {
 			//查询列表数据
-			xlglSubDocInfoList = xlglSubDocInfoService.queryList(map);
+			xlglSubDocTrackingList = xlglSubDocTrackingService.queryList(map);
+
 		}
-		Response.json(xlglSubDocInfoList);
+		Response.json(xlglSubDocTrackingList);
 	}
 	
 	

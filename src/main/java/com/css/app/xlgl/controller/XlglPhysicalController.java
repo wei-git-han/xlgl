@@ -296,7 +296,7 @@ public class XlglPhysicalController {
 			float h1 = Float.parseFloat(high);
 			int h = Math.round(h1);
 			float j = h1 * h1;
-			BMI = (int) ((new BigDecimal((float) w / j).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()) * 100);;
+			BMI = (int) ((new BigDecimal((float) w / j).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()));;
 			if(age1 <= 24){
 				if(BMI >= 18.5 && BMI <=25.9){
 					hg = "合格";
@@ -1553,6 +1553,9 @@ public class XlglPhysicalController {
 					} else {
 						core = 100 - (t * 5 / 6 + 1);
 					}
+				}else if(m < 181){
+					int t = 181 - m;
+					core = 100 + t;
 				}
 			} else if (age >= 25 && age <= 27) {
 				if (m <= 215 && m >= 208) {
@@ -1614,75 +1617,75 @@ public class XlglPhysicalController {
 				} else if (m < 183) {
 					core = 100 + 183 - m;
 				}
-			} else if (age >= 28 && age <= 30) {
-				if (m <= 219 && m >= 211) {
-					int t = m - 211;
-					int d = t * 5 % 8;
-					if (d == 0) {
-						core = 60 - (t * 5 / 8);
-					} else {
-						core = 60 - (t * 5 / 8 + 1);
+				} else if (age >= 28 && age <= 30) {
+					if (m <= 219 && m >= 211) {
+						int t = m - 211;
+						int d = t * 5 % 8;
+						if (d == 0) {
+							core = 60 - (t * 5 / 8);
+						} else {
+							core = 60 - (t * 5 / 8 + 1);
+						}
+					} else if (m < 211 && m >= 207) {
+						int t = m - 207;
+						int d = t * 5 % 4;
+						if (d == 0) {
+							core = 65 - (t * 5 / 4);
+						} else {
+							core = 65 - (t * 5 / 4 + 1);
+						}
+					} else if (m < 207 && m >= 204) {
+						int t = m - 204;
+						int d = t * 5 % 3;
+						if (d == 0) {
+							core = 70 - (t * 5 / 3);
+						} else {
+							core = 70 - (t * 5 / 3 + 1);
+						}
+					} else if (m < 204 && m >= 200) {
+						int t = m - 200;
+						int d = t * 5 % 2;
+						if (d == 0) {
+							core = 80 - (t * 5 / 2);
+						} else {
+							core = 80 - (t * 5 / 2 + 1);
+						}
+					} else if (m < 200 && m >= 197) {
+						int t = m - 197;
+						int d = t * 5 % 3;
+						if (d == 0) {
+							core = 85 - (t * 5 / 3);
+						} else {
+							core = 85 - (t * 5 / 3 + 1);
+						}
+					} else if (m < 197 && m >= 195) {
+						int t = m - 195;
+						int d = t * 5 % 2;
+						if (d == 0) {
+							core = 90 - (t * 5 / 2);
+						} else {
+							core = 90 - (t * 5 / 2 + 1);
+						}
+					} else if (m < 195 && m >= 191) {
+						int t = m - 191;
+						int d = t * 5 % 4;
+						if (d == 0) {
+							core = 95 - (t * 5 / 4);
+						} else {
+							core = 95 - (t * 5 / 4 + 1);
+						}
+					} else if (m < 191 && m >= 185) {
+						int t = m - 185;
+						int d = t * 5 % 6;
+						if (d == 0) {
+							core = 100 - (t * 5 / 6);
+						} else {
+							core = 100 - (t * 5 / 6 + 1);
+						}
+					} else if (m < 185) {
+						core = 100 + 185 - m;
 					}
-				} else if (m < 211 && m >= 207) {
-					int t = m - 207;
-					int d = t * 5 % 4;
-					if (d == 0) {
-						core = 65 - (t * 5 / 4);
-					} else {
-						core = 65 - (t * 5 / 4 + 1);
-					}
-				} else if (m < 207 && m >= 204) {
-					int t = m - 204;
-					int d = t * 5 % 3;
-					if (d == 0) {
-						core = 70 - (t * 5 / 3);
-					} else {
-						core = 70 - (t * 5 / 3 + 1);
-					}
-				} else if (m < 204 && m >= 200) {
-					int t = m - 200;
-					int d = t * 5 % 2;
-					if (d == 0) {
-						core = 80 - (t * 5 / 2);
-					} else {
-						core = 80 - (t * 5 / 2 + 1);
-					}
-				} else if (m < 200 && m >= 197) {
-					int t = m - 197;
-					int d = t * 5 % 3;
-					if (d == 0) {
-						core = 85 - (t * 5 / 3);
-					} else {
-						core = 85 - (t * 5 / 3 + 1);
-					}
-				} else if (m < 197 && m >= 195) {
-					int t = m - 195;
-					int d = t * 5 % 2;
-					if (d == 0) {
-						core = 90 - (t * 5 / 2);
-					} else {
-						core = 90 - (t * 5 / 2 + 1);
-					}
-				} else if (m < 195 && m >= 191) {
-					int t = m - 191;
-					int d = t * 5 % 4;
-					if (d == 0) {
-						core = 95 - (t * 5 / 4);
-					} else {
-						core = 95 - (t * 5 / 4 + 1);
-					}
-				} else if (m < 191 && m >= 185) {
-					int t = m - 185;
-					int d = t * 5 % 6;
-					if (d == 0) {
-						core = 100 - (t * 5 / 6);
-					} else {
-						core = 100 - (t * 5 / 6 + 1);
-					}
-				} else if (m < 185) {
-					core = 100 + m - 185;
-				}
-			} else if (age >= 31 && age <= 33) {
+				} else if (age >= 31 && age <= 33) {
 				if (m <= 222 && m >= 213) {
 					int t = m - 213;
 					int d = t * 5 % 9;
@@ -1732,7 +1735,7 @@ public class XlglPhysicalController {
 						core = 100 - (t * 5 / 6 + 1);
 					}
 				} else if (m < 187) {
-					core = 100 + m - 187;
+					core = 100 + 187 - m;
 				}
 			} else if (age >= 34 && age <= 36) {
 				if (m <= 226 && m >= 217) {
@@ -1792,7 +1795,7 @@ public class XlglPhysicalController {
 						core = 100 - (t * 5 / 6 + 1);
 					}
 				} else if (m < 189) {
-					core = 100 + m - 189;
+					core = 100 + 189 -m;
 				}
 			} else if (age >= 37 && age <= 39) {
 				if (m <= 227 && m >= 218) {
@@ -1844,7 +1847,7 @@ public class XlglPhysicalController {
 						core = 100 - (t * 5 / 7 + 1);
 					}
 				} else if (m < 191) {
-					core = 100 + m - 191;
+					core = 100 + 191 - m;
 				}
 			} else if (age >= 40 && age <= 42) {
 				if (m <= 229 && m >= 223) {
@@ -1904,7 +1907,7 @@ public class XlglPhysicalController {
 						core = 100 - (t * 5 / 7 + 1);
 					}
 				} else if (m < 193) {
-					core = 100 + m - 193;
+					core = 100 + 193 - m;
 				}
 			} else if (age >= 43 && age <= 45) {
 				if (m <= 233 && m >= 224) {
@@ -1966,7 +1969,7 @@ public class XlglPhysicalController {
 						core = 100 - (t * 5 / 7 + 1);
 					}
 				} else if (m < 195) {
-					core = 100 + m - 195;
+					core = 100 + 195 - m;
 				}
 			} else if (age >= 46 && age <= 48) {
 				if (m <= 239 && m >= 226) {
@@ -2028,7 +2031,7 @@ public class XlglPhysicalController {
 						core = 100 - (t * 5 / 7 + 1);
 					}
 				} else if (m < 197) {
-					core = 100 + m - 197;
+					core = 100 + 197 -m;
 				}
 			} else if (age >= 49 && age <= 51) {
 				if (m <= 240 && m >= 228) {
@@ -2082,7 +2085,7 @@ public class XlglPhysicalController {
 						core = 100 - (t * 5 / 8 + 1);
 					}
 				} else if (m < 199) {
-					core = 100 + m - 199;
+					core = 100 + 199 - m;
 				}
 			} else if (age >= 52 && age <= 54) {
 				if (m <= 245 && m >= 234) {
@@ -2142,7 +2145,7 @@ public class XlglPhysicalController {
 						core = 100 - (t * 5 / 3 + 1);
 					}
 				} else if (m < 206) {
-					core = 100 + m - 206;
+					core = 100 + 206 - m;
 				}
 			} else if (age >= 55 && age <= 57) {
 				if (m <= 248 && m >= 238) {
@@ -2210,7 +2213,7 @@ public class XlglPhysicalController {
 						core = 100 - (t * 5 / 2 + 1);
 					}
 				} else if (m < 211) {
-					core = 100 + m - 211;
+					core = 100 + 211 - m;
 				}
 			} else if (age >= 58 && age <= 60) {
 				if (m <= 254 && m >= 245) {
@@ -2282,6 +2285,7 @@ public class XlglPhysicalController {
 				}
 			}
 		}
+
 		return core;
 	}
 
