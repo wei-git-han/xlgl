@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.util.*;
 
 import cn.com.css.filestore.impl.HTTPFile;
@@ -295,7 +296,7 @@ public class XlglPhysicalController {
 			float h1 = Float.parseFloat(high);
 			int h = Math.round(h1);
 			float j = h1 * h1;
-			BMI = w/j;
+			BMI = (int) ((new BigDecimal((float) w / j).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()) * 100);;
 			if(age1 <= 24){
 				if(BMI >= 18.5 && BMI <=25.9){
 					hg = "合格";

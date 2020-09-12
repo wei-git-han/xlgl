@@ -27,7 +27,7 @@
         </if>
 
 		<if test="search != null and search !=''">
-			and TITLE  = #{search}
+			and TITLE  like '%'||#{search}||'%'
 		</if>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
@@ -83,7 +83,7 @@
 			and RECEIVER_ID = #{userId}
 		</if>
 		<if test="search != null and search !=''">
-			and TITLE  = #{search}
+			and TITLE  like '%'||#{search}||'%'
 		</if>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}

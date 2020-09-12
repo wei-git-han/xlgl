@@ -68,6 +68,17 @@ public class BaseAppUser implements Serializable {
 	//延后原因
 	private String reason;
 
+	//总的状态
+	private String status;
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	public String getReason() {
 		return reason;
 	}

@@ -140,6 +140,11 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 	}
 
 	@Override
+	public int queryAllBkCount(String fileId){
+		return xlglSubDocTrackingDao.queryAllBkCount(fileId);
+	}
+
+	@Override
 	public int queryAllYh(String fileId){
 		return xlglSubDocTrackingDao.queryAllYh(fileId);
 	}

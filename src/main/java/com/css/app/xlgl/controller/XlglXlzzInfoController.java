@@ -615,7 +615,7 @@ public class XlglXlzzInfoController {
 						int sum = baseAppUserService.queryBmCout(infoId,"1",deptId);//已报名
 						int nsum = baseAppUserService.queryBmCout(infoId,"0",deptId);//未报名
 						int yhSum = baseAppUserService.queryBmCout(infoId,"2",deptId);//延后报名
-						ybm += sum;
+						ybm += sum + yhSum;
 						wbm += nsum;
 						int yjs = baseAppUserService.queryYjs(deptId,infoId);//已接受
 						int wjs = baseAppUserService.queryWjs(deptId,infoId);//未接受
@@ -680,6 +680,28 @@ public class XlglXlzzInfoController {
 							listUser = baseAppUserService.queryAllJuUserByDeptId(deptId,infoId);
 						} else {
 							listUser = baseAppUserService.queryAllUserByDeptId(deptId,infoId);
+						}
+						if(listUser != null && listUser.size() > 0){
+							for(BaseAppUser baseAppUser : listUser) {
+								String isWork = baseAppUser.getIsWork();
+								String baoming = baseAppUser.getBaoming();
+								String read = baseAppUser.getRead();
+								if (StringUtils.isNotBlank(isWork) && "1".equals(isWork)) {
+									baseAppUser.setStatus("2");//已参训
+								} else if (StringUtils.isNotBlank(baoming) && !"0".equals(baoming)) {
+									if ("1".equals(baoming)) {
+										baseAppUser.setStatus("0");//已报名
+									} else if ("2".equals(baoming)) {
+										baseAppUser.setStatus("1");//延后参训
+									}
+								} else if (StringUtils.isNotBlank(read)) {
+									if ("0".equals(read)) {
+										baseAppUser.setStatus("3");//未接受
+									} else if ("1".equals(read)) {
+										baseAppUser.setStatus("4");//已接受
+									}
+								}
+							}
 						}
 						jsonObject.put("listUser",listUser);
 						jsonObject.put("deptName",deptName);
@@ -955,7 +977,7 @@ public class XlglXlzzInfoController {
 		count = xlglSubDocTrackingService.quereyWcCount(userId, year);//已参训的课程
 		if (sum > 0) {
 			bk = sum - count;
-			float f = count / sum;
+			float f  = (int) ((new BigDecimal((float) count / sum).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()) * 100);
 			jsonObject.put("wcl", f);
 			jsonObject.put("ywc", count);
 			jsonObject.put("bk", bk);
@@ -1049,7 +1071,7 @@ public class XlglXlzzInfoController {
 		int cxCount = xlglSubDocTrackingService.queryCxAllCount(map);//当前课堂参训人数
 		float DoneLv = 0.0f;
 		if(yxCount > 0){
-			DoneLv = cxCount / yxCount;
+			DoneLv = (int) ((new BigDecimal((float) cxCount / yxCount).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()) * 100);
 		}
 		return DoneLv;
 	}
@@ -1093,10 +1115,23 @@ public class XlglXlzzInfoController {
 		if (xlglSubDocTracking != null) {
 			xlglSubDocTracking.setIsWork("1");
 		}
+		xlglSubDocTrackingService.update(xlglSubDocTracking);
 		Response.json("result", "success");
 
 	}
 
+
+	@ResponseBody
+	@RequestMapping("/getInfoTj")
+	public void getInfoTj(String infoId) {
+		JSONObject jsonObject = new JSONObject();
+		int ycx = xlglSubDocTrackingService.queryAllCx(infoId);//已参训
+		int qx = xlglSubDocTrackingService.queryAllBkCount(infoId);//缺席
+		jsonObject.put("sum", ycx+qx);
+		jsonObject.put("ycm", ycx);
+		jsonObject.put("qx", qx);
+		Response.json(jsonObject);
+	}
 
 
 
