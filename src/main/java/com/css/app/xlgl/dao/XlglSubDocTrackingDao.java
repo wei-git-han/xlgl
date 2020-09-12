@@ -24,6 +24,9 @@ public interface XlglSubDocTrackingDao extends BaseDao<XlglSubDocTracking> {
     @Select("select * from XLGL_SUB_DOC_TRACKING where INFO_ID = #{0} and RECEIVER_ID = #{1} and XLTYPE = '1'")
     XlglSubDocTracking queryInfo(String id,String userId);
 
+    @Select("select * from XLGL_SUB_DOC_TRACKING where INFO_ID = #{0} and RECEIVER_ID = #{1}")
+    XlglSubDocTracking queryInfomation(String id,String userId);
+
     @Select("select * from XLGL_SUB_DOC_TRACKING where INFO_ID = #{0} and RECEIVER_ID = #{1} and XLTYPE = '0'")
     XlglSubDocTracking queryDjtInfo(String infoId,String userId);
 

@@ -8,7 +8,7 @@
 	</select>
 
 	<select id="queryAllInfos" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
-		select * from XLGL_SUB_DOC_TRACKING where 1=1
+		select * from XLGL_SUB_DOC_TRACKING where 1=1 and XLTYPE = '0'
 		<if test="userId != null and userId !=''">
 			and RECEIVER_ID = #{userId}
 		</if>
@@ -246,7 +246,7 @@
 			#{title},
 			#{isWork},
 			#{xltype},
-			#{picturePath},
+			#{picutrePath},
 			#{exerciseTime},
 			#{instraction}
 		)
@@ -277,7 +277,7 @@
 			<if test="title != null">"TITLE" = #{title},</if>
 			<if test="isWork != null">"IS_WORK" = #{isWork},</if>
 			<if test="xltype != null">"XLTYPE" = #{xltype},</if>
-			<if test="picturePath != null">"PICUTRE_PATH" = #{picturePath},</if>
+			<if test="picutrePath != null">"PICUTRE_PATH" = #{picutrePath},</if>
 			<if test="exerciseTime != null">"EXERCISE_TIME" = #{exerciseTime},</if>
 			<if test="instraction != null">"INSTRACTION" = #{instraction}</if>
 		</set>

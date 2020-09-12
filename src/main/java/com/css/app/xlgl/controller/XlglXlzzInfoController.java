@@ -133,7 +133,7 @@ public class XlglXlzzInfoController {
 		XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(id);
 		String instraction = "";
 		//打开的同时，更新打开人的状态为已读
-		XlglSubDocTracking xlglSubDocTracking = xlglSubDocTrackingService.queryInfo(id, loginUser);
+		XlglSubDocTracking xlglSubDocTracking = xlglSubDocTrackingService.queryInfomation(id, loginUser);
 		if (xlglSubDocTracking != null) {
 			if (xlglSubDocTracking != null) {
 				xlglSubDocTracking.setRead("1");
@@ -864,7 +864,7 @@ public class XlglXlzzInfoController {
 						list.add(xlglPicture.getPictureId());
 					}
 				}
-				jsonObject.put("picturePath", xlglSubDocTracking.getPicturePath());
+				jsonObject.put("picturePath", xlglSubDocTracking.getPicutrePath());
 				jsonObject.put("baoming", xlglSubDocTracking.getBaoming());//2是需补课
 				if(listPicture != null && listPicture.size() > 0){
 					xlglSubDocTracking.setListPictureIds(listPicture.get(0).getPictureId());
@@ -923,6 +923,12 @@ public class XlglXlzzInfoController {
 		if(xlglSubDocTracking != null){
 			xlglSubDocTracking.setIsWork("1");
 			xlglSubDocTrackingService.update(xlglSubDocTracking);
+		}
+
+		XlglSubDocTracking xlglSubDocTracking1 = xlglSubDocTrackingService.queryDjtInfo(infoId,CurrentUser.getUserId());
+		if(xlglSubDocTracking1 != null){
+			jsonObject.put("baoming",xlglSubDocTracking1.getBaoming());//0未报名 1：已报名 2：延后报名
+			jsonObject.put("reason",xlglSubDocTracking1.getReason());//原因
 		}
 		jsonObject.put("title",xlglXlzzInfo.getTitle());
 		jsonObject.put("time",xlglXlzzInfo.getExerciseTime());
@@ -1041,7 +1047,10 @@ public class XlglXlzzInfoController {
 		int yxCount = baseAppUserService.queryYxCount(map);//当前局的有效人数
 
 		int cxCount = xlglSubDocTrackingService.queryCxAllCount(map);//当前课堂参训人数
-		float DoneLv = cxCount / yxCount;
+		float DoneLv = 0.0f;
+		if(yxCount > 0){
+			DoneLv = cxCount / yxCount;
+		}
 		return DoneLv;
 	}
 
