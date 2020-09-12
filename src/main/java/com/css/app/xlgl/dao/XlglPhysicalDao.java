@@ -8,6 +8,7 @@ import com.css.base.dao.BaseDao;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 军事体育训练
@@ -23,4 +24,6 @@ public interface XlglPhysicalDao extends BaseDao<XlglPhysical> {
 
     @Select("select top 1 * from XLGL_PHYSICAL where USER_ID = #{0} AND CREATED_TIME like '%'||#{1}||'%'")
     XlglPhysical queryByUserId(String userId, String year);
+
+    String querySort(Map<String,Object> map);
 }
