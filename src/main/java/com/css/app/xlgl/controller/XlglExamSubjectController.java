@@ -254,6 +254,22 @@ public class XlglExamSubjectController {
 					}
 				}
 			}
+		}else {
+			for (XlglExamTopic xlglExamTopic : queryList) {
+				if(subjectType.equals(xlglExamTopic.getTopicType()) && subjectType.equals("1")) {
+					type1 ++;
+				}
+				if(subjectType.equals(xlglExamTopic.getTopicType()) && subjectType.equals("2")) {
+					type2 ++;
+				}
+				if(subjectType.equals(xlglExamTopic.getTopicType()) && subjectType.equals("3")) {
+					type3 ++;
+				}
+				if(subjectType.equals(xlglExamTopic.getTopicType()) && subjectType.equals("4")) {
+					type4 ++;
+				}
+			}
+			
 		}
 		jsonbject.put("1", type1);
 		jsonbject.put("2", type2);
