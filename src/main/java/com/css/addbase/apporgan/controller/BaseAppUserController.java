@@ -244,7 +244,11 @@ public class BaseAppUserController {
 				}else {
     				userJson.put("roleFlag",false);
 				}
+			}else {
+				userJson.put("roleFlag",false);
 			}
+		}else {
+			userJson.put("roleFlag",false);
 		}
     	Response.json(userJson);
     }
