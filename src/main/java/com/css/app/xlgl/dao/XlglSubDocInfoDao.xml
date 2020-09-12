@@ -34,6 +34,29 @@
         <if test="deptId != null and deptId !=''">
             and SUB_DEPT_ID = #{deptId}
         </if>
+    <!--报名状态     -->
+     	<if test="baoming != null and baoming !=''">
+            and BAOMING = #{baoming}
+        </if> 
+    <!--参训状态     -->
+     	<if test="isWork != null and isWork !=''">
+            and  IS_WORK = #{isWork}
+        </if> 
+    <!--接收人部门id    -->
+     	<if test="recDeptId != null and recDeptId !=''">
+            and  REC_DEPT_ID = #{recDeptId}
+        </if> 
+    <!--接收人id     -->
+     	<if test="receiverId != null and receiverId !=''">
+            and  RECEIVER_ID = #{receiverId}
+        </if> 
+        <!--接收人名称     -->
+     	<if test="receiverName != null and receiverName !=''">
+            and  RECEIVER_NAME like '%'||#{receiverName}||'%'
+        </if> 
+        
+
+       
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}
         </if>
