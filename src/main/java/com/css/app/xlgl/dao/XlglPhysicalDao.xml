@@ -22,6 +22,21 @@
 			limit #{offset}, #{limit}
 		</if>
 	</select>
+
+	<select id="querySort" resultType="String">
+		 select  max(sort) from ( select ROW_NUMBER() OVER(order by t.ALL_SCORE desc ) as SORT,  t.* from  XLGL_PHYSICAL t   where 1=1
+          <if test="age != null and age !=''">
+			  and t.age = #{age}
+		  </if> )where 1=1
+		<if test="score != null and score !=''">
+			and ALL_SCORE = #{score}
+		</if>
+		<if test="year != null and year !=''">
+			and LAST_YEAR = #{year}
+		</if>
+
+
+	</select>
 	
  	<select id="queryTotal" resultType="int">
 		select count(*) from XLGL_PHYSICAL 
@@ -57,7 +72,8 @@
 			"YWQZ",
 			"SXP",
 			"CPF",
-			"CPM"
+			"CPM",
+			"LAST_YEAR"
 		)
 		values
 		(
@@ -88,7 +104,8 @@
 			#{ywqz},
 			#{sxp},
 			#{cpf},
-			#{cpm}
+			#{cpm},
+			#{lastYear}
 		)
 	</insert>
 	 
@@ -112,16 +129,17 @@
 			<if test="allJudge != null">"ALL_JUDGE" = #{allJudge}, </if>
 			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
 			<if test="creator != null">"CREATOR" = #{creator}, </if>
-			<if test="userId != null">"USER_ID" = #{userId}</if>
-			<if test="age != null">"AGE" = #{age}</if>
-			<if test="deptName != null">"DEPT_NAME" = #{deptName}</if>
-			<if test="upId != null">"UP_ID" = #{upId}</if>
-			<if test="normal != null">"NORMAL" = #{normal}</if>
-			<if test="ytxs != null">"YTXS" = #{ytxs}</if>
-			<if test="ywqz != null">"YWQZ" = #{ywqz}</if>
-			<if test="sxp != null">"SXP" = #{sxp}</if>
-			<if test="cpf != null">"CPF" = #{cpf}</if>
-			<if test="cpm != null">"CPM" = #{cpm}</if>
+			<if test="userId != null">"USER_ID" = #{userId},</if>
+			<if test="age != null">"AGE" = #{age},</if>
+			<if test="deptName != null">"DEPT_NAME" = #{deptName},</if>
+			<if test="upId != null">"UP_ID" = #{upId},</if>
+			<if test="normal != null">"NORMAL" = #{normal},</if>
+			<if test="ytxs != null">"YTXS" = #{ytxs},</if>
+			<if test="ywqz != null">"YWQZ" = #{ywqz},</if>
+			<if test="sxp != null">"SXP" = #{sxp},</if>
+			<if test="cpf != null">"CPF" = #{cpf},</if>
+			<if test="cpm != null">"CPM" = #{cpm},</if>
+			<if test="lastYear != null">"LAST_YEAR" = #{lastYear}</if>
 		</set>
 		where ID = #{id}
 	</update>

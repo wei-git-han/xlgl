@@ -223,5 +223,10 @@ public class XlglPhysicalServiceImpl implements XlglPhysicalService {
 	public XlglPhysical queryByUserId(String userId,String year){
 		return xlglPhysicalDao.queryByUserId(userId,year);
 	}
+
+	@Override
+	public String querySort(Map<String,Object> map){
+		return xlglPhysicalDao.querySort(map);
+	}
 	
 }

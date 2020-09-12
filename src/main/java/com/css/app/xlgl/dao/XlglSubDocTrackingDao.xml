@@ -12,12 +12,19 @@
 		<if test="userId != null and userId !=''">
 			and RECEIVER_ID = #{userId}
 		</if>
-		<if test='type == "0"'>
-			and EXERCISE_TIME > to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
-		</if>
-		<if test='type =="1"'>
-			and EXERCISE_TIME &lt; to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
-		</if>
+		<!--<if test='type == "0"'>-->
+			<!--and EXERCISE_TIME > to_date(#{time},'yyyy-mm-dd HH24:mi:ss')-->
+		<!--</if>-->
+		<!--<if test='type =="1"'>-->
+			<!--and EXERCISE_TIME &lt; to_date(#{time},'yyyy-mm-dd HH24:mi:ss')-->
+		<!--</if>-->
+
+        <if test="type == 0">
+            and IS_WORK  = '0'
+        </if>
+        <if test="type == 1">
+            and IS_WORK = '1'
+        </if>
 
 		<if test="search != null and search !=''">
 			and TITLE  = #{search}
