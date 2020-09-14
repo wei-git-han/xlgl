@@ -197,8 +197,7 @@ public class XlglWarCommonSportsController {
 		xlglWarCommonSports.setCreateOrganId(ssoUser.getOrganId());
 		xlglWarCommonSports.setCreateOrganName(ssoUser.getOrgName());
 		xlglWarCommonSports.setCreateDate(date);
-		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-		xlglWarCommonSports.setUpdateDate(format);
+		xlglWarCommonSports.setUpdateDate(date);
 		xlglWarCommonSports.setCreateUser(ssoUser.getUserId());
 		xlglWarCommonSports.setPublishDate(date);
 		xlglWarCommonSportsService.save(xlglWarCommonSports);
@@ -222,9 +221,8 @@ public class XlglWarCommonSportsController {
 	@ResponseBody
 	@RequestMapping("/update")
 	public void update(XlglWarCommonSports xlglWarCommonSports) {
-		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		xlglWarCommonSports.setUpdateUser(CurrentUser.getUserId());
-		xlglWarCommonSports.setUpdateDate(format);
+		xlglWarCommonSports.setUpdateDate(new Date());
 		xlglWarCommonSportsService.update(xlglWarCommonSports);
 		Map<String, Object> map = new HashMap<>();
 		map.put("id", xlglWarCommonSports.getId());

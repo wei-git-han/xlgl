@@ -191,13 +191,12 @@ public class XlglWarCommonWeaponController {
 			String[] accessoryArray) {
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		Date date = new Date();
-		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
 		String random = UUIDUtils.random();
 		xlglWarCommonWeapon.setId(random);
 		xlglWarCommonWeapon.setCreateOrganId(ssoUser.getOrganId());
 		xlglWarCommonWeapon.setCreateOrganName(ssoUser.getOrgName());
 		xlglWarCommonWeapon.setCreateDate(date);
-		xlglWarCommonWeapon.setUpdateDate(format);
+		xlglWarCommonWeapon.setUpdateDate(date);
 		xlglWarCommonWeapon.setCreateUser(ssoUser.getUserId());
 		xlglWarCommonWeapon.setPublishDate(date);
 		xlglWarCommonWeaponService.save(xlglWarCommonWeapon);
@@ -221,9 +220,8 @@ public class XlglWarCommonWeaponController {
 	@ResponseBody
 	@RequestMapping("/update")
 	public void update(XlglWarCommonWeapon xlglWarCommonWeapon) {
-		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		xlglWarCommonWeapon.setUpdateUser(CurrentUser.getUserId());
-		xlglWarCommonWeapon.setUpdateDate(format);
+		xlglWarCommonWeapon.setUpdateDate(new Date());
 		xlglWarCommonWeaponService.update(xlglWarCommonWeapon);
 
 		Map<String, Object> map = new HashMap<>();

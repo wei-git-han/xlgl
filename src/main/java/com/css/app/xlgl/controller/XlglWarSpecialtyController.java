@@ -195,8 +195,7 @@ public class XlglWarSpecialtyController {
 		xlglWarSpecialty.setCreateOrganId(ssoUser.getOrganId());
 		xlglWarSpecialty.setCreateOrganName(ssoUser.getOrgName());
 		xlglWarSpecialty.setCreateDate(date);
-		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-		xlglWarSpecialty.setUpdateDate(format);
+		xlglWarSpecialty.setUpdateDate(date);
 		xlglWarSpecialty.setCreateUser(ssoUser.getUserId());
 		xlglWarSpecialty.setPublishDate(date);
 		xlglWarSpecialtyService.save(xlglWarSpecialty);
@@ -225,9 +224,8 @@ public class XlglWarSpecialtyController {
 	@ResponseBody
 	@RequestMapping("/update")
 	public void update(XlglWarSpecialty xlglWarSpecialty) {
-		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		xlglWarSpecialty.setUpdateUser(CurrentUser.getUserId());
-		xlglWarSpecialty.setUpdateDate(format);
+		xlglWarSpecialty.setUpdateDate(new Date());
 		xlglWarSpecialtyService.update(xlglWarSpecialty);
 
 		Map<String, Object> map = new HashMap<>();

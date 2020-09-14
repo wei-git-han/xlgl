@@ -45,7 +45,7 @@ public class XlglWarCommonWarbasis implements Serializable {
 	//修改人
 	private String updateUser;
 	//修改时间
-	private String updateDate;
+	private Date updateDate;
 	//训练类型
 	private String queueType;
 	//观看次数
@@ -229,13 +229,13 @@ public class XlglWarCommonWarbasis implements Serializable {
 	/**
 	 * 设置：修改时间
 	 */
-	public void setUpdateDate(String updateDate) {
+	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
 	}
 	/**
 	 * 获取：修改时间
 	 */
-	public String getUpdateDate() {
+	public Date getUpdateDate() {
 		return updateDate;
 	}
 	/**

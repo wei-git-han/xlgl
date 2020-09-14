@@ -167,7 +167,7 @@ public class XlglMeetingController {
 				map, headers);
 		// 创建RestTemplate对象
 		RestTemplate restTemplate = new RestTemplate();
-		// url+="?access_token=" + SSOAuthFilter.getToken();
+		url+="?access_token=" + SSOAuthFilter.getToken();
 		try {
 			// 发送post请求
 			ResponseEntity<JSONObject> data = restTemplate.postForEntity(url, formEntity, JSONObject.class);
