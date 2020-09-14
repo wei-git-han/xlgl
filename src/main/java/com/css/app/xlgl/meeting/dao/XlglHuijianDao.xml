@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.meeting.dao.XlglHuijianDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.meeting.entity.XlglHuijian">
+		select * from XLGL_HUIJIAN where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.meeting.entity.XlglHuijian">
+		select * from XLGL_HUIJIAN 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_HUIJIAN 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.meeting.entity.XlglHuijian">
+		insert into XLGL_HUIJIAN
+		(
+			"id", 
+			"CREATE_USER", 
+			"CONF_ID", 
+			"CREATE_DATE", 
+			"XLGL_ID",
+			"IS_DELETE"
+		)
+		values
+		(
+			#{id}, 
+			#{createUser}, 
+			#{confId}, 
+			#{createDate}, 
+			#{xlglId},
+			#{isDelete}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.meeting.entity.XlglHuijian">
+		update XLGL_HUIJIAN 
+		<set>
+			<if test="createUser != null">"CREATE_USER" = #{createUser}, </if>
+			<if test="confId != null">"CONF_ID" = #{confId}, </if>
+			<if test="createDate != null">"CREATE_DATE" = #{createDate}, </if>
+			<if test="xlglId != null">"XLGL_ID" = #{xlglId}, </if>
+			<if test="isDelete != null">"IS_DELETE" = #{isDelete}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_HUIJIAN where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_HUIJIAN where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

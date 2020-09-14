@@ -115,18 +115,6 @@ public class XlglWarCommonQueue implements Serializable {
         return createUser;
     }
     /**
-     * 设置：修改时间
-     */
-    public void setUpdateUser(String updateUser) {
-        this.updateUser = updateUser;
-    }
-    /**
-     * 获取：修改时间
-     */
-    public String getUpdateUser() {
-        return updateUser;
-    }
-    /**
      * 设置：封面上传
      */
     public void setCoverFile(String coverFile) {
@@ -173,18 +161,6 @@ public class XlglWarCommonQueue implements Serializable {
      */
     public String getQueueType() {
         return queueType;
-    }
-    /**
-     * 设置：修改人
-     */
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
-    }
-    /**
-     * 获取：修改人
-     */
-    public Date getUpdateDate() {
-        return updateDate;
     }
     /**s
      * 设置：发布时间
@@ -306,6 +282,22 @@ public class XlglWarCommonQueue implements Serializable {
     }
     public void setAccessoryFileNameArray(List<String> accessoryFileNameArray) {
         this.accessoryFileNameArray = accessoryFileNameArray;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String getUpdateUser() {
+        return updateUser;
+    }
+
+    public void setUpdateUser(String updateUser) {
+        this.updateUser = updateUser;
     }
 
 

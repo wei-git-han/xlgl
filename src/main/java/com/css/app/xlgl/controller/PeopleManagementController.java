@@ -288,7 +288,12 @@ public class PeopleManagementController {
 			String zwRate = decimalFormat.format(((float)userIdList/object)*100);
 			//long zwr =((long)userIdList /(long)yzwrs);
 			//float zwRate = zwr*100; //人员在位率
-			jsonData.put("zwlv", zwRate);
+			if(StringUtils.isNotBlank(zwRate)) {
+				jsonData.put("zwlv", zwRate);
+			}else {
+				jsonData.put("zwlv", "0");
+			}
+			
 		}
 		Response.json(jsonData);
 	}
