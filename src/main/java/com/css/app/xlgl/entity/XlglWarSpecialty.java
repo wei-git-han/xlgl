@@ -25,7 +25,7 @@ public class XlglWarSpecialty implements Serializable {
 	//创建人
 	private String createUser;
 	//修改时间
-	private String updateDate;
+	private Date updateDate;
 	//封面上传
 	private String coverFile;
 	//发布单位名称
@@ -99,13 +99,13 @@ public class XlglWarSpecialty implements Serializable {
 	/**
 	 * 设置：修改时间
 	 */
-	public void setUpdateDate(String updateDate) {
+	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
 	}
 	/**
 	 * 获取：修改时间
 	 */
-	public String getUpdateDate() {
+	public Date getUpdateDate() {
 		return updateDate;
 	}
 	/**

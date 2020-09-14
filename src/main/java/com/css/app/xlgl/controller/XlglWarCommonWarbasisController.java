@@ -195,8 +195,7 @@ public class XlglWarCommonWarbasisController {
 		xlglWarCommonWarbasis.setCreateOrganId(ssoUser.getOrganId());
 		xlglWarCommonWarbasis.setCreateOrganName(ssoUser.getOrgName());
 		xlglWarCommonWarbasis.setCreateDate(date);
-		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-		xlglWarCommonWarbasis.setUpdateDate(format);
+		xlglWarCommonWarbasis.setUpdateDate(date);
 		xlglWarCommonWarbasis.setCreateUser(ssoUser.getUserId());
 		xlglWarCommonWarbasis.setPublishDate(date);
 		xlglWarCommonWarbasisService.save(xlglWarCommonWarbasis);
@@ -220,9 +219,8 @@ public class XlglWarCommonWarbasisController {
 	@ResponseBody
 	@RequestMapping("/update")
 	public void update(XlglWarCommonWarbasis xlglWarCommonWarbasis) {
-		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		xlglWarCommonWarbasis.setUpdateUser(CurrentUser.getUserId());
-		xlglWarCommonWarbasis.setUpdateDate(format);
+		xlglWarCommonWarbasis.setUpdateDate(new Date());
 		xlglWarCommonWarbasisService.update(xlglWarCommonWarbasis);
 		Map<String, Object> map = new HashMap<>();
 		map.put("id", xlglWarCommonWarbasis.getId());

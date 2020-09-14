@@ -191,8 +191,9 @@ public class XlglWarCommonQueueController {
 		xlglWarCommonQueue.setCreateOrganId(ssoUser.getOrganId());
 		xlglWarCommonQueue.setCreateOrganName(ssoUser.getOrgName());
 		xlglWarCommonQueue.setCreateDate(date);
-		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-		xlglWarCommonQueue.setUpdateDate(format);
+		//String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+		xlglWarCommonQueue.setUpdateDate(date);
+		xlglWarCommonQueue.setUpdateUser(ssoUser.getUserId());
 		xlglWarCommonQueue.setCreateUser(ssoUser.getUserId());
 		xlglWarCommonQueue.setPublishDate(date);
 		xlglWarCommonQueueService.save(xlglWarCommonQueue);
@@ -217,8 +218,8 @@ public class XlglWarCommonQueueController {
 	@ResponseBody
 	@RequestMapping("/update")
 	public void update(XlglWarCommonQueue xlglWarCommonQueue) {
-		xlglWarCommonQueue.setUpdateDate(CurrentUser.getUserId());
-		xlglWarCommonQueue.setUpdateUser(new Date());
+		xlglWarCommonQueue.setUpdateDate(new Date());
+		xlglWarCommonQueue.setUpdateUser(CurrentUser.getUserId());
 		xlglWarCommonQueueService.update(xlglWarCommonQueue);
 		Map<String, Object> map = new HashMap<>();
 		map.put("id", xlglWarCommonQueue.getId());

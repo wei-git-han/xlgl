@@ -25,7 +25,7 @@ public class XlglWarCommonQueue implements Serializable {
 	//创建人
 	private String createUser;
 	//修改时间
-	private String updateDate;
+	private Date updateDate;
 	//封面上传
 	private String coverFile;
 	//发布单位名称
@@ -35,7 +35,7 @@ public class XlglWarCommonQueue implements Serializable {
 	//训练类型
 	private String queueType;
 	//修改人
-	private Date updateUser;
+	private String updateUser;
 	//发布时间
 	private Date publishDate;
 	//创建时间
@@ -117,14 +117,14 @@ public class XlglWarCommonQueue implements Serializable {
 	/**
 	 * 设置：修改时间
 	 */
-	public void setUpdateDate(String updateDate) {
-		this.updateDate = updateDate;
+	public void setUpdateUser(String updateUser) {
+		this.updateUser = updateUser;
 	}
 	/**
 	 * 获取：修改时间
 	 */
-	public String getUpdateDate() {
-		return updateDate;
+	public String getUpdateUser() {
+		return updateUser;
 	}
 	/**
 	 * 设置：封面上传
@@ -177,14 +177,14 @@ public class XlglWarCommonQueue implements Serializable {
 	/**
 	 * 设置：修改人
 	 */
-	public void setUpdateUser(Date updateUser) {
-		this.updateUser = updateUser;
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
 	}
 	/**
 	 * 获取：修改人
 	 */
-	public Date getUpdateUser() {
-		return updateUser;
+	public Date getUpdateDate() {
+		return updateDate;
 	}
 	/**s
 	 * 设置：发布时间
