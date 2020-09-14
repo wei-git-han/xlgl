@@ -263,16 +263,12 @@ public class XlglDocumentZbjlController {
                 xlglSubDocTrackingService.save(tracking);
 
                 //发送消息提醒
-                MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_JU_ZHUANBAN_MSG_TITLE);
-                if (msg != null) {
                 	XlglHuijian queryObjectByxlglId = xlglHuijianService.queryObjectByxlglId(fileId);
                 	String msgRedirect = xlglHuijianService.getMsgRedirect(queryObjectByxlglId.getConfId());
                     String msgUrl = "";
                     if (StringUtils.isNotBlank(receiverId)) {
-                        msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, receiverId, huiJianAppId, huiJianAppSecret, msg.getGroupName(), msgRedirect, "", "true");
+                        msgUtil.sendMsg("会见系统", "您有一条新的会议链接", msgUrl, receiverId, huiJianAppId, huiJianAppSecret, "训练管理", msgRedirect, "", "true");
                     }
-                }
-
             }
             Response.json("result", "success");
         } else {
