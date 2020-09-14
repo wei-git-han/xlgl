@@ -15,5 +15,5 @@ import com.css.base.dao.BaseDao;
  */
 @Mapper
 public interface XlglHuijianDao extends BaseDao<XlglHuijian> {
-	
+	XlglHuijian queryObjectByxlglId(String id);
 }

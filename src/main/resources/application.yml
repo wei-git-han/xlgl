@@ -151,6 +151,8 @@ csse.meeting.huijian.url.create: /api/v3/conference/create
 csse.meeting.huijian.redirect: sys.config.chinasoft.inviteurl.template
 #会见的appid
 csse.meeting.appid: cpk.zbfzb.huijian
+#会见的密钥
+csse.meeting.appSecret: 95c7ca5e-6088-404f-aedd-42544ceda083
 
 #本war的所有应用日志输出路径
 csse.log.path: c:/temp/storetemp/zf_one_number_app.log

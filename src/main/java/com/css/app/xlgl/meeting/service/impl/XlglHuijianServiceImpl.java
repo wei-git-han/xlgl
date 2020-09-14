@@ -1,12 +1,13 @@
 package com.css.app.xlgl.meeting.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
 
 import com.alibaba.fastjson.JSONObject;
 import com.css.app.xlgl.meeting.controller.XlglMeetingController;
@@ -21,6 +22,8 @@ import com.css.base.utils.UUIDUtils;
 
 @Service("xlglHuijianService")
 public class XlglHuijianServiceImpl implements XlglHuijianService {
+	@Value("${csse.meeting.huijian.redirect}")
+	private  String HuiYiApp ;
 	@Autowired
 	private XlglHuijianDao xlglHuijianDao;
 	
@@ -92,6 +95,20 @@ public class XlglHuijianServiceImpl implements XlglHuijianService {
 		xlglHuijian.setIsDelete("0");
 		this.save(xlglHuijian);
 		
+	}
+	/**
+	 * 返回进入会见的链接
+	 * */
+	@Override
+	public String getMsgRedirect(String huiJianId) {
+		String url = HuiYiApp+"={"+huiJianId+"}";
+		return url;
+	}
+
+	@Override
+	public XlglHuijian queryObjectByxlglId(String id) {
+		// TODO Auto-generated method stub
+		return xlglHuijianDao.queryObjectByxlglId(id);
 	}
 	
 }

@@ -6,6 +6,10 @@
 	<select id="queryObject" resultType="com.css.app.xlgl.meeting.entity.XlglHuijian">
 		select * from XLGL_HUIJIAN where id = #{value}
 	</select>
+	
+	<select id="queryObjectByxlglId" resultType="com.css.app.xlgl.meeting.entity.XlglHuijian">
+		select * from XLGL_HUIJIAN where XLGL_ID = #{xlglId}
+	</select>
 
 	<select id="queryList" resultType="com.css.app.xlgl.meeting.entity.XlglHuijian">
 		select * from XLGL_HUIJIAN 

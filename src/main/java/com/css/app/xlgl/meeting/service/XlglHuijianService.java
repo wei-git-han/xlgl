@@ -28,4 +28,8 @@ public interface XlglHuijianService {
 	void deleteBatch(String[] ids);
 	JSONObject createHuiYi(String url,String appId,String token,String startTime, String endTime, String confName);
 	void saveXlglHuiJian(String xlglId,String huiJianId);
+	
+	String getMsgRedirect(String huiJianId);
+	
+	XlglHuijian queryObjectByxlglId(String id);
 }
