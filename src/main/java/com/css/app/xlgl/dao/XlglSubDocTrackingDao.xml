@@ -248,7 +248,7 @@
 			"TITLE",
 			"IS_WORK",
 			"XLTYPE",
-			"PICUTRE_PATH",
+			"PICTURE_PATH",
 			"EXERCISE_TIME",
 			"INSTRACTION"
 		)
@@ -277,7 +277,7 @@
 			#{title},
 			#{isWork},
 			#{xltype},
-			#{picutrePath},
+			#{picturePath},
 			#{exerciseTime},
 			#{instraction}
 		)
@@ -308,7 +308,7 @@
 			<if test="title != null">"TITLE" = #{title},</if>
 			<if test="isWork != null">"IS_WORK" = #{isWork},</if>
 			<if test="xltype != null">"XLTYPE" = #{xltype},</if>
-			<if test="picutrePath != null">"PICUTRE_PATH" = #{picutrePath},</if>
+			<if test="picturePath != null">"PICTURE_PATH" = #{picturePath},</if>
 			<if test="exerciseTime != null">"EXERCISE_TIME" = #{exerciseTime},</if>
 			<if test="instraction != null">"INSTRACTION" = #{instraction}</if>
 		</set>

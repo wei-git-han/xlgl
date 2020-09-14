@@ -608,7 +608,7 @@ public class XlglXlzzInfoController {
 				List<BaseAppOrgan> list = baseAppOrganService.queryAllDeptId(judeptId);
 				List listTotal = new ArrayList();
 				if(list != null && list.size() > 0){
-					for(int i=0;i<list.size();i++){
+					for(int i=1;i<list.size();i++){
 						JSONObject jsonObject = new JSONObject();
 						String deptId = list.get(i).getId();
 						String deptName = list.get(i).getName();
@@ -671,7 +671,7 @@ public class XlglXlzzInfoController {
 				List<BaseAppOrgan> list3 = baseAppOrganService.queryAllDeptId(judeptId);
 				List listAllUser = new ArrayList();
 				if (list3 != null && list3.size() > 0) {
-					for (int i = 0; i < list3.size(); i++) {
+					for (int i = 0; i < list3.size(); i++) {//i从1开始是为了去除局id的情况
 						List<BaseAppUser> listUser = null;
 						JSONObject jsonObject = new JSONObject();
 						String deptId = list3.get(i).getId();
@@ -697,9 +697,9 @@ public class XlglXlzzInfoController {
 									}
 								} else if (StringUtils.isNotBlank(read)) {
 									if ("0".equals(read)) {
-										baseAppUser.setStatus("3");//未接受
+										baseAppUser.setStatus("2");//未接受
 									} else if ("1".equals(read)) {
-										baseAppUser.setStatus("4");//已接受
+										baseAppUser.setStatus("3");//已接受
 									}
 								}
 
@@ -893,7 +893,7 @@ public class XlglXlzzInfoController {
 						list.add(xlglPicture.getPictureId());
 					}
 				}
-				jsonObject.put("picturePath", xlglSubDocTracking.getPicutrePath());
+				jsonObject.put("picturePath", xlglSubDocTracking.getPicturePath());
 				jsonObject.put("baoming", xlglSubDocTracking.getBaoming());//2是需补课
 				if(listPicture != null && listPicture.size() > 0){
 					xlglSubDocTracking.setListPictureIds(listPicture.get(0).getPictureId());
