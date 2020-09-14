@@ -459,20 +459,26 @@ public class XlglDocumentZbjlController {
 //                }
                 XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(fileId);
                 xlglSubDocTracking.setPicturePath(xlglXlzzInfo.getPicturePath());
-                //0已接收、1未接受、2已报名、3延后参训
+                //0未接收、1已接受、2已报名、3延后参训,4已参训
                 String read = xlglSubDocTracking.getRead();
                 String baoming = xlglSubDocTracking.getBaoming();
+                String isWork = xlglSubDocTracking.getIsWork();
                 if(StringUtils.isNotBlank(baoming) && !"0".equals(baoming)){
                     if("1".equals(baoming)){
                         xlglSubDocTracking.setSumStatus("2");
                     }else if("2".equals(baoming)){
-                        xlglSubDocTracking.setSumStatus("3");
+//                        if(StringUtils.isNotBlank(isWork) && "1".equals(isWork)){
+//                            xlglSubDocTracking.setSumStatus("4");
+//                        }else {
+                            xlglSubDocTracking.setSumStatus("3");
+                        //}
+
                     }
                 }else {
                     if("0".equals(read)){
-                        xlglSubDocTracking.setSumStatus("0");
-                    }else{
                         xlglSubDocTracking.setSumStatus("1");
+                    }else{
+                        xlglSubDocTracking.setSumStatus("0");
                     }
                 }
 

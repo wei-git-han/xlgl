@@ -464,6 +464,7 @@ public class XlglXlzzInfoController {
 		String infoId = id;
 		int ybm = 0;
 		int wbm = 0;
+		int ySum = 0;
 		JSONObject jsonObject2 = new JSONObject();
 		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
 		String orgName = baseAppOrganService.queryObject(orgId).getName();
@@ -471,15 +472,16 @@ public class XlglXlzzInfoController {
 		List<BaseAppOrgan> list = baseAppOrganService.queryAllDeptId(orgId);
 		List listTotal = new ArrayList();
 		if(list != null && list.size() > 0){
-			for(int i=0;i<list.size();i++){
+			for(int i=1;i<list.size();i++){
 				JSONObject jsonObject = new JSONObject();
 				String deptId = list.get(i).getId();
 				String deptName = list.get(i).getName();
 				int sum = baseAppUserService.queryBmCout(infoId,"1",deptId);//已报名
 				int nsum = baseAppUserService.queryBmCout(infoId,"0",deptId);//未报名
 				int yhSum = baseAppUserService.queryBmCout(infoId,"2",deptId);//延后报名
-				ybm += sum;
+				ybm += sum + yhSum;
 				wbm += nsum;
+				ySum += yhSum;
 				int yjs = baseAppUserService.queryYjs(deptId,infoId);//已接受
 				int wjs = baseAppUserService.queryWjs(deptId,infoId);//未接受
 				Map<String,Object> map = new HashMap<String,Object>();
@@ -544,6 +546,35 @@ public class XlglXlzzInfoController {
 				} else {
 					listUser = baseAppUserService.queryAllUserByDeptId(deptId,infoId);
 				}
+				if(listUser != null && listUser.size() > 0){
+					for(BaseAppUser baseAppUser : listUser) {
+						String isWork = baseAppUser.getIsWork();
+						String baoming = baseAppUser.getBaoming();
+						String read = baseAppUser.getRead();
+//								if (StringUtils.isNotBlank(isWork) && "1".equals(isWork)) {
+//									baseAppUser.setStatus("2");//已参训
+//								} else
+						if (StringUtils.isNotBlank(baoming) && !"0".equals(baoming)) {
+							if ("1".equals(baoming)) {
+								baseAppUser.setStatus("0");//已报名
+							} else if ("2".equals(baoming)) {
+								baseAppUser.setStatus("1");//延后参训
+							}
+						} else if (StringUtils.isNotBlank(read)) {
+							if ("0".equals(read)) {
+								baseAppUser.setStatus("2");//未接受
+							} else if ("1".equals(read)) {
+								baseAppUser.setStatus("3");//已接受
+							}
+						}
+
+						if ("1".equals(isWork)) {
+							baseAppUser.setSfcx("1");//1是已参训
+						} else if("2".equals(baoming)){
+							baseAppUser.setSfcx("0");//0是延后参训
+						}
+					}
+				}
 				jsonObject.put("listUser",listUser);
 				jsonObject.put("deptName",deptName);
 				listAllUser.add(jsonObject);
@@ -565,6 +596,7 @@ public class XlglXlzzInfoController {
 		jsonObject2.put("confirm",confirm);
 		jsonObject2.put("ybm",ybm);
 		jsonObject2.put("wbm",wbm);
+		jsonObject2.put("ySum",ySum);
 		jsonObject2.put("listAllUser",listAllUser);
 		jsonObject2.put("juName",orgName);
 		Response.json(jsonObject2);
@@ -602,6 +634,7 @@ public class XlglXlzzInfoController {
 				String infoId = id;
 				int ybm = 0;
 				int wbm = 0;
+				int ySum = 0;
 				JSONObject jsonObject2 = new JSONObject();
 				//String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
 				//获取了该局所有的部门id
@@ -617,6 +650,7 @@ public class XlglXlzzInfoController {
 						int yhSum = baseAppUserService.queryBmCout(infoId,"2",deptId);//延后报名
 						ybm += sum + yhSum;
 						wbm += nsum;
+						ySum += yhSum;
 						int yjs = baseAppUserService.queryYjs(deptId,infoId);//已接受
 						int wjs = baseAppUserService.queryWjs(deptId,infoId);//未接受
 						Map<String,Object> map = new HashMap<String,Object>();
@@ -729,8 +763,9 @@ public class XlglXlzzInfoController {
 				jsonObject2.put("cxl",t);//参训率
 				jsonObject2.put("listTotal",listTotal);
 				jsonObject2.put("confirm",confirm);
-				jsonObject2.put("ybm",ybm);
-				jsonObject2.put("wbm",wbm);
+				jsonObject2.put("ybm",ybm);//已报名
+				jsonObject2.put("wbm",wbm);//未报名
+				jsonObject2.put("ySum",ySum);//延后报名
 				jsonObject2.put("listAllUser",listAllUser);
 				jsonObject2.put("juName",juName);
 				jsonArray.add(jsonObject2);
