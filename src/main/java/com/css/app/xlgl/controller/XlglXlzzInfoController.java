@@ -1011,18 +1011,20 @@ public class XlglXlzzInfoController {
 		int sum = 0;
 		int count = 0;
 		int bk = 0;
+		int yhCount = 0;
 		Calendar calendar = Calendar.getInstance();
 		String year = String.valueOf(calendar.get(Calendar.YEAR));
 		JSONObject jsonObject = new JSONObject();
 		String userId = CurrentUser.getUserId();
 		sum = xlglSubDocTrackingService.queryAllCount(userId, year);//所有的课程
 		count = xlglSubDocTrackingService.quereyWcCount(userId, year);//已参训的课程
+		yhCount = xlglSubDocTrackingService.queryYhCount(userId,year);
 		if (sum > 0) {
-			bk = sum - count;
+			//bk = sum - count;
 			float f  = (int) ((new BigDecimal((float) count / sum).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()) * 100);
 			jsonObject.put("wcl", f);
 			jsonObject.put("ywc", count);
-			jsonObject.put("bk", bk);
+			jsonObject.put("bk", yhCount);
 		} else {
 			jsonObject.put("wcl", "0");
 			jsonObject.put("ywc", "0");
@@ -1114,6 +1116,9 @@ public class XlglXlzzInfoController {
 		float DoneLv = 0.0f;
 		if(yxCount > 0){
 			DoneLv = (int) ((new BigDecimal((float) cxCount / yxCount).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()) * 100);
+		}
+		if(DoneLv > 100.0){
+			DoneLv = 100.0f;
 		}
 		return DoneLv;
 	}

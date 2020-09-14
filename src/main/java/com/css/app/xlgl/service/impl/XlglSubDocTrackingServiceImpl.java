@@ -112,6 +112,11 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 	}
 
 	@Override
+	public int queryYhCount(String userId,String year){
+		return xlglSubDocTrackingDao.queryYhCount(userId,year);
+	}
+
+	@Override
 	public int queryCurrentYear(Map<String,Object> map){
 		return xlglSubDocTrackingDao.queryCurrentYear(map);
 	}

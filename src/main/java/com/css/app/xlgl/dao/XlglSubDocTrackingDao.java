@@ -60,6 +60,9 @@ public interface XlglSubDocTrackingDao extends BaseDao<XlglSubDocTracking> {
     @Select("select count(1) from XLGL_SUB_DOC_TRACKING where RECEIVER_ID = #{0} and IS_WORK = '1' and EXERCISE_TIME like '%'||#{1}||'%'")
     int quereyWcCount(String userId,String year);
 
+    @Select("select count(1) from XLGL_SUB_DOC_TRACKING where RECEIVER_ID = #{0} and BAOMING = '2' and EXERCISE_TIME like '%'||#{1}||'%'")
+    int queryYhCount(String userId,String year);
+
     int queryCurrentYear(Map<String,Object> map);
 
     int queryCxCount(Map<String,Object> map);
