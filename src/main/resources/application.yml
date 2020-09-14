@@ -146,7 +146,7 @@ csse.meeting.huijian.url: http://kf.suirui.com
 #会见创建会议的接口
 csse.meeting.huijian.url.create: /api/v3/conference/create
 #会见web入会的路径
-csse.meeting.huijian： SRhuijian://SRhuijian.com/jm
+#csse.meeting.huijian： SRhuijian://SRhuijian.com/jm
 #会见推送消息的路径
 csse.meeting.huijian.redirect: sys.config.chinasoft.inviteurl.template
 #会见的appid

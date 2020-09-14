@@ -43,8 +43,8 @@ public class XlglMeetingController {
 	private  String URL ;
 	@Value("${csse.meeting.huijian.url.create}")
 	private  String Create ;
-	@Value("${csse.meeting.huijian}")
-	private  String HuiYiApp ;
+	/*@Value("${csse.meeting.huijian}")
+	private  String HuiYiApp ;*/
 	@Value("${HuiYiappId}")
 	private String appId;
 	
@@ -123,7 +123,7 @@ public class XlglMeetingController {
 	/**
 	 * 页面调起客户端 废弃
 	 * */ 
-	@ResponseBody
+	/*@ResponseBody
 	@RequestMapping("/huiyiApp")
 	public void HuiYiApp(String startTime, String endTime, String confName) {
 		String url = HuiYiApp;
@@ -144,7 +144,7 @@ public class XlglMeetingController {
 			System.out.println("创建会议错误信息：" + jsonData.getString("errorCode"));
 			Response.error();
 		}
-	}
+	}*/
 	
 	/**会见登录  废弃
 	 * */
