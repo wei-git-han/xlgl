@@ -35,7 +35,7 @@ public class XlglWarCommonQueue implements Serializable {
 	//训练类型
 	private String queueType;
 	//修改人
-	private Date updateUser;
+	private String updateUser;
 	//发布时间
 	private Date publishDate;
 	//创建时间
@@ -177,13 +177,13 @@ public class XlglWarCommonQueue implements Serializable {
 	/**
 	 * 设置：修改人
 	 */
-	public void setUpdateUser(Date updateUser) {
+	public void setUpdateUser(String updateUser) {
 		this.updateUser = updateUser;
 	}
 	/**
 	 * 获取：修改人
 	 */
-	public Date getUpdateUser() {
+	public String getUpdateUser() {
 		return updateUser;
 	}
 	/**s
