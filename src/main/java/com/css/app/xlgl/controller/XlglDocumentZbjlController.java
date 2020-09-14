@@ -19,6 +19,8 @@ import com.css.addbase.orgservice.OrgService;
 import com.css.app.xlgl.config.entity.XlglRoleSet;
 import com.css.app.xlgl.config.service.XlglRoleSetService;
 import com.css.app.xlgl.entity.*;
+import com.css.app.xlgl.meeting.entity.XlglHuijian;
+import com.css.app.xlgl.meeting.service.XlglHuijianService;
 import com.css.app.xlgl.service.*;
 import com.css.base.utils.*;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -85,6 +87,13 @@ public class XlglDocumentZbjlController {
     private XlglMineStudyService xlglMineStudyService;
     @Autowired
     private XlglRoleSetService xlglRoleSetService;
+	@Autowired
+	private XlglHuijianService xlglHuijianService;
+	@Value("${csse.meeting.appid}")
+	private  String huiJianAppId;
+	@Value("${csse.meeting.appSecret}")
+	private  String huiJianAppSecret;
+
 	
 	/**
 	 * 列表
@@ -256,9 +265,11 @@ public class XlglDocumentZbjlController {
                 //发送消息提醒
                 MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_JU_ZHUANBAN_MSG_TITLE);
                 if (msg != null) {
+                	XlglHuijian queryObjectByxlglId = xlglHuijianService.queryObjectByxlglId(fileId);
+                	String msgRedirect = xlglHuijianService.getMsgRedirect(queryObjectByxlglId.getConfId());
                     String msgUrl = "";
                     if (StringUtils.isNotBlank(receiverId)) {
-                        //msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, receiverId, appId, clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "", "true");
+                        msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, receiverId, huiJianAppId, huiJianAppSecret, msg.getGroupName(), msgRedirect, "", "true");
                     }
                 }
 

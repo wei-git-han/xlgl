@@ -2,7 +2,22 @@ package com.css.app.xlgl.controller;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -11,29 +26,26 @@ import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
-import com.css.addbase.apporgan.util.OrgUtil;
 import com.css.addbase.apporgmapped.service.BaseAppOrgMappedService;
 import com.css.addbase.orgservice.OrgService;
-import com.css.app.xlgl.dto.XlglConfirmDto;
-import com.css.app.xlgl.entity.*;
-import com.css.app.xlgl.service.*;
-import com.css.base.utils.*;
-import com.google.gson.JsonObject;
-
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.lang.StringUtils;
-import org.apache.http.cookie.SM;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.stereotype.Controller;
-
+import com.css.app.xlgl.entity.XlglConfirm;
+import com.css.app.xlgl.entity.XlglPicture;
+import com.css.app.xlgl.entity.XlglSubDocInfo;
+import com.css.app.xlgl.entity.XlglSubDocTracking;
+import com.css.app.xlgl.entity.XlglXlzzInfo;
+import com.css.app.xlgl.meeting.service.XlglHuijianService;
+import com.css.app.xlgl.service.XlglConfirmService;
+import com.css.app.xlgl.service.XlglPictureService;
+import com.css.app.xlgl.service.XlglSubDocInfoService;
+import com.css.app.xlgl.service.XlglSubDocTrackingService;
+import com.css.app.xlgl.service.XlglXlzzInfoService;
+import com.css.base.filter.SSOAuthFilter;
+import com.css.base.utils.CurrentUser;
+import com.css.base.utils.GwPageUtils;
+import com.css.base.utils.PageUtils;
+import com.css.base.utils.Response;
+import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
-import org.springframework.web.context.request.NativeWebRequest;
-import org.thymeleaf.processor.ITextNodeProcessorMatcher;
 
 
 /**
@@ -70,6 +82,16 @@ public class XlglXlzzInfoController {
 	private XlglSubDocInfoService xlglSubDocInfoService;
 	@Autowired
 	private XlglConfirmService xlglConfirmService;
+	@Autowired
+	private XlglHuijianService xlglHuijianService;
+	
+	@Value("${csse.meeting.huijian.url}")
+	private  String URL ;
+	@Value("${csse.meeting.huijian.url.create}")
+	private  String Create ;
+	@Value("${HuiYiappId}")
+	private String appId;
+	
 
 	/**
 	 * 列表
@@ -364,6 +386,18 @@ public class XlglXlzzInfoController {
 			xlglXlzzInfo.setCreateTime(new Date());
 			xlglXlzzInfo.setZjdept(CurrentUser.getOrgName());
 			xlglXlzzInfoService.save(xlglXlzzInfo);
+			String url = URL + Create;
+			JSONObject jsonData = xlglHuijianService.createHuiYi(url, appId, SSOAuthFilter.getToken(), null, null, null);
+			String confId = "";
+			if(jsonData !=null) {
+				JSONObject jsonObject1 = jsonData.getJSONObject("data");
+				Boolean boolean1 = jsonData.getBoolean("isSuccess");
+				if(boolean1) {
+					confId = jsonObject1.getString("confId");
+					xlglHuijianService.saveXlglHuiJian(fId, confId);
+				}
+				
+			}
 		}
 		//保存上传图片，视频，文件
 		if(StringUtils.isNotBlank(pIds)) {
