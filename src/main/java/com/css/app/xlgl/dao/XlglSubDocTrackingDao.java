@@ -24,6 +24,9 @@ public interface XlglSubDocTrackingDao extends BaseDao<XlglSubDocTracking> {
     @Select("select * from XLGL_SUB_DOC_TRACKING where INFO_ID = #{0} and RECEIVER_ID = #{1} and XLTYPE = '1'")
     XlglSubDocTracking queryInfo(String id,String userId);
 
+    @Select("select * from XLGL_SUB_DOC_TRACKING where INFO_ID = #{0} and RECEIVER_ID = #{1}")
+    XlglSubDocTracking queryInfomation(String id,String userId);
+
     @Select("select * from XLGL_SUB_DOC_TRACKING where INFO_ID = #{0} and RECEIVER_ID = #{1} and XLTYPE = '0'")
     XlglSubDocTracking queryDjtInfo(String infoId,String userId);
 
@@ -70,6 +73,9 @@ public interface XlglSubDocTrackingDao extends BaseDao<XlglSubDocTracking> {
 
     @Select("select count(1) from XLGL_SUB_DOC_TRACKING where IS_WORK = '1' and INFO_ID = #{0}")
     int queryAllCx(String fileId);
+
+    @Select("select count(1) from XLGL_SUB_DOC_TRACKING where BAOMING = '2' and INFO_ID = #{0}")
+    int queryAllBkCount(String fileId);
 
     @Select("select count(1) from XLGL_SUB_DOC_TRACKING where IS_WORK = '1' and INFO_ID = #{0} and REC_DEPT_ID = #{1}")
     int queryAllCxByInfoId(String fileId,String orgId);

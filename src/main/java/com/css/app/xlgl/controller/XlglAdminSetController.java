@@ -152,8 +152,25 @@ public class XlglAdminSetController {
 		}
 		if(StringUtils.isNotBlank(adminSet.getId())) {
             Map<String, Object> adminMap = new HashMap<>();
-            adminMap.put("adminType", adminSet.getAdminType());
             adminMap.put("userId", adminSet.getUserId());
+            //如果是处管理员，不能添加局管理员
+        	if(adminSet.getAdminType().equals("2")) {
+        		adminMap.put("adminType", "4");
+        		List<XlglAdminSet> chuList = adminSetService.queryList(adminMap);
+        		if(chuList.size()>0) {
+        			Response.json("result", "ischu");
+    				return;
+        		}
+        	//如果是局管理员，不能添加处管理员
+        	}else if(adminSet.getAdminType().equals("4")){
+        		adminMap.put("adminType", "2");
+        		List<XlglAdminSet> juList = adminSetService.queryList(adminMap);
+        		if(juList.size()>0) {
+        			Response.json("result", "isju");
+    				return;
+        		}
+        	}
+            adminMap.put("adminType", adminSet.getAdminType());
             List<XlglAdminSet> queryList = adminSetService.queryList(adminMap);
             if(queryList != null && queryList.size()>0) {
                 Response.json("result", "exist");
@@ -167,9 +184,28 @@ public class XlglAdminSetController {
                 adminSetService.update(adminSet);
             }
         }else {
-			Map<String, Object> adminMap = new HashMap<>();
+        	Map<String, Object> adminMap = new HashMap<>();
+        	adminMap.put("userId", adminSet.getUserId());
+        	//如果是处管理员，不能添加局管理员
+        	if(adminSet.getAdminType().equals("2")) {
+        		adminMap.put("adminType", "4");
+        		List<XlglAdminSet> chuList = adminSetService.queryList(adminMap);
+        		if(chuList.size()>0) {
+        			Response.json("result", "ischu");
+    				return;
+        		}
+        	//如果是局管理员，不能添加处管理员
+        	}else if(adminSet.getAdminType().equals("4")){
+        		adminMap.put("adminType", "2");
+        		List<XlglAdminSet> juList = adminSetService.queryList(adminMap);
+        		if(juList.size()>0) {
+        			Response.json("result", "isju");
+    				return;
+        		}
+        	}
+			
 			adminMap.put("adminType", adminSet.getAdminType());
-			adminMap.put("userId", adminSet.getUserId());
+			
 			List<XlglAdminSet> queryList = adminSetService.queryList(adminMap);
 			if(queryList != null && queryList.size()>0) {
 				Response.json("result", "exist");

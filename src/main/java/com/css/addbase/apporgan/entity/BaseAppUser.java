@@ -68,6 +68,28 @@ public class BaseAppUser implements Serializable {
 	//延后原因
 	private String reason;
 
+	//总的状态
+	private String status;
+
+	//是否参训
+	private String sfcx;
+
+	public String getSfcx() {
+		return sfcx;
+	}
+
+	public void setSfcx(String sfcx) {
+		this.sfcx = sfcx;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	public String getReason() {
 		return reason;
 	}

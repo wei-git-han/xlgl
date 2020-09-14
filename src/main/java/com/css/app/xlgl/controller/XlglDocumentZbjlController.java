@@ -298,14 +298,6 @@ public class XlglDocumentZbjlController {
         }else {
             t = false;
         }
-        boolean juz = false;
-        //3：局长；4：局秘书；5：处长；6：参谋；2：首长秘书；1：首长；）
-        XlglRoleSet xlglRoleSet = xlglRoleSetService.queryByuserId(userId);
-        String adminType = xlglRoleSet.getRoleFlag();
-        if("3".equals(adminType)){
-
-        }
-
         if (userId.equals(CurrentUser.getUserId()) || "1".equals(adminFlag) || "2".equals(adminFlag) || t) {
             String deptId = baseAppUserService.queryByUserId(CurrentUser.getUserId());
             List<XlglConfirm> xlglConfirmList = xlglConfirmService.queryByInfoIdAndDeptId(deptId, infoId);

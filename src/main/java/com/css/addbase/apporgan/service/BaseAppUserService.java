@@ -137,5 +137,7 @@ public interface BaseAppUserService {
 
 	BaseAppUser query(String userId);
 
+	int queryAllZbCount();
+
 
 }

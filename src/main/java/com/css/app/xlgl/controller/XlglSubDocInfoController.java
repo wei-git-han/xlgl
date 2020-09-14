@@ -1,6 +1,7 @@
 package com.css.app.xlgl.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -59,6 +60,53 @@ public class XlglSubDocInfoController {
 		
 		PageUtils pageUtil = new PageUtils(xlglSubDocInfoList);
 		Response.json("page",pageUtil);
+	}
+	
+	/**
+	 * 人员参训情况清单搜索列表
+	 * @param receiverName 接收人名称
+	 * @param recDeptId 接收人部门id
+	 * @param isWork 参训状态
+	 * @param baoming 报名状态
+	 * @author 李振楠
+	 * @date 2020-09-12 14:56:00
+	 */
+	@ResponseBody
+	@RequestMapping("/searchList")
+	public void list(String receiverName,String recDeptId,String isWork,String baoming){
+		Map<String, Object> map = new HashMap<>();
+		Boolean stutas = false;
+		if(StringUtils.isNotBlank(receiverName)) {
+			map.put("receiverName", receiverName);
+			stutas = true;
+		}
+		if(StringUtils.isNotBlank(recDeptId)) {
+			map.put("recDeptId", recDeptId);
+			stutas = true;
+		}
+		if(StringUtils.isNotBlank(isWork)) {
+			map.put("isWork", isWork);
+			stutas = true;
+		}
+		if(StringUtils.isNotBlank(baoming)) {
+			if("3".equals(baoming)){
+				map.put("read","1");
+			}else if("2".equals(baoming)){
+				map.put("read","0");
+			}else if("0".equals(baoming)){
+				map.put("baoming","1");
+			}else if("1".equals(baoming)){
+				map.put("baoming","2");
+			}
+			stutas = true;
+		}
+		List<XlglSubDocTracking> xlglSubDocTrackingList  = new ArrayList<XlglSubDocTracking>();
+		if(stutas) {
+			//查询列表数据
+			xlglSubDocTrackingList = xlglSubDocTrackingService.queryList(map);
+
+		}
+		Response.json(xlglSubDocTrackingList);
 	}
 	
 	

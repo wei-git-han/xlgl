@@ -218,6 +218,11 @@ public class BaseAppUserServiceImpl implements BaseAppUserService {
 		return baseAppUserDao.query(userId);
 	}
 
+	@Override
+	public int queryAllZbCount(){
+		return baseAppUserDao.queryAllZbCount();
+	}
+
 
 
 }

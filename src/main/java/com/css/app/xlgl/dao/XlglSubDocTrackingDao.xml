@@ -8,19 +8,26 @@
 	</select>
 
 	<select id="queryAllInfos" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
-		select * from XLGL_SUB_DOC_TRACKING where 1=1
+		select * from XLGL_SUB_DOC_TRACKING where 1=1 and XLTYPE = '0'
 		<if test="userId != null and userId !=''">
 			and RECEIVER_ID = #{userId}
 		</if>
-		<if test='type == "0"'>
-			and EXERCISE_TIME > to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
-		</if>
-		<if test='type =="1"'>
-			and EXERCISE_TIME &lt; to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
-		</if>
+		<!--<if test='type == "0"'>-->
+			<!--and EXERCISE_TIME > to_date(#{time},'yyyy-mm-dd HH24:mi:ss')-->
+		<!--</if>-->
+		<!--<if test='type =="1"'>-->
+			<!--and EXERCISE_TIME &lt; to_date(#{time},'yyyy-mm-dd HH24:mi:ss')-->
+		<!--</if>-->
+
+        <if test="type == 0">
+            and IS_WORK  = '0'
+        </if>
+        <if test="type == 1">
+            and IS_WORK = '1'
+        </if>
 
 		<if test="search != null and search !=''">
-			and TITLE  = #{search}
+			and TITLE  like '%'||#{search}||'%'
 		</if>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
@@ -76,12 +83,15 @@
 			and RECEIVER_ID = #{userId}
 		</if>
 		<if test="search != null and search !=''">
-			and TITLE  = #{search}
+			and TITLE  like '%'||#{search}||'%'
 		</if>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
 	</select>
+
+
+
 
 	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
 		select * from XLGL_SUB_DOC_TRACKING  where 1=1
@@ -89,10 +99,31 @@
 		<if test="INFO_ID != null and INFO_ID !=''">
 			and INFO_ID = #{INFO_ID}
 		</if>
+		<if test="receiverName != null and receiverName !=''">
+			and RECEIVER_NAME like '%'|| #{receiverName}||'%'
+		</if>
+		<if test="recDeptId != null and recDeptId !=''">
+			and REC_DEPT_ID = #{recDeptId}
+		</if>
+		<if test="isWork != null and isWork !=''">
+			and IS_WORK = #{isWork}
+		</if>
+		<if test="read != null and read !=''">
+			and READ = #{read}
+		</if>
+		<if test="baoming != null and baoming !=''">
+			and BAOMING = #{baoming}
+		</if>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
 	</select>
+
+
+
+
+
+
 
 	<select id="queryCurrentYear" resultType="int">
 		select count(1) from XLGL_SUB_DOC_TRACKING where 1=1
@@ -217,7 +248,7 @@
 			"TITLE",
 			"IS_WORK",
 			"XLTYPE",
-			"PICUTRE_PATH",
+			"PICTURE_PATH",
 			"EXERCISE_TIME",
 			"INSTRACTION"
 		)
@@ -277,7 +308,7 @@
 			<if test="title != null">"TITLE" = #{title},</if>
 			<if test="isWork != null">"IS_WORK" = #{isWork},</if>
 			<if test="xltype != null">"XLTYPE" = #{xltype},</if>
-			<if test="picturePath != null">"PICUTRE_PATH" = #{picturePath},</if>
+			<if test="picturePath != null">"PICTURE_PATH" = #{picturePath},</if>
 			<if test="exerciseTime != null">"EXERCISE_TIME" = #{exerciseTime},</if>
 			<if test="instraction != null">"INSTRACTION" = #{instraction}</if>
 		</set>

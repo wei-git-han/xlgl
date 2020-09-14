@@ -63,7 +63,7 @@ public class XlglExamMainAnswerController {
 		Map<String, Object> map = new HashMap<>();	
 		map.put("examineId", examineId);
 		map.put("level", level);
-		//map.put("makeupStatus", makeupStatus);
+		map.put("makeupStatus", makeupStatus);
 		map.put("replyUserName", replyUserName);
 		map.put("organName", organName);
 		map.put("isNotExam", isNotExam);

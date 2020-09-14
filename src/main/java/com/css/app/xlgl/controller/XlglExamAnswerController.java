@@ -232,7 +232,7 @@ public class XlglExamAnswerController {
 			eanswer.setExamineId(xlglExamExamine.getId());
 			if(StringUtils.isNotBlank(eanswer.getReply())) {
 				eanswer.setStatus("1");
-				eanswer = getRightReply(eanswer);
+				eanswer = this.getRightReply(eanswer);
 				if(eanswer.getCorrectStatus().equals("0")) {
 					sum +=eanswer.getFraction();
 				}
@@ -289,7 +289,14 @@ public class XlglExamAnswerController {
 			eanswer.setCorrectStatus(eanswer.getTopicResult().equals(eanswer.getReply())?"0":"1");
 			break;
 		case "2":
-			eanswer.setCorrectStatus(eanswer.getTopicResult().equals(eanswer.getReply())?"0":"1");
+			String replyStr ="";
+			if(StringUtils.isNotBlank(eanswer.getReply())&&eanswer.getReply().contains(",")) {
+				String[] split = eanswer.getReply().split(",");
+				for (String string : split) {
+					replyStr =replyStr+string;
+				}
+			}
+			eanswer.setCorrectStatus(eanswer.getTopicResult().equals(replyStr)?"0":"1");
 			break;
 		case "3":
 			eanswer.setCorrectStatus(eanswer.getTopicResult().equals(eanswer.getReply())?"0":"1");
@@ -353,7 +360,7 @@ public class XlglExamAnswerController {
 			eanswer.setExamineId(xlglExamExamine.getId());
 			if(StringUtils.isNotBlank(eanswer.getReply())) {
 				eanswer.setStatus("1");
-				eanswer = getRightReply(eanswer);
+				eanswer = this.getRightReply(eanswer);
 				if(eanswer.getCorrectStatus().equals("0")) {
 					sum +=eanswer.getFraction();
 				}
