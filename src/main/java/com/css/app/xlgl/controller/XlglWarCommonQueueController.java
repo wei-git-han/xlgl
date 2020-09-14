@@ -217,8 +217,9 @@ public class XlglWarCommonQueueController {
 	@ResponseBody
 	@RequestMapping("/update")
 	public void update(XlglWarCommonQueue xlglWarCommonQueue) {
-		xlglWarCommonQueue.setUpdateDate(CurrentUser.getUserId());
-		xlglWarCommonQueue.setUpdateUser(new Date());
+		String format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		xlglWarCommonQueue.setUpdateDate(format);
+		xlglWarCommonQueue.setUpdateUser(CurrentUser.getUserId());
 		xlglWarCommonQueueService.update(xlglWarCommonQueue);
 		Map<String, Object> map = new HashMap<>();
 		map.put("id", xlglWarCommonQueue.getId());
