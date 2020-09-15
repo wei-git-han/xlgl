@@ -203,9 +203,12 @@ public class XlglDocumentZbjlController {
     @ResponseBody
     @RequestMapping("/sendToUsers")
     public void sendToUsers(String fileId,String subId,String instraction) {
+    	Map<String, Object> map = new HashMap<String,Object>();
+    	
         XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(fileId);
         String organId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
-        List<BaseAppUser> list = baseAppUserService.queryAllUserIdAndName(organId);
+        map.put("organId", organId);
+        List<BaseAppUser> list = baseAppUserService.queryAllUserIdAndName(map);
         if (list != null && list.size() > 0) {
             XlglSubDocInfo subInfo = xlglSubDocInfoService.queryObject(subId);
             subInfo.setInstraction(instraction);
@@ -504,7 +507,7 @@ public class XlglDocumentZbjlController {
      */
     @ResponseBody
     @RequestMapping("/getXlCoreList")
-    public void getXlCoreList(String orgId){
+    public void getXlCoreList(String orgId,String userNames,String depId,String sort){
         String deptId = "";
         Calendar calendar = Calendar.getInstance();
         String year = String.valueOf(calendar.get(Calendar.YEAR));
@@ -518,8 +521,13 @@ public class XlglDocumentZbjlController {
         }else {
             deptId = organId;
         }
+        Map<String, Object> hashmap = new HashMap<String,Object>();
+        hashmap.put("organId", deptId);
+        hashmap.put("userNames", userNames);
+        hashmap.put("depId", depId);
+        hashmap.put("sort", sort);
         //获取局内所有的人
-        List<BaseAppUser> list = baseAppUserService.queryAllUserIdAndName(deptId);
+        List<BaseAppUser> list = baseAppUserService.queryAllUserIdAndName(hashmap);
         JSONArray jsonArray = new JSONArray();
         if(list != null && list.size() > 0){
             for(BaseAppUser baseAppUser : list){
@@ -537,17 +545,23 @@ public class XlglDocumentZbjlController {
                 //强装兴装大讲堂得分 ------------------start
                 int sum = xlglSubDocTrackingService.queryAllCount(userId,year);
                 int count = xlglSubDocTrackingService.quereyWcCount(userId,year);
-                float f = count/sum;//强装兴装大讲堂得分
                 String dj = "--";
-                if(f<0.6){
-                    dj = "不及格";
-                }else if(f>=0.6 && f<0.75){
-                    dj = "及格";
-                }else if(f >=0.75 && f<0.9){
-                    dj = "良好";
-                }else{
-                    dj = "优秀";
+                float f = 0;
+                if(count == 0  ) {
+                	f =0;
+                }else {
+                	  f = count/sum;//强装兴装大讲堂得分
+                    if(f<0.6){
+                        dj = "不及格";
+                    }else if(f>=0.6 && f<0.75){
+                        dj = "及格";
+                    }else if(f >=0.75 && f<0.9){
+                        dj = "良好";
+                    }else{
+                        dj = "优秀";
+                    }
                 }
+                  
                 jsonObject.put("djt",f);
                 jsonObject.put("djtdj",dj);
                 //强装兴装大讲堂得分 ------------------end

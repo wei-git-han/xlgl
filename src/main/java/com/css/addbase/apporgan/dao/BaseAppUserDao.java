@@ -106,7 +106,7 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 	@Select("select * from BASE_APP_USER where ORGANID = #{0}")
 	List<BaseAppUser> queryUsers(String deptId);
 
-	List<BaseAppUser> queryAllUserIdAndName(String deptId);
+	List<BaseAppUser> queryAllUserIdAndName(Map<String,Object> map);
 
 	@Select("select  t.*,d.BAOMING,d.INFO_ID,d.READ,d.IS_WORK,d.REASON from BASE_APP_USER t left join XLGL_SUB_DOC_TRACKING d on t.USER_ID = d.RECEIVER_ID  and d.INFO_ID = #{1} where  t.ORGANID in  (  select id from BASE_APP_ORGAN start with ID = #{0} and ISDELETE=0 connect by prior ID = PARENT_ID )")
 	List<BaseAppUser> queryAllUserByDeptId(String deptId,String infoId);
