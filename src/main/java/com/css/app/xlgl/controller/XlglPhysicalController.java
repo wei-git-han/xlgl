@@ -3377,7 +3377,7 @@ public class XlglPhysicalController {
 		if(m == 0){
 			c = 0;
 		}else {
-			if (age < 24) {
+			if (age <= 24) {
 				if(m < 30){
 					c= 0;
 				}else if (m >= 30 && m <= 36) {
@@ -3885,7 +3885,7 @@ public class XlglPhysicalController {
 		if(num == 0){
 			c = 0;
 		}else {
-			if (age < 24) {
+			if (age <= 24) {
 				if(num < 41){
 					c = 0;
 				}else if (num >= 41 && num <= 43) {
@@ -4537,7 +4537,7 @@ public class XlglPhysicalController {
 		if(m ==0 ){
 			c = 0;
 		}else {
-			if (age < 24) {
+			if (age <= 24) {
 				if (m <= 226 && m >= 222) {
 					int t = m - 222;
 					int d = t * 5 % 4;
@@ -5614,7 +5614,7 @@ public class XlglPhysicalController {
 	public int getWomen3Run(int age ,int m){
 		int s = 0;
 		int c = 0;
-		if(age < 24){
+		if(age <= 24){
 			if(m <= 1610 && m >= 1600){
 				int t = m - 1600;
 				int d = t * 5 % 5;
