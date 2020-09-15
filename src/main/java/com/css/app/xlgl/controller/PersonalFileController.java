@@ -2,6 +2,7 @@ package com.css.app.xlgl.controller;
 
 import java.util.*;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.entity.BaseAppUser;
@@ -211,6 +212,25 @@ public class PersonalFileController {
 		String year = String.valueOf(calendar.get(Calendar.YEAR));
 		String userId = CurrentUser.getUserId();
 		XlglPhysical xlglPhysical = xlglPhysicalService.queryByUserId(userId,year);
+		String age = xlglPhysical.getAge();
+		String age1 = age.substring(0,age.indexOf("."));
+		String ytxs = xlglPhysical.getUp();
+		String ytxs1 = ytxs.substring(0,ytxs.indexOf("."));
+		String ywqz = xlglPhysical.getSit();
+		String ywqz1 = ywqz.substring(0,ywqz.indexOf("."));
+		String sRun = xlglPhysical.getSrun();
+		String tRun = xlglPhysical.getTrun();
+		String t = "";
+		String sex = xlglPhysical.getSex();
+		String weiht = xlglPhysical.getWight();
+		String weiht1 = weiht.substring(0,weiht.indexOf("."));
+		String high = xlglPhysical.getHigh();
+		String high1 = high.substring(0,high.indexOf("."));
+		String type = xlglPhysical.getType();
+		String type1 = type.substring(0,type.indexOf("."));
+		XlglPhysicalController xlglPhysicalController = new XlglPhysicalController();
+		JSONObject jsonObject = xlglPhysicalController.getPerSumCore(age1,ytxs1,ywqz1,sRun,tRun,t,sex,type1,weiht1,high1);
+		//String ttt = (String)jsonObject.get("score");
 		Response.json("xlglPhysical",xlglPhysical);
 	}
 

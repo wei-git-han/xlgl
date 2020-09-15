@@ -75,12 +75,14 @@ public class XlglHuijianServiceImpl implements XlglHuijianService {
 			map.add("confName", confName);
 		}
 		JSONObject jsonData = XlglMeetingController.getJsonData(url, map);
+		if(jsonData != null){
 		JSONObject jsonObject = jsonData.getJSONObject("data");
 		Boolean boolean1 = jsonData.getBoolean("isSuccess");
 		String confId = jsonObject.getString("confId");
 		if (boolean1) {
 			return jsonObject;
 			}
+		}
 		return null;
 	}
 

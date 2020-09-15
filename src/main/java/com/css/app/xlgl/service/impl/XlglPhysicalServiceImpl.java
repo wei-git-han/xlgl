@@ -212,6 +212,7 @@ public class XlglPhysicalServiceImpl implements XlglPhysicalService {
 				xlglPhysical.setAge(steCell2);
 				xlglPhysical.setUpId(id);//每次上传的id
 				xlglPhysical.setNormal("1");//1是正式导入，0是自己保存
+				xlglPhysical.setCreatedTime(new Date());
 				list.add(xlglPhysical);
 			}
 		wb.close();
