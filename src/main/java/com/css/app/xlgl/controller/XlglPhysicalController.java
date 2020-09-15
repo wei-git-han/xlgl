@@ -228,6 +228,40 @@ public class XlglPhysicalController {
 			List<XlglPhysical> list = xlglPhysicalService.importExcle(inputStream,id);
 			if (list != null && list.size() > 0) {
 				for (XlglPhysical xlglPhysical : list) {
+					XlglPhysicalController xlglPhysicalController = new XlglPhysicalController();
+					String age = xlglPhysical.getAge();
+					String age1 = age.substring(0,age.indexOf("."));
+					String ytxs = xlglPhysical.getYtxs();
+					String ytxs1 = ytxs.substring(0,ytxs.indexOf("."));
+					String ywqz = xlglPhysical.getYwqz();
+					String ywqz1 = ywqz.substring(0,ywqz.indexOf("."));
+					String sRun = xlglPhysical.getSxp();
+					String tRun = xlglPhysical.getCpf();
+					String t = "";
+					String sex = xlglPhysical.getSex();
+					String weiht = xlglPhysical.getWight();
+					String weiht1 = weiht.substring(0,weiht.indexOf("."));
+					String high1 = xlglPhysical.getHigh();
+					//String high1 = high.substring(0,high.indexOf("."));
+					String type = xlglPhysical.getType();
+					String type1 = type.substring(0,type.indexOf("."));
+					JSONObject jsonObject1 = xlglPhysicalController.getPerSumCore(age1,ytxs1,ywqz1,sRun,tRun,t,sex,type1,weiht1,high1);
+					int score = (int)jsonObject1.get("score");
+					String dj = (String)jsonObject1.get("dj");
+					float BMI = (Float) jsonObject1.get("BMI");
+					String hg = (String)jsonObject1.get("hg");
+					int shang = (int)jsonObject1.get("shang");
+					int zuo = (int)jsonObject1.get("zuo");
+					int pao = (int)jsonObject1.get("pao");
+					int changpao = (int)jsonObject1.get("changpao");
+					xlglPhysical.setUp(String.valueOf(shang));
+					xlglPhysical.setSit(String.valueOf(zuo));
+					xlglPhysical.setSrun(String.valueOf(pao));
+					xlglPhysical.setTrun(String.valueOf(changpao));
+					xlglPhysical.setAllScore(String.valueOf(score));
+					xlglPhysical.setAllJudge(dj);
+					xlglPhysical.setTscore(String.valueOf(BMI));
+					xlglPhysical.setJudge(hg);
 					xlglPhysicalService.save(xlglPhysical);
 				}
 			}

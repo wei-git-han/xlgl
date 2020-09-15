@@ -212,6 +212,9 @@ public class PersonalFileController {
 		String year = String.valueOf(calendar.get(Calendar.YEAR));
 		String userId = CurrentUser.getUserId();
 		XlglPhysical xlglPhysical = xlglPhysicalService.queryByUserId(userId,year);
+		if(xlglPhysical != null){
+
+
 		String age = xlglPhysical.getAge();
 		String age1 = age.substring(0,age.indexOf("."));
 		String ytxs = xlglPhysical.getYtxs();
@@ -247,6 +250,7 @@ public class PersonalFileController {
 		xlglPhysical.setTscore(String.valueOf(BMI));
 		xlglPhysical.setJudge(hg);
 		xlglPhysicalService.update(xlglPhysical);
+		}
 		Response.json("xlglPhysical",xlglPhysical);
 	}
 
