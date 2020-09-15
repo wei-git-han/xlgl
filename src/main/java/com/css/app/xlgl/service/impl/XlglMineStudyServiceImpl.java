@@ -147,7 +147,7 @@ public class XlglMineStudyServiceImpl implements XlglMineStudyService {
 		Workbook wb =new HSSFWorkbook(is);
 		Sheet sheet = wb.getSheetAt(0); // 遍历第一个Sheet
 		String title = sheet.getRow(0).getCell(0).getStringCellValue();//标题，用于判断是哪一类题
-		for(int i = 2 ;i<=sheet.getLastRowNum(); i ++) {
+		for(int i = 1 ;i<=sheet.getLastRowNum(); i ++) {
 			XlglMineStudy xlglMineStudy = new XlglMineStudy ();
 			xlglMineStudy.setId(UUIDUtils.random());
 			String steCell0 = sheet.getRow(i).getCell(0).getStringCellValue(); //姓名

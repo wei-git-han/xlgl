@@ -228,6 +228,40 @@ public class XlglPhysicalController {
 			List<XlglPhysical> list = xlglPhysicalService.importExcle(inputStream,id);
 			if (list != null && list.size() > 0) {
 				for (XlglPhysical xlglPhysical : list) {
+					XlglPhysicalController xlglPhysicalController = new XlglPhysicalController();
+					String age = xlglPhysical.getAge();
+					String age1 = age.substring(0,age.indexOf("."));
+					String ytxs = xlglPhysical.getYtxs();
+					String ytxs1 = ytxs.substring(0,ytxs.indexOf("."));
+					String ywqz = xlglPhysical.getYwqz();
+					String ywqz1 = ywqz.substring(0,ywqz.indexOf("."));
+					String sRun = xlglPhysical.getSxp();
+					String tRun = xlglPhysical.getCpf();
+					String t = "";
+					String sex = xlglPhysical.getSex();
+					String weiht = xlglPhysical.getWight();
+					String weiht1 = weiht.substring(0,weiht.indexOf("."));
+					String high1 = xlglPhysical.getHigh();
+					//String high1 = high.substring(0,high.indexOf("."));
+					String type = xlglPhysical.getType();
+					String type1 = type.substring(0,type.indexOf("."));
+					JSONObject jsonObject1 = xlglPhysicalController.getPerSumCore(age1,ytxs1,ywqz1,sRun,tRun,t,sex,type1,weiht1,high1);
+					int score = (int)jsonObject1.get("score");
+					String dj = (String)jsonObject1.get("dj");
+					float BMI = (Float) jsonObject1.get("BMI");
+					String hg = (String)jsonObject1.get("hg");
+					int shang = (int)jsonObject1.get("shang");
+					int zuo = (int)jsonObject1.get("zuo");
+					int pao = (int)jsonObject1.get("pao");
+					int changpao = (int)jsonObject1.get("changpao");
+					xlglPhysical.setUp(String.valueOf(shang));
+					xlglPhysical.setSit(String.valueOf(zuo));
+					xlglPhysical.setSrun(String.valueOf(pao));
+					xlglPhysical.setTrun(String.valueOf(changpao));
+					xlglPhysical.setAllScore(String.valueOf(score));
+					xlglPhysical.setAllJudge(dj);
+					xlglPhysical.setTscore(String.valueOf(BMI));
+					xlglPhysical.setJudge(hg);
 					xlglPhysicalService.save(xlglPhysical);
 				}
 			}
@@ -447,6 +481,203 @@ public class XlglPhysicalController {
 		jsonObject.put("changpao",changpao);
 		jsonObject.put("result","success");
 		Response.json(jsonObject);
+
+	}
+
+	public JSONObject getPerSumCore(@RequestParam(required = false) String age,@RequestParam(required = false) String ytxs,@RequestParam(required = false) String ywqz,@RequestParam(required = false) String sxp,@RequestParam(required = false) String cpf,@RequestParam(required = false) String cpm,@RequestParam(required = false) String sex,@RequestParam(required = false) String type,@RequestParam(required = false) String wight,@RequestParam(required = false) String high ){
+		JSONObject jsonObject = new JSONObject();
+		int sum = 0;
+		int shang = 0;
+		int zuo = 0;
+		int pao = 0;
+		int changpao = 0;
+		float BMI = 0.0f;
+		String hg = "";
+		int age1 = Integer.parseInt(age);
+		float s = 0.0f;
+		if(StringUtils.isNotBlank(sxp)){
+			s = Float.parseFloat(sxp) * 10;
+		}
+		int sxp1 = Math.round(s);
+		float f = 0.0f;
+		String string = "";
+		if(StringUtils.isNotBlank(cpm) && StringUtils.isNotBlank(cpf)){
+			string = cpf+"."+cpm;
+			f = Float.parseFloat(string) * 100;
+		}
+		int cp1 = Math.round(f);
+		int ytxs1 = 0;
+		if(StringUtils.isNotBlank(ytxs)){
+			ytxs1 = Integer.parseInt(ytxs);
+		}
+		int ywqz1 = 0;
+		if(StringUtils.isNotBlank(ywqz)){
+			ywqz1 = Integer.parseInt(ywqz);
+		}
+		if("0".equals(sex)){
+			JSONObject js = new JSONObject();
+			js = getManSumCore(age1,ytxs1,ywqz1,sxp1,cp1);
+			sum = (int) js.get("sum");
+			shang = (int)js.get("y");
+			zuo = (int)js.get("z");
+			pao = (int)js.get("s");
+			changpao = (int)js.get("r");
+			float t = Float.parseFloat(wight);
+			int w = Math.round(t);
+			float h1 = Float.parseFloat(high);
+			int h = Math.round(h1);
+			float j = h1 * h1;
+			BMI = (int) ((new BigDecimal((float) w / j).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()));;
+			if(age1 <= 24){
+				if(BMI >= 18.5 && BMI <=25.9){
+					hg = "合格";
+				}else {
+					hg = "不合格";
+				}
+			}else if(age1 >= 25 && age1 <=29){
+				if(BMI >= 18.5 && BMI <=26.9){
+					hg = "合格";
+				}else {
+					hg = "不合格";
+				}
+			}else if(age1 >= 30 && age1 <=39){
+				if(BMI >= 18.5 && BMI <=27.9){
+					hg = "合格";
+				}else {
+					hg = "不合格";
+				}
+			}else if(age1 >= 40 && age1 <=49){
+				if(BMI >= 18.5 && BMI <=28.9){
+					hg = "合格";
+				}else {
+					hg = "不合格";
+				}
+			}else if(age1 >= 50 && age1 <=59){
+				if(BMI >= 18.5 && BMI <=29.4){
+					hg = "合格";
+				}else {
+					hg = "不合格";
+				}
+			}else if(age1 >= 60){
+				if(BMI >= 18.5 && BMI <=29.9){
+					hg = "合格";
+				}else {
+					hg = "不合格";
+				}
+			}
+		}else {
+			JSONObject js = new JSONObject();
+			js  = getWomanSumCore(age1,ytxs1,ywqz1,sxp1,cp1);
+			sum = (int) js.get("sum");
+			shang = (int)js.get("o");
+			zuo = (int)js.get("m");
+			pao = (int)js.get("a");
+			changpao = (int)js.get("w");
+			float t = Float.parseFloat(wight);
+			int w = Math.round(t);
+			float h = Float.parseFloat(high);
+			float j = h * h;
+			BMI = w/j;
+			if(age1 <= 24){
+				if(BMI >= 18.5 && BMI <=23.9){
+					hg = "合格";
+				}else {
+					hg = "不合格";
+				}
+			}else if(age1 >= 25 && age1 <=29){
+				if(BMI >= 18.5 && BMI <=24.9){
+					hg = "合格";
+				}else {
+					hg = "不合格";
+				}
+			}else if(age1 >= 30 && age1 <=39){
+				if(BMI >= 18.5 && BMI <=25.9){
+					hg = "合格";
+				}else {
+					hg = "不合格";
+				}
+			}else if(age1 >= 40 && age1 <=49){
+				if(BMI >= 18.5 && BMI <=26.9){
+					hg = "合格";
+				}else {
+					hg = "不合格";
+				}
+			}else if(age1 >= 50 && age1 <=59){
+				if(BMI >= 18.5 && BMI <=27.4){
+					hg = "合格";
+				}else {
+					hg = "不合格";
+				}
+			}else if(age1 >= 60){
+				if(BMI >= 18.5 && BMI <=27.9){
+					hg = "合格";
+				}else {
+					hg = "不合格";
+				}
+			}
+		}
+		String dj = null;
+		if("1".equals(type)){
+			if(shang < 65 || zuo < 65 || pao < 65 || changpao < 65 || sum < 260){
+				dj = "不及格";
+			}else if(sum >= 260 && sum < 340){
+				dj = "及格";
+			}else if(sum >= 340 && sum < 380){
+				dj = "良好";
+			}else if(sum >= 380 && sum < 440){
+				dj = "优秀";
+			}else if(sum >= 440 && sum < 480){
+				dj = "特3级";
+			}else if(sum >= 480 && sum < 500){
+				dj = "特2级";
+			}else if(sum > 500){
+				dj = "特1级";
+			}
+		}else if("2".equals(type)){
+			if(shang < 60 || zuo < 60 || pao < 60 || changpao < 60 || sum < 240){
+				dj = "不及格";
+			}else if(sum >= 240 && sum < 320){
+				dj = "及格";
+			}else if(sum >= 320 && sum < 360){
+				dj = "良好";
+			}else if(sum >= 360 && sum < 440){
+				dj = "优秀";
+			}else if(sum >= 440 && sum < 480){
+				dj = "特3级";
+			}else if(sum >= 480 && sum < 500){
+				dj = "特2级";
+			}else if(sum > 500){
+				dj = "特1级";
+			}
+		}else if("3".equals(type)){
+			if(shang < 55 || zuo < 55 || pao < 55 || changpao < 55 || sum < 220){
+				dj = "不及格";
+			}else if(sum >= 220 && sum < 300){
+				dj = "及格";
+			}else if(sum >= 300 && sum < 340){
+				dj = "良好";
+			}else if(sum >= 340 && sum < 440){
+				dj = "优秀";
+			}else if(sum >= 440 && sum < 480){
+				dj = "特3级";
+			}else if(sum >= 480 && sum < 500){
+				dj = "特2级";
+			}else if(sum > 500){
+				dj = "特1级";
+			}
+		}
+
+
+		jsonObject.put("score",sum);
+		jsonObject.put("dj",dj);
+		jsonObject.put("BMI",BMI);
+		jsonObject.put("hg",hg);
+		jsonObject.put("shang",shang);
+		jsonObject.put("zuo",zuo);
+		jsonObject.put("pao",pao);
+		jsonObject.put("changpao",changpao);
+		jsonObject.put("result","success");
+		return jsonObject;
 
 	}
 

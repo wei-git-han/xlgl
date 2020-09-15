@@ -83,7 +83,6 @@ public class XlglHuijianServiceImpl implements XlglHuijianService {
 				return jsonObject;
 				}
 		}
-	
 		return null;
 	}
 

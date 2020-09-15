@@ -190,6 +190,7 @@ public class XlglMineStudyController {
 			List<XlglMineStudy> list = xlglMineStudyService.importExcle(inputStream,id);
 			if (list != null && list.size() > 0) {
 				for (XlglMineStudy xlglMineStudy : list) {
+					xlglMineStudy.setCreatedTime(new Date());
 					xlglMineStudyService.save(xlglMineStudy);
 				}
 			}

@@ -1,5 +1,6 @@
 package com.css.app.xlgl.controller;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -533,14 +534,15 @@ public class XlglDocumentZbjlController {
                 BaseAppOrgan organ = baseAppOrganService.queryObject(userOrganId);
                 String deptName = organ.getName();//部门名称
                 jsonObject.put("deptName",deptName);
-                String userId = CurrentUser.getUserId();
+                String userId = baseAppUser.getUserId();
 
 
 
                 //强装兴装大讲堂得分 ------------------start
                 int sum = xlglSubDocTrackingService.queryAllCount(userId,year);
                 int count = xlglSubDocTrackingService.quereyWcCount(userId,year);
-                float f = count/sum;//强装兴装大讲堂得分
+                float f = (float) ((new BigDecimal((float) count / sum).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()) * 100);//强装兴装大讲堂得分
+
                 String dj = "--";
                 if(f<0.6){
                     dj = "不及格";
