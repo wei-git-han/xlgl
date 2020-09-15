@@ -391,7 +391,9 @@ public class PersonalFileController {
 		int lowSum = 0;//及格
 		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
 		String name = baseAppOrganService.queryObject(deptId).getName();
-		List<BaseAppUser> list = baseAppUserService.queryAllUserIdAndName(deptId);
+		 Map<String, Object> hashmap = new HashMap<String,Object>();
+	        hashmap.put("organId", deptId);
+		List<BaseAppUser> list = baseAppUserService.queryAllUserIdAndName(hashmap);
 		if(list != null && list.size() > 0){
 			for(BaseAppUser baseAppUser : list) {
 				String userId = baseAppUser.getUserId();

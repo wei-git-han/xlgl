@@ -252,12 +252,18 @@ public class PeopleManagementController {
 			}
 			list.add(txlUserDto);
 		}
+		txl.put("rows", list);
 	
 		jsonObject.put("rows", list);
-		jsonObject.put("page", txl.getString("page"));
-		jsonObject.put("total", txl.getString("total"));
-		jsonObject.put("manager", txl.getBoolean("manager"));
-		Response.json(jsonObject);
+		jsonObject.put("pageSize", limit);
+		String string = txl.getString("total");
+		Integer valueOf = Integer.valueOf(string);
+		Integer valueOf2 = Integer.valueOf(limit);
+		String string2 = txl.getString("page");
+		Integer valueOf3 = Integer.valueOf(string2);
+		PageUtils pageUtils = new PageUtils(list, valueOf, valueOf2, valueOf3);
+		
+		Response.json("page",pageUtils);
 	}
 
 	/**
@@ -285,15 +291,18 @@ public class PeopleManagementController {
 			jsonData.put("zwlv", "0");
 		}else {
 			DecimalFormat decimalFormat = new DecimalFormat("0.00");
-			String zwRate = decimalFormat.format(((float)userIdList/object)*100);
-			//long zwr =((long)userIdList /(long)yzwrs);
-			//float zwRate = zwr*100; //人员在位率
-			if(StringUtils.isNotBlank(zwRate)) {
-				jsonData.put("zwlv", zwRate);
+			if(userIdList > 0) {
+				String zwRate = decimalFormat.format(((float)userIdList/object)*100);
+				//long zwr =((long)userIdList /(long)yzwrs);
+				//float zwRate = zwr*100; //人员在位率
+				if(StringUtils.isNotBlank(zwRate)) {
+					jsonData.put("zwlv", zwRate);
+				}else {
+					jsonData.put("zwlv", "0");
+				}
 			}else {
 				jsonData.put("zwlv", "0");
-			}
-			
+			}		
 		}
 		Response.json(jsonData);
 	}
@@ -355,7 +364,9 @@ public class PeopleManagementController {
 				}
 			}
 		}else {
-			i=list.size();
+			if(list.size()>0) {
+				i=list.size();
+			}
 		}
 		
 		return i;

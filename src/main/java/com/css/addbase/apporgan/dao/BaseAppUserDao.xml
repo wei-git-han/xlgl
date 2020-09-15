@@ -43,10 +43,22 @@
         id
         from
         BASE_APP_ORGAN start
-        with ID  = #{deptId}
+        with ID  = #{organId}
         and ISDELETE=0 
         connect by prior ID = PARENT_ID
         )
+        <if  test="userNames != null and userNames != ''">
+        and TRUENAME  like '%'||#{userNames}||'%'
+        </if>
+        <if  test="depId != null and depId != ''">
+        and ORGANID   = #{depId}
+        </if>
+         <if test="sort != null and sort != ''">
+               order by ORGANID desc
+          </if>
+        <if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
 	</select>
 
 	<select id="queryList" resultType="com.css.addbase.apporgan.entity.BaseAppUser">
