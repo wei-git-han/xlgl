@@ -343,7 +343,7 @@ public class PersonalFileController {
 		int levelStudy = 0;
 		if(xlglMineStudy != null){
 			if(StringUtils.isNotBlank(xlglMineStudy.getScore())){
-				levelStudy	= Integer.parseInt(xlglMineStudy.getScore());
+				levelStudy	= Integer.parseInt(xlglMineStudy.getScore().substring(0,xlglMineStudy.getScore().indexOf(".")));
 			}
 
 
@@ -404,18 +404,20 @@ public class PersonalFileController {
 					lowSum += 1;
 				}
 			}
+			int sum = list.size();//总人数
+			float yxLv = highSum/sum;
+			float ylLv = midSum/sum;
+			float jgLv = lowSum/sum;
+			jsonObject.put("yxLv",yxLv);//优秀率
+			jsonObject.put("ylLv",ylLv);//优良率
+			jsonObject.put("jgLv",jgLv);//及格率
 		}
-		int sum = list.size();//总人数
-		float yxLv = highSum/sum;
-		float ylLv = midSum/sum;
-		float jgLv = lowSum/sum;
+
 		jsonObject.put("name",name);
 		jsonObject.put("highSum",highSum);//优秀人数
 		jsonObject.put("midSum",midSum);//优良人数
 		jsonObject.put("lowSum",lowSum);//及格人数
-		jsonObject.put("yxLv",yxLv);//优秀率
-		jsonObject.put("ylLv",ylLv);//优良率
-		jsonObject.put("jgLv",jgLv);//及格率
+
 //		Response.json(jsonObject);
 		return jsonObject;
 	}
