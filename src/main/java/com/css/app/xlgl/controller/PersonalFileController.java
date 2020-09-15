@@ -230,7 +230,14 @@ public class PersonalFileController {
 		String type1 = type.substring(0,type.indexOf("."));
 		XlglPhysicalController xlglPhysicalController = new XlglPhysicalController();
 		JSONObject jsonObject = xlglPhysicalController.getPerSumCore(age1,ytxs1,ywqz1,sRun,tRun,t,sex,type1,weiht1,high1);
-		//String ttt = (String)jsonObject.get("score");
+		String score = (String)jsonObject.get("score");
+		String dj = (String)jsonObject.get("dj");
+		String BMI = (String)jsonObject.get("BMI");
+		String hg = (String)jsonObject.get("hg");
+		String shang = (String)jsonObject.get("shang");
+		String zuo = (String)jsonObject.get("zuo");
+		String pao = (String)jsonObject.get("pao");
+		String changpao = (String)jsonObject.get("changpao");
 		Response.json("xlglPhysical",xlglPhysical);
 	}
 
