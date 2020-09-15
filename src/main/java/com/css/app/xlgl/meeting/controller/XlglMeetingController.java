@@ -57,15 +57,20 @@ public class XlglMeetingController {
 		String url = URL + Create;
 		String token = SSOAuthFilter.getToken();
 		JSONObject jsonData = xlglHuijianService.createHuiYi(url, appId, token, startTime, endTime, confName);
-		JSONObject jsonObject = jsonData.getJSONObject("data");
-		Boolean boolean1 = jsonData.getBoolean("isSuccess");
-		String confId = jsonObject.getString("confId");
-		if (boolean1) {
-			Response.ok();
-		} else {
-			System.out.println("创建会议错误信息：" + jsonData.getString("errorCode"));
-			Response.error();
+		if(jsonData !=null) {
+			JSONObject jsonObject = jsonData.getJSONObject("data");
+			System.out.println("会见返回信息："+jsonObject);
+			Boolean boolean1 = jsonData.getBoolean("isSuccess");
+			String confId = jsonObject.getString("confId");
+			System.out.println("会见返回信息会议号："+confId);
+			if (boolean1) {
+				Response.ok();
+			} else {
+				System.out.println("创建会议错误信息：" + jsonData.getString("errorCode"));
+				Response.error();
+			}
 		}
+	
 	}
 	
 	// 创建会议
