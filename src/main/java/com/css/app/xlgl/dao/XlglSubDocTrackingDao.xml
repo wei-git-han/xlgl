@@ -32,7 +32,7 @@
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
-
+			order by CREATED_TIME desc
 	</select>
 
 	<select id="queryBySort" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
@@ -88,6 +88,7 @@
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
+		order by CREATED_TIME desc
 	</select>
 
 
