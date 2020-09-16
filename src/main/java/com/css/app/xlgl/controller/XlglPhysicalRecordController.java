@@ -43,7 +43,7 @@ public class XlglPhysicalRecordController {
 	@RequestMapping("/list")
 	public void list(Integer page, Integer limit){
 		Map<String, Object> map = new HashMap<>();
-		PageHelper.startPage(page, limit);
+		//PageHelper.startPage(page, limit);
 		
 		//查询列表数据
 		List<XlglPhysicalRecord> xlglPhysicalRecordList = xlglPhysicalRecordService.queryList(map);
