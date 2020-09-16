@@ -292,7 +292,7 @@ public class XlglDocumentZbjlController {
 	 *            0是未参训，1是已参训
 	 * type 0是参训受训 1是大讲堂
 	 * status 参训受训 0已报名，1延后参训，2未接受，3已接受
-	 * status 大讲堂 0延后报名 1已参训
+	 * status 大讲堂 0延后参训 1已参训
 	 */
 	@ResponseBody
 	@RequestMapping("/updateStatus")
@@ -337,7 +337,7 @@ public class XlglDocumentZbjlController {
 								xlglSubDocTracking.setRead("1");
 							}
 						}
-					}else if("1".equals(status)){
+					}else if("1".equals(type)){
 						if(StringUtils.isNotBlank(status)){
 							if("0".equals(status)){
 								xlglSubDocTracking.setBaoming("2");
