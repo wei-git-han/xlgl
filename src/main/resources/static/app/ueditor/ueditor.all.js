@@ -8498,7 +8498,9 @@
                 //针对wps添加的多余标签处理
                 .replace(/<\/?div[^>]*>/g, '')
                 //去掉多余的属性
+                .replace(/\/?-EndFragment[^>]*>/g, '')
                 .replace(/v:\w+=(["']?)[^'"]+\1/g, '')
+                .replace(/Ø/g, '')
                 .replace(/<(!|script[^>]*>.*?<\/script(?=[>\s])|\/?(\?xml(:\w+)?|xml|meta|link|style|\w+:\w+)(?=[\s\/>]))[^>]*>/gi, "")
                 .replace(/<p [^>]*class="?MsoHeading"?[^>]*>(.*?)<\/p>/gi, "<p><strong>$1</strong></p>")
                 //去掉多余的属性
