@@ -289,21 +289,24 @@ public class PersonalFileController {
 		map.put("level", "1");
 		map.put("replyUserId", userId);
 		int levelTotal = personalFileService.queryTotal(map);
-		Integer levelrate = (levelTotal/total)*100;
-		String level ="";
-		if(levelrate >= 85) {
-			level = "优秀";
-			yxSum +=1;
-		}else if(70 <= levelrate && levelrate < 85){
-			level = "优良";
-			ylSum +=1;
-		}else if(60 <= levelrate && levelrate < 70) {
-			level = "及格";
-			jgSum +=1;
-		}else {
-			level = "不及格";
-			njgSum +=1;
+		if(total > 0){
+			Integer levelrate = (levelTotal/total)*100;
+			String level ="";
+			if(levelrate >= 85) {
+				level = "优秀";
+				yxSum +=1;
+			}else if(70 <= levelrate && levelrate < 85){
+				level = "优良";
+				ylSum +=1;
+			}else if(60 <= levelrate && levelrate < 70) {
+				level = "及格";
+				jgSum +=1;
+			}else {
+				level = "不及格";
+				njgSum +=1;
+			}
 		}
+
 		//训练考核优秀率----end
 
 		//体育成绩-----start
