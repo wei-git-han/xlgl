@@ -341,6 +341,7 @@ public class XlglDocumentZbjlController {
 						if(StringUtils.isNotBlank(status)){
 							if("0".equals(status)){
 								xlglSubDocTracking.setBaoming("2");
+								xlglSubDocTracking.setIsWork("0");
 							}else if("1".equals(status)){
 								xlglSubDocTracking.setIsWork("1");
 							}
