@@ -388,18 +388,18 @@ public class XlglXlzzInfoController {
 			xlglXlzzInfo.setCreateTime(new Date());
 			xlglXlzzInfo.setZjdept(CurrentUser.getOrgName());
 			xlglXlzzInfoService.save(xlglXlzzInfo);
-			String url = URL + Create;
-			JSONObject jsonData = xlglHuijianService.createHuiYi(url, appId, SSOAuthFilter.getToken(), null, null, null);
-			String confId = "";
-			if(jsonData !=null) {
-				JSONObject jsonObject1 = jsonData.getJSONObject("data");
-				Boolean boolean1 = jsonData.getBoolean("isSuccess");
-				if(boolean1) {
-					confId = jsonObject1.getString("confId");
-					xlglHuijianService.saveXlglHuiJian(fId, confId);
-				}
-				
-			}
+//			String url = URL + Create;
+//			JSONObject jsonData = xlglHuijianService.createHuiYi(url, appId, SSOAuthFilter.getToken(), null, null, null);
+//			String confId = "";
+//			if(jsonData !=null) {
+//				JSONObject jsonObject1 = jsonData.getJSONObject("data");
+//				Boolean boolean1 = jsonData.getBoolean("isSuccess");
+//				if(boolean1) {
+//					confId = jsonObject1.getString("confId");
+//					xlglHuijianService.saveXlglHuiJian(fId, confId);
+//				}
+//
+//			}
 		}
 		//保存上传图片，视频，文件
 		if(StringUtils.isNotBlank(pIds)) {

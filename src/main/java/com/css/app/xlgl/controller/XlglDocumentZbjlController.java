@@ -263,15 +263,15 @@ public class XlglDocumentZbjlController {
 				xlglSubDocTrackingService.save(tracking);
 
 				// 发送消息提醒
-				XlglHuijian queryObjectByxlglId = xlglHuijianService.queryObjectByxlglId(fileId);
-				if (queryObjectByxlglId != null) {
-					String msgRedirect = xlglHuijianService.getMsgRedirect(queryObjectByxlglId.getConfId());
-					String msgUrl = "";
-					if (StringUtils.isNotBlank(receiverId)) {
-						msgUtil.sendMsg("会见系统", "您有一条新的会议链接", msgUrl, receiverId, huiJianAppId, huiJianAppSecret,
-								"训练管理", msgRedirect, "", "true");
-					}
-				}
+//				XlglHuijian queryObjectByxlglId = xlglHuijianService.queryObjectByxlglId(fileId);
+//				if (queryObjectByxlglId != null) {
+//					String msgRedirect = xlglHuijianService.getMsgRedirect(queryObjectByxlglId.getConfId());
+//					String msgUrl = "";
+//					if (StringUtils.isNotBlank(receiverId)) {
+//						msgUtil.sendMsg("会见系统", "您有一条新的会议链接", msgUrl, receiverId, huiJianAppId, huiJianAppSecret,
+//								"训练管理", msgRedirect, "", "true");
+//					}
+//				}
 
 			}
 			Response.json("result", "success");
