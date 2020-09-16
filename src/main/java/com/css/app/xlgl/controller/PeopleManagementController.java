@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -105,7 +106,7 @@ public class PeopleManagementController {
 					break;
 				}
 			}
-		}	
+		}
 		List<String> list = getUserArray();
 		for (BaseAppOrgan baseAppOrgan : queryList) {
 			LinkedMultiValueMap<String, Object> linkeMap = new LinkedMultiValueMap<String,Object>();
@@ -155,7 +156,7 @@ public class PeopleManagementController {
 			baseAppOrgan.setQjrs(qjrs);
 			baseAppOrgan.setXjrs(xjrs);
 			baseAppOrgan.setSjzwrs(userIdList);
-		
+
 		}
 		Response.json("page",pageUtil);
 	}
@@ -295,14 +296,18 @@ public class PeopleManagementController {
 		}else {
 			DecimalFormat decimalFormat = new DecimalFormat("0.00");
 			if(userIdList > 0) {
-				String zwRate = decimalFormat.format(((float)userIdList/object)*100);
+				if(object > 0){
+
+					float zwRate = (float) ((new BigDecimal((float) userIdList / object).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()) * 100);
+					if(zwRate > 0) {
+						jsonData.put("zwlv", zwRate);
+					}else {
+						jsonData.put("zwlv", "0");
+					}
+				}
 				//long zwr =((long)userIdList /(long)yzwrs);
 				//float zwRate = zwr*100; //人员在位率
-				if(StringUtils.isNotBlank(zwRate)) {
-					jsonData.put("zwlv", zwRate);
-				}else {
-					jsonData.put("zwlv", "0");
-				}
+
 			}else {
 				jsonData.put("zwlv", "0");
 			}		
