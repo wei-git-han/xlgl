@@ -206,7 +206,7 @@ where
             and b.XLTYPE like '%'||#{xltype}||'%'
         </if>
 
-        order by a.EXERCISE_TIME desc
+        order by a.CREATED_TIME desc
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}
         </if>

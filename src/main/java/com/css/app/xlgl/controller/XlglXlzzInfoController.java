@@ -98,8 +98,10 @@ public class XlglXlzzInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	public void list(Integer page, Integer pagesize){
+	public void list(Integer page, Integer pagesize,String search, String xltype){
 		Map<String, Object> map = new HashMap<>();
+		map.put("search",search);
+		map.put("xltype",xltype);
 		PageHelper.startPage(page, pagesize);
 		
 		//查询列表数据

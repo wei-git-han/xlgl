@@ -183,7 +183,7 @@
 		<if test="xltype != null and xltype !=''">
 			and XLTYPE = #{xltype}
 		</if>
-		order by EXERCISE_TIME desc
+		order by CREATED_TIME desc
 	</select>
 
 	<select id="queryListForPerson" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
@@ -200,7 +200,7 @@
 		<if test="xltype != null and xltype !=''">
 			and XLTYPE = #{xltype}
 		</if>
-		order by EXERCISE_TIME desc
+		order by CREATED_TIME desc
 	</select>
 
 	<select id="queryBmInfo" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">

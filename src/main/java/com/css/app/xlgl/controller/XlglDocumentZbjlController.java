@@ -290,10 +290,13 @@ public class XlglDocumentZbjlController {
 	 *            用户id
 	 * @param isWork
 	 *            0是未参训，1是已参训
+	 * type 0是参训受训 1是大讲堂
+	 * status 参训受训 0已报名，1延后参训，2未接受，3已接受
+	 * status 大讲堂 0延后报名 1已参训
 	 */
 	@ResponseBody
 	@RequestMapping("/updateStatus")
-	public void updateStatus(String infoId, String userId, String isWork) {
+	public void updateStatus(String infoId, String userId, String isWork,String status,String type) {
 		// 0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员;4:处管理员
 		String adminFlag = adminSetService.getAdminTypeByUserId(CurrentUser.getUserId());
 		BaseAppUser baseAppUser = baseAppUserService.query(userId);
@@ -322,9 +325,27 @@ public class XlglDocumentZbjlController {
 				List<XlglSubDocTracking> list = xlglSubDocInfoService.queryByInfoIdAndUserId(infoId, userId);
 				if (list != null && list.size() > 0) {
 					XlglSubDocTracking xlglSubDocTracking = list.get(0);
-					xlglSubDocTracking.setIsWork(isWork);// 已参训
-					xlglSubDocTracking.setBaoming("1");// 已报名
-					xlglSubDocTracking.setRead("1");// 已接收
+					if("0".equals(type)){
+						if(StringUtils.isNotBlank(status)){
+							if("0".equals(status)){
+								xlglSubDocTracking.setBaoming("1");//已报名
+							}else if("1".equals(status)){
+								xlglSubDocTracking.setBaoming("2");//延后参训
+							}else if("2".equals(status)){
+								xlglSubDocTracking.setRead("0");
+							}else if("3".equals(status)){
+								xlglSubDocTracking.setRead("1");
+							}
+						}
+					}else if("1".equals(status)){
+						if(StringUtils.isNotBlank(status)){
+							if("0".equals(status)){
+								xlglSubDocTracking.setBaoming("2");
+							}else if("1".equals(status)){
+								xlglSubDocTracking.setIsWork("1");
+							}
+						}
+					}
 					xlglSubDocTrackingService.update(xlglSubDocTracking);
 					Response.json("result", "success");
 				} else {
@@ -335,6 +356,8 @@ public class XlglDocumentZbjlController {
 			Response.json("result", "no Perssion");
 		}
 	}
+
+
 
 	// public void confirm(String infoId){
 	// String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());

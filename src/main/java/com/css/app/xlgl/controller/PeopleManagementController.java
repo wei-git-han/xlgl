@@ -126,18 +126,21 @@ public class PeopleManagementController {
 			Integer yzwrs=0;
 			Integer qjrs=0;
 			Integer xjrs=0;
-			Object object = jsonData.get("yzwrs");
-			Object object2 = jsonData.get("qjrs");
-			Object object3 = jsonData.get("xjrs");
-			if( object!=null) {
-				yzwrs = (Integer)object;
+			if(jsonData != null) {
+				Object object = jsonData.get("yzwrs");
+				Object object2 = jsonData.get("qjrs");
+				Object object3 = jsonData.get("xjrs");
+				if (object != null) {
+					yzwrs = (Integer) object;
+				}
+				if (object2 != null) {
+					qjrs = (Integer) object2;
+				}
+				if (object3 != null) {
+					xjrs = (Integer) object3;
+				}
 			}
-			if( object2!=null) {
-				qjrs = (Integer)object2;
-			}
-			if( object3!=null) {
-				xjrs = (Integer)object3;
-			}
+
 			int userIdList = this.userIdNumber(baseAppOrgan.getId(),list);//实际在位人数
 			if(userIdList == 0 || yzwrs ==0) {
 				baseAppOrgan.setZwrate("0");

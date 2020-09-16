@@ -302,6 +302,7 @@ public class PersonalFileController {
 			jgSum +=1;
 		}else {
 			level = "不及格";
+			njgSum +=1;
 		}
 		//训练考核优秀率----end
 
@@ -334,6 +335,8 @@ public class PersonalFileController {
 		}else if(levelTy > 500){
 			dj = "特1级";
 			yxSum +=1;
+		}else if(levelTy < 260){
+			njgSum +=1;
 		}
 		}
 		//体育成绩------end
@@ -359,6 +362,7 @@ public class PersonalFileController {
 			jgSum +=1;
 		}else {
 			studyDj = "不及格";
+			njgSum +=1;
 		}
 		}
 		//自学成绩-----end
@@ -388,7 +392,7 @@ public class PersonalFileController {
 		int result = 0;
 		int highSum = 0;//优秀
 		int midSum = 0;//优良
-		int lowSum = 0;//及格
+		int lowSum = 0;//不及格
 		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
 		String name = baseAppOrganService.queryObject(deptId).getName();
 		 Map<String, Object> hashmap = new HashMap<String,Object>();
@@ -402,23 +406,23 @@ public class PersonalFileController {
 					highSum += 1;
 				} else if (result == 1) {
 					midSum += 1;
-				} else if (result == 2) {
+				} else if (result == 3) {
 					lowSum += 1;
 				}
 			}
 			int sum = list.size();//总人数
-			float yxLv = highSum/sum;
-			float ylLv = midSum/sum;
-			float jgLv = lowSum/sum;
+			float yxLv = highSum/sum * 100;
+			float ylLv = midSum/sum * 100;
+			float bjgLv = (sum - highSum - midSum)/sum * 100;
 			jsonObject.put("yxLv",yxLv);//优秀率
 			jsonObject.put("ylLv",ylLv);//优良率
-			jsonObject.put("jgLv",jgLv);//及格率
+			jsonObject.put("jgLv",bjgLv);//不及格率
 		}
 
 		jsonObject.put("name",name);
 		jsonObject.put("highSum",highSum);//优秀人数
 		jsonObject.put("midSum",midSum);//优良人数
-		jsonObject.put("lowSum",lowSum);//及格人数
+		jsonObject.put("lowSum",lowSum);//不及格人数
 
 //		Response.json(jsonObject);
 		return jsonObject;

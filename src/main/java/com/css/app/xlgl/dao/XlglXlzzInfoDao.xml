@@ -8,7 +8,14 @@
 	</select>
 
 	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglXlzzInfo">
-		select * from XLGL_XLZZ_INFO  order by CREATE_TIME desc
+		select * from XLGL_XLZZ_INFO where 1=1
+		<if test="search != null and search !=''">
+			and TITLE like '%'||#{search}||'%'
+		</if>
+		<if test="xltype != null and xltype !=''">
+			and XLTYPE = #{xltype}
+		</if>
+		order by CREATE_TIME desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
