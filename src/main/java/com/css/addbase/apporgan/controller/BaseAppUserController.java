@@ -10,6 +10,7 @@ import com.css.app.xlgl.config.service.XlglRoleSetService;
 import com.css.app.xlgl.service.XlglAdminSetService;
 import com.css.base.utils.GwPageUtils;
 import com.github.pagehelper.PageHelper;
+import freemarker.cache.StrongCacheStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -249,6 +250,14 @@ public class BaseAppUserController {
 			}
 		}else {
 			userJson.put("roleFlag",false);
+		}
+
+		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
+    	BaseAppOrgan baseAppOrgan = baseAppOrganService.queryDeptNameByUserId(orgId);
+    	if(baseAppOrgan != null){
+			String orgName = baseAppOrgan.getName();
+			userJson.put("juId",orgId);
+			userJson.put("juName",orgName);
 		}
     	Response.json(userJson);
     }
