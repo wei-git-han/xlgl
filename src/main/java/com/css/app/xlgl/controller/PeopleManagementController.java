@@ -1,9 +1,11 @@
 package com.css.app.xlgl.controller;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -13,6 +15,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -420,7 +424,7 @@ public class PeopleManagementController {
 	 * */
 	@ResponseBody
 	@RequestMapping("/export")
-	public void export(String[] organIds) {
+	public void export(String[] organIds,HttpServletResponse response) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("parentId", "root");
 		List<BaseAppOrgan> queryList = baseAppOrganService.queryList(map);
@@ -436,7 +440,8 @@ public class PeopleManagementController {
 			}
 		}
 		String format = new SimpleDateFormat("yyyy-MM-ddHHmmss").format(new Date());
-		File tempFile = new File(filePath, "人员管理-各单位人员情况统计表-"+format+".xls");
+		String fileName = "人员管理-各单位人员情况统计表-"+format+".xls";
+		File tempFile = new File(filePath, fileName);
 		if (tempFile.exists()) {
 			tempFile.delete();
 		} else {
@@ -451,10 +456,25 @@ public class PeopleManagementController {
 			}else {
 				is = createExcelList(queryList,title,tempFile.getAbsolutePath());
 			}	
-			is.close();
-			resultMap.put("fileUrl", tempFile.getAbsoluteFile());
-			resultMap.put("fileName", tempFile.getName());
-			resultMap.put("result", "success");
+			String string = new String(fileName.getBytes("UTF-8"),"ISO-8859-1");
+			response.reset();
+			response.setContentType("application/octet-stream");
+			response.setCharacterEncoding("UTF-8");
+			response.setHeader("Content-Disposition", "attachment;filename=" + string);
+			OutputStream	os = response.getOutputStream();
+			BufferedInputStream bis = new BufferedInputStream(is);
+			byte[] buff = new byte[1024];
+			int i = 0;
+			try {
+				while ((i = bis.read(buff)) != -1) {
+					os.write(buff, 0, i);
+					os.flush();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				bis.close();
+			}
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -473,39 +493,35 @@ public class PeopleManagementController {
 				HSSFCell createCell = row.createCell(i);
 				createCell.setCellValue(title[i]);
 			}
-			for (int i = 1; i < list.size(); i++) {
+			for (int i = 1; i < list.size()+1; i++) {
 				HSSFRow rows = sheet.createRow(i);
 				HSSFCell cell0 = rows.createCell(0);//序号
 				cell0.setCellValue(i);
 				
 				HSSFCell cell1 = rows.createCell(1);//部门名称
-				cell1.setCellValue(list.get(i).getName());
+				cell1.setCellValue(list.get(i-1).getName());
 				
 				HSSFCell cell2 = rows.createCell(2);//应在位人数
-				cell2.setCellValue(list.get(i).getYzwrs());
+				cell2.setCellValue(list.get(i-1).getYzwrs());
 				
 				HSSFCell cell3 = rows.createCell(3);//实际在位人数
-				cell3.setCellValue(list.get(i).getSjzwrs());
+				cell3.setCellValue(list.get(i-1).getSjzwrs());
 				
 				HSSFCell cell4 = rows.createCell(4);//人员在未率
-				cell4.setCellValue(list.get(i).getZwrate());
+				cell4.setCellValue(list.get(i-1).getZwrate());
 				
 				HSSFCell cell5 = rows.createCell(5);//请假人数
-				cell5.setCellValue(list.get(i).getQjrs());
+				cell5.setCellValue(list.get(i-1).getQjrs());
 				
 				HSSFCell cell6 = rows.createCell(6);//休假人数
-				cell6.setCellValue(list.get(i).getXjrs());
+				cell6.setCellValue(list.get(i-1).getXjrs());
 			}
 			fout = new FileOutputStream(fileName);
 			wb.write(fout);
 			fout.flush();
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			if (fout != null) {
-				fout.close();
-			}
-		}
+		} 
 		return new FileInputStream(fileName);
 	}
 	
@@ -515,7 +531,7 @@ public class PeopleManagementController {
 	 * */
 	@ResponseBody
 	@RequestMapping("/exportPeople")
-	public void exportPeople(String organId,String[] ids) {
+	public void exportPeople(String organId,String[] ids,HttpServletResponse response) {
 		LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String,Object>();
 		map.add("orgid", organId);
 		JSONObject txl = getTXL(map);
@@ -532,7 +548,8 @@ public class PeopleManagementController {
 			}
 		}
 		String format = new SimpleDateFormat("yyyy-MM-ddHHmmss").format(new Date());
-		File tempFile = new File(filePath, "人员管理-本单位人员情况情况统计表-"+format+".xls");
+		String fileName = "人员管理-本单位人员情况情况统计表-"+format+".xls";
+		File tempFile = new File(filePath,fileName);
 		if (tempFile.exists()) {
 			tempFile.delete();
 		} else {
@@ -548,10 +565,25 @@ public class PeopleManagementController {
 				is = createExcelInfoFlie(parseArray,title,tempFile.getAbsolutePath());
 			}
 			
-			is.close();
-			resultMap.put("fileUrl", tempFile.getAbsoluteFile());
-			resultMap.put("fileName", tempFile.getName());
-			resultMap.put("result", "success");
+			String string = new String(fileName.getBytes("UTF-8"),"ISO-8859-1");
+			response.reset();
+			response.setContentType("application/octet-stream");
+			response.setCharacterEncoding("UTF-8");
+			response.setHeader("Content-Disposition", "attachment;filename=" + string);
+			OutputStream	os = response.getOutputStream();
+			BufferedInputStream bis = new BufferedInputStream(is);
+			byte[] buff = new byte[1024];
+			int i = 0;
+			try {
+				while ((i = bis.read(buff)) != -1) {
+					os.write(buff, 0, i);
+					os.flush();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				bis.close();
+			}
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -571,30 +603,30 @@ public class PeopleManagementController {
 				HSSFCell createCell = row.createCell(i);
 				createCell.setCellValue(title[i]);
 			}
-			for (int i = 1; i < list.size(); i++) {
+			for (int i = 1; i < list.size()+1; i++) {
 				HSSFRow rows = sheet.createRow(i);
 				HSSFCell cell0 = rows.createCell(0);//用户名称
-				cell0.setCellValue(list.get(i).getFullname());
+				cell0.setCellValue(list.get(i-1).getFullname());
 				
 				HSSFCell cell1 = rows.createCell(1);//职务
-				cell1.setCellValue(list.get(i).getPost());
+				cell1.setCellValue(list.get(i-1).getPost());
 				
 				HSSFCell cell2 = rows.createCell(2);//座机
-				cell2.setCellValue(list.get(i).getTelephone());
+				cell2.setCellValue(list.get(i-1).getTelephone());
 				
 				HSSFCell cell3 = rows.createCell(3);//手机号
-				cell3.setCellValue(list.get(i).getMobile());
+				cell3.setCellValue(list.get(i-1).getMobile());
 				
 				HSSFCell cell4 = rows.createCell(4);//房间号
 				cell4.setCellValue("");
 				
 				HSSFCell cell5 = rows.createCell(5);//部门名称
-				cell5.setCellValue(list.get(i).getOrganName());
+				cell5.setCellValue(list.get(i-1).getOrganName());
 				
 				HSSFCell cell6 = rows.createCell(6);//在位情况
-				if(list.get(i).getIsShow() != null && list.get(i).getIsShow().equals("0")) {
+				if(list.get(i-1).getIsShow() != null && list.get(i-1).getIsShow().equals("0")) {
 					cell6.setCellValue("否");
-				}else if(list.get(i).getIsShow() != null && list.get(i).getIsShow().equals("1")) {
+				}else if(list.get(i-1).getIsShow() != null && list.get(i-1).getIsShow().equals("1")) {
 					cell6.setCellValue("是");
 				}
 				
@@ -604,10 +636,6 @@ public class PeopleManagementController {
 			fout.flush();
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			if (fout != null) {
-				fout.close();
-			}
 		}
 		return new FileInputStream(fileName);
 	}

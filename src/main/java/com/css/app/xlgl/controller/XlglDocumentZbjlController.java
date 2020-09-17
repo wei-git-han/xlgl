@@ -61,10 +61,6 @@ public class XlglDocumentZbjlController {
 	private MsgTipService msgService;
 	@Autowired
 	private MsgTipUtil msgUtil;
-	@Value("${csse.xlgl.appId}")
-	private String appId;
-	@Value("${csse.xlgl.appSecret}")
-	private String clientSecret;
 	@Autowired
 	private BaseAppUserService baseAppUserService;
 	@Autowired
@@ -89,10 +85,6 @@ public class XlglDocumentZbjlController {
 	private XlglRoleSetService xlglRoleSetService;
 	@Autowired
 	private XlglHuijianService xlglHuijianService;
-	@Value("${csse.meeting.appid}")
-	private String huiJianAppId;
-	@Value("${csse.meeting.appSecret}")
-	private String huiJianAppSecret;
 
 	/**
 	 * 列表

@@ -139,20 +139,25 @@ csse.fileservice.tempPath: c:/temp/storetemp/
 #本地文件路径（应用中下载操作的默认文件保存路径）
 filePath: D:/download/ 
 #文件服务----------------------------------end
+
+#调会见配置------------------------------------------------------------start
 #训练管理应用号由第三方提供，应用号与私有密钥一致 
-HuiYiappId: beb7da4ced7c42a085c3c99697f9aa42
+csse.meeting.huiyi.HuiYiappId: beb7da4ced7c42a085c3c99697f9aa42
 #会见创建会议的url
-csse.meeting.huijian.url: http://kf.suirui.com
+csse.meeting.huijian.url: http://10.1.150.187:80
 #会见创建会议的接口
 csse.meeting.huijian.url.create: /api/v3/conference/create
 #会见web入会的路径
 #csse.meeting.huijian： SRhuijian://SRhuijian.com/jm
 #会见推送消息的路径
 csse.meeting.huijian.redirect: sys.config.chinasoft.inviteurl.template
-#会见的appid
+#平台上会见的appid
 csse.meeting.appid: cpk.zbfzb.huijian
-#会见的密钥
+#平台上的会见的密钥
 csse.meeting.appSecret: 95c7ca5e-6088-404f-aedd-42544ceda083
+#会见登录
+csse.meeting.huiyi.url.login: /api/v3/user/login
+#调会见配置---------------------------------------------------------------------end
 
 #本war的所有应用日志输出路径
 csse.log.path: c:/temp/storetemp/zf_one_number_app.log

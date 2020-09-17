@@ -32,4 +32,6 @@ public interface XlglHuijianService {
 	String getMsgRedirect(String huiJianId);
 	
 	XlglHuijian queryObjectByxlglId(String id);
+	
+	Map<String, String> loginToken() ;
 }

@@ -203,4 +203,10 @@ public class AppConstant {
 	 * @date 2018年11月12日 网关配置服务地址
 	 */
 	public final static String GATEWAY_URL = "gatewayUrl";
+	
+	/**
+	 * @author 李振楠
+	 * @date 2020年09月17日  考试上传模板权限限制
+	 */
+	public final static String EXAM_TOPIC = "exam_topic";
 }

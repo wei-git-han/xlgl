@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.css.addbase.appconfig.entity.BaseAppConfig;
+import com.css.addbase.appconfig.service.BaseAppConfigService;
+import com.css.addbase.constant.AppConstant;
 import com.css.app.xlgl.entity.XlglExamSubject;
 import com.css.app.xlgl.entity.XlglExamTopic;
 import com.css.app.xlgl.service.XlglExamSubjectService;
@@ -44,7 +47,8 @@ public class XlglExamSubjectController {
 	private XlglExamSubjectService xlglExamSubjectService;
 	@Autowired
 	private XlglExamTopicService xlglExamTopicService;
-	
+	@Autowired
+	private BaseAppConfigService baseAppConfigService;
 	/**
 	 * 列表
 	 */
@@ -276,5 +280,20 @@ public class XlglExamSubjectController {
 		jsonbject.put("3", type3);
 		jsonbject.put("4", type4);
 		Response.json(jsonbject);
+	}
+	/**
+	 * 限制上传模板权限
+	 * */
+	@ResponseBody
+	@RequestMapping("/getUpLoad")
+	public void getupLoad() {
+		boolean state = false;
+		List<BaseAppConfig> typeList = baseAppConfigService.typeList(AppConstant.EXAM_TOPIC);
+		for (BaseAppConfig baseAppConfig : typeList) {
+			if(baseAppConfig.getValue().equals(CurrentUser.getUserId())) {
+				state =true;
+			}
+		}
+		Response.json("state",state);
 	}
 }
