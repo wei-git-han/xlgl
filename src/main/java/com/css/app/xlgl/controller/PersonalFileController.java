@@ -395,7 +395,7 @@ public class PersonalFileController {
 		int result = 0;
 		int highSum = 0;//优秀
 		int midSum = 0;//优良
-		int lowSum = 0;//不及格
+		int lowSum = 0;//及格
 		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
 		String name = baseAppOrganService.queryObject(deptId).getName();
 		 Map<String, Object> hashmap = new HashMap<String,Object>();
@@ -409,17 +409,17 @@ public class PersonalFileController {
 					highSum += 1;
 				} else if (result == 1) {
 					midSum += 1;
-				} else if (result == 3) {
+				} else if (result == 2) {
 					lowSum += 1;
 				}
 			}
 			int sum = list.size();//总人数
 			float yxLv = highSum/sum * 100;
 			float ylLv = midSum/sum * 100;
-			float bjgLv = (sum - highSum - midSum)/sum * 100;
+			float jgLv = lowSum/sum * 100;
 			jsonObject.put("yxLv",yxLv);//优秀率
 			jsonObject.put("ylLv",ylLv);//优良率
-			jsonObject.put("jgLv",bjgLv);//不及格率
+			jsonObject.put("jgLv",jgLv);//不及格率
 		}
 
 		jsonObject.put("name",name);
