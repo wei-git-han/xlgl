@@ -8,7 +8,7 @@
 	</select>
 
 	<select id="queryAllInfos" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
-		select * from XLGL_SUB_DOC_TRACKING where 1=1 and XLTYPE = '0'
+		select * from XLGL_SUB_DOC_TRACKING where 1=1 and XLTYPE = '0' and (BAOMING = '1' or BAOMING = '2')
 		<if test="userId != null and userId !=''">
 			and RECEIVER_ID = #{userId}
 		</if>
@@ -20,11 +20,27 @@
 		<!--</if>-->
 
         <if test="type == 0">
-            and IS_WORK  = '0'
+            and IS_WORK  = '0' and EXERCISE_TIME > to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
         </if>
         <if test="type == 1">
-            and IS_WORK = '1'
+             and EXERCISE_TIME &lt; to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
         </if>
+
+		<if test="search != null and search !=''">
+			and TITLE  like '%'||#{search}||'%'
+		</if>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+
+		union all
+		select * from XLGL_SUB_DOC_TRACKING where 1=1 and XLTYPE = '0' and BAOMING = '0'
+		<if test="type == 0">
+			and EXERCISE_TIME &lt; to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
+		</if>
+		<if test="userId != null and userId !=''">
+			and RECEIVER_ID = #{userId}
+		</if>
 
 		<if test="search != null and search !=''">
 			and TITLE  like '%'||#{search}||'%'

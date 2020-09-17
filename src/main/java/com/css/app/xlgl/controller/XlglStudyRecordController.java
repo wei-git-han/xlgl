@@ -41,9 +41,9 @@ public class XlglStudyRecordController {
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	public void list(Integer page, Integer limit){
+	public void list(){
 		Map<String, Object> map = new HashMap<>();
-		PageHelper.startPage(page, limit);
+		//PageHelper.startPage(page, limit);
 		
 		//查询列表数据
 		List<XlglStudyRecord> xlglStudyRecordList = xlglStudyRecordService.queryList(map);
