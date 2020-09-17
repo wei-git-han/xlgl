@@ -304,7 +304,7 @@ public class XlglPhysicalController {
 		int sxp1 = Math.round(s);
 		float f = 0.0f;
 		String string = "";
-		if(StringUtils.isNotBlank(cpm) && StringUtils.isNotBlank(cpf)){
+		if(StringUtils.isNotBlank(cpf)){
 			string = cpf+"."+cpm;
 			f = Float.parseFloat(string) * 100;
 		}
