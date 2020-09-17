@@ -85,12 +85,6 @@ public class XlglXlzzInfoController {
 	@Autowired
 	private XlglHuijianService xlglHuijianService;
 	
-	@Value("${csse.meeting.huijian.url}")
-	private  String URL ;
-	@Value("${csse.meeting.huijian.url.create}")
-	private  String Create ;
-	@Value("${HuiYiappId}")
-	private String appId;
 	
 
 	/**
