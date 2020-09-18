@@ -166,57 +166,45 @@ public class PeopleManagementController {
 	}
 	
 	private List<BaseAppOrgan> getBaseAppOrganList(List<BaseAppOrgan> queryList,List<XlglAdminSet> queryList2,Boolean status) {
-		LinkedMultiValueMap<String, Object> linkeMap = new LinkedMultiValueMap<String,Object>();
 		List<String> list = getUserArray();
 		for (BaseAppOrgan baseAppOrgan : queryList) {
-			if(status != null) {
-				if(status) {
-					String str = "0";
-					if(queryList2.size()>0) {
-						List<String> queryListByTREEPATH = baseAppOrganService.queryListByTREEPATH(baseAppOrgan.getId());
-						if(queryListByTREEPATH.contains(CurrentUser.getSSOUser().getOrganId())) {
-							str = "1";
-						}
-					}
-					baseAppOrgan.setStatus(str);
-				}else {
-					baseAppOrgan.setStatus("1");
-				}
-			}
+			LinkedMultiValueMap<String, Object> linkeMap = new LinkedMultiValueMap<String,Object>();
 			linkeMap.add("organId", baseAppOrgan.getId());
-			JSONObject jsonData = this.getNumber(linkeMap);
-			Integer yzwrs=0;
-			Integer qjrs=0;
-			Integer xjrs=0;
+		JSONObject jsonData = this.getNumber(linkeMap);
+		Integer yzwrs=0;
+		Integer qjrs=0;
+		Integer xjrs=0;
+		if(jsonData != null) {
 			Object object = jsonData.get("yzwrs");
 			Object object2 = jsonData.get("qjrs");
 			Object object3 = jsonData.get("xjrs");
-			if( object!=null) {
-				yzwrs = (Integer)object;
+			if (object != null) {
+				yzwrs = (Integer) object;
 			}
-			if( object2!=null) {
-				yzwrs = (Integer)object2;
+			if (object2 != null) {
+				qjrs = (Integer) object2;
 			}
-			if( object3!=null) {
-				yzwrs = (Integer)object3;
+			if (object3 != null) {
+				xjrs = (Integer) object3;
 			}
-			int userIdList = this.userIdNumber(baseAppOrgan.getId(),list);//实际在位人数
-			if(userIdList == 0 || yzwrs ==0) {
-				
-				baseAppOrgan.setZwrate("0");
-			}else {
-				DecimalFormat decimalFormat = new DecimalFormat("0.00");
-				String zwRate = decimalFormat.format(((float)userIdList/yzwrs)*100);
-				//long zwr =((long)userIdList /(long)yzwrs);
-				//float zwRate = zwr*100; //人员在位率
-				baseAppOrgan.setZwrate(zwRate);
-			}
-			baseAppOrgan.setYzwrs(yzwrs);
-			baseAppOrgan.setQjrs(qjrs);
-			baseAppOrgan.setXjrs(xjrs);
-			baseAppOrgan.setSjzwrs(userIdList);
-		
 		}
+
+		int userIdList = this.userIdNumber(baseAppOrgan.getId(),list);//实际在位人数
+		if(userIdList == 0 || yzwrs ==0) {
+			baseAppOrgan.setZwrate("0");
+		}else {
+			DecimalFormat decimalFormat = new DecimalFormat("0.00");
+			String zwRate = decimalFormat.format(((float)userIdList/yzwrs)*100);
+			//long zwr =((long)userIdList /(long)yzwrs);
+			//float zwRate = zwr*100; //人员在位率
+			baseAppOrgan.setZwrate(zwRate);
+		}
+		baseAppOrgan.setYzwrs(yzwrs);
+		baseAppOrgan.setQjrs(qjrs);
+		baseAppOrgan.setXjrs(xjrs);
+		baseAppOrgan.setSjzwrs(userIdList);
+
+	}
 		return queryList;
 	}
 	
