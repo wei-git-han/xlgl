@@ -462,6 +462,7 @@ public class PeopleManagementController {
 				e.printStackTrace();
 			} finally {
 				bis.close();
+				os.close();
 			}
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -509,6 +510,8 @@ public class PeopleManagementController {
 			fout.flush();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			fout.close();
 		} 
 		return new FileInputStream(fileName);
 	}
@@ -571,6 +574,7 @@ public class PeopleManagementController {
 				e.printStackTrace();
 			} finally {
 				bis.close();
+				os.close();
 			}
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -612,10 +616,12 @@ public class PeopleManagementController {
 				cell5.setCellValue(list.get(i-1).getOrganName());
 				
 				HSSFCell cell6 = rows.createCell(6);//在位情况
-				if(list.get(i-1).getIsShow() != null && list.get(i-1).getIsShow().equals("0")) {
-					cell6.setCellValue("否");
+				if(StringUtils.isNotBlank(list.get(i-1).getIsShow()) && list.get(i-1).getIsShow().equals("0")) {
+					cell6.setCellValue("不在位");
 				}else if(list.get(i-1).getIsShow() != null && list.get(i-1).getIsShow().equals("1")) {
-					cell6.setCellValue("是");
+					cell6.setCellValue("在位");
+				}else {
+					cell6.setCellValue("不在位");
 				}
 				
 			}
@@ -624,6 +630,8 @@ public class PeopleManagementController {
 			fout.flush();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			fout.close();
 		}
 		return new FileInputStream(fileName);
 	}
