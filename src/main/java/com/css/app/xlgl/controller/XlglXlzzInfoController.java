@@ -678,7 +678,8 @@ public class XlglXlzzInfoController {
 						int sum = baseAppUserService.queryBmCout(infoId,"1",deptId);//已报名
 						int nsum = baseAppUserService.queryBmCout(infoId,"0",deptId);//未报名
 						int yhSum = baseAppUserService.queryBmCout(infoId,"2",deptId);//延后报名
-						ybm += sum + yhSum;
+						//ybm += sum + yhSum;
+						ybm += sum ;//已报名就是已报名，和延后参训分开
 						wbm += nsum;
 						ySum += yhSum;
 						int yjs = baseAppUserService.queryYjs(deptId,infoId);//已接受
