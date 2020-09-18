@@ -585,11 +585,11 @@ public class XlglExamExamineController {
 		
 		Integer numberIntoNot =queryTotal-numberInto;//需要补考人数
 		//Integer raio =(numberInto/queryTotal)*100;
-		map.put("level", "1");
+		map.put("level", "优秀");
 		int total1 = xlglExamMainAnswerService.queryTotal(map);//优秀人数
-		map.put("level", "2");
+		map.put("level", "优良");
 		int total2 = xlglExamMainAnswerService.queryTotal(map);//优良人数
-		map.put("level", "3");
+		map.put("level", "及格");
 		int total3 = xlglExamMainAnswerService.queryTotal(map);//及格人数
 		String total1Raio;
 		if(numberInto == 0 || total1 ==0) {

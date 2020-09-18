@@ -119,12 +119,11 @@ public class PersonalFileController {
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		map.put("replyUserId", CurrentUser.getUserId());
 		int total = personalFileService.queryTotal(map);
-		map.put("level", "1");
+		map.put("level", "优秀");
 		int levelTotal = personalFileService.queryTotal(map);
 		String level ="";
 		if(total > 0){
 			Integer levelrate = (levelTotal/total)*100;
-
 			if(levelrate >= 85) {
 				level = "优秀";
 			}else if(70 <= levelrate && levelrate < 85){
@@ -286,7 +285,7 @@ public class PersonalFileController {
 		//训练考核优秀率----start
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		int total = personalFileService.queryTotal(map);
-		map.put("level", "1");
+		map.put("level", "优秀");
 		map.put("replyUserId", userId);
 		int levelTotal = personalFileService.queryTotal(map);
 		if(total > 0){

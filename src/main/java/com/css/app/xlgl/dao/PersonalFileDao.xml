@@ -37,7 +37,6 @@
 			on a.id=b.examine_id
 		where  
 		b.ISNOTEXAM = '1'and a.status= '0'
-		and a.OVER_STATUS = '1' 
 		<if test="replyUserId != null and replyUserId !=''">
 			and b.REPLY_USER_ID = #{replyUserId}
 		</if>
