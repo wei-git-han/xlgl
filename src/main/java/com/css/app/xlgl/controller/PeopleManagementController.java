@@ -462,6 +462,7 @@ public class PeopleManagementController {
 				e.printStackTrace();
 			} finally {
 				bis.close();
+				os.close();
 			}
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -509,6 +510,8 @@ public class PeopleManagementController {
 			fout.flush();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			fout.close();
 		} 
 		return new FileInputStream(fileName);
 	}
