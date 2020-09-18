@@ -295,6 +295,8 @@ public class XlglExamAnswerController {
 				for (String string : split) {
 					replyStr =replyStr+string;
 				}
+			}else if(StringUtils.isNotBlank(eanswer.getReply())){
+				replyStr = eanswer.getReply();
 			}
 			eanswer.setCorrectStatus(eanswer.getTopicResult().equals(replyStr)?"0":"1");
 			break;

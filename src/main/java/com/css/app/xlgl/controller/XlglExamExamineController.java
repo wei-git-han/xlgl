@@ -90,6 +90,7 @@ public class XlglExamExamineController {
 		//查询列表数据
 		List<XlglExamExamine> xlglExamExamineList = xlglExamExamineService.queryList(map);
 		PageUtils pageUtil = new PageUtils(xlglExamExamineList);
+		DecimalFormat format = new DecimalFormat("0.00");
 		for (XlglExamExamine xlglExamExamine : xlglExamExamineList) {
 			HashMap<String,Object> mapAll = new HashMap<String, Object>();
 			Map<String, Object> mapAnswer = new HashMap<>();
@@ -132,8 +133,13 @@ public class XlglExamExamineController {
 			}else {
 				xlglExamExamine.setNumberIntoNot(numberIntoNot);
 			}
-			Integer raio =((numberInto/queryTotal)*100);
-			xlglExamExamine.setRatio(raio.toString()+"%");
+			String raio;
+			if(numberInto == 0 || queryTotal ==0) {
+				raio = "0";
+			}else {
+				raio = format.format(((float)numberInto/queryTotal)*100);//参考率
+			}
+			xlglExamExamine.setRatio(raio+"%");
 			//更改状态
 			if(makeupList.size()>0) {//查看是否有补考，如果有补考则以补考结束时间为准
 				XlglExamExamineMakeup xlglExamExamineMakeup = makeupList.get(0);
