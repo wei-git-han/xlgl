@@ -85,6 +85,10 @@ public class XlglDocumentZbjlController {
 	private XlglRoleSetService xlglRoleSetService;
 	@Autowired
 	private XlglHuijianService xlglHuijianService;
+	@Value("${csse.meeting.appid}")
+	private String huiJianAppId;
+	@Value("${csse.meeting.appSecret}")
+	private String clientSecret;
 
 	/**
 	 * 列表
@@ -264,6 +268,17 @@ public class XlglDocumentZbjlController {
 //								"训练管理", msgRedirect, "", "true");
 //					}
 //				}
+				/**
+				 * 发送消息提醒
+				 */
+				MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_SHENPIWANCHENG_MSG_TITLE);
+				if (msg != null) {
+					String msgUrl ="";// msg.getMsgRedirect() + "&fileId=" + infoId + "&subId=" + subId;
+					if (StringUtils.isNotBlank(receiverId)) {
+						msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, receiverId, huiJianAppId, clientSecret,
+								msg.getGroupName(), msg.getGroupRedirect(), "", "true");
+					}
+				}
 
 			}
 			Response.json("result", "success");
