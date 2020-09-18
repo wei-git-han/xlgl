@@ -45,6 +45,7 @@ public interface XlglSubDocTrackingService {
 	List<XlglSubDocTracking> queryListForPerson1(Map<String,Object> map);
 
 	List<XlglSubDocTracking> queryAllInfos(Map<String,Object> map1);
+	List<XlglSubDocTracking> queryAllInfoHistory(Map<String,Object> map1);
 
 	List<XlglSubDocTracking> queryAllYear(Map<String,Object> map1);
 

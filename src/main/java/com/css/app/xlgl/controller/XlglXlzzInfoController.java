@@ -933,7 +933,12 @@ public class XlglXlzzInfoController {
 		List<XlglSubDocTracking> listInfoIds = null;
 		PageHelper.startPage(page, limit);
 		if ("0".equals(flag)) {
-			listInfoIds = xlglSubDocTrackingService.queryAllInfos(map1);
+			if("0".equals(type)){
+				listInfoIds = xlglSubDocTrackingService.queryAllInfos(map1);
+			}else {
+				listInfoIds = xlglSubDocTrackingService.queryAllInfoHistory(map1);
+			}
+
 		} else {
 			listInfoIds = xlglSubDocTrackingService.queryAllYear(map1);
 		}
