@@ -271,7 +271,7 @@ public class XlglDocumentZbjlController {
 				/**
 				 * 发送消息提醒
 				 */
-				MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_SHENPIWANCHENG_MSG_TITLE);
+				MsgTip msg = msgService.queryObject(MSGTipDefined.XLGL);
 				if (msg != null) {
 					String msgUrl ="";// msg.getMsgRedirect() + "&fileId=" + infoId + "&subId=" + subId;
 					if (StringUtils.isNotBlank(receiverId)) {
