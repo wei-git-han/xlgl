@@ -236,10 +236,12 @@ public class XlglNoticeController {
 	public void saveOrUpdate(XlglNotice xlglNotice,String pIds){
 		//判断是新增还是修改,id不为空则是修改，为空则是新增
 		String id = xlglNotice.getId();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		if(StringUtils.isNotBlank(xlglNotice.getReleaseTimeStr())) {
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 			try {
 				Date parse = simpleDateFormat.parse(xlglNotice.getReleaseTimeStr());
+				xlglNotice.setReleaseTimeStr(simpleDateFormat.format(new Date()));
 				xlglNotice.setReleaseTime(parse);
 			} catch (ParseException e) {
 				e.printStackTrace();
@@ -247,6 +249,8 @@ public class XlglNoticeController {
 			}
 		}
 		if(!StringUtils.isEmpty(id)){
+			xlglNotice.setReleaseTimeStr(simpleDateFormat.format(new Date()));
+			xlglNotice.setReleaseTime(new Date());
 			xlglNoticeService.update(xlglNotice);
 			if(StringUtils.isNotBlank(pIds)) {
 				String[] ids = pIds.split(",");
