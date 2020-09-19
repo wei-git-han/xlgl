@@ -278,10 +278,14 @@ public class PeopleManagementController {
 		JSONObject jsonData = this.getNumber(map);
 		int userIdList = this.userIdNumber(null,list);//实际在位人数
 		Integer object = 0;
+		Integer num = 0;
 		if(jsonData!=null) {
 			Object object2 = jsonData.get("yzwrs");
 			object =(Integer)object2;//应在位人数
+			Object object3 = jsonData.get("qjrs");
+			num = (Integer) object3;
 		}
+		Integer sum = object - num;
 		
 		if(userIdList == 0 && object == 0 && object !=null) {
 			jsonData.put("zwlv", "0");
@@ -290,9 +294,9 @@ public class PeopleManagementController {
 			if(userIdList > 0) {
 				if(object > 0){
 
-					float zwRate = (float) ((new BigDecimal((float) userIdList / object).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()) * 100);
+					float zwRate = (float) ((new BigDecimal((float) sum / object).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()) * 100);
 					if(zwRate > 0) {
-						jsonData.put("zwlv", zwRate);
+						jsonData.put("zwlv", zwRate-1);
 					}else {
 						jsonData.put("zwlv", "0");
 					}
