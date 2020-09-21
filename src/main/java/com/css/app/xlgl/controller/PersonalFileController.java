@@ -70,8 +70,7 @@ public class PersonalFileController {
 		Integer numberAll = 0;
 		for (PersonalFile personalFile : queryList) {
 			numberAll += personalFile.getFractionSum();
-			personalFile.setUserName(CurrentUser.getUsername());
-			personalFile.setExamineName(personalFile.getExamineSubjectName());
+			personalFile.setUserName(personalFile.getUserName());
 		}
 		List<XlglPhysical> queryPhysicalList = xlglPhysicalService.queryList(map);//军事体育成绩
 		List<XlglMineStudy> xlglMineStudyList  = xlglMineStudyService.queryList(map);//自学成绩
@@ -121,12 +120,11 @@ public class PersonalFileController {
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		map.put("replyUserId", CurrentUser.getUserId());
 		int total = personalFileService.queryTotal(map);
-		map.put("level", "1");
+		map.put("level", "优秀");
 		int levelTotal = personalFileService.queryTotal(map);
 		String level ="";
 		if(total > 0){
 			Integer levelrate = (levelTotal/total)*100;
-
 			if(levelrate >= 85) {
 				level = "优秀";
 			}else if(70 <= levelrate && levelrate < 85){
@@ -288,7 +286,7 @@ public class PersonalFileController {
 		//训练考核优秀率----start
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		int total = personalFileService.queryTotal(map);
-		map.put("level", "1");
+		map.put("level", "优秀");
 		map.put("replyUserId", userId);
 		int levelTotal = personalFileService.queryTotal(map);
 		if(total > 0){
