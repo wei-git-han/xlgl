@@ -1081,7 +1081,7 @@ public class XlglXlzzInfoController {
 		map.put("userId", userId);
 		map.put("year", year);
 		int count = xlglSubDocTrackingService.queryCurrentYear(map);//本年度大讲堂数+日常训练数
-		int ycx = xlglSubDocTrackingService.queryCxCount(map);//已参训的大讲堂数和日常军事训练数(已完成)
+		int ycx = xlglSubDocTrackingService.queryCxCount(map);//已参训的大讲堂数和日常军事训练数(已完成),日常军事训练的已报名就代表已参训
 		int bk = xlglSubDocTrackingService.queryBkCount(map);//延后参训数（补考数）
 		int f = 0;
 		if (count > 0) {
