@@ -70,8 +70,7 @@ public class PersonalFileController {
 		Integer numberAll = 0;
 		for (PersonalFile personalFile : queryList) {
 			numberAll += personalFile.getFractionSum();
-			personalFile.setUserName(CurrentUser.getUsername());
-			personalFile.setExamineName(personalFile.getExamineSubjectName());
+			personalFile.setUserName(personalFile.getUserName());
 		}
 		List<XlglPhysical> queryPhysicalList = xlglPhysicalService.queryList(map);//军事体育成绩
 		List<XlglMineStudy> xlglMineStudyList  = xlglMineStudyService.queryList(map);//自学成绩
