@@ -139,7 +139,7 @@ public class XlglWarSpecialtyController {
 		} else {
 
 		}
-		xlglWarSpecialty.setViewNumber(1);
+		//xlglWarSpecialty.setViewNumber(1);
 		xlglWarSpecialtyService.update(xlglWarSpecialty);
 
 		Response.json("xlglWarSpecialty", xlglWarSpecialty);
