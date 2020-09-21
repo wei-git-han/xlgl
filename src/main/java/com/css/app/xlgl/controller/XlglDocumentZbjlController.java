@@ -85,6 +85,14 @@ public class XlglDocumentZbjlController {
 	private XlglRoleSetService xlglRoleSetService;
 	@Autowired
 	private XlglHuijianService xlglHuijianService;
+	@Value("${csse.meeting.appid}")
+	private String huiJianAppId;
+	@Value("${csse.meeting.appSecret}")
+	private String clientSecret;
+	@Value("${csse.xlgl.appId}")
+	private String AppId;
+	@Value("${csse.xlgl.appSecret}")
+	private String appSecret;
 
 	/**
 	 * 列表
@@ -166,13 +174,13 @@ public class XlglDocumentZbjlController {
 				// 获取局管理员,给局管理员发送消息提醒
 				List<String> userIds = adminSetService.queryUserIdByOrgId(deptId);
 				if (userIds != null && userIds.size() > 0) {
-					for (String user : userIds) {
-						MsgTip msg = msgService.queryObject(MSGTipDefined.DCCB_BU_ZHUANBAN_MSG_TITLE);
+					for (String userId : userIds) {
+						MsgTip msg = msgService.queryObject(MSGTipDefined.XLGL);
 						if (msg != null) {
-							String msgUrl = "";
-							for (String userId : userIds) {
-								// msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId,
-								// appId, clientSecret, msg.getGroupName(), msg.getGroupRedirect(), "", "true");
+							String msgUrl ="";// msg.getMsgRedirect() + "&fileId=" + infoId + "&subId=" + subId;
+							if (StringUtils.isNotBlank(userId)) {
+								msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, userId, AppId, appSecret,
+										msg.getGroupName(), msg.getGroupRedirect(), "", "true");
 							}
 						}
 					}
@@ -264,6 +272,17 @@ public class XlglDocumentZbjlController {
 //								"训练管理", msgRedirect, "", "true");
 //					}
 //				}
+				/**
+				 * 发送消息提醒
+				 */
+				MsgTip msg = msgService.queryObject(MSGTipDefined.XLGL);
+				if (msg != null) {
+					String msgUrl ="";// msg.getMsgRedirect() + "&fileId=" + infoId + "&subId=" + subId;
+					if (StringUtils.isNotBlank(receiverId)) {
+						msgUtil.sendMsg(msg.getMsgTitle(), msg.getMsgContent(), msgUrl, receiverId, AppId, appSecret,
+								msg.getGroupName(), msg.getGroupRedirect(), "", "true");
+					}
+				}
 
 			}
 			Response.json("result", "success");

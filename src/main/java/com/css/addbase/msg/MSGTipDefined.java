@@ -44,4 +44,5 @@ public class MSGTipDefined {
 	public static String DCCB_CUIBAN_MSG_TITLE = "dccb_cuiban";//催办
 	public static String DCCB_ADDXB_MSG_TITLE = "dccb_addxb";//协办
 	public static String DCCB_SHENPIWANCHENG_MSG_TITLE = "dccb_spwc";//审批完成
+	public static String XLGL = "xlgl";//审批完成
 }

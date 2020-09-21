@@ -157,8 +157,11 @@ public class XlglExamMainAnswerController {
 			map.put("examineId", examineId);
 			map.put("replyUserId", CurrentUser.getUserId());
 			List<XlglExamMainAnswer> queryList = xlglExamMainAnswerService.queryList(map);
-			queryObject=queryList.get(0);
-			queryObject2=xlglExamExamineService.queryObject(queryObject.getExamineId());
+			if(queryList != null && queryList.size() > 0){
+				queryObject=queryList.get(0);
+				queryObject2=xlglExamExamineService.queryObject(queryObject.getExamineId());
+			}
+
 		}
 	
 		jsonObject.put("time", queryObject.getUpdateDate());
