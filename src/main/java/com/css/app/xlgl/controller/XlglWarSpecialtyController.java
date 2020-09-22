@@ -137,11 +137,13 @@ public class XlglWarSpecialtyController {
 		// 修改浏览次数,只能是详情模式才能
 		if (xlglWarSpecialty.getViewNumber() != null && "0".equals(type)) {
 			xlglWarSpecialty.setViewNumber(xlglWarSpecialty.getViewNumber() + 1);
-		} else {
-
+		} else if(xlglWarSpecialty.getViewNumber() != null && "1".equals(type)){
+			xlglWarSpecialty.setViewNumber(xlglWarSpecialty.getViewNumber());
+		}else {
+			xlglWarSpecialty.setViewNumber(1);
 		}
 		//xlglWarSpecialty.setViewNumber(1);
-		xlglWarSpecialtyService.update(xlglWarSpecialty);
+			xlglWarSpecialtyService.update(xlglWarSpecialty);
 
 		Response.json("xlglWarSpecialty", xlglWarSpecialty);
 	}

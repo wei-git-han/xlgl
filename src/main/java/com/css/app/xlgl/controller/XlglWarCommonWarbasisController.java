@@ -138,6 +138,8 @@ public class XlglWarCommonWarbasisController {
 		// 修改浏览次数,只有详情页才会浏览量加1
 		if (xlglWarCommonWarbasis.getViewNumber() != null && "0".equals(type)) {
 			xlglWarCommonWarbasis.setViewNumber(xlglWarCommonWarbasis.getViewNumber() + 1);
+		}else if (xlglWarCommonWarbasis.getViewNumber() != null && "1".equals(type)) {
+			xlglWarCommonWarbasis.setViewNumber(xlglWarCommonWarbasis.getViewNumber());
 		} else {
 			xlglWarCommonWarbasis.setViewNumber(1);
 		}

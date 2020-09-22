@@ -139,6 +139,8 @@ public class XlglWarCommonSportsController {
 		// 修改浏览次数,只有详情才会浏览量加1
 		if (xlglWarCommonSports.getViewNumber() != null && "0".equals(type)) {
 			xlglWarCommonSports.setViewNumber(xlglWarCommonSports.getViewNumber() + 1);
+		}else if (xlglWarCommonSports.getViewNumber() != null && "1".equals(type)) {
+			xlglWarCommonSports.setViewNumber(xlglWarCommonSports.getViewNumber());
 		} else {
 			xlglWarCommonSports.setViewNumber(1);
 		}

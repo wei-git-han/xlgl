@@ -138,6 +138,8 @@ public class XlglWarCommonWeaponController {
 		// 修改浏览次数,详情页浏览量才会加1
 		if (xlglWarCommonWeapon.getViewNumber() != null && "0".equals(type)) {
 			xlglWarCommonWeapon.setViewNumber(xlglWarCommonWeapon.getViewNumber() + 1);
+		}if (xlglWarCommonWeapon.getViewNumber() != null && "1".equals(type)) {
+			xlglWarCommonWeapon.setViewNumber(xlglWarCommonWeapon.getViewNumber());
 		} else {
 			xlglWarCommonWeapon.setViewNumber(1);
 		}

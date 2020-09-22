@@ -139,6 +139,8 @@ public class XlglWarTacticController {
 		// 修改浏览次数,只能是详情才会浏览量加1
 		if (xlglWarTactic.getViewNumber() != null && "0".equals(type)) {
 			xlglWarTactic.setViewNumber(xlglWarTactic.getViewNumber() + 1);
+		}else if (xlglWarTactic.getViewNumber() != null && "1".equals(type)) {
+			xlglWarTactic.setViewNumber(xlglWarTactic.getViewNumber());
 		} else {
 			xlglWarTactic.setViewNumber(1);
 		}

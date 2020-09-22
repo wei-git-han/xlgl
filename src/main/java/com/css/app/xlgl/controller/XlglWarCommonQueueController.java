@@ -132,8 +132,9 @@ public class XlglWarCommonQueueController {
 
 		// 修改浏览次数,只有详情才会浏览量加1
 		if (xlglWarCommonQueue.getViewNumber() != null && "0".equals(type)) {
-
 			xlglWarCommonQueue.setViewNumber(xlglWarCommonQueue.getViewNumber() + 1);
+		}else if (xlglWarCommonQueue.getViewNumber() != null && "1".equals(type)) {
+			xlglWarCommonQueue.setViewNumber(xlglWarCommonQueue.getViewNumber());
 		} else {
 			xlglWarCommonQueue.setViewNumber(1);
 		}
