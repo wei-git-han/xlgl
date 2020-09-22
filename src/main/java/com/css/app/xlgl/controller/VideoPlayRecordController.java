@@ -27,7 +27,7 @@ import com.github.pagehelper.PageHelper;
  * @date 2020-09-22 15:00:50
  */
 @Controller
-@RequestMapping("/videoplayrecord")
+@RequestMapping("/app/xlgl/videoplayrecord")
 public class VideoPlayRecordController {
 	@Autowired
 	private VideoPlayRecordService videoPlayRecordService;
@@ -65,8 +65,8 @@ public class VideoPlayRecordController {
 	 * 保存
 	 */
 	@ResponseBody
-	@RequestMapping("/save")
-	public void save(VideoPlayRecord videoPlayRecord) {
+	@RequestMapping("/saveOrUpdate")
+	public void saveOrUpdate(VideoPlayRecord videoPlayRecord) {
 		if (StringUtils.isNotBlank(videoPlayRecord.getId())) {
 			videoPlayRecordService.update(videoPlayRecord);
 		} else {
