@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
 import com.css.app.xlgl.entity.VideoPlayRecord;
 import com.css.app.xlgl.service.VideoPlayRecordService;
 import com.css.base.utils.*;
@@ -67,6 +68,7 @@ public class VideoPlayRecordController {
 	@ResponseBody
 	@RequestMapping("/saveOrUpdate")
 	public void saveOrUpdate(VideoPlayRecord videoPlayRecord) {
+		JSONObject jsonObject = new JSONObject();
 		if (StringUtils.isNotBlank(videoPlayRecord.getId())) {
 			videoPlayRecordService.update(videoPlayRecord);
 		} else {
@@ -76,7 +78,9 @@ public class VideoPlayRecordController {
 			videoPlayRecord.setCreateTime(new Date());
 			videoPlayRecordService.save(videoPlayRecord);
 		}
-		Response.json("result", "success");
+		jsonObject.put("info",videoPlayRecord);
+		jsonObject.put("result","success");
+		Response.json(jsonObject);
 
 	}
 	
