@@ -220,9 +220,11 @@ public class XlglExamExamineController {
 		map.put("status", "0");
 		map.put("overStatus", "0");
 		int into = xlglExamExamineDao.queryTotal(map);//进行中
+		map.put("overStatus", "2");
+		int makeUp = xlglExamExamineDao.queryTotal(map);//补考中
 		map.put("overStatus", "1");
 		int intoNot = xlglExamExamineDao.queryTotal(map);//已结束
-		jsonObject.put("into",into);
+		jsonObject.put("into",into+makeUp);
 		jsonObject.put("intoNot",intoNot);
 		Response.json(jsonObject);
 	}

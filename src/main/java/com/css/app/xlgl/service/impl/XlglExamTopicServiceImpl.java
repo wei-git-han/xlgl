@@ -61,8 +61,9 @@ public class XlglExamTopicServiceImpl implements XlglExamTopicService {
 	 * 1：单选，2：多选，3：判断，4：填空，5：简答。
 	 * */
 	@Override
-	public List<XlglExamTopic> readExcelLists(InputStream is,String subjectId) throws Exception {
+	public List<XlglExamTopic> readExcelLists(InputStream is,String subjectId){
 		List<XlglExamTopic> list =new ArrayList<XlglExamTopic>();
+		try {
 		Workbook wb =new HSSFWorkbook(is);
 		//int numberOfSheets = wb.getNumberOfSheets();
 		Sheet sheet = wb.getSheetAt(0); // 遍历第一个Sheet
@@ -115,6 +116,9 @@ public class XlglExamTopicServiceImpl implements XlglExamTopicService {
 		}
 		wb.close();
 		is.close();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 		return list;
 	}
 

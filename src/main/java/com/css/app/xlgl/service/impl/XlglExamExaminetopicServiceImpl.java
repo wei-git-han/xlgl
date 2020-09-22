@@ -122,7 +122,7 @@ public class XlglExamExaminetopicServiceImpl implements XlglExamExaminetopicServ
 			for (int j = 0; j < 1000000; j++) {
 				int random = (int) (Math.random() * queryList.size());
 				if (hashMap.size() < object) {
-					if (!hashMap.containsKey(random)) {
+					if (!hashMap.containsKey(random) && hashMap.size() * 2 < queryList.size()) {
 						hashMap.put(random, "");
 						XlglExamExaminetopic examineTopic = new XlglExamExaminetopic();
 						examineTopic.setId(UUIDUtils.random());
@@ -147,7 +147,7 @@ public class XlglExamExaminetopicServiceImpl implements XlglExamExaminetopicServ
 						}
 						list.add(examineTopic);
 					}
-					if (hashMap.size() * 2 > queryList.size()) {
+					else if (hashMap.size() * 2 > queryList.size()) {
 						for (int i = 0; i < queryList.size(); i++) {
 							if (hashMap.size() < object) {
 								if (!hashMap.containsKey(i)) {
@@ -176,7 +176,7 @@ public class XlglExamExaminetopicServiceImpl implements XlglExamExaminetopicServ
 									list.add(examineTopic);
 								}
 							} else {
-								break;
+								return list;
 							}
 						}
 					}

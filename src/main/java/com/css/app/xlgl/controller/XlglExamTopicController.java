@@ -203,6 +203,12 @@ public class XlglExamTopicController {
 			HTTPFile httpFile = new HTTPFile(fileId);
 			InputStream fileInputStream = httpFile.getInputSteam();
 			List<XlglExamTopic> readExcelLists = xlglExamTopicService.readExcelLists(fileInputStream,subjectId);
+			if(readExcelLists.size()<0) {
+				json.put("code", "500");
+				json.put("msg", "题目导入格式不正确");
+				Response.json(json);
+				return;
+			}
 			xlglExamTopicService.saveList(readExcelLists);
 			json.put("fileId", fileId);
 			XlglExamFile xlglExamFile = new XlglExamFile();
@@ -212,6 +218,7 @@ public class XlglExamTopicController {
 			xlglExamFile.setCreateDate(new Date());
 			xlglExamFile.setCreateUser(CurrentUser.getUserId());
 			xlglExamFileService.save(xlglExamFile);
+			json.put("code", "200");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			Response.error();
