@@ -232,145 +232,7 @@ public class XlglDocumentFileController{
 		}
 		Response.json(json);
 	}
-	
-	/**
-	 * 富文本上传
-	 * @param currentSite
-	 * @param currentWebID
-	 * @param currentColumnID
-	 * @param watermark
-	 * @param user
-	 */
-	@ResponseBody
-	@RequestMapping("/upLoad")
-	public void Upload() {
-		System.out.println("ddddddddddd");
-	}
-//	public void upLoad(Site currentSite,String currentWebID,String currentColumnID,String watermark,User user) {
-//        JSONObject obj=new JSONObject();
-//        try {
-//            String uploadPath = MyUtil.getTmpDir();
-//            uploadPath = uploadPath.substring(0, uploadPath.length() - 1);
-//            String action = getPara("action");
-//            String rtn = new ActionEnter(getRequest(), uploadPath).exec();
-//            System.out.println("--rtn--" + rtn);
-//            obj= JSON.parseObject(rtn);
-//            System.out.println("--obj--" + obj);
-//            String state = obj.getString("state");
-//            WebFileService webFileService = new WebFileService();
-//            // 将上传文件信息保存在数据库中
-//            if (state != null && state.equals("SUCCESS")) {
-//                String tempFile = uploadPath + obj.getString("url");
-//                String url = obj.getString("url");
-//                //String realPath=prefixPath+url;
-//                String fileType = "";
-//                //System.out.println("--dir--"+dir+"--url-"+url+"--action--"+action);
-//
-//                switch (action) {
-//                    case "uploadvideo":
-//                        // 转换为mp4
-//
-//                        String targetMp4 = VedioUtil.convertMp4Thread(uploadPath + url);
-//                        url = targetMp4.substring(uploadPath.length(), targetMp4.length());
-//                        String targetImg = targetMp4.substring(0, targetMp4.lastIndexOf(".")) + ".jpg";
-//                        VedioUtil.processImage(targetMp4, targetImg, 5f, 5f);
-//                        String urlImg = url.substring(0, url.lastIndexOf(".")) + ".jpg";
-//                        obj.put("url", url);
-//                        obj.put("urlImg", urlImg);
-//                        fileType = "video";
-//                        break;
-//                    case "uploadfile":
-//                        // 转换为swf
-//                        String ext = url.toLowerCase().substring(url.lastIndexOf("."), url.length());
-//                        System.out.println("--ext--" + ext);
-//                        if (".doc.docx.ppt.txt.pptx.pdf".indexOf(ext) != -1) {
-//                            String docFile = uploadPath + url;
-//                            String pdfFile = docFile.substring(0, docFile.lastIndexOf(".")) + ".pdf";
-//                            String swfFile = docFile.substring(0, docFile.lastIndexOf(".")) + ".swf";
-//
-//                            Doc2Swf d = new Doc2Swf();
-//                            String OpenOffice_HOME = PropKit.use("myconfig.properties").get("OpenOffice_HOME");
-//                            if (new File(OpenOffice_HOME).exists() && !ext.equals(".pdf")) {
-//                                d.office2PDF(docFile, pdfFile);
-//                                ext = ".pdf";
-//                            }
-//						/*if(ext.equals(".pdf")){
-//							d.convertFileToSwf(pdfFile,swfFile);
-//						}*/
-//                            //url=url.substring(0, url.lastIndexOf("."))+".swf";
-//                            //obj.put("url", url);
-//                        }
-//                        fileType = "file";
-//                        break;
-//                    case "uploadimage":
-//                        // 水印
-//                        //String watermark = "";
-//                        if (StrKit.notBlank(watermark)) {
-//                            WatermarkService ws = new WatermarkService();
-//                            Watermark w = Watermark.dao.findById(Site.dao.findById(currentSite.getStr("keyid")).getStr("WaterMarkID"));
-//                            if (w != null) {
-//                                url = ws.addMark(uploadPath + url, url, w, watermark);
-//                            }
-//                            System.out.println("--url1--" + url);
-//                            obj.put("url", url);
-//                        }
-//                        fileType = "image";
-//                        break;
-//                    case "catchimage":
-//                        fileType = "image";
-//                        //System.out.println("-----obj--"+obj.getJSONArray("list"));
-//                        for (Object o : obj.getJSONArray("list")) {
-//                            //System.out.println("--o--"+((JSONObject)o).getString("url"));
-//                            JSONObject jo = (JSONObject) o;
-//                            String url1 = jo.getString("url");
-//                            String fileKeyID = url1.substring(url1.lastIndexOf("/") + 1, url1.lastIndexOf(".")).split("_")[0];//视频会在原文件后加_,图片加水印后会在后面加_1
-//
-//                            url1 = webFileService.addFile(tempFile, fileKeyID, MyUtil.getCTX(), currentSite.getStr("siteID"), currentColumnID, currentWebID, MyUtil.getDate(), jo.getString("title"), fileType);
-//                            jo.put("url", url1);
-//                        }
-//					/*JSONArray arr=obj.getJSONArray("list");
-//					for(int i=0;i<arr.size();i++){
-//						System.out.println(""+arr[i].);
-//					}*/
-//                        break;
-//                    default:
-//                }
-//                //System.out.println("--url--"+url);
-//                // 保存数据库
-//                //User user = null;
-//                //System.out.println("--url--"+url);
-//                if (StrKit.notBlank(url)) {
-//                    String fileKeyID = url.substring(url.lastIndexOf("/") + 1, url.lastIndexOf(".")).split("_")[0];//视频会在原文件后加_,图片加水印后会在后面加_1
-//
-//                    System.out.println("--uploadPath+url------------------------------------------------------------------------" + uploadPath + url + "-----fileKeyID-----" + fileKeyID);
-//                    tempFile = uploadPath + obj.getString("url");//添加水印后的新地址
-//                    url = webFileService.addFile(tempFile, fileKeyID, MyUtil.getCTX(), currentSite.getStr("siteID"), currentColumnID, currentWebID, MyUtil.getDate(), obj.getString("original"), fileType);
-//                    obj.put("url", url);
-//                   // logger.info("/myconsole/ueditor/url:{}",url);
-//                    if (obj.get("urlImg") != null) {
-//                        String urlImg = (String) obj.get("urlImg");
-//                       // logger.info("/myconsole/ueditor/urlImg:{}",urlImg);
-//                        //System.out.println("--uploadPath+urlImg-----------------------------------------------------"+uploadPath+urlImg);
-//                        urlImg = webFileService.addFile(uploadPath + urlImg, fileKeyID + "1", MyUtil.getCTX(), currentSite.getStr("siteID"), currentColumnID, currentWebID, MyUtil.getDate(), obj.getString("original"), "image");
-//                        obj.put("urlImg", urlImg);
-//                    }
-//                    Log.dao.recordLog(fileKeyID, "信息发布", "上传", "上传类型：" + action + "，url地址：" + obj.get("url"), user);
-//                    if (StringUtils.equals(action, "uploadvideo")) {
-//                        String videoUrl = "/videoplay?webFileId=" + fileKeyID;
-//                        // 将返回值url重写为修改后的地址，请求VideoPlayController 中的index方法
-//                        obj.put("url", videoUrl);
-//                    }
-//                }
-//            }
-//        }catch (Exception e) {
-//           // logger.info("/myconsole/ueditor出错了:{}",e);
-//            e.printStackTrace();
-//        }
-//        renderHtml(JSON.toJSONString(obj));
-//
-//	}
-	
-	
+
 	/**
 	 * 文件上传接口
 	 * @param pdf
@@ -439,7 +301,12 @@ public class XlglDocumentFileController{
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
-				bis.close();
+				if(bis != null){
+					bis.close();
+				}
+				if(os != null){
+					os.close();
+				}
 			}
 		}
 	}
