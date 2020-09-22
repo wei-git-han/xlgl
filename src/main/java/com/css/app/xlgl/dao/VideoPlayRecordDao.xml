@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.daoVideoPlayRecordDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.VideoPlayRecord">
+		select * from VIDEO_PLAY_RECORD where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.VideoPlayRecord">
+		select * from VIDEO_PLAY_RECORD 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from VIDEO_PLAY_RECORD 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.VideoPlayRecord">
+		insert into VIDEO_PLAY_RECORD
+		(
+			"ID", 
+			"FILE_ID", 
+			"VIDEO_ID", 
+			"USER_ID", 
+			"SUM_TIME", 
+			"CURENT_TIME", 
+			"CREATE_TIME"
+		)
+		values
+		(
+			#{id}, 
+			#{fileId}, 
+			#{videoId}, 
+			#{userId}, 
+			#{sumTime}, 
+			#{curentTime}, 
+			#{createTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.VideoPlayRecord">
+		update VIDEO_PLAY_RECORD 
+		<set>
+			<if test="fileId != null">"FILE_ID" = #{fileId}, </if>
+			<if test="videoId != null">"VIDEO_ID" = #{videoId}, </if>
+			<if test="userId != null">"USER_ID" = #{userId}, </if>
+			<if test="sumTime != null">"SUM_TIME" = #{sumTime}, </if>
+			<if test="curentTime != null">"CURENT_TIME" = #{curentTime}, </if>
+			<if test="createTime != null">"CREATE_TIME" = #{createTime}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from VIDEO_PLAY_RECORD where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from VIDEO_PLAY_RECORD where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
