@@ -293,10 +293,11 @@ public class PeopleManagementController {
 			DecimalFormat decimalFormat = new DecimalFormat("0.00");
 			if(userIdList > 0) {
 				if(object > 0){
-
-					float zwRate = (float) ((new BigDecimal((float) sum / object).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()) * 100);
+					//float zwRate = (float) ((new BigDecimal((float) object / userIdList).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()) * 100);
+					float zwRate =((float)userIdList/(float)sum)*100;
+					String format = decimalFormat.format(zwRate);
 					if(zwRate > 0) {
-						jsonData.put("zwlv", zwRate-1);
+						jsonData.put("zwlv", format);
 					}else {
 						jsonData.put("zwlv", "0");
 					}
