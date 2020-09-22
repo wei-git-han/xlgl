@@ -101,10 +101,11 @@ public class XlglWarSpecialtyController {
 
 	/**
 	 * 信息
+	 * type 0是详情 1是编辑
 	 */
 	@ResponseBody
 	@RequestMapping("/info")
-	public void info(String id) {
+	public void info(String id,String type) {
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		Map<String, Object> map = new HashMap<>();
 		map.put("specialtyId", id);
@@ -133,8 +134,8 @@ public class XlglWarSpecialtyController {
 		}
 		xlglWarSpecialty.setAccessoryFileArray(list);
 
-		// 修改浏览次数
-		if (xlglWarSpecialty.getViewNumber() != null) {
+		// 修改浏览次数,只能是详情模式才能
+		if (xlglWarSpecialty.getViewNumber() != null && "0".equals(type)) {
 			xlglWarSpecialty.setViewNumber(xlglWarSpecialty.getViewNumber() + 1);
 		} else {
 

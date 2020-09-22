@@ -103,10 +103,11 @@ public class XlglWarCommonSportsController {
 
 	/**
 	 * 信息
+	 * type 0是详情 1是编辑
 	 */
 	@ResponseBody
 	@RequestMapping("/info")
-	public void info(String id) {
+	public void info(String id,String type) {
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		Map<String, Object> map = new HashMap<>();
 		map.put("sportsId", id);
@@ -135,8 +136,8 @@ public class XlglWarCommonSportsController {
 		}
 		xlglWarCommonSports.setAccessoryFileArray(list);
 
-		// 修改浏览次数
-		if (xlglWarCommonSports.getViewNumber() != null) {
+		// 修改浏览次数,只有详情才会浏览量加1
+		if (xlglWarCommonSports.getViewNumber() != null && "0".equals(type)) {
 			xlglWarCommonSports.setViewNumber(xlglWarCommonSports.getViewNumber() + 1);
 		} else {
 			xlglWarCommonSports.setViewNumber(1);

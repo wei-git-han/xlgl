@@ -102,10 +102,11 @@ public class XlglWarCommonWeaponController {
 
 	/**
 	 * 信息
+	 * type 0是详情 1是编辑
 	 */
 	@ResponseBody
 	@RequestMapping("/info")
-	public void info(String id) {
+	public void info(String id,String type) {
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		Map<String, Object> map = new HashMap<>();
 		map.put("weaponId", id);
@@ -134,8 +135,8 @@ public class XlglWarCommonWeaponController {
 		}
 		xlglWarCommonWeapon.setAccessoryFileArray(list);
 
-		// 修改浏览次数
-		if (xlglWarCommonWeapon.getViewNumber() != null) {
+		// 修改浏览次数,详情页浏览量才会加1
+		if (xlglWarCommonWeapon.getViewNumber() != null && "0".equals(type)) {
 			xlglWarCommonWeapon.setViewNumber(xlglWarCommonWeapon.getViewNumber() + 1);
 		} else {
 			xlglWarCommonWeapon.setViewNumber(1);

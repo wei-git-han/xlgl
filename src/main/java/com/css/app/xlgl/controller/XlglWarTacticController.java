@@ -104,10 +104,11 @@ public class XlglWarTacticController {
 
 	/**
 	 * 信息
+	 * type 0是详情 1是编辑
 	 */
 	@ResponseBody
 	@RequestMapping("/info")
-	public void info(String id) {
+	public void info(String id,String type) {
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		Map<String, Object> map = new HashMap<>();
 		map.put("tacticId", id);
@@ -135,8 +136,8 @@ public class XlglWarTacticController {
 			}
 		}
 		xlglWarTactic.setAccessoryFileArray(list);
-		// 修改浏览次数
-		if (xlglWarTactic.getViewNumber() != null) {
+		// 修改浏览次数,只能是详情才会浏览量加1
+		if (xlglWarTactic.getViewNumber() != null && "0".equals(type)) {
 			xlglWarTactic.setViewNumber(xlglWarTactic.getViewNumber() + 1);
 		} else {
 			xlglWarTactic.setViewNumber(1);

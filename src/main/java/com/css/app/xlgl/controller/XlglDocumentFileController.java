@@ -1,7 +1,9 @@
 package com.css.app.xlgl.controller;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.UploadContext;
@@ -385,20 +388,60 @@ public class XlglDocumentFileController{
 	 * 文件下载接口
 	 * @param fileId
 	 */
+//	@ResponseBody
+//	@RequestMapping("/downLoad")
+//	public void downLoad(String fileId) {
+//		if(StringUtils.isNotBlank(fileId)) {
+//			try {
+//				HTTPFile httpFile = new HTTPFile(fileId);
+//				String fileName = httpFile.getFileName();
+//				String sufName = fileName.substring(fileName.indexOf(".")+1,fileName.length());
+//				Response.download(fileName, httpFile.getInputSteam());
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//
+//		}
+//
+//	}
+
 	@ResponseBody
 	@RequestMapping("/downLoad")
-	public void downLoad(String fileId) {
-		if(StringUtils.isNotBlank(fileId)) {
+	public void downLoad(String fileId,HttpServletResponse response) throws IOException {
+		OutputStream os = null;
+		BufferedInputStream bis = null;
+		byte[] buff = new byte[1024];
+		if(StringUtils.isNotBlank(fileId)){
 			try {
 				HTTPFile httpFile = new HTTPFile(fileId);
 				String fileName = httpFile.getFileName();
-				Response.download(fileName, httpFile.getInputSteam());
+				String sufName = fileName.substring(fileName.indexOf(".")+1,fileName.length());
+				if("mp4".equals(sufName) || "ogg".equals(sufName) || "webm".equals(sufName)){
+					response.reset();
+					response.setHeader("Content-Type", "video/mp4");
+					//response.setCharacterEncoding("UTF-8");
+					response.setHeader("Content-Disposition", "attachment;filename=tt.mp4");
+
+				}else {
+					response.reset();
+					response.setContentType("application/octet-stream");
+					response.setCharacterEncoding("UTF-8");
+					response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+				}
+				os = response.getOutputStream();
+				bis = new BufferedInputStream(httpFile.getInputSteam());
+				int i = 0;
+
+				while ((i = bis.read(buff)) != -1) {
+					os.write(buff, 0, i);
+					os.flush();
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
+			} finally {
+				bis.close();
 			}
-
 		}
-
 	}
 	
 	/**

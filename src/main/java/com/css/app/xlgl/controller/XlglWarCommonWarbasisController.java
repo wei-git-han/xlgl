@@ -102,10 +102,11 @@ public class XlglWarCommonWarbasisController {
 
 	/**
 	 * 信息
+	 * type 0是详情 1是编辑
 	 */
 	@ResponseBody
 	@RequestMapping("/info")
-	public void info(String id) {
+	public void info(String id,String type) {
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		Map<String, Object> map = new HashMap<>();
 		map.put("warbasisId", id);
@@ -134,8 +135,8 @@ public class XlglWarCommonWarbasisController {
 		}
 		xlglWarCommonWarbasis.setAccessoryFileArray(list);
 
-		// 修改浏览次数
-		if (xlglWarCommonWarbasis.getViewNumber() != null) {
+		// 修改浏览次数,只有详情页才会浏览量加1
+		if (xlglWarCommonWarbasis.getViewNumber() != null && "0".equals(type)) {
 			xlglWarCommonWarbasis.setViewNumber(xlglWarCommonWarbasis.getViewNumber() + 1);
 		} else {
 			xlglWarCommonWarbasis.setViewNumber(1);

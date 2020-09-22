@@ -97,10 +97,11 @@ public class XlglWarCommonQueueController {
 
 	/**
 	 * 信息
+	 * type 0是详情 1是编辑
 	 */
 	@ResponseBody
 	@RequestMapping("/info")
-	public void info(String id) {
+	public void info(String id,String type) {
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		Map<String, Object> map = new HashMap<>();
 		map.put("queueId", id);
@@ -129,8 +130,8 @@ public class XlglWarCommonQueueController {
 		}
 		xlglWarCommonQueue.setAccessoryFileArray(list);
 
-		// 修改浏览次数
-		if (xlglWarCommonQueue.getViewNumber() != null) {
+		// 修改浏览次数,只有详情才会浏览量加1
+		if (xlglWarCommonQueue.getViewNumber() != null && "0".equals(type)) {
 
 			xlglWarCommonQueue.setViewNumber(xlglWarCommonQueue.getViewNumber() + 1);
 		} else {
