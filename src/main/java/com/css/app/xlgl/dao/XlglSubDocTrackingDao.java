@@ -48,6 +48,8 @@ public interface XlglSubDocTrackingDao extends BaseDao<XlglSubDocTracking> {
     //@Select("select INFO_ID from XLGL_SUB_DOC_TRACKING where RECEIVER_ID = #{0} and BAOMING = #{1}")
     List<XlglSubDocTracking> queryAllInfos(Map<String,Object> map1);
 
+    List<XlglSubDocTracking> queryAllInfoHistory(Map<String,Object> map1);
+
 
     List<XlglSubDocTracking> queryAllYear(Map<String,Object> map1);
 
