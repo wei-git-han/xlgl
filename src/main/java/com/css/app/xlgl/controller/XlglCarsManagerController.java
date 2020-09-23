@@ -191,7 +191,7 @@ public class XlglCarsManagerController {
 	}
 
 	/**
-	 * 该方法只是上传，没有进行转版
+	 * 该方法只是上传，没有进行转版，是正常好使的方法
 	 * 该方法是好用的
 	 * @param file
 	 */
