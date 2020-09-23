@@ -9,10 +9,22 @@
 		"setCompsiteEnable" : {
 			args : [ "cmpName", "isEnable" ]
 		},
+		// 3.2.1-s 设置元素可用性-标准
+		"setCompositeEnable" : {
+			real : "setCompsiteEnable",
+			args : [ "cmpName", "isEnable" ]
+		},
 		// 3.2.2 设置元素可见性
 		"setCompsiteVisible" : {
 			args : [ "cmpName", "isVisible" ]
 		},
+
+		// 3.2.2-s 设置元素可见性-标准
+		"setCompositeVisible" : {
+			real : "setCompsiteVisible",
+			args : [ "cmpName", "isVisible" ]
+		},
+
 		// 兼容四院要求
 		"setCompositeVisible" : {
 			real : "setCompsiteVisible",
@@ -196,7 +208,10 @@
 		"setPrintResolution":{
 			args : [ "printDpi" ]
 		},
-		
+		//通过参数设置打印文档的属性
+		"printFileBySetting":{
+				args : [ "printSetting" ]
+		},
 		// 3.4.1 设置内容(兼容老版本，已不推荐使用)
 		"setEDFContent" : {
 			args : [ "content" ]
@@ -225,25 +240,28 @@
 		 "setClipboardMonitor" :{
 		 	args : ["bMonitor"]
 		 },
-		
+
 		//3.4.8　火狐关闭网页有弹出对话框崩溃的解决
 		"closeFireFox":{
 			args : [""]
+		},//3.4.9　关闭浏览器不弹出保存确认对话框
+		"closeBrowser":{
+			args : [""]
 		},
-		// 3.5.1 打开文件
+		// 3.5.1 打开远程文件，并可设置是否只读状态
 		"openFile" : {
 			real : "openFile2",
 			args : [ "path", "readeOnly" ]
 		},
-    "openurl":{
+       "openurl":{
         	 args : [ "open_url","save_url","readeOnly"]
         },
-		// 3.5.2 打开内容服务文件
+		// 3.5.2 打开远程文件，可编辑状态
 		"openFileOld" : {
 			real : "openFile",
 			args : [ "path"]
 		},
-				// 3.5.2 打开内容服务文件
+		// 3.5.2 打开内容服务文件
 		"openSvcFile" : {
 			args : [ "svcAddr", "docId" ]
 		},
@@ -255,7 +273,7 @@
 		"downloadFile":{
 			args : [ "filename", "param" ]
 		},
-		
+
 		// 3.5.5 打印文件
 		"printFileCopies" : {
 			args : [ "copies" ]
@@ -298,7 +316,7 @@
 		"excuteOperation" : {
 			args : [ "commandXML" ]
 		},
-		
+
 		// 3.5.14 导入语义模板
 		"importSinemaTemp" : {
 			args : [ "param" ]
@@ -307,15 +325,17 @@
 		"validSignature":{
 				args : [ "online","signIds" ]
 		},
+		//3.3.11　获取阅读器版本信息项
 	    "version":{
 			args : [ ]
 		},
-            //3.5.6设置远程打开文件的临时文件模式
+       //3.5.6设置远程打开文件的临时文件模式
 	    "setEncryptTempFile":{
 		  args : ["bEncrypt"]
              },
+		//3.5.17全屏显示功能
 		"readerFullScreen":{
-	  	args : [ ]
+	     	args : [ ]
 	      },
 	      //3.6.1　异步下载接口
 	   "downloadHttpFile":{
@@ -329,11 +349,19 @@
         "uploadLocalFile":{
         	 args : [ "url","localFileName"]
         },
+		//3.5.20客户端转换接口
+		"openOfficeFile":{
+			args : [ "filename","suffixes"]
+		},
+		//3.5.21客户端注册接口
+		"setRegistrationInfo":{
+			args : [ "projectInfo","registration"]
+		},
         //3.5.22查找文本接口
         "searchText":{
         	 args : [ "keyword","bCaseSensitive","bWholeWord","bForward" ]
         },
-        //1.2.23清空所有注释
+        //3.5.23清空注释
         "clearHandwrittenAnnotation":{
         	args:[]
         },
@@ -343,18 +371,136 @@
         },
          //3.3.10保存配置信息项
         "saveConfigInfoToIni":{
-        	args : [ "tag","tagVal"]
-        },
-		//3.3.11设置用户User Agent标示
-        "setUserAgent":{
-        	args : [ "url" ]
+        	args : [ "svraddr","url"]
         },
         //3.1.2退出插件及阅读器
         "exit":{
 			args : []
 		},
-		"addWaterMakerAnnot":{
-		args : [ "watermaker" ]
+		//3.4.11获得文档中签章个数
+		"getSignaturesCount":{
+			args:["type"]
+		},
+		//3.3.12　设置文本框常用意见信息项
+		"setFreqUsedComments":{
+			args:["comments"]
+		},
+		//3.3.13　自定义文本框落款
+		"setCommentsSignInfo":{
+			args:["signinfo"]
+		},
+		//3.4.10获取当前文档是否处于编辑状态
+		"isDocumentModified":{
+			args : []
+		},
+		//3.4.8获取组件中当前在阅读状态的文档打开后的修改状态
+		"isDocumentModifiedAfterOpen":{
+			args : []
+		},
+		//3.3.14　打印时是否带章
+		"setPrintSealEnable":{
+			args:["isEnable"]
+		},
+		//在线文件脱密并下载到本地
+		"decryptAllSeals":{
+			args:["bBlack","fileName"]
+		},
+		//3.5.25添加远程橡皮图章地址
+		"addStampUrl":{
+			args:["url"]
+		},
+		//3.3.15设置打印弹出对话框的复选框组件是否可用。
+		"setPrintCompsiteEnable":{
+			args:["cmpName","bEnable"]
+		},
+		//3.3.15设置打印弹出对话框的复选框组件是否选中。
+		"setPrintCompsiteChecked":{
+			args:["cmpName","bChecked"]
+		},
+		//3.5.15　验证签名2
+		"validSignatureWithResult":{
+				args : [ "online","signIds" ]
+		},
+		//3.3.17　添加文本注释
+		"addFreeText":{
+				args : [ "text"]
+				//参数说明：
+				//string型， 文本批注的json串。
+				//例var json='{"text":"1231231231","page-index":"1","pos-x":"10","pos-y":"10","font-family":"simsun","font-size":"36","font-style":"italic","font-weight":"bold","font-color":"#ff0000"}';
+				//参数说明：
+					//addFreeText 添加文本批注(文本框注释)
+					//reetextInfo json格式文本批注内容以及内容格式设置
+					//text         文字内容
+					//page-index   页码(从1开始)
+					//pos-x        位置距离页面左侧的偏移量（单位：毫米）
+					//pos-y        位置距离页面上方的偏移量（单位：毫米）
+					//font-family  字体名称
+					//font-size    字号（单位：磅）
+					//font-style   斜体,取值：normal/italic
+					//font-weight  粗体,取值：normal/bold
+					//font-color   字体颜色,例如 "#000000"
+				//返回值说明：
+					//string型， 文本批注的id，可用于删除和修改批注。
+		},
+      //3.3.18　获取文本注释
+		"getFreeTextContentById ":{
+				args : [ "id"]
+				//版本：20180328后的版本
+				//接口原型：
+				   //String getFreeTextContentById(string id);
+				//参数说明：
+				//string型， 文本批注的id。
+				//返回值说明：
+				//string型， 文本批注的字符串。
+		},
+		//3.3.19 修改文本注释内容
+		"modifyFreeTextById":{
+				args : ["id","text"]
+				//版本：20180404后的版本
+				//接口原型：
+					//bool  modifyFreeTextById(string id,String text);
+				//参数说明：
+				//string型， 要修改内容的文本批注id。
+				//string型， 新的文本批注内容。
+				//返回值说明：
+					//bool  型，是否修改成功
+		},
+		//3.3.20 删除权限范围内的所有文本注释
+		"deleteAllFreeTextBy":{
+				args : ["user","datatag"]
+				//版本：20180404后的版本
+				//接口原型：
+					//void deleteAllFreeTextBy(String user,String datatag);
+				//参数说明：
+				//string型， 欲删除的用户id。
+				//string型， 欲删除的节点id。
+				//返回值说明：
+					//无
+		},
+		//3.3.21　添加图片接口
+		"addWaterImageAnnot":{
+			args : ["imagInfo"]
+			//版本：20180404后的版本
+			//接口原型：
+				//ocx.addWaterImageAnnot(string imagInfo);
+			//参数说明：
+			//string型， 欲添加图片的信息，json形式。
+			//var json='{"image":"imagpath/base64code","vflag":"top","hflag":"left","pos-x":"10","pos-y":"10","rotate":"0","gray":"false","scale":"100","range":"all"}';
+			//属性说明：//注意:xpos和ypos属于自定义位置，默认为空，在有实值的情况下水平位置(hflag)和垂直位置(vflag)则无效
+				//hflag: 水平位置:left|center|right;
+				//vflag: 垂直位置:top|middle|bottom;
+				//pos-x: 自定义位置点X，单位毫米;
+				//pos-y: 自定义位置点Y，单位毫米;
+			   //rotate: 旋转/角度值(0-360);
+			   //gray:图片置灰(true|false);//注意：透明背景的png图片灰度会把透明背景也做灰度处理。效果不好。
+			   //scale:比例缩放(0-100);//100代表缩放100%,即图片原始大小，100以后待调整整体比例
+			   //Range: 水印作用范围(默认为当前页面|'all'|'1,2,3'|'1-3'|'1,2,3,5-7');
+					  //"all":全部页面, "1,2,3":页面1,2,3;
+				//imagepath/base64：图片可以通过本地imagepath和图片base64的方式将图片内容传入阅读器插件。Imagepath建议为png格式。其它格式建议以base64的方式传入。
+			//返回值说明：无
+		},
+		"setNavigatorVisible" : {
+			args : [ "name", "visible" ]
 		}
 	},
 
@@ -398,6 +544,9 @@ var OFD = (function(_w) {
 		// 关闭当前文件
 		"closeFile" : {
 			args : []
+		},
+		"setNavigatorVisible" : {
+			args : [ "name", "visible" ]
 		}
 	};
 
@@ -720,7 +869,7 @@ var OFD = (function(_w) {
 
 				var html = "OFD阅读控件没有正确安装，请下载安装！";
 				if (Tool.isValid(this.cfg.downURL)) {
-					html += "<a href='"// 
+					html += "<a href='"//
 							+ this.cfg.downURL //
 							+ "' target='_blank'>&gt;&gt;&gt;&gt;&nbsp;&nbsp;下载&nbsp;&nbsp;&lt;&lt;&lt;&lt;</a>";
 				}
@@ -749,16 +898,16 @@ var OFD = (function(_w) {
 
 		} catch (e) {
 
-			
+
 				try {// 判断是否安装OFD阅读器
 					var axo = new ActiveXObject(Constant.ACTIVE_NAME_OLD);
 					return true;
-				
+
 				} catch (e) {
-					
+
 					var html = "OFD阅读控件没有正确安装，请下载安装！";
 					if (Tool.isValid(this.cfg.downURL)) {
-						html += "<a href='"// 
+						html += "<a href='"//
 								+ this.cfg.downURL //
 								+ "' target='_blank'>&gt;&gt;&gt;&gt;&nbsp;&nbsp;下载&nbsp;&nbsp;&lt;&lt;&lt;&lt;</a>";
 					}
@@ -766,7 +915,7 @@ var OFD = (function(_w) {
 				// "<br>由于安装程序会更改IE的安全设置并注册dll文件，安全软件可能会弹出安全警告，允许本软件继续即可。<br>建议使用管理员权限运行本软件。";
 				this.message(html, "warn");
 			}
-				
+
 		}
 	} else {
 		this.message("无法显示ActiveX控件,请使用IE访问", "warn");
@@ -873,10 +1022,10 @@ var OFD = (function(_w) {
 			}
 
 			var o = Tool._$(this.id);
-			if (Tool.isNull(o)) {// 判断是否有对象
-				this.message("控件未正确初始化!");
-				return;
-			}
+			//if (Tool.isNull(o)) {// 判断是否有对象
+			//	this.message("控件未正确初始化!");
+			//	return;
+			//}
 			// 赋值,很重要
 			this.obj = o;
 			// private
@@ -1096,6 +1245,7 @@ var height;
 suwell.ofdReaderInit = function(divID, width, height) {
 	this.width=width;
 	this.height=height;
+
 	return OFD.OCX.init(divID, width, height);
 };
 // 加载并初始化转换器OCX控件
