@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="340px" height="110px" viewBox="0 0 340 110" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->
+    <title>junshitiyu</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="-2.48949813e-15%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#FCBF1A" offset="0%"></stop>
+            <stop stop-color="#FF853E" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-2" x="0" y="0" width="340" height="110" rx="4"></rect>
+    </defs>
+    <g id="训管动态" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="部分切图" transform="translate(-1255.000000, -350.000000)">
+            <g id="junshitiyu" transform="translate(1255.000000, 350.000000)">
+                <g id="benzhou">
+                    <mask id="mask-3" fill="white">
+                        <use xlink:href="#path-2"></use>
+                    </mask>
+                    <use id="Mask" fill="url(#linearGradient-1)" xlink:href="#path-2"></use>
+                    <g mask="url(#mask-3)" id="分组" opacity="0.304757254">
+                        <g transform="translate(0.000000, 40.000000)">
+                            <g>
+                                <path d="M7.2,70.826087 L16.8,70.826087 L16.8,30.173913 L7.2,30.173913 L7.2,70.826087 Z M18.4615385,78 L5.53846154,78 C2.48492308,78 0,75.6119355 0,72.6774194 L0,28.3225806 C0,25.3880645 2.48492308,23 5.53846154,23 L18.4615385,23 C21.5150769,23 24,25.3880645 24,28.3225806 L24,72.6774194 C24,75.6119355 21.5150769,78 18.4615385,78 L18.4615385,78 Z" id="Fill-1" fill="#FFFFFF"></path>
+                                <path d="M66.6,70.0625 L75.4,70.0625 L75.4,46.9375 L66.6,46.9375 L66.6,70.0625 Z M76.9230769,77 L65.0769231,77 C62.2778462,77 60,74.6284762 60,71.7142857 L60,45.2857143 C60,42.3715238 62.2778462,40 65.0769231,40 L76.9230769,40 C79.7221538,40 82,42.3715238 82,45.2857143 L82,71.7142857 C82,74.6284762 79.7221538,77 76.9230769,77 L76.9230769,77 Z" id="Fill-3" fill="#FFFFFF"></path>
+                                <path d="M38.3333333,72.7272727 L45.6666667,72.7272727 L45.6666667,7.27272727 L38.3333333,7.27272727 L38.3333333,72.7272727 Z M47.9230769,80 L36.0769231,80 C33.2778462,80 31,77.6591304 31,74.7826087 L31,5.2173913 C31,2.34086957 33.2778462,0 36.0769231,0 L47.9230769,0 C50.7221538,0 53,2.34086957 53,5.2173913 L53,74.7826087 C53,77.6591304 50.7221538,80 47.9230769,80 L47.9230769,80 Z" id="Fill-4" fill="#FFFFFF"></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
