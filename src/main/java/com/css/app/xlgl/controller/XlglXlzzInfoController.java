@@ -1218,7 +1218,8 @@ public class XlglXlzzInfoController {
 		if (infoIds != null && infoIds.length > 0) {
 			for (int i = 0; i < infoIds.length; i++) {
 				String infoId = infoIds[i];
-				int yxSum = xlglSubDocTrackingService.queryCxCount(map);
+				map.put("infoId",infoId);
+				int yxSum = xlglSubDocTrackingService.queryCxCount(map);//单一课程所有参训的人
 				cxSum += yxSum;
 			}
 			sum = baseAppUserService.queryListAllYxCount() * infoIds.length;
