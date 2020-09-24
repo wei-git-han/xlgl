@@ -92,6 +92,16 @@ public class XlglSubDocTracking implements Serializable {
 	//0已接收、1未接受、2已报名、3延后参训
 	private String sumStatus;
 
+	private String creatorName;
+
+	public String getCreatorName() {
+		return creatorName;
+	}
+
+	public void setCreatorName(String creatorName) {
+		this.creatorName = creatorName;
+	}
+
 	public String getSumStatus() {
 		return sumStatus;
 	}

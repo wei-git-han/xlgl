@@ -73,6 +73,16 @@ public class XlglXlzzInfo implements Serializable {
 	private String infoId;
 	//排序
 	private String sort;
+	//创建人名字
+	private String creatorName;
+
+	public String getCreatorName() {
+		return creatorName;
+	}
+
+	public void setCreatorName(String creatorName) {
+		this.creatorName = creatorName;
+	}
 
 	public String getSort() {
 		return sort;
