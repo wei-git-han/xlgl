@@ -94,6 +94,11 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 	}
 
 	@Override
+	public List<XlglSubDocTracking> queryAllInfoHistory(Map<String,Object> map1){
+		return xlglSubDocTrackingDao.queryAllInfoHistory(map1);
+	}
+
+	@Override
 	public List<XlglSubDocTracking> queryAllYear(Map<String,Object> map1){
 		return xlglSubDocTrackingDao.queryAllYear(map1);
 	}

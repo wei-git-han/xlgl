@@ -19,312 +19,349 @@
 		<!--and EXERCISE_TIME &lt; to_date(#{time},'yyyy-mm-dd HH24:mi:ss')-->
 		<!--</if>-->
 
-		<if test="type == 0">
-			and IS_WORK  = '0'
-		</if>
-		<if test="type == 1">
-			and IS_WORK = '1'
-		</if>
+		and BAOMING = '1' and IS_WORK = '0'
 
 		<if test="search != null and search !=''">
 			and TITLE  like '%'||#{search}||'%'
 		</if>
-		<if test="offset != null and limit != null">
-			limit #{offset}, #{limit}
-		</if>
-		order by CREATED_TIME desc
-	</select>
+		<!--<if test="offset != null and limit != null">-->
+			<!--limit #{offset}, #{limit}-->
+		<!--</if>-->
 
-	<select id="queryBySort" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
-		select * from ( select ROW_NUMBER() OVER(order by t.EXERCISE_TIME desc ) as SORT, t.* from XLGL_SUB_DOC_TRACKING t where 1=1
-            <if test="receiveId != null and receiveId !=''">
-				and RECEIVER_ID = #{receiveId}
-			</if> )
-         where 1=1
-		<if test="sortPre != null and sortPre !=''">
-			and SORT = #{sortPre}
-		</if>
-		<if test="sortSuf != null and sortSuf !=''">
-			or SORT = #{sortSuf}
-		</if>
-		<if test="time != null and time !=''">
-			and EXERCISE_TIME > to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
-		</if>
-
-	</select>
-
-	<select id="queryCxAllCount" resultType="int">
-		select count(1) from XLGL_SUB_DOC_TRACKING where 1=1
-		<if test="infoId != null and infoId !=''">
-			and INFO_ID = #{infoId}
-		</if>
-		and RECEIVER_ID in
-		(
-		select
-		USER_ID
-		from
-		BASE_APP_USER
-		where
-		ORGANID in
-		(
-		select
-		id
-		from
-		BASE_APP_ORGAN start
-		with ID = #{orgId}
-		and ISDELETE=0 connect by prior ID = PARENT_ID
-		)) and IS_WORK = '1'
-
-	</select>
-
-	<select id="queryAllYear" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
-		select * from XLGL_SUB_DOC_TRACKING where 1=1
+		union  all
+		select * from XLGL_SUB_DOC_TRACKING where 1=1 and XLTYPE = '0'
 		<if test="userId != null and userId !=''">
 			and RECEIVER_ID = #{userId}
 		</if>
+		and BAOMING = '2'
 		<if test="search != null and search !=''">
 			and TITLE  like '%'||#{search}||'%'
 		</if>
-		<if test="offset != null and limit != null">
+
+
+		UNION  ALL
+		select * from XLGL_SUB_DOC_TRACKING where 1=1 and XLTYPE = '0'
+		<if test="userId != null and userId !=''">
+			and RECEIVER_ID = #{userId}
+		</if>
+		AND BAOMING = '0' AND EXERCISE_TIME &lt; to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
+		<if test="offset != null and limit != null">-->
 			limit #{offset}, #{limit}
-		</if>
-		order by CREATED_TIME desc
-	</select>
+			</if>
+        </select>
+
+        <select id="queryAllInfoHistory" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
+            select * from XLGL_SUB_DOC_TRACKING where 1=1 and XLTYPE = '0'
+            <if test="userId != null and userId !=''">
+                and RECEIVER_ID = #{userId}
+            </if>
+                and IS_WORK = '1'
+
+            <if test="search != null and search !=''">
+                and TITLE  like '%'||#{search}||'%'
+            </if>
+            <if test="offset != null and limit != null">
+                limit #{offset}, #{limit}
+            </if>
+            order by CREATED_TIME desc
+        </select>
+
+        <select id="queryBySort" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
+            select * from ( select ROW_NUMBER() OVER(order by t.EXERCISE_TIME desc ) as SORT, t.* from XLGL_SUB_DOC_TRACKING t where 1=1
+                <if test="receiveId != null and receiveId !=''">
+                    and RECEIVER_ID = #{receiveId}
+                </if> )
+             where 1=1
+            <if test="sortPre != null and sortPre !=''">
+                and SORT = #{sortPre}
+            </if>
+            <if test="sortSuf != null and sortSuf !=''">
+                or SORT = #{sortSuf}
+            </if>
+            <if test="time != null and time !=''">
+                and EXERCISE_TIME > to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
+            </if>
+
+        </select>
+
+        <select id="queryCxAllCount" resultType="int">
+            select count(1) from XLGL_SUB_DOC_TRACKING where 1=1
+            <if test="infoId != null and infoId !=''">
+                and INFO_ID = #{infoId}
+            </if>
+            and RECEIVER_ID in
+            (
+            select
+            USER_ID
+            from
+            BASE_APP_USER
+            where
+            ORGANID in
+            (
+            select
+            id
+            from
+            BASE_APP_ORGAN start
+            with ID = #{orgId}
+            and ISDELETE=0 connect by prior ID = PARENT_ID
+            )) and IS_WORK = '1'
+
+        </select>
+
+        <select id="queryAllYear" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
+            select * from XLGL_SUB_DOC_TRACKING where 1=1
+            <if test="userId != null and userId !=''">
+                and RECEIVER_ID = #{userId}
+            </if>
+            <if test="search != null and search !=''">
+                and TITLE  like '%'||#{search}||'%'
+            </if>
+            <if test="year != null and year !=''">
+                and CREATED_TIME not like '%'||#{year}||'%'
+            </if>
+            <if test="offset != null and limit != null">
+                limit #{offset}, #{limit}
+            </if>
+            order by CREATED_TIME desc
+        </select>
 
 
 
 
-	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
-		select * from XLGL_SUB_DOC_TRACKING  where 1=1
+        <select id="queryList" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
+            select * from XLGL_SUB_DOC_TRACKING  where 1=1
 
-		<if test="INFO_ID != null and INFO_ID !=''">
-			and INFO_ID = #{INFO_ID}
-		</if>
-		<if test="receiverName != null and receiverName !=''">
-			and RECEIVER_NAME like '%'|| #{receiverName}||'%'
-		</if>
-		<if test="recDeptId != null and recDeptId !=''">
-			and REC_DEPT_ID = #{recDeptId}
-		</if>
-		<if test="isWork != null and isWork !=''">
-			and IS_WORK = #{isWork}
-		</if>
-		<if test="read != null and read !=''">
-			and READ = #{read}
-		</if>
-		<if test="baoming != null and baoming !=''">
-			and BAOMING = #{baoming}
-		</if>
-		<if test="offset != null and limit != null">
-			limit #{offset}, #{limit}
-		</if>
-	</select>
-
-
+            <if test="INFO_ID != null and INFO_ID !=''">
+                and INFO_ID = #{INFO_ID}
+            </if>
+            <if test="receiverName != null and receiverName !=''">
+                and RECEIVER_NAME like '%'|| #{receiverName}||'%'
+            </if>
+            <if test="recDeptId != null and recDeptId !=''">
+                and REC_DEPT_ID = #{recDeptId}
+            </if>
+            <if test="isWork != null and isWork !=''">
+                and IS_WORK = #{isWork}
+            </if>
+            <if test="read != null and read !=''">
+                and READ = #{read}
+            </if>
+            <if test="baoming != null and baoming !=''">
+                and BAOMING = #{baoming}
+            </if>
+            <if test="offset != null and limit != null">
+                limit #{offset}, #{limit}
+            </if>
+        </select>
 
 
 
 
 
-	<select id="queryCurrentYear" resultType="int">
-		select count(1) from XLGL_SUB_DOC_TRACKING where 1=1
-		<if test="userId != null and userId !=''">
-			and RECEIVER_ID =#{userId}
-		</if>
-		<if test="year != null and year !=''">
-			and CREATED_TIME like '%'||#{year}||'%'
-		</if>
-	</select>
 
-	<select id="queryCxCount" resultType="int">
-		select count(1) from XLGL_SUB_DOC_TRACKING where 1=1
-		<if test="userId != null and userId !=''">
-			and RECEIVER_ID =#{userId}
-		</if>
-		<if test="year != null and year !=''">
-			and CREATED_TIME like '%'||#{year}||'%'
-		</if>
-		and IS_WORK = '1'
-	</select>
 
-	<select id="queryBkCount" resultType="int">
-		select count(1) from XLGL_SUB_DOC_TRACKING where 1=1
-		<if test="userId != null and userId !=''">
-			and RECEIVER_ID =#{userId}
-		</if>
-		<if test="year != null and year !=''">
-			and CREATED_TIME like '%'||#{year}||'%'
-		</if>
-		and BAOMING = '2'
-	</select>
+        <select id="queryCurrentYear" resultType="int">
+            select count(1) from XLGL_SUB_DOC_TRACKING where 1=1
+            <if test="userId != null and userId !=''">
+                and RECEIVER_ID =#{userId}
+            </if>
+            <if test="year != null and year !=''">
+                and CREATED_TIME like '%'||#{year}||'%'
+            </if>
+        </select>
 
-	<select id="queryBmCount" resultType="int">
-		select count(1) from XLGL_SUB_DOC_TRACKING where 1=1
-		<if test="userId != null and userId !=''">
-			and RECEIVER_ID =#{userId}
-		</if>
-		<if test="year != null and year !=''">
-			and CREATED_TIME like '%'||#{year}||'%'
-		</if>
-		and BAOMING = '1' and TRACKING_TYPE = '1'
-	</select>
+        <select id="queryCxCount" resultType="int">
+            select count(1) from XLGL_SUB_DOC_TRACKING where 1=1
+            <if test="userId != null and userId !=''">
+                and RECEIVER_ID =#{userId}
+            </if>
+            <if test="year != null and year !=''">
+                and CREATED_TIME like '%'||#{year}||'%'
+            </if>
+            <if test="infoId != null and infoId !=''">
+                and INFO_ID = #{infoId}
+            </if>
+            and IS_WORK = '1'
+        </select>
 
-	<select id="queryListForPerson1" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
-		select * from XLGL_SUB_DOC_TRACKING where 1=1
-		<if test="userId != null and userId != ''">
-			 and RECEIVER_ID =#{userId}
-		</if>
-		<if test="time != null ">
-			and EXERCISE_TIME &lt; to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
-		</if>
-		<if test="search != null and search !=''">
-			and TITLE = #{search}
-		</if>
-		<if test="xltype != null and xltype !=''">
-			and XLTYPE = #{xltype}
-		</if>
-		order by CREATED_TIME desc
-	</select>
+        <select id="queryBkCount" resultType="int">
+            select count(1) from XLGL_SUB_DOC_TRACKING where 1=1
+            <if test="userId != null and userId !=''">
+                and RECEIVER_ID =#{userId}
+            </if>
+            <if test="year != null and year !=''">
+                and CREATED_TIME like '%'||#{year}||'%'
+            </if>
+            and BAOMING = '2'
+        </select>
 
-	<select id="queryListForPerson" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
-		select * from XLGL_SUB_DOC_TRACKING where 1=1
-		<if test="userId != null and userId != ''">
-			and RECEIVER_ID =#{userId}
-		</if>
-		<if test="time != null ">
-			and EXERCISE_TIME > to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
-		</if>
-		<if test="search != null and search !=''">
-			and TITLE like '%'||#{search}||'%'
-		</if>
-		<if test="xltype != null and xltype !=''">
-			and XLTYPE = #{xltype}
-		</if>
-		order by CREATED_TIME desc
-	</select>
+        <select id="queryBmCount" resultType="int">
+            select count(1) from XLGL_SUB_DOC_TRACKING where 1=1
+            <if test="userId != null and userId !=''">
+                and RECEIVER_ID =#{userId}
+            </if>
+            <if test="year != null and year !=''">
+                and CREATED_TIME like '%'||#{year}||'%'
+            </if>
+            and BAOMING = '1' and TRACKING_TYPE = '1'
+        </select>
 
-	<select id="queryBmInfo" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
-		select
-        max ( case when a.baoming = '0' then count(id) end ) as baoming,
-        max( case  when a.baoming = '1' then count(id) end)  as wbm    ,
-        max( case  when a.baoming = '2' then count(id) end)  as qj
-        from XLGL_SUB_DOC_TRACKING a where 1=1
-        <if test="info !=null">
-			and INFO_ID = #{info}
-		</if>
-		<if test="deptId != null">
-			and REC_DEPT_ID = #{deptId}
-		</if>
-        group by baoming
+        <select id="queryListForPerson1" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
+            select * from XLGL_SUB_DOC_TRACKING where 1=1
+            <if test="userId != null and userId != ''">
+                 and RECEIVER_ID =#{userId}
+            </if>
+            <if test="time != null ">
+                and EXERCISE_TIME &lt; to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
+            </if>
+            <if test="search != null and search !=''">
+                and TITLE = #{search}
+            </if>
+            <if test="xltype != null and xltype !=''">
+                and XLTYPE = #{xltype}
+            </if>
+            order by CREATED_TIME desc
+        </select>
 
-	</select>
-	
- 	<select id="queryTotal" resultType="int">
-		select count(*) from XLGL_SUB_DOC_TRACKING 
-	</select>
-	 
-	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglSubDocTracking">
-		insert into XLGL_SUB_DOC_TRACKING
-		(
-			"ID", 
-			"SENDER_NAME", 
-			"SEN_DEPT_ID", 
-			"UNDERTAKER", 
-			"CREATED_TIME", 
-			"RECEIVER_NAME", 
-			"RECEIVER_ID", 
-			"SUB_ID", 
-			"IDEA_GROUP_ID", 
-			"TRACKING_TYPE", 
-			"SEN_DEPT_NAME", 
-			"REMARK", 
-			"REC_DEPT_ID", 
-			"PREVIOUS_STATUS", 
-			"SENDER_ID", 
-			"REC_DEPT_NAME",
-			"READ",
-			"INFO_ID",
-			"BAOMING",
-			"REASON",
-			"TITLE",
-			"IS_WORK",
-			"XLTYPE",
-			"PICTURE_PATH",
-			"EXERCISE_TIME",
-			"INSTRACTION"
-		)
-		values
-		(
-			#{id}, 
-			#{senderName}, 
-			#{senDeptId}, 
-			#{undertaker}, 
-			#{createdTime}, 
-			#{receiverName}, 
-			#{receiverId}, 
-			#{subId}, 
-			#{ideaGroupId}, 
-			#{trackingType}, 
-			#{senDeptName}, 
-			#{remark}, 
-			#{recDeptId}, 
-			#{previousStatus}, 
-			#{senderId}, 
-			#{recDeptName},
-			#{read},
-			#{infoId},
-			#{baoming},
-			#{reason},
-			#{title},
-			#{isWork},
-			#{xltype},
-			#{picturePath},
-			#{exerciseTime},
-			#{instraction}
-		)
-	</insert>
-	 
-	<update id="update" parameterType="com.css.app.xlgl.entity.XlglSubDocTracking">
-		update XLGL_SUB_DOC_TRACKING 
-		<set>
-			<if test="senderName != null">"SENDER_NAME" = #{senderName}, </if>
-			<if test="senDeptId != null">"SEN_DEPT_ID" = #{senDeptId}, </if>
-			<if test="undertaker != null">"UNDERTAKER" = #{undertaker}, </if>
-			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
-			<if test="receiverName != null">"RECEIVER_NAME" = #{receiverName}, </if>
-			<if test="receiverId != null">"RECEIVER_ID" = #{receiverId}, </if>
-			<if test="subId != null">"SUB_ID" = #{subId}, </if>
-			<if test="ideaGroupId != null">"IDEA_GROUP_ID" = #{ideaGroupId}, </if>
-			<if test="trackingType != null">"TRACKING_TYPE" = #{trackingType}, </if>
-			<if test="senDeptName != null">"SEN_DEPT_NAME" = #{senDeptName}, </if>
-			<if test="remark != null">"REMARK" = #{remark}, </if>
-			<if test="recDeptId != null">"REC_DEPT_ID" = #{recDeptId}, </if>
-			<if test="previousStatus != null">"PREVIOUS_STATUS" = #{previousStatus}, </if>
-			<if test="senderId != null">"SENDER_ID" = #{senderId}, </if>
-			<if test="recDeptName != null">"REC_DEPT_NAME" = #{recDeptName},</if>
-			<if test="read != null">"READ" = #{read},</if>
-			<if test="infoId != null">"INFO_ID" = #{infoId},</if>
-			<if test="baoming != null">"BAOMING" = #{baoming},</if>
-			<if test="reason != null">"REASON" = #{reason},</if>
-			<if test="title != null">"TITLE" = #{title},</if>
-			<if test="isWork != null">"IS_WORK" = #{isWork},</if>
-			<if test="xltype != null">"XLTYPE" = #{xltype},</if>
-			<if test="picturePath != null">"PICTURE_PATH" = #{picturePath},</if>
-			<if test="exerciseTime != null">"EXERCISE_TIME" = #{exerciseTime},</if>
-			<if test="instraction != null">"INSTRACTION" = #{instraction}</if>
-		</set>
-		where ID = #{id}
-	</update>
-	
-	<delete id="delete">
-		delete from XLGL_SUB_DOC_TRACKING where ID = #{value}
-	</delete>
-	
-	<delete id="deleteBatch">
-		delete from XLGL_SUB_DOC_TRACKING where ID in 
-		<foreach item="id" collection="array" open="(" separator="," close=")">
-			#{id}
-		</foreach>
-	</delete>
+        <select id="queryListForPerson" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
+            select * from XLGL_SUB_DOC_TRACKING where 1=1
+            <if test="userId != null and userId != ''">
+                and RECEIVER_ID =#{userId}
+            </if>
+            <if test="time != null ">
+                and EXERCISE_TIME > to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
+            </if>
+            <if test="search != null and search !=''">
+                and TITLE like '%'||#{search}||'%'
+            </if>
+            <if test="xltype != null and xltype !=''">
+                and XLTYPE = #{xltype}
+            </if>
+            order by CREATED_TIME desc
+        </select>
 
-</mapper>
+        <select id="queryBmInfo" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
+            select
+            max ( case when a.baoming = '0' then count(id) end ) as baoming,
+            max( case  when a.baoming = '1' then count(id) end)  as wbm    ,
+            max( case  when a.baoming = '2' then count(id) end)  as qj
+            from XLGL_SUB_DOC_TRACKING a where 1=1
+            <if test="info !=null">
+                and INFO_ID = #{info}
+            </if>
+            <if test="deptId != null">
+                and REC_DEPT_ID = #{deptId}
+            </if>
+            group by baoming
+
+        </select>
+
+         <select id="queryTotal" resultType="int">
+            select count(*) from XLGL_SUB_DOC_TRACKING
+        </select>
+
+        <insert id="save" parameterType="com.css.app.xlgl.entity.XlglSubDocTracking">
+            insert into XLGL_SUB_DOC_TRACKING
+            (
+                "ID",
+                "SENDER_NAME",
+                "SEN_DEPT_ID",
+                "UNDERTAKER",
+                "CREATED_TIME",
+                "RECEIVER_NAME",
+                "RECEIVER_ID",
+                "SUB_ID",
+                "IDEA_GROUP_ID",
+                "TRACKING_TYPE",
+                "SEN_DEPT_NAME",
+                "REMARK",
+                "REC_DEPT_ID",
+                "PREVIOUS_STATUS",
+                "SENDER_ID",
+                "REC_DEPT_NAME",
+                "READ",
+                "INFO_ID",
+                "BAOMING",
+                "REASON",
+                "TITLE",
+                "IS_WORK",
+                "XLTYPE",
+                "PICTURE_PATH",
+                "EXERCISE_TIME",
+                "INSTRACTION"
+            )
+            values
+            (
+                #{id},
+                #{senderName},
+                #{senDeptId},
+                #{undertaker},
+                #{createdTime},
+                #{receiverName},
+                #{receiverId},
+                #{subId},
+                #{ideaGroupId},
+                #{trackingType},
+                #{senDeptName},
+                #{remark},
+                #{recDeptId},
+                #{previousStatus},
+                #{senderId},
+                #{recDeptName},
+                #{read},
+                #{infoId},
+                #{baoming},
+                #{reason},
+                #{title},
+                #{isWork},
+                #{xltype},
+                #{picturePath},
+                #{exerciseTime},
+                #{instraction}
+            )
+        </insert>
+
+        <update id="update" parameterType="com.css.app.xlgl.entity.XlglSubDocTracking">
+            update XLGL_SUB_DOC_TRACKING
+            <set>
+                <if test="senderName != null">"SENDER_NAME" = #{senderName}, </if>
+                <if test="senDeptId != null">"SEN_DEPT_ID" = #{senDeptId}, </if>
+                <if test="undertaker != null">"UNDERTAKER" = #{undertaker}, </if>
+                <if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
+                <if test="receiverName != null">"RECEIVER_NAME" = #{receiverName}, </if>
+                <if test="receiverId != null">"RECEIVER_ID" = #{receiverId}, </if>
+                <if test="subId != null">"SUB_ID" = #{subId}, </if>
+                <if test="ideaGroupId != null">"IDEA_GROUP_ID" = #{ideaGroupId}, </if>
+                <if test="trackingType != null">"TRACKING_TYPE" = #{trackingType}, </if>
+                <if test="senDeptName != null">"SEN_DEPT_NAME" = #{senDeptName}, </if>
+                <if test="remark != null">"REMARK" = #{remark}, </if>
+                <if test="recDeptId != null">"REC_DEPT_ID" = #{recDeptId}, </if>
+                <if test="previousStatus != null">"PREVIOUS_STATUS" = #{previousStatus}, </if>
+                <if test="senderId != null">"SENDER_ID" = #{senderId}, </if>
+                <if test="recDeptName != null">"REC_DEPT_NAME" = #{recDeptName},</if>
+                <if test="read != null">"READ" = #{read},</if>
+                <if test="infoId != null">"INFO_ID" = #{infoId},</if>
+                <if test="baoming != null">"BAOMING" = #{baoming},</if>
+                <if test="reason != null">"REASON" = #{reason},</if>
+                <if test="title != null">"TITLE" = #{title},</if>
+                <if test="isWork != null">"IS_WORK" = #{isWork},</if>
+                <if test="xltype != null">"XLTYPE" = #{xltype},</if>
+                <if test="picturePath != null">"PICTURE_PATH" = #{picturePath},</if>
+                <if test="exerciseTime != null">"EXERCISE_TIME" = #{exerciseTime},</if>
+                <if test="instraction != null">"INSTRACTION" = #{instraction}</if>
+            </set>
+            where ID = #{id}
+        </update>
+
+        <delete id="delete">
+            delete from XLGL_SUB_DOC_TRACKING where ID = #{value}
+        </delete>
+
+        <delete id="deleteBatch">
+            delete from XLGL_SUB_DOC_TRACKING where ID in
+            <foreach item="id" collection="array" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </delete>
+
+    </mapper>

@@ -16,7 +16,7 @@
         }
         #fileDiv{
             position:absolute;
-            top:50px;
+            top:10px;
             left:0;
             bottom:0;
             width:100%;
@@ -24,14 +24,13 @@
     </style>
 </head>
 <body onload="initObject()">
-    <div style="position:relative;height:99.5%;">
+    <div style="position:relative;height:99%;">
         <div id="fileDiv"></div>
     </div>
     <script src="js/jquery.min.js"></script>
-    <script src="suwell/suwell.js"></script>
     <script src="suwell/suwell_ofdReader.js"></script>
+    <script src="suwell/suwell.js"></script>
     <script>
-        var ocx;
         function initObject()
         {
             //注意：插件宽高设固定值。
@@ -50,7 +49,14 @@
         }
         //打开文件。可以实现打开本地文件。也可实现打开远程文件。
         function openFile(){
-            ocx.openFile("C:/Users/lenovo/WebstormProjects/openLocalFile/data/20200325-测试文件fsfsf.ofd",false);
+            $.ajax({
+            url: '/app/xlgl/xlglcarsmanager/getFile'+window.location.search,
+            method: 'post',
+            success: function(res) {
+                openOFDFile(res.downFormatIdUrl,"fileDiv","100%","100%");
+            }
+        })
+            // ocx.openFile("C:/Users/lenovo/WebstormProjects/openLocalFile/data/20200325-测试文件fsfsf.ofd",false);
         }
 
     </script>

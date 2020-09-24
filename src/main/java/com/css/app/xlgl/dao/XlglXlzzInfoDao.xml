@@ -71,7 +71,8 @@
 			"EXERCISE_ISSUE",
 			"JOIN_PEOPLE",
 			"EXERCISE_TIME",
-			"PICTURE_PATH"
+			"PICTURE_PATH",
+			"CREATOR_NAME"
 		)
 		values
 		(
@@ -95,7 +96,8 @@
 			#{exerciseIssue},
 			#{joinPeople},
 			#{exerciseTime},
-			#{picturePath}
+			#{picturePath},
+			#{creatorName}
 		)
 	</insert>
 	 
@@ -121,7 +123,8 @@
 			<if test="exerciseIssue != null">"EXERCISE_ISSUE" = #{exerciseIssue},</if>
 			<if test="joinPeople != null">"JOIN_PEOPLE" = #{joinPeople},</if>
 			<if test="exerciseTime != null">"EXERCISE_TIME" = #{exerciseTime},</if>
-			<if test="picturePath != null">"PICTURE_PATH" = #{picturePath}</if>
+			<if test="picturePath != null">"PICTURE_PATH" = #{picturePath},</if>
+			<if test="creatorName != null">"CREATOR_NAME" = #{creatorName}</if>
 		</set>
 		where ID = #{id}
 	</update>

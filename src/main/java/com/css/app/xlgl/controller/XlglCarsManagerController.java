@@ -126,7 +126,7 @@ public class XlglCarsManagerController {
 	 *            文件
 	 */
 	@ResponseBody
-	@RequestMapping("/uploadFile111")
+	@RequestMapping("/uploadFile")
 	public void savePDF(@RequestParam(required = false) MultipartFile[] file) {
 		String formatDownPath = "";// 版式文件下载路径
 		String retFormatId = null;// 返回的版式文件id
@@ -174,37 +174,44 @@ public class XlglCarsManagerController {
 						// 保存文件相关数据
 						XlglCarsManager file1 = new XlglCarsManager();
 						file1.setId(UUIDUtils.random());
-						//file.setInfoId(fileId);
+						file1.setInfoId(formatId);
 						file1.setFileName(fileName);
 						file1.setFileServerFormatId(formatId);
+						file1.setCreatedTime(new Date());
 						xlglCarsManagerService.save(file1);
 					}
 				}
 				json.put("smjId", retFormatId);
 				json.put("smjFilePath", formatDownPath);
 				json.put("result", "success");
+				json.put("fileId",retFormatId);
 			}
 
 		Response.json(json);
 	}
 
-	@ResponseBody
-	@RequestMapping("/uploadFile")
-	public void upLoad(@RequestParam(required = false) MultipartFile[] file) {
-		JSONObject json = new JSONObject();
-		String fileId = FileBaseUtil.fileServiceUpload(file[0]);
-		String fileName = file[0].getOriginalFilename();
-		json.put("fileId", fileId);
-		XlglCarsManager file1 = new XlglCarsManager();
-		file1.setId(UUIDUtils.random());
-		file1.setInfoId(fileId);
-		file1.setFileName(fileName);
-		file1.setCreatedTime(new Date());
-		file1.setUploadUser(CurrentUser.getUsername());
-		//file1.setFileServerFormatId(formatId);
-		xlglCarsManagerService.save(file1);
-		Response.json(json);
-	}
+	/**
+	 * 该方法只是上传，没有进行转版，是正常好使的方法
+	 * 该方法是好用的
+	 * @param file
+	 */
+//	@ResponseBody
+//	@RequestMapping("/uploadFile")
+//	public void upLoad(@RequestParam(required = false) MultipartFile[] file) {
+//		JSONObject json = new JSONObject();
+//		String fileId = FileBaseUtil.fileServiceUpload(file[0]);
+//		String fileName = file[0].getOriginalFilename();
+//		json.put("fileId", fileId);
+//		XlglCarsManager file1 = new XlglCarsManager();
+//		file1.setId(UUIDUtils.random());
+//		file1.setInfoId(fileId);
+//		file1.setFileName(fileName);
+//		file1.setCreatedTime(new Date());
+//		file1.setUploadUser(CurrentUser.getUsername());
+//		//file1.setFileServerFormatId(formatId);
+//		xlglCarsManagerService.save(file1);
+//		Response.json(json);
+//	}
 
 	/**
 	 * 下载功能，只能预览
@@ -258,6 +265,21 @@ public class XlglCarsManagerController {
 		List<XlglCarsManager> list = xlglCarsManagerService.queryList(map);
 		Response.json("list",list);
 
+	}
+
+	@ResponseBody
+	@RequestMapping("/getFile")
+	public void getFile(String fileId){
+		JSONObject json= new JSONObject();
+			if(StringUtils.isNotBlank(fileId)){
+				//获取版式文件的下载路径
+				HTTPFile httpFiles = new HTTPFile(fileId);
+				if(httpFiles!=null) {
+					json.put("formatId", fileId);
+					json.put("downFormatIdUrl", httpFiles.getAssginDownloadURL(true));
+				}
+			}
+		Response.json(json);
 	}
 
 
