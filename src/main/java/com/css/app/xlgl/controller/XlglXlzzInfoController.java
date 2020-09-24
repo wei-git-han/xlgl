@@ -1271,7 +1271,7 @@ public class XlglXlzzInfoController {
 		}
 		float DoneLv = 0.0f;
 		if (sum > 0) {
-			DoneLv = (int) ((new BigDecimal((float) cxSum / sum).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()) * 100);
+			DoneLv = (int) ((new BigDecimal((float) cxSum / sum).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue()) * 100);
 		}
 		return DoneLv;
 	}
