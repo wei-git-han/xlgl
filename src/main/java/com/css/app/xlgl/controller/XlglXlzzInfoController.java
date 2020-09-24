@@ -926,6 +926,9 @@ public class XlglXlzzInfoController {
 		Map<String, Object> map1 = new HashMap<>();
 		String userId = CurrentUser.getUserId();
 		JSONArray jsonArray = new JSONArray();
+		Calendar calendar = Calendar.getInstance();
+		int year = calendar.get(Calendar.YEAR);
+		String yearStr = String.valueOf(year);
 		//查出所有的文id
 		map1.put("userId", userId);
 		map1.put("type", type);
@@ -942,6 +945,7 @@ public class XlglXlzzInfoController {
 			}
 
 		} else {
+			map1.put("year",yearStr);
 			listInfoIds = xlglSubDocTrackingService.queryAllYear(map1);
 		}
 		//List<XlglSubDocTracking> listInfoIds = xlglSubDocTrackingService.queryAllInfos(map1);
