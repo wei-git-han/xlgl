@@ -645,6 +645,8 @@ public class XlglXlzzInfoController {
 	public void getDateForAll(String id,String orgId){
 		JSONArray jsonArray = new JSONArray();
 		JSONObject object = new JSONObject();
+		int ycx = 0;
+		int bk = 0;
 		List<BaseAppOrgan> allList = baseAppOrganService.queryPerDept(orgId);
 //		if(allList != null && allList.size() > 0){
 //			for(int i=0;i<allList.size();i++){
@@ -718,12 +720,15 @@ public class XlglXlzzInfoController {
 						//jsonObject.put("isConfirm",status);
 						//jsonObject.put("listUser",listUser);
 						listTotal.add(jsonObject);
+						int ycxSum = xlglSubDocTrackingService.queryAllCxByInfoId(infoId,deptId);//局内已参训
+						int bkSum = xlglSubDocTrackingService.queryAllBkByInfoId(infoId,deptId);//局内未参训
+						ycx +=ycxSum;
+						bk += bkSum;
 					}
 				}
 				Map<String,Object> map1 = new HashMap<String,Object>();
 				String organId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
-				int ycx = xlglSubDocTrackingService.queryAllCxByInfoId(infoId,judeptId);//局内已参训
-				int bk = xlglSubDocTrackingService.queryAllBkByInfoId(infoId,judeptId);//局内未参训
+
 				map1.put("deptId",organId);
 				map1.put("infoId",infoId);
 				String confirm = xlglConfirmService.queryConfromForJu(map1);//局的已确认情况
@@ -734,14 +739,14 @@ public class XlglXlzzInfoController {
 				}
 
 				//获取了该局所有的部门id
-				List<BaseAppOrgan> list3 = baseAppOrganService.queryAllDeptId(judeptId);
+				//List<BaseAppOrgan> list3 = baseAppOrganService.queryAllDeptId(judeptId);
 				List listAllUser = new ArrayList();
-				if (list3 != null && list3.size() > 0) {
-					for (int i = 0; i < list3.size(); i++) {//i从1开始是为了去除局id的情况
+				if (list != null && list.size() > 0) {
+					for (int i = 0; i < list.size(); i++) {//i从1开始是为了去除局id的情况
 						List<BaseAppUser> listUser = null;
 						JSONObject jsonObject = new JSONObject();
-						String deptId = list3.get(i).getId();
-						String deptName = list3.get(i).getName();
+						String deptId = list.get(i).getId();
+						String deptName = list.get(i).getName();
 						if (i == 0) {
 							listUser = baseAppUserService.queryAllJuUserByDeptId(deptId,infoId);
 						} else {
