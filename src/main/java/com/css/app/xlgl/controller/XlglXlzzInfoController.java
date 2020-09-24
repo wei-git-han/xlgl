@@ -1031,10 +1031,12 @@ public class XlglXlzzInfoController {
 			jsonObject.put("baoming",xlglSubDocTracking1.getBaoming());//0未报名 1：已报名 2：延后报名
 			jsonObject.put("reason",xlglSubDocTracking1.getReason());//原因
 		}
-		jsonObject.put("title",xlglXlzzInfo.getTitle());
-		jsonObject.put("time",xlglXlzzInfo.getExerciseTime());
+		if(xlglXlzzInfo != null){
+			jsonObject.put("title",xlglXlzzInfo.getTitle());
+			jsonObject.put("time",xlglXlzzInfo.getExerciseTime());
+			jsonObject.put("xlglXlzzInfo",xlglXlzzInfo);
+		}
 		jsonObject.put("list",list);
-		jsonObject.put("xlglXlzzInfo",xlglXlzzInfo);
 		Response.json(jsonObject);
 
 	}
