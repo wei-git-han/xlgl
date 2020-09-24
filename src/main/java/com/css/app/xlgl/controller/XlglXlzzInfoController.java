@@ -674,7 +674,7 @@ public class XlglXlzzInfoController {
 				List<BaseAppOrgan> list = baseAppOrganService.queryAllDeptId(judeptId);
 				List listTotal = new ArrayList();
 				if(list != null && list.size() > 0){
-					for(int i=1;i<list.size();i++){
+					for(int i=1;i<list.size();i++){//i从1开始，只会显示局下的处
 						JSONObject jsonObject = new JSONObject();
 						String deptId = list.get(i).getId();
 						String deptName = list.get(i).getName();
@@ -720,6 +720,13 @@ public class XlglXlzzInfoController {
 						//jsonObject.put("isConfirm",status);
 						//jsonObject.put("listUser",listUser);
 						listTotal.add(jsonObject);
+
+					}
+				}
+
+				if(list != null && list.size() > 0){
+					for(int i=0;i<list.size();i++){
+						String deptId = list.get(i).getId();
 						int ycxSum = xlglSubDocTrackingService.queryAllCxByInfoId(infoId,deptId);//局内已参训
 						int bkSum = xlglSubDocTrackingService.queryAllBkByInfoId(infoId,deptId);//局内未参训
 						ycx +=ycxSum;
@@ -742,7 +749,7 @@ public class XlglXlzzInfoController {
 				//List<BaseAppOrgan> list3 = baseAppOrganService.queryAllDeptId(judeptId);
 				List listAllUser = new ArrayList();
 				if (list != null && list.size() > 0) {
-					for (int i = 0; i < list.size(); i++) {//i从1开始是为了去除局id的情况
+					for (int i = 0; i < list.size(); i++) {
 						List<BaseAppUser> listUser = null;
 						JSONObject jsonObject = new JSONObject();
 						String deptId = list.get(i).getId();
