@@ -788,8 +788,8 @@ public class XlglXlzzInfoController {
 
 				}
 
-				jsonObject2.put("ycx",ycx);
-				jsonObject2.put("bk",bk);
+				jsonObject2.put("ycx",ycx);//已参训，是根据is_work状态来判断的
+				jsonObject2.put("bk",bk);//延后参训，除了已参训，别的都算延后参训，是根据is_work状态来判断的
 				int sum = ycx + bk;
 				float t = 0.0f;
 				if(sum > 0){
@@ -800,9 +800,9 @@ public class XlglXlzzInfoController {
 				jsonObject2.put("cxl",t);//参训率
 				jsonObject2.put("listTotal",listTotal);
 				jsonObject2.put("confirm",confirm);
-				jsonObject2.put("ybm",ybm);//已报名
-				jsonObject2.put("wbm",wbm);//未报名
-				jsonObject2.put("ySum",ySum);//延后报名
+				jsonObject2.put("ybm",ybm);//已报名，是根据baoming状态来判断的
+				jsonObject2.put("wbm",wbm);//未报名，是根据baoming状态来判断的
+				jsonObject2.put("ySum",ySum);//延后报名，是根据baoming状态来判断的
 				jsonObject2.put("listAllUser",listAllUser);
 				jsonObject2.put("juName",juName);
 				jsonArray.add(jsonObject2);
@@ -1264,8 +1264,8 @@ public class XlglXlzzInfoController {
 	@RequestMapping("/getInfoTj")
 	public void getInfoTj(String infoId) {
 		JSONObject jsonObject = new JSONObject();
-		int ycx = xlglSubDocTrackingService.queryAllCx(infoId);//已参训
-		int qx = xlglSubDocTrackingService.queryAllBkCount(infoId);//缺席
+		int ycx = xlglSubDocTrackingService.queryAllCx(infoId);//已参训，根据is_work状态来判断
+		int qx = xlglSubDocTrackingService.queryAllBkCount(infoId);//缺席，根据is_work 状态来判断
 		jsonObject.put("sum", ycx+qx);
 		jsonObject.put("ycm", ycx);
 		jsonObject.put("qx", qx);
