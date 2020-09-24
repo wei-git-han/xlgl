@@ -21,9 +21,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.css.app.xlgl.dto.XlglExamExaminetopicDto;
 import com.css.app.xlgl.entity.XlglExamAnswer;
 import com.css.app.xlgl.entity.XlglExamExamine;
+import com.css.app.xlgl.entity.XlglExamExamineMakeup;
 import com.css.app.xlgl.entity.XlglExamExaminetopic;
 import com.css.app.xlgl.entity.XlglExamMainAnswer;
 import com.css.app.xlgl.service.XlglExamAnswerService;
+import com.css.app.xlgl.service.XlglExamExamineMakeupService;
 import com.css.app.xlgl.service.XlglExamExamineService;
 import com.css.app.xlgl.service.XlglExamExaminetopicService;
 import com.css.app.xlgl.service.XlglExamMainAnswerService;
@@ -56,6 +58,8 @@ public class XlglExamAnswerController {
 	private XlglExamExamineService xlglExamExamineService;
 	@Autowired
 	private XlglExamExaminetopicService xlglExamExaminetopicService;
+	@Autowired
+	private XlglExamExamineMakeupService xlglExamExamineMakeupService;
 	/**
 	 * 列表
 	 */
@@ -89,8 +93,15 @@ public class XlglExamAnswerController {
 	@ResponseBody
 	@RequestMapping("/view/info")
 	public void viewinfo(String examineId){
+		Map<String, Object> map = new HashMap<String,Object>();
+		map.put("examineId", examineId);
 		JSONObject jsonObject = new JSONObject();
-		jsonObject = getAllAnswer(examineId);
+		List<XlglExamExamineMakeup> queryList = xlglExamExamineMakeupService.queryList(map);
+		String makup="";
+		if(queryList.size()>0) {
+			makup = queryList.get(0).getId();
+		}
+		jsonObject = getAllAnswer(examineId,makup);
 		Response.json(jsonObject);
 	}
 	
@@ -101,7 +112,14 @@ public class XlglExamAnswerController {
 	@RequestMapping("/view/infoLianXi")
 	public void viewinfoLianXi(String examineId,String lianxiType){
 		JSONObject jsonObject = new JSONObject();
-		jsonObject = getAllAnswer(examineId);
+		Map<String, Object> hashmap = new HashMap<String,Object>();
+		hashmap.put("examineId", examineId);
+		List<XlglExamExamineMakeup> queryList = xlglExamExamineMakeupService.queryList(hashmap);
+		String makup="";
+		if(queryList.size()>0) {
+			makup = queryList.get(0).getId();
+		}
+		jsonObject = getAllAnswer(examineId,makup);
 		jsonObject.put("lianxiType", lianxiType);
 		Map<String, Object> map = new HashMap<String,Object>();
 		map.put("examineId", examineId);
@@ -116,12 +134,18 @@ public class XlglExamAnswerController {
 		jsonObject.put("", "");
 		Response.json(jsonObject);
 	}
-	private JSONObject getAllAnswer(String examineId) {
+	private JSONObject getAllAnswer(String examineId,String makeUpId) {
 		JSONObject jsonObject = new JSONObject();
 		Map<String, Object> map = new HashMap<String,Object>();
-		map.put("examineId", examineId);
 		map.put("replyUserId", CurrentUser.getUserId());
-		map.put("makeUpStatus", "0");
+		if(StringUtils.isNotBlank(makeUpId)) {
+			map.put("makeUpStatus", "1");
+			map.put("examineId", examineId);
+			map.put("makeUpId", makeUpId);
+		}else {
+			map.put("examineId", examineId);
+			map.put("makeUpStatus", "0");
+		}
 		List<XlglExamAnswer> list = xlglExamAnswerService.queryList(map);
 		XlglExamExamine xlglExamExamine = xlglExamExamineService.queryObject(examineId);
 		List<XlglExamAnswer> listType1 = new ArrayList<XlglExamAnswer>();

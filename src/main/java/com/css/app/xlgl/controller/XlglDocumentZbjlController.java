@@ -646,7 +646,7 @@ public class XlglDocumentZbjlController {
 				List<XlglExamMainAnswer> specialtyList = xlglExamMainAnswerService.findListBySubjectId(map);
 				map.put("examineSubjectName", "战略训练");
 				List<XlglExamMainAnswer> tacticalList = xlglExamMainAnswerService.findListBySubjectId(map);
-				map.put("examineSubjectName", "军事训练");
+				map.put("examineSubjectName", "军事职业教育");
 				List<XlglExamMainAnswer> warList = xlglExamMainAnswerService.findListBySubjectId(map);
 				if (commonList != null && commonList.size() > 0) {
 					jsonObject.put("commonSum", commonList.get(0).getFractionsum());

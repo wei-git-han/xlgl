@@ -131,4 +131,8 @@
 		where SUBJECT_ID = #{subjectId} 
 		and TOPIC_TYPE = #{topicType}
 	</delete>
+	
+
+	
+	
 </mapper>

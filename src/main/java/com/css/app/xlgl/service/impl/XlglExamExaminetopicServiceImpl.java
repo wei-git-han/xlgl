@@ -119,71 +119,73 @@ public class XlglExamExaminetopicServiceImpl implements XlglExamExaminetopicServ
 			}
 		} else {
 			Map<Integer, Object> hashMap = new HashMap<>();
-			for (int j = 0; j < 1000000; j++) {
-				int random = (int) (Math.random() * queryList.size());
-				if (hashMap.size() < object) {
-					if (!hashMap.containsKey(random) && hashMap.size() * 2 < queryList.size()) {
-						hashMap.put(random, "");
-						XlglExamExaminetopic examineTopic = new XlglExamExaminetopic();
-						examineTopic.setId(UUIDUtils.random());
-						examineTopic.setExamineId(examineId);
-						examineTopic.setSubjectId(queryList.get(random).getSubjectId());
-						examineTopic.setTopicId(queryList.get(random).getId());
-						examineTopic.setTopicType(queryList.get(random).getTopicType());
-						examineTopic.setTopicColumn(queryList.get(random).getTopicColumn());
-						examineTopic.setTopicOption(queryList.get(random).getTopicOption());
-						examineTopic.setTopicResult(queryList.get(random).getTopicResult());
-						String fractionalNumber = (String) map.get("fractionalNumber");
-						examineTopic.setFractionalNumber(Integer.parseInt(fractionalNumber));
-						examineTopic.setCreateDate(date);
-						examineTopic.setCreateUser(userId);
-						examineTopic.setUpdateDate(date);
-						examineTopic.setUpdateUser(userId);
-						if (StringUtils.isNotBlank(makeUpId)) {
-							examineTopic.setMakeUpId(makeUpId);
-							examineTopic.setMakeUpStatus("1");
-						} else {
-							examineTopic.setMakeUpStatus("0");
-						}
-						list.add(examineTopic);
-					}
-					else if (hashMap.size() * 2 > queryList.size()) {
-						for (int i = 0; i < queryList.size(); i++) {
-							if (hashMap.size() < object) {
-								if (!hashMap.containsKey(i)) {
-									hashMap.put(i, "");
-									XlglExamExaminetopic examineTopic = new XlglExamExaminetopic();
-									examineTopic.setId(UUIDUtils.random());
-									examineTopic.setExamineId(examineId);
-									examineTopic.setSubjectId(queryList.get(i).getSubjectId());
-									examineTopic.setTopicId(queryList.get(i).getId());
-									examineTopic.setTopicType(queryList.get(i).getTopicType());
-									examineTopic.setTopicColumn(queryList.get(i).getTopicColumn());
-									examineTopic.setTopicOption(queryList.get(i).getTopicOption());
-									examineTopic.setTopicResult(queryList.get(i).getTopicResult());
-									String fractionalNumber = (String) map.get("fractionalNumber");
-									examineTopic.setFractionalNumber(Integer.parseInt(fractionalNumber));
-									examineTopic.setCreateDate(date);
-									examineTopic.setCreateUser(userId);
-									examineTopic.setUpdateDate(date);
-									examineTopic.setUpdateUser(userId);
-									if (StringUtils.isNotBlank(makeUpId)) {
-										examineTopic.setMakeUpId(makeUpId);
-										examineTopic.setMakeUpStatus("1");
-									} else {
-										examineTopic.setMakeUpStatus("0");
-									}
-									list.add(examineTopic);
-								}
+			if(object * 2 < queryList.size()) {
+				for (int j = 0; j < 1000000; j++) {
+					int random = (int) (Math.random() * queryList.size());
+					if (hashMap.size() < object) {
+						if (!hashMap.containsKey(random) ) {
+							hashMap.put(random, "");
+							XlglExamExaminetopic examineTopic = new XlglExamExaminetopic();
+							examineTopic.setId(UUIDUtils.random());
+							examineTopic.setExamineId(examineId);
+							examineTopic.setSubjectId(queryList.get(random).getSubjectId());
+							examineTopic.setTopicId(queryList.get(random).getId());
+							examineTopic.setTopicType(queryList.get(random).getTopicType());
+							examineTopic.setTopicColumn(queryList.get(random).getTopicColumn());
+							examineTopic.setTopicOption(queryList.get(random).getTopicOption());
+							examineTopic.setTopicResult(queryList.get(random).getTopicResult());
+							String fractionalNumber = (String) map.get("fractionalNumber");
+							examineTopic.setFractionalNumber(Integer.parseInt(fractionalNumber));
+							examineTopic.setCreateDate(date);
+							examineTopic.setCreateUser(userId);
+							examineTopic.setUpdateDate(date);
+							examineTopic.setUpdateUser(userId);
+							if (StringUtils.isNotBlank(makeUpId)) {
+								examineTopic.setMakeUpId(makeUpId);
+								examineTopic.setMakeUpStatus("1");
 							} else {
-								return list;
+								examineTopic.setMakeUpStatus("0");
 							}
+							list.add(examineTopic);
 						}
-					}
-				} else {
-					break;
+					} else {
+						return list;
+				}
 			}
-		}
+			}else {
+				for (int i = 0; i < queryList.size(); i++) {
+					if (hashMap.size() < object) {
+						if (!hashMap.containsKey(i)) {
+							hashMap.put(i, "");
+							XlglExamExaminetopic examineTopic = new XlglExamExaminetopic();
+							examineTopic.setId(UUIDUtils.random());
+							examineTopic.setExamineId(examineId);
+							examineTopic.setSubjectId(queryList.get(i).getSubjectId());
+							examineTopic.setTopicId(queryList.get(i).getId());
+							examineTopic.setTopicType(queryList.get(i).getTopicType());
+							examineTopic.setTopicColumn(queryList.get(i).getTopicColumn());
+							examineTopic.setTopicOption(queryList.get(i).getTopicOption());
+							examineTopic.setTopicResult(queryList.get(i).getTopicResult());
+							String fractionalNumber = (String) map.get("fractionalNumber");
+							examineTopic.setFractionalNumber(Integer.parseInt(fractionalNumber));
+							examineTopic.setCreateDate(date);
+							examineTopic.setCreateUser(userId);
+							examineTopic.setUpdateDate(date);
+							examineTopic.setUpdateUser(userId);
+							if (StringUtils.isNotBlank(makeUpId)) {
+								examineTopic.setMakeUpId(makeUpId);
+								examineTopic.setMakeUpStatus("1");
+							} else {
+								examineTopic.setMakeUpStatus("0");
+							}
+							list.add(examineTopic);
+						}
+					} else {
+						return list;
+					}
+				}
+			
+			}
 	}
 		return list;
 }

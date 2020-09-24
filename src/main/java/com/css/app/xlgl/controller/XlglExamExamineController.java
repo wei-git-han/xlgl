@@ -376,6 +376,8 @@ public class XlglExamExamineController {
 		Map<String, Object> map = new HashMap<String,Object>();
 		if(StringUtils.isNotBlank(makeUpId)) {
 			map.put("makeUpStatus", "1");
+			map.put("examineId", examineId);
+			map.put("makeUpId", makeUpId);
 		}else {
 			map.put("examineId", examineId);
 			map.put("makeUpStatus", "0");

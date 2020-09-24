@@ -3,6 +3,7 @@ package com.css.app.xlgl.service.impl;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -62,6 +63,8 @@ public class XlglExamTopicServiceImpl implements XlglExamTopicService {
 	 * */
 	@Override
 	public List<XlglExamTopic> readExcelLists(InputStream is,String subjectId){
+		Map<String, Object> map = new HashMap<>();
+		map.put("subjectId", subjectId);
 		List<XlglExamTopic> list =new ArrayList<XlglExamTopic>();
 		try {
 		Workbook wb =new HSSFWorkbook(is);
@@ -73,6 +76,8 @@ public class XlglExamTopicServiceImpl implements XlglExamTopicService {
 			if(title.equals("多选题")) {
 				type = "2";
 			}
+			map.put("topicType", type);
+			xlglExamTopicDao.deleteByType(map);
 			for(int i = 2 ;i<=sheet.getLastRowNum(); i ++) {
 				XlglExamTopic xlglExamTopic = new XlglExamTopic ();
 				xlglExamTopic.setId(UUIDUtils.random());
@@ -98,6 +103,8 @@ public class XlglExamTopicServiceImpl implements XlglExamTopicService {
 			if(title.equals("填空题")) {
 				type = "4";
 			}
+			map.put("topicType", type);
+			xlglExamTopicDao.deleteByType(map);
 			for(int i = 2 ;i<=sheet.getLastRowNum(); i ++) {
 				XlglExamTopic xlglExamTopic = new XlglExamTopic ();
 				xlglExamTopic.setId(UUIDUtils.random());
@@ -136,5 +143,7 @@ public class XlglExamTopicServiceImpl implements XlglExamTopicService {
 	public void deleteByType(Map<String, Object> map) {
 		xlglExamTopicDao.deleteByType(map);;
 	}
-	
+
+
+
 }

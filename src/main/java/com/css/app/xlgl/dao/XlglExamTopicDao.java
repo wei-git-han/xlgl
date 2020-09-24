@@ -26,4 +26,6 @@ public interface XlglExamTopicDao extends BaseDao<XlglExamTopic> {
 	
 	void deleteByType(Map<String, Object> map);
 	
+	
+	
 }

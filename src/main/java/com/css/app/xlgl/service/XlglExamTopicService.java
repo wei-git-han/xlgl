@@ -33,4 +33,5 @@ public interface XlglExamTopicService {
 	void saveList(List<XlglExamTopic> list);
 	List<XlglExamTopic> queryListByIds(Object[] id);
 	void deleteByType(Map<String, Object> map);
+
 }
