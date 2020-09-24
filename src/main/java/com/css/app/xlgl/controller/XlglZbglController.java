@@ -177,20 +177,20 @@ public class XlglZbglController {
 
 	@ResponseBody
 	@RequestMapping("/uploadFile")
-	public void uploadFile(@RequestParam(required = false) MultipartFile[] pdf){
+	public void uploadFile(@RequestParam(required = false) MultipartFile[] file){
 		String formatDownPath = "";// 版式文件下载路径
 		String retFormatId = null;// 返回的版式文件id
 		String streamId = null;// 流式文件id
 		String formatId = null;// 版式文件id
 		JSONObject json = new JSONObject();
-		if (pdf != null && pdf.length > 0) {
-			for (int i = 0; i < pdf.length; i++) {
-				String fileName = pdf[i].getOriginalFilename();
+		if (file != null && file.length > 0) {
+			for (int i = 0; i < file.length; i++) {
+				String fileName = file[i].getOriginalFilename();
 				// 获取文件后缀
 				String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
 				// 如果文件是流式则流式转换为版式
 				if (!StringUtils.equals("ofd", fileType)) {
-					streamId = FileBaseUtil.fileServiceUpload(pdf[i]);
+					streamId = FileBaseUtil.fileServiceUpload(file[i]);
 					HTTPFile hf = new HTTPFile(streamId);
 					try {
 						String path = appConfig.getLocalFilePath() + UUIDUtils.random() + "." + hf.getSuffix();
@@ -210,7 +210,7 @@ public class XlglZbglController {
 						e.printStackTrace();
 					}
 				} else {
-					formatId = FileBaseUtil.fileServiceUpload(pdf[i]);
+					formatId = FileBaseUtil.fileServiceUpload(file[i]);
 				}
 				if (StringUtils.isNotBlank(formatId)) {
 					if (i == 0) {
