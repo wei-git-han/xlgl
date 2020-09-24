@@ -1184,7 +1184,7 @@ public class XlglXlzzInfoController {
 //		Response.json(jsonObject);
 //	}
 
-	public Float getCurrentDoneInfo(String infoId,String orgId){
+	public String getCurrentDoneInfo(String infoId,String orgId){
 		Map<String, Object> map = new HashMap<>();
 		map.put("infoId", infoId);
 		map.put("orgId", orgId);
@@ -1192,17 +1192,12 @@ public class XlglXlzzInfoController {
 		int yxCount = baseAppUserService.queryYxCount(map);//当前局的有效人数
 
 		int cxCount = xlglSubDocTrackingService.queryCxAllCount(map);//当前课堂参训人数
-		float DoneLv = 0.0f;
+		String raio = "";
 		if(yxCount > 0){
-			DoneLv = (int) ((new BigDecimal((float) cxCount / yxCount).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue()) * 100);
-			//DecimalFormat decimalFormat = new DecimalFormat("0.0000");
-
-			//DoneLv = Float.valueOf(decimalFormat.format(cxCount / yxCount));
+			DecimalFormat format = new DecimalFormat("0.00");
+			raio = format.format(((float)cxCount/yxCount)*100);
 		}
-		if(DoneLv > 100.0){
-			DoneLv = 100.0f;
-		}
-		return DoneLv;
+		return raio;
 	}
 
 	/**
@@ -1220,7 +1215,7 @@ public class XlglXlzzInfoController {
 				JSONObject jsonObject = new JSONObject();
 				String orgId = baseAppOrgan.getId();
 				String orgName = baseAppOrgan.getName();
-				float t = getCurrentDoneInfo(infoId, orgId);
+				String t = getCurrentDoneInfo(infoId, orgId);
 				jsonObject.put("name", orgName);
 				jsonObject.put("wcl", t);
 				listAll.add(jsonObject);
@@ -1243,7 +1238,7 @@ public class XlglXlzzInfoController {
 				JSONObject jsonObject = new JSONObject();
 				String orgId = baseAppOrgan.getId();
 				String orgName = baseAppOrgan.getName();
-				float f = getSum(allInfoIds);
+				String f = getSum(allInfoIds);
 				jsonObject.put("name", orgName);
 				jsonObject.put("wcl", f);
 				listAll.add(jsonObject);
@@ -1255,7 +1250,7 @@ public class XlglXlzzInfoController {
 
 
 	}
-	public float getSum(String allInfoIds) {
+	public String getSum(String allInfoIds) {
 		int cxSum = 0;//总的参训人数
 		int sum = 0;//总的有效人数
 		Map<String, Object> map = new HashMap<>();
@@ -1270,10 +1265,12 @@ public class XlglXlzzInfoController {
 			sum = baseAppUserService.queryListAllYxCount() * infoIds.length;
 		}
 		float DoneLv = 0.0f;
+		String raio = "";
 		if (sum > 0) {
-			DoneLv = (int) ((new BigDecimal((float) cxSum / sum).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue()) * 100);
+			DecimalFormat format = new DecimalFormat("0.00");
+			raio = format.format(((float)cxSum/sum)*100);
 		}
-		return DoneLv;
+		return raio;
 	}
 
 	/**大讲堂点开视频，看完后触发本接口，更改状态为已参训
