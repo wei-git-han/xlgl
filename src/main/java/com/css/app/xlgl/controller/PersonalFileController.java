@@ -211,10 +211,9 @@ public class PersonalFileController {
 		Calendar calendar = Calendar.getInstance();
 		String year = String.valueOf(calendar.get(Calendar.YEAR));
 		String userId = CurrentUser.getUserId();
+		//只查出导入的数据，且只取最新的一次的
 		XlglPhysical xlglPhysical = xlglPhysicalService.queryByUserId(userId,year);
 		if(xlglPhysical != null){
-
-
 		String age = xlglPhysical.getAge();
 		String age1 = age.substring(0,age.indexOf("."));
 		String ytxs = xlglPhysical.getYtxs();

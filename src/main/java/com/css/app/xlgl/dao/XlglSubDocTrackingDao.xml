@@ -116,6 +116,9 @@
             <if test="search != null and search !=''">
                 and TITLE  like '%'||#{search}||'%'
             </if>
+            <if test="year != null and year !=''">
+                and CREATED_TIME not like '%'||#{year}||'%'
+            </if>
             <if test="offset != null and limit != null">
                 limit #{offset}, #{limit}
             </if>

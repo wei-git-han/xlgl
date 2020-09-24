@@ -645,6 +645,8 @@ public class XlglXlzzInfoController {
 	public void getDateForAll(String id,String orgId){
 		JSONArray jsonArray = new JSONArray();
 		JSONObject object = new JSONObject();
+		int ycx = 0;
+		int bk = 0;
 		List<BaseAppOrgan> allList = baseAppOrganService.queryPerDept(orgId);
 //		if(allList != null && allList.size() > 0){
 //			for(int i=0;i<allList.size();i++){
@@ -718,12 +720,15 @@ public class XlglXlzzInfoController {
 						//jsonObject.put("isConfirm",status);
 						//jsonObject.put("listUser",listUser);
 						listTotal.add(jsonObject);
+						int ycxSum = xlglSubDocTrackingService.queryAllCxByInfoId(infoId,deptId);//局内已参训
+						int bkSum = xlglSubDocTrackingService.queryAllBkByInfoId(infoId,deptId);//局内未参训
+						ycx +=ycxSum;
+						bk += bkSum;
 					}
 				}
 				Map<String,Object> map1 = new HashMap<String,Object>();
 				String organId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
-				int ycx = xlglSubDocTrackingService.queryAllCxByInfoId(infoId,judeptId);//局内已参训
-				int bk = xlglSubDocTrackingService.queryAllBkByInfoId(infoId,judeptId);//局内未参训
+
 				map1.put("deptId",organId);
 				map1.put("infoId",infoId);
 				String confirm = xlglConfirmService.queryConfromForJu(map1);//局的已确认情况
@@ -734,14 +739,14 @@ public class XlglXlzzInfoController {
 				}
 
 				//获取了该局所有的部门id
-				List<BaseAppOrgan> list3 = baseAppOrganService.queryAllDeptId(judeptId);
+				//List<BaseAppOrgan> list3 = baseAppOrganService.queryAllDeptId(judeptId);
 				List listAllUser = new ArrayList();
-				if (list3 != null && list3.size() > 0) {
-					for (int i = 0; i < list3.size(); i++) {//i从1开始是为了去除局id的情况
+				if (list != null && list.size() > 0) {
+					for (int i = 0; i < list.size(); i++) {//i从1开始是为了去除局id的情况
 						List<BaseAppUser> listUser = null;
 						JSONObject jsonObject = new JSONObject();
-						String deptId = list3.get(i).getId();
-						String deptName = list3.get(i).getName();
+						String deptId = list.get(i).getId();
+						String deptName = list.get(i).getName();
 						if (i == 0) {
 							listUser = baseAppUserService.queryAllJuUserByDeptId(deptId,infoId);
 						} else {
@@ -783,8 +788,8 @@ public class XlglXlzzInfoController {
 
 				}
 
-				jsonObject2.put("ycx",ycx);
-				jsonObject2.put("bk",bk);
+				jsonObject2.put("ycx",ycx);//已参训，是根据is_work状态来判断的
+				jsonObject2.put("bk",bk);//延后参训，除了已参训，别的都算延后参训，是根据is_work状态来判断的
 				int sum = ycx + bk;
 				float t = 0.0f;
 				if(sum > 0){
@@ -795,9 +800,9 @@ public class XlglXlzzInfoController {
 				jsonObject2.put("cxl",t);//参训率
 				jsonObject2.put("listTotal",listTotal);
 				jsonObject2.put("confirm",confirm);
-				jsonObject2.put("ybm",ybm);//已报名
-				jsonObject2.put("wbm",wbm);//未报名
-				jsonObject2.put("ySum",ySum);//延后报名
+				jsonObject2.put("ybm",ybm);//已报名，是根据baoming状态来判断的
+				jsonObject2.put("wbm",wbm);//未报名，是根据baoming状态来判断的
+				jsonObject2.put("ySum",ySum);//延后报名，是根据baoming状态来判断的
 				jsonObject2.put("listAllUser",listAllUser);
 				jsonObject2.put("juName",juName);
 				jsonArray.add(jsonObject2);
@@ -926,6 +931,9 @@ public class XlglXlzzInfoController {
 		Map<String, Object> map1 = new HashMap<>();
 		String userId = CurrentUser.getUserId();
 		JSONArray jsonArray = new JSONArray();
+		Calendar calendar = Calendar.getInstance();
+		int year = calendar.get(Calendar.YEAR);
+		String yearStr = String.valueOf(year);
 		//查出所有的文id
 		map1.put("userId", userId);
 		map1.put("type", type);
@@ -942,6 +950,7 @@ public class XlglXlzzInfoController {
 			}
 
 		} else {
+			map1.put("year",yearStr);
 			listInfoIds = xlglSubDocTrackingService.queryAllYear(map1);
 		}
 		//List<XlglSubDocTracking> listInfoIds = xlglSubDocTrackingService.queryAllInfos(map1);
@@ -1031,10 +1040,12 @@ public class XlglXlzzInfoController {
 			jsonObject.put("baoming",xlglSubDocTracking1.getBaoming());//0未报名 1：已报名 2：延后报名
 			jsonObject.put("reason",xlglSubDocTracking1.getReason());//原因
 		}
-		jsonObject.put("title",xlglXlzzInfo.getTitle());
-		jsonObject.put("time",xlglXlzzInfo.getExerciseTime());
+		if(xlglXlzzInfo != null){
+			jsonObject.put("title",xlglXlzzInfo.getTitle());
+			jsonObject.put("time",xlglXlzzInfo.getExerciseTime());
+			jsonObject.put("xlglXlzzInfo",xlglXlzzInfo);
+		}
 		jsonObject.put("list",list);
-		jsonObject.put("xlglXlzzInfo",xlglXlzzInfo);
 		Response.json(jsonObject);
 
 	}
@@ -1253,8 +1264,8 @@ public class XlglXlzzInfoController {
 	@RequestMapping("/getInfoTj")
 	public void getInfoTj(String infoId) {
 		JSONObject jsonObject = new JSONObject();
-		int ycx = xlglSubDocTrackingService.queryAllCx(infoId);//已参训
-		int qx = xlglSubDocTrackingService.queryAllBkCount(infoId);//缺席
+		int ycx = xlglSubDocTrackingService.queryAllCx(infoId);//已参训，根据is_work状态来判断
+		int qx = xlglSubDocTrackingService.queryAllBkCount(infoId);//缺席，根据is_work 状态来判断
 		jsonObject.put("sum", ycx+qx);
 		jsonObject.put("ycm", ycx);
 		jsonObject.put("qx", qx);
