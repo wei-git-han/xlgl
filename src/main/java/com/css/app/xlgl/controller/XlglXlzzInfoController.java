@@ -642,7 +642,7 @@ public class XlglXlzzInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getDateForAll")
-	public void getDateForAll(String id,String orgId){
+	public void getDateForAll(String id,String orgId) {
 		JSONArray jsonArray = new JSONArray();
 		JSONObject object = new JSONObject();
 		int ycx = 0;
@@ -660,8 +660,8 @@ public class XlglXlzzInfoController {
 //				}
 //			}
 //		}
-		if(allList != null && allList.size() > 0){
-			for(BaseAppOrgan baseAppOrgan : allList){
+		if (allList != null && allList.size() > 0) {
+			for (BaseAppOrgan baseAppOrgan : allList) {
 				String judeptId = baseAppOrgan.getId();//获取局id
 				String juName = baseAppOrgan.getName();//获取局名字
 				String infoId = id;
@@ -673,23 +673,23 @@ public class XlglXlzzInfoController {
 				//获取了该局所有的部门id
 				List<BaseAppOrgan> list = baseAppOrganService.queryAllDeptId(judeptId);
 				List listTotal = new ArrayList();
-				if(list != null && list.size() > 0){
-					for(int i=1;i<list.size();i++){//i从1开始，只会显示局下的处
+				if (list != null && list.size() > 0) {
+					for (int i = 1; i < list.size(); i++) {//i从1开始，只会显示局下的处
 						JSONObject jsonObject = new JSONObject();
 						String deptId = list.get(i).getId();
 						String deptName = list.get(i).getName();
-						int sum = baseAppUserService.queryBmCout(infoId,"1",deptId);//已报名
-						int nsum = baseAppUserService.queryBmCout(infoId,"0",deptId);//未报名
-						int yhSum = baseAppUserService.queryBmCout(infoId,"2",deptId);//延后报名
+						int sum = baseAppUserService.queryBmCout(infoId, "1", deptId);//已报名
+						int nsum = baseAppUserService.queryBmCout(infoId, "0", deptId);//未报名
+						int yhSum = baseAppUserService.queryBmCout(infoId, "2", deptId);//延后报名
 						//ybm += sum + yhSum;
-						ybm += sum ;//已报名就是已报名，和延后参训分开
+						ybm += sum;//已报名就是已报名，和延后参训分开
 						wbm += nsum;
 						ySum += yhSum;
-						int yjs = baseAppUserService.queryYjs(deptId,infoId);//已接受
-						int wjs = baseAppUserService.queryWjs(deptId,infoId);//未接受
-						Map<String,Object> map = new HashMap<String,Object>();
-						map.put("deptId",deptId);
-						map.put("infoId",infoId);
+						int yjs = baseAppUserService.queryYjs(deptId, infoId);//已接受
+						int wjs = baseAppUserService.queryWjs(deptId, infoId);//未接受
+						Map<String, Object> map = new HashMap<String, Object>();
+						map.put("deptId", deptId);
+						map.put("infoId", infoId);
 //						XlglConfirmDto xlglConfirmDto = xlglConfirmService.queryPerDeptInfo(map);
 //						String status = null;
 //						if(xlglConfirmDto != null){
@@ -704,19 +704,19 @@ public class XlglXlzzInfoController {
 //					listUser = baseAppUserService.queryAllUserByDeptId(deptId,infoId);
 //				}
 
-						List<XlglConfirm> xlglConfirmList = xlglConfirmService.queryByInfoIdAndDeptId(deptId,infoId);
-						if(xlglConfirmList != null && xlglConfirmList.size() > 0){
-							jsonObject.put("confirm",true);
-						}else {
-							jsonObject.put("confirm",false);
+						List<XlglConfirm> xlglConfirmList = xlglConfirmService.queryByInfoIdAndDeptId(deptId, infoId);
+						if (xlglConfirmList != null && xlglConfirmList.size() > 0) {
+							jsonObject.put("confirm", true);
+						} else {
+							jsonObject.put("confirm", false);
 						}
-						jsonObject.put("sum",sum);//已报名
-						jsonObject.put("nsum",nsum);//未报名
-						jsonObject.put("yhSum",yhSum);//延后报名
-						jsonObject.put("yjs",yjs);
-						jsonObject.put("wjs",wjs);
-						jsonObject.put("deptName",deptName);
-						jsonObject.put("deptId",deptId);
+						jsonObject.put("sum", sum);//已报名
+						jsonObject.put("nsum", nsum);//未报名
+						jsonObject.put("yhSum", yhSum);//延后报名
+						jsonObject.put("yjs", yjs);
+						jsonObject.put("wjs", wjs);
+						jsonObject.put("deptName", deptName);
+						jsonObject.put("deptId", deptId);
 						//jsonObject.put("isConfirm",status);
 						//jsonObject.put("listUser",listUser);
 						listTotal.add(jsonObject);
@@ -724,24 +724,24 @@ public class XlglXlzzInfoController {
 					}
 				}
 
-				if(list != null && list.size() > 0){
-					for(int i=0;i<list.size();i++){
+				if (list != null && list.size() > 0) {
+					for (int i = 0; i < list.size(); i++) {
 						String deptId = list.get(i).getId();
-						int ycxSum = xlglSubDocTrackingService.queryAllCxByInfoId(infoId,deptId);//局内已参训
-						int bkSum = xlglSubDocTrackingService.queryAllBkByInfoId(infoId,deptId);//局内未参训
-						ycx +=ycxSum;
+						int ycxSum = xlglSubDocTrackingService.queryAllCxByInfoId(infoId, deptId);//局内已参训
+						int bkSum = xlglSubDocTrackingService.queryAllBkByInfoId(infoId, deptId);//局内未参训
+						ycx += ycxSum;
 						bk += bkSum;
 					}
 				}
-				Map<String,Object> map1 = new HashMap<String,Object>();
+				Map<String, Object> map1 = new HashMap<String, Object>();
 				String organId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
 
-				map1.put("deptId",organId);
-				map1.put("infoId",infoId);
+				map1.put("deptId", organId);
+				map1.put("infoId", infoId);
 				String confirm = xlglConfirmService.queryConfromForJu(map1);//局的已确认情况
-				if(StringUtils.isNotBlank(confirm) && "1".equals(confirm)){
+				if (StringUtils.isNotBlank(confirm) && "1".equals(confirm)) {
 					confirm = "1";
-				}else {
+				} else {
 					confirm = "0";
 				}
 
@@ -755,19 +755,19 @@ public class XlglXlzzInfoController {
 						String deptId = list.get(i).getId();
 						String deptName = list.get(i).getName();
 						if (i == 0) {
-							listUser = baseAppUserService.queryAllJuUserByDeptId(deptId,infoId);
+							listUser = baseAppUserService.queryAllJuUserByDeptId(deptId, infoId);
 						} else {
-							listUser = baseAppUserService.queryAllUserByDeptId(deptId,infoId);
+							listUser = baseAppUserService.queryAllUserByDeptId(deptId, infoId);
 						}
-						if(listUser != null && listUser.size() > 0){
-							for(BaseAppUser baseAppUser : listUser) {
+						if (listUser != null && listUser.size() > 0) {
+							for (BaseAppUser baseAppUser : listUser) {
 								String isWork = baseAppUser.getIsWork();
 								String baoming = baseAppUser.getBaoming();
 								String read = baseAppUser.getRead();
 //								if (StringUtils.isNotBlank(isWork) && "1".equals(isWork)) {
 //									baseAppUser.setStatus("2");//已参训
 //								} else
-									if (StringUtils.isNotBlank(baoming) && !"0".equals(baoming)) {
+								if (StringUtils.isNotBlank(baoming) && !"0".equals(baoming)) {
 									if ("1".equals(baoming)) {
 										baseAppUser.setStatus("0");//已报名
 									} else if ("2".equals(baoming)) {
@@ -783,40 +783,40 @@ public class XlglXlzzInfoController {
 
 								if ("1".equals(isWork)) {
 									baseAppUser.setSfcx("1");//1是已参训
-								} else if("2".equals(baoming)){
+								} else if ("2".equals(baoming)) {
 									baseAppUser.setSfcx("0");//0是延后参训
 								}
 							}
 						}
-						jsonObject.put("listUser",listUser);
-						jsonObject.put("deptName",deptName);
+						jsonObject.put("listUser", listUser);
+						jsonObject.put("deptName", deptName);
 						listAllUser.add(jsonObject);
 					}
 
 				}
 
-				jsonObject2.put("ycx",ycx);//已参训，是根据is_work状态来判断的
-				jsonObject2.put("bk",bk);//延后参训，除了已参训，别的都算延后参训，是根据is_work状态来判断的
+				jsonObject2.put("ycx", ycx);//已参训，是根据is_work状态来判断的
+				jsonObject2.put("bk", bk);//延后参训，除了已参训，别的都算延后参训，是根据is_work状态来判断的
 				int sum = ycx + bk;
 				float t = 0.0f;
-				if(sum > 0){
-					t = ycx/(ycx+bk);
-				}else {
+				if (sum > 0) {
+					t = ycx / (ycx + bk);
+				} else {
 					t = 0.0f;
 				}
-				jsonObject2.put("cxl",t);//参训率
-				jsonObject2.put("listTotal",listTotal);
-				jsonObject2.put("confirm",confirm);
-				jsonObject2.put("ybm",ybm);//已报名，是根据baoming状态来判断的
-				jsonObject2.put("wbm",wbm);//未报名，是根据baoming状态来判断的
-				jsonObject2.put("ySum",ySum);//延后报名，是根据baoming状态来判断的
-				jsonObject2.put("listAllUser",listAllUser);
-				jsonObject2.put("juName",juName);
+				jsonObject2.put("cxl", t);//参训率
+				jsonObject2.put("listTotal", listTotal);
+				jsonObject2.put("confirm", confirm);
+				jsonObject2.put("ybm", ybm);//已报名，是根据baoming状态来判断的
+				jsonObject2.put("wbm", wbm);//未报名，是根据baoming状态来判断的
+				jsonObject2.put("ySum", ySum);//延后报名，是根据baoming状态来判断的
+				jsonObject2.put("listAllUser", listAllUser);
+				jsonObject2.put("juName", juName);
 				jsonArray.add(jsonObject2);
 			}
 		}
-		object.put("result","success");
-		object.put("list",jsonArray);
+		object.put("result", "success");
+		object.put("list", jsonArray);
 		Response.json(object);
 
 	}
