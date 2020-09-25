@@ -299,7 +299,7 @@ public class PeopleManagementController {
 		} else {
 			DecimalFormat decimalFormat = new DecimalFormat("0.00");
 			if (userIdList > 0) {
-				if (object > 0) {
+				if (sum > 0) {
 					// float zwRate = (float) ((new BigDecimal((float) object /
 					// userIdList).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()) * 100);
 					float zwRate = ((float) userIdList / (float) sum) * 100;
@@ -309,6 +309,8 @@ public class PeopleManagementController {
 					} else {
 						jsonData.put("zwlv", "0");
 					}
+				}else {
+					jsonData.put("zwlv", "0");
 				}
 				// long zwr =((long)userIdList /(long)yzwrs);
 				// float zwRate = zwr*100; //人员在位率
