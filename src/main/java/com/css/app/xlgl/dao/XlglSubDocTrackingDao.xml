@@ -45,6 +45,7 @@
 			and RECEIVER_ID = #{userId}
 		</if>
 		AND BAOMING = '0' AND EXERCISE_TIME &lt; to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
+        order by CREATED_TIME desc
 		<if test="offset != null and limit != null">-->
 			limit #{offset}, #{limit}
 			</if>
