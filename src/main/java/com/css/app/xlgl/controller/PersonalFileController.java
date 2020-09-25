@@ -1,5 +1,6 @@
 package com.css.app.xlgl.controller;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 import com.alibaba.fastjson.JSON;
@@ -123,8 +124,9 @@ public class PersonalFileController {
 		map.put("level", "优秀");
 		int levelTotal = personalFileService.queryTotal(map);
 		String level ="";
+		DecimalFormat decimalFormat = new DecimalFormat(".00");
 		if(total > 0){
-			Integer levelrate = (levelTotal/total)*100;
+			float levelrate = ((float)levelTotal/(float)total)*100;
 			if(levelrate >= 85) {
 				level = "优秀";
 			}else if(70 <= levelrate && levelrate < 85){
@@ -134,7 +136,8 @@ public class PersonalFileController {
 			}else {
 				level = "不及格";
 			}
-			jsonObject.put("levelrate", levelrate);//优秀比率
+			String format = decimalFormat.format(levelrate);
+			jsonObject.put("levelrate", format);//优秀比率
 		}
 		jsonObject.put("level", level);//优秀等级
 		jsonObject.put("total", total);//已考科目总数

@@ -366,8 +366,10 @@ public class PeopleManagementController {
 			map.put("organid", organId);
 			List<BaseAppUser> queryListByOrganid = baseAppUserService.queryListByOrganid(map);
 			for (BaseAppUser baseAppUser : queryListByOrganid) {
-				if (list.contains(baseAppUser.getAccount())) {
-					i++;
+				for (int j = 0; j < list.size(); j++) {
+					if(baseAppUser.getAccount().equals(list.get(j))) {
+						i++;
+					}
 				}
 			}
 		} else {
