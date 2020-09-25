@@ -7,6 +7,8 @@ import com.css.addbase.FileBaseUtil;
 import com.css.app.xlgl.entity.XlglPicture;
 import com.css.app.xlgl.service.XlglAdminSetService;
 import com.css.app.xlgl.service.XlglPictureService;
+import com.css.base.entity.SSOUser;
+import com.css.base.filter.SSOAuthFilter;
 import com.netflix.discovery.converters.Auto;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
@@ -459,11 +461,30 @@ public class XlglNewsController {
 		List<BaseAppOrgan> list = baseAppOrganService.queryAllDeptId(orgId);
 		String name = list.get(0).getName();
 		for (BaseAppOrgan baseAppOrgan : list) {
-			if (deptId.equals(baseAppOrgan.getId())) {
+			if (deptId.equals(baseAppOrgan.getId()) && !orgId.equals(deptId)) {//防止有人不属于某处，直接属于某局
 				name += baseAppOrgan.getName();
 			}
 		}
+//		String name = "";
+//		String orgName ="";
+//		String cName = "";
+//		com.alibaba.fastjson.JSONObject userJson = new com.alibaba.fastjson.JSONObject();
+//		SSOUser ssoUser = SSOAuthFilter.getSUser();
+//		userJson.put("result","error");
+//		if(ssoUser != null){
+//			userJson = (com.alibaba.fastjson.JSONObject) com.alibaba.fastjson.JSONObject.toJSON(ssoUser);
+//			cName = (String)userJson.get("orgName");
+//		}
+//		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
+//		BaseAppOrgan baseAppOrgan = baseAppOrganService.queryDeptNameByUserId(orgId);
+//		if(baseAppOrgan != null){
+//			orgName = baseAppOrgan.getName();
+//		}
+//		name = orgName+cName;
 		Response.json("deptName", name);
+
+
+
 
 	}
 }
