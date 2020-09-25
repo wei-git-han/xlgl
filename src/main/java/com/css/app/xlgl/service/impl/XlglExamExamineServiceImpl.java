@@ -52,5 +52,10 @@ public class XlglExamExamineServiceImpl implements XlglExamExamineService {
 	public int findCount() {
 		return xlglExamExamineDao.findCount();
 	}
+
+	@Override
+	public List<XlglExamExamine> queryVerifyList(Map<String, Object> map) {
+		return xlglExamExamineDao.queryVerifyList(map);
+	}
 	
 }

@@ -673,5 +673,20 @@ public class XlglExamExamineController {
 		jsonObject.put("originalTopic", listCount);
 		Response.json(jsonObject);
 	}
+	/**
+	 * 考试名称重复校验
+	 * */
+	@ResponseBody
+	@RequestMapping("/verify")
+	public void verify(String examineName) {
+		Map<String, Object> map = new HashMap<String,Object>();
+		map.put("examineName", examineName);
+		List<XlglExamExamine> list = xlglExamExamineService.queryVerifyList(map);
+		boolean status = true; //考试名称无重复
+		if(list.size()>0) {
+			status = false; //考试名称重复
+		}
+		Response.json("status",status);
+	}
 	
 }

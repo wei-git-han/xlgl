@@ -4,92 +4,93 @@
 <mapper namespace="com.css.app.xlgl.dao.XlglExamExamineDao">
 
 	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglExamExamine">
-		select * from XLGL_EXAM_EXAMINE where id = #{value}
+		select * from
+		XLGL_EXAM_EXAMINE where id = #{value}
 	</select>
 
 	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglExamExamine">
-		select * from XLGL_EXAM_EXAMINE 
+		select * from XLGL_EXAM_EXAMINE
 		where 1=1
 		<if test="issueStatus != null and issueStatus !=''">
-			  and ISSUE_STATUS = #{issueStatus}
+			and ISSUE_STATUS = #{issueStatus}
 		</if>
 		<if test="issueDate != null and issueDate !=''">
-			  and ISSUE_DATE &gt;= #{issueDate}
+			and ISSUE_DATE &gt;= #{issueDate}
 		</if>
 		<if test="examineName != null and examineName !=''">
-			  and EXAMINE_NAME like '%'||#{examineName}||'%'
+			and EXAMINE_NAME like '%'||#{examineName}||'%'
 		</if>
 		<if test="status != null and status !=''">
-			  and STATUS = #{status}
-		</if>	
-			order by UPDATE_DATE desc
+			and STATUS = #{status}
+		</if>
+		order by UPDATE_DATE desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
 	</select>
-	
- 	<select id="queryTotal" resultType="int">
-		select count(*) from XLGL_EXAM_EXAMINE 
-		 where 1=1
+
+	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_EXAM_EXAMINE
+		where 1=1
 		<if test="issueStatus != null and issueStatus !=''">
-			  and ISSUE_STATUS = #{issueStatus}
+			and ISSUE_STATUS = #{issueStatus}
 		</if>
 		<if test="status != null and status !=''">
-			  and STATUS = #{status}
-		</if>	
+			and STATUS = #{status}
+		</if>
 		<if test="overStatus != null and overStatus !=''">
-			  and OVER_STATUS = #{overStatus}
-		</if>	
-		
+			and OVER_STATUS = #{overStatus}
+		</if>
+
 	</select>
-	 
+
 	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglExamExamine">
 		insert into XLGL_EXAM_EXAMINE
 		(
-			"id", 
-			"EXAMINE_NAME", 
-			"EXAMINE_DATE", 
-			"EXAMINE_START_DATE", 
-			"EXAMINE_ALL_NUMBER", 
-			"EXAMINE_SUBJECT_ID", 
-			"EXAMINE_SUBJECT_NAME", 
-			"CREATE_USER", 
-			"CREATE_DATE", 
-			"UPDATE_USER", 
-			"UPDATE_DATE", 
-			"ISSUE_STATUS",
-			"STATUS",
-			"OVER_STATUS",
-			"EXAMINE_END_DATE",
-			"ISSUE_DATE",
-			"MAKEUP_STATUS",
-			"LIANXI_TYPE"
+		"id",
+		"EXAMINE_NAME",
+		"EXAMINE_DATE",
+		"EXAMINE_START_DATE",
+		"EXAMINE_ALL_NUMBER",
+		"EXAMINE_SUBJECT_ID",
+		"EXAMINE_SUBJECT_NAME",
+		"CREATE_USER",
+		"CREATE_DATE",
+		"UPDATE_USER",
+		"UPDATE_DATE",
+		"ISSUE_STATUS",
+		"STATUS",
+		"OVER_STATUS",
+		"EXAMINE_END_DATE",
+		"ISSUE_DATE",
+		"MAKEUP_STATUS",
+		"LIANXI_TYPE"
 		)
 		values
 		(
-			#{id}, 
-			#{examineName}, 
-			#{examineDate}, 
-			#{examineStartDate}, 
-			#{examineAllNumber}, 
-			#{examineSubjectId}, 
-			#{examineSubjectName}, 
-			#{createUser}, 
-			#{createDate}, 
-			#{updateUser}, 
-			#{updateDate}, 
-			#{issueStatus},
-			#{status},
-			#{overStatus},
-			#{examineEndDate},
-			#{issueDate},
-			#{makeupStatus},
-			#{lianxiType}
+		#{id},
+		#{examineName},
+		#{examineDate},
+		#{examineStartDate},
+		#{examineAllNumber},
+		#{examineSubjectId},
+		#{examineSubjectName},
+		#{createUser},
+		#{createDate},
+		#{updateUser},
+		#{updateDate},
+		#{issueStatus},
+		#{status},
+		#{overStatus},
+		#{examineEndDate},
+		#{issueDate},
+		#{makeupStatus},
+		#{lianxiType}
 		)
 	</insert>
-	 
+
 	<update id="update" parameterType="com.css.app.xlgl.entity.XlglExamExamine">
-		update XLGL_EXAM_EXAMINE 
+		update XLGL_EXAM_EXAMINE
 		<set>
 			<if test="examineName != null">"EXAMINE_NAME" = #{examineName}, </if>
 			<if test="examineDate != null">"EXAMINE_DATE" = #{examineDate}, </if>
@@ -111,20 +112,30 @@
 		</set>
 		where id = #{id}
 	</update>
-	
+
 	<delete id="delete">
 		delete from XLGL_EXAM_EXAMINE where id = #{value}
 	</delete>
-	
+
 	<delete id="deleteBatch">
-		delete from XLGL_EXAM_EXAMINE where id in 
-		<foreach item="id" collection="array" open="(" separator="," close=")">
+		delete from XLGL_EXAM_EXAMINE where id in
+		<foreach item="id" collection="array" open="(" separator=","
+			close=")">
 			#{id}
 		</foreach>
 	</delete>
-	
+
 	<select id="findCount" resultType="int">
-		select count(*) from BASE_APP_USER where ISDELETE=0
+		select count(*) from
+		BASE_APP_USER where ISDELETE=0
 	</select>
 
+	<select id="queryVerifyList" resultType="com.css.app.xlgl.entity.XlglExamExamine">
+		select * from XLGL_EXAM_EXAMINE
+		where STATUS = '0' and ISSUE_STATUS = '1'
+		<if test="examineName != null and examineName !=''">
+			and EXAMINE_NAME = #{examineName}
+		</if>
+		order by UPDATE_DATE desc
+	</select>
 </mapper>

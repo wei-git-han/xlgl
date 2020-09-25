@@ -27,4 +27,6 @@ public interface XlglExamExamineService {
 	
 	void deleteBatch(String[] ids);
 	int findCount();
+	
+	List<XlglExamExamine> queryVerifyList(Map<String, Object> map);
 }
