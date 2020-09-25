@@ -182,6 +182,9 @@
             <if test="infoId != null and infoId !=''">
                 and INFO_ID = #{infoId}
             </if>
+            <if test="orgId != null and orgId !=''">
+                and ORG_ID = #{orgId}
+            </if>
             and IS_WORK = '1'
         </select>
 
@@ -289,7 +292,8 @@
                 "XLTYPE",
                 "PICTURE_PATH",
                 "EXERCISE_TIME",
-                "INSTRACTION"
+                "INSTRACTION",
+                "ORG_ID"
             )
             values
             (
@@ -318,7 +322,8 @@
                 #{xltype},
                 #{picturePath},
                 #{exerciseTime},
-                #{instraction}
+                #{instraction},
+                #{orgId}
             )
         </insert>
 
@@ -349,7 +354,8 @@
                 <if test="xltype != null">"XLTYPE" = #{xltype},</if>
                 <if test="picturePath != null">"PICTURE_PATH" = #{picturePath},</if>
                 <if test="exerciseTime != null">"EXERCISE_TIME" = #{exerciseTime},</if>
-                <if test="instraction != null">"INSTRACTION" = #{instraction}</if>
+                <if test="instraction != null">"INSTRACTION" = #{instraction},</if>
+                <if test="orgId != null">"ORG_ID" = #{orgId}</if>
             </set>
             where ID = #{id}
         </update>

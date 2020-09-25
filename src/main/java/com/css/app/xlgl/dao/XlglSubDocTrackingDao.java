@@ -59,7 +59,7 @@ public interface XlglSubDocTrackingDao extends BaseDao<XlglSubDocTracking> {
     //@Select("select * from BASE_APP_ORGAN where ISDELETE=0 and TREE_PATH like '%'||#{deptId}||'%' ")
     @Select("select count(1) from XLGL_SUB_DOC_TRACKING where RECEIVER_ID = #{0} and EXERCISE_TIME like '%'||#{1}||'%'" )
     int queryAllCount(String userId,String year);
-    @Select("select count(1) from XLGL_SUB_DOC_TRACKING where RECEIVER_ID = #{0} and IS_WORK = '1' and EXERCISE_TIME like '%'||#{1}||'%'")
+    @Select("select count(1) from XLGL_SUB_DOC_TRACKING where RECEIVER_ID = #{0} and XLTYPE = '0' and IS_WORK = '1' and EXERCISE_TIME like '%'||#{1}||'%'")
     int quereyWcCount(String userId,String year);
 
     @Select("select count(1) from XLGL_SUB_DOC_TRACKING where RECEIVER_ID = #{0} and BAOMING = '2' and EXERCISE_TIME like '%'||#{1}||'%'")

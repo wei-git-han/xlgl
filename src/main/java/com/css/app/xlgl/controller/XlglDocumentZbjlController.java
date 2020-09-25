@@ -260,6 +260,7 @@ public class XlglDocumentZbjlController {
 				tracking.setRead("0");// 0是未接受，1是已接受
 				tracking.setIsWork("0");// 0是未参训
 				tracking.setCreatedTime(new Date());
+				tracking.setOrgId(organId);
 				xlglSubDocTrackingService.save(tracking);
 
 				// 发送消息提醒

@@ -690,7 +690,7 @@ public class XlglXlzzInfoController {
 				List<BaseAppOrgan> list = baseAppOrganService.queryAllDeptId(judeptId);
 				List listTotal = new ArrayList();
 				if (list != null && list.size() > 0) {
-					for (int i = 1; i < list.size(); i++) {//i从1开始，只会显示局下的处
+					for (int i = 0; i < list.size(); i++) {//i从1开始，只会显示局下的处
 						JSONObject jsonObject = new JSONObject();
 						String deptId = list.get(i).getId();
 						String deptName = list.get(i).getName();
@@ -739,11 +739,12 @@ public class XlglXlzzInfoController {
 						jsonObject.put("cbk",cbk);//处延后参训
 						//jsonObject.put("isConfirm",status);
 						//jsonObject.put("listUser",listUser);
-						listTotal.add(jsonObject);
+						if(i !=0){
+							listTotal.add(jsonObject);
+						}
 
 					}
 				}
-
 				if (list != null && list.size() > 0) {
 					for (int i = 0; i < list.size(); i++) {
 						String deptId = list.get(i).getId();
@@ -1238,7 +1239,7 @@ public class XlglXlzzInfoController {
 				JSONObject jsonObject = new JSONObject();
 				String orgId = baseAppOrgan.getId();
 				String orgName = baseAppOrgan.getName();
-				String f = getSum(allInfoIds);
+				String f = getSum(allInfoIds,orgId);
 				jsonObject.put("name", orgName);
 				jsonObject.put("wcl", f);
 				listAll.add(jsonObject);
@@ -1250,7 +1251,7 @@ public class XlglXlzzInfoController {
 
 
 	}
-	public String getSum(String allInfoIds) {
+	public String getSum(String allInfoIds,String orgId) {
 		int cxSum = 0;//总的参训人数
 		int sum = 0;//总的有效人数
 		Map<String, Object> map = new HashMap<>();
@@ -1259,6 +1260,7 @@ public class XlglXlzzInfoController {
 			for (int i = 0; i < infoIds.length; i++) {
 				String infoId = infoIds[i];
 				map.put("infoId",infoId);
+				map.put("orgId",orgId);
 				int yxSum = xlglSubDocTrackingService.queryCxCount(map);//单一课程所有参训的人
 				cxSum += yxSum;
 			}
