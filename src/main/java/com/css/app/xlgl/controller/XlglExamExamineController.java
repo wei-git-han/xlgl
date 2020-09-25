@@ -143,6 +143,9 @@ public class XlglExamExamineController {
 			//更改状态
 			if(makeupList.size()>0) {//查看是否有补考，如果有补考则以补考结束时间为准
 				XlglExamExamineMakeup xlglExamExamineMakeup = makeupList.get(0);
+				if(xlglExamExamineMakeup.getMakeUpEndDate() !=null ) {
+					xlglExamExamine.setExamineEndDate(xlglExamExamineMakeup.getMakeUpEndDate());
+				}	
 				if(xlglExamExamineMakeup.getMakeUpEndDate() !=null 
 						&& xlglExamExamineMakeup.getMakeUpEndDate().before(date) ) {
 					XlglExamExamine ex = new XlglExamExamine();
@@ -150,7 +153,19 @@ public class XlglExamExamineController {
 					ex.setOverStatus("1");
 					xlglExamExamine.setOverStatus("1");
 					xlglExamExamineService.update(ex);
-					xlglExamExamine.setExamineEndDate(xlglExamExamineMakeup.getMakeUpEndDate());
+				}else if(xlglExamExamineMakeup.getMakeUpEndDate() !=null 
+						&&xlglExamExamineMakeup.getMakeUpStartDate().before(date) && xlglExamExamineMakeup.getMakeUpEndDate().after(date) 
+						&& !xlglExamExamine.getOverStatus().equals("0")) {
+					XlglExamExamine ex = new XlglExamExamine();
+					ex.setId(xlglExamExamine.getId());
+					ex.setOverStatus("2");
+					xlglExamExamineService.update(ex);
+				}else if(xlglExamExamineMakeup.getMakeUpStartDate() !=null && xlglExamExamineMakeup.getMakeUpEndDate() !=null 
+						&& xlglExamExamineMakeup.getMakeUpStartDate().after(date)) {
+					XlglExamExamine ex = new XlglExamExamine();
+					ex.setId(xlglExamExamine.getId());
+					ex.setOverStatus("99");
+					xlglExamExamineService.update(ex);
 				}
 			}else {
 				if(xlglExamExamine.getExamineEndDate() !=null && xlglExamExamine.getIssueStatus() !=null
@@ -192,11 +207,24 @@ public class XlglExamExamineController {
 			if(makeupList.size()>0) {//查看是否有补考，如果有补考则以补考结束时间为准
 				XlglExamExamineMakeup xlglExamExamineMakeup = makeupList.get(0);
 				if(xlglExamExamineMakeup.getMakeUpEndDate() !=null 
-						&& xlglExamExamineMakeup.getMakeUpEndDate().before(new Date()) ) {
+						&& xlglExamExamineMakeup.getMakeUpEndDate().before(date) ) {
 					XlglExamExamine ex = new XlglExamExamine();
 					ex.setId(xlglExamExamine.getId());
 					ex.setOverStatus("1");
 					xlglExamExamine.setOverStatus("1");
+					xlglExamExamineService.update(ex);
+				}else if(xlglExamExamineMakeup.getMakeUpEndDate() !=null 
+						&&xlglExamExamineMakeup.getMakeUpStartDate().before(date) && xlglExamExamineMakeup.getMakeUpEndDate().after(date) 
+						&& !xlglExamExamine.getOverStatus().equals("0")) {
+					XlglExamExamine ex = new XlglExamExamine();
+					ex.setId(xlglExamExamine.getId());
+					ex.setOverStatus("2");
+					xlglExamExamineService.update(ex);
+				}else if(xlglExamExamineMakeup.getMakeUpStartDate() !=null && xlglExamExamineMakeup.getMakeUpEndDate() !=null 
+						&& xlglExamExamineMakeup.getMakeUpStartDate().after(date)) {
+					XlglExamExamine ex = new XlglExamExamine();
+					ex.setId(xlglExamExamine.getId());
+					ex.setOverStatus("99");
 					xlglExamExamineService.update(ex);
 				}
 			}else {
@@ -672,6 +700,21 @@ public class XlglExamExamineController {
 		}
 		jsonObject.put("originalTopic", listCount);
 		Response.json(jsonObject);
+	}
+	/**
+	 * 考试名称重复校验
+	 * */
+	@ResponseBody
+	@RequestMapping("/verify")
+	public void verify(String examineName) {
+		Map<String, Object> map = new HashMap<String,Object>();
+		map.put("examineName", examineName);
+		List<XlglExamExamine> list = xlglExamExamineService.queryVerifyList(map);
+		boolean status = true; //考试名称无重复
+		if(list.size()>0) {
+			status = false; //考试名称重复
+		}
+		Response.json("status",status);
 	}
 	
 }

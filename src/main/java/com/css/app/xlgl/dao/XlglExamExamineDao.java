@@ -1,5 +1,8 @@
 package com.css.app.xlgl.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.css.app.xlgl.entity.XlglExamExamine;
@@ -15,4 +18,7 @@ import com.css.base.dao.BaseDao;
 @Mapper
 public interface XlglExamExamineDao extends BaseDao<XlglExamExamine> {
 	int findCount();
+	
+	List<XlglExamExamine> queryVerifyList(Map<String, Object> map);
+	
 }

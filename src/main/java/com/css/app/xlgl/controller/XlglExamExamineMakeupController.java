@@ -93,7 +93,7 @@ public class XlglExamExamineMakeupController {
 			xlglExamExamineMakeup.setSort(0);
 		}
 		
-			SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			XlglExamExamine queryObject = xlglExamExamineService.queryObject(xlglExamExamineMakeup.getExamineId());
 		try {
 				Date endDate = format.parse(xlglExamExamineMakeup.getMakeUpStartDateStr());
