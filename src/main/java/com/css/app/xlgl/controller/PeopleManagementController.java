@@ -268,15 +268,22 @@ public class PeopleManagementController {
 	 */
 	@ResponseBody
 	@RequestMapping("/statistics")
-	public void statistics(String status) {
+	public void statistics(String status,String organId) {
 		LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		if (status.equals("1")) {
-			String organId = CurrentUser.getSSOUser().getOrganId();
+		if (status.equals("1") ) {
+			if(StringUtils.isBlank(organId)) {
+				organId = CurrentUser.getSSOUser().getOrganId();
+			}
 			map.add("organId", organId);
 		}
 		List<String> list = getUserArray();
 		JSONObject jsonData = this.getNumber(map);
-		int userIdList = this.userIdNumber(null, list);// 实际在位人数
+		int userIdList = 0;
+		if(status.equals("1")) {
+			userIdList=this.userIdNumber(organId, list);// 实际在位人数
+		}else {
+			userIdList=this.userIdNumber(null, list);// 实际在位人数
+		}
 		Integer object = 0;
 		Integer num = 0;
 		if (jsonData != null) {
@@ -292,7 +299,7 @@ public class PeopleManagementController {
 		} else {
 			DecimalFormat decimalFormat = new DecimalFormat("0.00");
 			if (userIdList > 0) {
-				if (object > 0) {
+				if (sum > 0) {
 					// float zwRate = (float) ((new BigDecimal((float) object /
 					// userIdList).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()) * 100);
 					float zwRate = ((float) userIdList / (float) sum) * 100;
@@ -302,6 +309,8 @@ public class PeopleManagementController {
 					} else {
 						jsonData.put("zwlv", "0");
 					}
+				}else {
+					jsonData.put("zwlv", "0");
 				}
 				// long zwr =((long)userIdList /(long)yzwrs);
 				// float zwRate = zwr*100; //人员在位率
