@@ -101,7 +101,7 @@
 			<if test="userId != null">"USER_ID" = #{userId},</if>
 			<if test="userName != null">"USER_NAME" = #{userName},</if>
 			<if test="createTime != null">"CREATE_TIME" = #{createTime},</if>
-			<if test="pictureType != null">"PICTURE_TYPE" = #{pictureType}</if>
+			<if test="pictureType != null">"PICTURE_TYPE" = #{pictureType},</if>
 			<if test="pictureName != null">"PICTURE_NAME" = #{pictureName}</if>
 		</set>
 		where ID = #{id}
@@ -121,5 +121,27 @@
 	<delete id="deleteByPictureId">
 		delete from XLGL_PICTURE where PICTURE_ID = #{value}
 	</delete>
-
+	
+	
+	<select id="queryListByType" resultType="com.css.app.xlgl.entity.XlglPicture">
+		select * from XLGL_PICTURE where 1=1
+		<if test="id != null and id !=''">
+			and FILE_ID = #{id}
+		</if>
+		<if test="type != null and type !=''">
+			and PICTURE_TYPE = #{type}
+		</if>
+		<if test="pictureId != pictureId and pictureId !=''">
+			and PICTURE_ID = #{pictureId}
+		</if>
+		<if test="fileId != null and fileId !=''">
+			and FILE_ID = #{fileId}
+		</if>
+		
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+		order by CREATE_TIME asc
+	</select>
+	
 </mapper>

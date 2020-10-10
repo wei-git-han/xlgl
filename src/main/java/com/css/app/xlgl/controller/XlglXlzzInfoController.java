@@ -48,6 +48,8 @@ import com.css.base.utils.Response;
 import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 
+import cn.com.css.filestore.impl.HTTPFile;
+
 
 /**
  * 训练组织基本信息表
@@ -104,6 +106,15 @@ public class XlglXlzzInfoController {
 		if(xlglXlzzInfoList != null && xlglXlzzInfoList.size() > 0){
 			for(XlglXlzzInfo xlglXlzzInfo : xlglXlzzInfoList){
 				xlglXlzzInfo.setInfoId(xlglXlzzInfo.getId());
+				Map<String, Object> hashmap = new HashMap<String, Object>();
+				hashmap.put("id", xlglXlzzInfo.getId());
+				hashmap.put("type","4");
+				List<XlglPicture> queryList = xlglPictureService.queryListByType(hashmap);
+				if(queryList.size() >0) {
+					if(queryList.get(0).getFileId().equals(xlglXlzzInfo.getId())) {
+						xlglXlzzInfo.setPicturePath(queryList.get(0).getPictureId());
+					}
+				}
 			}
 		}
 		
@@ -191,7 +202,7 @@ public class XlglXlzzInfoController {
 					jsPicture.put("pictureName", xlglPicture.getPictureName());
 					jsPicture.put("type","image/png");
 					listPicture.add(jsPicture);
-				} else {
+				} else if("2".equals(type)){
 					jsFile.put("pictureId", xlglPicture.getPictureId());
 					jsFile.put("pictureName", xlglPicture.getPictureName());
 					jsFile.put("type","application/ofd");
@@ -324,7 +335,14 @@ public class XlglXlzzInfoController {
 			jsonObject.put("time", "0");
 		}
 
-
+		Map<String, Object> hashmap = new HashMap<String, Object>();
+		hashmap.put("id", xlglXlzzInfo.getId());
+		hashmap.put("type","4");
+		List<XlglPicture> queryList = xlglPictureService.queryListByType(hashmap);
+		if(queryList.size() >0) {
+				xlglXlzzInfo.setPicturePath(queryList.get(0).getPictureId());
+				xlglXlzzInfo.setPictureName(queryList.get(0).getPictureName());
+		}
 		jsonObject.put("listVedio", listVedio);
 		jsonObject.put("listPicture", listPicture);
 		jsonObject.put("listFile", listFile);
@@ -370,7 +388,7 @@ public class XlglXlzzInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	public void save(XlglXlzzInfo xlglXlzzInfo,String pIds,String type,String pidNames){
+	public void save(XlglXlzzInfo xlglXlzzInfo,String pIds,String type,String pidNames,String coverFile){
 		JSONObject jsonObject = new JSONObject();
 		String fId = null;
 		if(StringUtils.isNotBlank(xlglXlzzInfo.getId())){
@@ -422,6 +440,33 @@ public class XlglXlzzInfoController {
 				}
 				xlglPictureService.save(xlglPicture);
 			}
+		}
+		//保存上传封面
+		if(StringUtils.isNotBlank(coverFile)) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("id", fId);
+			map.put("type","4");
+			List<XlglPicture> queryList = xlglPictureService.queryListByType(map);
+			if(queryList.size() >0) {
+				XlglPicture xlglPicture = queryList.get(0);
+				HTTPFile httpFile = new HTTPFile(coverFile);
+				xlglPicture.setPictureId(coverFile);
+				xlglPicture.setPictureName(httpFile.getFileName());
+				xlglPictureService.update(xlglPicture);
+				
+			}else {
+				Integer sort = xlglPictureService.queryTotal(null)+1;
+				HTTPFile httpFile = new HTTPFile(coverFile);
+				XlglPicture xlglPicture = new XlglPicture();
+				xlglPicture.setId(UUIDUtils.random());
+				xlglPicture.setFileId(fId);
+				xlglPicture.setPictureId(coverFile);
+				xlglPicture.setSort(sort.toString());
+				xlglPicture.setPictureName(httpFile.getFileName());
+				xlglPicture.setPictureType("4");
+				xlglPictureService.save(xlglPicture);
+			}
+			
 		}
 		jsonObject.put("fileId",fId);
 		jsonObject.put("result","success");
