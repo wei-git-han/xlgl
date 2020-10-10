@@ -52,7 +52,7 @@ public class XlglRuleController {
 	
 	/**
 	 * 列表
-	 * type : 0:全军管理法规；1:装备发展部管理法规；2：常用资料；3：其他法规
+	 * type : 0:全军管理法规；1:装备发展部管理法规；2：常用资料；3：其他法规; 4:军事法规
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
@@ -76,7 +76,7 @@ public class XlglRuleController {
 	}
 
 	//获取文件列表
-	//type : 0:全军管理法规；1:装备发展部管理法规；2：常用资料；3：其他法规
+	//type : 0:全军管理法规；1:装备发展部管理法规；2：常用资料；3：其他法规; 4:军事法规
 	@ResponseBody
 	@RequestMapping("/getFileList")
 	public void getFileList(Integer page, Integer limit,String type){
@@ -224,20 +224,48 @@ public class XlglRuleController {
 	@RequestMapping("/uploadFile")
 	public void upLoad(@RequestParam(required = false) MultipartFile[] file,String type) {
 		JSONObject json = new JSONObject();
-		String fileId = FileBaseUtil.fileServiceUpload(file[0]);
-		String fileName = file[0].getOriginalFilename();
+			String fileId =FileBaseUtil.fileServiceUpload(file[0]);
+			String fileName = file[0].getOriginalFilename();
+			XlglRule file1 = new XlglRule();
+			file1.setId(UUIDUtils.random());
+			file1.setInfoId(fileId);
+			file1.setFileName(fileName);
+			file1.setUploadUser(CurrentUser.getUsername());
+			file1.setType(type);
+			file1.setCreatedTime(new Date());
+			xlglRuleService.save(file1);
+	
+	
 		json.put("fileId", fileId);
-		XlglRule file1 = new XlglRule();
-		file1.setId(UUIDUtils.random());
-		file1.setInfoId(fileId);
-		file1.setFileName(fileName);
-		file1.setUploadUser(CurrentUser.getUsername());
-		file1.setType(type);
-		file1.setCreatedTime(new Date());
-		xlglRuleService.save(file1);
+	
 		Response.json(json);
 	}
-
+/*	@ResponseBody
+	@RequestMapping("/uploadFile")
+	public void upLoad(@RequestParam(required = false) MultipartFile file) {
+		JSONObject json = new JSONObject();
+		String fileId = FileBaseUtil.fileServiceUpload(file);
+		json.put("fileId", fileId);
+		Response.json(json);
+	}
+	
+	@ResponseBody
+	@RequestMapping("/uploadFileSave")
+	public void upLoad(String[] ids,String type) {
+		for (String string : ids) {
+			HTTPFile httpFile = new HTTPFile(string);
+			XlglRule file1 = new XlglRule();
+			file1.setId(UUIDUtils.random());
+			file1.setInfoId(string);
+			file1.setFileName(httpFile.getFileName());
+			file1.setUploadUser(CurrentUser.getUsername());
+			file1.setType(type);
+			file1.setCreatedTime(new Date());
+			xlglRuleService.save(file1);
+		}
+	}*/
+	
+	
 	@ResponseBody
 	@RequestMapping("/downLoad")
 	public void downLoad(String fileId,HttpServletResponse response) throws IOException {

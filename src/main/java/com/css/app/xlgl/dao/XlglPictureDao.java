@@ -40,5 +40,8 @@ public interface XlglPictureDao extends BaseDao<XlglPicture> {
 
     @Delete("delete from XLGL_PICTURE where FILE_ID = #{0} and PICTURE_ID = #{1}")
     void deleteVedioOrFileOrPicture(String infoId,String id);
+    
+	List<XlglPicture> queryListByType(Map<String, Object> map);
 
+    
 }

@@ -75,6 +75,9 @@ public class XlglXlzzInfo implements Serializable {
 	private String sort;
 	//创建人名字
 	private String creatorName;
+	
+	//图片名称
+	private String pictureName;
 
 	public String getCreatorName() {
 		return creatorName;
@@ -360,4 +363,13 @@ public class XlglXlzzInfo implements Serializable {
 	public void setPicturePath(String picturePath) {
 		this.picturePath = picturePath;
 	}
+
+	public String getPictureName() {
+		return pictureName;
+	}
+
+	public void setPictureName(String pictureName) {
+		this.pictureName = pictureName;
+	}
+	
 }

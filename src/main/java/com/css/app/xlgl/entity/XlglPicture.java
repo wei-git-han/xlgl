@@ -27,7 +27,7 @@ public class XlglPicture implements Serializable {
 	private String sort;
 
 	private Date createTime;
-	//1:图片，0：视频，2：附件
+	//0：视频，1:图片， 2：附件，  4:封面， 5：主文件（转版后ofd文件）
 	private String pictureType;
 
 	//上传文件名称
