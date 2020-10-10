@@ -609,6 +609,18 @@ public class XlglDocumentZbjlController {
 				XlglPhysical xlglPhysical = xlglPhysicalService.queryByUserId(userId, year);
 				String jtScore = "0";
 				String jtDj = "--";
+				String up = "";
+				String sit = "";
+				String srun = "";
+				String trun = "";
+				String sex = "";
+				String age = "";
+				String ytxs = "";
+				String ywqz = "";
+				String sxp = "";
+				String cpf = "";
+				String cpm = "";
+				String judge = "";
 				if (xlglPhysical != null) {
 					if (StringUtils.isNotBlank(xlglPhysical.getAllScore())) {
 						jtScore = xlglPhysical.getAllScore();
@@ -616,9 +628,56 @@ public class XlglDocumentZbjlController {
 					if (StringUtils.isNotBlank(xlglPhysical.getAllJudge())) {
 						jtDj = xlglPhysical.getAllJudge();
 					}
+					if(StringUtils.isNotBlank(xlglPhysical.getUp())){
+						up = xlglPhysical.getUp();
+					}
+					if(StringUtils.isNotBlank(xlglPhysical.getSit())){
+						sit = xlglPhysical.getSit();
+					}
+					if(StringUtils.isNotBlank(xlglPhysical.getSrun())){
+						srun = xlglPhysical.getSrun();
+					}
+					if(StringUtils.isNotBlank(xlglPhysical.getTrun())){
+						trun = xlglPhysical.getTrun();
+					}
+					if(StringUtils.isNotBlank(xlglPhysical.getSex())){
+						sex = xlglPhysical.getSex();
+					}
+					if(StringUtils.isNotBlank(xlglPhysical.getAge())){
+						age = xlglPhysical.getAge();
+					}
+					if(StringUtils.isNotBlank(xlglPhysical.getYtxs())){
+						ytxs = xlglPhysical.getYtxs();
+					}
+					if(StringUtils.isNotBlank(xlglPhysical.getYwqz())){
+						ywqz = xlglPhysical.getYwqz();
+					}
+					if(StringUtils.isNotBlank(xlglPhysical.getSxp())){
+						sxp = xlglPhysical.getSxp();
+					}
+					if(StringUtils.isNotBlank(xlglPhysical.getCpf())){
+						cpf = xlglPhysical.getCpf();
+					}
+					if(StringUtils.isNotBlank(xlglPhysical.getCpm())){
+						cpm = xlglPhysical.getCpm();
+					}
+					if(StringUtils.isNotBlank(xlglPhysical.getJudge())){
+						judge = xlglPhysical.getJudge();
+					}
 				}
 				jsonObject.put("jtScore", jtScore);// 得分
 				jsonObject.put("jtDj", jtDj);// 等级
+				jsonObject.put("up",up);//引体向上
+				jsonObject.put("sit",sit);//仰卧起坐
+				jsonObject.put("srun",srun);//蛇形跑
+				jsonObject.put("trun",trun);//3000米长跑
+				jsonObject.put("sex",sex);//性别
+				jsonObject.put("age",age.substring(0,age.indexOf(".")));//年龄
+				jsonObject.put("ytxs",ytxs.substring(0,ytxs.indexOf(".")));//引体向上
+				jsonObject.put("ywqz",ywqz.substring(0,ywqz.indexOf(".")));//仰卧起坐
+				jsonObject.put("sxp",sxp);//蛇形跑
+				jsonObject.put("cp",cpf+cpm);
+				jsonObject.put("judge",judge);//体型
 				// 军事体育成绩得分-----------------------end
 
 				// 自学成绩得分------------------------------start
