@@ -206,9 +206,9 @@ public class XlglXlzzInfoController {
 					jsFile.put("type", "application/ofd");
 					listFile.add(jsFile);
 				}else if("5".equals(type)) {
-					jsFile.put("pictureId", xlglPicture.getPictureId());
-					jsFile.put("pictureName", xlglPicture.getPictureName());
-					jsFile.put("type", "application/ofd");
+					mainFile.put("pictureId", xlglPicture.getPictureId());
+					mainFile.put("pictureName", xlglPicture.getPictureName());
+					mainFile.put("type", "application/ofd");
 					listMainFile.add(mainFile);
 				}
 			}
@@ -470,6 +470,7 @@ public class XlglXlzzInfoController {
 				XlglPicture xlglPicture = new XlglPicture();
 				xlglPicture.setId(UUIDUtils.random());
 				xlglPicture.setFileId(fId);
+				xlglPicture.setCreateTime(new Date());
 				xlglPicture.setPictureId(coverFile);
 				xlglPicture.setSort(sort.toString());
 				xlglPicture.setPictureName(httpFile.getFileName());
@@ -487,7 +488,7 @@ public class XlglXlzzInfoController {
 			if (queryList.size() > 0) {
 				XlglPicture xlglPicture = queryList.get(0);
 				HTTPFile httpFile = new HTTPFile(mainFile);
-				xlglPicture.setPictureId(coverFile);
+				xlglPicture.setPictureId(mainFile);
 				xlglPicture.setPictureName(httpFile.getFileName());
 				xlglPictureService.update(xlglPicture);
 
