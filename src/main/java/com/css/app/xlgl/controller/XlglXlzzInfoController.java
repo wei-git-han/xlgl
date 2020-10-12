@@ -178,7 +178,7 @@ public class XlglXlzzInfoController {
 			xlglXlzzInfo.setFbDept(xlglXlzzInfo.getZjdept());
 		}
 		map.put("fileId", id);
-		List<XlglPicture> list = xlglPictureService.queryAllInfoByInfoId(map);
+		List<XlglPicture> list = xlglPictureService.queryAllInfoByInfoId(map); 
 		List listVedio = new ArrayList();
 		List listPicture = new ArrayList();
 		List listFile = new ArrayList();
@@ -1131,9 +1131,25 @@ public class XlglXlzzInfoController {
 	public void getInfo(String infoId, String id) {
 		JSONObject jsonObject = new JSONObject();
 		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> hashmap = new HashMap<>();
+		hashmap.put("fileId", infoId);
 		map.put("id", infoId);
 		map.put("type", "1");
 		XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(infoId);
+		List<XlglPicture> mainlist = xlglPictureService.queryAllInfoByInfoId(hashmap);
+		List listMainFile = new ArrayList();
+		if (mainlist != null && mainlist.size() > 0) {
+			for (XlglPicture xlglPicture : mainlist) {
+				JSONObject mainFile = new JSONObject();
+				String type = xlglPicture.getPictureType();
+				 if("5".equals(type)) {
+					mainFile.put("pictureId", xlglPicture.getPictureId());
+					mainFile.put("pictureName", xlglPicture.getPictureName());
+					mainFile.put("type", "application/ofd");
+					listMainFile.add(mainFile);
+				}
+			}
+		}
 		if (StringUtils.isNotBlank(id)) {
 			XlglPicture xlglPicture = xlglPictureService.queryVedio(id);
 			xlglPicture.setTitle(xlglXlzzInfo.getTitle());
@@ -1160,6 +1176,7 @@ public class XlglXlzzInfoController {
 			jsonObject.put("time", xlglXlzzInfo.getExerciseTime());
 			jsonObject.put("xlglXlzzInfo", xlglXlzzInfo);
 		}
+		jsonObject.put("listMainFile", listMainFile);//主文件
 		jsonObject.put("list", list);
 		Response.json(jsonObject);
 
