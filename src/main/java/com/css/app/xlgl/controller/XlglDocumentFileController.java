@@ -161,7 +161,7 @@ public class XlglDocumentFileController{
 	 */
 	@ResponseBody
 	@RequestMapping("/uploadFile")
-	public void savePDF(@RequestParam(required = false) MultipartFile[] pdf) {
+	public void savePDF(@RequestParam(value = "pdf", required = false) MultipartFile[] pdf) {
 		String formatDownPath = "";// 版式文件下载路径
 		String retFormatId = null;// 返回的版式文件id
 		String streamId = null;// 流式文件id
