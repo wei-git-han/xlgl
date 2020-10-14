@@ -96,25 +96,25 @@ public class XlglDocumentFileController{
 	/**
 	 * 信息
 	 */
-	@ResponseBody
-	@RequestMapping("/getFile")
-	public void info(String id){
-		System.err.println(id);
-		XlglDocumentFile xlglDocumentFile = xlglDocumentFileService.queryObject(id);
-		JSONObject json= new JSONObject();
-		if(xlglDocumentFile!=null) {
-			String formatId=xlglDocumentFile.getFileServerFormatId();
-			if(StringUtils.isNotBlank(formatId)){
-				//获取版式文件的下载路径
-				HTTPFile httpFiles = new HTTPFile(formatId);
-				if(httpFiles!=null) {
-					json.put("formatId", formatId);
-					json.put("downFormatIdUrl", httpFiles.getAssginDownloadURL(true));
-				}
-			}
-		}
-		Response.json(json);
-	}
+//	@ResponseBody
+//	@RequestMapping("/getFile")
+//	public void info(String id){
+//		System.err.println(id);
+//		XlglDocumentFile xlglDocumentFile = xlglDocumentFileService.queryObject(id);
+//		JSONObject json= new JSONObject();
+//		if(xlglDocumentFile!=null) {
+//			String formatId=xlglDocumentFile.getFileServerFormatId();
+//			if(StringUtils.isNotBlank(formatId)){
+//				//获取版式文件的下载路径
+//				HTTPFile httpFiles = new HTTPFile(formatId);
+//				if(httpFiles!=null) {
+//					json.put("formatId", formatId);
+//					json.put("downFormatIdUrl", httpFiles.getAssginDownloadURL(true));
+//				}
+//			}
+//		}
+//		Response.json(json);
+//	}
 	
 	/**
 	 * 保存
@@ -156,21 +156,17 @@ public class XlglDocumentFileController{
 	
 	/**
 	 * 文件上传保存
-	 * 
-	 * @param idpdf
-	 *            主记录id(documentInfo的id)
 	 * @param pdf
 	 *            文件
 	 */
 	@ResponseBody
 	@RequestMapping("/uploadFile")
-	public void savePDF(String idpdf, @RequestParam(required = false) MultipartFile[] pdf) {
+	public void savePDF(@RequestParam(required = false) MultipartFile[] pdf) {
 		String formatDownPath = "";// 版式文件下载路径
 		String retFormatId = null;// 返回的版式文件id
 		String streamId = null;// 流式文件id
 		String formatId = null;// 版式文件id
 		JSONObject json = new JSONObject();
-		if (StringUtils.isNotBlank(idpdf)) {
 			if (pdf != null && pdf.length > 0) {
 				for (int i = 0; i < pdf.length; i++) {
 					String fileName = pdf[i].getOriginalFilename();
@@ -212,13 +208,8 @@ public class XlglDocumentFileController{
 						// 保存文件相关数据
 						XlglDocumentFile file = new XlglDocumentFile();
 						file.setId(UUIDUtils.random());
-						file.setDocInfoId(idpdf);
-						file.setSort(xlglDocumentFileService.queryMinSort(idpdf));
 						file.setFileName(fileName);
 						file.setCreatedTime(new Date());
-						if (StringUtils.isNotBlank(streamId)) {
-							file.setFileServerStreamId(streamId);
-						}
 						file.setFileServerFormatId(formatId);
 						xlglDocumentFileService.save(file);
 					}
@@ -226,9 +217,23 @@ public class XlglDocumentFileController{
 				json.put("smjId", retFormatId);
 				json.put("smjFilePath", formatDownPath);
 				json.put("result", "success");
+				json.put("fileId",retFormatId);
 			}
-		} else {
-			json.put("result", "fail");
+
+		Response.json(json);
+	}
+
+	@ResponseBody
+	@RequestMapping("/getFile")
+	public void getFile(String fileId){
+		JSONObject json= new JSONObject();
+		if(org.apache.commons.lang.StringUtils.isNotBlank(fileId)){
+			//获取版式文件的下载路径
+			HTTPFile httpFiles = new HTTPFile(fileId);
+			if(httpFiles!=null) {
+				json.put("formatId", fileId);
+				json.put("downFormatIdUrl", httpFiles.getAssginDownloadURL(true));
+			}
 		}
 		Response.json(json);
 	}
@@ -236,15 +241,16 @@ public class XlglDocumentFileController{
 	/**
 	 * 文件上传接口
 	 * @param pdf
+	 * 改接口能用，能直接上传，只是不能转版
 	 */
-	@ResponseBody
-	@RequestMapping("/upLoadFile")
-	public void upLoad(@RequestParam(value = "pdf", required = false) MultipartFile pdf) {
-		JSONObject json = new JSONObject();
-		String fileId = FileBaseUtil.fileServiceUpload(pdf);
-		json.put("fileId", fileId);
-		Response.json(json);
-	}
+//	@ResponseBody
+//	@RequestMapping("/upLoadFile")
+//	public void upLoad(@RequestParam(value = "pdf", required = false) MultipartFile pdf) {
+//		JSONObject json = new JSONObject();
+//		String fileId = FileBaseUtil.fileServiceUpload(pdf);
+//		json.put("fileId", fileId);
+//		Response.json(json);
+//	}
 	
 	/**
 	 * 文件下载接口
@@ -266,6 +272,7 @@ public class XlglDocumentFileController{
 //		}
 //
 //	}
+
 
 	@ResponseBody
 	@RequestMapping("/downLoad")
