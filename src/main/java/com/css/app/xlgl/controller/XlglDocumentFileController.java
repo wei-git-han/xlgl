@@ -243,14 +243,68 @@ public class XlglDocumentFileController{
 	 * @param pdf
 	 * 改接口能用，能直接上传，只是不能转版
 	 */
-//	@ResponseBody
-//	@RequestMapping("/upLoadFile")
-//	public void upLoad(@RequestParam(value = "pdf", required = false) MultipartFile pdf) {
+	@ResponseBody
+	@RequestMapping("/upLoadFile")
+	public void upLoad(@RequestParam(value = "pdf", required = false) MultipartFile pdf) {
+		//一下三行注释掉的是普通上传的，不用转版的，也是好使得
 //		JSONObject json = new JSONObject();
 //		String fileId = FileBaseUtil.fileServiceUpload(pdf);
 //		json.put("fileId", fileId);
-//		Response.json(json);
-//	}
+
+
+		String formatDownPath = "";// 版式文件下载路径
+		String retFormatId = null;// 返回的版式文件id
+		String streamId = null;// 流式文件id
+		String formatId = null;// 版式文件id
+		JSONObject json = new JSONObject();
+				String fileName = pdf.getOriginalFilename();
+				// 获取文件后缀
+				String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
+				// 如果文件是流式则流式转换为版式
+				if (!StringUtils.equals("ofd", fileType)) {
+					streamId = FileBaseUtil.fileServiceUpload(pdf);
+					HTTPFile hf = new HTTPFile(streamId);
+					try {
+						String path = appConfig.getLocalFilePath() + UUIDUtils.random() + "." + hf.getSuffix();
+						try {
+							FileUtils.moveFile(new File(hf.getFilePath()), new File(path));
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						if (StringUtils.isNotBlank(path)) {
+							formatId = OfdTransferUtil.convertLocalFileToOFD(path);
+						}
+						// 删除本地的临时流式文件
+						if (new File(path).exists()) {
+							new File(path).delete();
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else {
+					formatId = FileBaseUtil.fileServiceUpload(pdf);
+				}
+				if (StringUtils.isNotBlank(formatId)) {
+						retFormatId = formatId;
+						// 获取版式文件的下载路径
+						HTTPFile httpFiles = new HTTPFile(formatId);
+						if (httpFiles != null) {
+							formatDownPath = httpFiles.getAssginDownloadURL(true);
+						}
+					// 保存文件相关数据
+					XlglDocumentFile file = new XlglDocumentFile();
+					file.setId(UUIDUtils.random());
+					file.setFileName(fileName);
+					file.setCreatedTime(new Date());
+					file.setFileServerFormatId(formatId);
+					xlglDocumentFileService.save(file);
+				}
+			json.put("smjId", retFormatId);
+			json.put("smjFilePath", formatDownPath);
+			json.put("result", "success");
+			json.put("fileId",retFormatId);
+		Response.json(json);
+	}
 	
 	/**
 	 * 文件下载接口
