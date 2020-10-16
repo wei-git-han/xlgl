@@ -183,7 +183,7 @@ public class XlglMsgRemindTimingTask {
 	}
 	private void setMsg(String userId, String msgUrl, String content) {
 		if (userId != null) {
-			msgUtil.sendMsg("训练管理", content, msgUrl, userId, appId, clientSecret, "训练管理", "", "", "true");
+			msgUtil.sendMsg("训练管理", content, msgUrl, userId, appId, clientSecret, "参训受训", "", "", "true");
 		}
 	}
 
