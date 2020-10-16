@@ -41,7 +41,7 @@ public class XlglMsgRemindTimingTask {
 	private XlglMsgRemindService xlglMsgRemindService;
 	@Autowired
 	private XlglSubDocTrackingService xlglSubDocTrackingService;
-	private final Logger logger = LoggerFactory.getLogger(XlglHuijianServiceImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(XlglMsgRemindTimingTask.class);
 	
 	
 	@Value("${csse.xlgl.appId}")
