@@ -1,9 +1,6 @@
 package com.css.app.xlgl.controller;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -20,6 +18,7 @@ import org.apache.commons.fileupload.UploadContext;
 import org.apache.commons.io.FileUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -76,6 +75,12 @@ public class XlglDocumentFileController{
 	private BaseAppUserService baseAppUserService;
 	@Autowired
 	private BaseAppOrganService baseAppOrganService;
+
+	@Value("${uploadFile.path}")
+	private  String filePath;
+
+	@Value("${localAddress}")
+	private  String localAddress;
 	
 	
 	/**
@@ -251,6 +256,21 @@ public class XlglDocumentFileController{
 		json.put("fileId", fileId);
 		Response.json(json);
 	}
+
+	/**
+	 * 视频上传接口
+	 * 没用文件服务，用的是本地上传，保存在一个文件夹下
+	 */
+
+	@ResponseBody
+	@RequestMapping("/upLoadVedio")
+	public void upLoadVedio(@RequestParam(value = "pdf", required = false) MultipartFile pdf){
+		JSONObject json = new JSONObject();
+		Map<String,Object> map = new HashMap<>();
+		map = FileBaseUtil.fileServiceUploadByFilePath1(pdf,filePath,localAddress);
+		json.put("fileId", map.get("fileId"));
+		Response.json(json);
+	}
 	
 	/**
 	 * 文件下载接口
@@ -272,6 +292,33 @@ public class XlglDocumentFileController{
 //		}
 //
 //	}
+
+	@ResponseBody
+	@RequestMapping("/downLoadVedio")
+	public void downLoadVedio(String fileId,HttpServletResponse response) throws IOException {
+		File file = new File("D:\\ideaProject\\xlgl_app\\src\\main\\resources\\static\\app\\db\\uploadFile\\40e39827-9632-4aa9-af1b-9ed6213ad7cb.mp4");
+		try {
+			FileInputStream fis = new FileInputStream(file);
+			response.setContentType("application/force-download");
+			response.setCharacterEncoding("UTF-8");
+			response.addHeader("Content-Disposition", "attachment;filename="+new String(file.getName().getBytes(),"ISO-8859-1"));
+			ServletOutputStream os = response.getOutputStream();
+			byte[] buf = new byte[1024];
+			int len = 0;
+			while((len = fis.read(buf)) !=-1) {
+				os.write(buf,0,len);
+			}
+			fis.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 
 	@ResponseBody

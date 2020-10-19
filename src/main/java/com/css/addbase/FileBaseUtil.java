@@ -14,10 +14,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.css.base.utils.UUIDUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -346,5 +351,63 @@ private static  String ofdfileupload(HttpServletRequest request) throws IOExcept
 			}
 			return "";
 		}
+
+	public static Map<String,Object> fileServiceUploadByFilePath1(MultipartFile fileStream, String filePath, String localAddress) {
+		Map<String,Object> map = new HashMap<>();
+		if (fileStream == null || StringUtils.isEmpty(fileStream.getOriginalFilename())) {
+			return map;
+		}
+		filePath = findPath() + filePath;
+		String fileName = fileStream.getOriginalFilename();
+		SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+		String date = format.format(new Date());
+		String substring = fileName.substring(fileName.indexOf(".")); // 文件后缀.ofd
+		String substring2 = fileName.substring(0, fileName.indexOf("."));// 文件名称无后缀
+		String fileName1 = UUIDUtils.random();
+		File targetFile = new File(filePath);
+		if (!targetFile.exists()) {
+			targetFile.mkdirs();
+		}
+		FileOutputStream out = null;
+		try {
+			InputStream inputStream = fileStream.getInputStream();
+			String lastFilePath = filePath + fileName1 + substring;
+			out = new FileOutputStream(lastFilePath);
+			int b = -1;
+			byte[] buffer = new byte[1024];
+			while ((b = inputStream.read(buffer)) != -1){
+				out.write(buffer,0,b);
+			}
+			//out.write(fileStream.getBytes());
+			String fileUrl =localAddress+ "app/db/documentinfo/download?id=" + lastFilePath;
+			map.put("filePath",filePath);
+			map.put("fileId",fileName1);
+			map.put("substring",substring);
+			map.put("fileUrl",fileUrl);
+			map.put("filePath1",lastFilePath);
+			return map;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (out != null) {
+				try {
+					out.flush();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				try {
+					out.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return map;
+	}
+
+	public static String findPath() {
+		String url = System.getProperty("user.dir");
+		return url;
+	}
 
 }
