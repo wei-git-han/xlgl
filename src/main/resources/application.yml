@@ -165,3 +165,8 @@ csse.log.path: c:/temp/storetemp/zf_one_number_app.log
 csse.mircoservice.smsUrl: http://192.168.0.55:50005/v1.0/plan
 #语音预定会议室 
 voicePreMeetUrl: http://localhost:8768
+
+uploadFile.path: \src\main\resources\static\app\db\uploadFile\
+css.file.uploadFile.path: \src\main\resources\static\app\db\uploadOFDFile\
+
+localAddress: http://172.16.1.35:11009/

@@ -1,5 +1,6 @@
 package com.css.app.xlgl.util;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,17 +12,21 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.bytedeco.javacv.FFmpegFrameGrabber;
+//import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber.Exception;
 
+import org.bytedeco.javacv.FFmpegFrameGrabber;
+import org.bytedeco.javacv.Java2DFrameConverter;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
-import org.bytedeco.javacv.Java2DFrameConverter;
+/*import org.bytedeco.javacv.Java2DFrameConverter;*/
 
 import com.css.addbase.FileBaseUtil;
 
 import cn.com.css.filestore.impl.HTTPFile;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 public class CutOutVideoUtil {
 	
@@ -100,9 +105,9 @@ public class CutOutVideoUtil {
 			return rotate(bufferedImage);
 		}
 		return bufferedImage;
-	}	
-	
-	public static BufferedImage rotate(BufferedImage img) {
+	}
+
+public static BufferedImage rotate(BufferedImage img) {
 		BufferedImage bufferedImage = new BufferedImage(img.getHeight(), img.getWidth(), BufferedImage.TYPE_4BYTE_ABGR);
 		for (int i = 0; i < img.getWidth(); i++) {
 			for (int j = 0; j < img.getHeight(); j++) {
