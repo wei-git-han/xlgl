@@ -296,14 +296,15 @@ public class XlglDocumentFileController{
 	@ResponseBody
 	@RequestMapping("/downLoadVedio")
 	public void downLoadVedio(String fileId,HttpServletResponse response) throws IOException {
-		File file = new File("D:\\ideaProject\\xlgl_app\\src\\main\\resources\\static\\app\\db\\uploadFile\\40e39827-9632-4aa9-af1b-9ed6213ad7cb.mp4");
+		String path = "D:\\ideaProject\\xlgl_app\\src\\main\\resources\\static\\app\\db\\uploadFile\\d4933ed9-fd2e-433e-bd96-177785e0a852.mp4";
+		File file = new File(path);
 		try {
 			FileInputStream fis = new FileInputStream(file);
 			response.setContentType("application/force-download");
 			response.setCharacterEncoding("UTF-8");
 			response.addHeader("Content-Disposition", "attachment;filename="+new String(file.getName().getBytes(),"ISO-8859-1"));
 			ServletOutputStream os = response.getOutputStream();
-			byte[] buf = new byte[1024];
+			byte[] buf = new byte[4096];
 			int len = 0;
 			while((len = fis.read(buf)) !=-1) {
 				os.write(buf,0,len);
