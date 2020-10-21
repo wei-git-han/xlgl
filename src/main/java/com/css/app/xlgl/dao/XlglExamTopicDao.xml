@@ -41,6 +41,7 @@
 			"TOPIC_RESULT", 
 			"CREATE_USER", 
 			"CREATE_DATE", 
+			"PICTURE_STATUS",
 			"UPDATE_USER", 
 			"UPDATE_DATE"
 		)
@@ -54,6 +55,7 @@
 			#{topicResult}, 
 			#{createUser}, 
 			#{createDate}, 
+			#{pictureStatus},
 			#{updateUser}, 
 			#{updateDate}
 		)
@@ -69,6 +71,7 @@
 			<if test="topicResult != null">"TOPIC_RESULT" = #{topicResult}, </if>
 			<if test="createUser != null">"CREATE_USER" = #{createUser}, </if>
 			<if test="createDate != null">"CREATE_DATE" = #{createDate}, </if>
+			<if test="pictureStatus != null">"PICTURE_STATUS" = #{pictureStatus}, </if>
 			<if test="updateUser != null">"UPDATE_USER" = #{updateUser}, </if>
 			<if test="updateDate != null">"UPDATE_DATE" = #{updateDate}</if>
 		</set>

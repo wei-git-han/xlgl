@@ -109,6 +109,7 @@ public class XlglExamExaminetopicServiceImpl implements XlglExamExaminetopicServ
 				examineTopic.setCreateUser(userId);
 				examineTopic.setUpdateDate(date);
 				examineTopic.setUpdateUser(userId);
+				examineTopic.setPictureStatus(xlglExamTopic.getPictureStatus());
 				if (StringUtils.isNotBlank(makeUpId)) {
 					examineTopic.setMakeUpId(makeUpId);
 					examineTopic.setMakeUpStatus("1");
@@ -134,6 +135,7 @@ public class XlglExamExaminetopicServiceImpl implements XlglExamExaminetopicServ
 							examineTopic.setTopicColumn(queryList.get(random).getTopicColumn());
 							examineTopic.setTopicOption(queryList.get(random).getTopicOption());
 							examineTopic.setTopicResult(queryList.get(random).getTopicResult());
+							examineTopic.setPictureStatus(queryList.get(random).getPictureStatus());
 							String fractionalNumber = (String) map.get("fractionalNumber");
 							examineTopic.setFractionalNumber(Integer.parseInt(fractionalNumber));
 							examineTopic.setCreateDate(date);
@@ -166,6 +168,7 @@ public class XlglExamExaminetopicServiceImpl implements XlglExamExaminetopicServ
 							examineTopic.setTopicColumn(queryList.get(i).getTopicColumn());
 							examineTopic.setTopicOption(queryList.get(i).getTopicOption());
 							examineTopic.setTopicResult(queryList.get(i).getTopicResult());
+							examineTopic.setPictureStatus(queryList.get(i).getPictureStatus());
 							String fractionalNumber = (String) map.get("fractionalNumber");
 							examineTopic.setFractionalNumber(Integer.parseInt(fractionalNumber));
 							examineTopic.setCreateDate(date);

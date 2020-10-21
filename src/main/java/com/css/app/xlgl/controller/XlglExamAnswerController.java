@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -167,9 +168,33 @@ public class XlglExamAnswerController {
 			xlglExamAnswer.setTopicOptionMap(hashMap);
 			switch (xlglExamAnswer.getTopicType()) {
 			case "1":	
+				if(StringUtils.isNotBlank(xlglExamAnswer.getPictureStatus()) 
+						&& xlglExamAnswer.getPictureStatus().equals("0")) {
+					List<String> piclist =new LinkedList<String>();
+					if(xlglExamAnswer.getTopicOption().contains(",")) {
+						String[] split = xlglExamAnswer.getTopicOption().split(",");
+						for (String string : split) {
+							String[] split2 = string.split(":");
+							piclist.add(split2[split2.length-1]);
+						}
+					}
+					xlglExamAnswer.setList(piclist);
+				}
 				listType1.add(xlglExamAnswer);
 				break;
 			case "2":
+				if(StringUtils.isNotBlank(xlglExamAnswer.getPictureStatus()) 
+						&& xlglExamAnswer.getPictureStatus().equals("0")) {
+					List<String> piclist =new LinkedList<String>();
+					if(xlglExamAnswer.getTopicOption().contains(",")) {
+						String[] split = xlglExamAnswer.getTopicOption().split(",");
+						for (String string : split) {
+							String[] split2 = string.split(":");
+							piclist.add(split2[split2.length-1]);
+						}
+					}
+					xlglExamAnswer.setList(piclist);
+				}
 				listType2.add(xlglExamAnswer);
 				break;
 			case "3":

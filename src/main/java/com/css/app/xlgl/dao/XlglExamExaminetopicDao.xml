@@ -51,6 +51,7 @@
 			"CREATE_DATE", 
 			"UPDATE_USER", 
 			"UPDATE_DATE",
+			"PICTURE_STATUS",
 			"SORT"
 		)
 		values
@@ -69,6 +70,7 @@
 			#{createDate}, 
 			#{updateUser}, 
 			#{updateDate},
+			#{pictureStatus},
 			#{sort}
 		)
 	</insert>
@@ -90,6 +92,7 @@
 			<if test="createDate != null">"CREATE_DATE" = #{createDate}, </if>
 			<if test="updateUser != null">"UPDATE_USER" = #{updateUser}, </if>
 			<if test="updateDate != null">"UPDATE_DATE" = #{updateDate},</if>
+			<if test="pictureStatus != null">"PICTURE_STATUS" = #{pictureStatus},</if>
 			<if test="sort != null">"SORT" = #{sort}</if>
 		</set>
 		where id = #{id}
@@ -122,6 +125,7 @@
 			"FRACTIONAL_NUMBER", 
 			"CREATE_USER", 
 			"CREATE_DATE", 
+			"PICTURE_STATUS",
 			"UPDATE_USER", 
 			"UPDATE_DATE"
 		
@@ -142,6 +146,7 @@
 			#{item.fractionalNumber}, 
 			#{item.createUser}, 
 			#{item.createDate}, 
+			#{item.pictureStatus},
 			#{item.updateUser}, 
 			#{item.updateDate}
 		

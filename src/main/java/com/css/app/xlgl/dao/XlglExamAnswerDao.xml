@@ -45,6 +45,7 @@
 			"ORGAN_NAME", 
 			"FRACTION", 
 			"REPLY_USER_NAME", 
+			"PICTURE_STATUS",
 			"MAIN_ANSWER_ID"
 		)
 		values
@@ -66,6 +67,7 @@
 			#{organName}, 
 			#{fraction}, 
 			#{replyUserName}, 
+			#{pictureStatus},
 			#{mainAnswerId}
 		)
 	</insert>
@@ -89,6 +91,7 @@
 			<if test="organName != null">"ORGAN_NAME" = #{organName}, </if>
 			<if test="fraction != null">"FRACTION" = #{fraction}, </if>
 			<if test="replyUserName != null">"REPLY_USER_NAME" = #{replyUserName}, </if>
+			<if test="pictureStatus != null">"PICTURE_STATUS" = #{pictureStatus}, </if>
 			<if test="mainAnswerId != null">"MAIN_ANSWER_ID" = #{mainAnswerId}</if>
 		</set>
 		where id = #{id}
@@ -130,6 +133,7 @@
 			"ORGAN_NAME", 
 			"FRACTION", 
 			"REPLY_USER_NAME", 
+			"PICTURE_STATUS",
 			"MAIN_ANSWER_ID"
 		)
 		values
@@ -152,6 +156,7 @@
 			#{item.organName}, 
 			#{item.fraction}, 
 			#{item.replyUserName}, 
+			#{item.pictureStatus},
 			#{item.mainAnswerId}
 		)
 		</foreach>
