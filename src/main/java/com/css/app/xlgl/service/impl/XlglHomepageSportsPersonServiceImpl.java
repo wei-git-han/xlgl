@@ -1,5 +1,6 @@
 package com.css.app.xlgl.service.impl;
 
+import com.css.base.utils.SpringContextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +46,16 @@ public class XlglHomepageSportsPersonServiceImpl implements XlglHomepageSportsPe
 	@Override
 	public void deleteBatch(String[] ids){
 		xlglHomepageSportsPersonDao.deleteBatch(ids);
+	}
+
+	@Override
+	public void deleteBySportIdAndUserId(String sportId,String userId){
+		xlglHomepageSportsPersonDao.deleteBySportIdAndUserId(sportId,userId);
+	}
+
+	@Override
+	public XlglHomepageSportsPerson queryByUserAndSportId(String sportId,String userId){
+		return xlglHomepageSportsPersonDao.queryByUserAndSportId(sportId,userId);
 	}
 	
 }

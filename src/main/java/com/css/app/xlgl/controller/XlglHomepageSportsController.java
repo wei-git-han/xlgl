@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.css.base.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,11 +17,8 @@ import com.css.app.xlgl.entity.XlglHomepageSportsPerson;
 import com.css.app.xlgl.service.XlglHomepageSportsPersonService;
 import com.css.app.xlgl.service.XlglHomepageSportsService;
 import com.css.base.entity.SSOUser;
-import com.css.base.utils.CurrentUser;
-import com.css.base.utils.PageUtils;
-import com.css.base.utils.Response;
-import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
+import org.thymeleaf.processor.ITextNodeProcessorMatcher;
 
 
 /**
@@ -40,16 +38,38 @@ public class XlglHomepageSportsController {
 	
 	/**
 	 * 列表
+	 * type:0:全部，1.报名中；2.已报名；3.组局成功
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	public void list(Integer page, Integer limit){
+	public void list(Integer page, Integer limit,String type){
+		String userId = CurrentUser.getUserId();
 		Map<String, Object> map = new HashMap<>();
+		if(StringUtils.isNotBlank(type) && "3".equals(type)){
+			map.put("zjcg",type);//组局成功
+		}
+		if(StringUtils.isNotBlank(type) && "1".equals(type)){
+			map.put("bmz",type);//报名中
+		}
+		if(StringUtils.isNotBlank(type) && "2".equals(type)){
+			map.put("ybm",type);
+		}
 		PageHelper.startPage(page, limit);
-		
 		//查询列表数据
 		List<XlglHomepageSports> xlglHomepageSportsList = xlglHomepageSportsService.queryList(map);
-		
+		if("3".equals(type) || "2".equals(type)){
+		if(xlglHomepageSportsList != null && xlglHomepageSportsList.size() > 0){
+			for(int i=0;i<xlglHomepageSportsList.size();i++){
+				String sportId = xlglHomepageSportsList.get(i).getId();
+				XlglHomepageSportsPerson xlglHomepageSportsPerson = xlglHomepageSportsPersonService.queryByUserAndSportId(sportId,userId);
+				if(xlglHomepageSportsPerson == null){
+					xlglHomepageSportsList.remove(i);
+				}else {
+					xlglHomepageSportsList.get(i).setType(true);
+				}
+			}
+		}
+		}
 		PageUtils pageUtil = new PageUtils(xlglHomepageSportsList);
 		Response.json("page",pageUtil);
 	}
@@ -76,18 +96,34 @@ public class XlglHomepageSportsController {
 	 * 保存
 	 */
 	@ResponseBody
-	@RequestMapping("/save")
-	public void save(XlglHomepageSports xlglHomepageSports){
+	@RequestMapping("/saveOrUpdate")
+	public void saveOrUpdate(XlglHomepageSports xlglHomepageSports){
+		JSONObject jsonObject = new JSONObject();
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		Date date = new Date();
-		xlglHomepageSports.setId(UUIDUtils.random());
-		xlglHomepageSports.setCreateUser(ssoUser.getUserId());
-		xlglHomepageSports.setCreateDate(date);
-		xlglHomepageSports.setUpdateUser(ssoUser.getUserId());
-		xlglHomepageSports.setUpdateDate(date);
-		xlglHomepageSportsService.save(xlglHomepageSports);
-		
-		Response.ok();
+		String id = xlglHomepageSports.getId();
+		if(StringUtils.isNotBlank(id)){
+			String creator = xlglHomepageSports.getCreateUser();
+			if(creator.equals(ssoUser.getUserId())){
+				jsonObject.put("isOpen",true);
+			}else {
+				jsonObject.put("isOpen",false);
+			}
+			xlglHomepageSportsService.update(xlglHomepageSports);
+		}else {
+			xlglHomepageSports.setId(UUIDUtils.random());
+			xlglHomepageSports.setCreateUser(ssoUser.getUserId());
+			xlglHomepageSports.setCreateDate(date);
+			xlglHomepageSports.setUpdateUser(ssoUser.getUserId());
+			xlglHomepageSports.setUpdateDate(date);
+			xlglHomepageSports.setCreateUser(ssoUser.getUserId());
+			xlglHomepageSports.setStatus("0");
+			xlglHomepageSportsService.save(xlglHomepageSports);
+		}
+		jsonObject.put("result","success");
+		jsonObject.put("xlglHomepageSports",xlglHomepageSports);
+		Response.json(jsonObject);
+
 	}
 	
 	/**
@@ -102,13 +138,28 @@ public class XlglHomepageSportsController {
 	
 	/**
 	 * 删除
+	 *
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	public void delete(String[] ids){
+	public void delete(String id){
+		String[] ids = id.split(",");
 		xlglHomepageSportsService.deleteBatch(ids);	
-		Response.ok();
+		Response.json("result","success");
 	}
+
+	/**
+	 * 活动取消
+	 *
+	 */
+	@ResponseBody
+	@RequestMapping("/cacle")
+	public void cacle(String id){
+		xlglHomepageSportsService.cacle(id);
+		Response.json("result","success");
+	}
+
+
 	
 	/**
 	 * 判断需要的人员是否已满

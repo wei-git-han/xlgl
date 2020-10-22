@@ -8,7 +8,17 @@
 	</select>
 
 	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglHomepageSports">
-		select * from XLGL_HOMEPAGE_SPORTS 
+		select * from XLGL_HOMEPAGE_SPORTS where 1=1
+		<if test="zjcg != null and zjcg !=''">
+			and status  = '1'
+		</if>
+		<if test="bmz != null and bmz !=''">
+			and status = '0'
+		</if>
+		<if test="ybm != null and ybm !=''">
+
+		</if>
+
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>

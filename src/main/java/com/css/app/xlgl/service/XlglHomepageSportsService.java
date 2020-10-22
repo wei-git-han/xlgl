@@ -25,4 +25,6 @@ public interface XlglHomepageSportsService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+
+	void cacle(String id);
 }

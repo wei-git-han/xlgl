@@ -5,6 +5,7 @@ import com.css.app.xlgl.entity.XlglHomepageSports;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.css.base.dao.BaseDao;
+import org.apache.ibatis.annotations.Update;
 
 /**
  * 首页-体育活动
@@ -15,5 +16,7 @@ import com.css.base.dao.BaseDao;
  */
 @Mapper
 public interface XlglHomepageSportsDao extends BaseDao<XlglHomepageSports> {
-	
+
+    @Update("update XLGL_HOMEPAGE_SPORTS set STATUS = '2' where id = #{0}")
+    void cacle(String id);
 }
