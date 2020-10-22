@@ -57,7 +57,7 @@ public class XlglHomepageSportsController {
 		PageHelper.startPage(page, limit);
 		//查询列表数据
 		List<XlglHomepageSports> xlglHomepageSportsList = xlglHomepageSportsService.queryList(map);
-		if("3".equals(type) || "2".equals(type)){
+		if("3".equals(type) || "2".equals(type)){//组局成功是从所有组局成功中，删除不是当前登录人的数据；已报名也是从所有数据中，删除不是当前登录人的
 		if(xlglHomepageSportsList != null && xlglHomepageSportsList.size() > 0){
 			for(int i=0;i<xlglHomepageSportsList.size();i++){
 				String sportId = xlglHomepageSportsList.get(i).getId();
