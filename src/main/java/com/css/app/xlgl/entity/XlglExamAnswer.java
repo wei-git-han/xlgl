@@ -2,6 +2,7 @@ package com.css.app.xlgl.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 
@@ -52,7 +53,10 @@ public class XlglExamAnswer implements Serializable {
 	private String replyUserName;
 	//主表id
 	private String mainAnswerId;
+	//选项为图片的状态为 0   
+	private String pictureStatus;
 	
+	private List<String> list;
 	
 	private Map<String,Object> topicOptionMap;
 	/**
@@ -276,6 +280,18 @@ public class XlglExamAnswer implements Serializable {
 	}
 	public void setTopicOptionMap(Map<String, Object> topicOptionMap) {
 		this.topicOptionMap = topicOptionMap;
+	}
+	public String getPictureStatus() {
+		return pictureStatus;
+	}
+	public void setPictureStatus(String pictureStatus) {
+		this.pictureStatus = pictureStatus;
+	}
+	public List<String> getList() {
+		return list;
+	}
+	public void setList(List<String> list) {
+		this.list = list;
 	}
 	
 	

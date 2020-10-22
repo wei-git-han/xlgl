@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.XlglHomepageSportsPersonDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglHomepageSportsPerson">
+		select * from XLGL_HOMEPAGE_SPORTS_PERSON where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglHomepageSportsPerson">
+		select * from XLGL_HOMEPAGE_SPORTS_PERSON 
+		where  1 = 1
+		<if test="sportsId != null and sportsId != ''">
+			and SPORTS_ID = #{sportsId}
+		</if>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_HOMEPAGE_SPORTS_PERSON 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglHomepageSportsPerson">
+		insert into XLGL_HOMEPAGE_SPORTS_PERSON
+		(
+			"id", 
+			"USER_ID", 
+			"CREATE_USER", 
+			"USER_NAME", 
+			"SPORTS_ID", 
+			"ORGAN_ID", 
+			"ORGAN_NAME", 
+			"CREATE_DATE"
+		)
+		values
+		(
+			#{id}, 
+			#{userId}, 
+			#{createUser}, 
+			#{userName}, 
+			#{sportsId}, 
+			#{organId}, 
+			#{organName}, 
+			#{createDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.XlglHomepageSportsPerson">
+		update XLGL_HOMEPAGE_SPORTS_PERSON 
+		<set>
+			<if test="userId != null">"USER_ID" = #{userId}, </if>
+			<if test="createUser != null">"CREATE_USER" = #{createUser}, </if>
+			<if test="userName != null">"USER_NAME" = #{userName}, </if>
+			<if test="sportsId != null">"SPORTS_ID" = #{sportsId}, </if>
+			<if test="organId != null">"ORGAN_ID" = #{organId}, </if>
+			<if test="organName != null">"ORGAN_NAME" = #{organName}, </if>
+			<if test="createDate != null">"CREATE_DATE" = #{createDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_HOMEPAGE_SPORTS_PERSON where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_HOMEPAGE_SPORTS_PERSON where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

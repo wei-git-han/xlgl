@@ -200,5 +200,10 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 		return xlglSubDocTrackingDao.queryDjtInfo(infoId,userId);
 	}
 
+	@Override
+	public List<XlglSubDocTracking> queryMsgRemind() {
+		return xlglSubDocTrackingDao.queryMsgRemind();
+	}
+
 
 }

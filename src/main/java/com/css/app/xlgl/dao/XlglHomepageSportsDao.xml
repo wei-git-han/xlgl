@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.XlglHomepageSportsDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglHomepageSports">
+		select * from XLGL_HOMEPAGE_SPORTS where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglHomepageSports">
+		select * from XLGL_HOMEPAGE_SPORTS where 1=1
+		<if test="zjcg != null and zjcg !=''">
+			and status  = '1'
+		</if>
+		<if test="bmz != null and bmz !=''">
+			and status = '0'
+		</if>
+		<if test="ybm != null and ybm !=''">
+
+		</if>
+
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_HOMEPAGE_SPORTS 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglHomepageSports">
+		insert into XLGL_HOMEPAGE_SPORTS
+		(
+			"id", 
+			"CREATE_USER", 
+			"SPORTS_END_TIME", 
+			"UPDATE_DATE", 
+			"HAVE_NUMBER", 
+			"STATUS", 
+			"SPORTS_START_TIME", 
+			"PlACE", 
+			"UPDATE_USER", 
+			"CREATE_DATE", 
+			"NEED_NUMBER", 
+			"SPORTS_NAME", 
+			"CONTENT"
+		)
+		values
+		(
+			#{id}, 
+			#{createUser}, 
+			#{sportsEndTime}, 
+			#{updateDate}, 
+			#{haveNumber}, 
+			#{status}, 
+			#{sportsStartTime}, 
+			#{place}, 
+			#{updateUser}, 
+			#{createDate}, 
+			#{needNumber}, 
+			#{sportsName}, 
+			#{content}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.XlglHomepageSports">
+		update XLGL_HOMEPAGE_SPORTS 
+		<set>
+			<if test="createUser != null">"CREATE_USER" = #{createUser}, </if>
+			<if test="sportsEndTime != null">"SPORTS_END_TIME" = #{sportsEndTime}, </if>
+			<if test="updateDate != null">"UPDATE_DATE" = #{updateDate}, </if>
+			<if test="haveNumber != null">"HAVE_NUMBER" = #{haveNumber}, </if>
+			<if test="status != null">"STATUS" = #{status}, </if>
+			<if test="sportsStartTime != null">"SPORTS_START_TIME" = #{sportsStartTime}, </if>
+			<if test="place != null">"PlACE" = #{place}, </if>
+			<if test="updateUser != null">"UPDATE_USER" = #{updateUser}, </if>
+			<if test="createDate != null">"CREATE_DATE" = #{createDate}, </if>
+			<if test="needNumber != null">"NEED_NUMBER" = #{needNumber}, </if>
+			<if test="sportsName != null">"SPORTS_NAME" = #{sportsName}, </if>
+			<if test="content != null">"CONTENT" = #{content}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_HOMEPAGE_SPORTS where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_HOMEPAGE_SPORTS where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

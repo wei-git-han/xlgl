@@ -2,6 +2,7 @@ package com.css.app.xlgl.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 
 
@@ -35,7 +36,12 @@ public class XlglExamTopic implements Serializable {
 	private String updateUser;
 	//修改时间
 	private Date updateDate;
+	//图目选项是图的 0:是图片标志
+	private String pictureStatus;
 
+	//图片集合
+	private  List<String> list;
+	
 	/**
 	 * 设置：
 	 */
@@ -156,4 +162,17 @@ public class XlglExamTopic implements Serializable {
 	public Date getUpdateDate() {
 		return updateDate;
 	}
+	public String getPictureStatus() {
+		return pictureStatus;
+	}
+	public void setPictureStatus(String pictureStatus) {
+		this.pictureStatus = pictureStatus;
+	}
+	public List<String> getList() {
+		return list;
+	}
+	public void setList(List<String> list) {
+		this.list = list;
+	}
+	
 }
