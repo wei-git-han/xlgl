@@ -46,5 +46,10 @@ public class XlglHomepageSportsServiceImpl implements XlglHomepageSportsService 
 	public void deleteBatch(String[] ids){
 		xlglHomepageSportsDao.deleteBatch(ids);
 	}
+
+	@Override
+	public void cacle(String id){
+		xlglHomepageSportsDao.cacle(id);
+	}
 	
 }

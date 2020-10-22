@@ -25,4 +25,8 @@ public interface XlglHomepageSportsPersonService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+
+	void deleteBySportIdAndUserId(String sportId,String userId);
+
+	XlglHomepageSportsPerson queryByUserAndSportId(String sportId,String userId);
 }

@@ -25,7 +25,7 @@ public class XlglHomepageSports implements Serializable {
 	private Date updateDate;
 	//已报名的人数
 	private Integer haveNumber;
-	//待定-当前字段无使用,无定义
+	//0是未满员，1是已满员,2是取消
 	private String status;
 	//活动开始时间
 	private Date sportsStartTime;
@@ -41,6 +41,37 @@ public class XlglHomepageSports implements Serializable {
 	private String sportsName;
 	//通知内容
 	private String content;
+	//判断是否已经报名满员,0未满员，1是满员
+	private Boolean flag;
+
+	//个人是否已报名
+	private Boolean type;
+	//所有报名的人
+	private String peoples;
+
+	public String getPeoples() {
+		return peoples;
+	}
+
+	public void setPeoples(String peoples) {
+		this.peoples = peoples;
+	}
+
+	public Boolean getType() {
+		return type;
+	}
+
+	public void setType(Boolean type) {
+		this.type = type;
+	}
+
+	public Boolean getFlag() {
+		return flag;
+	}
+
+	public void setFlag(Boolean flag) {
+		this.flag = flag;
+	}
 
 	/**
 	 * 设置：
