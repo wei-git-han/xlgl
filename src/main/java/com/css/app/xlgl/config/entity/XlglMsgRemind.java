@@ -29,6 +29,9 @@ public class XlglMsgRemind implements Serializable {
 	private String state;
 	//提醒内容
 	private String content;
+	
+	//remindDate 带时分单位的
+	private String remindTime;
 
 	/**
 	 * 设置：
@@ -114,4 +117,11 @@ public class XlglMsgRemind implements Serializable {
 	public String getContent() {
 		return content;
 	}
+	public String getRemindTime() {
+		return remindTime;
+	}
+	public void setRemindTime(String remindTime) {
+		this.remindTime = remindTime;
+	}
+	
 }

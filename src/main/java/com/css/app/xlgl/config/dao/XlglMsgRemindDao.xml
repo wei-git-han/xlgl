@@ -18,6 +18,7 @@
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
+		order by REMIND_DATE desc
 	</select>
 	
  	<select id="queryTotal" resultType="int">

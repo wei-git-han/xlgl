@@ -465,6 +465,18 @@ public class XlglDocumentZbjlController {
 		}
 		PageHelper.startPage(page, pagesize);
 		List<XlglSubDocInfo> list = xlglSubDocInfoService.queryListForJu(map);
+		for (XlglSubDocInfo xlglSubDocInfo : list) {
+			Map<String, Object> hashmap = new HashMap<String, Object>();
+			hashmap.put("id", xlglSubDocInfo.getInfoId());
+			hashmap.put("type", "4");
+			List<XlglPicture> queryList = xlglPictureService.queryListByType(hashmap);
+			if (queryList.size() > 0) {
+				if (queryList.get(0).getFileId().equals(xlglSubDocInfo.getInfoId())) {
+					xlglSubDocInfo.setPicturePath(queryList.get(0).getPictureId());
+				}
+			}
+		
+		}
 		GwPageUtils pageUtil = new GwPageUtils(list);
 		Response.json(pageUtil);
 	}
