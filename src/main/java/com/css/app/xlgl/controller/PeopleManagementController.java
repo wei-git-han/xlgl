@@ -372,10 +372,11 @@ public class PeopleManagementController {
 		int i = 0;
 		if (StringUtils.isNotBlank(organId)) {
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("organid", organId);
-			List<BaseAppUser> queryListByOrganid = baseAppUserService.queryListByOrganid(map);
+			map.put("orgId", organId);
+			map.put("departmentId", organId);
+			List<BaseAppUser> queryListByOrganid = baseAppUserService.queryByOrganidTREEPATH(map);
+			for (int j = 0; j < list.size(); j++) {
 			for (BaseAppUser baseAppUser : queryListByOrganid) {
-				for (int j = 0; j < list.size(); j++) {
 					if(baseAppUser.getAccount().equals(list.get(j))) {
 						i++;
 					}

@@ -149,4 +149,7 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 
 	@Select("select  count(*) from BASE_APP_USER where SFZB = '1'")
 	int queryAllZbCount();
+	
+	List<BaseAppUser>  queryByOrganidTREEPATH(Map<String,Object> map);
+	
 }

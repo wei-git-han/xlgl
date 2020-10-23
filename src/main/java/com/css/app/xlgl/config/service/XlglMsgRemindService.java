@@ -25,4 +25,6 @@ public interface XlglMsgRemindService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+	
+	int updateState();
 }

@@ -61,6 +61,11 @@
 		where id = #{id}
 	</update>
 	
+	<update id="updateState" parameterType="com.css.app.xlgl.config.entity.XlglMsgRemind">
+		update XLGL_MSG_REMIND  set STATE = 'false' where 1 =1 
+	</update>
+	
+	
 	<delete id="delete">
 		delete from XLGL_MSG_REMIND where id = #{value}
 	</delete>

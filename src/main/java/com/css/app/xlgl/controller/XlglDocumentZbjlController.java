@@ -621,7 +621,9 @@ public class XlglDocumentZbjlController {
 				XlglPhysical xlglPhysical = xlglPhysicalService.queryByUserId(userId, year);
 				String jtScore = "0";
 				String jtDj = "--";
-				String up = "";
+				String up = "";//引体向上
+				String dan="";//单杠
+				String fwc="";//俯卧撑
 				String sit = "";
 				String srun = "";
 				String trun = "";
@@ -633,15 +635,47 @@ public class XlglDocumentZbjlController {
 				String cpf = "";
 				String cpm = "";
 				String judge = "";
+			
+				String weight = "";//体重
+				String birthday = "";//出生日期
+				String high = "";//身高
 				if (xlglPhysical != null) {
+					if (StringUtils.isNotBlank(xlglPhysical.getWight())) {
+						weight = xlglPhysical.getWight();
+					}
+					if (StringUtils.isNotBlank(xlglPhysical.getBirthday())) {
+						birthday = xlglPhysical.getBirthday();
+					}
+					if (StringUtils.isNotBlank(xlglPhysical.getHigh())) {
+						high = xlglPhysical.getHigh();
+					}
+					
 					if (StringUtils.isNotBlank(xlglPhysical.getAllScore())) {
 						jtScore = xlglPhysical.getAllScore();
 					}
 					if (StringUtils.isNotBlank(xlglPhysical.getAllJudge())) {
 						jtDj = xlglPhysical.getAllJudge();
 					}
+					if(StringUtils.isNotBlank(xlglPhysical.getAge())){
+						age = xlglPhysical.getAge();
+					}
 					if(StringUtils.isNotBlank(xlglPhysical.getUp())){
-						up = xlglPhysical.getUp();
+						String agestr="0";
+						if(StringUtils.isNotBlank(xlglPhysical.getAge())) {
+							agestr = xlglPhysical.getAge().substring(0,age.indexOf("."));
+						}
+						if(StringUtils.isNotBlank(xlglPhysical.getAge()) && Integer.parseInt(agestr)>=40) {
+							fwc =xlglPhysical.getUp();
+						}else if(StringUtils.isNotBlank(xlglPhysical.getAge()) && Integer.parseInt(agestr)<40) {
+							if(StringUtils.isNotBlank(xlglPhysical.getSex()) && xlglPhysical.getSex().equals("女")) {
+								dan =xlglPhysical.getUp();
+							}else {
+								up=xlglPhysical.getUp();
+							}
+						}else {
+							up=xlglPhysical.getUp();
+						}
+						
 					}
 					if(StringUtils.isNotBlank(xlglPhysical.getSit())){
 						sit = xlglPhysical.getSit();
@@ -655,9 +689,7 @@ public class XlglDocumentZbjlController {
 					if(StringUtils.isNotBlank(xlglPhysical.getSex())){
 						sex = xlglPhysical.getSex();
 					}
-					if(StringUtils.isNotBlank(xlglPhysical.getAge())){
-						age = xlglPhysical.getAge();
-					}
+				
 					if(StringUtils.isNotBlank(xlglPhysical.getYtxs())){
 						ytxs = xlglPhysical.getYtxs();
 					}
@@ -677,9 +709,15 @@ public class XlglDocumentZbjlController {
 						judge = xlglPhysical.getJudge();
 					}
 				}
+				jsonObject.put("weight", weight);// 体重
+				jsonObject.put("birthday", birthday);// 出生日期
+				jsonObject.put("high",high);//身高
+				jsonObject.put("up",up);//引体向上
+				jsonObject.put("dan",dan);//单杠
+				jsonObject.put("fwc",fwc);//俯卧撑
+				
 				jsonObject.put("jtScore", jtScore);// 得分
 				jsonObject.put("jtDj", jtDj);// 等级
-				jsonObject.put("up",up);//引体向上
 				jsonObject.put("sit",sit);//仰卧起坐
 				jsonObject.put("srun",srun);//蛇形跑
 				jsonObject.put("trun",trun);//3000米长跑

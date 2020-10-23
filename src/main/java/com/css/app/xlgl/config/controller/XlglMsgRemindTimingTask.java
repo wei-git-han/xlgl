@@ -28,7 +28,7 @@ import com.css.base.utils.Response;
  * 提醒消息定时任务
  */
 @Component
-public class XlglMsgRemindTimingTask {
+public class XlglMsgRemindTimingTask {/*
 	// java 定时器
 	private Timer timer = null;
 	// 定时器任务
@@ -50,9 +50,9 @@ public class XlglMsgRemindTimingTask {
 	private String clientSecret;
 	
 
-	/**
+	*//**
 	 * 启动程序时默认启动定时同步 120000代表项目启动2分钟后开始启动定时程序 600000代表每隔10分钟定时程序扫描一次数据
-	 */
+	 *//*
 	public XlglMsgRemindTimingTask() {
 		if (timer == null) {
 			timer = new Timer();
@@ -60,9 +60,9 @@ public class XlglMsgRemindTimingTask {
 		timer.scheduleAtFixedRate(getInstance(), 120000 , 600000);
 	}
 
-	/**
+	*//**
 	 * 启动定时器
-	 */
+	 *//*
 	public void start() {
 		if (!status) {
 			timer.purge();
@@ -71,9 +71,9 @@ public class XlglMsgRemindTimingTask {
 		}
 	}
 
-	/**
+	*//**
 	 * 获取定时器状态
-	 */
+	 *//*
 	public void status() {
 		if (status) {
 			// 定时器开启
@@ -84,19 +84,19 @@ public class XlglMsgRemindTimingTask {
 		}
 	}
 
-	/**
+	*//**
 	 * 停止定时器
-	 */
+	 *//*
 	public void calcel() {
 		timer.cancel();
 		status = false;
 	}
 
-	/**
+	*//**
 	 * 获取定时任务
 	 * 
 	 * @return
-	 */
+	 *//*
 	public TimerTask getInstance() {
 		if (timerTask == null || !status) {
 			status = true;
@@ -110,9 +110,9 @@ public class XlglMsgRemindTimingTask {
 		return timerTask;
 	}
 
-	/**
+	*//**
 	 * 提醒消息业务代码
-	 */
+	 *//*
 	public void timingTask() {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Map<String, Object> map = new HashMap<>();
@@ -147,12 +147,12 @@ public class XlglMsgRemindTimingTask {
 		}
 	}
 
-	/*private String getNewDate() {
+	private String getNewDate() {
 		Date toDay = new Date();
 		SimpleDateFormat f = new SimpleDateFormat("HH:mm");
 		String format = f.format(toDay);
 		return format;
-	}*/
+	}
 
 	private boolean  getMinusDate(String remind){
 		if(StringUtils.isEmpty(remind)){
@@ -218,4 +218,4 @@ public class XlglMsgRemindTimingTask {
 		return false;
 	}
 
-}
+*/}

@@ -223,6 +223,11 @@ public class BaseAppUserServiceImpl implements BaseAppUserService {
 		return baseAppUserDao.queryAllZbCount();
 	}
 
+	@Override
+	public List<BaseAppUser> queryByOrganidTREEPATH(Map<String, Object> map) {
+		return baseAppUserDao.queryByOrganidTREEPATH(map);
+	}
+
 
 
 }

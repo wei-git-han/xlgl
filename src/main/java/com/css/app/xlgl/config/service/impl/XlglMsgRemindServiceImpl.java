@@ -46,5 +46,10 @@ public class XlglMsgRemindServiceImpl implements XlglMsgRemindService {
 	public void deleteBatch(String[] ids){
 		xlglMsgRemindDao.deleteBatch(ids);
 	}
+
+	@Override
+	public int updateState() {
+		return xlglMsgRemindDao.updateState();
+	}
 	
 }

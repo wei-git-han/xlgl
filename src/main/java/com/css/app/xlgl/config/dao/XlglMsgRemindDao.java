@@ -15,5 +15,7 @@ import com.css.base.dao.BaseDao;
  */
 @Mapper
 public interface XlglMsgRemindDao extends BaseDao<XlglMsgRemind> {
+	int updateState();
+	
 	
 }

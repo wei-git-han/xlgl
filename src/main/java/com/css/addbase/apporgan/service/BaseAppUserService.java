@@ -138,6 +138,8 @@ public interface BaseAppUserService {
 	BaseAppUser query(String userId);
 
 	int queryAllZbCount();
+	
+	List<BaseAppUser>  queryByOrganidTREEPATH(Map<String,Object> map);
 
 
 }
