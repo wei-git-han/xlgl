@@ -152,9 +152,6 @@ public class XlglHomepageSportsPersonController {
 		//查询列表数据
 		List<XlglHomepageSportsPerson> xlglHomepageSportsPersonList = xlglHomepageSportsPersonService.queryList(map);
 		Integer number = 0;
-		if(xlglHomepageSportsPersonList.size() >0) {
-			number = xlglHomepageSportsPersonList.size();
-		}
 		List<String> list = new ArrayList();
 		String people = queryObject.getPeoples();
 		String[] peoples = people.split(",");
@@ -176,7 +173,14 @@ public class XlglHomepageSportsPersonController {
 			peoName += list.get(h) + ",";
 		}
 		queryObject.setPeoples(peoName);
+		if(xlglHomepageSportsPersonList.size() >0) {
+			number = xlglHomepageSportsPersonList.size();
+		}
+
 		queryObject.setHaveNumber(number);
+		if(queryObject.getNeedNumber() != number){
+			queryObject.setStatus("0");
+		}
 		xlglHomepageSportsService.update(queryObject);
 		jsonObject.put("result","success");
 		//jsonObject.put("number",number);
