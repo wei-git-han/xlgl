@@ -94,7 +94,6 @@ public class XlglHomepageSportsPersonController {
 		xlglHomepageSportsPerson.setOrganName(ssoUser.getOrgName());
 		xlglHomepageSportsPerson.setCreateDate(date);
 		xlglHomepageSportsPerson.setCreateUser(ssoUser.getUserId());
-		xlglHomepageSportsPerson.setSportsId(xlglHomepageSportsPerson.getId());
 		xlglHomepageSportsPersonService.save(xlglHomepageSportsPerson);
 
 		XlglHomepageSports queryObject = xlglHomepageSportsService.queryObject(xlglHomepageSportsPerson.getSportsId());
@@ -112,18 +111,13 @@ public class XlglHomepageSportsPersonController {
 		}else {
 			queryObject.setStatus("0");
 		}
-		name = queryObject.getPeoples()+","+CurrentUser.getUsername();
-		List list = new ArrayList();
-		if(StringUtils.isNotBlank(name)){
-			String[] names = name.split(",");
-			if(names != null && names.length > 0){
-				for(int i=0;i<names.length;i++){
-					list.add(names[i]);
-				}
-			}
+		String currentName = queryObject.getPeoples();
+		if(StringUtils.isNotBlank(currentName)){
+			name = currentName+","+CurrentUser.getUsername();
+		}else {
+			name = CurrentUser.getUsername();
 		}
-
-		queryObject.setPeoples(list);
+		queryObject.setPeoples(name);
 		xlglHomepageSportsService.update(queryObject);
 		jsonObject.put("result","success");
 		jsonObject.put("number",number);
@@ -150,18 +144,44 @@ public class XlglHomepageSportsPersonController {
 	public void delete(String sportId){
 		JSONObject jsonObject = new JSONObject();
 		String userId = CurrentUser.getUserId();
+		String userName = CurrentUser.getUsername();
 		xlglHomepageSportsPersonService.deleteBySportIdAndUserId(sportId,userId);
-//		XlglHomepageSports queryObject = xlglHomepageSportsService.queryObject(sportId);
-//		Map<String, Object> map = new HashMap<>();
-//		map.put("sportsId",queryObject.getId());
-//		//查询列表数据
-//		List<XlglHomepageSportsPerson> xlglHomepageSportsPersonList = xlglHomepageSportsPersonService.queryList(map);
-//		Integer number = 0;
-//		if(xlglHomepageSportsPersonList.size() >0) {
-//			number = xlglHomepageSportsPersonList.size();
-//		}
-//		queryObject.setHaveNumber(number);
-//		xlglHomepageSportsService.update(queryObject);
+		XlglHomepageSports queryObject = xlglHomepageSportsService.queryObject(sportId);
+		Map<String, Object> map = new HashMap<>();
+		map.put("sportsId",queryObject.getId());
+		//查询列表数据
+		List<XlglHomepageSportsPerson> xlglHomepageSportsPersonList = xlglHomepageSportsPersonService.queryList(map);
+		Integer number = 0;
+		List<String> list = new ArrayList();
+		String people = queryObject.getPeoples();
+		String[] peoples = people.split(",");
+		if(peoples != null && peoples.length > 0){
+			for(int i = 0;i<peoples.length;i++){
+				list.add(peoples[i]);
+			}
+		}
+		for(int i = 0;i<list.size();i++){
+			String name = list.get(i);
+			if(name.equals(userName)){
+				list.remove(i);
+				break;
+			}
+
+		}
+		String peoName = "";
+		for(int h = 0;h<list.size();h++){
+			peoName += list.get(h) + ",";
+		}
+		queryObject.setPeoples(peoName);
+		if(xlglHomepageSportsPersonList.size() >0) {
+			number = xlglHomepageSportsPersonList.size();
+		}
+
+		queryObject.setHaveNumber(number);
+		if(queryObject.getNeedNumber() != number){
+			queryObject.setStatus("0");
+		}
+		xlglHomepageSportsService.update(queryObject);
 		jsonObject.put("result","success");
 		//jsonObject.put("number",number);
 		Response.json(jsonObject);

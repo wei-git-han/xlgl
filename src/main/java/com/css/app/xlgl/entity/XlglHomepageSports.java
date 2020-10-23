@@ -46,10 +46,21 @@ public class XlglHomepageSports implements Serializable {
 	//判断是否已经报名满员,0未满员，1是满员
 	private Boolean flag;
 
-	//个人是否已报名
+	//个人是否已报名,true是报名的，false或者空为未报名
 	private Boolean type;
 	//所有报名的人
-	private List<String> peoples;
+	private String peoples;
+
+	//所有报名人的集合
+	private List<String> allPeople;
+
+	public List<String> getAllPeople() {
+		return allPeople;
+	}
+
+	public void setAllPeople(List<String> allPeople) {
+		this.allPeople = allPeople;
+	}
 
 	//判断是否是当前登录人
 	private Boolean isOpen;
@@ -63,13 +74,11 @@ public class XlglHomepageSports implements Serializable {
 	}
 
 
-
-	public List<String> getPeoples() {
-
+	public String getPeoples() {
 		return peoples;
 	}
 
-	public void setPeoples(List<String> peoples) {
+	public void setPeoples(String peoples) {
 		this.peoples = peoples;
 	}
 
