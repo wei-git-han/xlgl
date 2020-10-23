@@ -18,6 +18,12 @@
 		<if test="ybm != null and ybm !=''">
 
 		</if>
+		<if test="time != null and time !=''">
+			and UPDATE_DATE > to_date(#{time},'yyyy-mm-dd HH24:mi')
+		</if>
+		<if test="projectName != null and projectName !=''">
+			and SPORTS_NAME = #{projectName}
+		</if>
 
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
@@ -44,7 +50,8 @@
 			"NEED_NUMBER", 
 			"SPORTS_NAME", 
 			"CONTENT",
-			"ORG_NAME"
+			"ORG_NAME",
+			"PEOPLES"
 		)
 		values
 		(
@@ -61,7 +68,8 @@
 			#{needNumber}, 
 			#{sportsName}, 
 			#{content},
-			#{orgName}
+			#{orgName},
+			#{peoples}
 		)
 	</insert>
 	 
@@ -81,6 +89,7 @@
 			<if test="sportsName != null">"SPORTS_NAME" = #{sportsName}, </if>
 			<if test="content != null">"CONTENT" = #{content},</if>
 			<if test="orgName != null">"ORG_NAME" = #{orgName},</if>
+			<if test="peoples != null">"PEOPLES" = #{peoples}</if>
 		</set>
 		where id = #{id}
 	</update>
