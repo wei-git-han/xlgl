@@ -1,11 +1,10 @@
 package com.css.app.xlgl.controller;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.alibaba.fastjson.JSONObject;
+import com.css.base.utils.*;
+import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,10 +15,6 @@ import com.css.app.xlgl.entity.XlglHomepageSportsPerson;
 import com.css.app.xlgl.service.XlglHomepageSportsPersonService;
 import com.css.app.xlgl.service.XlglHomepageSportsService;
 import com.css.base.entity.SSOUser;
-import com.css.base.utils.CurrentUser;
-import com.css.base.utils.PageUtils;
-import com.css.base.utils.Response;
-import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 import org.springframework.web.context.request.NativeWebRequest;
 
@@ -118,7 +113,17 @@ public class XlglHomepageSportsPersonController {
 			queryObject.setStatus("0");
 		}
 		name = queryObject.getPeoples()+","+CurrentUser.getUsername();
-		queryObject.setPeoples(name);
+		List list = new ArrayList();
+		if(StringUtils.isNotBlank(name)){
+			String[] names = name.split(",");
+			if(names != null && names.length > 0){
+				for(int i=0;i<names.length;i++){
+					list.add(names[i]);
+				}
+			}
+		}
+
+		queryObject.setPeoples(list);
 		xlglHomepageSportsService.update(queryObject);
 		jsonObject.put("result","success");
 		jsonObject.put("number",number);

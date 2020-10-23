@@ -1,5 +1,6 @@
 package com.css.app.xlgl.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -61,6 +62,19 @@ public class XlglHomepageSportsController {
 		if(xlglHomepageSportsList != null && xlglHomepageSportsList.size() > 0){
 			for(int i=0;i<xlglHomepageSportsList.size();i++){
 				String sportId = xlglHomepageSportsList.get(i).getId();
+				int needNumber = xlglHomepageSportsList.get(i).getNeedNumber();
+				int haveNumber = xlglHomepageSportsList.get(i).getHaveNumber();
+				if(needNumber == haveNumber){
+					xlglHomepageSportsList.get(i).setStatus("1");
+				}else {
+					xlglHomepageSportsList.get(i).setStatus("0");
+				}
+				String creator = xlglHomepageSportsList.get(i).getCreateUser();
+				if(userId.equals(creator)){
+					xlglHomepageSportsList.get(i).setIsOpen(true);
+				}else {
+					xlglHomepageSportsList.get(i).setIsOpen(false);
+				}
 				XlglHomepageSportsPerson xlglHomepageSportsPerson = xlglHomepageSportsPersonService.queryByUserAndSportId(sportId,userId);
 				if(xlglHomepageSportsPerson == null){
 					xlglHomepageSportsList.remove(i);
@@ -98,6 +112,8 @@ public class XlglHomepageSportsController {
 	@ResponseBody
 	@RequestMapping("/saveOrUpdate")
 	public void saveOrUpdate(XlglHomepageSports xlglHomepageSports){
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String curDay = format.format(new Date());
 		JSONObject jsonObject = new JSONObject();
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		Date date = new Date();
@@ -109,15 +125,18 @@ public class XlglHomepageSportsController {
 			}else {
 				jsonObject.put("isOpen",false);
 			}
+			xlglHomepageSports.setUpdateDate(curDay);
 			xlglHomepageSportsService.update(xlglHomepageSports);
 		}else {
 			xlglHomepageSports.setId(UUIDUtils.random());
 			xlglHomepageSports.setCreateUser(ssoUser.getUserId());
-			xlglHomepageSports.setCreateDate(date);
+			xlglHomepageSports.setCreateDate(curDay);
 			xlglHomepageSports.setUpdateUser(ssoUser.getUserId());
-			xlglHomepageSports.setUpdateDate(date);
+			xlglHomepageSports.setUpdateDate(curDay);
 			xlglHomepageSports.setCreateUser(ssoUser.getUserId());
 			xlglHomepageSports.setStatus("0");
+			xlglHomepageSports.setType(false);
+			xlglHomepageSports.setOrgName(CurrentUser.getOrgName());
 			xlglHomepageSportsService.save(xlglHomepageSports);
 		}
 		jsonObject.put("result","success");
