@@ -115,7 +115,7 @@ public class XlglHomepageSportsPersonController {
 		if(StringUtils.isNotBlank(currentName)){
 			name = currentName+","+CurrentUser.getUsername();
 		}else {
-			name = CurrentUser.getUsername() + ",";
+			name = CurrentUser.getUsername();
 		}
 		queryObject.setPeoples(name);
 		xlglHomepageSportsService.update(queryObject);
