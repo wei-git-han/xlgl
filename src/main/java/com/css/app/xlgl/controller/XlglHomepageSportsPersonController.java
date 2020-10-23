@@ -144,6 +144,7 @@ public class XlglHomepageSportsPersonController {
 	public void delete(String sportId){
 		JSONObject jsonObject = new JSONObject();
 		String userId = CurrentUser.getUserId();
+		String userName = CurrentUser.getUsername();
 		xlglHomepageSportsPersonService.deleteBySportIdAndUserId(sportId,userId);
 		XlglHomepageSports queryObject = xlglHomepageSportsService.queryObject(sportId);
 		Map<String, Object> map = new HashMap<>();
