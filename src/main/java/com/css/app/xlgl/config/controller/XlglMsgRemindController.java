@@ -29,13 +29,13 @@ import com.css.app.xlgl.config.service.XlglMsgRemindService;
  */
 @Controller
 @RequestMapping("/app/xlgl/xlglmsgremind")
-public class XlglMsgRemindController {/*
+public class XlglMsgRemindController {
 	@Autowired
 	private XlglMsgRemindService xlglMsgRemindService;
 	
-	*//**
+	/**
 	 * 列表
-	 *//*
+	 */
 	@ResponseBody
 	@RequestMapping("/list")
 	public void list(){
@@ -60,9 +60,9 @@ public class XlglMsgRemindController {/*
 	}
 	
 	
-	*//**
+	/**
 	 * 信息
-	 *//*
+	 */
 	@ResponseBody
 	@RequestMapping("/info")
 	public void info(String id){
@@ -70,9 +70,9 @@ public class XlglMsgRemindController {/*
 		Response.json("xlglMsgRemind", xlglMsgRemind);
 	}
 	
-	*//**
+	/**
 	 * 保存
-	 *//*
+	 */
 	@ResponseBody
 	@RequestMapping("/save")
 	public void save(XlglMsgRemind xlglMsgRemind){
@@ -82,9 +82,9 @@ public class XlglMsgRemindController {/*
 		Response.ok();
 	}
 	
-	*//**
+	/**
 	 * 修改
-	 *//*
+	 */
 	@ResponseBody
 	@RequestMapping("/update")
 	public void update(XlglMsgRemind xlglMsgRemind){
@@ -94,9 +94,9 @@ public class XlglMsgRemindController {/*
 		Response.ok();
 	}
 	
-	*//**
+	/**
 	 * 删除
-	 *//*
+	 */
 	@ResponseBody
 	@RequestMapping("/delete")
 	public void delete(String[] ids){
@@ -105,4 +105,4 @@ public class XlglMsgRemindController {/*
 		Response.ok();
 	}
 	
-*/}
+}
