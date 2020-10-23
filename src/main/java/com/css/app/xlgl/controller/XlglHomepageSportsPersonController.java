@@ -155,6 +155,27 @@ public class XlglHomepageSportsPersonController {
 		if(xlglHomepageSportsPersonList.size() >0) {
 			number = xlglHomepageSportsPersonList.size();
 		}
+		List<String> list = new ArrayList();
+		String people = queryObject.getPeoples();
+		String[] peoples = people.split(",");
+		if(peoples != null && peoples.length > 0){
+			for(int i = 0;i<peoples.length;i++){
+				list.add(peoples[i]);
+			}
+		}
+		for(int i = 0;i<list.size();i++){
+			String name = list.get(i);
+			if(name.equals(userName)){
+				list.remove(i);
+				break;
+			}
+
+		}
+		String peoName = "";
+		for(int h = 0;h<list.size();h++){
+			peoName += list.get(h) + ",";
+		}
+		queryObject.setPeoples(peoName);
 		queryObject.setHaveNumber(number);
 		xlglHomepageSportsService.update(queryObject);
 		jsonObject.put("result","success");
