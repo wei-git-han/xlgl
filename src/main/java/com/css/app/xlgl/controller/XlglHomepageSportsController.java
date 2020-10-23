@@ -116,6 +116,7 @@ public class XlglHomepageSportsController {
 			}else {
 				jsonObject.put("isOpen",false);
 			}
+			xlglHomepageSports.setUpdateDate(new Date());
 			xlglHomepageSportsService.update(xlglHomepageSports);
 		}else {
 			xlglHomepageSports.setId(UUIDUtils.random());
