@@ -2,7 +2,7 @@ package com.css.app.xlgl.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-
+import java.util.List;
 
 
 /**
@@ -19,22 +19,24 @@ public class XlglHomepageSports implements Serializable {
 	private String id;
 	//创建人id
 	private String createUser;
+	//创建人部门
+	private String orgName;
 	//活动结束时间
-	private Date sportsEndTime;
+	private String sportsEndTime;
 	//修改时间
-	private Date updateDate;
+	private String updateDate;
 	//已报名的人数
 	private Integer haveNumber;
 	//0是未满员，1是已满员,2是取消
 	private String status;
 	//活动开始时间
-	private Date sportsStartTime;
+	private String sportsStartTime;
 	//活动地点
 	private String place;
 	//修改人id
 	private String updateUser;
 	//创建时间
-	private Date createDate;
+	private String createDate;
 	//需要的人数
 	private Integer needNumber;
 	//活动名称
@@ -47,14 +49,36 @@ public class XlglHomepageSports implements Serializable {
 	//个人是否已报名
 	private Boolean type;
 	//所有报名的人
-	private String peoples;
+	private List<String> peoples;
 
-	public String getPeoples() {
+	//判断是否是当前登录人
+	private Boolean isOpen;
+
+	public Boolean getIsOpen() {
+		return isOpen;
+	}
+
+	public void setIsOpen(Boolean isopen) {
+		this.isOpen = isopen;
+	}
+
+
+
+	public List<String> getPeoples() {
+
 		return peoples;
 	}
 
-	public void setPeoples(String peoples) {
+	public void setPeoples(List<String> peoples) {
 		this.peoples = peoples;
+	}
+
+	public String getOrgName() {
+		return orgName;
+	}
+
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
 	}
 
 	public Boolean getType() {
@@ -97,30 +121,7 @@ public class XlglHomepageSports implements Serializable {
 	public String getCreateUser() {
 		return createUser;
 	}
-	/**
-	 * 设置：活动结束时间
-	 */
-	public void setSportsEndTime(Date sportsEndTime) {
-		this.sportsEndTime = sportsEndTime;
-	}
-	/**
-	 * 获取：活动结束时间
-	 */
-	public Date getSportsEndTime() {
-		return sportsEndTime;
-	}
-	/**
-	 * 设置：修改时间
-	 */
-	public void setUpdateDate(Date updateDate) {
-		this.updateDate = updateDate;
-	}
-	/**
-	 * 获取：修改时间
-	 */
-	public Date getUpdateDate() {
-		return updateDate;
-	}
+
 	/**
 	 * 设置：已报名的人数
 	 */
@@ -145,18 +146,7 @@ public class XlglHomepageSports implements Serializable {
 	public String getStatus() {
 		return status;
 	}
-	/**
-	 * 设置：活动开始时间
-	 */
-	public void setSportsStartTime(Date sportsStartTime) {
-		this.sportsStartTime = sportsStartTime;
-	}
-	/**
-	 * 获取：活动开始时间
-	 */
-	public Date getSportsStartTime() {
-		return sportsStartTime;
-	}
+
 	/**
 	 * 设置：活动地点
 	 */
@@ -181,18 +171,7 @@ public class XlglHomepageSports implements Serializable {
 	public String getUpdateUser() {
 		return updateUser;
 	}
-	/**
-	 * 设置：创建时间
-	 */
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
-	/**
-	 * 获取：创建时间
-	 */
-	public Date getCreateDate() {
-		return createDate;
-	}
+
 	/**
 	 * 设置：需要的人数
 	 */
@@ -228,5 +207,37 @@ public class XlglHomepageSports implements Serializable {
 	 */
 	public String getContent() {
 		return content;
+	}
+
+	public String getSportsEndTime() {
+		return sportsEndTime;
+	}
+
+	public void setSportsEndTime(String sportsEndTime) {
+		this.sportsEndTime = sportsEndTime;
+	}
+
+	public String getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(String updateDate) {
+		this.updateDate = updateDate;
+	}
+
+	public String getSportsStartTime() {
+		return sportsStartTime;
+	}
+
+	public void setSportsStartTime(String sportsStartTime) {
+		this.sportsStartTime = sportsStartTime;
+	}
+
+	public String getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(String createDate) {
+		this.createDate = createDate;
 	}
 }

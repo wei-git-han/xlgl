@@ -43,7 +43,8 @@
 			"CREATE_DATE", 
 			"NEED_NUMBER", 
 			"SPORTS_NAME", 
-			"CONTENT"
+			"CONTENT",
+			"ORG_NAME"
 		)
 		values
 		(
@@ -59,7 +60,8 @@
 			#{createDate}, 
 			#{needNumber}, 
 			#{sportsName}, 
-			#{content}
+			#{content},
+			#{orgName}
 		)
 	</insert>
 	 
@@ -77,7 +79,8 @@
 			<if test="createDate != null">"CREATE_DATE" = #{createDate}, </if>
 			<if test="needNumber != null">"NEED_NUMBER" = #{needNumber}, </if>
 			<if test="sportsName != null">"SPORTS_NAME" = #{sportsName}, </if>
-			<if test="content != null">"CONTENT" = #{content}</if>
+			<if test="content != null">"CONTENT" = #{content},</if>
+			<if test="orgName != null">"ORG_NAME" = #{orgName},</if>
 		</set>
 		where id = #{id}
 	</update>
