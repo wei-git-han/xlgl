@@ -123,7 +123,7 @@ public class XlglHomepageSportsPersonController {
 			}
 		}
 
-		queryObject.setPeoples(name);
+		queryObject.setPeoples(list);
 		xlglHomepageSportsService.update(queryObject);
 		jsonObject.put("result","success");
 		jsonObject.put("number",number);
