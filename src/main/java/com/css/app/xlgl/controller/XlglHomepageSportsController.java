@@ -61,6 +61,11 @@ public class XlglHomepageSportsController {
 		if(xlglHomepageSportsList != null && xlglHomepageSportsList.size() > 0){
 			for(int i=0;i<xlglHomepageSportsList.size();i++){
 				String sportId = xlglHomepageSportsList.get(i).getId();
+				int needNumber = xlglHomepageSportsList.get(i).getNeedNumber();
+				int haveNumber = xlglHomepageSportsList.get(i).getHaveNumber();
+				if(needNumber == haveNumber){
+
+				}
 				XlglHomepageSportsPerson xlglHomepageSportsPerson = xlglHomepageSportsPersonService.queryByUserAndSportId(sportId,userId);
 				if(xlglHomepageSportsPerson == null){
 					xlglHomepageSportsList.remove(i);
