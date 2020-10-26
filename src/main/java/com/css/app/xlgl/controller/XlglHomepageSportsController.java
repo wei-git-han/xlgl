@@ -186,7 +186,7 @@ public class XlglHomepageSportsController {
 			}else {
 				jsonObject.put("isOpen",false);
 			}
-			xlglHomepageSports.setUpdateDate(curDay);
+			//xlglHomepageSports.setUpdateDate(curDay);
 			xlglHomepageSportsService.update(xlglHomepageSports);
 			//每次更新后，删除已读表的该体育活动的人员已读信息
 			xlglHomepageSportsReadService.deleteBySportId(id);
@@ -196,7 +196,7 @@ public class XlglHomepageSportsController {
 			xlglHomepageSports.setCreateUser(CurrentUser.getUsername());
 			xlglHomepageSports.setCreateDate(curDay);
 			xlglHomepageSports.setUpdateUser(CurrentUser.getUserId());
-			xlglHomepageSports.setUpdateDate(curDay);
+			//xlglHomepageSports.setUpdateDate(curDay);
 			xlglHomepageSports.setStatus("0");
 			xlglHomepageSports.setType(false);
 			xlglHomepageSports.setOrgName(CurrentUser.getOrgName());
