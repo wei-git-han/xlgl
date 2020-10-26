@@ -22,12 +22,13 @@
 			and UPDATE_DATE > to_date(#{time},'yyyy-mm-dd HH24:mi')
 		</if>
 		<if test="projectName != null and projectName !=''">
-			and SPORTS_NAME = #{projectName}
+			and SPORTS_NAME like  '%'||#{projectName}||'%'
 		</if>
 
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
+		order by CREATE_DATE desc
 	</select>
 	
  	<select id="queryTotal" resultType="int">
