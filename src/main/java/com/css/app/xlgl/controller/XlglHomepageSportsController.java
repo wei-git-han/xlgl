@@ -96,19 +96,21 @@ public class XlglHomepageSportsController {
 			}
 			List list = new ArrayList();
 			String people = xlglHomepageSports.getPeoples();
-			if(StringUtils.isNotBlank(people)){
+			if (StringUtils.isNotBlank(people)) {
 				String[] peoples = people.split(",");
-				if(peoples != null && peoples.length > 0){
-					for(int i = 0;i<peoples.length;i++){
+				if (peoples != null && peoples.length > 0) {
+					for (int i = 0; i < peoples.length; i++) {
 						list.add(peoples[i]);
 					}
 				}
 			}
-
 			xlglHomepageSports.setAllPeople(list);
+		}
+
+
 			PageUtils pageUtil = new PageUtils(xlglHomepageSportsList);
 			Response.json("page", pageUtil);
-		}
+
 	}
 	
 	
