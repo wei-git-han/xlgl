@@ -3,6 +3,8 @@ package com.css.app.xlgl.controller;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.css.app.xlgl.entity.XlglHomepageSportsRead;
+import com.css.app.xlgl.service.XlglHomepageSportsReadService;
 import com.css.base.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,6 +34,8 @@ public class XlglHomepageSportsController {
 	private XlglHomepageSportsService xlglHomepageSportsService;
 	@Autowired
 	private XlglHomepageSportsPersonService xlglHomepageSportsPersonService;
+	@Autowired
+	private XlglHomepageSportsReadService xlglHomepageSportsReadService;
 	
 	/**
 	 * 列表
@@ -107,10 +111,42 @@ public class XlglHomepageSportsController {
 			xlglHomepageSports.setAllPeople(list);
 		}
 
-
+		for(XlglHomepageSports xlglHomepageSports : xlglHomepageSportsList){
+			String sportId = xlglHomepageSports.getId();
+			XlglHomepageSportsRead xlglHomepageSportsRead = xlglHomepageSportsReadService.queryBySportAndUserId(sportId,userId);
+			if(xlglHomepageSportsRead != null){
+				xlglHomepageSports.setRead("1");
+			}else{
+				xlglHomepageSports.setRead("0");
+			}
+		}
 			PageUtils pageUtil = new PageUtils(xlglHomepageSportsList);
 			Response.json("page", pageUtil);
 
+	}
+
+	/**
+	 * 首页是否显示红点
+	 * 0是未读，1是已读
+	 */
+	@ResponseBody
+	@RequestMapping("/isRead")
+	public void getIsRead(){
+		String flag = "0";
+		String userId = CurrentUser.getUserId();
+		Map<String, Object> map = new HashMap<>();
+		List<XlglHomepageSports> xlglHomepageSportsList = xlglHomepageSportsService.queryList(map);
+		if(xlglHomepageSportsList != null && xlglHomepageSportsList.size() > 0){
+			for(XlglHomepageSports xlglHomepageSports : xlglHomepageSportsList){
+				String sportId = xlglHomepageSports.getId();
+				XlglHomepageSportsRead xlglHomepageSportsRead = xlglHomepageSportsReadService.queryBySportAndUserId(sportId,userId);
+				if(xlglHomepageSportsRead == null){
+					flag = "1";
+					break;
+				}
+			}
+		}
+		Response.json("flag",flag);
 	}
 	
 	
@@ -152,6 +188,9 @@ public class XlglHomepageSportsController {
 			}
 			xlglHomepageSports.setUpdateDate(curDay);
 			xlglHomepageSportsService.update(xlglHomepageSports);
+			//每次更新后，删除已读表的该体育活动的人员已读信息
+			xlglHomepageSportsReadService.deleteBySportId(id);
+
 		}else {
 			xlglHomepageSports.setId(UUIDUtils.random());
 			xlglHomepageSports.setCreateUser(CurrentUser.getUsername());

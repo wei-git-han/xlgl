@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.XlglHomepageSportsReadDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.XlglHomepageSportsRead">
+		select * from XLGL_HOMEPAGE_SPORTS_READ where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglHomepageSportsRead">
+		select * from XLGL_HOMEPAGE_SPORTS_READ 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from XLGL_HOMEPAGE_SPORTS_READ 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglHomepageSportsRead">
+		insert into XLGL_HOMEPAGE_SPORTS_READ
+		(
+			"ID", 
+			"USER_ID", 
+			"SPORT_ID", 
+			"USER_NAME", 
+			"CREATE_TIME"
+		)
+		values
+		(
+			#{id}, 
+			#{userId}, 
+			#{sportId}, 
+			#{userName}, 
+			#{createTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.XlglHomepageSportsRead">
+		update XLGL_HOMEPAGE_SPORTS_READ 
+		<set>
+			<if test="userId != null">"USER_ID" = #{userId}, </if>
+			<if test="sportId != null">"SPORT_ID" = #{sportId}, </if>
+			<if test="userName != null">"USER_NAME" = #{userName}, </if>
+			<if test="createTime != null">"CREATE_TIME" = #{createTime}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from XLGL_HOMEPAGE_SPORTS_READ where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from XLGL_HOMEPAGE_SPORTS_READ where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

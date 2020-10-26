@@ -54,6 +54,17 @@ public class XlglHomepageSports implements Serializable {
 	//所有报名人的集合
 	private List<String> allPeople;
 
+	//是否已读
+	private String read;
+
+	public String getRead() {
+		return read;
+	}
+
+	public void setRead(String read) {
+		this.read = read;
+	}
+
 	public List<String> getAllPeople() {
 		return allPeople;
 	}
