@@ -127,7 +127,7 @@ public class XlglHomepageSportsController {
 
 	/**
 	 * 首页是否显示红点
-	 * 0是未读，1是已读
+	 * 0是都已读了，1是有未读的数据
 	 */
 	@ResponseBody
 	@RequestMapping("/isRead")
