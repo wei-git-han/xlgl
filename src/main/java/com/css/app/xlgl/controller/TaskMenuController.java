@@ -207,6 +207,19 @@ public class TaskMenuController {
                 jsonArray1.remove(1);
                 jsonArray1.remove(1);
             }
+        }else {
+            //非部管理员不显示体育成绩导入和自学成绩导入菜单
+            JSONArray jsonArray = (JSONArray) jsons.getJSONObject(0).get("children");
+            JSONArray jsonArray1 = (JSONArray) jsonArray.getJSONObject(7).get("children");
+            jsonArray1.remove(1);
+            jsonArray1.remove(1);
+            //非部管理员，只显示考核清单菜单
+            JSONArray jsonArraySix = (JSONArray) jsons.getJSONObject(0).get("children");
+            JSONArray jsonArray6 = (JSONArray) jsonArray.getJSONObject(6).get("children");
+            jsonArray6.remove(1);
+            jsonArray6.remove(1);
+
+            jsons.remove(4);
         }
 
 
