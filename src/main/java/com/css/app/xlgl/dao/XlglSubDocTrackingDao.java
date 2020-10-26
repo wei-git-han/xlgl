@@ -105,5 +105,8 @@ public interface XlglSubDocTrackingDao extends BaseDao<XlglSubDocTracking> {
     void deleteByInfoIdAndOrgId(String orgId,String id);
     
     List<XlglSubDocTracking>   queryMsgRemind();
+
+    @Select("select count(*) from    XLGL_SUB_DOC_TRACKING where  INFO_ID = #{0} and IS_WORK = '1' and REC_DEPT_ID in  (select id from BASE_APP_ORGAN start with ID = #{1}  and ISDELETE=0 connect by prior ID = PARENT_ID)")
+    int queryAllWcByInfoIdAndOrgId(String infoId,String orgId);
   
 }

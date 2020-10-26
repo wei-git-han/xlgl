@@ -94,4 +94,9 @@ public class XlglSubDocInfoServiceImpl implements XlglSubDocInfoService {
 		xlglSubDocInfoDao.deleteByInfoId(id);
 	}
 
+	@Override
+	public List<XlglSubDocInfo> queryByDeptId(String orgId){
+		return xlglSubDocInfoDao.queryByDept(orgId);
+	}
+
 }

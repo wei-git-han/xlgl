@@ -205,5 +205,10 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 		return xlglSubDocTrackingDao.queryMsgRemind();
 	}
 
+	@Override
+	public int queryAllWcByInfoIdAndOrgId(String infoId,String orgId){
+		return xlglSubDocTrackingDao.queryAllWcByInfoIdAndOrgId(infoId,orgId);
+	}
+
 
 }

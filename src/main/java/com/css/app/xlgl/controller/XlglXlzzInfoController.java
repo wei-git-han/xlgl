@@ -1341,9 +1341,13 @@ public class XlglXlzzInfoController {
 				JSONObject jsonObject = new JSONObject();
 				String orgId = baseAppOrgan.getId();
 				String orgName = baseAppOrgan.getName();
-				String f = getSum(allInfoIds, orgId);
+				String f = getSum(orgId);
 				jsonObject.put("name", orgName);
-				jsonObject.put("wcl", f);
+				if(StringUtils.isNotBlank(f)){
+					jsonObject.put("wcl", f);
+				}else {
+					jsonObject.put("wcl", "0.00");
+				}
 				listAll.add(jsonObject);
 			}
 		}
@@ -1353,27 +1357,25 @@ public class XlglXlzzInfoController {
 
 	}
 
-	public String getSum(String allInfoIds, String orgId) {
-		int cxSum = 0;// 总的参训人数
+	public String getSum(String orgId) {
 		int sum = 0;// 总的有效人数
-		Map<String, Object> map = new HashMap<>();
-		String[] infoIds = allInfoIds.split(",");
-		if (infoIds != null && infoIds.length > 0) {
-			for (int i = 0; i < infoIds.length; i++) {
-				String infoId = infoIds[i];
-				map.put("infoId", infoId);
-				map.put("orgId", orgId);
-				int yxSum = xlglSubDocTrackingService.queryCxCount(map);// 单一课程所有参训的人
-				cxSum += yxSum;
+		int cxNum = 0;
+		List<XlglSubDocInfo> list = xlglSubDocInfoService.queryByDeptId(orgId);
+		if(list != null && list.size() > 0){
+			for(XlglSubDocInfo xlglSubDocInfo : list){
+				String infoId = xlglSubDocInfo.getInfoId();
+				int num = xlglSubDocTrackingService.queryAllWcByInfoIdAndOrgId(infoId,orgId);//查出某视频某单位参训完成情况
+				cxNum += num;
 			}
-			sum = baseAppUserService.queryListAllYxCount() * infoIds.length;
 		}
+		sum = baseAppUserService.queryListAllYxCount() * list.size();
 		float DoneLv = 0.0f;
 		String raio = "";
 		if (sum > 0) {
 			DecimalFormat format = new DecimalFormat("0.00");
-			raio = format.format(((float) cxSum / sum) * 100);
+			raio = format.format(((float) cxNum / sum) * 100);
 		}
+
 		return raio;
 	}
 
