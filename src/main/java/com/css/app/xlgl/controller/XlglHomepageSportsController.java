@@ -69,7 +69,12 @@ public class XlglHomepageSportsController {
 				for (int i = 0; i < xlglHomepageSportsList.size(); i++) {
 					String sportId = xlglHomepageSportsList.get(i).getId();
 					int needNumber = xlglHomepageSportsList.get(i).getNeedNumber();
-					int haveNumber = xlglHomepageSportsList.get(i).getHaveNumber();
+					int haveNumber = 0;
+					if(xlglHomepageSportsList.get(i).getHaveNumber() == null){
+						haveNumber = 0;
+					}else {
+						haveNumber = xlglHomepageSportsList.get(i).getHaveNumber();
+					}
 					if (needNumber == haveNumber) {
 						xlglHomepageSportsList.get(i).setStatus("1");
 					} else {
@@ -79,6 +84,7 @@ public class XlglHomepageSportsController {
 					XlglHomepageSportsPerson xlglHomepageSportsPerson = xlglHomepageSportsPersonService.queryByUserAndSportId(sportId, userId);
 					if (xlglHomepageSportsPerson == null) {
 						xlglHomepageSportsList.remove(i);
+						i--;
 					} else {
 						xlglHomepageSportsList.get(i).setType(true);
 					}
