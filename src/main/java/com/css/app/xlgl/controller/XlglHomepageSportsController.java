@@ -44,6 +44,7 @@ public class XlglHomepageSportsController {
 	@ResponseBody
 	@RequestMapping("/list")
 	public void list(Integer page, Integer limit,String type,String updateDate,String sportsName) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String userId = CurrentUser.getUserId();
 		Map<String, Object> map = new HashMap<>();
 		if (StringUtils.isNotBlank(type) && "3".equals(type)) {
@@ -57,10 +58,13 @@ public class XlglHomepageSportsController {
 		}
 		if (StringUtils.isNotBlank(updateDate)) {
 			map.put("time", updateDate);
+		}else {
+			map.put("time",simpleDateFormat.format(new Date()));
 		}
 		if (StringUtils.isNotBlank(sportsName)) {
 			map.put("projectName", sportsName);
 		}
+		map.put("userId",userId);
 		PageHelper.startPage(page, limit);
 		//查询列表数据
 		List<XlglHomepageSports> xlglHomepageSportsList = xlglHomepageSportsService.queryList(map);
@@ -110,7 +114,10 @@ public class XlglHomepageSportsController {
 				String[] peoples = people.split(",");
 				if (peoples != null && peoples.length > 0) {
 					for (int i = 0; i < peoples.length; i++) {
-						list.add(peoples[i]);
+						if(StringUtils.isNotBlank(peoples[i])){
+							list.add(peoples[i]);
+						}
+
 					}
 				}
 			}
@@ -198,7 +205,8 @@ public class XlglHomepageSportsController {
 			xlglHomepageSportsReadService.deleteBySportId(id);
 
 		}else {
-			xlglHomepageSports.setId(UUIDUtils.random());
+			String sportId = UUIDUtils.random();
+			xlglHomepageSports.setId(sportId);
 			xlglHomepageSports.setCreateUser(CurrentUser.getUsername());
 			xlglHomepageSports.setCreateDate(curDay);
 			xlglHomepageSports.setUpdateUser(CurrentUser.getUserId());
@@ -207,6 +215,8 @@ public class XlglHomepageSportsController {
 			xlglHomepageSports.setType(false);
 			xlglHomepageSports.setOrgName(CurrentUser.getOrgName());
 			xlglHomepageSportsService.save(xlglHomepageSports);
+			//创建人创建后，自动报名
+			xlglHomepageSportsService.baoming(sportId);
 		}
 		jsonObject.put("result","success");
 		jsonObject.put("xlglHomepageSports",xlglHomepageSports);

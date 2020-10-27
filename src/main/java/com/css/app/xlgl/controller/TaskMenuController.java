@@ -200,6 +200,12 @@ public class TaskMenuController {
                 JSONArray jsonArray1 = (JSONArray) jsonArray.getJSONObject(7).get("children");
                 jsonArray1.remove(0);
                 jsonArray1.remove(0);
+
+                if("2".equals(adminFlag)){
+                    JSONArray jsonArray2 = (JSONArray) jsons.getJSONObject(4).get("children");
+                    jsonArray2.remove(3);
+                }
+
             }
             if (!"1".equals(adminFlag)) {//非部管理员，只显示考核清单菜单
                 JSONArray jsonArray = (JSONArray) jsons.getJSONObject(0).get("children");

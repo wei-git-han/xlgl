@@ -147,6 +147,12 @@ public class XlglHomepageSportsPersonController {
 		String userName = CurrentUser.getUsername();
 		xlglHomepageSportsPersonService.deleteBySportIdAndUserId(sportId,userId);
 		XlglHomepageSports queryObject = xlglHomepageSportsService.queryObject(sportId);
+//		if(queryObject != null){
+//			String creator = queryObject.getCreateUser();
+//			if(userId.equals(creator)){
+//				jsonObject.put("result","fail");
+//			}
+//		}
 		Map<String, Object> map = new HashMap<>();
 		map.put("sportsId",queryObject.getId());
 		//查询列表数据

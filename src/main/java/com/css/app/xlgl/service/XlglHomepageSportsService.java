@@ -27,4 +27,6 @@ public interface XlglHomepageSportsService {
 	void deleteBatch(String[] ids);
 
 	void cacle(String id);
+
+	void baoming(String sportId);
 }

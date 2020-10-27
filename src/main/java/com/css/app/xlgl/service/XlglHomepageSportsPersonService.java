@@ -29,4 +29,6 @@ public interface XlglHomepageSportsPersonService {
 	void deleteBySportIdAndUserId(String sportId,String userId);
 
 	XlglHomepageSportsPerson queryByUserAndSportId(String sportId,String userId);
+
+
 }

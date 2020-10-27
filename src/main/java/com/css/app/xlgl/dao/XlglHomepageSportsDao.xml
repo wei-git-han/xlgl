@@ -19,7 +19,7 @@
 
 		</if>
 		<if test="time != null and time !=''">
-			and UPDATE_DATE > to_date(#{time},'yyyy-mm-dd HH24:mi')
+			and UPDATE_DATE >= to_date(#{time},'yyyy-mm-dd HH24:mi')
 		</if>
 		<if test="projectName != null and projectName !=''">
 			and SPORTS_NAME like  '%'||#{projectName}||'%'

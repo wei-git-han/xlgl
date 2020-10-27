@@ -1,9 +1,16 @@
 package com.css.app.xlgl.service.impl;
 
+import com.css.app.xlgl.entity.XlglHomepageSports;
+import com.css.base.entity.SSOUser;
+import com.css.base.utils.CurrentUser;
 import com.css.base.utils.SpringContextUtils;
+import com.css.base.utils.StringUtils;
+import com.css.base.utils.UUIDUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,5 +64,7 @@ public class XlglHomepageSportsPersonServiceImpl implements XlglHomepageSportsPe
 	public XlglHomepageSportsPerson queryByUserAndSportId(String sportId,String userId){
 		return xlglHomepageSportsPersonDao.queryByUserAndSportId(sportId,userId);
 	}
+
+
 	
 }
