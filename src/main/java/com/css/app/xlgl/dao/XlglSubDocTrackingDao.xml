@@ -375,7 +375,7 @@
  	<select id="queryMsgRemind" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
             select * from XLGL_SUB_DOC_TRACKING 
             where 
-            EXERCISE_TIME &gt;= sysdate() and read  = '0' and BAOMING = '1' 
+            EXERCISE_TIME &gt;= sysdate()  and BAOMING = '1'
             order by CREATED_TIME desc
         </select>
 
