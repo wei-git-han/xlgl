@@ -1232,11 +1232,12 @@ public class XlglXlzzInfoController {
 		int count = xlglSubDocTrackingService.queryCurrentYear(map);// 本年度大讲堂数+日常训练数
 		int ycx = xlglSubDocTrackingService.queryCxCount(map);// 已参训的大讲堂数和日常军事训练数(已完成),日常军事训练的已报名就代表已参训
 		int bk = xlglSubDocTrackingService.queryBkCount(map);// 延后参训数（补考数）
-		int f = 0;
+		double f = 0;
 		if (count > 0) {
-			f = (int) ((new BigDecimal((float) ycx / count).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()) * 100);
+			f =  ((new BigDecimal((float) ycx / count).doubleValue()) * 100);
 		}
-		jsonObject.put("wcl", f);
+		String wcl = String.valueOf(f);
+		jsonObject.put("wcl", wcl.substring(0,wcl.indexOf(".")+2));
 		jsonObject.put("ywc", ycx);
 		jsonObject.put("bk", bk);
 		Response.json(jsonObject);
