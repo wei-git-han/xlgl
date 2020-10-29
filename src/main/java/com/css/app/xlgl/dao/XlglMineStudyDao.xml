@@ -12,6 +12,9 @@
 		<if test="replyUserId != null and replyUserId !=''">
 			and USER_ID = #{replyUserId}
 		</if>
+		<if test="year != null and year !=''">
+			and CREATED_TIME like '%'||#{year}||'%'
+		</if>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
