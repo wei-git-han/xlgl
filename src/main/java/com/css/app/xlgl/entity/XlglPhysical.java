@@ -79,6 +79,17 @@ public class XlglPhysical implements Serializable {
 	//上一年
 	private String lastYear;
 
+	//当前年
+	private String curentYear;
+
+	public String getCurentYear() {
+		return curentYear;
+	}
+
+	public void setCurentYear(String curentYear) {
+		this.curentYear = curentYear;
+	}
+
 	public String getLastYear() {
 		return lastYear;
 	}
