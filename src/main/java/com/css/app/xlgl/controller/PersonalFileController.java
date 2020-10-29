@@ -61,12 +61,16 @@ public class PersonalFileController {
 		JSONObject jsonObject = new JSONObject();
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		map.put("replyUserId", ssoUser.getUserId());
-		map.put("year", time);
+
 		List<XlglExamSubject> subjectList = xlglExamSubjectService.queryList(null);
 		
 		Calendar date = Calendar.getInstance();
 		String year = String.valueOf(date.get(Calendar.YEAR));
-		
+		if(StringUtils.isNotBlank(time)){
+			map.put("year", time);
+		}else {
+			map.put("year", year);
+		}
 		List<PersonalFile> queryList = personalFileService.queryList(map);
 		Integer numberAll = 0;
 		for (PersonalFile personalFile : queryList) {
