@@ -104,6 +104,10 @@ public class XlglMineStudyServiceImpl implements XlglMineStudyService {
 				cell.setCellValue("人员id");
 				cell.setCellStyle(style);
 
+				cell = row.createCell(5);
+				cell.setCellValue("年份");
+				cell.setCellStyle(style);
+
 
 
 				int k = rowsOfSheet;
@@ -126,6 +130,7 @@ public class XlglMineStudyServiceImpl implements XlglMineStudyService {
 				sheet.setColumnWidth(2, 6000);
 				sheet.setColumnWidth(3, 10000);
 				sheet.setColumnWidth(4, 6000);
+				sheet.setColumnWidth(5,4400);
 				fout = new FileOutputStream(fileName);
 				wb.write(fout);
 				fout.flush();
@@ -155,12 +160,14 @@ public class XlglMineStudyServiceImpl implements XlglMineStudyService {
 			String steCell2 = sheet.getRow(i).getCell(2).getNumericCellValue()+""; //分数
 			String steCell3 = sheet.getRow(i).getCell(3).getStringCellValue()+""; //等级
 			String steCell4 = sheet.getRow(i).getCell(4).getStringCellValue(); //人员id
+			String steCell5 = sheet.getRow(i).getCell(5).getStringCellValue();//年份
 			xlglMineStudy.setUserName(steCell0);
 			xlglMineStudy.setDeptName(steCell1);
 			xlglMineStudy.setScore(steCell2);
 			xlglMineStudy.setDj(steCell3);
 			xlglMineStudy.setUserId(steCell4);
 			xlglMineStudy.setUpId(id);//每次上传的id
+			xlglMineStudy.setCurentYear(steCell5);
 			list.add(xlglMineStudy);
 		}
 		wb.close();

@@ -32,6 +32,17 @@ public class XlglMineStudy implements Serializable {
 	//上传id，用于统计和删除
 	private String upId;
 
+	//当前年
+	private String curentYear;
+
+	public String getCurentYear() {
+		return curentYear;
+	}
+
+	public void setCurentYear(String curentYear) {
+		this.curentYear = curentYear;
+	}
+
 	/**
 	 * 设置：
 	 */
