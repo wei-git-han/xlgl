@@ -16,7 +16,7 @@
 			and USER_ID = #{replyUserId}
 		</if>
 		<if test="year != null and year !=''">
-			and CREATED_TIME like '%'||#{year}||'%'
+			and CURENT_YEAR = #{year}
 		</if>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
@@ -73,7 +73,8 @@
 			"SXP",
 			"CPF",
 			"CPM",
-			"LAST_YEAR"
+			"LAST_YEAR",
+			"CURENT_YEAR"
 		)
 		values
 		(
@@ -105,7 +106,8 @@
 			#{sxp},
 			#{cpf},
 			#{cpm},
-			#{lastYear}
+			#{lastYear},
+			#{curentYear}
 		)
 	</insert>
 	 
@@ -139,7 +141,8 @@
 			<if test="sxp != null">"SXP" = #{sxp},</if>
 			<if test="cpf != null">"CPF" = #{cpf},</if>
 			<if test="cpm != null">"CPM" = #{cpm},</if>
-			<if test="lastYear != null">"LAST_YEAR" = #{lastYear}</if>
+			<if test="lastYear != null">"LAST_YEAR" = #{lastYear},</if>
+			<if test="curentYear != null">"CURENT_YEAR" = #{curentYear}</if>
 		</set>
 		where ID = #{id}
 	</update>

@@ -22,7 +22,7 @@ public interface XlglPhysicalDao extends BaseDao<XlglPhysical> {
 
     void deleteAllRecord(String[] ids);
 
-    @Select("select top 1 * from XLGL_PHYSICAL where USER_ID = #{0} and NORMAL = '1' AND CREATED_TIME like '%'||#{1}||'%'")
+    @Select("select top 1 * from XLGL_PHYSICAL where USER_ID = #{0} and NORMAL = '1' AND CURENT_YEAR like '%'||#{1}||'%'")
     XlglPhysical queryByUserId(String userId, String year);
 
     String querySort(Map<String,Object> map);

@@ -13,7 +13,7 @@
 			and USER_ID = #{replyUserId}
 		</if>
 		<if test="year != null and year !=''">
-			and CREATED_TIME like '%'||#{year}||'%'
+			and CURENT_YEAR = #{year}
 		</if>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
@@ -34,7 +34,8 @@
 			"DJ", 
 			"CREATED_TIME", 
 			"DEPT_NAME",
-			"UP_ID"
+			"UP_ID",
+			"CURENT_YEAR"
 		)
 		values
 		(
@@ -45,7 +46,8 @@
 			#{dj}, 
 			#{createdTime}, 
 			#{deptName},
-			#{upId}
+			#{upId},
+			#{curentYear}
 		)
 	</insert>
 	 
@@ -58,7 +60,8 @@
 			<if test="dj != null">"DJ" = #{dj}, </if>
 			<if test="createdTime != null">"CREATED_TIME" = #{createdTime}, </if>
 			<if test="deptName != null">"DEPT_NAME" = #{deptName}</if>
-			<if test="upId != null">"UP_ID" = #{upId}</if>
+			<if test="upId != null">"UP_ID" = #{upId},</if>
+			<if test="curentYear != null">"CURENT_YEAR" = #{curentYear}</if>
 		</set>
 		where ID = #{id}
 	</update>

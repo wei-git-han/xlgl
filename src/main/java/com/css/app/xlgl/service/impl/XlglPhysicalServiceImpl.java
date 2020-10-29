@@ -141,6 +141,10 @@ public class XlglPhysicalServiceImpl implements XlglPhysicalService {
 				cell.setCellValue("所在部门");
 				cell.setCellStyle(style);
 
+				cell = row.createCell(13);
+				cell.setCellValue("年份");
+				cell.setCellStyle(style);
+
 				int k = rowsOfSheet;
 				if ((size % rowsOfSheet != 0) && (j == size / rowsOfSheet)) {
 					k = size % rowsOfSheet;
@@ -169,6 +173,7 @@ public class XlglPhysicalServiceImpl implements XlglPhysicalService {
 				sheet.setColumnWidth(10, 4400);
 				sheet.setColumnWidth(11, 4400);
 				sheet.setColumnWidth(12, 4400);
+				sheet.setColumnWidth(13, 4400);
 				fout = new FileOutputStream(fileName);
 				wb.write(fout);
 				fout.flush();
@@ -205,6 +210,7 @@ public class XlglPhysicalServiceImpl implements XlglPhysicalService {
 				Date steCell10 = sheet.getRow(i).getCell(10).getDateCellValue();//生日
 				String steCell11 = sheet.getRow(i).getCell(11).getStringCellValue(); //人员id
 				String steCell12 = sheet.getRow(i).getCell(12).getStringCellValue();//人员部门
+				String steCell13 = sheet.getRow(i).getCell(13).getStringCellValue();//年份
 				xlglPhysical.setName(steCell0);
 				xlglPhysical.setSex(steCell1);
 				xlglPhysical.setHigh(steCell3);
@@ -220,6 +226,7 @@ public class XlglPhysicalServiceImpl implements XlglPhysicalService {
 				xlglPhysical.setUpId(id);//每次上传的id
 				xlglPhysical.setNormal("1");//1是正式导入，0是自己保存
 				xlglPhysical.setCreatedTime(new Date());
+				xlglPhysical.setCurentYear(steCell13);
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				xlglPhysical.setBirthday(simpleDateFormat.format(steCell10));
 				list.add(xlglPhysical);
