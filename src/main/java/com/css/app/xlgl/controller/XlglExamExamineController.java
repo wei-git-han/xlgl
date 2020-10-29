@@ -433,33 +433,9 @@ public class XlglExamExamineController {
 			xlglExamExaminetopic.setTopicOptionMap(hashMap);
 			switch (xlglExamExaminetopic.getTopicType()) {
 			case "1":	
-				if(StringUtils.isNotBlank(xlglExamExaminetopic.getPictureStatus()) 
-						&& xlglExamExaminetopic.getPictureStatus().equals("0")) {
-					List<String> list =new LinkedList<String>();
-					if(xlglExamExaminetopic.getTopicOption().contains(",")) {
-						String[] split = xlglExamExaminetopic.getTopicOption().split(",");
-						for (String string : split) {
-							String[] split2 = string.split(":");
-							list.add(split2[split2.length-1]);
-						}
-					}
-					xlglExamExaminetopic.setList(list);
-				}
 				listType1.add(xlglExamExaminetopic);
 				break;
 			case "2":
-				if(StringUtils.isNotBlank(xlglExamExaminetopic.getPictureStatus()) 
-						&& xlglExamExaminetopic.getPictureStatus().equals("0")) {
-					List<String> list =new LinkedList<String>();
-					if(xlglExamExaminetopic.getTopicOption().contains(",")) {
-						String[] split = xlglExamExaminetopic.getTopicOption().split(",");
-						for (String string : split) {
-							String[] split2 = string.split(":");
-							list.add(split2[split2.length-1]);
-						}
-					}
-					xlglExamExaminetopic.setList(list);
-				}
 				listType2.add(xlglExamExaminetopic);
 				break;
 			case "3":
@@ -470,6 +446,31 @@ public class XlglExamExamineController {
 				break;
 			default:
 				break;
+			}
+			if(StringUtils.isNotBlank(xlglExamExaminetopic.getPictureStatus()) 
+					&& xlglExamExaminetopic.getPictureStatus().equals("0")) {
+				List<String> columnList =new LinkedList<String>();
+				HashMap<String, String> pictureMap = new HashMap<String,String>();
+				if(StringUtils.isNotBlank(xlglExamExaminetopic.getPictureColumn())
+						&&xlglExamExaminetopic.getPictureColumn().contains(",")) {
+					String[] split = xlglExamExaminetopic.getPictureColumn().split(",");
+					for (String string : split) {
+						String[] split2 = string.split(":");
+						columnList.add(split2[split2.length-1]);
+					}
+				}else if(StringUtils.isNotBlank(xlglExamExaminetopic.getPictureColumn())){
+					columnList.add(xlglExamExaminetopic.getPictureColumn());
+				}
+				if(StringUtils.isNotBlank(xlglExamExaminetopic.getPictureOption()) &&
+						xlglExamExaminetopic.getPictureOption().contains(",")) {
+					String[] split = xlglExamExaminetopic.getPictureOption().split(",");
+					for (String string : split) {
+						String[] split2 = string.split("-");
+						pictureMap.put(split2[0], split2[1]);
+					}	
+				}
+				xlglExamExaminetopic.setColumnList(columnList);
+				xlglExamExaminetopic.setMap(pictureMap);
 			}
 		}
 		List<XlglExamExaminetopicDto> listCount = xlglExamExaminetopicService.findCountBySubjectId(map);

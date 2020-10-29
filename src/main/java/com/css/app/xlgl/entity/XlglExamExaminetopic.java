@@ -52,9 +52,22 @@ public class XlglExamExaminetopic implements Serializable {
 	//选项为图片的状态为 0   
 	private String pictureStatus;
 	
-	private List<String> list;
 	
 	private Map<String,Object> topicOptionMap;
+	
+	
+	/**
+	 * 题目图片字段
+	 * */
+	private String pictureColumn;
+	/**
+	 * 选项图片字段
+	 * */
+	private String pictureOption;
+	//题目图片集合
+	private List<String> columnList;
+	//选项图片集合
+	private Map<String,String> map;
 	
 	/**
 	 * 设置：
@@ -242,12 +255,31 @@ public class XlglExamExaminetopic implements Serializable {
 	public void setPictureStatus(String pictureStatus) {
 		this.pictureStatus = pictureStatus;
 	}
-	public List<String> getList() {
-		return list;
+	public String getPictureColumn() {
+		return pictureColumn;
 	}
-	public void setList(List<String> list) {
-		this.list = list;
+	public void setPictureColumn(String pictureColumn) {
+		this.pictureColumn = pictureColumn;
 	}
+	public String getPictureOption() {
+		return pictureOption;
+	}
+	public void setPictureOption(String pictureOption) {
+		this.pictureOption = pictureOption;
+	}
+	public List<String> getColumnList() {
+		return columnList;
+	}
+	public void setColumnList(List<String> columnList) {
+		this.columnList = columnList;
+	}
+	public Map<String, String> getMap() {
+		return map;
+	}
+	public void setMap(Map<String, String> map) {
+		this.map = map;
+	}
+	
 	
 	
 	

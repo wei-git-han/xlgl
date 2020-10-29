@@ -49,9 +49,11 @@
 			"FRACTIONAL_NUMBER", 
 			"CREATE_USER", 
 			"CREATE_DATE", 
+			"PICTURE_STATUS",
+			"PICTURE_COLUMN",
+			"PICTURE_OPTION",
 			"UPDATE_USER", 
 			"UPDATE_DATE",
-			"PICTURE_STATUS",
 			"SORT"
 		)
 		values
@@ -68,9 +70,11 @@
 			#{fractionalNumber}, 
 			#{createUser}, 
 			#{createDate}, 
+			#{pictureStatus},
+			#{pictureColumn},
+			#{pictureOption},
 			#{updateUser}, 
 			#{updateDate},
-			#{pictureStatus},
 			#{sort}
 		)
 	</insert>
@@ -126,6 +130,8 @@
 			"CREATE_USER", 
 			"CREATE_DATE", 
 			"PICTURE_STATUS",
+			"PICTURE_COLUMN",
+			"PICTURE_OPTION",
 			"UPDATE_USER", 
 			"UPDATE_DATE"
 		
@@ -147,6 +153,8 @@
 			#{item.createUser}, 
 			#{item.createDate}, 
 			#{item.pictureStatus},
+			#{item.pictureColumn},
+			#{item.pictureOption},
 			#{item.updateUser}, 
 			#{item.updateDate}
 		

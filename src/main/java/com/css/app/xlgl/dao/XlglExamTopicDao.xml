@@ -42,6 +42,8 @@
 			"CREATE_USER", 
 			"CREATE_DATE", 
 			"PICTURE_STATUS",
+			"PICTURE_COLUMN",
+			"PICTURE_OPTION",
 			"UPDATE_USER", 
 			"UPDATE_DATE"
 		)
@@ -56,6 +58,8 @@
 			#{createUser}, 
 			#{createDate}, 
 			#{pictureStatus},
+			#{pictureColumn},
+			#{pictureOption},
 			#{updateUser}, 
 			#{updateDate}
 		)
@@ -72,6 +76,8 @@
 			<if test="createUser != null">"CREATE_USER" = #{createUser}, </if>
 			<if test="createDate != null">"CREATE_DATE" = #{createDate}, </if>
 			<if test="pictureStatus != null">"PICTURE_STATUS" = #{pictureStatus}, </if>
+			<if test="pictureColumn != null">"PICTURE_COLUMN" = #{pictureColumn}, </if>
+			<if test="pictureOption != null">"PICTURE_OPTION" = #{pictureOption}, </if>
 			<if test="updateUser != null">"UPDATE_USER" = #{updateUser}, </if>
 			<if test="updateDate != null">"UPDATE_DATE" = #{updateDate}</if>
 		</set>
@@ -101,6 +107,9 @@
 			"TOPIC_RESULT", 
 			"CREATE_USER", 
 			"CREATE_DATE", 
+			"PICTURE_STATUS",
+			"PICTURE_COLUMN",
+			"PICTURE_OPTION",
 			"UPDATE_USER", 
 			"UPDATE_DATE"
 		)
@@ -115,6 +124,9 @@
 			#{item.topicResult}, 
 			#{item.createUser}, 
 			#{item.createDate}, 
+			#{item.pictureStatus},
+			#{item.pictureColumn},
+			#{item.pictureOption},
 			#{item.updateUser}, 
 			#{item.updateDate}
 			)
