@@ -217,6 +217,9 @@
 			<if test="examineSubjectName != null and examineSubjectName !=''">
 			 	and e.EXAMINE_SUBJECT_NAME like '%'||#{examineSubjectName}||'%'
 			</if>
+		<if test="year != null and year !=''">
+			and e.CREATE_DATE like '%'||#{year}||'%'
+		</if>
 			order by m.update_date desc
 	</select>
 	

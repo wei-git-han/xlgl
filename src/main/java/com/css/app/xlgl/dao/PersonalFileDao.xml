@@ -27,6 +27,9 @@
 		<if test="replyUserId != null and replyUserId !=''">
 			and b.REPLY_USER_ID = #{replyUserId}
 		</if>
+		<if test="year != null and year !=''">
+			and a.CREATE_DATE like '%'||#{year}||'%'
+		</if>
 		order by b.UPDATE_DATE desc
 	</select>
 
@@ -42,6 +45,9 @@
 		</if>
 		<if test="level != null and level !=''">
 			and b.LEVEL = #{level}
+		</if>
+		<if test="year != null and year !=''">
+			and a.CREATE_DATE like '%'||#{year}||'%'
 		</if>
 
 	</select>

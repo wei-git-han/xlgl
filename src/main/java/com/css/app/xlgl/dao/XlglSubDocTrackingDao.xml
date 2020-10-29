@@ -44,7 +44,7 @@
 		<if test="userId != null and userId !=''">
 			and RECEIVER_ID = #{userId}
 		</if>
-		AND BAOMING = '0' AND EXERCISE_TIME &lt; to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
+		AND BAOMING = '0' and IS_WORK = '0' AND EXERCISE_TIME &lt; to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
         order by CREATED_TIME desc
 		<if test="offset != null and limit != null">-->
 			limit #{offset}, #{limit}
@@ -375,7 +375,7 @@
  	<select id="queryMsgRemind" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
             select * from XLGL_SUB_DOC_TRACKING 
             where 
-            EXERCISE_TIME &gt;= sysdate() and read  = '0' and BAOMING = '1' 
+            EXERCISE_TIME &gt;= sysdate()  and BAOMING = '1'
             order by CREATED_TIME desc
         </select>
 

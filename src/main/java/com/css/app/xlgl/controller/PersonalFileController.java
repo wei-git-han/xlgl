@@ -56,12 +56,12 @@ public class PersonalFileController {
 	 * */
 	@ResponseBody
 	@RequestMapping("/list")
-	public void list() {
+	public void list(String time) {
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		JSONObject jsonObject = new JSONObject();
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		map.put("replyUserId", ssoUser.getUserId());
-		map.put("year", "1");
+		map.put("year", time);
 		List<XlglExamSubject> subjectList = xlglExamSubjectService.queryList(null);
 		
 		Calendar date = Calendar.getInstance();
@@ -275,9 +275,9 @@ public class PersonalFileController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getPerScore")
-	public int getPerScore(String userId){
-		Calendar calendar = Calendar.getInstance();
-		String year = String.valueOf(calendar.get(Calendar.YEAR));
+	public int getPerScore(String userId,String year){
+		//Calendar calendar = Calendar.getInstance();
+		//String year = String.valueOf(calendar.get(Calendar.YEAR));
 		//String userId = CurrentUser.getUserId();
 		int t = 0;
 		int yxSum = 0;//优秀个数
@@ -287,6 +287,7 @@ public class PersonalFileController {
 		int result = 0;//最终结果 0是优秀，1是优良，2是及格，3是不及格
 		//训练考核优秀率----start
 		HashMap<String,Object> map = new HashMap<String,Object>();
+		map.put("year",year);
 		int total = personalFileService.queryTotal(map);
 		map.put("level", "优秀");
 		map.put("replyUserId", userId);
@@ -392,7 +393,7 @@ public class PersonalFileController {
 	//某局所有的优秀
 	@ResponseBody
 	@RequestMapping("/getAllYxl")
-	public JSONObject getAllYxl(String deptId){
+	public JSONObject getAllYxl(String deptId,String year){
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
 		int highSum = 0;//优秀
@@ -406,7 +407,7 @@ public class PersonalFileController {
 		if(list != null && list.size() > 0){
 			for(BaseAppUser baseAppUser : list) {
 				String userId = baseAppUser.getUserId();
-				result = getPerScore(userId);
+				result = getPerScore(userId,year);
 				if (result == 0) {
 					highSum += 1;
 				} else if (result == 1) {
@@ -438,7 +439,11 @@ public class PersonalFileController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getAllDeptInfo")
-	public void getAllDeptInfo(){
+	public void getAllDeptInfo(String year){
+		Calendar calendar = Calendar.getInstance();
+		if(StringUtils.isBlank(year)){
+			year = String.valueOf(calendar.get(Calendar.YEAR));
+		}
 		List list2 = new ArrayList();
 		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
 		List listAll = new ArrayList();
@@ -448,7 +453,7 @@ public class PersonalFileController {
 			for(BaseAppOrgan baseAppOrgan : list){
 				String deptId = baseAppOrgan.getId();
 
-				JSONObject jsonObject = getAllYxl(deptId);
+				JSONObject jsonObject = getAllYxl(deptId,year);
 				if(orgId.equals(deptId)){//当前登录人所在的局的信息
 					JSONObject jsCurrentDept = new JSONObject();
 					jsCurrentDept.put("name",jsonObject.get("name"));

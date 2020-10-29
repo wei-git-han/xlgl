@@ -203,7 +203,7 @@ public class TaskMenuController {
 
                 if("2".equals(adminFlag)){
                     JSONArray jsonArray2 = (JSONArray) jsons.getJSONObject(4).get("children");
-                    jsonArray2.remove(3);
+                    //jsonArray2.remove(3);
                 }
 
             }

@@ -57,7 +57,7 @@ public class XlglMsgRemindTimingTask {
 		if (timer == null) {
 			timer = new Timer();
 		}
-		timer.scheduleAtFixedRate(getInstance(), 120000 , 600000);
+		timer.scheduleAtFixedRate(getInstance(), 120000 , 30000);
 	}
 
 	/**
@@ -114,10 +114,10 @@ public class XlglMsgRemindTimingTask {
 	 * 提醒消息业务代码
 	 */
 	public void timingTask() {
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		Map<String, Object> map = new HashMap<>();
 		map.put("state", "true");
-		map.put("type", "0");//参训受训为0
+		//map.put("type", "0");//参训受训为0
 		List<XlglMsgRemind> queryList = xlglMsgRemindService.queryList(map);
 		if(queryList.size()>0) {
 			Integer remindDate = queryList.get(0).getRemindDate();
@@ -127,9 +127,14 @@ public class XlglMsgRemindTimingTask {
 				for (XlglSubDocTracking xlglSubDocTracking : queryMsgRemind) {
 					String exerciseTime = xlglSubDocTracking.getExerciseTime();
 					try {
-						Date parse = format.parse(exerciseTime);
-						Date date = new Date(parse.getTime()-time);
-						if(date.before(new Date())&&parse.after(new Date())) {
+						int minute = 0;
+						String curDate = format.format(new Date());
+						long remindTime = format.parse(exerciseTime).getTime();
+						long curTime = format.parse(curDate).getTime();
+						long  minusTime = remindTime - curTime;
+						minute = (int) minusTime/(1000*60);
+						System.out.println("当前时间减配置时间所差分钟数："+minute);
+						if(minute<10 && minute>=0){
 							String msgUrl =""; //"/app/db/document/grdb/html/grdb.html?fileFrom=grdb";
 							this.setMsg(xlglSubDocTracking.getReceiverId(), msgUrl,
 									queryList.get(0).getContent());

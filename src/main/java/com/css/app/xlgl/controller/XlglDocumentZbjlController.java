@@ -564,9 +564,12 @@ public class XlglDocumentZbjlController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getXlCoreList")
-	public void getXlCoreList(String userNames, String depId, String type) {
+	public void getXlCoreList(String userNames, String depId, String type,String time) {
 		Calendar calendar = Calendar.getInstance();
-		String year = String.valueOf(calendar.get(Calendar.YEAR));
+		String year = String.valueOf(calendar.get(Calendar.YEAR));//默认查询的是当前年，若time有值，查对应的年份
+		if(StringUtils.isNotBlank(time)){
+			year = time;
+		}
 		String organId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
 		Map<String, Object> hashmap = new HashMap<String, Object>();
 
@@ -751,6 +754,7 @@ public class XlglDocumentZbjlController {
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("replyUserId", baseAppUser.getUserId());
 				map.put("examineSubjectName", "共同训练");
+				map.put("year",time);
 				List<XlglExamMainAnswer> commonList = xlglExamMainAnswerService.findListBySubjectId(map);
 				map.put("examineSubjectName", "专业训练");
 				List<XlglExamMainAnswer> specialtyList = xlglExamMainAnswerService.findListBySubjectId(map);

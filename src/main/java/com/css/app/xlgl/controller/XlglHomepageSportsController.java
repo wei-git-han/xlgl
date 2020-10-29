@@ -207,7 +207,7 @@ public class XlglHomepageSportsController {
 		}else {
 			String sportId = UUIDUtils.random();
 			xlglHomepageSports.setId(sportId);
-			xlglHomepageSports.setCreateUser(CurrentUser.getUsername());
+			xlglHomepageSports.setCreateUser(CurrentUser.getUserId());
 			xlglHomepageSports.setCreateDate(curDay);
 			xlglHomepageSports.setUpdateUser(CurrentUser.getUserId());
 			//xlglHomepageSports.setUpdateDate(curDay);
