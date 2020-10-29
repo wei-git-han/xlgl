@@ -168,33 +168,9 @@ public class XlglExamAnswerController {
 			xlglExamAnswer.setTopicOptionMap(hashMap);
 			switch (xlglExamAnswer.getTopicType()) {
 			case "1":	
-				if(StringUtils.isNotBlank(xlglExamAnswer.getPictureStatus()) 
-						&& xlglExamAnswer.getPictureStatus().equals("0")) {
-					List<String> piclist =new LinkedList<String>();
-					if(xlglExamAnswer.getTopicOption().contains(",")) {
-						String[] split = xlglExamAnswer.getTopicOption().split(",");
-						for (String string : split) {
-							String[] split2 = string.split(":");
-							piclist.add(split2[split2.length-1]);
-						}
-					}
-					xlglExamAnswer.setList(piclist);
-				}
 				listType1.add(xlglExamAnswer);
 				break;
 			case "2":
-				if(StringUtils.isNotBlank(xlglExamAnswer.getPictureStatus()) 
-						&& xlglExamAnswer.getPictureStatus().equals("0")) {
-					List<String> piclist =new LinkedList<String>();
-					if(xlglExamAnswer.getTopicOption().contains(",")) {
-						String[] split = xlglExamAnswer.getTopicOption().split(",");
-						for (String string : split) {
-							String[] split2 = string.split(":");
-							piclist.add(split2[split2.length-1]);
-						}
-					}
-					xlglExamAnswer.setList(piclist);
-				}
 				listType2.add(xlglExamAnswer);
 				break;
 			case "3":
@@ -205,6 +181,29 @@ public class XlglExamAnswerController {
 				break;
 			default:
 				break;
+			}
+			if(StringUtils.isNotBlank(xlglExamAnswer.getPictureStatus()) 
+					&& xlglExamAnswer.getPictureStatus().equals("0")) {
+				List<String> piclist =new LinkedList<String>();
+				Map<String, String> pictureMap = new HashMap<String,String>();
+				if(StringUtils.isNotBlank(xlglExamAnswer.getPictureColumn())
+						&&xlglExamAnswer.getPictureColumn().contains(",")) {
+					String[] split = xlglExamAnswer.getPictureColumn().split(",");
+					for (String string : split) {
+						piclist.add(string);
+					}
+				}else if(StringUtils.isNotBlank(xlglExamAnswer.getPictureColumn())) {
+					piclist.add(xlglExamAnswer.getPictureColumn());
+				}
+				if(StringUtils.isNotBlank(xlglExamAnswer.getPictureOption())&&xlglExamAnswer.getPictureOption().contains(",")) {
+					String[] split = xlglExamAnswer.getPictureOption().split(",");
+					for (String string : split) {
+						String[] split2 = string.split("-");
+						pictureMap.put(split2[0], split2[1]);
+					}
+				}
+				xlglExamAnswer.setColumnList(piclist);
+				xlglExamAnswer.setMap(pictureMap);
 			}
 		}
 		List<XlglExamExaminetopicDto> listCount = xlglExamExaminetopicService.findCountBySubjectId(map);

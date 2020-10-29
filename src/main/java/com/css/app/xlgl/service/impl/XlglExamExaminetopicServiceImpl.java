@@ -109,6 +109,8 @@ public class XlglExamExaminetopicServiceImpl implements XlglExamExaminetopicServ
 				examineTopic.setCreateUser(userId);
 				examineTopic.setUpdateDate(date);
 				examineTopic.setUpdateUser(userId);
+				examineTopic.setPictureColumn(xlglExamTopic.getPictureColumn());
+				examineTopic.setPictureOption(xlglExamTopic.getPictureOption());
 				examineTopic.setPictureStatus(xlglExamTopic.getPictureStatus());
 				if (StringUtils.isNotBlank(makeUpId)) {
 					examineTopic.setMakeUpId(makeUpId);

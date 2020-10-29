@@ -540,7 +540,6 @@ public class XlglDocumentZbjlController {
 						// }else {
 						xlglSubDocTracking.setSumStatus("3");
 						// }
-
 					}
 				} else {
 					if ("0".equals(read)) {
@@ -549,7 +548,15 @@ public class XlglDocumentZbjlController {
 						xlglSubDocTracking.setSumStatus("0");
 					}
 				}
-
+				Map<String, Object> hashmap = new HashMap<String, Object>();
+				hashmap.put("id", xlglSubDocTracking.getInfoId());
+				hashmap.put("type", "4");
+				List<XlglPicture> queryList = xlglPictureService.queryListByType(hashmap);
+				if (queryList.size() > 0) {
+					if (queryList.get(0).getFileId().equals(xlglSubDocTracking.getInfoId())) {
+						xlglSubDocTracking.setPicturePath(queryList.get(0).getPictureId());
+					}
+				}
 			}
 		}
 

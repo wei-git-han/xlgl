@@ -74,15 +74,26 @@ public class XlglExamTopicController {
 			if(StringUtils.isNotBlank(xlglExamTopic.getPictureStatus())
 					&& xlglExamTopic.getPictureStatus().equals("0")) {
 				List<String> picture =new LinkedList<String>();
-				if(xlglExamTopic.getTopicOption().contains(",")) {
-					String[] split = xlglExamTopic.getTopicOption().split(",");
+				Map<String, String> hashMap = new HashMap<String,String>();
+				if(StringUtils.isNotBlank(xlglExamTopic.getPictureColumn())
+						&&xlglExamTopic.getPictureColumn().contains(",")) {
+					String[] split = xlglExamTopic.getPictureColumn().split(",");
 					for (String string : split) {
-						String[] split2 = string.split(":");
-						String s =split2[split2.length-1];
-						picture.add(s);
+						picture.add(string);
 					}
+				}else if(StringUtils.isNotBlank(xlglExamTopic.getPictureColumn())){
+					picture.add(xlglExamTopic.getPictureColumn());
 				}
-				xlglExamTopic.setList(picture);
+				if(StringUtils.isNotBlank(xlglExamTopic.getPictureOption()) 
+						&& xlglExamTopic.getPictureOption().contains(",")) {
+					String[] split = xlglExamTopic.getPictureOption().split(",");
+					for (String string : split) {
+						String[] split2 = string.split("-");
+						hashMap.put(split2[0], split2[1]);
+					}	
+				}
+				xlglExamTopic.setColumnList(picture);
+				xlglExamTopic.setMap(hashMap);
 			}
 		}
 		PageUtils pageUtil = new PageUtils(xlglExamTopicList);
@@ -97,6 +108,31 @@ public class XlglExamTopicController {
 	@RequestMapping("/info")
 	public void info(String id) {
 		XlglExamTopic xlglExamTopic = xlglExamTopicService.queryObject(id);
+		if(StringUtils.isNotBlank(xlglExamTopic.getPictureStatus())
+				&& xlglExamTopic.getPictureStatus().equals("0")) {
+			List<String> picture =new LinkedList<String>();
+			Map<String, String> hashMap = new HashMap<String,String>();
+			if(StringUtils.isNotBlank(xlglExamTopic.getPictureColumn())
+					&&xlglExamTopic.getPictureColumn().contains(",")) {
+				String[] split = xlglExamTopic.getPictureColumn().split(",");
+				for (String string : split) {
+					picture.add(string);
+				}
+			}else if(StringUtils.isNotBlank(xlglExamTopic.getPictureColumn())){
+				picture.add(xlglExamTopic.getPictureColumn());
+			}
+			if(StringUtils.isNotBlank(xlglExamTopic.getPictureOption()) 
+					&& xlglExamTopic.getPictureOption().contains(",")) {
+				String[] split = xlglExamTopic.getPictureOption().split(",");
+				for (String string : split) {
+					String[] split2 = string.split("-");
+					hashMap.put(split2[0], split2[1]);
+				}	
+			}
+			xlglExamTopic.setColumnList(picture);
+			xlglExamTopic.setMap(hashMap);
+		}
+	
 		Response.json("xlglExamTopic", xlglExamTopic);
 	}
 
@@ -239,21 +275,34 @@ public class XlglExamTopicController {
 
 	/**
 	 * 手动录入题目
-	 * 
-	 * @param XlglExamTopic
-	 *            前端传jsonarray,
+	 * @param XlglExamTopic      
+	 * pictureColumn 存多个图片id以逗号隔开
+	 * pictureOption 存选项图片以逗号隔开，单个选项一张图片
 	 */
 	@ResponseBody
 	@RequestMapping("/saveTopic")
-	public void saveTopic(String jsonArray) {
-		List<XlglExamTopic> list = JSONArray.parseArray(jsonArray, XlglExamTopic.class);
-		for (XlglExamTopic xlglExamTopic : list) {
-			xlglExamTopic.setPictureStatus("0");
-		}
-		xlglExamTopicService.saveList(list);
+	public void saveTopic(XlglExamTopic xlglExamTopic) {
+		xlglExamTopic.setPictureStatus("0");
+		xlglExamTopicService.save(xlglExamTopic);
+		Response.ok();
+	}
+	
+	/**
+	 * 手动录入修改
+	 */
+	@ResponseBody
+	@RequestMapping("/updateTopic")
+	public void updateTopic(XlglExamTopic xlglExamTopic) {
+		Date date = new Date();
+		xlglExamTopic.setUpdateDate(date);
+		xlglExamTopic.setUpdateUser(CurrentUser.getUserId());
+		xlglExamTopic.setPictureStatus("0");
+		xlglExamTopicService.update(xlglExamTopic);
+
 		Response.ok();
 	}
 
+	
 	/**
 	 * 保存图片
 	 * 

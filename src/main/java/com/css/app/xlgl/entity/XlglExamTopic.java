@@ -3,6 +3,7 @@ package com.css.app.xlgl.entity;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 
@@ -38,9 +39,19 @@ public class XlglExamTopic implements Serializable {
 	private Date updateDate;
 	//图目选项是图的 0:是图片标志
 	private String pictureStatus;
-
-	//图片集合
-	private  List<String> list;
+	/*PICTURE_OPTION  PICTURE_COLUMN
+	 * 题目图片字段
+	 * */
+	private String pictureColumn;
+	/**
+	 * 选项图片字段
+	 * */
+	private String pictureOption;
+	//题目图片集合
+	private List<String> columnList;
+	//选项图片集合
+	private Map<String,String> map;
+	
 	
 	/**
 	 * 设置：
@@ -168,11 +179,29 @@ public class XlglExamTopic implements Serializable {
 	public void setPictureStatus(String pictureStatus) {
 		this.pictureStatus = pictureStatus;
 	}
-	public List<String> getList() {
-		return list;
+	public String getPictureColumn() {
+		return pictureColumn;
 	}
-	public void setList(List<String> list) {
-		this.list = list;
+	public void setPictureColumn(String pictureColumn) {
+		this.pictureColumn = pictureColumn;
+	}
+	public String getPictureOption() {
+		return pictureOption;
+	}
+	public void setPictureOption(String pictureOption) {
+		this.pictureOption = pictureOption;
+	}
+	public List<String> getColumnList() {
+		return columnList;
+	}
+	public void setColumnList(List<String> columnList) {
+		this.columnList = columnList;
+	}
+	public Map<String, String> getMap() {
+		return map;
+	}
+	public void setMap(Map<String, String> map) {
+		this.map = map;
 	}
 	
 }
