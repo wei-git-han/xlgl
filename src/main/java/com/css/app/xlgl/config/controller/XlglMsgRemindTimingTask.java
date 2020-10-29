@@ -57,7 +57,7 @@ public class XlglMsgRemindTimingTask {
 		if (timer == null) {
 			timer = new Timer();
 		}
-		timer.scheduleAtFixedRate(getInstance(), 120000 , 30000);
+		timer.scheduleAtFixedRate(getInstance(), 120000 , 600000);
 	}
 
 	/**

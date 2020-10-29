@@ -1201,7 +1201,7 @@ public class XlglXlzzInfoController {
 		yhCount = xlglSubDocTrackingService.queryYhCount(userId, year);
 		if (sum > 0) {
 			// bk = sum - count;
-			double f = ((new BigDecimal((float) 1 / 39).doubleValue())
+			double f = ((new BigDecimal((float) count / sum).doubleValue())
 					* 100);
 			String wcl = String.valueOf(f);
 			jsonObject.put("wcl", wcl.substring(0,wcl.indexOf(".")+2));
@@ -1405,9 +1405,14 @@ public class XlglXlzzInfoController {
 		JSONObject jsonObject = new JSONObject();
 		int ycx = xlglSubDocTrackingService.queryAllCx(infoId);// 已参训，根据is_work状态来判断
 		int qx = xlglSubDocTrackingService.queryAllBkCount(infoId);// 缺席，根据is_work 状态来判断
-		jsonObject.put("sum", ycx + qx);
+		int sum = ycx + qx;
+		jsonObject.put("sum", sum );
 		jsonObject.put("ycm", ycx);
 		jsonObject.put("qx", qx);
+		double f = ((new BigDecimal((float) ycx / sum).doubleValue())
+				* 100);
+		String wcl = String.valueOf(f);
+		jsonObject.put("wcl",wcl.substring(0,wcl.indexOf(".")+2));
 		Response.json(jsonObject);
 	}
 	
