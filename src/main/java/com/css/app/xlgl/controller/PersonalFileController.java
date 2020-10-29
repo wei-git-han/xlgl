@@ -443,10 +443,10 @@ public class PersonalFileController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getAllDeptInfo")
-	public void getAllDeptInfo(String year){
+	public void getAllDeptInfo(String time){
 		Calendar calendar = Calendar.getInstance();
-		if(StringUtils.isBlank(year)){
-			year = String.valueOf(calendar.get(Calendar.YEAR));
+		if(StringUtils.isBlank(time)){
+			time = String.valueOf(calendar.get(Calendar.YEAR));
 		}
 		List list2 = new ArrayList();
 		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
@@ -457,7 +457,7 @@ public class PersonalFileController {
 			for(BaseAppOrgan baseAppOrgan : list){
 				String deptId = baseAppOrgan.getId();
 
-				JSONObject jsonObject = getAllYxl(deptId,year);
+				JSONObject jsonObject = getAllYxl(deptId,time);
 				if(orgId.equals(deptId)){//当前登录人所在的局的信息
 					JSONObject jsCurrentDept = new JSONObject();
 					jsCurrentDept.put("name",jsonObject.get("name"));

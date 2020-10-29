@@ -61,14 +61,14 @@ public class XlglPictureServiceImpl implements XlglPictureService {
 	@Override
 	public void savePicture(String fileId, String pictureId, String pictureType) {
 		XlglPicture xlglPicture = new XlglPicture();
-		//HTTPFile httpFile = new HTTPFile(pictureId);
-		//String fileName = httpFile.getFileName();
+		HTTPFile httpFile = new HTTPFile(pictureId);
+		String fileName = httpFile.getFileName();
 		xlglPicture.setId(UUIDUtils.random());
 		xlglPicture.setFileId(fileId);
 		xlglPicture.setPictureId(pictureId);
 		xlglPicture.setPictureType(pictureType);
 		xlglPicture.setIsFirst("0");
-		xlglPicture.setPictureName("ttt");
+		xlglPicture.setPictureName(fileName);
 		xlglPicture.setCreateTime(new Date());
 		xlglPicture.setUserId(CurrentUser.getUserId());
 		xlglPicture.setUserName(CurrentUser.getUsername());
