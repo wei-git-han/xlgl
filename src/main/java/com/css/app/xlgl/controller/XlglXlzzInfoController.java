@@ -1201,9 +1201,10 @@ public class XlglXlzzInfoController {
 		yhCount = xlglSubDocTrackingService.queryYhCount(userId, year);
 		if (sum > 0) {
 			// bk = sum - count;
-			float f = (int) ((new BigDecimal((float) count / sum).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue())
+			double f = ((new BigDecimal((float) 1 / 39).doubleValue())
 					* 100);
-			jsonObject.put("wcl", f);
+			String wcl = String.valueOf(f);
+			jsonObject.put("wcl", wcl.substring(0,wcl.indexOf(".")+2));
 			jsonObject.put("ywc", count);
 			jsonObject.put("bk", yhCount);
 		} else {
