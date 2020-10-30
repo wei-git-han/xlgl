@@ -796,7 +796,7 @@ public class XlglDocumentZbjlController {
 						jsonObject2.put("xlglName", xlglExamMainAnswer.getExamineName());
 						jsonObject2.put("xlglSum", xlglExamMainAnswer.getFractionsum());
 						jsonObject2.put("xlglLevel", xlglExamMainAnswer.getLevel());
-						jsonArray2.add(jsonObject);
+						jsonArray2.add(jsonObject2);
 					}
 				}
 				jsonObject.put("examine", jsonArray2);

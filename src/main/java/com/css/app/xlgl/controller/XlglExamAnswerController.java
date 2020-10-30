@@ -165,23 +165,6 @@ public class XlglExamAnswerController {
 					}
 				}
 			}
-			xlglExamAnswer.setTopicOptionMap(hashMap);
-			switch (xlglExamAnswer.getTopicType()) {
-			case "1":	
-				listType1.add(xlglExamAnswer);
-				break;
-			case "2":
-				listType2.add(xlglExamAnswer);
-				break;
-			case "3":
-				listType3.add(xlglExamAnswer);
-				break;
-			case "4":
-				listType4.add(xlglExamAnswer);
-				break;
-			default:
-				break;
-			}
 			if(StringUtils.isNotBlank(xlglExamAnswer.getPictureStatus()) 
 					&& xlglExamAnswer.getPictureStatus().equals("0")) {
 				List<String> piclist =new LinkedList<String>();
@@ -205,6 +188,24 @@ public class XlglExamAnswerController {
 				xlglExamAnswer.setColumnList(piclist);
 				xlglExamAnswer.setMap(pictureMap);
 			}
+			xlglExamAnswer.setTopicOptionMap(hashMap);
+			switch (xlglExamAnswer.getTopicType()) {
+			case "1":	
+				listType1.add(xlglExamAnswer);
+				break;
+			case "2":
+				listType2.add(xlglExamAnswer);
+				break;
+			case "3":
+				listType3.add(xlglExamAnswer);
+				break;
+			case "4":
+				listType4.add(xlglExamAnswer);
+				break;
+			default:
+				break;
+			}
+			
 		}
 		List<XlglExamExaminetopicDto> listCount = xlglExamExaminetopicService.findCountBySubjectId(map);
 		jsonObject.put("listType1", listType1);

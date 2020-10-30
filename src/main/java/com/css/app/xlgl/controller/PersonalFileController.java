@@ -21,12 +21,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.css.app.xlgl.dto.PersonalFileDto;
 import com.css.app.xlgl.entity.PersonalFile;
+import com.css.app.xlgl.entity.XlglExamMainAnswer;
 import com.css.app.xlgl.entity.XlglExamSubject;
 import com.css.base.entity.SSOUser;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.Response;
 import org.springframework.web.context.request.NativeWebRequest;
-import sun.text.resources.cldr.es.FormatData_es_419;
+
 
 /**
  * 
@@ -63,9 +64,6 @@ public class PersonalFileController {
 		JSONObject jsonObject = new JSONObject();
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		map.put("replyUserId", ssoUser.getUserId());
-
-		List<XlglExamSubject> subjectList = xlglExamSubjectService.queryList(null);
-		
 		Calendar date = Calendar.getInstance();
 		String year = String.valueOf(date.get(Calendar.YEAR));
 		if(StringUtils.isNotBlank(time)){
@@ -82,28 +80,21 @@ public class PersonalFileController {
 		List<XlglPhysical> queryPhysicalList = xlglPhysicalService.queryList(map);//军事体育成绩
 		List<XlglMineStudy> xlglMineStudyList  = xlglMineStudyService.queryList(map);//自学成绩
 		List<PersonalFileDto> list =new ArrayList<PersonalFileDto>();
-		for (XlglExamSubject xlglExamSubject : subjectList) {
-			List<PersonalFile> PersonalFilelist =new ArrayList<PersonalFile>();
-			for (PersonalFile personalFile : queryList) {
-				if(xlglExamSubject.getSubjectName().equals(personalFile.getExamineSubjectName())) {
-					PersonalFilelist.add(personalFile);
-				}
-			}
-			if(PersonalFilelist.size()>0) {
-				PersonalFileDto personalFileDto = new PersonalFileDto();
-				personalFileDto.setExamineSubjectName(xlglExamSubject.getSubjectName());
-				personalFileDto.setList(PersonalFilelist);
-				list.add(personalFileDto);
+		Map<String, Object> xlglMap = new HashMap<String, Object>();
+		xlglMap.put("replyUserId", ssoUser.getUserId());
+		List<XlglExamMainAnswer> commonList = xlglExamMainAnswerService.findListBySubjectId(map);
+		if(commonList.size()>0) {
+			for (XlglExamMainAnswer xlglExamMainAnswer : commonList) {
+			    JSONObject jsonObject2 = new JSONObject();
+				jsonObject2.put("xlglName", xlglExamMainAnswer.getExamineName());
+				jsonObject2.put("xlglSum", xlglExamMainAnswer.getFractionsum());
+				jsonObject2.put("xlglLevel", xlglExamMainAnswer.getLevel());
+				jsonObject2.put("userName", ssoUser.getFullname());
+				numberAll +=xlglExamMainAnswer.getFractionsum();
+				listAll.add(jsonObject2);
 			}
 		}
-
-		for(XlglExamSubject xlglExamSubject : subjectList){
-
-		}
-
-
-
-
+		
 
 		if(queryPhysicalList != null && queryPhysicalList.size() > 0){
 			for(XlglPhysical xlglPhysical : queryPhysicalList){
@@ -118,9 +109,6 @@ public class PersonalFileController {
 
 			}
 		}
-
-
-
 
 		if(xlglMineStudyList != null && xlglMineStudyList.size() > 0){
 			for(XlglMineStudy xlglMineStudy : xlglMineStudyList){
