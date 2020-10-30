@@ -26,6 +26,7 @@ import com.css.base.entity.SSOUser;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.Response;
 import org.springframework.web.context.request.NativeWebRequest;
+import sun.text.resources.cldr.es.FormatData_es_419;
 
 /**
  * 
@@ -57,6 +58,7 @@ public class PersonalFileController {
 	@ResponseBody
 	@RequestMapping("/list")
 	public void list(String time) {
+		List listAll = new ArrayList();
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		JSONObject jsonObject = new JSONObject();
 		HashMap<String,Object> map = new HashMap<String,Object>();
@@ -94,29 +96,48 @@ public class PersonalFileController {
 				list.add(personalFileDto);
 			}
 		}
+
+		for(XlglExamSubject xlglExamSubject : subjectList){
+
+		}
+
+
+
+
+
 		if(queryPhysicalList != null && queryPhysicalList.size() > 0){
-			PersonalFileDto personalFileDto = new PersonalFileDto();
-			personalFileDto.setExamineSubjectName("军事体育训练");
-			personalFileDto.setXlglPhysicalList(queryPhysicalList);
-			personalFileDto.setScore(queryPhysicalList.get(0).getAllScore());
-			list.add(personalFileDto);
 			for(XlglPhysical xlglPhysical : queryPhysicalList){
 				numberAll += Integer.parseInt(xlglPhysical.getAllScore());
 			}
+			for(XlglPhysical xlglPhysical : queryPhysicalList){
+				JSONObject jsonObject1 = new JSONObject();
+				jsonObject1.put("score",xlglPhysical.getAllScore());
+				jsonObject1.put("subJectName","军事体育训练");
+				jsonObject1.put("currentName",CurrentUser.getUsername());
+				listAll.add(jsonObject1);
+
+			}
 		}
+
+
+
+
 		if(xlglMineStudyList != null && xlglMineStudyList.size() > 0){
-			PersonalFileDto personalFileDto = new PersonalFileDto();
-			personalFileDto.setExamineSubjectName("自学成绩");
-			personalFileDto.setXlglMineStudyList(xlglMineStudyList);
-			personalFileDto.setScore(xlglMineStudyList.get(0).getScore());
-			list.add(personalFileDto);
 			for(XlglMineStudy xlglMineStudy : xlglMineStudyList){
 				numberAll += Integer.parseInt(xlglMineStudy.getScore());
+			}
+
+			for(XlglMineStudy xlglMineStudy : xlglMineStudyList){
+				JSONObject jsonObject1 = new JSONObject();
+				jsonObject1.put("score",xlglMineStudy.getScore());
+				jsonObject1.put("subJectName","自学成绩");
+				jsonObject1.put("currentName",CurrentUser.getUsername());
+				listAll.add(jsonObject1);
 			}
 		}
 
 		//jsonObject.put("XlglPhysical",queryPhysicalList);//体育成绩
-		jsonObject.put("personalFileList", list);
+		jsonObject.put("list", listAll);
 		jsonObject.put("currentUserName", ssoUser.getFullname());
 		jsonObject.put("orgName", ssoUser.getOrgName());
 		jsonObject.put("numberAll", numberAll);//总分

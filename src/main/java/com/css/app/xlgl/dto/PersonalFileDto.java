@@ -14,7 +14,7 @@ public class PersonalFileDto implements Serializable {
     //科目名称
     private String examineSubjectName;
     //
-    private List<PersonalFile> list;
+    private List list;
 
     private List<XlglPhysical> xlglPhysicalList;
 
@@ -62,13 +62,11 @@ public class PersonalFileDto implements Serializable {
         this.examineSubjectName = examineSubjectName;
     }
 
-    public List<PersonalFile> getList() {
+    public List getList() {
         return list;
     }
 
-    public void setList(List<PersonalFile> list) {
+    public void setList(List list) {
         this.list = list;
     }
-
-
 }
