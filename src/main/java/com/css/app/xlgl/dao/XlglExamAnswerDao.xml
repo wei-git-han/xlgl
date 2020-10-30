@@ -39,13 +39,15 @@
 			"REPLY_USER_ID", 
 			"CREATE_DATE", 
 			"UPDATE_DATE", 
+			"PICTURE_STATUS",
+			"PICTURE_COLUMN",
+			"PICTURE_OPTION",
 			"STATUS", 
 			"CORRECT_STATUS", 
 			"ORGAN_ID", 
 			"ORGAN_NAME", 
 			"FRACTION", 
 			"REPLY_USER_NAME", 
-			"PICTURE_STATUS",
 			"MAIN_ANSWER_ID"
 		)
 		values
@@ -61,13 +63,15 @@
 			#{replyUserId}, 
 			#{createDate}, 
 			#{updateDate}, 
+			#{pictureStatus},
+			#{pictureColumn},
+			#{pictureOption},
 			#{status}, 
 			#{correctStatus}, 
 			#{organId}, 
 			#{organName}, 
 			#{fraction}, 
 			#{replyUserName}, 
-			#{pictureStatus},
 			#{mainAnswerId}
 		)
 	</insert>
@@ -85,13 +89,15 @@
 			<if test="replyUserId != null">"REPLY_USER_ID" = #{replyUserId}, </if>
 			<if test="createDate != null">"CREATE_DATE" = #{createDate}, </if>
 			<if test="updateDate != null">"UPDATE_DATE" = #{updateDate}, </if>
+			<if test="pictureStatus != null">"PICTURE_STATUS" = #{pictureStatus}, </if>
+			<if test="pictureColumn != null">"PICTURE_COLUMN" = #{pictureColumn}, </if>
+			<if test="pictureOption != null">"PICTURE_OPTION" = #{pictureOption}, </if>
 			<if test="status != null">"STATUS" = #{status}, </if>
 			<if test="correctStatus != null">"CORRECT_STATUS" = #{correctStatus}, </if>
 			<if test="organId != null">"ORGAN_ID" = #{organId}, </if>
 			<if test="organName != null">"ORGAN_NAME" = #{organName}, </if>
 			<if test="fraction != null">"FRACTION" = #{fraction}, </if>
 			<if test="replyUserName != null">"REPLY_USER_NAME" = #{replyUserName}, </if>
-			<if test="pictureStatus != null">"PICTURE_STATUS" = #{pictureStatus}, </if>
 			<if test="mainAnswerId != null">"MAIN_ANSWER_ID" = #{mainAnswerId}</if>
 		</set>
 		where id = #{id}
@@ -127,13 +133,15 @@
 			"REPLY_USER_ID", 
 			"CREATE_DATE", 
 			"UPDATE_DATE", 
+			"PICTURE_STATUS",
+			"PICTURE_COLUMN",
+			"PICTURE_OPTION",
 			"STATUS", 
 			"CORRECT_STATUS", 
 			"ORGAN_ID", 
 			"ORGAN_NAME", 
 			"FRACTION", 
 			"REPLY_USER_NAME", 
-			"PICTURE_STATUS",
 			"MAIN_ANSWER_ID"
 		)
 		values
@@ -150,13 +158,15 @@
 			#{item.replyUserId}, 
 			#{item.createDate}, 
 			#{item.updateDate}, 
+			#{item.pictureStatus},
+			#{item.pictureColumn},
+			#{item.pictureOption},
 			#{item.status}, 
 			#{item.correctStatus}, 
 			#{item.organId}, 
 			#{item.organName}, 
 			#{item.fraction}, 
 			#{item.replyUserName}, 
-			#{item.pictureStatus},
 			#{item.mainAnswerId}
 		)
 		</foreach>
