@@ -444,8 +444,12 @@ public class PersonalFileController {
 		int levelStudy = 0;
 		if(xlglMineStudy != null){
 			if(StringUtils.isNotBlank(xlglMineStudy.getScore())){
-				levelStudy	= Integer.parseInt(xlglMineStudy.getScore().substring(0,xlglMineStudy.getScore().indexOf(".")));
-			}
+				if(xlglMineStudy.getScore().contains(".")){
+					levelStudy	= Integer.parseInt(xlglMineStudy.getScore().substring(0,xlglMineStudy.getScore().indexOf(".")));
+				}else {
+					levelStudy = Integer.parseInt(xlglMineStudy.getScore());
+				}
+				}
 
 
 		String studyDj = "";
