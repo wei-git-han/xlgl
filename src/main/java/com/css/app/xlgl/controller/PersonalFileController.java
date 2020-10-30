@@ -59,11 +59,91 @@ public class PersonalFileController {
 	@ResponseBody
 	@RequestMapping("/list")
 	public void list(String time) {
-		List listAll = new ArrayList();
+//		List listAll = new ArrayList();
+//		SSOUser ssoUser = CurrentUser.getSSOUser();
+//		JSONObject jsonObject = new JSONObject();
+//		HashMap<String,Object> map = new HashMap<String,Object>();
+//		map.put("replyUserId", ssoUser.getUserId());
+//		Calendar date = Calendar.getInstance();
+//		String year = String.valueOf(date.get(Calendar.YEAR));
+//		if(StringUtils.isNotBlank(time)){
+//			map.put("year", time);
+//		}else {
+//			map.put("year", year);
+//		}
+//		List<PersonalFile> queryList = personalFileService.queryList(map);
+//		Integer numberAll = 0;
+//		for (PersonalFile personalFile : queryList) {
+//			numberAll += personalFile.getFractionSum();
+//			personalFile.setUserName(personalFile.getUserName());
+//		}
+//		List<XlglPhysical> queryPhysicalList = xlglPhysicalService.queryList(map);//军事体育成绩
+//		List<XlglMineStudy> xlglMineStudyList  = xlglMineStudyService.queryList(map);//自学成绩
+//		List<PersonalFileDto> list =new ArrayList<PersonalFileDto>();
+//		Map<String, Object> xlglMap = new HashMap<String, Object>();
+//		xlglMap.put("replyUserId", ssoUser.getUserId());
+//		List<XlglExamMainAnswer> commonList = xlglExamMainAnswerService.findListBySubjectId(map);
+//		if(commonList.size()>0) {
+//			for (XlglExamMainAnswer xlglExamMainAnswer : commonList) {
+//			    JSONObject jsonObject2 = new JSONObject();
+//				jsonObject2.put("subJectName", xlglExamMainAnswer.getExamineName());
+//				if(xlglExamMainAnswer.getFractionsum() != null){
+//					jsonObject2.put("score", xlglExamMainAnswer.getFractionsum());
+//				}else {
+//					jsonObject2.put("score", "0");
+//				}
+//				jsonObject2.put("currentName", CurrentUser.getUsername());
+//				if(xlglExamMainAnswer.getFractionsum() != null){
+//					numberAll +=xlglExamMainAnswer.getFractionsum();
+//				}
+//				listAll.add(jsonObject2);
+//			}
+//		}
+//
+//
+//		if(queryPhysicalList != null && queryPhysicalList.size() > 0){
+//			for(XlglPhysical xlglPhysical : queryPhysicalList){
+//				numberAll += Integer.parseInt(xlglPhysical.getAllScore());
+//			}
+//			for(XlglPhysical xlglPhysical : queryPhysicalList){
+//				JSONObject jsonObject1 = new JSONObject();
+//				jsonObject1.put("score",xlglPhysical.getAllScore());
+//				jsonObject1.put("subJectName","军事体育训练");
+//				jsonObject1.put("currentName",CurrentUser.getUsername());
+//				listAll.add(jsonObject1);
+//
+//			}
+//		}
+//
+//		if(xlglMineStudyList != null && xlglMineStudyList.size() > 0){
+//			for(XlglMineStudy xlglMineStudy : xlglMineStudyList){
+//				numberAll += Integer.parseInt(xlglMineStudy.getScore());
+//			}
+//
+//			for(XlglMineStudy xlglMineStudy : xlglMineStudyList){
+//				JSONObject jsonObject1 = new JSONObject();
+//				jsonObject1.put("score",xlglMineStudy.getScore());
+//				jsonObject1.put("subJectName","自学成绩");
+//				jsonObject1.put("currentName",CurrentUser.getUsername());
+//				listAll.add(jsonObject1);
+//			}
+//		}
+//
+//		//jsonObject.put("XlglPhysical",queryPhysicalList);//体育成绩
+//		jsonObject.put("list", listAll);
+//		jsonObject.put("currentUserName", ssoUser.getFullname());
+//		jsonObject.put("orgName", ssoUser.getOrgName());
+//		jsonObject.put("numberAll", numberAll);//总分
+//		jsonObject.put("year", year);
+//		Response.json(jsonObject);
+
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		JSONObject jsonObject = new JSONObject();
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		map.put("replyUserId", ssoUser.getUserId());
+
+		List<XlglExamSubject> subjectList = xlglExamSubjectService.queryList(null);
+
 		Calendar date = Calendar.getInstance();
 		String year = String.valueOf(date.get(Calendar.YEAR));
 		if(StringUtils.isNotBlank(time)){
@@ -80,51 +160,43 @@ public class PersonalFileController {
 		List<XlglPhysical> queryPhysicalList = xlglPhysicalService.queryList(map);//军事体育成绩
 		List<XlglMineStudy> xlglMineStudyList  = xlglMineStudyService.queryList(map);//自学成绩
 		List<PersonalFileDto> list =new ArrayList<PersonalFileDto>();
-		Map<String, Object> xlglMap = new HashMap<String, Object>();
-		xlglMap.put("replyUserId", ssoUser.getUserId());
-		List<XlglExamMainAnswer> commonList = xlglExamMainAnswerService.findListBySubjectId(map);
-		if(commonList.size()>0) {
-			for (XlglExamMainAnswer xlglExamMainAnswer : commonList) {
-			    JSONObject jsonObject2 = new JSONObject();
-				jsonObject2.put("subJectName", xlglExamMainAnswer.getExamineName());
-				jsonObject2.put("score", xlglExamMainAnswer.getFractionsum());
-				jsonObject2.put("currentName", CurrentUser.getUsername());
-				numberAll +=xlglExamMainAnswer.getFractionsum();
-				listAll.add(jsonObject2);
+		for (XlglExamSubject xlglExamSubject : subjectList) {
+			List<PersonalFile> PersonalFilelist =new ArrayList<PersonalFile>();
+			for (PersonalFile personalFile : queryList) {
+				if(xlglExamSubject.getSubjectName().equals(personalFile.getExamineSubjectName())) {
+					PersonalFilelist.add(personalFile);
+				}
+			}
+			if(PersonalFilelist.size()>0) {
+				PersonalFileDto personalFileDto = new PersonalFileDto();
+				personalFileDto.setExamineSubjectName(xlglExamSubject.getSubjectName());
+				personalFileDto.setList(PersonalFilelist);
+				list.add(personalFileDto);
 			}
 		}
-		
-
 		if(queryPhysicalList != null && queryPhysicalList.size() > 0){
+			PersonalFileDto personalFileDto = new PersonalFileDto();
+			personalFileDto.setExamineSubjectName("军事体育训练");
+			personalFileDto.setXlglPhysicalList(queryPhysicalList);
+			personalFileDto.setScore(queryPhysicalList.get(0).getAllScore());
+			list.add(personalFileDto);
 			for(XlglPhysical xlglPhysical : queryPhysicalList){
 				numberAll += Integer.parseInt(xlglPhysical.getAllScore());
 			}
-			for(XlglPhysical xlglPhysical : queryPhysicalList){
-				JSONObject jsonObject1 = new JSONObject();
-				jsonObject1.put("score",xlglPhysical.getAllScore());
-				jsonObject1.put("subJectName","军事体育训练");
-				jsonObject1.put("currentName",CurrentUser.getUsername());
-				listAll.add(jsonObject1);
-
-			}
 		}
-
 		if(xlglMineStudyList != null && xlglMineStudyList.size() > 0){
+			PersonalFileDto personalFileDto = new PersonalFileDto();
+			personalFileDto.setExamineSubjectName("自学成绩");
+			personalFileDto.setXlglMineStudyList(xlglMineStudyList);
+			personalFileDto.setScore(xlglMineStudyList.get(0).getScore());
+			list.add(personalFileDto);
 			for(XlglMineStudy xlglMineStudy : xlglMineStudyList){
 				numberAll += Integer.parseInt(xlglMineStudy.getScore());
-			}
-
-			for(XlglMineStudy xlglMineStudy : xlglMineStudyList){
-				JSONObject jsonObject1 = new JSONObject();
-				jsonObject1.put("score",xlglMineStudy.getScore());
-				jsonObject1.put("subJectName","自学成绩");
-				jsonObject1.put("currentName",CurrentUser.getUsername());
-				listAll.add(jsonObject1);
 			}
 		}
 
 		//jsonObject.put("XlglPhysical",queryPhysicalList);//体育成绩
-		jsonObject.put("list", listAll);
+		jsonObject.put("personalFileList", list);
 		jsonObject.put("currentUserName", ssoUser.getFullname());
 		jsonObject.put("orgName", ssoUser.getOrgName());
 		jsonObject.put("numberAll", numberAll);//总分
