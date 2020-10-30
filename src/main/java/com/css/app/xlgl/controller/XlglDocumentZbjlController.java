@@ -672,7 +672,12 @@ public class XlglDocumentZbjlController {
 					if(StringUtils.isNotBlank(xlglPhysical.getUp())){
 						String agestr="0";
 						if(StringUtils.isNotBlank(xlglPhysical.getAge())) {
-							agestr = xlglPhysical.getAge().substring(0,age.indexOf("."));
+							String s = xlglPhysical.getAge();
+							if(s.contains(".")){
+								agestr = xlglPhysical.getAge().substring(0,age.indexOf("."));
+							}else {
+								agestr = xlglPhysical.getAge();
+							}
 						}
 						if(StringUtils.isNotBlank(xlglPhysical.getAge()) && Integer.parseInt(agestr)>=40) {
 							fwc =xlglPhysical.getUp();
@@ -733,17 +738,29 @@ public class XlglDocumentZbjlController {
 				jsonObject.put("trun",trun);//3000米长跑
 				jsonObject.put("sex",sex);//性别
 				if(StringUtils.isNotBlank(age)){
-					jsonObject.put("age",age.substring(0,age.indexOf(".")));//年龄
+					if(age.contains(".")){
+						jsonObject.put("age",age.substring(0,age.indexOf(".")));//年龄
+					}else {
+						jsonObject.put("age",age);//年龄
+					}
 				}else {
 					jsonObject.put("age","0");//年龄
 				}
 				if(StringUtils.isNotBlank(ytxs)){
-					jsonObject.put("ytxs",ytxs.substring(0,ytxs.indexOf(".")));//引体向上
+					if(ytxs.contains(".")){
+						jsonObject.put("ytxs",ytxs.substring(0,ytxs.indexOf(".")));//引体向上
+					}else {
+						jsonObject.put("ytxs",ytxs);//引体向上
+					}
 				}else {
 					jsonObject.put("ytxs","0");//引体向上
 				}
 				if(StringUtils.isNotBlank(ywqz)){
-					jsonObject.put("ywqz",ywqz.substring(0,ywqz.indexOf(".")));//仰卧起坐
+					if(ywqz.contains(".")){
+						jsonObject.put("ywqz",ywqz.substring(0,ywqz.indexOf(".")));//仰卧起坐
+					}else {
+						jsonObject.put("ywqz",ywqz);//仰卧起坐
+					}
 				}else {
 					jsonObject.put("ywqz","0");//仰卧起坐
 				}

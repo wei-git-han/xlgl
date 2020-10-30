@@ -115,6 +115,7 @@ public class XlglPhysicalController {
 		xlglPhysical.setUserId(CurrentUser.getUserId());
 		xlglPhysical.setNormal("0");//1是正式导入，0是自己保存
 		xlglPhysical.setLastYear(String.valueOf(Integer.parseInt(year) - 1));
+		xlglPhysical.setCurentYear(String.valueOf(Integer.parseInt(year)));
 		xlglPhysicalService.save(xlglPhysical);
 		XlglPhysical xlglPhysical1 = xlglPhysicalService.queryObject(id);
 		if (xlglPhysical1 != null) {

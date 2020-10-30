@@ -20,6 +20,16 @@ public class PersonalFileDto implements Serializable {
 
     private List<XlglMineStudy> xlglMineStudyList;
 
+    private String score;
+
+    public String getScore() {
+        return score;
+    }
+
+    public void setScore(String score) {
+        this.score = score;
+    }
+
     public List<XlglMineStudy> getXlglMineStudyList() {
         return xlglMineStudyList;
     }

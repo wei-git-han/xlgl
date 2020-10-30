@@ -98,16 +98,24 @@ public class PersonalFileController {
 			PersonalFileDto personalFileDto = new PersonalFileDto();
 			personalFileDto.setExamineSubjectName("军事体育训练");
 			personalFileDto.setXlglPhysicalList(queryPhysicalList);
+			personalFileDto.setScore(queryPhysicalList.get(0).getAllScore());
 			list.add(personalFileDto);
+			for(XlglPhysical xlglPhysical : queryPhysicalList){
+				numberAll += Integer.parseInt(xlglPhysical.getAllScore());
+			}
 		}
 		if(xlglMineStudyList != null && xlglMineStudyList.size() > 0){
 			PersonalFileDto personalFileDto = new PersonalFileDto();
 			personalFileDto.setExamineSubjectName("自学成绩");
 			personalFileDto.setXlglMineStudyList(xlglMineStudyList);
+			personalFileDto.setScore(xlglMineStudyList.get(0).getScore());
 			list.add(personalFileDto);
+			for(XlglMineStudy xlglMineStudy : xlglMineStudyList){
+				numberAll += Integer.parseInt(xlglMineStudy.getScore());
+			}
 		}
 
-		jsonObject.put("XlglPhysical",queryPhysicalList);//体育成绩
+		//jsonObject.put("XlglPhysical",queryPhysicalList);//体育成绩
 		jsonObject.put("personalFileList", list);
 		jsonObject.put("currentUserName", ssoUser.getFullname());
 		jsonObject.put("orgName", ssoUser.getOrgName());
