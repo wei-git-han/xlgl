@@ -86,10 +86,9 @@ public class PersonalFileController {
 		if(commonList.size()>0) {
 			for (XlglExamMainAnswer xlglExamMainAnswer : commonList) {
 			    JSONObject jsonObject2 = new JSONObject();
-				jsonObject2.put("xlglName", xlglExamMainAnswer.getExamineName());
-				jsonObject2.put("xlglSum", xlglExamMainAnswer.getFractionsum());
-				jsonObject2.put("xlglLevel", xlglExamMainAnswer.getLevel());
-				jsonObject2.put("userName", ssoUser.getFullname());
+				jsonObject2.put("subJectName", xlglExamMainAnswer.getExamineName());
+				jsonObject2.put("score", xlglExamMainAnswer.getFractionsum());
+				jsonObject2.put("currentName", CurrentUser.getUsername());
 				numberAll +=xlglExamMainAnswer.getFractionsum();
 				listAll.add(jsonObject2);
 			}
