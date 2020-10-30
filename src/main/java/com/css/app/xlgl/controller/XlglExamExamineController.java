@@ -426,7 +426,11 @@ public class XlglExamExamineController {
 				for (String str : split) {
 					if(str.contains(":")) {
 						String[] split2 = str.split(":");
-						hashMap.put(split2[0], split2[1]);
+						if(split2.length ==2) {
+							hashMap.put(split2[0], split2[1]);
+						}else {
+							hashMap.put(split2[0],"");
+						}	
 					}
 				}
 			}
