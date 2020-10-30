@@ -426,7 +426,11 @@ public class XlglExamExamineController {
 				for (String str : split) {
 					if(str.contains(":")) {
 						String[] split2 = str.split(":");
-						hashMap.put(split2[0], split2[1]);
+						if(split2.length ==2) {
+							hashMap.put(split2[0], split2[1]);
+						}else {
+							hashMap.put(split2[0],"");
+						}	
 					}
 				}
 			}
@@ -575,6 +579,7 @@ public class XlglExamExamineController {
 			if(IssueStatus.equals("1") && StringUtils.isNotBlank(xlglExamExamine.getId())) {
 			List<BaseAppUser> queryList = baseAppUserService.queryList(null);
 			List<XlglExamMainAnswer> mainExaminelist =new ArrayList<XlglExamMainAnswer>();
+			int i = 1;
 			for (BaseAppUser baseAppUser : queryList) {
 				XlglExamMainAnswer xlglExamMainAnswer = new XlglExamMainAnswer();
 				xlglExamMainAnswer.setId(UUIDUtils.random());
@@ -598,7 +603,10 @@ public class XlglExamExamineController {
 				if(mainExaminelist.size() ==10) {
 					xlglExamMainAnswerService.saveBatch(mainExaminelist);
 					mainExaminelist =new ArrayList<XlglExamMainAnswer>();
+					}else if(queryList.size()-i == 0) {
+						xlglExamMainAnswerService.saveBatch(mainExaminelist);
 					}
+				i++;
 				}
 			}	
 		}else if(status.equals("1")) {
