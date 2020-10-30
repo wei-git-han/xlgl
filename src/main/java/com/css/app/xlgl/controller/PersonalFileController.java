@@ -13,6 +13,7 @@ import com.css.app.xlgl.entity.XlglMineStudy;
 import com.css.app.xlgl.entity.XlglPhysical;
 import com.css.app.xlgl.service.*;
 import com.css.base.utils.StringUtils;
+import com.sun.xml.internal.messaging.saaj.soap.ver1_1.Message1_1Impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -154,7 +155,12 @@ public class PersonalFileController {
 		List<PersonalFile> queryList = personalFileService.queryList(map);
 		Integer numberAll = 0;
 		for (PersonalFile personalFile : queryList) {
-			numberAll += personalFile.getFractionSum();
+			if(personalFile.getFractionSum() != null){
+				numberAll += personalFile.getFractionSum();
+			}else {
+				numberAll += 0;
+			}
+
 			personalFile.setUserName(personalFile.getUserName());
 		}
 		List<XlglPhysical> queryPhysicalList = xlglPhysicalService.queryList(map);//军事体育成绩
@@ -181,7 +187,12 @@ public class PersonalFileController {
 			personalFileDto.setScore(queryPhysicalList.get(0).getAllScore());
 			list.add(personalFileDto);
 			for(XlglPhysical xlglPhysical : queryPhysicalList){
-				numberAll += Integer.parseInt(xlglPhysical.getAllScore());
+				if(StringUtils.isNotBlank(xlglPhysical.getAllScore())){
+					numberAll += Integer.parseInt(xlglPhysical.getAllScore());
+				}else {
+					numberAll += 0;
+				}
+
 			}
 		}
 		if(xlglMineStudyList != null && xlglMineStudyList.size() > 0){
@@ -274,18 +285,18 @@ public class PersonalFileController {
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		String userId = ssoUser.getUserId();
 		for (PersonalFile personalFile : queryRanking) {
-			if(personalFile.getReplyUserId().equals(userId)) {
+			if (personalFile.getReplyUserId().equals(userId)) {
 				jsonObject.put("totalFraction", personalFile.getTotalFraction());
 				String totalFraction = personalFile.getTotalFraction();//得总分
 				Integer fractionSum = personalFile.getFractionSum();//所有考试总分
 				int parseInt = Integer.parseInt(totalFraction);
-				if(parseInt >=fractionSum*0.9) {
+				if (parseInt >= fractionSum * 0.9) {
 					jsonObject.put("level", "优秀");
-				}else if(parseInt < fractionSum*0.9  && parseInt >=fractionSum*0.75) {
+				} else if (parseInt < fractionSum * 0.9 && parseInt >= fractionSum * 0.75) {
 					jsonObject.put("level", "优良");
-				}else if(fractionSum*0.75 > parseInt && parseInt >= fractionSum*0.6) {
+				} else if (fractionSum * 0.75 > parseInt && parseInt >= fractionSum * 0.6) {
 					jsonObject.put("level", "良好");
-				}else {
+				} else {
 					jsonObject.put("level", "差");
 				}
 				break;
@@ -310,21 +321,51 @@ public class PersonalFileController {
 		XlglPhysical xlglPhysical = xlglPhysicalService.queryByUserId(userId,year);
 		if(xlglPhysical != null){
 		String age = xlglPhysical.getAge();
-		String age1 = age.substring(0,age.indexOf("."));
+		String age1 = "";
+		if(age.contains(".")){
+			age1 = age.substring(0,age.indexOf("."));
+		}else {
+			age1 = age;
+		}
 		String ytxs = xlglPhysical.getYtxs();
-		String ytxs1 = ytxs.substring(0,ytxs.indexOf("."));
+		String ytxs1 = "";
+		if(ytxs.contains(".")){
+			ytxs1 = ytxs.substring(0,ytxs.indexOf("."));
+		}else {
+			ytxs1 = ytxs;
+		}
 		String ywqz = xlglPhysical.getYwqz();
-		String ywqz1 = ywqz.substring(0,ywqz.indexOf("."));
+		String ywqz1 = "";
+		if(ywqz.contains(".")){
+			ywqz1 = ywqz.substring(0,ywqz.indexOf("."));
+		}else {
+			ywqz1 = ywqz;
+		}
 		String sRun = xlglPhysical.getSxp();
 		String tRun = xlglPhysical.getCpf();
 		String t = "";
 		String sex = xlglPhysical.getSex();
 		String weiht = xlglPhysical.getWight();
-		String weiht1 = weiht.substring(0,weiht.indexOf("."));
-		String high1 = xlglPhysical.getHigh();
-		//String high1 = high.substring(0,high.indexOf("."));
+		String weiht1 = "";
+		if(weiht.contains(".")){
+			weiht1 = weiht.substring(0,weiht.indexOf("."));
+		}else {
+			weiht1 = weiht;
+		}
+		String high = xlglPhysical.getHigh();
+		String high1 = "";
+		if(high.contains(".")){
+			high1 = high.substring(0,high.indexOf("."));
+		}else {
+			high1 = high;
+		}
 		String type = xlglPhysical.getType();
-		String type1 = type.substring(0,type.indexOf("."));
+		String type1 = "";
+		if(type.contains(".")){
+			type1 = type.substring(0,type.indexOf("."));
+		}else {
+			type1 = type;
+		}
 		XlglPhysicalController xlglPhysicalController = new XlglPhysicalController();
 		JSONObject jsonObject = xlglPhysicalController.getPerSumCore(age1,ytxs1,ywqz1,sRun,tRun,t,sex,type1,weiht1,high1);
 		int score = (int)jsonObject.get("score");
@@ -444,8 +485,12 @@ public class PersonalFileController {
 		int levelStudy = 0;
 		if(xlglMineStudy != null){
 			if(StringUtils.isNotBlank(xlglMineStudy.getScore())){
-				levelStudy	= Integer.parseInt(xlglMineStudy.getScore().substring(0,xlglMineStudy.getScore().indexOf(".")));
-			}
+				if(xlglMineStudy.getScore().contains(".")){
+					levelStudy	= Integer.parseInt(xlglMineStudy.getScore().substring(0,xlglMineStudy.getScore().indexOf(".")));
+				}else {
+					levelStudy = Integer.parseInt(xlglMineStudy.getScore());
+				}
+				}
 
 
 		String studyDj = "";
