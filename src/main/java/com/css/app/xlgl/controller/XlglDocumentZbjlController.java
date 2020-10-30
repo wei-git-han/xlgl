@@ -604,8 +604,8 @@ public class XlglDocumentZbjlController {
 				String userId = CurrentUser.getUserId();
 
 				// 强装兴装大讲堂得分 ------------------start
-				int sum = xlglSubDocTrackingService.queryAllCount(userId, year);
-				int count = xlglSubDocTrackingService.quereyWcCount(userId, year);
+				int sum = xlglSubDocTrackingService.queryAllCount(baseAppUser.getUserId(), year);
+				int count = xlglSubDocTrackingService.quereyWcCount(baseAppUser.getUserId(), year);
 				String dj = "--";
 				float f = 0;
 				if (count == 0) {
@@ -628,7 +628,7 @@ public class XlglDocumentZbjlController {
 				// 强装兴装大讲堂得分 ------------------end
 
 				// 军事体育成绩得分----------------------start
-				XlglPhysical xlglPhysical = xlglPhysicalService.queryByUserId(userId, year);
+				XlglPhysical xlglPhysical = xlglPhysicalService.queryByUserId(baseAppUser.getUserId(), year);
 				String jtScore = "0";
 				String jtDj = "--";
 				String up = "";//引体向上
@@ -770,7 +770,7 @@ public class XlglDocumentZbjlController {
 				// 军事体育成绩得分-----------------------end
 
 				// 自学成绩得分------------------------------start
-				XlglMineStudy xlglMineStudy = xlglMineStudyService.queryByUserId(userId, year);
+				XlglMineStudy xlglMineStudy = xlglMineStudyService.queryByUserId(baseAppUser.getUserId(), year);
 				String studyScore = "0";
 				String studyDj = "--";
 				if (xlglMineStudy != null) {
