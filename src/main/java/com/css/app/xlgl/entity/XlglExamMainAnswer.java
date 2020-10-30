@@ -47,7 +47,9 @@ public class XlglExamMainAnswer implements Serializable {
 	private String updateUser;
 	//练习状态 0 模拟练习，1自主练习
 	private String lianxiType;
-
+	
+	//考试名称
+	private String  examineName;
 	/**
 	 * 设置：
 	 */
@@ -221,6 +223,12 @@ public class XlglExamMainAnswer implements Serializable {
 	}
 	public void setLianxiType(String lianxiType) {
 		this.lianxiType = lianxiType;
+	}
+	public String getExamineName() {
+		return examineName;
+	}
+	public void setExamineName(String examineName) {
+		this.examineName = examineName;
 	}
 	
 }

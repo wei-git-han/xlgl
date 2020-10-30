@@ -193,12 +193,12 @@
 	
 	<select id="findListBySubjectId" resultType="com.css.app.xlgl.entity.XlglExamMainAnswer">
 		select 
-			m.* 
+				e.EXAMINE_NAME as examineName , m.* 
 		from 
 			XLGL_EXAM_MAIN_ANSWER m
 		join 
 			XLGL_EXAM_EXAMINE e on e.id = m.EXAMINE_ID
-		where m.STATUS  = '0' 
+		where m.STATUS  = '0'  and m.ISNOTEXAM = '1'
 			<if test="examineId != null and examineId !=''">
 			  and m.EXAMINE_ID = #{examineId}
 			</if>

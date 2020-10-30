@@ -283,6 +283,11 @@ public class XlglExamTopicController {
 	@RequestMapping("/saveTopic")
 	public void saveTopic(XlglExamTopic xlglExamTopic) {
 		xlglExamTopic.setPictureStatus("0");
+		xlglExamTopic.setId(UUIDUtils.random());
+		xlglExamTopic.setCreateDate(new Date());
+		xlglExamTopic.setUpdateDate(new Date());
+		xlglExamTopic.setUpdateUser(CurrentUser.getUserId());
+		xlglExamTopic.setCreateUser(CurrentUser.getUserId());
 		xlglExamTopicService.save(xlglExamTopic);
 		Response.ok();
 	}

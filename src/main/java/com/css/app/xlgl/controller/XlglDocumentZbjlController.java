@@ -768,9 +768,24 @@ public class XlglDocumentZbjlController {
 				jsonObject.put("studyScore", studyScore);
 				jsonObject.put("studyDj", studyDj);
 				// 自学成绩得分-------------------------------end
-
-				// 共同训练，专业训练，战略训练，军事训练 ------------------start
+				//训练管理-当前用户已经考过考试-----------------start
 				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("replyUserId", baseAppUser.getUserId());
+				List<XlglExamMainAnswer> commonList = xlglExamMainAnswerService.findListBySubjectId(map);
+				JSONArray jsonArray2 = new JSONArray();
+				if(commonList.size()>0) {
+					for (XlglExamMainAnswer xlglExamMainAnswer : commonList) {
+					    JSONObject jsonObject2 = new JSONObject();
+						jsonObject2.put("xlglName", xlglExamMainAnswer.getExamineName());
+						jsonObject2.put("xlglSum", xlglExamMainAnswer.getFractionsum());
+						jsonObject2.put("xlglLevel", xlglExamMainAnswer.getLevel());
+						jsonArray2.add(jsonObject);
+					}
+				}
+				jsonObject.put("examine", jsonArray2);
+				//训练管理-当前用户已经考过考试-----------------end
+				// 共同训练，专业训练，战略训练，军事训练 ------------------start
+				/*Map<String, Object> map = new HashMap<String, Object>();
 				map.put("replyUserId", baseAppUser.getUserId());
 				map.put("examineSubjectName", "共同训练");
 				map.put("year",time);
@@ -809,7 +824,7 @@ public class XlglDocumentZbjlController {
 					jsonObject.put("warSum", "0");
 					jsonObject.put("warLevel", "--");
 				}
-
+*/
 				// 共同训练，专业训练，战略训练，军事训练 ------------------end
 				jsonArray.add(jsonObject);
 
