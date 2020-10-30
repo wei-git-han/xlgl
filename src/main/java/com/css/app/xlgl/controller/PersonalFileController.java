@@ -99,12 +99,18 @@ public class PersonalFileController {
 			personalFileDto.setExamineSubjectName("军事体育训练");
 			personalFileDto.setXlglPhysicalList(queryPhysicalList);
 			list.add(personalFileDto);
+			for(XlglPhysical xlglPhysical : queryPhysicalList){
+				numberAll += Integer.parseInt(xlglPhysical.getAllScore());
+			}
 		}
 		if(xlglMineStudyList != null && xlglMineStudyList.size() > 0){
 			PersonalFileDto personalFileDto = new PersonalFileDto();
 			personalFileDto.setExamineSubjectName("自学成绩");
 			personalFileDto.setXlglMineStudyList(xlglMineStudyList);
 			list.add(personalFileDto);
+			for(XlglMineStudy xlglMineStudy : xlglMineStudyList){
+				numberAll += Integer.parseInt(xlglMineStudy.getScore());
+			}
 		}
 
 		jsonObject.put("XlglPhysical",queryPhysicalList);//体育成绩
