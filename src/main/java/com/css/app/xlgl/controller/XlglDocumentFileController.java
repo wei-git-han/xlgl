@@ -262,15 +262,15 @@ public class XlglDocumentFileController{
 	 * 没用文件服务，用的是本地上传，保存在一个文件夹下
 	 */
 
-	@ResponseBody
-	@RequestMapping("/upLoadVedio")
-	public void upLoadVedio(@RequestParam(value = "pdf", required = false) MultipartFile pdf){
-		JSONObject json = new JSONObject();
-		Map<String,Object> map = new HashMap<>();
-		map = FileBaseUtil.fileServiceUploadByFilePath1(pdf,filePath,localAddress);
-		json.put("fileId", map.get("fileId"));
-		Response.json(json);
-	}
+//	@ResponseBody
+//	@RequestMapping("/upLoadVedio")
+//	public void upLoadVedio(@RequestParam(value = "pdf", required = false) MultipartFile pdf){
+//		JSONObject json = new JSONObject();
+//		Map<String,Object> map = new HashMap<>();
+//		map = FileBaseUtil.fileServiceUploadByFilePath1(pdf,filePath,localAddress);
+//		json.put("fileId", map.get("fileId"));
+//		Response.json(json);
+//	}
 	
 	/**
 	 * 文件下载接口
@@ -293,33 +293,33 @@ public class XlglDocumentFileController{
 //
 //	}
 
-	@ResponseBody
-	@RequestMapping("/downLoadVedio")
-	public void downLoadVedio(String fileId,HttpServletResponse response) throws IOException {
-		String path = "D:\\ideaProject\\xlgl_app\\src\\main\\resources\\static\\app\\db\\uploadFile\\d4933ed9-fd2e-433e-bd96-177785e0a852.mp4";
-		File file = new File(path);
-		try {
-			FileInputStream fis = new FileInputStream(file);
-			response.setContentType("application/force-download");
-			response.setCharacterEncoding("UTF-8");
-			response.addHeader("Content-Disposition", "attachment;filename="+new String(file.getName().getBytes(),"ISO-8859-1"));
-			ServletOutputStream os = response.getOutputStream();
-			byte[] buf = new byte[4096];
-			int len = 0;
-			while((len = fis.read(buf)) !=-1) {
-				os.write(buf,0,len);
-			}
-			fis.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+//	@ResponseBody
+//	@RequestMapping("/downLoadVedio")
+//	public void downLoadVedio(String fileId,HttpServletResponse response) throws IOException {
+//		String path = "D:\\ideaProject\\xlgl_app\\src\\main\\resources\\static\\app\\db\\uploadFile\\d4933ed9-fd2e-433e-bd96-177785e0a852.mp4";
+//		File file = new File(path);
+//		try {
+//			FileInputStream fis = new FileInputStream(file);
+//			response.setContentType("application/force-download");
+//			response.setCharacterEncoding("UTF-8");
+//			response.addHeader("Content-Disposition", "attachment;filename="+new String(file.getName().getBytes(),"ISO-8859-1"));
+//			ServletOutputStream os = response.getOutputStream();
+//			byte[] buf = new byte[4096];
+//			int len = 0;
+//			while((len = fis.read(buf)) !=-1) {
+//				os.write(buf,0,len);
+//			}
+//			fis.close();
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		} catch (UnsupportedEncodingException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 
 
 	@ResponseBody
