@@ -270,6 +270,17 @@ public class XlglExamAnswerController {
 		XlglExamMainAnswer queryObject = xlglExamMainAnswerService.queryObject(mainAnswerId);
 		XlglExamExamine xlglExamExamine = xlglExamExamineService.queryObject(queryObject.getExamineId());
 		for (XlglExamAnswer eanswer : parseArray) {
+			if(StringUtils.isNotBlank(eanswer.getPictureStatus()) && eanswer.getPictureStatus().equals("0")) {
+				XlglExamExaminetopic queryObject2 = xlglExamExaminetopicService.queryObject(eanswer.getExamineTopicId());
+				if(queryObject2 !=null) {
+					if(StringUtils.isNotBlank(queryObject2.getPictureColumn())) {
+						eanswer.setPictureColumn(queryObject2.getPictureColumn());
+					}
+					if(StringUtils.isNotBlank(queryObject2.getPictureOption())) {
+						eanswer.setPictureOption(queryObject2.getPictureOption());
+					}
+				}
+			}
 			eanswer.setId(UUIDUtils.random());
 			eanswer.setMainAnswerId(mainAnswerId);
 			eanswer.setReplyUserId(ssoUser.getUserId());

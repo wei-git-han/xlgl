@@ -575,6 +575,7 @@ public class XlglExamExamineController {
 			if(IssueStatus.equals("1") && StringUtils.isNotBlank(xlglExamExamine.getId())) {
 			List<BaseAppUser> queryList = baseAppUserService.queryList(null);
 			List<XlglExamMainAnswer> mainExaminelist =new ArrayList<XlglExamMainAnswer>();
+			int i = 1;
 			for (BaseAppUser baseAppUser : queryList) {
 				XlglExamMainAnswer xlglExamMainAnswer = new XlglExamMainAnswer();
 				xlglExamMainAnswer.setId(UUIDUtils.random());
@@ -598,7 +599,10 @@ public class XlglExamExamineController {
 				if(mainExaminelist.size() ==10) {
 					xlglExamMainAnswerService.saveBatch(mainExaminelist);
 					mainExaminelist =new ArrayList<XlglExamMainAnswer>();
+					}else if(queryList.size()-i == 0) {
+						xlglExamMainAnswerService.saveBatch(mainExaminelist);
 					}
+				i++;
 				}
 			}	
 		}else if(status.equals("1")) {
