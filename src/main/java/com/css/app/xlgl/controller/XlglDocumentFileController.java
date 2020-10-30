@@ -232,7 +232,7 @@ public class XlglDocumentFileController{
 	@RequestMapping("/getFile")
 	public void getFile(String fileId){
 		JSONObject json= new JSONObject();
-		if(org.apache.commons.lang.StringUtils.isNotBlank(fileId)){
+		if(StringUtils.isNotBlank(fileId)){
 			//获取版式文件的下载路径
 			HTTPFile httpFiles = new HTTPFile(fileId);
 			if(httpFiles!=null) {
