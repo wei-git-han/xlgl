@@ -212,7 +212,7 @@ public class XlglPhysicalController {
 
 	@ResponseBody
 	@RequestMapping("/importExcel")
-	public void importExcel(@RequestParam(required = false) MultipartFile file) {
+	public void importExcel(@RequestParam(required = false) MultipartFile file,String year) {
 		JSONObject jsonObject = new JSONObject();
 		try {
 			//文件上传记录
@@ -225,7 +225,7 @@ public class XlglPhysicalController {
 			String fileId = FileBaseUtil.fileServiceUpload(file);
 			HTTPFile httpFile = new HTTPFile(fileId);
 			InputStream inputStream = httpFile.getInputSteam();
-			List<XlglPhysical> list = xlglPhysicalService.importExcle(inputStream,id);
+			List<XlglPhysical> list = xlglPhysicalService.importExcle(inputStream,id,year);
 			if (list != null && list.size() > 0) {
 				for (XlglPhysical xlglPhysical : list) {
 					XlglPhysicalController xlglPhysicalController = new XlglPhysicalController();
@@ -262,6 +262,7 @@ public class XlglPhysicalController {
 					xlglPhysical.setAllJudge(dj);
 					xlglPhysical.setTscore(String.valueOf(BMI));
 					xlglPhysical.setJudge(hg);
+					xlglPhysical.setCurentYear(year);
 					xlglPhysicalService.save(xlglPhysical);
 				}
 			}

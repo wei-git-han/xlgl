@@ -732,9 +732,21 @@ public class XlglDocumentZbjlController {
 				jsonObject.put("srun",srun);//蛇形跑
 				jsonObject.put("trun",trun);//3000米长跑
 				jsonObject.put("sex",sex);//性别
-				jsonObject.put("age",age.substring(0,age.indexOf(".")));//年龄
-				jsonObject.put("ytxs",ytxs.substring(0,ytxs.indexOf(".")));//引体向上
-				jsonObject.put("ywqz",ywqz.substring(0,ywqz.indexOf(".")));//仰卧起坐
+				if(StringUtils.isNotBlank(age)){
+					jsonObject.put("age",age.substring(0,age.indexOf(".")));//年龄
+				}else {
+					jsonObject.put("age","0");//年龄
+				}
+				if(StringUtils.isNotBlank(ytxs)){
+					jsonObject.put("ytxs",ytxs.substring(0,ytxs.indexOf(".")));//引体向上
+				}else {
+					jsonObject.put("ytxs","0");//引体向上
+				}
+				if(StringUtils.isNotBlank(ywqz)){
+					jsonObject.put("ywqz",ywqz.substring(0,ywqz.indexOf(".")));//仰卧起坐
+				}else {
+					jsonObject.put("ywqz","0");//仰卧起坐
+				}
 				jsonObject.put("sxp",sxp);//蛇形跑
 				jsonObject.put("cp",cpf+cpm);
 				jsonObject.put("judge",judge);//体型

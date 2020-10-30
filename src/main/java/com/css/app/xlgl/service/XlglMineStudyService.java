@@ -32,7 +32,7 @@ public interface XlglMineStudyService {
 
 	public InputStream createExcelInfoFile(List<BaseAppUser> list, String fileName) throws Exception;
 
-	List<XlglMineStudy> importExcle(InputStream is, String id) throws Exception;
+	List<XlglMineStudy> importExcle(InputStream is, String id,String year) throws Exception;
 
 	void deleteAllRecord(String[] ids);
 

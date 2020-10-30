@@ -104,9 +104,9 @@ public class XlglMineStudyServiceImpl implements XlglMineStudyService {
 				cell.setCellValue("人员id");
 				cell.setCellStyle(style);
 
-				cell = row.createCell(5);
-				cell.setCellValue("年份");
-				cell.setCellStyle(style);
+//				cell = row.createCell(5);
+//				cell.setCellValue("年份");
+//				cell.setCellStyle(style);
 
 
 
@@ -130,7 +130,7 @@ public class XlglMineStudyServiceImpl implements XlglMineStudyService {
 				sheet.setColumnWidth(2, 6000);
 				sheet.setColumnWidth(3, 10000);
 				sheet.setColumnWidth(4, 6000);
-				sheet.setColumnWidth(5,4400);
+				//sheet.setColumnWidth(5,4400);
 				fout = new FileOutputStream(fileName);
 				wb.write(fout);
 				fout.flush();
@@ -147,7 +147,7 @@ public class XlglMineStudyServiceImpl implements XlglMineStudyService {
 
 
 	@Override
-	public List<XlglMineStudy> importExcle(InputStream is, String id) throws Exception {
+	public List<XlglMineStudy> importExcle(InputStream is, String id,String year) throws Exception {
 		List<XlglMineStudy> list =new ArrayList<XlglMineStudy>();
 		Workbook wb =new HSSFWorkbook(is);
 		Sheet sheet = wb.getSheetAt(0); // 遍历第一个Sheet
@@ -160,14 +160,14 @@ public class XlglMineStudyServiceImpl implements XlglMineStudyService {
 			String steCell2 = sheet.getRow(i).getCell(2).getNumericCellValue()+""; //分数
 			String steCell3 = sheet.getRow(i).getCell(3).getStringCellValue()+""; //等级
 			String steCell4 = sheet.getRow(i).getCell(4).getStringCellValue(); //人员id
-			String steCell5 = sheet.getRow(i).getCell(5).getStringCellValue();//年份
+			//String steCell5 = sheet.getRow(i).getCell(5).getStringCellValue();//年份
 			xlglMineStudy.setUserName(steCell0);
 			xlglMineStudy.setDeptName(steCell1);
 			xlglMineStudy.setScore(steCell2);
 			xlglMineStudy.setDj(steCell3);
 			xlglMineStudy.setUserId(steCell4);
 			xlglMineStudy.setUpId(id);//每次上传的id
-			xlglMineStudy.setCurentYear(steCell5);
+			xlglMineStudy.setCurentYear(year);
 			list.add(xlglMineStudy);
 		}
 		wb.close();
