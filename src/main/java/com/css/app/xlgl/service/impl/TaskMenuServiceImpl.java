@@ -64,4 +64,9 @@ public class TaskMenuServiceImpl implements TaskMenuService {
 		}
 		return taskMenuDao.queryAuthList(null);
 	}
+
+	@Override
+	public List<TaskMenu> queryAll(){
+		return taskMenuDao.queryAll();
+	}
 }

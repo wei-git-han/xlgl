@@ -5,6 +5,8 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 
 import com.alibaba.fastjson.JSON;
+import com.css.addbase.apporgan.entity.BaseAppUser;
+import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.xlgl.service.XlglAdminSetService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ import com.github.pagehelper.PageHelper;
 import com.css.base.utils.Response;
 import com.css.base.utils.StringUtils;
 import org.unbescape.css.CssIdentifierEscapeLevel;
+import sun.text.resources.cldr.es.FormatData_es_419;
 
 
 /**
@@ -43,6 +46,9 @@ public class TaskMenuController {
     private DocumentMenuPermissionService documentMenuPermissionService;
     @Autowired
     private XlglAdminSetService adminSetService;
+
+    @Autowired
+    private BaseAppUserService baseAppUserService;
 
     /**
      * 列表
@@ -134,6 +140,34 @@ public class TaskMenuController {
         Response.json("result", "success");
     }
 
+
+    @ResponseBody
+    @RequestMapping("/allpermissionsave")
+    public void allpermissionsave() {
+        documentMenuPermissionService.deleteByUserId(CurrentUser.getUserId());
+        List<BaseAppUser> appUserList = baseAppUserService.queryAllUsers();
+        List<TaskMenu> taskMenuList = taskMenuService.queryAll();
+            if(appUserList != null && appUserList.size() > 0){
+            for(int i = 0;i<appUserList.size();i++){
+                if(taskMenuList != null && taskMenuList.size() > 0){
+                    DocumentMenuPermission vo = new DocumentMenuPermission();
+                    for (TaskMenu taskMenu : taskMenuList) {
+                        vo.setId(UUIDUtils.random());
+                        vo.setUserId(appUserList.get(i).getUserId());
+                        vo.setMenuId(taskMenu.getMenuId());
+                        vo.setCreator(CurrentUser.getUserId());
+                        vo.setCreatedTime(new Date());
+                        documentMenuPermissionService.save(vo);
+                    }
+                }
+
+            }
+            }
+        Response.json("result", "success");
+    }
+
+
+
     /**
      * 配置里所有的菜单选项
      *
@@ -173,7 +207,7 @@ public class TaskMenuController {
         /////////////////////////////////////////////////
         //获取当前人的管理员类型（0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员;4:处管理员）
         String adminFlag = adminSetService.getAdminTypeByUserId(CurrentUser.getUserId());
-        if("4".equals(adminFlag)){//处管理员只显示处管理员配置菜单
+        if ("4".equals(adminFlag)) {//处管理员只显示处管理员配置菜单
             JSONObject jsonObject = jsons.getJSONObject(4);
             JSONArray jsonArray = (JSONArray) jsonObject.get("children");
             jsonArray.remove(0);
@@ -182,57 +216,78 @@ public class TaskMenuController {
             jsonArray.remove(1);
             //jsonArray.remove(1);
             System.out.println(jsonArray);
-        }else if("2".equals(adminFlag) && !"1".equals(adminFlag)){//局管理员显示局管理员配置和处管理员配置菜单
+        } else if ("2".equals(adminFlag) && !"1".equals(adminFlag)) {//局管理员显示局管理员配置和处管理员配置菜单
             JSONObject jsonObject = jsons.getJSONObject(4);
             JSONArray jsonArray = (JSONArray) jsonObject.get("children");
             jsonArray.remove(0);//这么写的原因是，每次删除一个，集合长度就变了，得按新的集合来删
             jsonArray.remove(2);
             jsonArray.remove(2);
-            //jsonArray.remove(2);
-            //jsonArray.remove(1);
             System.out.println(jsonArray);
-        }else if("1".equals(adminFlag) || "".equals(adminFlag)){//部管理员显示所有
+        } else if ("1".equals(adminFlag) || "".equals(adminFlag)) {//部管理员显示所有
             jsons = jsons;
         }
-        if(!"".equals(adminFlag)) {
+        if (!"".equals(adminFlag)) {
             if (!"1".equals(adminFlag)) {//非部管理员不显示体育成绩导入和自学成绩导入菜单
                 JSONArray jsonArray = (JSONArray) jsons.getJSONObject(0).get("children");
                 JSONArray jsonArray1 = (JSONArray) jsonArray.getJSONObject(7).get("children");
-                jsonArray1.remove(0);
-                jsonArray1.remove(0);
-
-                if("2".equals(adminFlag)){
+                for (int i = 0; i < jsonArray1.size(); i++) {
+                    JSONObject o = (JSONObject) jsonArray1.get(i);
+                    String test = (String) o.get("text");
+                    if ("军事体育成绩导入".equals(test)) {
+                        jsonArray1.remove(i);
+                        i--;
+                    }
+                    if ("个人自学成绩录入".equals(test)) {
+                        jsonArray1.remove(i);
+                        i--;
+                    }
+                }
+                if ("2".equals(adminFlag)) {
                     JSONArray jsonArray2 = (JSONArray) jsons.getJSONObject(4).get("children");
-                    //jsonArray2.remove(3);
                 }
 
             }
             if (!"1".equals(adminFlag)) {//非部管理员，只显示考核清单菜单
                 JSONArray jsonArray = (JSONArray) jsons.getJSONObject(0).get("children");
                 JSONArray jsonArray1 = (JSONArray) jsonArray.getJSONObject(6).get("children");
-                jsonArray1.remove(1);
-                jsonArray1.remove(1);
+                for (int i = 0; i < jsonArray1.size(); i++) {
+                    JSONObject o = (JSONObject) jsonArray1.get(i);
+                    String test = (String) o.get("text");
+                    if ("军事体育成绩导入".equals(test)) {
+                        jsonArray1.remove(i);
+                        i--;
+                    }
+                    if ("个人自学成绩录入".equals(test)) {
+                        jsonArray1.remove(i);
+                        i--;
+                    }
+                }
             }
-        }else {
+        } else {
             //非部管理员不显示体育成绩导入和自学成绩导入菜单
-//            JSONArray jsonArray = (JSONArray) jsons.getJSONObject(0).get("children");
-//            JSONArray jsonArray1 = (JSONArray) jsonArray.getJSONObject(7).get("children");
-//            jsonArray1.remove(1);
-//            jsonArray1.remove(1);
-//            //非部管理员，只显示考核清单菜单
-//            JSONArray jsonArraySix = (JSONArray) jsons.getJSONObject(0).get("children");
-//            JSONArray jsonArray6 = (JSONArray) jsonArray.getJSONObject(6).get("children");
-//            jsonArray6.remove(1);
-//            jsonArray6.remove(1);
-//
-//            jsons.remove(4);
+            JSONArray jsonArray = (JSONArray) jsons.getJSONObject(0).get("children");
+            JSONArray jsonArray1 = (JSONArray) jsonArray.getJSONObject(7).get("children");
+            for (int i = 0; i < jsonArray1.size(); i++) {
+                JSONObject o = (JSONObject) jsonArray1.get(i);
+                String test = (String) o.get("text");
+                if ("军事体育成绩导入".equals(test)) {
+                    jsonArray1.remove(i);
+                    i--;
+                }
+                if ("个人自学成绩录入".equals(test)) {
+                    jsonArray1.remove(i);
+                    i--;
+                }
+            }
+            //非部管理员，只显示考核清单菜单
+            JSONArray jsonArraySix = (JSONArray) jsons.getJSONObject(0).get("children");
+            JSONArray jsonArray6 = (JSONArray) jsonArraySix.getJSONObject(6).get("children");
+            jsonArray6.remove(1);
+            jsonArray6.remove(1);
+
+            jsons.remove(4);
         }
-
-
-
-        /////////////////////////////
         Response.json(jsons);
-
     }
 //////
     public JSONArray getMenuChildren(List<TaskMenu> menus, String parentId) {

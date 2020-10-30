@@ -23,4 +23,7 @@ public interface TaskMenuDao extends BaseDao<TaskMenu> {
 	List<TaskMenu> findByParentId(String id);
 	
 	List<TaskMenu> queryAuthList(Map<String, Object> map);
+
+	@Select("select * from TASK_MENU")
+	List<TaskMenu> queryAll();
 }

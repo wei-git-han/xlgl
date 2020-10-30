@@ -151,5 +151,8 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 	int queryAllZbCount();
 	
 	List<BaseAppUser>  queryByOrganidTREEPATH(Map<String,Object> map);
+
+	@Select("select  * from BASE_APP_USER")
+	List<BaseAppUser> queryAllUsers();
 	
 }

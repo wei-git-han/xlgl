@@ -30,4 +30,6 @@ public interface TaskMenuService {
 	List<TaskMenu> findByParentId(String id);
 	
 	List<TaskMenu> queryAuthList(String userId);
+
+	List<TaskMenu> queryAll();
 }
