@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -92,6 +93,7 @@ public class XlglExamExaminetopicServiceImpl implements XlglExamExaminetopicServ
 		Date date = new Date();
 		String userId = CurrentUser.getUserId();
 		Integer object = Integer.parseInt(map.get("topicNumber").toString());
+		Random rdom = new Random();
 		if (queryList.size() <= object) {
 			for (XlglExamTopic xlglExamTopic : queryList) {
 				XlglExamExaminetopic examineTopic = new XlglExamExaminetopic();
@@ -122,9 +124,8 @@ public class XlglExamExaminetopicServiceImpl implements XlglExamExaminetopicServ
 			}
 		} else {
 			Map<Integer, Object> hashMap = new HashMap<>();
-			if(object * 2 < queryList.size()) {
-				for (int j = 0; j < 1000000; j++) {
-					int random = (int) (Math.random() * queryList.size());
+				for (int j = 0; j < queryList.size(); j++) {
+					int random = (int)rdom.nextInt((queryList.size()-1)-j+1)+j;
 					if (hashMap.size() < object) {
 						if (!hashMap.containsKey(random) ) {
 							hashMap.put(random, "");
@@ -154,47 +155,12 @@ public class XlglExamExaminetopicServiceImpl implements XlglExamExaminetopicServ
 							}
 							list.add(examineTopic);
 						}
+						j = 0;
 					} else {
 						return list;
 				}
 			}
-			}else {
-				for (int i = 0; i < queryList.size(); i++) {
-					if (hashMap.size() < object) {
-						if (!hashMap.containsKey(i)) {
-							hashMap.put(i, "");
-							XlglExamExaminetopic examineTopic = new XlglExamExaminetopic();
-							examineTopic.setId(UUIDUtils.random());
-							examineTopic.setExamineId(examineId);
-							examineTopic.setSubjectId(queryList.get(i).getSubjectId());
-							examineTopic.setTopicId(queryList.get(i).getId());
-							examineTopic.setTopicType(queryList.get(i).getTopicType());
-							examineTopic.setTopicColumn(queryList.get(i).getTopicColumn());
-							examineTopic.setTopicOption(queryList.get(i).getTopicOption());
-							examineTopic.setTopicResult(queryList.get(i).getTopicResult());
-							examineTopic.setPictureStatus(queryList.get(i).getPictureStatus());
-							examineTopic.setPictureColumn(queryList.get(i).getPictureColumn());
-							examineTopic.setPictureOption(queryList.get(i).getPictureOption());
-							String fractionalNumber = (String) map.get("fractionalNumber");
-							examineTopic.setFractionalNumber(Integer.parseInt(fractionalNumber));
-							examineTopic.setCreateDate(date);
-							examineTopic.setCreateUser(userId);
-							examineTopic.setUpdateDate(date);
-							examineTopic.setUpdateUser(userId);
-							if (StringUtils.isNotBlank(makeUpId)) {
-								examineTopic.setMakeUpId(makeUpId);
-								examineTopic.setMakeUpStatus("1");
-							} else {
-								examineTopic.setMakeUpStatus("0");
-							}
-							list.add(examineTopic);
-						}
-					} else {
-						return list;
-					}
-				}
-			
-			}
+
 	}
 		return list;
 }
