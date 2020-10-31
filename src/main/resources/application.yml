@@ -1,6 +1,6 @@
-server:
+﻿server:
+  port: 11051
 
-  port: 11009
 app:
   ConnectTimeout: 100
   ReadTimeout: 5000
@@ -8,11 +8,26 @@ app:
 #子配置文件
 spring.profiles.include: url
  
+#druid:
+#    dbType: dm
+#    url: jdbc:dm://${csse.dmdba.url}/ZF_MINISTRY_APP_DB
+#    username: ZF_MINISTRY_APP_DB
+#    password: QNKN1ReWghEU95X/pZmu4rWzAlA3t9ayTeqNTdUILuj3eyQsU1V4S543u0dPyoOFbxbMMWrtn7S+dAAo5Ed9LQ==
+#    initial-size: 1
+#    min-idle: 1
+#    max-active: 10 
+#    maxWait: 3000
+#    test-on-borrow: true
+#    testWhileIdle: true
+#    validationQuery: select 1 from DUAL 
+#    filters: config
+#    connectionProperties: config.decrypt=true;config.decrypt.key=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIfduBXAcGaEuALCIFq8PUfhUdVfu+fJSb05UY8+de5qbHxK/hs0BEpzlinf9VXEZV6tifsclqVqD7ljrO0BBO8CAwEAAQ==
+
 druid:
     dbType: dm
-    url: jdbc:dm://${csse.dmdba.url}/ZF_XLGL_APP
-    username: ZF_XLGL_APP
-    password: QNKN1ReWghEU95X/pZmu4rWzAlA3t9ayTeqNTdUILuj3eyQsU1V4S543u0dPyoOFbxbMMWrtn7S+dAAo5Ed9LQ==
+    url: jdbc:dm://${csse.dmdba.url}/ZF_XLGL_APP_NEW
+    username: ZF_XLGL_APP_NEW
+    password: password01
     initial-size: 1
     min-idle: 1
     max-active: 10 
@@ -20,8 +35,9 @@ druid:
     test-on-borrow: true
     testWhileIdle: true
     validationQuery: select 1 from DUAL 
-    filters: config
+    #filters: config
     connectionProperties: config.decrypt=true;config.decrypt.key=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIfduBXAcGaEuALCIFq8PUfhUdVfu+fJSb05UY8+de5qbHxK/hs0BEpzlinf9VXEZV6tifsclqVqD7ljrO0BBO8CAwEAAQ==
+
 
 mybatis.configuration.mapUnderscoreToCamelCase: true
 
@@ -29,28 +45,27 @@ logging:
   file: ${csse.log.path}
   level:
 #    root: info
-    com: 
+   com: 
       css: debug
 
 spring:
   application:
-    name: legacycpk.csse.zbfzbbgt_zyyy
+    name: ${csse.xlgl.appId}
 eureka:
   instance:
     prefer-ip-address: true
   client:
-#此处为url网关开关
     enabled: false
     registerWithEureka: true
     fetchRegistry: true
     serviceUrl:
-      defaultZone: http://localhost:18761/eureka/
+      defaultZone: http://ofaciserver:18761/eureka/
   http:
     multipart:
-      max-file-size: 2048MB
-      max-request-size: 2048MB
-      maxFileSize: 10240MB
-      maxRequestSize: 10240MB
+      max-file-size: 256MB
+      max-request-size: 256MB
+      maxFileSize: 1024MB
+      maxRequestSize: 1024MB
 
 pagehelper:
     helperDialect: mysql
@@ -68,7 +83,7 @@ csse:
         clientSecret: ${csse.xlgl.appSecret}
     fileservice:
       servers: http://10.1.150.3:7003
-      tempDirPath: c:/temp/storetemp/
+      tempDirPath: /tmp/storetemp/
   sso: 
     server: 
       url: ${csse.mircoservice.zuul}
@@ -89,6 +104,17 @@ msg:
   group: 
     name: 
     redirect: 
+#消息格式
+#msg:
+#  type: application
+#  appid: 
+#  display: 
+#    system: true
+#    notification: true
+#    msgbox: true
+#  action: 
+#    anstore: 
+#    deployment: 
     
 #文件服务配置
 css.oauth2.accessTokenUri: ${csse.mircoservice.zuul}/api/uaa/oauth/token
@@ -124,20 +150,28 @@ csse.mircoservice.app: /api/app/application/manager
 csse.mircoservice.syncdepartments: /api/org/syncdepartments
 
 #数据库配置地址
-csse.dmdba.url: 10.1.150.1:5236
+#csse.dmdba.url: dm5238
 
+csse.dmdba.url: 10.1.150.1:5236
 #文件服务----------------------------------start
 #文件服务的clientId,与公文处理应用进行共用；
+#csse.xlgl.appId: legacycpk.csse.xlgl
+#csse.xlgl.appId: legacycpk.csse.zbfzb_zyyy_app10j_xlgl
+#csse.xlgl.appSecret: 886decb13e454f3ca1d52c404c93a906
 csse.xlgl.appId: legacycpk.csse.zbfzbbgt_zyyy_app1a_gwcl
 csse.xlgl.appSecret: 2C0DB8B2-C752-4f63-AA9E-919BE5B8233A
+
+#csse.xlgl.appSecret: 8cb1a6ab-bcea-4b75-b9d5-49c575cb0753
+#csse.gwcl.appId: cpk.csse.zbfzb_zyyy_app1a_dzbms
+#csse.gwcl.appSecret: 54F93E1D-C338-4399-9FB7-1BF6B751F832
 #文件服务所在的服务器ip或域名
 csse.fileservice.domain: 10.1.150.3
 #文件服务端口
 csse.fileservice.port: 7003
 #文件服务生成文件的临时目录
-csse.fileservice.tempPath: c:/temp/storetemp/
+csse.fileservice.tempPath: /tmp/storetemp/
 #本地文件路径（应用中下载操作的默认文件保存路径）
-filePath: D:/download/ 
+filePath: /home/ 
 #文件服务----------------------------------end
 
 #调会见配置------------------------------------------------------------start
@@ -159,14 +193,13 @@ csse.meeting.appSecret: 95c7ca5e-6088-404f-aedd-42544ceda083
 csse.meeting.huiyi.url.login: /api/v3/user/login
 #调会见配置---------------------------------------------------------------------end
 
+
 #本war的所有应用日志输出路径
-csse.log.path: c:/temp/storetemp/zf_one_number_app.log
+csse.log.path: /opt/ofatrjar/_logs/zf_xlgl_app.log
 #短信接口地址
 csse.mircoservice.smsUrl: http://192.168.0.55:50005/v1.0/plan
 #语音预定会议室 
 voicePreMeetUrl: http://localhost:8768
-
-uploadFile.path: \src\main\resources\static\app\db\uploadFile\
-css.file.uploadFile.path: \src\main\resources\static\app\db\uploadOFDFile\
-
-localAddress: http://172.16.1.35:11009/
+uploadFile.path:
+css.file.uploadFile.path:
+localAddress: http://10.1.150.10:11009/
