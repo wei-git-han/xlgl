@@ -91,6 +91,9 @@ public class XlglExamTopicController {
 						String[] split2 = string.split("-");
 						hashMap.put(split2[0], split2[1]);
 					}	
+				}else if(StringUtils.isNotBlank(xlglExamTopic.getPictureOption()) ) {
+					String[] split = xlglExamTopic.getPictureOption().split("-");
+					hashMap.put(split[0], split[1]);
 				}
 				xlglExamTopic.setColumnList(picture);
 				xlglExamTopic.setMap(hashMap);
@@ -128,6 +131,9 @@ public class XlglExamTopicController {
 					String[] split2 = string.split("-");
 					hashMap.put(split2[0], split2[1]);
 				}	
+			}else if(StringUtils.isNotBlank(xlglExamTopic.getPictureOption()) ) {
+				String[] split = xlglExamTopic.getPictureOption().split("-");
+				hashMap.put(split[0], split[1]);
 			}
 			xlglExamTopic.setColumnList(picture);
 			xlglExamTopic.setMap(hashMap);

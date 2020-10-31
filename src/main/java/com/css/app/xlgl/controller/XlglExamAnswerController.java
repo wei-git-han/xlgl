@@ -188,6 +188,9 @@ public class XlglExamAnswerController {
 						String[] split2 = string.split("-");
 						pictureMap.put(split2[0], split2[1]);
 					}
+				}else if(StringUtils.isNotBlank(xlglExamAnswer.getPictureOption()) ) {
+					String[] split = xlglExamAnswer.getPictureOption().split("-");
+					hashMap.put(split[0], split[1]);
 				}
 				xlglExamAnswer.setColumnList(piclist);
 				xlglExamAnswer.setMap(pictureMap);
@@ -415,6 +418,17 @@ public class XlglExamAnswerController {
 			xlglExamAnswerService.deleteByExamineId(xlglExamExamine.getId());
 		}
 		for (XlglExamAnswer eanswer : parseArray) {
+			if(StringUtils.isNotBlank(eanswer.getPictureStatus()) && eanswer.getPictureStatus().equals("0")) {
+				XlglExamExaminetopic queryObject2 = xlglExamExaminetopicService.queryObject(eanswer.getExamineTopicId());
+				if(queryObject2 !=null) {
+					if(StringUtils.isNotBlank(queryObject2.getPictureColumn())) {
+						eanswer.setPictureColumn(queryObject2.getPictureColumn());
+					}
+					if(StringUtils.isNotBlank(queryObject2.getPictureOption())) {
+						eanswer.setPictureOption(queryObject2.getPictureOption());
+					}
+				}
+			}
 			eanswer.setId(UUIDUtils.random());
 			eanswer.setMainAnswerId(mainAnswerId);
 			eanswer.setReplyUserId(ssoUser.getUserId());
