@@ -454,6 +454,9 @@ public class XlglExamExamineController {
 						String[] split2 = string.split("-");
 						pictureMap.put(split2[0], split2[1]);
 					}	
+				}else if(StringUtils.isNotBlank(xlglExamExaminetopic.getPictureOption()) ) {
+					String[] split = xlglExamExaminetopic.getPictureOption().split("-");
+					hashMap.put(split[0], split[1]);
 				}
 				xlglExamExaminetopic.setColumnList(columnList);
 				xlglExamExaminetopic.setMap(pictureMap);
