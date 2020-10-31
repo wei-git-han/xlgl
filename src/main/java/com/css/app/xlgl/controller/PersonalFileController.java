@@ -21,12 +21,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.css.app.xlgl.dto.PersonalFileDto;
 import com.css.app.xlgl.entity.PersonalFile;
-import com.css.app.xlgl.entity.XlglExamMainAnswer;
 import com.css.app.xlgl.entity.XlglExamSubject;
 import com.css.base.entity.SSOUser;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.Response;
-import org.springframework.web.context.request.NativeWebRequest;
 
 
 /**
