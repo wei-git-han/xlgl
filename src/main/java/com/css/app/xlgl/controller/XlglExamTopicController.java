@@ -294,21 +294,6 @@ public class XlglExamTopicController {
 		xlglExamTopic.setUpdateDate(new Date());
 		xlglExamTopic.setUpdateUser(CurrentUser.getUserId());
 		xlglExamTopic.setCreateUser(CurrentUser.getUserId());
-		String topicResult = "";
-		if(StringUtils.isNotBlank(xlglExamTopic.getTopicResult())&&!xlglExamTopic.getTopicResult().contains(",")) {
-			char[] charArray = xlglExamTopic.getTopicResult().toCharArray();
-			int i = 1;
-			for (char c : charArray) {
-				if(i<charArray.length) {
-					topicResult =topicResult +c+",";
-				}else {
-					topicResult =topicResult +c;
-				}
-				
-				i++;
-			}
-		}
-		xlglExamTopic.setTopicResult(topicResult);
 		xlglExamTopicService.save(xlglExamTopic);
 		Response.ok();
 	}
@@ -323,21 +308,6 @@ public class XlglExamTopicController {
 		xlglExamTopic.setUpdateDate(date);
 		xlglExamTopic.setUpdateUser(CurrentUser.getUserId());
 		xlglExamTopic.setPictureStatus("0");
-		String topicResult = "";
-		if(StringUtils.isNotBlank(xlglExamTopic.getTopicResult())&&!xlglExamTopic.getTopicResult().contains(",")) {
-			char[] charArray = xlglExamTopic.getTopicResult().toCharArray();
-			int i = 1;
-			for (char c : charArray) {
-				if(i<charArray.length) {
-					topicResult =topicResult +c+",";
-				}else {
-					topicResult =topicResult +c;
-				}
-				
-				i++;
-			}
-		}
-		xlglExamTopic.setTopicResult(topicResult);
 		xlglExamTopicService.update(xlglExamTopic);
 
 		Response.ok();
