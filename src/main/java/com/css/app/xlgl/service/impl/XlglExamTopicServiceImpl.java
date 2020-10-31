@@ -1,13 +1,17 @@
 package com.css.app.xlgl.service.impl;
 
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,15 +85,16 @@ public class XlglExamTopicServiceImpl implements XlglExamTopicService {
 			for(int i = 2 ;i<=sheet.getLastRowNum(); i ++) {
 				XlglExamTopic xlglExamTopic = new XlglExamTopic ();
 				xlglExamTopic.setId(UUIDUtils.random());
-				String steCell = sheet.getRow(i).getCell(0).getStringCellValue(); //题目
+				String steCell = getCellValue(sheet.getRow(i).getCell(0));; //题目
 				xlglExamTopic.setTopicColumn(steCell);
-				String steCell2 = sheet.getRow(i).getCell(1).getStringCellValue(); //选项A
-				String steCell3 = sheet.getRow(i).getCell(2).getStringCellValue(); //选项B
-				String steCell4 = sheet.getRow(i).getCell(3).getStringCellValue(); //选项C
-				String steCell5 = sheet.getRow(i).getCell(4).getStringCellValue(); //选项D
+
+				String steCell2 = getCellValue(sheet.getRow(i).getCell(1)); //选项A
+				String steCell3 = getCellValue(sheet.getRow(i).getCell(2)); //选项B
+				String steCell4 = getCellValue(sheet.getRow(i).getCell(3)); //选项C
+				String steCell5 = getCellValue(sheet.getRow(i).getCell(4)); //选项D
 				xlglExamTopic.setTopicOption("A:"+steCell2+",B:"+steCell3+",C:"+steCell4+",D:"+steCell5);//题目选项
 				xlglExamTopic.setSubjectId(subjectId);	//科目表id
-				String steCell6 = sheet.getRow(i).getCell(5).getStringCellValue(); //答案
+				String steCell6 = getCellValue(sheet.getRow(i).getCell(5)); //答案
 				xlglExamTopic.setTopicResult(steCell6);
 				xlglExamTopic.setTopicType(type);
 				xlglExamTopic.setCreateUser(CurrentUser.getUserId());
@@ -142,6 +147,24 @@ public class XlglExamTopicServiceImpl implements XlglExamTopicService {
 	@Override
 	public void deleteByType(Map<String, Object> map) {
 		xlglExamTopicDao.deleteByType(map);;
+	}
+	private String getCellValue(Cell cell) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String str = "";
+		if(cell.getCellType() ==0) {
+			if(HSSFDateUtil.isCellDateFormatted(cell)) {
+				Date dateCellValue = cell.getDateCellValue();
+				str = simpleDateFormat.format(dateCellValue);
+			}else {
+				str = cell.getNumericCellValue()+"";
+				if(str.contains(".")) {
+					str =str.substring(0,str.indexOf("."));
+				}
+			}
+		}else if(cell.getCellType() ==1){
+			 str = cell.getStringCellValue();
+		}
+		return str;
 	}
 
 
