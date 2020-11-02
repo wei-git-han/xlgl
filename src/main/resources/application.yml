@@ -1,13 +1,13 @@
+
 server:
 
   port: 11009
 app:
   ConnectTimeout: 100
   ReadTimeout: 5000
- 
+
 #子配置文件
 spring.profiles.include: url
- 
 druid:
     dbType: dm
     url: jdbc:dm://${csse.dmdba.url}/ZF_XLGL_APP
@@ -15,7 +15,7 @@ druid:
     password: QNKN1ReWghEU95X/pZmu4rWzAlA3t9ayTeqNTdUILuj3eyQsU1V4S543u0dPyoOFbxbMMWrtn7S+dAAo5Ed9LQ==
     initial-size: 1
     min-idle: 1
-    max-active: 10 
+    max-active: 10
     maxWait: 3000
     test-on-borrow: true
     testWhileIdle: true
@@ -73,14 +73,14 @@ csse:
     server: 
       url: ${csse.mircoservice.zuul}
       no-auth-suffixs: js,css,font,png,jpg,jpeg,htm,ico,pdf,ofd,wps,doc,noauth
-      api: 
-        checkToken: api/sso/valtoken/  
+      api:
+        checkToken: api/sso/valtoken/
         userinfo: api/sso/user/
 
 #消息格式
 msg:
   type: document
-  title: 
+  title:
   platform: all
   visible: true
   icon: 
@@ -89,7 +89,7 @@ msg:
   group: 
     name: 
     redirect: 
-    
+   
 #文件服务配置
 css.oauth2.accessTokenUri: ${csse.mircoservice.zuul}/api/uaa/oauth/token
 css.oauth2.clientId: ${csse.xlgl.appId}
@@ -114,7 +114,7 @@ css.fileService.file.assignUploadConfirmPath: /assign/uploadConfirm
 css.fileService.file.assignDownloadPath: /assign/download
 css.fileService.file.assignMd5Path: /assign/md5
 
-#css.fileService.file.infoPath: 
+#css.fileService.file.infoPath:
 css.fileService.file.namePath: /
 css.fileService.file.updateNamePath: /updateName
 
@@ -138,10 +138,11 @@ csse.fileservice.port: 7003
 csse.fileservice.tempPath: c:/temp/storetemp/
 #本地文件路径（应用中下载操作的默认文件保存路径）
 filePath: D:/download/ 
+
 #文件服务----------------------------------end
 
 #调会见配置------------------------------------------------------------start
-#训练管理应用号由第三方提供，应用号与私有密钥一致 
+#训练管理应用号由第三方提供，应用号与私有密钥一致
 csse.meeting.huiyi.HuiYiappId: beb7da4ced7c42a085c3c99697f9aa42
 #会见创建会议的url
 csse.meeting.huijian.url: http://10.1.150.187:80
@@ -163,7 +164,7 @@ csse.meeting.huiyi.url.login: /api/v3/user/login
 csse.log.path: c:/temp/storetemp/zf_one_number_app.log
 #短信接口地址
 csse.mircoservice.smsUrl: http://192.168.0.55:50005/v1.0/plan
-#语音预定会议室 
+#语音预定会议室
 voicePreMeetUrl: http://localhost:8768
 
 uploadFile.path: \src\main\resources\static\app\db\uploadFile\
