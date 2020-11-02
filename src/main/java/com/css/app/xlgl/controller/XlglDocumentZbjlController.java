@@ -582,7 +582,7 @@ public class XlglDocumentZbjlController {
 
 		if (StringUtils.isNotBlank(depId)) {
 			hashmap.put("organId", depId);
-			hashmap.put("depId", depId);
+			//hashmap.put("depId", depId);
 		} else {
 			hashmap.put("organId", organId);
 		}
