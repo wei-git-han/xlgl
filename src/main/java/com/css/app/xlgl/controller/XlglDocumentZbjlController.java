@@ -806,6 +806,7 @@ public class XlglDocumentZbjlController {
 						String examId  = xlglExamMainAnswer.getExamineId();
 						Map<String,Object> examMap = new HashMap<>();
 						examMap.put("replyUserId",baseAppUser.getUserId());
+						if(StringUtils.isNotBlank(examId)){
 						examMap.put("examId",examId);
 						List<XlglExamMainAnswer> examMainAnswerList = xlglExamMainAnswerService.queryExamByUserIdAndExamId(examMap);
 						if(examMainAnswerList != null && examMainAnswerList.size() > 0){
@@ -814,6 +815,13 @@ public class XlglDocumentZbjlController {
 							jsonExam.put("xlglCore",examMainAnswerList.get(0).getFractionsum());
 							jsonExam.put("xlglLevel",examMainAnswerList.get(0).getLevel());
 							jsonArrayExam.add(jsonExam);
+						}else {
+							JSONObject jsonExam = new JSONObject();
+							jsonExam.put("xlglExamName","--");
+							jsonExam.put("xlglCore","--");
+							jsonExam.put("xlglLevel","--");
+							jsonArrayExam.add(jsonExam);
+						}
 						}else {
 							JSONObject jsonExam = new JSONObject();
 							jsonExam.put("xlglExamName","--");
