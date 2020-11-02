@@ -51,6 +51,8 @@ public class XlglExamExamine implements Serializable {
 	private String lianxiType;
 	//每次考试仅能发起一次补考，（仅用于判断是否发起过补考，不与其他状态直接有关联）0：没补考，1：发起补考
 	private String makeupStatus;
+	//题型和题数量
+	private String typeNumStr;
 	
 	//已参加人数
 	private Integer numberInto;
@@ -69,6 +71,7 @@ public class XlglExamExamine implements Serializable {
 	private String makeupId;
 	//编辑人名称
 	private String updateUserName;
+	
 
 	
 
@@ -299,6 +302,12 @@ public class XlglExamExamine implements Serializable {
 	}
 	public void setMakeupStatus(String makeupStatus) {
 		this.makeupStatus = makeupStatus;
+	}
+	public String getTypeNumStr() {
+		return typeNumStr;
+	}
+	public void setTypeNumStr(String typeNumStr) {
+		this.typeNumStr = typeNumStr;
 	}
 	
 
