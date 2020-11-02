@@ -335,7 +335,17 @@ public class XlglExamAnswerController {
 		xlglExamMainAnswer.setUpdateDate(date);
 		xlglExamMainAnswer.setId(mainAnswerId);
 		xlglExamMainAnswerService.update(xlglExamMainAnswer);
-		xlglExamAnswerService.saveBatch(parseArray);
+		List<XlglExamAnswer> list =	new ArrayList<XlglExamAnswer>();
+		for (int i = 0; i < parseArray.size(); i++) {
+			list.add(parseArray.get(i));
+			if(list.size() == 10) {
+				xlglExamAnswerService.saveBatch(list);
+				list = new ArrayList<XlglExamAnswer>();
+			}else if(parseArray.size()-1 -i ==0){
+				xlglExamAnswerService.saveBatch(list);
+			}
+		}
+	
 		jsonObject.put("mainAnswer", queryObject);
 		jsonObject.put("answerList", parseArray);
 		Map<String, Object> map = new HashMap<String,Object>();
