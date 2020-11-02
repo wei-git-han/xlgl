@@ -50,9 +50,6 @@
         <if  test="userNames != null and userNames != ''">
         and TRUENAME  like '%'||#{userNames}||'%'
         </if>
-        <if  test="depId != null and depId != ''">
-        and ORGANID   = #{depId}
-        </if>
          <if test="sort != null and sort != ''">
                order by ORGANID desc
           </if>
