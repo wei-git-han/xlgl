@@ -260,31 +260,9 @@
 	</select>
 
 	<select id="findListAllExam" resultType="com.css.app.xlgl.entity.XlglExamMainAnswer">
--- 		select
--- 				distinct  e.EXAMINE_NAME as examineName
--- 		from
--- 			XLGL_EXAM_MAIN_ANSWER m
--- 		join
--- 			XLGL_EXAM_EXAMINE e on e.id = m.EXAMINE_ID
--- 		where m.STATUS  = '0'  and m.ISNOTEXAM = '1' order by m.CREATE_DATE desc
-
-select
-        distinct examineName as examineName
-from
-        (
-                select
-                        e.EXAMINE_NAME as examineName,
-                        m.*
-                from
-                        XLGL_EXAM_MAIN_ANSWER m
-                join XLGL_EXAM_EXAMINE e
-                on
-                        e.id = m.EXAMINE_ID
-                where
-                        m.STATUS    = '0'
-                    and m.ISNOTEXAM = '1'
-                    order by
-        CREATE_DATE desc
+     select   distinct examineName as examineName,EXAMINE_ID as examineId from ( select  e.EXAMINE_NAME as examineName,  m.*
+      from XLGL_EXAM_MAIN_ANSWER m join XLGL_EXAM_EXAMINE e on e.id = m.EXAMINE_ID where
+        m.STATUS    = '0' and m.ISNOTEXAM = '1'  order by CREATE_DATE desc
         )
 	</select>
 	
