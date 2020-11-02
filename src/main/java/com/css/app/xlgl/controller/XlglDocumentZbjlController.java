@@ -810,11 +810,13 @@ public class XlglDocumentZbjlController {
 						List<XlglExamMainAnswer> examMainAnswerList = xlglExamMainAnswerService.queryExamByUserIdAndExamId(examMap);
 						if(examMainAnswerList != null && examMainAnswerList.size() > 0){
 							JSONObject jsonExam = new JSONObject();
+							jsonExam.put("xlglExamName",examMainAnswerList.get(0).getExamineName());
 							jsonExam.put("xlglCore",examMainAnswerList.get(0).getFractionsum());
 							jsonExam.put("xlglLevel",examMainAnswerList.get(0).getLevel());
 							jsonArrayExam.add(jsonExam);
 						}else {
 							JSONObject jsonExam = new JSONObject();
+							jsonExam.put("xlglExamName","--");
 							jsonExam.put("xlglCore","--");
 							jsonExam.put("xlglLevel","--");
 							jsonArrayExam.add(jsonExam);
