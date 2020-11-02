@@ -645,7 +645,7 @@ public class XlglDocumentZbjlController {
 				String cpf = "";
 				String cpm = "";
 				String judge = "";
-			
+
 				String weight = "";//体重
 				String birthday = "";//出生日期
 				String high = "";//身高
@@ -659,7 +659,7 @@ public class XlglDocumentZbjlController {
 					if (StringUtils.isNotBlank(xlglPhysical.getHigh())) {
 						high = xlglPhysical.getHigh();
 					}
-					
+
 					if (StringUtils.isNotBlank(xlglPhysical.getAllScore())) {
 						jtScore = xlglPhysical.getAllScore();
 					}
@@ -690,7 +690,7 @@ public class XlglDocumentZbjlController {
 						}else {
 							up=xlglPhysical.getUp();
 						}
-						
+
 					}
 					if(StringUtils.isNotBlank(xlglPhysical.getSit())){
 						sit = xlglPhysical.getSit();
@@ -704,7 +704,7 @@ public class XlglDocumentZbjlController {
 					if(StringUtils.isNotBlank(xlglPhysical.getSex())){
 						sex = xlglPhysical.getSex();
 					}
-				
+
 					if(StringUtils.isNotBlank(xlglPhysical.getYtxs())){
 						ytxs = xlglPhysical.getYtxs();
 					}
@@ -730,7 +730,7 @@ public class XlglDocumentZbjlController {
 				jsonObject.put("up",up);//引体向上
 				jsonObject.put("dan",dan);//单杠
 				jsonObject.put("fwc",fwc);//俯卧撑
-				
+
 				jsonObject.put("jtScore", jtScore);// 得分
 				jsonObject.put("jtDj", jtDj);// 等级
 				jsonObject.put("sit",sit);//仰卧起坐
@@ -788,18 +788,40 @@ public class XlglDocumentZbjlController {
 				//训练管理-当前用户已经考过考试-----------------start
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("replyUserId", baseAppUser.getUserId());
-				List<XlglExamMainAnswer> commonList = xlglExamMainAnswerService.findListBySubjectId(map);
+				//List<XlglExamMainAnswer> commonList = xlglExamMainAnswerService.findListBySubjectId(map);
+				List<XlglExamMainAnswer> commonList1 = xlglExamMainAnswerService.findListAllExam(map);//所有的考试科目
 				JSONArray jsonArray2 = new JSONArray();
-				if(commonList.size()>0) {
-					for (XlglExamMainAnswer xlglExamMainAnswer : commonList) {
-					    JSONObject jsonObject2 = new JSONObject();
-						jsonObject2.put("xlglName", xlglExamMainAnswer.getExamineName());
-						jsonObject2.put("xlglSum", xlglExamMainAnswer.getFractionsum());
-						jsonObject2.put("xlglLevel", xlglExamMainAnswer.getLevel());
-						jsonArray2.add(jsonObject2);
+//				if(commonList.size()>0) {
+//					for (XlglExamMainAnswer xlglExamMainAnswer : commonList) {
+//					    JSONObject jsonObject2 = new JSONObject();
+//						jsonObject2.put("xlglName", xlglExamMainAnswer.getExamineName());
+//						jsonObject2.put("xlglSum", xlglExamMainAnswer.getFractionsum());
+//						jsonObject2.put("xlglLevel", xlglExamMainAnswer.getLevel());
+//						jsonArray2.add(jsonObject2);
+//					}
+//				}
+				JSONArray jsonArrayExam = new JSONArray();
+				if(commonList1 != null && commonList1.size() > 0){
+					for(XlglExamMainAnswer xlglExamMainAnswer : commonList1){
+						String examId  = xlglExamMainAnswer.getExamineId();
+						Map<String,Object> examMap = new HashMap<>();
+						examMap.put("replyUserId",baseAppUser.getUserId());
+						examMap.put("examId",examId);
+						List<XlglExamMainAnswer> examMainAnswerList = xlglExamMainAnswerService.queryExamByUserIdAndExamId(examMap);
+						if(examMainAnswerList != null && examMainAnswerList.size() > 0){
+							JSONObject jsonExam = new JSONObject();
+							jsonExam.put("xlglCore",examMainAnswerList.get(0).getFractionsum());
+							jsonExam.put("xlglLevel",examMainAnswerList.get(0).getLevel());
+							jsonArrayExam.add(jsonExam);
+						}else {
+							JSONObject jsonExam = new JSONObject();
+							jsonExam.put("xlglCore","--");
+							jsonExam.put("xlglLevel","--");
+							jsonArrayExam.add(jsonExam);
+						}
 					}
 				}
-				jsonObject.put("examine", jsonArray2);
+				jsonObject.put("examine", jsonArrayExam);
 				//训练管理-当前用户已经考过考试-----------------end
 				// 共同训练，专业训练，战略训练，军事训练 ------------------start
 				/*Map<String, Object> map = new HashMap<String, Object>();
@@ -848,7 +870,29 @@ public class XlglDocumentZbjlController {
 			}
 		}
 
+		//JSONArray jsonArray = new JSONArray();
 		Response.json(jsonArray);
+
+	}
+
+	/**
+	 * 档案分析，考试成绩加载列表展示
+	 */
+	@ResponseBody
+	@RequestMapping("/getExam")
+	public void getExam(){
+		Map<String,Object> map = new HashMap<>();
+		List list = new ArrayList();
+		JSONObject jsonObject = new JSONObject();
+		List<XlglExamMainAnswer> commonList = xlglExamMainAnswerService.findListAllExam(map);
+		if(commonList != null && commonList.size() > 0){
+			for(XlglExamMainAnswer xlglExamMainAnswer : commonList){
+				String exam = xlglExamMainAnswer.getExamineName();
+				list.add(exam);
+			}
+		}
+
+		Response.json("result",list);
 
 	}
 

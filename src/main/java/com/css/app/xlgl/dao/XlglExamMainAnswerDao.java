@@ -23,5 +23,11 @@ public interface XlglExamMainAnswerDao extends BaseDao<XlglExamMainAnswer> {
 	void saveBatch(List<XlglExamMainAnswer> list);
 	
 	List<XlglExamMainAnswer> findListBySubjectId(Map<String, Object> map);
-	
+
+
+	List<XlglExamMainAnswer> findListAllExam(Map<String, Object> map);
+
+
+	List<XlglExamMainAnswer> queryExamByUserIdAndExamId(Map<String, Object> map);
+
 }

@@ -34,4 +34,10 @@ public interface XlglExamMainAnswerService {
 	int queryTotal(Map<String,Object> map);
 	
 	List<XlglExamMainAnswer> findListBySubjectId(Map<String, Object> map);
+
+
+	List<XlglExamMainAnswer> queryExamByUserIdAndExamId(Map<String, Object> map);
+
+
+	List<XlglExamMainAnswer> findListAllExam(Map<String, Object> map);
 }

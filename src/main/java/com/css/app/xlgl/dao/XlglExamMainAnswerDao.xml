@@ -222,5 +222,70 @@
 		</if>
 			order by m.update_date desc
 	</select>
+
+
+	<select id="queryExamByUserIdAndExamId" resultType="com.css.app.xlgl.entity.XlglExamMainAnswer">
+		select
+				e.EXAMINE_NAME as examineName , m.*
+		from
+			XLGL_EXAM_MAIN_ANSWER m
+		join
+			XLGL_EXAM_EXAMINE e on e.id = m.EXAMINE_ID
+		where m.STATUS  = '0'  and m.ISNOTEXAM = '1'
+			<if test="examineId != null and examineId !=''">
+			  and m.EXAMINE_ID = #{examineId}
+			</if>
+			<if test="makeupStatus != null and makeupStatus !=''">
+			  and m.MAKEUP_STATUS = #{makeupStatus}
+			</if>
+			<if test="replyUserName != null and replyUserName !=''">
+			  and m.REPLY_USER_NAME like '%'||#{replyUserName}||'%'
+			</if>
+			<if test="replyUserId != null and replyUserId !=''">
+			  and m.REPLY_USER_ID = #{replyUserId}
+			</if>
+			<if test="examId != null and examId !=''">
+				and m.EXAMINE_ID = #{examId}
+			</if>
+			<if test="isNotExam != null and isNotExam !=''">
+			  and m.ISNOTEXAM = #{isNotExam}
+			</if>
+			<if test="examineSubjectName != null and examineSubjectName !=''">
+			 	and e.EXAMINE_SUBJECT_NAME like '%'||#{examineSubjectName}||'%'
+			</if>
+		<if test="year != null and year !=''">
+			and e.CREATE_DATE like '%'||#{year}||'%'
+		</if>
+			order by m.update_date desc
+	</select>
+
+	<select id="findListAllExam" resultType="com.css.app.xlgl.entity.XlglExamMainAnswer">
+-- 		select
+-- 				distinct  e.EXAMINE_NAME as examineName
+-- 		from
+-- 			XLGL_EXAM_MAIN_ANSWER m
+-- 		join
+-- 			XLGL_EXAM_EXAMINE e on e.id = m.EXAMINE_ID
+-- 		where m.STATUS  = '0'  and m.ISNOTEXAM = '1' order by m.CREATE_DATE desc
+
+select
+        distinct examineName as examineName
+from
+        (
+                select
+                        e.EXAMINE_NAME as examineName,
+                        m.*
+                from
+                        XLGL_EXAM_MAIN_ANSWER m
+                join XLGL_EXAM_EXAMINE e
+                on
+                        e.id = m.EXAMINE_ID
+                where
+                        m.STATUS    = '0'
+                    and m.ISNOTEXAM = '1'
+                    order by
+        CREATE_DATE desc
+        )
+	</select>
 	
 </mapper>
