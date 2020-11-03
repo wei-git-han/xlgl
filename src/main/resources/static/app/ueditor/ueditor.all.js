@@ -11369,7 +11369,7 @@
                     domUtils.remove(txt);
                 }
 
-                range.select();
+                /*range.select();*/
 
 
                 return true;
@@ -22795,7 +22795,7 @@
                             }
                             obj ? range.removeInlineStyle(tagNames) : range.applyInlineStyle(tagNames[0]);
                         }
-                        range.select();
+                       /* range.select();*/
                     },
                     queryCommandState: function() {
                         return getObj(this, tagNames) ? 1 : 0;
