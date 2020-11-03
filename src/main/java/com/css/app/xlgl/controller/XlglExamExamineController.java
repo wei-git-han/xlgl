@@ -816,6 +816,7 @@ public class XlglExamExamineController {
 			String userId = CurrentUser.getUserId();
 			Date date = new Date();
 			xlglExamExamine.setStatus(status);
+			XlglExamExamine xlglExamExamineInfo = xlglExamExamineService.queryObject(xlglExamExamine.getId());
 			if (StringUtils.isNotBlank(xlglExamExamine.getId())) {// 修改
 				xlglExamExamine.setUpdateUser(userId);
 				xlglExamExamine.setUpdateDate(date);
@@ -831,7 +832,7 @@ public class XlglExamExamineController {
 			for (int i = 0; i < typeAndNum.length; i++) {
 				Map<String, Object> map = new HashMap<String, Object>();
 				String[] split2 = typeAndNum[i].split("-");
-				map.put("subjectId", xlglExamExamine.getExamineSubjectId());
+				map.put("subjectId", xlglExamExamineInfo.getExamineSubjectId());
 				map.put("topicType", split2[0]);
 				map.put("topicNumber", split2[1]);
 				map.put("fractionalNumber", split2[2]);
