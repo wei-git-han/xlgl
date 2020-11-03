@@ -574,35 +574,35 @@ public class PersonalFileController {
 	@ResponseBody
 	@RequestMapping("/getAllDeptInfo")
 	public void getAllDeptInfo(String time){
-//		Calendar calendar = Calendar.getInstance();
-//		if(StringUtils.isBlank(time)){
-//			time = String.valueOf(calendar.get(Calendar.YEAR));
-//		}
-//		List list2 = new ArrayList();
-//		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
-//		List listAll = new ArrayList();
-//		List<BaseAppOrgan> list = baseAppOrganService.findByParentId("root");
-//		//所有局
-//		if(list != null && list.size() > 0){
-//			for(BaseAppOrgan baseAppOrgan : list){
-//				String deptId = baseAppOrgan.getId();
-//
-//				JSONObject jsonObject = getAllYxl(deptId,time);
-//				if(orgId.equals(deptId)){//当前登录人所在的局的信息
-//					JSONObject jsCurrentDept = new JSONObject();
-//					jsCurrentDept.put("name",jsonObject.get("name"));
-//					jsCurrentDept.put("highSum",jsonObject.get("highSum"));//优秀人数
-//					jsCurrentDept.put("midSum",jsonObject.get("midSum"));//优良人数
-//					jsCurrentDept.put("lowSum",jsonObject.get("lowSum"));//及格人数
-//					jsCurrentDept.put("yxLv",jsonObject.get("yxLv"));//优秀率
-//					jsCurrentDept.put("ylLv",jsonObject.get("ylLv"));//优良率
-//					jsCurrentDept.put("jgLv",jsonObject.get("jgLv"));//及格率
-//					list2.add(jsCurrentDept);
-//				}
-//				listAll.add(jsonObject);
-//			}
-//		}
-//		//当前局
+		Calendar calendar = Calendar.getInstance();
+		if(StringUtils.isBlank(time)){
+			time = String.valueOf(calendar.get(Calendar.YEAR));
+		}
+		List list2 = new ArrayList();
+		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
+		List listAll = new ArrayList();
+		List<BaseAppOrgan> list = baseAppOrganService.findByParentId("root");
+		//所有局
+		if(list != null && list.size() > 0){
+			for(BaseAppOrgan baseAppOrgan : list){
+				String deptId = baseAppOrgan.getId();
+
+				JSONObject jsonObject = getAllYxl(deptId,time);
+				if(orgId.equals(deptId)){//当前登录人所在的局的信息
+					JSONObject jsCurrentDept = new JSONObject();
+					jsCurrentDept.put("name",jsonObject.get("name"));
+					jsCurrentDept.put("highSum",jsonObject.get("highSum"));//优秀人数
+					jsCurrentDept.put("midSum",jsonObject.get("midSum"));//优良人数
+					jsCurrentDept.put("lowSum",jsonObject.get("lowSum"));//及格人数
+					jsCurrentDept.put("yxLv",jsonObject.get("yxLv"));//优秀率
+					jsCurrentDept.put("ylLv",jsonObject.get("ylLv"));//优良率
+					jsCurrentDept.put("jgLv",jsonObject.get("jgLv"));//及格率
+					list2.add(jsCurrentDept);
+				}
+				listAll.add(jsonObject);
+			}
+		}
+		//当前局
 ////		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());//当前登录人的局id
 ////		JSONObject js = getAllYxl(orgId);
 ////		JSONObject jsCurrentDept = new JSONObject();
@@ -616,9 +616,9 @@ public class PersonalFileController {
 ////		jsCurrentDept.put("jgLv",js.get("jgLv"));//及格率
 //
 		JSONObject result = new JSONObject();
-//		result.put("listAll",listAll);
-//		result.put("listCurrent",list2);
-//		result.put("result","success");
+		result.put("listAll",listAll);
+		result.put("listCurrent",list2);
+		result.put("result","success");
 		Response.json(result);
 	}
 
