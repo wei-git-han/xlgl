@@ -253,11 +253,11 @@ public class TaskMenuController {
                 for (int i = 0; i < jsonArray1.size(); i++) {
                     JSONObject o = (JSONObject) jsonArray1.get(i);
                     String test = (String) o.get("text");
-                    if ("军事体育成绩导入".equals(test)) {
+                    if ("考核组织".equals(test)) {
                         jsonArray1.remove(i);
                         i--;
                     }
-                    if ("个人自学成绩录入".equals(test)) {
+                    if ("题库维护".equals(test)) {
                         jsonArray1.remove(i);
                         i--;
                     }
