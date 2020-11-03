@@ -82,12 +82,12 @@ msg:
   platform: all
   visible: true
   icon:
-  appid: 
-  redirect: 
-  group: 
-    name: 
-    redirect: 
-    
+  appid:
+  redirect:
+  group:
+    name:
+    redirect:
+
 #文件服务配置
 css.oauth2.accessTokenUri: ${csse.mircoservice.zuul}/api/uaa/oauth/token
 css.oauth2.clientId: ${csse.xlgl.appId}
