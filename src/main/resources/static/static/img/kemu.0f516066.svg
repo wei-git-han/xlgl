@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="172px" height="30px" viewBox="0 0 172 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->
+    <title>kemu</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="100%" y1="50%" x2="0.131967905%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#11BE9D" offset="0%"></stop>
+            <stop stop-color="#1FE77F" offset="100%"></stop>
+        </linearGradient>
+        <path d="M8,0 L170,0 C171.104569,-2.02906125e-16 172,0.8954305 172,2 L172,28 C172,29.1045695 171.104569,30 170,30 L0,30 L0,8 C-5.41083001e-16,3.581722 3.581722,8.11624501e-16 8,0 Z" id="path-2"></path>
+        <polygon id="path-4" points="0 0 32 0 32 35.047619 0 35.047619"></polygon>
+    </defs>
+    <g id="训管动态" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="军事训练-共同训练-军事体育-军事成绩评定" transform="translate(-210.000000, -619.000000)">
+            <g id="体型" transform="translate(210.000000, 619.000000)">
+                <g id="kemu">
+                    <g id="分组">
+                        <mask id="mask-3" fill="white">
+                            <use xlink:href="#path-2"></use>
+                        </mask>
+                        <use id="Mask" fill="url(#linearGradient-1)" xlink:href="#path-2"></use>
+                        <g opacity="0.5" mask="url(#mask-3)">
+                            <g transform="translate(12.000000, 6.000000)">
+                                <mask id="mask-5" fill="white">
+                                    <use xlink:href="#path-4"></use>
+                                </mask>
+                                <g id="Clip-2" stroke="none" fill="none"></g>
+                                <path d="M3.04761905,32 L24.3809524,32 L24.3809524,7.61904762 L3.04761905,7.61904762 L3.04761905,32 Z M25.1428571,4.57142857 L2.28571429,4.57142857 C1.02552381,4.57142857 0,5.59695238 0,6.85714286 L0,32.7619048 C0,34.0220952 1.02552381,35.047619 2.28571429,35.047619 L25.1428571,35.047619 C26.4030476,35.047619 27.4285714,34.0220952 27.4285714,32.7619048 L27.4285714,6.85714286 C27.4285714,5.59695238 26.4030476,4.57142857 25.1428571,4.57142857 L25.1428571,4.57142857 Z" id="Fill-1" stroke="none" fill="#FFFFFF" fill-rule="evenodd" mask="url(#mask-5)"></path>
+                                <path d="M31.4546286,0.570285714 C30.8801524,-0.00342857143 30.1563429,0.000380952381 29.6717714,-0.000380952381 L6.85729524,-0.000380952381 C6.01539048,-0.000380952381 5.33348571,0.682285714 5.33348571,1.52342857 C5.33348571,2.36533333 6.01539048,3.0472381 6.85729524,3.0472381 L28.9525333,3.0472381 L28.9525333,28.1900952 C28.9525333,29.032 29.6344381,29.7139048 30.4763429,29.7139048 C31.3174857,29.7139048 32.0001524,29.032 32.0001524,28.1900952 L32.0001524,1.94247619 C32.0001524,1.25828571 31.7037714,0.818666667 31.4546286,0.570285714" id="Fill-3" stroke="none" fill="#FFFFFF" fill-rule="evenodd" mask="url(#mask-5)"></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
