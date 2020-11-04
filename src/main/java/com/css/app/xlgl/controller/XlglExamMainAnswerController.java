@@ -52,20 +52,20 @@ public class XlglExamMainAnswerController {
 	 *@param makeupStatus //补考考状态0：没补考考，1:补考了
 	 *@param level 查询等级参数
 	 *@param replyUserName 查询答题人名称
-	 *@param organName 查询答题人的部门名称
+	 *@param organId 查询答题人的部门id
 	 *@param isNotExam //考试状态 0:没考，1:考了
 	 *@param status  //状态 0：考试，1：练习
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
 	public void list(Integer page, Integer limit,String examineId,String makeupStatus,String level,String replyUserName
-			,String organName,String isNotExam,String status){
+			,String organId,String isNotExam,String status){
 		Map<String, Object> map = new HashMap<>();	
 		map.put("examineId", examineId);
 		map.put("level", level);
 		map.put("makeupStatus", makeupStatus);
 		map.put("replyUserName", replyUserName);
-		map.put("organName", organName);
+		map.put("organId", organId);
 		map.put("isNotExam", isNotExam);
 		map.put("status", status);
 		PageHelper.startPage(page, limit);
