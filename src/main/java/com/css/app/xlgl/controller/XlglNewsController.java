@@ -277,6 +277,7 @@ public class XlglNewsController {
 	@ResponseBody
 	@RequestMapping("saveOrUpdate")
 	public void saveOrUpdate(XlglNews xlglNews,String pIds,String picutureName){
+		logger.info("新闻动态当前操作人："+CurrentUser.getUsername()+"---id:"+CurrentUser.getUserId()+"--时间是："+new Date());
 		JSONObject jsonObject = new JSONObject();
 		String fId = UUIDUtils.random();
 		//判断是新增还是修改,id不为空则是修改，为空则是新增

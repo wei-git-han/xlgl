@@ -6955,7 +6955,7 @@
                         '.view{padding:0;word-wrap:break-word;cursor:text;height:90%;}\n' +
                         //设置默认字体和字号
                         //font-family不能呢随便改，在safari下fillchar会有解析问题
-                        'body{margin:8px;font-family:sans-serif;font-size:16px;}' +
+                        'body{margin:8px;font-family:sans-serif;font-size:20px;}' +
                         //设置段落间距
                         'p{margin:5px 0;}</style>' +
                         (options.iframeCssUrl ? '<link rel=\'stylesheet\' type=\'text/css\' href=\'' + utils.unhtml(options.iframeCssUrl) + '\'/>' : '') +
@@ -8498,7 +8498,9 @@
                 //针对wps添加的多余标签处理
                 .replace(/<\/?div[^>]*>/g, '')
                 //去掉多余的属性
+                .replace(/\/?-EndFragment[^>]*>/g, '')
                 .replace(/v:\w+=(["']?)[^'"]+\1/g, '')
+                .replace(/Ø/g, '')
                 .replace(/<(!|script[^>]*>.*?<\/script(?=[>\s])|\/?(\?xml(:\w+)?|xml|meta|link|style|\w+:\w+)(?=[\s\/>]))[^>]*>/gi, "")
                 .replace(/<p [^>]*class="?MsoHeading"?[^>]*>(.*?)<\/p>/gi, "<p><strong>$1</strong></p>")
                 //去掉多余的属性
@@ -11367,7 +11369,7 @@
                     domUtils.remove(txt);
                 }
 
-                range.select();
+                /*range.select();*/
 
 
                 return true;
@@ -22793,7 +22795,7 @@
                             }
                             obj ? range.removeInlineStyle(tagNames) : range.applyInlineStyle(tagNames[0]);
                         }
-                        range.select();
+                       /* range.select();*/
                     },
                     queryCommandState: function() {
                         return getObj(this, tagNames) ? 1 : 0;
@@ -28962,8 +28964,11 @@
                     }
                     var count = editor.getContentLength(true);
                     if (count > max) {
-                        countDom.innerHTML = errMsg;
-                        editor.fireEvent("wordcountoverflow");
+                        // countDom.innerHTML = errMsg;
+                        // editor.fireEvent("wordcountoverflow");
+                        var content = editor.getContentTxt();
+                        editor.setContent(content.substring(0, max));
+                        editor.focus(true)
                     } else {
                         countDom.innerHTML = msg.replace("{#leave}", max - count).replace("{#count}", count);
                     }
