@@ -54,11 +54,11 @@ public class SysOrgan {
 	@ResponseBody
 	public Object getDeptCurrentTree(HttpServletRequest request) {
 		String orgid = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
-		JSONObject list=  getOrganTree(orgid);
+		JSONObject list=  getOrganTree("root");
 		JSONObject json = new JSONObject();
 		json.put("opened", true);
 		list.put("state", json);
-		list.put("currentOrgId", orgid);
+		list.put("currentOrgId", "root");
 		return list;
 	}
 	
@@ -79,6 +79,19 @@ public class SysOrgan {
 			result.put("children", jsons);
 		}
 		return result;
+	}
+	/**
+	 * 从组织结构根目录的下获取组织
+	 * */
+	@RequestMapping(value = "/currenttreeByRoot")
+	@ResponseBody
+	public Object getDeptCurrentTreeByRoot(HttpServletRequest request) {
+		JSONObject list=  getOrganTree("root");
+		JSONObject json = new JSONObject();
+		json.put("opened", true);
+		list.put("state", json);
+		list.put("currentOrgId", "root");
+		return list;
 	}
 	
 }

@@ -24,6 +24,9 @@
 			</if>
 			<if test="organName != null and organName !=''">
 			  and ORGAN_NAME like '%'||#{organName}||'%'
+			</if test="organId != null and organId !=''">
+			<if>
+			 and ORGAN_ID = #{organId}
 			</if>
 			<if test="replyUserId != null and replyUserId !=''">
 			  and REPLY_USER_ID = #{replyUserId}
