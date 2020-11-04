@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -259,7 +260,16 @@ public class XlglExamTopicController {
 				Response.json(json);
 				return;
 			}
-			xlglExamTopicService.saveList(readExcelLists);
+			List<XlglExamTopic> list =	new ArrayList<XlglExamTopic>();
+			for (int i = 0; i < readExcelLists.size(); i++) {
+				list.add(readExcelLists.get(i));
+				if(list.size() == 10) {
+					xlglExamTopicService.saveList(list);
+					list = new ArrayList<XlglExamTopic>();
+				}else if(readExcelLists.size()-1 -i ==0){
+					xlglExamTopicService.saveList(list);
+				}
+			}
 			json.put("fileId", fileId);
 			XlglExamFile xlglExamFile = new XlglExamFile();
 			xlglExamFile.setId(UUIDUtils.random());

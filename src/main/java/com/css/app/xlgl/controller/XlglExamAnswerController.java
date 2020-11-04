@@ -461,6 +461,7 @@ public class XlglExamAnswerController {
 				eanswer.setStatus("0");
 				eanswer.setCorrectStatus("1");
 			}
+			xlglExamAnswerService.save(eanswer);
 		}
 		XlglExamMainAnswer xlglExamMainAnswer = new XlglExamMainAnswer();
 		String level ="";
@@ -484,7 +485,6 @@ public class XlglExamAnswerController {
 		xlglExamMainAnswer.setUpdateDate(date);
 		xlglExamMainAnswer.setId(mainAnswerId);
 		xlglExamMainAnswerService.update(xlglExamMainAnswer);
-		xlglExamAnswerService.saveBatch(parseArray);
 		jsonObject.put("mainAnswerId", queryObject.getId());	
 		jsonObject.put("code", 0);
 		jsonObject.put("msg", "success");

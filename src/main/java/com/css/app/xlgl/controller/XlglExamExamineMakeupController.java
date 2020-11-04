@@ -2,6 +2,7 @@ package com.css.app.xlgl.controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -119,7 +120,17 @@ public class XlglExamExamineMakeupController {
 			map.put("fractionalNumber", split2[2]);
 			List<XlglExamExaminetopic> randomExtract = xlglExamExaminetopicService.randomExtract(map, queryObject.getId(),random);
 			if(randomExtract.size()>0) {
-				xlglExamExaminetopicService.saveBatch(randomExtract);
+				List<XlglExamExaminetopic> list =	new ArrayList<XlglExamExaminetopic>();
+				for (int j = 0; j < randomExtract.size(); j++) {
+					list.add(randomExtract.get(j));
+					if(list.size() == 10) {
+						xlglExamExaminetopicService.saveBatch(list);
+						list = new ArrayList<XlglExamExaminetopic>();
+					}else if(randomExtract.size()-1 -j ==0){
+						xlglExamExaminetopicService.saveBatch(list);
+					}
+				}
+
 			}
 		}
 		Response.ok();
