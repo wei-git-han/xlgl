@@ -20,7 +20,7 @@ import com.css.base.utils.CurrentUser;
  * @date 2017-04-19 13:05:36
  */
 @Controller
-@RequestMapping("/sysorgan")
+@RequestMapping("app/xlgl/sysorgan")
 public class SysOrgan {
 	
 	@Autowired
