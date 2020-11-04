@@ -80,5 +80,10 @@ public class XlglExamMainAnswerServiceImpl implements XlglExamMainAnswerService 
 	public List<XlglExamMainAnswer> queryExamByUserIdAndExamId(Map<String, Object> map) {
 		return xlglExamMainAnswerDao.queryExamByUserIdAndExamId(map);
 	}
+
+	@Override
+	public List<XlglExamMainAnswer> findExamByOrganId(Map<String, Object> map) {
+		return xlglExamMainAnswerDao.findExamByOrganId(map);
+	}
 	
 }

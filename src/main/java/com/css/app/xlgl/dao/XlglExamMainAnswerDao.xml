@@ -269,4 +269,28 @@
         )
 	</select>
 	
+	<select id="findExamByOrganId" resultType="com.css.app.xlgl.entity.XlglExamMainAnswer">
+    select * from 
+    	XLGL_EXAM_MAIN_ANSWER
+    	where	
+    		ORGAN_ID in
+    		(
+			select 
+				id 
+			from 
+				BASE_APP_ORGAN 
+			where 
+				TREE_PATH like  '%'||#{organId}||'%'
+			) 
+			<if test="examId != null and examId !=''">
+				and m.EXAMINE_ID = #{examId}
+			</if>
+			<if test="status != null and status !=''">
+				and STATUS = #{status}
+			</if>
+			<if test="isnotexam != null and isnotexam !=''">
+				and ISNOTEXAM = #{isnotexam}
+			</if>
+	</select>
+	
 </mapper>

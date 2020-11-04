@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.xlgl.dao.XlglExamExamineDao;
+import com.css.app.xlgl.dto.ExamMainAnswerAnalyseDto;
 import com.css.app.xlgl.dto.XlglExamExaminetopicDto;
 import com.css.app.xlgl.entity.XlglExamExamine;
 import com.css.app.xlgl.entity.XlglExamExamineMakeup;
@@ -850,5 +852,69 @@ public class XlglExamExamineController {
 			Response.error();
 		}
 	}
+	/**
+	 * 局单位的组织的参考率、参考人数、待考人数、优秀率
+	 * */
+	@ResponseBody
+	@RequestMapping("/examAnalyse")
+	public void examAnalyse(String examineId) {
+		JSONObject jsonObject = new JSONObject();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("parentId", "root");
+		List<BaseAppOrgan> queryList = baseAppOrganService.queryList(map);
+		DecimalFormat format = new DecimalFormat("0.00");
+		ArrayList<ExamMainAnswerAnalyseDto> list = new ArrayList<ExamMainAnswerAnalyseDto>();
+		for (BaseAppOrgan baseAppOrgan : queryList) {
+			Integer fillUpNum = 0; //待考人数
+			Integer peopleNum = 0; //参考人数
+			Integer total = 0; //优秀人数
+			String excellent = ""; //优秀率
+			String raioAll = ""; //参考率
+			//传参实体
+			ExamMainAnswerAnalyseDto analyseDto = new ExamMainAnswerAnalyseDto();
+			analyseDto.setOrganId(baseAppOrgan.getId());
+			analyseDto.setOrganName(baseAppOrgan.getName());
+			map.put("examId", examineId);
+			map.put("status", "0");
+			List<XlglExamMainAnswer> findExamByOrganId = xlglExamMainAnswerService.findExamByOrganId(map);
+			for (XlglExamMainAnswer xlglExamMainAnswer : findExamByOrganId) {
+				// IsNotExam 考试状态 0:没考，1:考了
+				if(xlglExamMainAnswer.getIsNotExam().equals("0")) {
+					fillUpNum++;
+				}else if(xlglExamMainAnswer.getIsNotExam().equals("1")) {
+					if(StringUtils.isNotBlank(xlglExamMainAnswer.getLevel())
+							&&xlglExamMainAnswer.getLevel().equals("优秀")) {
+						total++;
+					}
+					peopleNum++;
+				}
+			}
+			if (peopleNum == 0 || total == 0) {
+				excellent = "0";
+			} else {
+				excellent = format.format(((float) total / peopleNum) * 100);// 优秀率
+			}
+			if (peopleNum == 0 ) {
+				raioAll = "0";
+			} else {
+				raioAll = format.format(((float) peopleNum / findExamByOrganId.size()) * 100);// 参考率
+			}
+			analyseDto.setExcellent(excellent);//优秀率
+			analyseDto.setFillUpNum(fillUpNum);//待考人数
+			analyseDto.setRaioAll(raioAll);//参考率
+			analyseDto.setPeopleNum(peopleNum);	//参考人数
+			list.add(analyseDto);
+		}
+		if(list.size()>0) {
+			jsonObject.put("code", "0");
+			jsonObject.put("msg", "success");
+			jsonObject.put("list", list);
+		}else {
+			jsonObject.put("code", "500");
+			jsonObject.put("msg", "错误!无返回数据");
+		}
 
+		Response.json(jsonObject);
+	}
+	
 }
