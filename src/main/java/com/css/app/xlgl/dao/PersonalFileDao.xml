@@ -23,7 +23,6 @@
 		1=1
 		and a.ISSUE_STATUS = '1' and a.status= '0'
 		and b.ISNOTEXAM = '1' and b.status= '0'
-		and a.OVER_STATUS = '1'
 		<if test="replyUserId != null and replyUserId !=''">
 			and b.REPLY_USER_ID = #{replyUserId}
 		</if>
@@ -39,7 +38,7 @@
 		join XLGL_EXAM_MAIN_ANSWER b
 		on a.id=b.examine_id
 		where
-		b.ISNOTEXAM = '1'and a.status= '0'	and a.OVER_STATUS = '1'
+		b.ISNOTEXAM = '1'and a.status= '0'	
 		<if test="replyUserId != null and replyUserId !=''">
 			and b.REPLY_USER_ID = #{replyUserId}
 		</if>
@@ -61,7 +60,7 @@
 		join XLGL_EXAM_MAIN_ANSWER b
 		on a.id=b.examine_id
 		where
-		b.ISNOTEXAM = '1'and a.status= '0'	and a.OVER_STATUS = '1'
+		b.ISNOTEXAM = '1'and a.status= '0'	
 		<if test="replyUserId != null and replyUserId !=''">
 			and b.REPLY_USER_ID = #{replyUserId}
 		</if>
@@ -85,7 +84,7 @@
 		left join BASE_APP_USER u
 		on a.CREATE_USER =u.id
 		where  
-		b.ISNOTEXAM = '1'and a.status= '0'	and a.OVER_STATUS = '1'
+		b.ISNOTEXAM = '1'and a.status= '0'	
 		<if test="replyUserId != null and replyUserId !=''">
 			and b.REPLY_USER_ID = #{replyUserId}
 		</if>
@@ -116,7 +115,6 @@
 		on a.id=b.examine_id
 		where
 		b.ISNOTEXAM = '1' and a.status= '0'
-		and a.OVER_STATUS = '1'
 		group by b.REPLY_USER_ID,b.REPLY_USER_NAME)
 
 	</select>
