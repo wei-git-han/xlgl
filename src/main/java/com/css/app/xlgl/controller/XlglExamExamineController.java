@@ -29,6 +29,7 @@ import com.css.app.xlgl.entity.XlglExamExamine;
 import com.css.app.xlgl.entity.XlglExamExamineMakeup;
 import com.css.app.xlgl.entity.XlglExamExaminetopic;
 import com.css.app.xlgl.entity.XlglExamMainAnswer;
+import com.css.app.xlgl.entity.XlglExamTopic;
 import com.css.app.xlgl.service.XlglExamExamineMakeupService;
 import com.css.app.xlgl.service.XlglExamExamineService;
 import com.css.app.xlgl.service.XlglExamExaminetopicService;
@@ -611,7 +612,17 @@ public class XlglExamExamineController {
 				List<XlglExamExaminetopic> randomExtract = xlglExamExaminetopicService.randomExtract(map,
 						xlglExamExamine.getId(), null);
 				if (randomExtract.size() > 0) {
-					xlglExamExaminetopicService.saveBatch(randomExtract);
+					List<XlglExamExaminetopic> list =	new ArrayList<XlglExamExaminetopic>();
+					for (int j = 0; j < randomExtract.size(); j++) {
+						list.add(randomExtract.get(j));
+						if(list.size() == 10) {
+							xlglExamExaminetopicService.saveBatch(list);
+							list = new ArrayList<XlglExamExaminetopic>();
+						}else if(randomExtract.size()-1 -j ==0){
+							xlglExamExaminetopicService.saveBatch(list);
+						}
+					}
+	
 				}
 			}
 			if (status.equals("0")) {
@@ -841,7 +852,17 @@ public class XlglExamExamineController {
 				List<XlglExamExaminetopic> randomExtract = xlglExamExaminetopicService.randomExtract(map,
 						xlglExamExamine.getId(), null);
 				if (randomExtract.size() > 0) {
-					xlglExamExaminetopicService.saveBatch(randomExtract);
+					List<XlglExamExaminetopic> list =	new ArrayList<XlglExamExaminetopic>();
+					for (int j = 0; j < randomExtract.size(); j++) {
+						list.add(randomExtract.get(j));
+						if(list.size() == 10) {
+							xlglExamExaminetopicService.saveBatch(list);
+							list = new ArrayList<XlglExamExaminetopic>();
+						}else if(randomExtract.size()-1 -j ==0){
+							xlglExamExaminetopicService.saveBatch(list);
+						}
+					}
+	
 				}
 			}
 			jsonObject.put("code", "0");
