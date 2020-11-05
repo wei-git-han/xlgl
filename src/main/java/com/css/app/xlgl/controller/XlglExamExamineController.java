@@ -103,6 +103,33 @@ public class XlglExamExamineController {
 			mapAll.put("isNotExam", "1");
 			String number = xlglExamMainAnswerService.queryUserCount(mapAll);// 每个试卷的参考人数
 
+			// 当前用户考试状态 UserStatus 1:已参加 2开始考试  3:超时未考  4:无法考试，无成绩单	//overStatus  考试是否结束 0：没结束进行中，1：已结束已完结 2 :补考开始，99：未开始
+			mapAnswer.put("examineId", xlglExamExamine.getId());
+			mapAnswer.put("replyUserId", userId);
+			List<XlglExamMainAnswer> queryList = xlglExamMainAnswerService.queryList(mapAnswer);
+			if (queryList.size() > 0) {
+				XlglExamMainAnswer xlglExamMainAnswer = queryList.get(0);
+				if (xlglExamExamine.getOverStatus().equals("0") && xlglExamMainAnswer.getIsNotExam().equals("0") ) {
+					xlglExamExamine.setUserStatus("2");
+				} else if (xlglExamExamine.getOverStatus().equals("0") && xlglExamMainAnswer.getIsNotExam().equals("1") ) {
+					xlglExamExamine.setUserStatus("1");
+				} else if (xlglExamExamine.getOverStatus().equals("1") && xlglExamMainAnswer.getIsNotExam().equals("0") ) {
+					xlglExamExamine.setUserStatus("3");
+				}else if(xlglExamExamine.getOverStatus().equals("1") && xlglExamMainAnswer.getIsNotExam().equals("1")) {
+					xlglExamExamine.setUserStatus("1");
+				}else if(xlglExamExamine.getOverStatus().equals("2")&& xlglExamMainAnswer.getIsNotExam().equals("0")){
+					xlglExamExamine.setUserStatus("2");
+				}else if(xlglExamExamine.getOverStatus().equals("2")&& xlglExamMainAnswer.getIsNotExam().equals("1")) {
+					xlglExamExamine.setUserStatus("1");
+				}else if(xlglExamExamine.getOverStatus().equals("99")) {
+					xlglExamExamine.setUserStatus("2");
+				}else {
+					xlglExamExamine.setUserStatus("2");
+				}
+			} else {
+				xlglExamExamine.setUserStatus("4");
+			}
+			
 			// 当前考试是否发起补考
 			List<XlglExamExamineMakeup> makeupList = xlglExamExamineMakeupService.queryList(mapAnswer);
 			if (makeupList.size() > 0 && xlglExamExamine.getOverStatus().equals("2")) {
@@ -176,29 +203,7 @@ public class XlglExamExamineController {
 					xlglExamExamineService.update(ex);
 				}
 			}
-			XlglExamExamine queryObject = xlglExamExamineService.queryObject(xlglExamExamine.getId());
-			// 当前用户考试状态 UserStatus 1:已参加 2开始考试  3:超时未考  4:无法考试，无成绩单	//overStatus  考试是否结束 0：没结束进行中，1：已结束已完结 2 :补考开始，99：未开始
-			mapAnswer.put("examineId", xlglExamExamine.getId());
-			mapAnswer.put("replyUserId", userId);
-			List<XlglExamMainAnswer> queryList = xlglExamMainAnswerService.queryList(mapAnswer);
-			if (queryList.size() > 0) {
-				XlglExamMainAnswer xlglExamMainAnswer = queryList.get(0);
-				if (!queryObject.getOverStatus().equals("99") && xlglExamMainAnswer.getIsNotExam().equals("1") &&
-						xlglExamMainAnswer.getMakeupStatus().equals("0")) {
-					xlglExamExamine.setUserStatus("1");
-				} else if (!queryObject.getOverStatus().equals("99") && xlglExamMainAnswer.getMakeupStatus().equals("1")
-						&& xlglExamMainAnswer.getIsNotExam().equals("1")) {
-					xlglExamExamine.setUserStatus("1");
-				} else if (!queryObject.getOverStatus().equals("99") && xlglExamMainAnswer.getIsNotExam().equals("0")) {
-					xlglExamExamine.setUserStatus("2");
-				}else if(queryObject.getOverStatus().equals("1") && xlglExamMainAnswer.getIsNotExam().equals("0")) {
-					xlglExamExamine.setUserStatus("3");
-				}else {
-					xlglExamExamine.setUserStatus("2");
-				}
-			} else {
-				xlglExamExamine.setUserStatus("4");
-			}
+			//XlglExamExamine queryObject = xlglExamExamineService.queryObject(xlglExamExamine.getId());
 		}
 		Response.json("page", pageUtil);
 	}
@@ -392,9 +397,9 @@ public class XlglExamExamineController {
 			String status) {
 		JSONObject jsonObject = new JSONObject();
 		Map<String, Object> map = new HashMap<>();
-		String userId = CurrentUser.getUserId();
+		SSOUser ssoUser = CurrentUser.getSSOUser();
 		map.put("examineId", examineId);
-		map.put("replyUserId", userId);
+		map.put("replyUserId", ssoUser.getUserId());
 		map.put("isNotExam", isNotExam);
 		map.put("status", status);
 		List<XlglExamExamineMakeup> makeupList = xlglExamExamineMakeupService.queryList(map);
@@ -408,6 +413,24 @@ public class XlglExamExamineController {
 		if (queryList.size() > 0) {
 			XlglExamMainAnswer xlglExamMainAnswer = queryList.get(0);
 			jsonObject.put("MainAnswerID", xlglExamMainAnswer.getId());
+		}else {
+			XlglExamMainAnswer xlglExamMainAnswer = new XlglExamMainAnswer();
+			String random = UUIDUtils.random();
+			xlglExamMainAnswer.setId(random);
+			xlglExamMainAnswer.setExamineId(examineId);
+			xlglExamMainAnswer.setOrganId(ssoUser.getOrganId());
+			xlglExamMainAnswer.setOrganName(ssoUser.getOrgName());
+			xlglExamMainAnswer.setReplyUserId(ssoUser.getUserId());
+			xlglExamMainAnswer.setReplyUserName(ssoUser.getFullname());
+			xlglExamMainAnswer.setCreateDate(new Date());
+			xlglExamMainAnswer.setUpdateDate(new Date());
+			xlglExamMainAnswer.setMakeupStatus("0");
+			xlglExamMainAnswer.setStatus(status);
+			xlglExamMainAnswer.setIsNotExam("0");
+			xlglExamMainAnswer.setCreateUser(CurrentUser.getUserId());
+			xlglExamMainAnswer.setUpdateUser(CurrentUser.getUserId());
+			xlglExamMainAnswerService.save(xlglExamMainAnswer);
+			jsonObject.put("MainAnswerID",random);
 		}
 		Response.json(jsonObject);
 	}
