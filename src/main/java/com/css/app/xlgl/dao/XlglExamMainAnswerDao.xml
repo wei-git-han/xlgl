@@ -283,7 +283,7 @@
 				TREE_PATH like  '%'||#{organId}||'%'
 			) 
 			<if test="examId != null and examId !=''">
-				and m.EXAMINE_ID = #{examId}
+				and EXAMINE_ID = #{examId}
 			</if>
 			<if test="status != null and status !=''">
 				and STATUS = #{status}
