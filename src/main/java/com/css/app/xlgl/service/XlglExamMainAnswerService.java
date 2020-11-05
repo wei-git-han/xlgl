@@ -40,4 +40,6 @@ public interface XlglExamMainAnswerService {
 
 
 	List<XlglExamMainAnswer> findListAllExam(Map<String, Object> map);
+	
+	List<XlglExamMainAnswer> findExamByOrganId(Map<String, Object> map);
 }

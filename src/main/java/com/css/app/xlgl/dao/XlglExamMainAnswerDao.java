@@ -29,5 +29,7 @@ public interface XlglExamMainAnswerDao extends BaseDao<XlglExamMainAnswer> {
 
 
 	List<XlglExamMainAnswer> queryExamByUserIdAndExamId(Map<String, Object> map);
+	
+	List<XlglExamMainAnswer> findExamByOrganId(Map<String, Object> map);
 
 }
