@@ -10,8 +10,7 @@ druid:
     dbType: dm
     url: jdbc:dm://${csse.dmdba.url}/ZF_XLGL_APP
     username: ZF_XLGL_APP
-    password: password01
-    #password: QNKN1ReWghEU95X/pZmu4rWzAlA3t9ayTeqNTdUILuj3eyQsU1V4S543u0dPyoOFbxbMMWrtn7S+dAAo5Ed9LQ==
+    password: QNKN1ReWghEU95X/pZmu4rWzAlA3t9ayTeqNTdUILuj3eyQsU1V4S543u0dPyoOFbxbMMWrtn7S+dAAo5Ed9LQ==
     initial-size: 1
     min-idle: 1
     max-active: 10
@@ -19,8 +18,8 @@ druid:
     test-on-borrow: true
     testWhileIdle: true
     validationQuery: select 1 from DUAL
-    #filters: config
-    #connectionProperties: config.decrypt=true;config.decrypt.key=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIfduBXAcGaEuALCIFq8PUfhUdVfu+fJSb05UY8+de5qbHxK/hs0BEpzlinf9VXEZV6tifsclqVqD7ljrO0BBO8CAwEAAQ==
+    filters: config
+    connectionProperties: config.decrypt=true;config.decrypt.key=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIfduBXAcGaEuALCIFq8PUfhUdVfu+fJSb05UY8+de5qbHxK/hs0BEpzlinf9VXEZV6tifsclqVqD7ljrO0BBO8CAwEAAQ==
 
 mybatis.configuration.mapUnderscoreToCamelCase: true
 
@@ -123,7 +122,7 @@ csse.mircoservice.app: /api/app/application/manager
 csse.mircoservice.syncdepartments: /api/org/syncdepartments
 
 #数据库配置地址
-csse.dmdba.url: localhost:5240
+csse.dmdba.url: 10.1.150.1:5236
 
 #文件服务----------------------------------start
 #文件服务的clientId,与公文处理应用进行共用；
