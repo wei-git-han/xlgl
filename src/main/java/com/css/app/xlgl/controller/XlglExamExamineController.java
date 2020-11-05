@@ -878,7 +878,7 @@ public class XlglExamExamineController {
 	 * */
 	@ResponseBody
 	@RequestMapping("/examAnalyse")
-	public void examAnalyse(String examineId) {
+	public void examAnalyse(String examineId,String organId) {
 		JSONObject jsonObject = new JSONObject();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("parentId", "root");
@@ -897,6 +897,7 @@ public class XlglExamExamineController {
 			analyseDto.setOrganName(baseAppOrgan.getName());
 			map.put("examId", examineId);
 			map.put("status", "0");
+			map.put("organId", baseAppOrgan.getId());
 			List<XlglExamMainAnswer> findExamByOrganId = xlglExamMainAnswerService.findExamByOrganId(map);
 			for (XlglExamMainAnswer xlglExamMainAnswer : findExamByOrganId) {
 				// IsNotExam 考试状态 0:没考，1:考了
