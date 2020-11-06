@@ -17,7 +17,7 @@ import com.css.base.dao.BaseDao;
  */
 @Mapper
 public interface XlglExamExamineDao extends BaseDao<XlglExamExamine> {
-	int findCount();
+	int findCount(String id);
 	
 	List<XlglExamExamine> queryVerifyList(Map<String, Object> map);
 	

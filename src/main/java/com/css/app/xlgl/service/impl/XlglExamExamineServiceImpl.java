@@ -49,8 +49,8 @@ public class XlglExamExamineServiceImpl implements XlglExamExamineService {
 	}
 
 	@Override
-	public int findCount() {
-		return xlglExamExamineDao.findCount();
+	public int findCount(String id) {
+		return xlglExamExamineDao.findCount(id);
 	}
 
 	@Override
