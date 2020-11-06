@@ -309,12 +309,24 @@ public class XlglExamAnswerController {
 			}
 			xlglExamAnswerService.save(eanswer);
 		}
+		Integer examineAllNumber = xlglExamExamine.getExamineAllNumber();
+		if(	xlglExamExamine.getMakeupStatus().equals("1")) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("examineId", xlglExamExamine.getId());
+			List<XlglExamExamineMakeup> queryList = xlglExamExamineMakeupService.queryList(map);
+			if(queryList.size()>0) {
+				String id = queryList.get(0).getId();
+				map.put("makeupId", id);
+				map.put("makeUpStatus", "1");
+			}
+			examineAllNumber = xlglExamExaminetopicService.findMakeUpNumber(map);
+		}
 		String level ="";
-		if(sum >=(xlglExamExamine.getExamineAllNumber()*0.9)) {
+		if(sum >=(examineAllNumber*0.9)) {
 			level="优秀";
-		}else if((xlglExamExamine.getExamineAllNumber()*0.9) >sum && sum >=(xlglExamExamine.getExamineAllNumber()*0.75) ) {
+		}else if((examineAllNumber*0.9) >sum && sum >=(examineAllNumber*0.75) ) {
 			level="优良";
-		}else if((xlglExamExamine.getExamineAllNumber()*0.75) >sum && sum >=(xlglExamExamine.getExamineAllNumber()*0.6)){
+		}else if((examineAllNumber*0.75) >sum && sum >=(examineAllNumber*0.6)){
 			level="及格";
 		}else {
 			level="不及格";

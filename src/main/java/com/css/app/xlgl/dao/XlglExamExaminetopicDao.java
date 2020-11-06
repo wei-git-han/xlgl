@@ -24,5 +24,7 @@ public interface XlglExamExaminetopicDao extends BaseDao<XlglExamExaminetopic> {
 	List<XlglExamExaminetopic> findListBySubjectId(Map<String,Object> map);
 
 	void deleteByExamineId(Map<String,Object> map);
+	
+	int findMakeUpNumber(Map<String,Object> map);
 }
 

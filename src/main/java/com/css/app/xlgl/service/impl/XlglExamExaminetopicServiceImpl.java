@@ -171,4 +171,9 @@ public class XlglExamExaminetopicServiceImpl implements XlglExamExaminetopicServ
 
 	}
 
+	@Override
+	public int findMakeUpNumber(Map<String, Object> map) {
+		return xlglExamExaminetopicDao.findMakeUpNumber(map);
+	}
+
 }
