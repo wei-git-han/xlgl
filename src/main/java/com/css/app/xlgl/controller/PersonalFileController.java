@@ -203,7 +203,7 @@ public class PersonalFileController {
 				String score = xlglMineStudy.getScore();
 				if(StringUtils.isNotBlank(score)) {
 					if(score.contains(".")) {
-						tscore = score.substring(0,score.indexOf(".")+2);
+						tscore = score.substring(0,score.indexOf("."));
 					}else {
 						tscore = score;
 					}
