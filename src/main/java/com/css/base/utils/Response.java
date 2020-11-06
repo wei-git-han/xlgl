@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -74,10 +75,17 @@ public class Response extends ResponseBase {
 	public static void download(String filename, InputStream is) {
 		try {
 			String fileName = new String((filename).getBytes("UTF-8"), "iso-8859-1");
-			new Response().setHeader("Content-disposition", String.format("attachment; filename=\"%s\"", fileName))
-					.write(is);
+			Response response = new Response();
+			response.setHeader("Content-disposition", String.format("attachment; filename=\"%s\"", fileName));
+			response.write(is);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
+		}finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

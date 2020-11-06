@@ -4,8 +4,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
-
+import com.alibaba.fastjson.JSONObject;
 import com.css.app.xlgl.entity.XlglExamTopic;
 
 
@@ -29,7 +28,7 @@ public interface XlglExamTopicService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
-	List<XlglExamTopic> readExcelLists(InputStream is,String subjectId) throws Exception;
+	JSONObject readExcelLists(InputStream is,String subjectId) throws Exception;
 	void saveList(List<XlglExamTopic> list);
 	List<XlglExamTopic> queryListByIds(Object[] id);
 	void deleteByType(Map<String, Object> map);
