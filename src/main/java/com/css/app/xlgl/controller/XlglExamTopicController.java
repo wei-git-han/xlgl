@@ -25,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.FileBaseUtil;
-import com.css.app.xlgl.entity.XlglExamAnswer;
 import com.css.app.xlgl.entity.XlglExamFile;
 import com.css.app.xlgl.entity.XlglExamTopic;
 import com.css.app.xlgl.service.XlglExamFileService;
@@ -184,12 +183,9 @@ public class XlglExamTopicController {
 	/**
 	 * 文件下载接口 下载模板
 	 */
+	@ResponseBody
 	@RequestMapping("/downloadFile")
 	public void downloadFile(String fileId) {
-		/*
-		 * String url = "C:/temp/storetemp"; String pictureFileid =
-		 * CutOutVideoUtil.getPictureFileid(fileId, url);
-		 */
 		HTTPFile httpFile = new HTTPFile(fileId);
 		String fileName = httpFile.getFileName();
 		Response.download(fileName, httpFile.getInputSteam());
@@ -253,10 +249,20 @@ public class XlglExamTopicController {
 			String fileId = FileBaseUtil.fileServiceUpload(file);
 			HTTPFile httpFile = new HTTPFile(fileId);
 			InputStream fileInputStream = httpFile.getInputSteam();
-			List<XlglExamTopic> readExcelLists = xlglExamTopicService.readExcelLists(fileInputStream, subjectId);
-			if (readExcelLists.size() < 0) {
+			JSONObject excelJson = xlglExamTopicService.readExcelLists(fileInputStream, subjectId);
+			if(excelJson ==null) {
 				json.put("code", "500");
 				json.put("msg", "题目导入格式不正确");
+				Response.json(json);
+				return;
+			}
+			JSONArray jsonArray = excelJson.getJSONArray("list");
+			List<XlglExamTopic> readExcelLists = JSONObject.parseArray(jsonArray.toJSONString(),XlglExamTopic.class);
+			if (readExcelLists.size() <= 0) {
+				String code = excelJson.getString("code");
+				String msg = excelJson.getString("msg");
+				json.put("code", code);
+				json.put("msg", msg);
 				Response.json(json);
 				return;
 			}
