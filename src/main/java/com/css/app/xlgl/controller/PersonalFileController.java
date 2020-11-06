@@ -199,7 +199,17 @@ public class PersonalFileController {
 			personalFileDto.setScore(xlglMineStudyList.get(0).getScore());
 			list.add(personalFileDto);
 			for(XlglMineStudy xlglMineStudy : xlglMineStudyList){
-				numberAll += Integer.parseInt(xlglMineStudy.getScore());
+				String tscore = "";
+				String score = xlglMineStudy.getScore();
+				if(StringUtils.isNotBlank(score)) {
+					if(score.contains(".")) {
+						tscore = score.substring(0,score.indexOf(".")+2);
+					}else {
+						tscore = score;
+					}
+				}
+				int sc = Integer.parseInt(tscore);
+				numberAll += sc;
 			}
 		}
 
