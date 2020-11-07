@@ -761,17 +761,17 @@ public class XlglExamExamineController {
 			total1Raio = format.format(((float) total1 / numberInto) * 100);// 优秀率
 		}
 		String total2Raio;
-		if (numberInto == 0 || total2 == 0) {
+		if (numberInto == 0 || (total2+total1) == 0) {
 			total2Raio = "0";
 		} else {
-			total2Raio = format.format(((float) total2 / numberInto) * 100);// 优良率
+			total2Raio = format.format((((float) total2 +(float) total1)/ numberInto) * 100);// 优良率
 		}
 
 		String total3Raio;
-		if (numberInto == 0 || total3 == 0) {
+		if (numberInto == 0 || (total3+total2+total1) == 0) {
 			total3Raio = "0";
 		} else {
-			total3Raio = format.format(((float) total3 / numberInto) * 100);// 及格率
+			total3Raio = format.format((((float) total3+(float) total2 +(float) total1) / numberInto) * 100);// 及格率
 		}
 		/*
 		 * Integer total1Raio = (total1/numberInto) *100; Integer total2Raio =
