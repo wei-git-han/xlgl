@@ -129,8 +129,12 @@
 	</delete>
 
 	<select id="findCount" resultType="int">
-		select count(*) from
-		BASE_APP_USER where ISDELETE=0
+		select 
+			count(*) 
+		from
+			XLGL_EXAM_MAIN_ANSWER 
+		where 
+			EXAMINE_ID = #{examineId} and STATUS = '0'
 	</select>
 
 	<select id="queryVerifyList" resultType="com.css.app.xlgl.entity.XlglExamExamine">

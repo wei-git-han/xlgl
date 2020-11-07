@@ -35,5 +35,9 @@ public interface XlglExamExaminetopicService {
 	 * */
 	List<XlglExamExaminetopic> randomExtract(Map<String,Object> map,String examineId,String makeUpId);
 	void deleteByExamineId(Map<String,Object> map);
+	/**
+	 * 补考总分数
+	 * */
+	int findMakeUpNumber(Map<String,Object> map);
 	
 }

@@ -84,8 +84,13 @@ public class XlglExamExamineMakeupController {
 	@RequestMapping("/save")
 	public void save(XlglExamExamineMakeup xlglExamExamineMakeup,String[] typeAndNum){
 		Map<String,Object> HashMap = new HashMap<String,Object>();
+		Date date = new Date();
 		String random = UUIDUtils.random();
 		xlglExamExamineMakeup.setId(random);
+		xlglExamExamineMakeup.setCreateDate(date);
+		xlglExamExamineMakeup.setUpdateDate(date);
+		xlglExamExamineMakeup.setCreateUser(CurrentUser.getUserId());
+		xlglExamExamineMakeup.setUpdateUser(CurrentUser.getUserId());
 		HashMap.put("examineId", xlglExamExamineMakeup.getExamineId());
 		List<XlglExamExamineMakeup> queryList = xlglExamExamineMakeupService.queryList(HashMap);
 		if(queryList.size() >0) {

@@ -88,7 +88,7 @@ public class XlglExamExamineController {
 		Map<String, Object> map = new HashMap<>();
 		Date date = new Date();
 		String userId = CurrentUser.getUserId();
-		int queryTotal = xlglExamExamineService.findCount();// 总用户人数
+
 		map.put("issueDate", time);
 		map.put("examineName", examineName);
 		map.put("issueStatus", "1");
@@ -99,6 +99,7 @@ public class XlglExamExamineController {
 		PageUtils pageUtil = new PageUtils(xlglExamExamineList);
 		DecimalFormat format = new DecimalFormat("0.00");
 		for (XlglExamExamine xlglExamExamine : xlglExamExamineList) {
+			int queryTotal = xlglExamExamineService.findCount(xlglExamExamine.getId());// 总用户人数
 			HashMap<String, Object> mapAll = new HashMap<String, Object>();
 			Map<String, Object> mapAnswer = new HashMap<>();
 			mapAll.put("examineId", xlglExamExamine.getId());
@@ -727,7 +728,7 @@ public class XlglExamExamineController {
 	@RequestMapping("/examineTotal")
 	public void examineTotal(String examineId) {
 		JSONObject jsonObject = new JSONObject();
-		int queryTotal = xlglExamExamineService.findCount();// 需要参考的人数
+		int queryTotal = xlglExamExamineService.findCount(examineId);// 需要参考的人数
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("examineId", examineId);
 		map.put("isNotExam", "1");
@@ -760,17 +761,17 @@ public class XlglExamExamineController {
 			total1Raio = format.format(((float) total1 / numberInto) * 100);// 优秀率
 		}
 		String total2Raio;
-		if (numberInto == 0 || total2 == 0) {
+		if (numberInto == 0 || (total2+total1) == 0) {
 			total2Raio = "0";
 		} else {
-			total2Raio = format.format(((float) total2 / numberInto) * 100);// 优良率
+			total2Raio = format.format((((float) total2 +(float) total1)/ numberInto) * 100);// 优良率
 		}
 
 		String total3Raio;
-		if (numberInto == 0 || total3 == 0) {
+		if (numberInto == 0 || (total3+total2+total1) == 0) {
 			total3Raio = "0";
 		} else {
-			total3Raio = format.format(((float) total3 / numberInto) * 100);// 及格率
+			total3Raio = format.format((((float) total3+(float) total2 +(float) total1) / numberInto) * 100);// 及格率
 		}
 		/*
 		 * Integer total1Raio = (total1/numberInto) *100; Integer total2Raio =
