@@ -162,8 +162,9 @@ public class XlglExamExamineController {
 			// 更改状态
 			if (makeupList.size() > 0) {// 查看是否有补考，如果有补考则以补考结束时间为准
 				XlglExamExamineMakeup xlglExamExamineMakeup = makeupList.get(0);
-				if (xlglExamExamineMakeup.getMakeUpEndDate() != null) {
+				if (xlglExamExamineMakeup.getMakeUpEndDate() != null && xlglExamExamineMakeup.getMakeUpStartDate() != null) {
 					xlglExamExamine.setExamineEndDate(xlglExamExamineMakeup.getMakeUpEndDate());
+					xlglExamExamine.setExamineStartDate(xlglExamExamineMakeup.getMakeUpStartDate());
 				}
 				if (xlglExamExamineMakeup.getMakeUpEndDate() != null
 						&& xlglExamExamineMakeup.getMakeUpEndDate().before(date)) {
