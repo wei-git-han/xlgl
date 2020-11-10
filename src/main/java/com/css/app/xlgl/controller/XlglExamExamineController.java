@@ -418,6 +418,7 @@ public class XlglExamExamineController {
 			XlglExamMainAnswer xlglExamMainAnswer = queryList.get(0);
 			jsonObject.put("MainAnswerID", xlglExamMainAnswer.getId());
 		}else {
+			XlglExamExamine queryObject = xlglExamExamineService.queryObject(examineId);
 			XlglExamMainAnswer xlglExamMainAnswer = new XlglExamMainAnswer();
 			String random = UUIDUtils.random();
 			xlglExamMainAnswer.setId(random);
@@ -429,7 +430,7 @@ public class XlglExamExamineController {
 			xlglExamMainAnswer.setCreateDate(new Date());
 			xlglExamMainAnswer.setUpdateDate(new Date());
 			xlglExamMainAnswer.setMakeupStatus("0");
-			xlglExamMainAnswer.setStatus(status);
+			xlglExamMainAnswer.setStatus(queryObject.getStatus());
 			xlglExamMainAnswer.setIsNotExam("0");
 			xlglExamMainAnswer.setCreateUser(CurrentUser.getUserId());
 			xlglExamMainAnswer.setUpdateUser(CurrentUser.getUserId());
