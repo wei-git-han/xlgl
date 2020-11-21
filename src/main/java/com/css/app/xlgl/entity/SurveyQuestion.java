@@ -28,6 +28,12 @@ public class SurveyQuestion implements Serializable {
 	//开始时间
 	private Date startTime;
 
+
+	//待填写数量
+	private String waitFillCount;
+	//已收集数量
+	private String collectedCount;
+
 	/**
 	 * 设置：主键ID
 	 */
@@ -99,5 +105,21 @@ public class SurveyQuestion implements Serializable {
 	 */
 	public Date getStartTime() {
 		return startTime;
+	}
+
+	public String getWaitFillCount() {
+		return waitFillCount;
+	}
+
+	public void setWaitFillCount(String waitFillCount) {
+		this.waitFillCount = waitFillCount;
+	}
+
+	public String getCollectedCount() {
+		return collectedCount;
+	}
+
+	public void setCollectedCount(String collectedCount) {
+		this.collectedCount = collectedCount;
 	}
 }

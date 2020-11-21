@@ -13,7 +13,30 @@
 			limit #{offset}, #{limit}
 		</if>
 	</select>
-	
+
+	<select id="surveyQuestionList" resultType="com.css.app.xlgl.entity.SurveyQuestion">
+		select
+			tt.*,
+			(
+				select
+				count(bau.user_id)
+				from base_app_user bau
+				where bau.user_id not in (select s.create_user_id from SURVEY_QUESTION_ANSWER s where s.SURVER_QUESTION_ID = tt.id)
+			) as waitFillCount
+		from (
+			select
+				sq.id,
+				sq.survey_name as surveyName,
+				sq.start_time as startTime,
+				sq.end_time as endTime,
+				sq.remark,
+				count(sqa.id) as collectedCount
+			from survey_question sq
+			left join SURVEY_QUESTION_ANSWER sqa on sq.id = sqa.SURVER_QUESTION_ID
+			group by sq.id, sq.remark, sq.survey_name, sq.start_time, sq.end_time
+		) tt
+	</select>
+
  	<select id="queryTotal" resultType="int">
 		select count(*) from SURVEY_QUESTION 
 	</select>
