@@ -19,16 +19,46 @@ public class SurveyQuestionAnswer implements Serializable {
 	private String id;
 	//创建用户ID
 	private String createUserId;
+	//选票
+	private String piao;
 	//选项ID
 	private String questionTopicOptionId;
+	//选项
+	private String optionContent;
 	//创建时间
 	private Date createTime;
 	//题干ID
 	private String questionTopicId;
+	//题干
+	private String questionContent;
 	//创建用户名称
 	private String createUserName;
 	//调查问卷ID
 	private String surverQuestionId;
+
+	public String getPiao() {
+		return piao;
+	}
+
+	public void setPiao(String piao) {
+		this.piao = piao;
+	}
+
+	public String getOptionContent() {
+		return optionContent;
+	}
+
+	public void setOptionContent(String optionContent) {
+		this.optionContent = optionContent;
+	}
+
+	public String getQuestionContent() {
+		return questionContent;
+	}
+
+	public void setQuestionContent(String questionContent) {
+		this.questionContent = questionContent;
+	}
 
 	/**
 	 * 设置：主键ID

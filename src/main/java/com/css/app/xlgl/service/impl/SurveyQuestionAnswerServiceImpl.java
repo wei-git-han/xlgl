@@ -26,6 +26,15 @@ public class SurveyQuestionAnswerServiceImpl implements SurveyQuestionAnswerServ
 	public List<SurveyQuestionAnswer> queryList(Map<String, Object> map){
 		return surveyQuestionAnswerDao.queryList(map);
 	}
+
+	@Override
+	public List<SurveyQuestionAnswer> queryCountAnswerList(Map<String, Object> map){
+		return surveyQuestionAnswerDao.queryCountAnswerList(map);
+	}
+	@Override
+	public List<SurveyQuestionAnswer> queryCountOptionList(Map<String, Object> map){
+		return surveyQuestionAnswerDao.queryCountOptionList(map);
+	}
 	
 	@Override
 	public void save(SurveyQuestionAnswer surveyQuestionAnswer){

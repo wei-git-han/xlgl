@@ -17,6 +17,10 @@ public interface SurveyQuestionAnswerService {
 	SurveyQuestionAnswer queryObject(String id);
 	
 	List<SurveyQuestionAnswer> queryList(Map<String, Object> map);
+
+	List<SurveyQuestionAnswer> queryCountAnswerList(Map<String, Object> map);
+
+	List<SurveyQuestionAnswer> queryCountOptionList(Map<String, Object> map);
 	
 	void save(SurveyQuestionAnswer surveyQuestionAnswer);
 	
