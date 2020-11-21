@@ -25,4 +25,6 @@ public interface SurveyQuestionExtendInfoService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+
+	List<SurveyQuestionExtendInfo> findByFilter(String surveyQuestionId);
 }

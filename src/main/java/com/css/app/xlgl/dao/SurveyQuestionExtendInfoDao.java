@@ -2,7 +2,10 @@ package com.css.app.xlgl.dao;
 
 import com.css.app.xlgl.entity.SurveyQuestionExtendInfo;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import com.css.base.dao.BaseDao;
 
@@ -15,5 +18,8 @@ import com.css.base.dao.BaseDao;
  */
 @Mapper
 public interface SurveyQuestionExtendInfoDao extends BaseDao<SurveyQuestionExtendInfo> {
+
+	@Select("select * from SURVEY_QUESTION_EXTEND_INFO where SURVEY_QUESTION_ID = #{0} ")
+	List<SurveyQuestionExtendInfo> findByFilter(String surveyQuestionId);
 	
 }
