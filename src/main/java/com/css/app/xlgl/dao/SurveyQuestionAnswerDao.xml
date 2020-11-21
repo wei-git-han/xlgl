@@ -15,11 +15,11 @@
 	</select>
 
 	<select id="queryCountAnswerList" resultType="com.css.app.xlgl.entity.SurveyQuestionAnswer">
-		select agswer.*,topic.QUESTION_CONTENT  from ( select SURVER_QUESTION_ID,QUESTION_TOPIC_ID from SURVEY_QUESTION_ANSWER
+		select topic.*,agswer.zong  from ( select count(*) zong,SURVER_QUESTION_ID,QUESTION_TOPIC_ID from SURVEY_QUESTION_ANSWER
 		group by SURVER_QUESTION_ID,QUESTION_TOPIC_ID) agswer left join SURVEY_QUESTION_TOPIC topic on agswer.QUESTION_TOPIC_ID = topic.id
 	</select>
 
-	<select id="queryCountOptionList" resultType="com.css.app.xlgl.entity.SurveyQuestionAnswer">
+	<select id="queryCountOptionList" resultType="com.css.app.xlgl.entity.SurveyQuestionTopic">
 		select agswer.*,OPTION_CONTENT from ( select count(*) piao,SURVER_QUESTION_ID,QUESTION_TOPIC_ID,QUESTION_TOPIC_OPTION_ID from SURVEY_QUESTION_ANSWER
 		group by SURVER_QUESTION_ID,QUESTION_TOPIC_OPTION_ID,QUESTION_TOPIC_ID ) agswer left join SURVEY_QUESTION_TOPIC_OPTION topopic
 		on agswer.QUESTION_TOPIC_OPTION_ID = topopic.id  where 1=1

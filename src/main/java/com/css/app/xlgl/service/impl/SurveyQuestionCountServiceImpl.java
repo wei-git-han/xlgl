@@ -3,6 +3,7 @@ package com.css.app.xlgl.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.apporgan.dao.BaseAppUserDao;
+import com.css.app.xlgl.dao.SurveyQuestionAnswerDao;
 import com.css.app.xlgl.dao.SurveyQuestionCountDao;
 import com.css.app.xlgl.dao.SurveyQuestionDao;
 import com.css.app.xlgl.entity.*;
@@ -31,16 +32,18 @@ public class SurveyQuestionCountServiceImpl implements SurveyQuestionCountServic
 	private SurveyQuestionExtendInfoService surveyQuestionExtendInfoService;
 	@Autowired
 	private BaseAppUserDao baseAppUserDao;
+	@Autowired
+	private SurveyQuestionAnswerDao surveyQuestionAnswerDao;
 	@Override
 	public List<SurveyCountQuestion> queryTopList(){
 		return surveyQuestionCountDao.queryTopList();
 	}
 	@Override
-	public JSONObject querySurveyQuestionCountList(String serveyQuestionId,String ids){
-		Map<String, Object> map = new HashMap<>();
+	public JSONObject querySurveyQuestionCountList(String serveyQuestionId,String sex,String olds,String area){
+
 		//top
 		List<SurveyCountQuestion> surveyCountQuestion = surveyQuestionCountDao.queryTopList();
-		int total = baseAppUserDao.queryTotal(map);
+		int total = baseAppUserDao.queryTotal(null);
 		SurveyQuestion surveyQuestion = surveyQuestionDao.queryObject(serveyQuestionId);
 		JSONObject questionObject = new JSONObject();
 		questionObject.put("surveyName", surveyQuestion.getSurveyName());
@@ -54,6 +57,11 @@ public class SurveyQuestionCountServiceImpl implements SurveyQuestionCountServic
 		questionObject.put("endTime", surveyCountQuestion.get(0).getEndTime());
 		JSONArray questionArray = new JSONArray();
 		List<SurveyQuestionTopic> topicsList = surveyQuestionTopicService.queryTopicListByQuestionId(surveyQuestion.getId());
+//		List<SurveyQuestionTopic> topicsList = surveyQuestionAnswerDao.queryCountOptionList(surveyQuestion.getId());
+		Map<String, Object> map = new HashMap<>();
+		map.put("sex",sex);
+		map.put("olds",olds);
+		map.put("area",area);
 		topicsList.forEach(
 				e -> {
 					JSONObject topicObject = new JSONObject();
@@ -61,11 +69,12 @@ public class SurveyQuestionCountServiceImpl implements SurveyQuestionCountServic
 					topicObject.put("questionContent",e.getQuestionContent());
 					topicObject.put("questionTopicTypeId",e.getQuestionTopicTypeId());
 					topicObject.put("questionTopicTypeName",e.getQuestionTopicTypeName());
-					List<SurveyQuestionTopicOption> optionsList = surveyQuestionTopicOptionService.queryCountOptionList(e.getId());
+					List<SurveyQuestionTopicOption> optionsList = surveyQuestionTopicOptionService.queryCountOptionList(map);
 					for(SurveyQuestionTopicOption opt : optionsList){
 						BigDecimal piao = new BigDecimal(opt.getPiao());
 						BigDecimal zong = new BigDecimal(total);
-						BigDecimal lv = piao.divide(zong,0, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
+						BigDecimal lv = piao.divide(zong,2, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
+						String wcls = String.valueOf(lv).substring(0,String.valueOf(lv).length()-2);
 						String lvs = String.valueOf(lv);
 						opt.setBili(lvs);
 					}

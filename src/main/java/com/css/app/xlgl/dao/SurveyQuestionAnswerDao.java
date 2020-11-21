@@ -4,6 +4,7 @@ import com.css.app.xlgl.entity.SurveyQuestionAnswer;
 
 import java.util.List;
 
+import com.css.app.xlgl.entity.SurveyQuestionTopic;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -25,5 +26,5 @@ public interface SurveyQuestionAnswerDao extends BaseDao<SurveyQuestionAnswer> {
 	List<SurveyQuestionAnswer> isSave(String surverQuestionId, String userId);
 
     List<SurveyQuestionAnswer> queryCountAnswerList(Map<String, Object> map);
-    List<SurveyQuestionAnswer> queryCountOptionList(Map<String, Object> map);
+    List<SurveyQuestionTopic> queryCountOptionList(String id);
 }

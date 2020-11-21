@@ -1,5 +1,6 @@
 package com.css.app.xlgl.service.impl;
 
+import com.css.app.xlgl.entity.SurveyQuestionTopic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,8 +42,8 @@ public class SurveyQuestionAnswerServiceImpl implements SurveyQuestionAnswerServ
 		return surveyQuestionAnswerDao.queryCountAnswerList(map);
 	}
 	@Override
-	public List<SurveyQuestionAnswer> queryCountOptionList(Map<String, Object> map){
-		return surveyQuestionAnswerDao.queryCountOptionList(map);
+	public List<SurveyQuestionTopic> queryCountOptionList(String id){
+		return surveyQuestionAnswerDao.queryCountOptionList(id);
 	}
 	
 	@Override

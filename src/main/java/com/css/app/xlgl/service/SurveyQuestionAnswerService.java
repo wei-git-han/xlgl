@@ -1,6 +1,7 @@
 package com.css.app.xlgl.service;
 
 import com.css.app.xlgl.entity.SurveyQuestionAnswer;
+import com.css.app.xlgl.entity.SurveyQuestionTopic;
 
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ public interface SurveyQuestionAnswerService {
 
 	List<SurveyQuestionAnswer> queryCountAnswerList(Map<String, Object> map);
 
-	List<SurveyQuestionAnswer> queryCountOptionList(Map<String, Object> map);
+	List<SurveyQuestionTopic> queryCountOptionList(String id);
 	
 	void save(SurveyQuestionAnswer surveyQuestionAnswer);
 	

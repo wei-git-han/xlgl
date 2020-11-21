@@ -19,8 +19,6 @@ public class SurveyQuestionAnswer implements Serializable {
 	private String id;
 	//创建用户ID
 	private String createUserId;
-	//选票
-	private String piao;
 	//选项ID
 	private String questionTopicOptionId;
 	//选项
@@ -36,12 +34,14 @@ public class SurveyQuestionAnswer implements Serializable {
 	//调查问卷ID
 	private String surverQuestionId;
 
-	public String getPiao() {
-		return piao;
+	private String zong;
+
+	public String getZong() {
+		return zong;
 	}
 
-	public void setPiao(String piao) {
-		this.piao = piao;
+	public void setZong(String zong) {
+		this.zong = zong;
 	}
 
 	public String getOptionContent() {

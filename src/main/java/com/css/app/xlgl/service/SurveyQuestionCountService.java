@@ -16,5 +16,5 @@ import java.util.Map;
  */
 public interface SurveyQuestionCountService {
 	List<SurveyCountQuestion> queryTopList();
-	JSONObject querySurveyQuestionCountList(String serveyQuestionId,String ids);
+	JSONObject querySurveyQuestionCountList(String serveyQuestionId,String sex,String olds,String area);
 }
