@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 
-@Service("surveyQuestionService")
+@Service("SurveyQuestionCountService")
 public class SurveyQuestionCountServiceImpl implements SurveyQuestionCountService {
 	@Autowired
 	private SurveyQuestionCountDao surveyQuestionCountDao;
