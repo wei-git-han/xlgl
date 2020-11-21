@@ -56,6 +56,9 @@
 		 group by create_user_id,QUESTION_TOPIC_ID,QUESTION_TOPIC_OPTION_ID)
 		group by SURVER_QUESTION_ID,QUESTION_TOPIC_OPTION_ID,QUESTION_TOPIC_ID ) agswer left join SURVEY_QUESTION_TOPIC_OPTION topopic
 		on agswer.QUESTION_TOPIC_OPTION_ID = topopic.id  where id is not null
+		<if test="questionTopicId!=null and questionTopicId!='' ">
+			and agswer.QUESTION_TOPIC_ID = #{questionTopicId}
+		</if>
 		order by option_sequence
 	</select>
 

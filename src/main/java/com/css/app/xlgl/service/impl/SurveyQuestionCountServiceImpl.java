@@ -65,10 +65,7 @@ public class SurveyQuestionCountServiceImpl implements SurveyQuestionCountServic
 		JSONArray questionArray = new JSONArray();
 //		List<SurveyQuestionTopic> topicsList = surveyQuestionTopicService.queryTopicListByQuestionId(surveyQuestion.getId());
 		List<SurveyQuestionTopic> topicsList = surveyQuestionAnswerDao.queryCountAnswerList(surveyQuestion.getId());
-		Map<String, Object> map = new HashMap<>();
-		map.put("sex",sex);
-		map.put("olds",olds);
-		map.put("area",area);
+
 		topicsList.forEach(
 				e -> {
 					JSONObject topicObject = new JSONObject();
@@ -76,6 +73,11 @@ public class SurveyQuestionCountServiceImpl implements SurveyQuestionCountServic
 					topicObject.put("questionContent",e.getQuestionContent());
 					topicObject.put("questionTopicTypeId",e.getQuestionTopicTypeId());
 					topicObject.put("questionTopicTypeName",e.getQuestionTopicTypeName());
+					Map<String, Object> map = new HashMap<>();
+					map.put("sex",sex);
+					map.put("olds",olds);
+					map.put("area",area);
+					map.put("questionTopicId",e.getId());
 					List<SurveyQuestionTopicOption> optionsList = surveyQuestionTopicOptionService.queryCountOptionList(map);
 					for(SurveyQuestionTopicOption opt : optionsList){
 						BigDecimal piao = new BigDecimal(opt.getPiao());
