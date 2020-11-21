@@ -2,7 +2,10 @@ package com.css.app.xlgl.dao;
 
 import com.css.app.xlgl.entity.SurveyQuestionAnswer;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import com.css.base.dao.BaseDao;
 
@@ -15,5 +18,8 @@ import com.css.base.dao.BaseDao;
  */
 @Mapper
 public interface SurveyQuestionAnswerDao extends BaseDao<SurveyQuestionAnswer> {
+
+	@Select("select * from SURVEY_QUESTION_ANSWER where SURVER_QUESTION_ID = #{0} and CREATE_USER_ID = #{1} ")
+	List<SurveyQuestionAnswer> isSave(String surverQuestionId, String userId);
 	
 }
