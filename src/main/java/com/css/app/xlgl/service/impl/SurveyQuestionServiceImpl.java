@@ -72,7 +72,7 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService {
 
 	@Override
 	public List<SurveyQuestion> surveyQuestionList(Map<String, Object> map){
-        List<SurveyQuestion> surveyQuestions = surveyQuestionDao.queryList(map);
+        List<SurveyQuestion> surveyQuestions = surveyQuestionDao.surveyQuestionList(map);
         return surveyQuestions;
 	}
 

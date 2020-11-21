@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -69,12 +70,18 @@ public class SurveyQuestionController {
 	 */
 	@ResponseBody
 	@RequestMapping("/surveyQuestionList")
-	public void surveyQuestionList(HttpServletRequest request,  Integer page, Integer limit){
+	public void surveyQuestionList(Integer page, Integer limit, String title) {
 		Map<String, Object> map = new HashMap<>();
-		//PageHelper.startPage(page, limit);
-		//查询列表数据
-		List<SurveyQuestion> surveyQuestionList = surveyQuestionService.surveyQuestionList(map);
-		Response.json("surveyQuestionList",surveyQuestionList);
+		map.put("title", title);
+		PageHelper.startPage(page, limit);
+		// 查询列表数据
+		List<SurveyQuestion> xlglWarTacticList = surveyQuestionService.surveyQuestionList(map);;
+		PageUtils pageUtil = new PageUtils(xlglWarTacticList);
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("rows", xlglWarTacticList);
+		result.put("page", pageUtil.getCurrPage());
+		result.put("total", pageUtil.getTotalCount());
+		Response.json(result);
 	}
 
 	/**
