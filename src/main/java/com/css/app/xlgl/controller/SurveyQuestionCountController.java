@@ -1,27 +1,17 @@
 package com.css.app.xlgl.controller;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.apporgan.service.BaseAppUserService;
-import com.css.app.xlgl.entity.SurveyCountQuestion;
-import com.css.app.xlgl.entity.SurveyQuestion;
-import com.css.app.xlgl.entity.SurveyQuestionAnswer;
-import com.css.app.xlgl.entity.SurveyQuestionTopicOption;
 import com.css.app.xlgl.service.SurveyQuestionAnswerService;
 import com.css.app.xlgl.service.SurveyQuestionCountService;
-import com.css.app.xlgl.service.SurveyQuestionService;
-import com.css.base.utils.PageUtils;
 import com.css.base.utils.Response;
-import com.github.pagehelper.PageHelper;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+@RestController
+@RequestMapping("app/surverycount")
 public class SurveyQuestionCountController {
     @Autowired
     private SurveyQuestionCountService surveyQuestionCountService;
@@ -36,8 +26,8 @@ public class SurveyQuestionCountController {
      */
     @ResponseBody
     @RequestMapping("/countList")
-    public void countList(String serveyQuestionId,String ids){
-        JSONObject surveyQuestionList = surveyQuestionCountService.querySurveyQuestionCountList(serveyQuestionId,ids);
+    public void countList(String serveyQuestionId,String sex,String olds,String area){
+        JSONObject surveyQuestionList = surveyQuestionCountService.querySurveyQuestionCountList(serveyQuestionId,sex,olds,area);
         Response.json("surveyQuestionList",surveyQuestionList);
 //        Map<String, Object> map = new HashMap<>();
 //        JSONObject result = new JSONObject();
