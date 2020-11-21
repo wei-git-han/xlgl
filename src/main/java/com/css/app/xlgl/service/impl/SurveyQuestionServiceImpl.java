@@ -13,6 +13,7 @@ import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +74,16 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService {
 	@Override
 	public List<SurveyQuestion> surveyQuestionList(Map<String, Object> map){
         List<SurveyQuestion> surveyQuestions = surveyQuestionDao.surveyQuestionList(map);
+        surveyQuestions.forEach(
+                e -> {
+                    Date endTime = e.getEndTime();
+                    Date date = new Date();
+                    if(date.after(endTime)){
+                        e.setFillFlag("1");
+                    }
+                }
+
+        );
         return surveyQuestions;
 	}
 
