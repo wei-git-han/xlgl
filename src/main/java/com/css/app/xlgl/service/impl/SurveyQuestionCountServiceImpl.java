@@ -13,10 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Service("SurveyQuestionCountService")
@@ -49,8 +46,6 @@ public class SurveyQuestionCountServiceImpl implements SurveyQuestionCountServic
 		JSONObject questionObject = new JSONObject();
 		questionObject.put("surveyName", surveyQuestion.getSurveyName());
 		questionObject.put("remork", surveyQuestion.getRemark());
-		List<SurveyQuestionExtendInfo> surveyQuestionExtendInfos = surveyQuestionExtendInfoService.queryList(null);
-		questionObject.put("userArray", surveyQuestionExtendInfos);
 		int shouji = Integer.valueOf(surveyCountQuestion.get(0).getCount());
 		questionObject.put("shouji", shouji);
 		questionObject.put("weixie", total - shouji);
@@ -71,6 +66,7 @@ public class SurveyQuestionCountServiceImpl implements SurveyQuestionCountServic
 					JSONObject topicObject = new JSONObject();
 					topicObject.put("topicId",e.getId());
 					topicObject.put("questionContent",e.getQuestionContent());
+
 					topicObject.put("questionTopicTypeId",e.getQuestionTopicTypeId());
 					topicObject.put("questionTopicTypeName",e.getQuestionTopicTypeName());
 					Map<String, Object> map = new HashMap<>();
@@ -80,6 +76,8 @@ public class SurveyQuestionCountServiceImpl implements SurveyQuestionCountServic
 					map.put("questionTopicId",e.getId());
 					List<SurveyQuestionTopicOption> optionsList = surveyQuestionTopicOptionService.queryCountOptionList(map);
 					for(SurveyQuestionTopicOption opt : optionsList){
+						SurveyCountQuestionExport countQuestionExport = new SurveyCountQuestionExport();
+						countQuestionExport.setQuestionContent(e.getQuestionContent());
 						BigDecimal piao = new BigDecimal(opt.getPiao());
 						BigDecimal zong = new BigDecimal(e.getZong());
 						BigDecimal lv = piao.divide(zong,2, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
@@ -93,5 +91,39 @@ public class SurveyQuestionCountServiceImpl implements SurveyQuestionCountServic
 		);
 		questionObject.put("questionArray", questionArray);
 		return questionObject;
+	}
+
+	@Override
+	public List<SurveyCountQuestionExport> querySurveyExportList(String serveyQuestionId,String sex,String olds,String area){
+		List<SurveyQuestionTopic> topicsList = surveyQuestionAnswerDao.queryCountAnswerList(serveyQuestionId);
+		List<SurveyCountQuestionExport> surveyCountQuestionExportList = new ArrayList<SurveyCountQuestionExport>();
+		topicsList.forEach(
+				e -> {
+					Map<String, Object> map = new HashMap<>();
+					map.put("sex",sex);
+					map.put("olds",olds);
+					map.put("area",area);
+					map.put("questionTopicId",e.getId());
+					List<SurveyQuestionTopicOption> optionsList = surveyQuestionTopicOptionService.queryCountOptionList(map);
+					for(SurveyQuestionTopicOption opt : optionsList){
+						SurveyCountQuestionExport countQuestionExport = new SurveyCountQuestionExport();
+						countQuestionExport.setQuestionContent(e.getQuestionContent());
+						countQuestionExport.setQuestionContentId(e.getId());
+						countQuestionExport.setOptionContent(opt.getOptionContent());
+						countQuestionExport.setCountNum(opt.getPiao());
+
+						//计算比率
+						BigDecimal piao = new BigDecimal(opt.getPiao());
+						BigDecimal zong = new BigDecimal(e.getZong());
+						BigDecimal lv = piao.divide(zong,2, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
+						String wcls = String.valueOf(lv).substring(0,String.valueOf(lv).length()-3);
+						String lvs = String.valueOf(wcls);
+						opt.setBili(lvs);
+						countQuestionExport.setCountPercentage(lvs);
+						surveyCountQuestionExportList.add(countQuestionExport);
+					}
+				}
+		);
+		return surveyCountQuestionExportList;
 	}
 }

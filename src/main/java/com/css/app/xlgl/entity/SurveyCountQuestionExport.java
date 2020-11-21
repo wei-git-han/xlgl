@@ -7,13 +7,23 @@ public class SurveyCountQuestionExport {
 	
 	// 题干名称
 	private String questionContent;
+	// 题干名称Id
+	private String questionContentId;
 	// 选项名称
 	private String optionContent;
 	// 票数
 	private String countNum;
 	// 百分比
 	private String countPercentage;
-	
+
+	public String getQuestionContentId() {
+		return questionContentId;
+	}
+
+	public void setQuestionContentId(String questionContentId) {
+		this.questionContentId = questionContentId;
+	}
+
 	public String getQuestionContent() {
 		return questionContent;
 	}

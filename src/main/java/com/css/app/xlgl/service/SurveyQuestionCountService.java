@@ -2,6 +2,7 @@ package com.css.app.xlgl.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.css.app.xlgl.entity.SurveyCountQuestion;
+import com.css.app.xlgl.entity.SurveyCountQuestionExport;
 import com.css.app.xlgl.entity.SurveyQuestion;
 
 import java.util.List;
@@ -17,4 +18,5 @@ import java.util.Map;
 public interface SurveyQuestionCountService {
 	List<SurveyCountQuestion> queryTopList();
 	JSONObject querySurveyQuestionCountList(String serveyQuestionId,String sex,String olds,String area);
+	List<SurveyCountQuestionExport> querySurveyExportList(String serveyQuestionId,String sex,String olds,String area);
 }

@@ -29,41 +29,5 @@ public class SurveyQuestionCountController {
     public void countList(String serveyQuestionId,String sex,String olds,String area){
         JSONObject surveyQuestionList = surveyQuestionCountService.querySurveyQuestionCountList(serveyQuestionId,sex,olds,area);
         Response.json("surveyQuestionList",surveyQuestionList);
-//        Map<String, Object> map = new HashMap<>();
-//        JSONObject result = new JSONObject();
-//        JSONArray jsons = new JSONArray();
-//        JSONObject json = new JSONObject();
-//
-        //top
-//        List<SurveyCountQuestion> surveyCountQuestion = surveyQuestionCountService.queryTopList();
-//        int count = baseAppUserService.queryTotal(map);
-//
-//        if(surveyCountQuestion != null && surveyCountQuestion.size()>0){
-//            int shouji = Integer.valueOf(surveyCountQuestion.get(0).getCount());
-//            json.put("shouji", shouji);
-//            json.put("weixie", count - shouji);
-//            json.put("startTime", surveyCountQuestion.get(0).getStartTime());
-//            json.put("endTime", surveyCountQuestion.get(0).getEndTime());
-//            jsons.add(json);
-//            result.put("top", jsons);
-//            //题目
-//            List<SurveyQuestionAnswer> surveyQuestionList = surveyQuestionAnswerService.queryCountAnswerList(map);
-//
-//            for(SurveyQuestionAnswer anser : surveyQuestionList){
-//                json = new JSONObject();
-//                json.put("timu",anser.getQuestionContent());
-//                //选项内容
-//                List<SurveyQuestionAnswer> surveyOptionList = surveyQuestionAnswerService.queryCountOptionList(map);
-//                for(SurveyQuestionAnswer option : surveyOptionList){
-//                    JSONArray xuxiang = new JSONArray();
-//                    JSONObject xu = new JSONObject();
-//                    xu.put("","");
-//                    json.put("chirld",xuxiang);
-//                }
-//            }
-//        }
-
-
-//        Response.json(result);
     }
 }
