@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.SurveyQuestionTopicDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.SurveyQuestionTopic">
+		select * from SURVEY_QUESTION_TOPIC where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.SurveyQuestionTopic">
+		select * from SURVEY_QUESTION_TOPIC 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from SURVEY_QUESTION_TOPIC 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.SurveyQuestionTopic">
+		insert into SURVEY_QUESTION_TOPIC
+		(
+			"ID", 
+			"CHOICE_BLANKS_NUMBER", 
+			"SURVEY_QUESTION_ID", 
+			"REQUIRED", 
+			"QUESTION_CONTENT", 
+			"CREATE_TIME", 
+			"QUESTION_TOPIC_TYPE_ID", 
+			"REMARK", 
+			"QUESTION_SEQUENCE"
+		)
+		values
+		(
+			#{id}, 
+			#{choiceBlanksNumber}, 
+			#{surveyQuestionId}, 
+			#{required}, 
+			#{questionContent}, 
+			#{createTime}, 
+			#{questionTopicTypeId}, 
+			#{remark}, 
+			#{questionSequence}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.SurveyQuestionTopic">
+		update SURVEY_QUESTION_TOPIC 
+		<set>
+			<if test="choiceBlanksNumber != null">"CHOICE_BLANKS_NUMBER" = #{choiceBlanksNumber}, </if>
+			<if test="surveyQuestionId != null">"SURVEY_QUESTION_ID" = #{surveyQuestionId}, </if>
+			<if test="required != null">"REQUIRED" = #{required}, </if>
+			<if test="questionContent != null">"QUESTION_CONTENT" = #{questionContent}, </if>
+			<if test="createTime != null">"CREATE_TIME" = #{createTime}, </if>
+			<if test="questionTopicTypeId != null">"QUESTION_TOPIC_TYPE_ID" = #{questionTopicTypeId}, </if>
+			<if test="remark != null">"REMARK" = #{remark}, </if>
+			<if test="questionSequence != null">"QUESTION_SEQUENCE" = #{questionSequence}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from SURVEY_QUESTION_TOPIC where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from SURVEY_QUESTION_TOPIC where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

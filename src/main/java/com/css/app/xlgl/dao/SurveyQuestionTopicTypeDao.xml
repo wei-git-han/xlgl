@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.SurveyQuestionTopicTypeDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.SurveyQuestionTopicType">
+		select * from SURVEY_QUESTION_TOPIC_TYPE where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.SurveyQuestionTopicType">
+		select * from SURVEY_QUESTION_TOPIC_TYPE 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from SURVEY_QUESTION_TOPIC_TYPE 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.SurveyQuestionTopicType">
+		insert into SURVEY_QUESTION_TOPIC_TYPE
+		(
+			"ID", 
+			"NAME"
+		)
+		values
+		(
+			#{id}, 
+			#{name}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.SurveyQuestionTopicType">
+		update SURVEY_QUESTION_TOPIC_TYPE 
+		<set>
+			<if test="name != null">"NAME" = #{name}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from SURVEY_QUESTION_TOPIC_TYPE where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from SURVEY_QUESTION_TOPIC_TYPE where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
