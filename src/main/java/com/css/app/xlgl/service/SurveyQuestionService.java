@@ -30,4 +30,6 @@ public interface SurveyQuestionService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+
+	List<SurveyQuestion> findAll();
 }

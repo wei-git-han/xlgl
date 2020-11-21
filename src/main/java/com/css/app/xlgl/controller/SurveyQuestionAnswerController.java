@@ -17,8 +17,10 @@ import com.css.base.utils.PageUtils;
 import com.github.pagehelper.PageHelper;
 import com.css.base.utils.Response;
 import com.alibaba.fastjson.JSON;
+import com.css.app.xlgl.entity.SurveyQuestion;
 import com.css.app.xlgl.entity.SurveyQuestionAnswer;
 import com.css.app.xlgl.service.SurveyQuestionAnswerService;
+import com.css.app.xlgl.service.SurveyQuestionService;
 
 
 /**
@@ -33,7 +35,8 @@ import com.css.app.xlgl.service.SurveyQuestionAnswerService;
 public class SurveyQuestionAnswerController {
 	@Autowired
 	private SurveyQuestionAnswerService surveyQuestionAnswerService;
-	
+	@Autowired
+	private SurveyQuestionService surveyQuestionService;
 	/**
 	 * 列表
 	 */
@@ -116,5 +119,24 @@ public class SurveyQuestionAnswerController {
 		
 		Response.ok();
 	}
+	@ResponseBody
+	@RequestMapping("/isSave")
+	public void isSave(){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<SurveyQuestion> question = surveyQuestionService.findAll();
+		for (SurveyQuestion surveyQuestion : question) {
+			boolean isSave = surveyQuestionAnswerService.isSave(surveyQuestion.getId(),CurrentUser.getUserId());
+			if(!isSave) {
+				map.put("code", surveyQuestion.getId());
+				map.put("msg", "您有未填写的调查问卷表");
+				break;
+			}else {
+				map.put("code", "1");
+			}
+		}
+		Response.json(map);
+	}
+	
+	
 	
 }

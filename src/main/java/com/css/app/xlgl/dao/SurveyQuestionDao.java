@@ -3,6 +3,7 @@ package com.css.app.xlgl.dao;
 import com.css.app.xlgl.entity.SurveyQuestion;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import com.css.base.dao.BaseDao;
 
@@ -20,5 +21,8 @@ import java.util.Map;
 public interface SurveyQuestionDao extends BaseDao<SurveyQuestion> {
 
     List<SurveyQuestion> surveyQuestionList(Map<String, Object> map);
+
+    @Select("select * from SURVEY_QUESTION ")
+	List<SurveyQuestion> findAll();
 
 }
