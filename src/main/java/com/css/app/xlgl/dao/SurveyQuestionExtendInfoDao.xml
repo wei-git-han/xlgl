@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.SurveyQuestionExtendInfoDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.SurveyQuestionExtendInfo">
+		select * from SURVEY_QUESTION_EXTEND_INFO where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.SurveyQuestionExtendInfo">
+		select * from SURVEY_QUESTION_EXTEND_INFO 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from SURVEY_QUESTION_EXTEND_INFO 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.SurveyQuestionExtendInfo">
+		insert into SURVEY_QUESTION_EXTEND_INFO
+		(
+			"ID", 
+			"SURVEY_QUESTION_ID", 
+			"TYPE_ID", 
+			"REMARK", 
+			"TYPE_EXTEND_NAME", 
+			"TYPE_EXTEND"
+		)
+		values
+		(
+			#{id}, 
+			#{surveyQuestionId}, 
+			#{typeId}, 
+			#{remark}, 
+			#{typeExtendName}, 
+			#{typeExtend}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.SurveyQuestionExtendInfo">
+		update SURVEY_QUESTION_EXTEND_INFO 
+		<set>
+			<if test="surveyQuestionId != null">"SURVEY_QUESTION_ID" = #{surveyQuestionId}, </if>
+			<if test="typeId != null">"TYPE_ID" = #{typeId}, </if>
+			<if test="remark != null">"REMARK" = #{remark}, </if>
+			<if test="typeExtendName != null">"TYPE_EXTEND_NAME" = #{typeExtendName}, </if>
+			<if test="typeExtend != null">"TYPE_EXTEND" = #{typeExtend}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from SURVEY_QUESTION_EXTEND_INFO where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from SURVEY_QUESTION_EXTEND_INFO where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

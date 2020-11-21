@@ -13,7 +13,16 @@
 			limit #{offset}, #{limit}
 		</if>
 	</select>
-	
+
+	<select id="queryTopicListByQuestionId" resultType="com.css.app.xlgl.entity.SurveyQuestionTopic">
+		select sqt.*, sqtt.name as questionTopicTypeName from SURVEY_QUESTION_TOPIC sqt
+        left join SURVEY_QUESTION_TOPIC_type sqtt on sqt.question_topic_type_id = sqtt.id
+		<where>
+			SURVEY_QUESTION_ID = #{surveyQuestionId}
+		</where>
+        order by question_sequence
+    </select>
+
  	<select id="queryTotal" resultType="int">
 		select count(*) from SURVEY_QUESTION_TOPIC 
 	</select>

@@ -26,7 +26,12 @@ public class SurveyQuestionTopicServiceImpl implements SurveyQuestionTopicServic
 	public List<SurveyQuestionTopic> queryList(Map<String, Object> map){
 		return surveyQuestionTopicDao.queryList(map);
 	}
-	
+
+	@Override
+	public List<SurveyQuestionTopic> queryTopicListByQuestionId(String surveyQuestionId){
+		return surveyQuestionTopicDao.queryTopicListByQuestionId(surveyQuestionId);
+	}
+
 	@Override
 	public void save(SurveyQuestionTopic surveyQuestionTopic){
 		surveyQuestionTopicDao.save(surveyQuestionTopic);

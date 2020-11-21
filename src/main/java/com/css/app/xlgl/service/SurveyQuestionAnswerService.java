@@ -29,4 +29,8 @@ public interface SurveyQuestionAnswerService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
+
+	boolean isSave(String surverQuestionId, String userId);
+
+	boolean saveAnswer(String surverQuestionId, String surveyQuestionAnswer, String extendInfoId);
 }

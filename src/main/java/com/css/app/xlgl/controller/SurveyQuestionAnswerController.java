@@ -12,10 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.stereotype.Controller;
 
+import com.css.base.utils.CurrentUser;
 import com.css.base.utils.PageUtils;
-import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 import com.css.base.utils.Response;
+import com.alibaba.fastjson.JSON;
 import com.css.app.xlgl.entity.SurveyQuestionAnswer;
 import com.css.app.xlgl.service.SurveyQuestionAnswerService;
 
@@ -28,7 +29,7 @@ import com.css.app.xlgl.service.SurveyQuestionAnswerService;
  * @date 2020-11-20 19:22:47
  */
 @Controller
-@RequestMapping("/surveyquestionanswer")
+@RequestMapping("app/xlgl/surveyquestionanswer")
 public class SurveyQuestionAnswerController {
 	@Autowired
 	private SurveyQuestionAnswerService surveyQuestionAnswerService;
@@ -64,14 +65,31 @@ public class SurveyQuestionAnswerController {
 	
 	/**
 	 * 保存
+	 * surveyQuestionAnswer 问卷答案id
+	 * extendInfoId 问卷人性别、年龄、营区信息
+	 * 
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
 	@RequiresPermissions("surveyquestionanswer:save")
-	public void save(@RequestBody SurveyQuestionAnswer surveyQuestionAnswer){
-		surveyQuestionAnswer.setId(UUIDUtils.random());
-		surveyQuestionAnswerService.save(surveyQuestionAnswer);
+	public void save(String surverQuestionId,String surveyQuestionAnswer,String extendInfoId,String userName){
+		System.out.println(surveyQuestionAnswer);
+		Map<String, Object> map = new HashMap<String, Object>();
 		
+		boolean isSave = surveyQuestionAnswerService.isSave(surverQuestionId,CurrentUser.getUserId());
+		if(isSave) {
+			map.put("code", 1);
+			map.put("msg", "保存失败，问卷调查已填写");
+			Response.json(map);
+			return ;
+		}
+		boolean issucess = surveyQuestionAnswerService.saveAnswer(surverQuestionId,surveyQuestionAnswer,extendInfoId);
+		if(!issucess) {
+			map.put("code", 1);
+			map.put("msg", "保存失败");
+			Response.json(map);
+			return;
+		}
 		Response.ok();
 	}
 	
