@@ -95,5 +95,11 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService {
 	public void deleteBatch(String[] ids){
 		surveyQuestionDao.deleteBatch(ids);
 	}
+
+	@Override
+	public List<SurveyQuestion> findAll() {
+		List<SurveyQuestion> list =surveyQuestionDao.findAll();
+		return list;
+	}
 	
 }
