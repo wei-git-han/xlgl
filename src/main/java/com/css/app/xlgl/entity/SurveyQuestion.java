@@ -33,6 +33,8 @@ public class SurveyQuestion implements Serializable {
 	private String waitFillCount;
 	//已收集数量
 	private String collectedCount;
+	//是否做过调查
+    private String fillFlag;
 
 	/**
 	 * 设置：主键ID
@@ -122,4 +124,12 @@ public class SurveyQuestion implements Serializable {
 	public void setCollectedCount(String collectedCount) {
 		this.collectedCount = collectedCount;
 	}
+
+    public String getFillFlag() {
+        return fillFlag;
+    }
+
+    public void setFillFlag(String fillFlag) {
+        this.fillFlag = fillFlag;
+    }
 }
