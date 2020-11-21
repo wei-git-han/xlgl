@@ -24,4 +24,6 @@ public interface SurveyQuestionTopicOptionDao extends BaseDao<SurveyQuestionTopi
 
     List<SurveyQuestionTopicOption> queryCountOptionList(Map<String, Object> map);
 
+    SurveyQuestionTopicOption queryCountOptionObject(Map<String, Object> map);
+
 }

@@ -81,17 +81,27 @@ public class SurveyQuestionCountServiceImpl implements SurveyQuestionCountServic
 						map.put("area",area.split(","));
 					}
 					map.put("questionTopicId",e.getId());
-					List<SurveyQuestionTopicOption> optionsList = surveyQuestionTopicOptionService.queryCountOptionList(map);
+//					List<SurveyQuestionTopicOption> optionsList = surveyQuestionTopicOptionService.queryCountOptionList(map);
+					List<SurveyQuestionTopicOption> optionsList = surveyQuestionTopicOptionService.queryOptionListByTopicId(e.getId());
 					for(SurveyQuestionTopicOption opt : optionsList){
+						map.put("questionTopicOptionId",opt.getId());
+						SurveyQuestionTopicOption options = surveyQuestionTopicOptionService.queryCountOptionObject(map);
 						SurveyCountQuestionExport countQuestionExport = new SurveyCountQuestionExport();
 						countQuestionExport.setQuestionContent(e.getQuestionContent());
-						BigDecimal piao = new BigDecimal(opt.getPiao());
-						BigDecimal zong = new BigDecimal(e.getZong());
-						BigDecimal lv = piao.divide(zong,2, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
-						String wcls = String.valueOf(lv).substring(0,String.valueOf(lv).length()-3);
-						String lvs = String.valueOf(wcls);
-						opt.setBili(lvs);
+						if(options!=null){
+							BigDecimal piao = new BigDecimal(opt.getPiao());
+							BigDecimal zong = new BigDecimal(e.getZong());
+							BigDecimal lv = piao.divide(zong,2, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
+							String wcls = String.valueOf(lv).substring(0,String.valueOf(lv).length()-3);
+							String lvs = String.valueOf(wcls);
+							opt.setBili(lvs);
+							opt.setPiao(String.valueOf(piao));
+						}else{
+							opt.setBili("0");
+							opt.setPiao("0");
+						}
 					}
+
 					topicObject.put("optionsList",optionsList);
 					questionArray.add(topicObject);
 				}
@@ -111,15 +121,30 @@ public class SurveyQuestionCountServiceImpl implements SurveyQuestionCountServic
 					map.put("olds",olds);
 					map.put("area",area);
 					map.put("questionTopicId",e.getId());
-					List<SurveyQuestionTopicOption> optionsList = surveyQuestionTopicOptionService.queryCountOptionList(map);
+					List<SurveyQuestionTopicOption> optionsList = surveyQuestionTopicOptionService.queryOptionListByTopicId(e.getId());
+//					List<SurveyQuestionTopicOption> optionsList = surveyQuestionTopicOptionService.queryCountOptionList(map);
 					for(SurveyQuestionTopicOption opt : optionsList){
 						SurveyCountQuestionExport countQuestionExport = new SurveyCountQuestionExport();
 						countQuestionExport.setQuestionContent(e.getQuestionContent());
 						countQuestionExport.setQuestionContentId(e.getId());
 						countQuestionExport.setOptionContent(opt.getOptionContent());
-						countQuestionExport.setCountNum(opt.getPiao());
 
-						//计算比率
+
+						map.put("questionTopicOptionId",opt.getId());
+						SurveyQuestionTopicOption options = surveyQuestionTopicOptionService.queryCountOptionObject(map);
+						if(options!=null){
+							BigDecimal piao = new BigDecimal(opt.getPiao());
+							BigDecimal zong = new BigDecimal(e.getZong());
+							BigDecimal lv = piao.divide(zong,2, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
+							String wcls = String.valueOf(lv).substring(0,String.valueOf(lv).length()-3);
+							String lvs = String.valueOf(wcls);
+							countQuestionExport.setCountNum(String.valueOf(piao));
+							countQuestionExport.setCountPercentage(lvs);
+						}else{
+							countQuestionExport.setCountNum("0");
+							countQuestionExport.setCountPercentage("0");
+						}
+
 						BigDecimal piao = new BigDecimal(opt.getPiao());
 						BigDecimal zong = new BigDecimal(e.getZong());
 						BigDecimal lv = piao.divide(zong,2, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
