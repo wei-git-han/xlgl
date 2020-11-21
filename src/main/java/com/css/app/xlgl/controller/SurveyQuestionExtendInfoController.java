@@ -3,6 +3,7 @@ package com.css.app.xlgl.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ import com.css.app.xlgl.service.SurveyQuestionExtendInfoService;
  * @date 2020-11-21 14:46:59
  */
 @Controller
-@RequestMapping("/surveyquestionextendinfo")
+@RequestMapping("app/xlgl/surveyquestionextendinfo")
 public class SurveyQuestionExtendInfoController {
 	@Autowired
 	private SurveyQuestionExtendInfoService surveyQuestionExtendInfoService;
@@ -60,6 +61,14 @@ public class SurveyQuestionExtendInfoController {
 	public void info(@PathVariable("id") String id){
 		SurveyQuestionExtendInfo surveyQuestionExtendInfo = surveyQuestionExtendInfoService.queryObject(id);
 		Response.json("surveyQuestionExtendInfo", surveyQuestionExtendInfo);
+	}
+	@ResponseBody
+	@RequestMapping("/filter")
+	public void filter(String surveyQuestionId){
+		
+		List<SurveyQuestionExtendInfo> list = surveyQuestionExtendInfoService.findByFilter(surveyQuestionId);
+		Map<String, List<SurveyQuestionExtendInfo>> tracking = list.stream().collect(Collectors.groupingBy(SurveyQuestionExtendInfo :: getTypeId));
+		Response.json(tracking);
 	}
 	
 	/**

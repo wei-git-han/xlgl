@@ -46,5 +46,11 @@ public class SurveyQuestionExtendInfoServiceImpl implements SurveyQuestionExtend
 	public void deleteBatch(String[] ids){
 		surveyQuestionExtendInfoDao.deleteBatch(ids);
 	}
+
+	@Override
+	public List<SurveyQuestionExtendInfo> findByFilter(String surveyQuestionId) {
+		List<SurveyQuestionExtendInfo> list = surveyQuestionExtendInfoDao.findByFilter(surveyQuestionId);
+		return list;
+	}
 	
 }
