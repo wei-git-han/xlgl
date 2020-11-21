@@ -137,7 +137,7 @@ public class SurveyQuestionCountServiceImpl implements SurveyQuestionCountServic
 							String wcls = String.valueOf(lv).substring(0,String.valueOf(lv).length()-3);
 							String lvs = String.valueOf(wcls);
 							countQuestionExport.setCountNum(String.valueOf(piao));
-							countQuestionExport.setCountPercentage(lvs);
+							countQuestionExport.setCountPercentage(lvs + "%");
 						}else{
 							countQuestionExport.setCountNum("0");
 							countQuestionExport.setCountPercentage("0");
