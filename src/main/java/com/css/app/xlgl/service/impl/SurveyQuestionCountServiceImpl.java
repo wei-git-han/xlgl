@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,9 +56,15 @@ public class SurveyQuestionCountServiceImpl implements SurveyQuestionCountServic
 		questionObject.put("weixie", total - shouji);
 		questionObject.put("startTime", surveyCountQuestion.get(0).getStartTime());
 		questionObject.put("endTime", surveyCountQuestion.get(0).getEndTime());
+		Date data = new Date();
+		String isBj = "0";
+		if(data.after(surveyCountQuestion.get(0).getEndTime())){
+			isBj = "1";
+		}
+		questionObject.put("isBj", isBj);
 		JSONArray questionArray = new JSONArray();
-		List<SurveyQuestionTopic> topicsList = surveyQuestionTopicService.queryTopicListByQuestionId(surveyQuestion.getId());
-//		List<SurveyQuestionTopic> topicsList = surveyQuestionAnswerDao.queryCountOptionList(surveyQuestion.getId());
+//		List<SurveyQuestionTopic> topicsList = surveyQuestionTopicService.queryTopicListByQuestionId(surveyQuestion.getId());
+		List<SurveyQuestionTopic> topicsList = surveyQuestionAnswerDao.queryCountAnswerList(surveyQuestion.getId());
 		Map<String, Object> map = new HashMap<>();
 		map.put("sex",sex);
 		map.put("olds",olds);
@@ -72,10 +79,10 @@ public class SurveyQuestionCountServiceImpl implements SurveyQuestionCountServic
 					List<SurveyQuestionTopicOption> optionsList = surveyQuestionTopicOptionService.queryCountOptionList(map);
 					for(SurveyQuestionTopicOption opt : optionsList){
 						BigDecimal piao = new BigDecimal(opt.getPiao());
-						BigDecimal zong = new BigDecimal(total);
+						BigDecimal zong = new BigDecimal(e.getZong());
 						BigDecimal lv = piao.divide(zong,2, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
 						String wcls = String.valueOf(lv).substring(0,String.valueOf(lv).length()-2);
-						String lvs = String.valueOf(lv);
+						String lvs = String.valueOf(wcls);
 						opt.setBili(lvs);
 					}
 					topicObject.put("optionsList",optionsList);

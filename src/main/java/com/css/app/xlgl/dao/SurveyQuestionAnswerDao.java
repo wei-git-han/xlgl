@@ -25,6 +25,6 @@ public interface SurveyQuestionAnswerDao extends BaseDao<SurveyQuestionAnswer> {
 	@Select("select * from SURVEY_QUESTION_ANSWER where SURVER_QUESTION_ID = #{0} and CREATE_USER_ID = #{1} ")
 	List<SurveyQuestionAnswer> isSave(String surverQuestionId, String userId);
 
-    List<SurveyQuestionAnswer> queryCountAnswerList(Map<String, Object> map);
+    List<SurveyQuestionTopic> queryCountAnswerList(String id);
     List<SurveyQuestionTopic> queryCountOptionList(String id);
 }

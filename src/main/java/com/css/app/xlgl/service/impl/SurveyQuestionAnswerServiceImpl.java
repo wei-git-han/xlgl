@@ -38,8 +38,8 @@ public class SurveyQuestionAnswerServiceImpl implements SurveyQuestionAnswerServ
 	}
 
 	@Override
-	public List<SurveyQuestionAnswer> queryCountAnswerList(Map<String, Object> map){
-		return surveyQuestionAnswerDao.queryCountAnswerList(map);
+	public List<SurveyQuestionTopic> queryCountAnswerList(String id){
+		return surveyQuestionAnswerDao.queryCountAnswerList(id);
 	}
 	@Override
 	public List<SurveyQuestionTopic> queryCountOptionList(String id){

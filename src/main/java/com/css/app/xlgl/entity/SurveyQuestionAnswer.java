@@ -34,16 +34,6 @@ public class SurveyQuestionAnswer implements Serializable {
 	//调查问卷ID
 	private String surverQuestionId;
 
-	private String zong;
-
-	public String getZong() {
-		return zong;
-	}
-
-	public void setZong(String zong) {
-		this.zong = zong;
-	}
-
 	public String getOptionContent() {
 		return optionContent;
 	}

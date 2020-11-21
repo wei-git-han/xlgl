@@ -33,7 +33,15 @@ public class SurveyQuestionTopic implements Serializable {
 	private String remark;
 	//题展示的题号的顺序，用于前台排序展示
 	private Integer questionSequence;
+	private String zong;
 
+	public String getZong() {
+		return zong;
+	}
+
+	public void setZong(String zong) {
+		this.zong = zong;
+	}
 
 	//题干类型名称
 	private String questionTopicTypeName;

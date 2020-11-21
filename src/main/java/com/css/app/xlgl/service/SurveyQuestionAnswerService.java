@@ -19,7 +19,7 @@ public interface SurveyQuestionAnswerService {
 	
 	List<SurveyQuestionAnswer> queryList(Map<String, Object> map);
 
-	List<SurveyQuestionAnswer> queryCountAnswerList(Map<String, Object> map);
+	List<SurveyQuestionTopic> queryCountAnswerList(String id);
 
 	List<SurveyQuestionTopic> queryCountOptionList(String id);
 	
