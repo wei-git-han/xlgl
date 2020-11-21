@@ -33,25 +33,22 @@
 		 and d.extend_info_id in('cb7fe77e-763c-c76d-a3a7-983ab7ab34a4', 'cb7fe77e-763c-c76d-a3a7-983ab7ab34a5', 'cb7fe77e-763c-c76d-a3a7-983ab7ab34a6')
 		) a where 1=1
 		<if test="sex!=null and sex!='' ">
-			a.sex in
+			and a.sex in
 			<foreach item="item" collection="sex" open="(" separator="," close=")">
 				#{item}
 			</foreach>
-			)
 		</if>
 		<if test="olds!=null and olds!='' ">
-			a.sex in
+            and a.olds in
 			<foreach item="item" collection="olds" open="(" separator="," close=")">
 				#{item}
 			</foreach>
-			)
 		</if>
 		<if test="area!=null and area!='' ">
-			a.sex in
+            and a.area in
 			<foreach item="item" collection="area" open="(" separator="," close=")">
 				#{item}
 			</foreach>
-			)
 		</if>
 		 group by create_user_id,QUESTION_TOPIC_ID,QUESTION_TOPIC_OPTION_ID)
 		group by SURVER_QUESTION_ID,QUESTION_TOPIC_OPTION_ID,QUESTION_TOPIC_ID ) agswer left join SURVEY_QUESTION_TOPIC_OPTION topopic
