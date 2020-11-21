@@ -92,15 +92,19 @@ public class SurveyQuestionAnswerServiceImpl implements SurveyQuestionAnswerServ
 				surveyQuestionExtendInfoAnswerService.save(userInfo);
 			}
 			for (SurveyQuestionAnswer option : optionList) {
-				SurveyQuestionAnswer answer = new SurveyQuestionAnswer();
-				answer.setId(UUIDUtils.random());
-				answer.setCreateTime(nowDate);
-				answer.setCreateUserId(userId);
-				answer.setCreateUserName(CurrentUser.getUsername());
-				answer.setSurverQuestionId(surverQuestionId);
-				answer.setQuestionTopicId(option.getQuestionTopicId());
-				answer.setQuestionTopicOptionId(option.getQuestionTopicOptionId());
-				surveyQuestionAnswerDao.save(answer);
+				String[] str= option.getQuestionTopicOptionId().split(",");
+				for (String id : str) {
+					SurveyQuestionAnswer answer = new SurveyQuestionAnswer();
+					answer.setId(UUIDUtils.random());
+					answer.setCreateTime(nowDate);
+					answer.setCreateUserId(userId);
+					answer.setCreateUserName(CurrentUser.getUsername());
+					answer.setSurverQuestionId(surverQuestionId);
+					answer.setQuestionTopicId(option.getQuestionTopicId());
+					answer.setQuestionTopicOptionId(id);
+					surveyQuestionAnswerDao.save(answer);
+				}
+				
 			}
 		} catch (Exception e) {
 			return false;
