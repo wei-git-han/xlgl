@@ -31,6 +31,10 @@ public class SurveyQuestionTopicOptionServiceImpl implements SurveyQuestionTopic
 	public List<SurveyQuestionTopicOption> queryOptionListByTopicId(String questionTopicId){
 		return surveyQuestionTopicOptionDao.queryOptionListByTopicId(questionTopicId);
 	}
+	@Override
+	public List<SurveyQuestionTopicOption> queryCountOptionList(String questionTopicId){
+		return surveyQuestionTopicOptionDao.queryCountOptionList(questionTopicId);
+	}
 
 	@Override
 	public void save(SurveyQuestionTopicOption surveyQuestionTopicOption){

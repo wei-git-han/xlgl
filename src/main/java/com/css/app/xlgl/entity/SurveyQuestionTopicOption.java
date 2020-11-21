@@ -27,6 +27,26 @@ public class SurveyQuestionTopicOption implements Serializable {
 	private String remark;
 	//题干表ID
 	private String questionTopicId;
+	//选票
+	private String piao;
+	//比例
+	private String bili;
+
+	public String getBili() {
+		return bili;
+	}
+
+	public void setBili(String bili) {
+		this.bili = bili;
+	}
+
+	public String getPiao() {
+		return piao;
+	}
+
+	public void setPiao(String piao) {
+		this.piao = piao;
+	}
 
 	/**
 	 * 设置：主键ID

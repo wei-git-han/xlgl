@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.SurveyQuestionDao">
+
+	<select id="queryTopList" resultType="com.css.app.xlgl.entity.SurveyQuestion">
+		select a.*,b.START_TIME,b.END_TIME from ( select count(*),SURVER_QUESTION_ID from ( select CREATE_USER_ID,SURVER_QUESTION_ID
+		from SURVEY_QUESTION_ANSWER agswer left join SURVEY_QUESTION_EXTEND_INFO_ANSWER eanswer on agswer.CREATE_USER_ID = eanswer.CURRENT_USER_ID
+		left join SURVEY_QUESTION_EXTEND_INFO extend on eanswer.EXTEND_INFO_ID = extend.id group by SURVER_QUESTION_ID,CREATE_USER_ID )
+		group by SURVER_QUESTION_ID ) a left join SURVEY_QUESTION b on a.SURVER_QUESTION_ID = b.id
+	</select>
+
+</mapper>
