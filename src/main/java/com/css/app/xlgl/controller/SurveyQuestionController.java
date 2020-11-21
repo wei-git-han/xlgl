@@ -77,7 +77,11 @@ public class SurveyQuestionController {
 		// 查询列表数据
 		List<SurveyQuestion> xlglWarTacticList = surveyQuestionService.surveyQuestionList(map);;
 		PageUtils pageUtil = new PageUtils(xlglWarTacticList);
-		Response.json("page", pageUtil);
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("rows", xlglWarTacticList);
+		result.put("page", pageUtil.getCurrPage());
+		result.put("total", pageUtil.getTotalCount());
+		Response.json(result);
 	}
 
 	/**
