@@ -37,6 +37,11 @@ public class SurveyQuestionTopicOptionServiceImpl implements SurveyQuestionTopic
 	}
 
 	@Override
+	public SurveyQuestionTopicOption queryCountOptionObject(Map<String, Object> map){
+		return surveyQuestionTopicOptionDao.queryCountOptionObject(map);
+	}
+
+	@Override
 	public void save(SurveyQuestionTopicOption surveyQuestionTopicOption){
 		surveyQuestionTopicOptionDao.save(surveyQuestionTopicOption);
 	}
