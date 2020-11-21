@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.css.app.xlgl.dao.SurveyQuestionDao">
+<mapper namespace="com.css.app.xlgl.dao.SurveyQuestionCountDao">
 
 	<select id="queryTopList" resultType="com.css.app.xlgl.entity.SurveyQuestion">
 		select a.*,b.START_TIME,b.END_TIME from ( select count(*),SURVER_QUESTION_ID from ( select CREATE_USER_ID,SURVER_QUESTION_ID
