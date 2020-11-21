@@ -18,6 +18,7 @@
 		select topic.*,agswer.zong, sqtt.name as questionTopicTypeName  from ( select count(*) zong,SURVER_QUESTION_ID,QUESTION_TOPIC_ID from SURVEY_QUESTION_ANSWER
 		group by SURVER_QUESTION_ID,QUESTION_TOPIC_ID) agswer left join SURVEY_QUESTION_TOPIC topic on agswer.QUESTION_TOPIC_ID = topic.id
 		left join SURVEY_QUESTION_TOPIC_type sqtt on topic.question_topic_type_id = sqtt.id
+		where sqtt.id !='easay' and sqtt.id !='fill_blanks'
 	</select>
 
 	<select id="queryCountOptionList" resultType="com.css.app.xlgl.entity.SurveyQuestionTopic">
