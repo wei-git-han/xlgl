@@ -4,13 +4,13 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.css.app.xlgl.service.impl.SurveyQuestionCountServiceImpl;
 import com.css.base.utils.CurrentUser;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,6 +43,8 @@ import javax.servlet.http.HttpServletResponse;
 public class SurveyQuestionController {
 	@Autowired
 	private SurveyQuestionService surveyQuestionService;
+	@Autowired
+	private SurveyQuestionCountServiceImpl surveyQuestionCountService;
 	@Value("${filePath}")
 	private String filePath;
 	/**
@@ -104,7 +106,7 @@ public class SurveyQuestionController {
 		map.put("parentId", "root");
 		List<SurveyQuestion> xlglWarTacticList = surveyQuestionService.surveyQuestionList(map);;
 		String format = new SimpleDateFormat("yyyy-MM-ddHHmmss").format(new Date());
-		String fileName = "人员管理-各单位人员情况统计表-" + format + ".xls";
+		String fileName = "军事体育训练问卷调查-" + format + ".xls";
 
 		File tempFile = new File(filePath, fileName);
 		if (tempFile.exists()) {
@@ -150,7 +152,9 @@ public class SurveyQuestionController {
 		FileOutputStream fout = null;
 		try {
 			HSSFWorkbook wb = new HSSFWorkbook();
-			HSSFSheet sheet = wb.createSheet();
+			HSSFSheet sheet = wb.createSheet("军事体育训练问卷调查");
+			HSSFCellStyle cellStyle = wb.createCellStyle();
+			cellStyle.setAlignment(HorizontalAlignment.CENTER);
 			HSSFRow row = sheet.createRow(0);
 			for (int i = 0; i < title.length; i++) {
 				HSSFCell createCell = row.createCell(i);
@@ -160,11 +164,10 @@ public class SurveyQuestionController {
 				HSSFRow rows = sheet.createRow(i);
 				HSSFCell cell0 = rows.createCell(0);// 序号
 				cell0.setCellValue(i);
+                HSSFCell cell1 = rows.createCell(1);// 题目
+                cell1.setCellValue(list.get(i - 1).getSurveyName());
 
-				HSSFCell cell1 = rows.createCell(1);// 部门名称
-				cell1.setCellValue(list.get(i - 1).getSurveyName());
-
-				HSSFCell cell2 = rows.createCell(2);// 应在位人数
+				HSSFCell cell2 = rows.createCell(2);// 选项
 				cell2.setCellValue(list.get(i - 1).getCollectedCount());
 
 				HSSFCell cell3 = rows.createCell(3);// 实际在位人数
@@ -233,5 +236,5 @@ public class SurveyQuestionController {
 		
 		Response.ok();
 	}
-	
+
 }
