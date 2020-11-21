@@ -17,7 +17,9 @@ public interface SurveyQuestionTopicOptionService {
 	SurveyQuestionTopicOption queryObject(String id);
 	
 	List<SurveyQuestionTopicOption> queryList(Map<String, Object> map);
-	
+
+	List<SurveyQuestionTopicOption> queryOptionListByTopicId(String questionTopicId);
+
 	void save(SurveyQuestionTopicOption surveyQuestionTopicOption);
 	
 	void update(SurveyQuestionTopicOption surveyQuestionTopicOption);

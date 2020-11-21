@@ -1,5 +1,6 @@
 package com.css.app.xlgl.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.css.app.xlgl.entity.SurveyQuestion;
 
 import java.util.List;
@@ -17,7 +18,11 @@ public interface SurveyQuestionService {
 	SurveyQuestion queryObject(String id);
 	
 	List<SurveyQuestion> queryList(Map<String, Object> map);
-	
+
+    JSONObject querySurveyQuestionList(String serveyQuestionId);
+
+	List<SurveyQuestion> surveyQuestionList(Map<String, Object> map);
+
 	void save(SurveyQuestion surveyQuestion);
 	
 	void update(SurveyQuestion surveyQuestion);

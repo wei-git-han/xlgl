@@ -34,6 +34,10 @@ public class SurveyQuestionTopic implements Serializable {
 	//题展示的题号的顺序，用于前台排序展示
 	private Integer questionSequence;
 
+
+	//题干类型名称
+	private String questionTopicTypeName;
+
 	/**
 	 * 设置：主键ID
 	 */
@@ -141,5 +145,13 @@ public class SurveyQuestionTopic implements Serializable {
 	 */
 	public Integer getQuestionSequence() {
 		return questionSequence;
+	}
+
+	public String getQuestionTopicTypeName() {
+		return questionTopicTypeName;
+	}
+
+	public void setQuestionTopicTypeName(String questionTopicTypeName) {
+		this.questionTopicTypeName = questionTopicTypeName;
 	}
 }

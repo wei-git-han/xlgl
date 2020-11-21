@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.SurveyQuestionExtendInfoAnswerDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.SurveyQuestionExtendInfoAnswer">
+		select * from SURVEY_QUESTION_EXTEND_INFO_ANSWER where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.SurveyQuestionExtendInfoAnswer">
+		select * from SURVEY_QUESTION_EXTEND_INFO_ANSWER 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from SURVEY_QUESTION_EXTEND_INFO_ANSWER 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.SurveyQuestionExtendInfoAnswer">
+		insert into SURVEY_QUESTION_EXTEND_INFO_ANSWER
+		(
+			"ID", 
+			"CURRENT_USER_ID", 
+			"EXTEND_INFO_ID", 
+			"CREATE_TIME"
+		)
+		values
+		(
+			#{id}, 
+			#{currentUserId}, 
+			#{extendInfoId}, 
+			#{createTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.SurveyQuestionExtendInfoAnswer">
+		update SURVEY_QUESTION_EXTEND_INFO_ANSWER 
+		<set>
+			<if test="currentUserId != null">"CURRENT_USER_ID" = #{currentUserId}, </if>
+			<if test="extendInfoId != null">"EXTEND_INFO_ID" = #{extendInfoId}, </if>
+			<if test="createTime != null">"CREATE_TIME" = #{createTime}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from SURVEY_QUESTION_EXTEND_INFO_ANSWER where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from SURVEY_QUESTION_EXTEND_INFO_ANSWER where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

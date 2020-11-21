@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.css.base.dao.BaseDao;
 
+import java.util.List;
+
 /**
  * 调查问卷题干表
  * 
@@ -15,5 +17,8 @@ import com.css.base.dao.BaseDao;
  */
 @Mapper
 public interface SurveyQuestionTopicDao extends BaseDao<SurveyQuestionTopic> {
+
+    List<SurveyQuestionTopic> queryTopicListByQuestionId(String surveyQuestionId);
+
 	
 }

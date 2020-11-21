@@ -13,7 +13,15 @@
 			limit #{offset}, #{limit}
 		</if>
 	</select>
-	
+
+	<select id="queryOptionListByTopicId" resultType="com.css.app.xlgl.entity.SurveyQuestionTopicOption">
+		select * from SURVEY_QUESTION_TOPIC_OPTION
+		<where>
+			QUESTION_TOPIC_ID = #{questionTopicId}
+		</where>
+		order by option_sequence
+	</select>
+
  	<select id="queryTotal" resultType="int">
 		select count(*) from SURVEY_QUESTION_TOPIC_OPTION 
 	</select>

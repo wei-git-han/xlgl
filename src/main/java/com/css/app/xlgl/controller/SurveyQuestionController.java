@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,8 @@ import com.css.base.utils.Response;
 import com.css.app.xlgl.entity.SurveyQuestion;
 import com.css.app.xlgl.service.SurveyQuestionService;
 
+import javax.servlet.http.HttpServletRequest;
+
 
 /**
  * 调查问卷表
@@ -28,7 +31,7 @@ import com.css.app.xlgl.service.SurveyQuestionService;
  * @date 2020-11-20 18:45:19
  */
 @Controller
-@RequestMapping("/surveyquestion")
+@RequestMapping("app/surveyquestion")
 public class SurveyQuestionController {
 	@Autowired
 	private SurveyQuestionService surveyQuestionService;
@@ -42,15 +45,38 @@ public class SurveyQuestionController {
 	public void list(Integer page, Integer limit){
 		Map<String, Object> map = new HashMap<>();
 		PageHelper.startPage(page, limit);
-		
+
 		//查询列表数据
 		List<SurveyQuestion> surveyQuestionList = surveyQuestionService.queryList(map);
-		
+
 		PageUtils pageUtil = new PageUtils(surveyQuestionList);
 		Response.json("page",pageUtil);
 	}
-	
-	
+
+	/**
+	 * 列表
+	 */
+	@ResponseBody
+	@RequestMapping("/querySurveyQuestionList")
+	public void querySurveyQuestionList(String serveyQuestionId){
+		//查询列表数据
+		JSONObject surveyQuestionList = surveyQuestionService.querySurveyQuestionList(serveyQuestionId);
+		Response.json("surveyQuestionList",surveyQuestionList);
+	}
+
+	/**
+	 * 调查列表
+	 */
+	@ResponseBody
+	@RequestMapping("/surveyQuestionList")
+	public void surveyQuestionList(HttpServletRequest request,  Integer page, Integer limit){
+		Map<String, Object> map = new HashMap<>();
+		//PageHelper.startPage(page, limit);
+		//查询列表数据
+		List<SurveyQuestion> surveyQuestionList = surveyQuestionService.surveyQuestionList(map);
+		Response.json("surveyQuestionList",surveyQuestionList);
+	}
+
 	/**
 	 * 信息
 	 */
