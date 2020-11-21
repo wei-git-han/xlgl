@@ -8,6 +8,7 @@ import com.css.app.xlgl.dao.SurveyQuestionCountDao;
 import com.css.app.xlgl.dao.SurveyQuestionDao;
 import com.css.app.xlgl.entity.*;
 import com.css.app.xlgl.service.*;
+import com.css.base.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,9 +71,15 @@ public class SurveyQuestionCountServiceImpl implements SurveyQuestionCountServic
 					topicObject.put("questionTopicTypeId",e.getQuestionTopicTypeId());
 					topicObject.put("questionTopicTypeName",e.getQuestionTopicTypeName());
 					Map<String, Object> map = new HashMap<>();
-					map.put("sex",sex);
-					map.put("olds",olds);
-					map.put("area",area);
+					if(StringUtils.isNotBlank(sex)){
+						map.put("sex",sex.split(","));
+					}
+					if(StringUtils.isNotBlank(olds)){
+						map.put("olds",olds.split(","));
+					}
+					if(StringUtils.isNotBlank(area)){
+						map.put("area",area.split(","));
+					}
 					map.put("questionTopicId",e.getId());
 					List<SurveyQuestionTopicOption> optionsList = surveyQuestionTopicOptionService.queryCountOptionList(map);
 					for(SurveyQuestionTopicOption opt : optionsList){
@@ -117,7 +124,7 @@ public class SurveyQuestionCountServiceImpl implements SurveyQuestionCountServic
 						BigDecimal zong = new BigDecimal(e.getZong());
 						BigDecimal lv = piao.divide(zong,2, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
 						String wcls = String.valueOf(lv).substring(0,String.valueOf(lv).length()-3);
-						String lvs = String.valueOf(wcls);
+						String lvs = String.valueOf(wcls + "%");
 						opt.setBili(lvs);
 						countQuestionExport.setCountPercentage(lvs);
 						surveyCountQuestionExportList.add(countQuestionExport);
