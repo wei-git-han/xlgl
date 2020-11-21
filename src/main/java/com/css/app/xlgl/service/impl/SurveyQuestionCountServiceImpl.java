@@ -128,8 +128,6 @@ public class SurveyQuestionCountServiceImpl implements SurveyQuestionCountServic
 						countQuestionExport.setQuestionContent(e.getQuestionContent());
 						countQuestionExport.setQuestionContentId(e.getId());
 						countQuestionExport.setOptionContent(opt.getOptionContent());
-
-
 						map.put("questionTopicOptionId",opt.getId());
 						SurveyQuestionTopicOption options = surveyQuestionTopicOptionService.queryCountOptionObject(map);
 						if(options!=null){
@@ -144,14 +142,6 @@ public class SurveyQuestionCountServiceImpl implements SurveyQuestionCountServic
 							countQuestionExport.setCountNum("0");
 							countQuestionExport.setCountPercentage("0");
 						}
-
-						BigDecimal piao = new BigDecimal(opt.getPiao());
-						BigDecimal zong = new BigDecimal(e.getZong());
-						BigDecimal lv = piao.divide(zong,2, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
-						String wcls = String.valueOf(lv).substring(0,String.valueOf(lv).length()-3);
-						String lvs = String.valueOf(wcls + "%");
-						opt.setBili(lvs);
-						countQuestionExport.setCountPercentage(lvs);
 						surveyCountQuestionExportList.add(countQuestionExport);
 					}
 				}
