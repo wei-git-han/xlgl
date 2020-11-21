@@ -89,7 +89,7 @@ public class SurveyQuestionCountServiceImpl implements SurveyQuestionCountServic
 						SurveyCountQuestionExport countQuestionExport = new SurveyCountQuestionExport();
 						countQuestionExport.setQuestionContent(e.getQuestionContent());
 						if(options!=null){
-							BigDecimal piao = new BigDecimal(opt.getPiao());
+							BigDecimal piao = new BigDecimal(options.getPiao());
 							BigDecimal zong = new BigDecimal(e.getZong());
 							BigDecimal lv = piao.divide(zong,2, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
 							String wcls = String.valueOf(lv).substring(0,String.valueOf(lv).length()-3);
@@ -133,7 +133,7 @@ public class SurveyQuestionCountServiceImpl implements SurveyQuestionCountServic
 						map.put("questionTopicOptionId",opt.getId());
 						SurveyQuestionTopicOption options = surveyQuestionTopicOptionService.queryCountOptionObject(map);
 						if(options!=null){
-							BigDecimal piao = new BigDecimal(opt.getPiao());
+							BigDecimal piao = new BigDecimal(options.getPiao());
 							BigDecimal zong = new BigDecimal(e.getZong());
 							BigDecimal lv = piao.divide(zong,2, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
 							String wcls = String.valueOf(lv).substring(0,String.valueOf(lv).length()-3);
