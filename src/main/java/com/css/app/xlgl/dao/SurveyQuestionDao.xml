@@ -38,7 +38,7 @@
 				sq.start_time as startTime,
 				sq.end_time as endTime,
 				sq.remark,
-				count(sqa.id) as collectedCount
+				count(distinct(sqa.CREATE_USER_ID)) as collectedCount
 			from survey_question sq
 			left join SURVEY_QUESTION_ANSWER sqa on sq.id = sqa.SURVER_QUESTION_ID
 			group by sq.id, sq.remark, sq.survey_name, sq.start_time, sq.end_time

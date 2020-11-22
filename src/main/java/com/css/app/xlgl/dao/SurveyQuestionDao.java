@@ -22,7 +22,7 @@ public interface SurveyQuestionDao extends BaseDao<SurveyQuestion> {
 
     List<SurveyQuestion> surveyQuestionList(Map<String, Object> map);
 
-    @Select("select * from SURVEY_QUESTION ")
+    @Select("select * from SURVEY_QUESTION where END_TIME > now ")
 	List<SurveyQuestion> findAll();
 
 }

@@ -117,10 +117,16 @@ public class SurveyQuestionCountServiceImpl implements SurveyQuestionCountServic
 		topicsList.forEach(
 				e -> {
 					Map<String, Object> map = new HashMap<>();
-					map.put("sex",sex);
-					map.put("olds",olds);
-					map.put("area",area);
-					map.put("questionTopicId",e.getId());
+					if(StringUtils.isNotBlank(sex)){
+						map.put("sex",sex.split(","));
+					}
+					if(StringUtils.isNotBlank(olds)){
+						map.put("olds",olds.split(","));
+					}
+					if(StringUtils.isNotBlank(area)){
+						map.put("area",area.split(","));
+					}
+					map.put("questionTopicOptionId",e.getId());
 					List<SurveyQuestionTopicOption> optionsList = surveyQuestionTopicOptionService.queryOptionListByTopicId(e.getId());
 //					List<SurveyQuestionTopicOption> optionsList = surveyQuestionTopicOptionService.queryCountOptionList(map);
 					for(SurveyQuestionTopicOption opt : optionsList){
