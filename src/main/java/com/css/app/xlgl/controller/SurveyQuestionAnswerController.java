@@ -124,6 +124,9 @@ public class SurveyQuestionAnswerController {
 	public void isSave(){
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<SurveyQuestion> question = surveyQuestionService.findAll();
+		if(question.size()==0) {
+			map.put("code", "1");
+		}
 		for (SurveyQuestion surveyQuestion : question) {
 			boolean isSave = surveyQuestionAnswerService.isSave(surveyQuestion.getId(),CurrentUser.getUserId());
 			if(!isSave) {
