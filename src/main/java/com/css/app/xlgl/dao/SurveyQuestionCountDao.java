@@ -1,5 +1,6 @@
 package com.css.app.xlgl.dao;
 
+import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.app.xlgl.entity.SurveyCountQuestion;
 import com.css.app.xlgl.entity.SurveyQuestion;
 import com.css.base.dao.BaseDao;
@@ -18,4 +19,5 @@ import java.util.Map;
 @Mapper
 public interface SurveyQuestionCountDao extends BaseDao<SurveyQuestion> {
     List<SurveyCountQuestion> queryTopList();
+    List<BaseAppUser> queryUnSjUserList();
 }

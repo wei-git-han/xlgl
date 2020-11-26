@@ -10,4 +10,16 @@
 		group by SURVER_QUESTION_ID ) a left join SURVEY_QUESTION b on a.SURVER_QUESTION_ID = b.id
 	</select>
 
+	<select id="querySjUserList" resultType="String">
+		select CREATE_USER_ID
+		from SURVEY_QUESTION_ANSWER agswer left join SURVEY_QUESTION_EXTEND_INFO_ANSWER eanswer on agswer.CREATE_USER_ID = eanswer.CURRENT_USER_ID
+		left join SURVEY_QUESTION_EXTEND_INFO extend on eanswer.EXTEND_INFO_ID = extend.id group by SURVER_QUESTION_ID,CREATE_USER_ID
+	</select>
+	<select id="queryUnSjUserList" resultType="com.css.addbase.apporgan.entity.BaseAppUser">
+		select * from BASE_APP_USER where id not in(select  CREATE_USER_ID from
+		SURVEY_QUESTION_ANSWER agswer left join SURVEY_QUESTION_EXTEND_INFO_ANSWER eanswer on
+		agswer.CREATE_USER_ID = eanswer.CURRENT_USER_ID left join SURVEY_QUESTION_EXTEND_INFO extend
+		on eanswer.EXTEND_INFO_ID = extend.id group by SURVER_QUESTION_ID, CREATE_USER_ID )
+	</select>
+
 </mapper>
