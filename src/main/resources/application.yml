@@ -123,6 +123,8 @@ csse.mircoservice.syncdepartments: /api/org/syncdepartments
 
 #数据库配置地址
 csse.dmdba.url: 10.1.150.1:5236
+time.one: 10
+time.two: 15
 
 #文件服务----------------------------------start
 #文件服务的clientId,与公文处理应用进行共用；

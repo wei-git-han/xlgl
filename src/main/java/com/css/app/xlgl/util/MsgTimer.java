@@ -34,10 +34,10 @@ public class MsgTimer implements InitializingBean {
 	private BaseAppOrgMappedService baseAppOrgMappedService;
 	@Autowired
 	private SurveyQuestionDao surveyQuestionDao;
-//	@Value("${time.one}")
-	private int timeOne = 10;
-//	@Value("${time.two}")
-	private int timeTwo = 15;
+	@Value("${time.one}")
+	private int timeOne;
+	@Value("${time.two}")
+	private int timeTwo;
 
 	public MsgTimer() {
 		
