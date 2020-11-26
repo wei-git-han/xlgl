@@ -47,31 +47,46 @@ public class MsgTimer implements InitializingBean {
 		System.out.println(new Date());
 		List<SurveyQuestion> surveyQuestions = surveyQuestionDao.queryList(null);
 		List<BaseAppUser> baseAppUsersList = surveyQuestionCountDao.queryUnSjUserList();
-		String userIds = "";
+		String id = "";
+		if(surveyQuestions!=null && surveyQuestions.size()>0){
+			id = surveyQuestions.get(0).getId();
+		}
 		if(baseAppUsersList!=null && baseAppUsersList.size()>0){
-			for(BaseAppUser user: baseAppUsersList){
-				userIds += "," + user.getId();
+			sendMsg(baseAppUsersList,id);
+		}
+	}
+	private void sendMsg(List<BaseAppUser> baseAppUsersList,String id){
+		String userIds = "";
+		int i = 0;
+		Iterator<BaseAppUser> iterator = baseAppUsersList.iterator();
+		while (iterator.hasNext()){
+			if( i == 21 ){
+				break;
 			}
-			String gwclAppId = "";
-			String gwclAppSecret = "";
-			String url="";
-			String id = "";
-			if(surveyQuestions!=null && surveyQuestions.size()>0){
-				id = surveyQuestions.get(0).getId();
-			}
-			BaseAppOrgMapped mapped = (BaseAppOrgMapped)baseAppOrgMappedService.orgMappedByOrgId("", "root", "xlgl");
-			if (mapped != null) {
-				gwclAppId = mapped.getAppId();
-				gwclAppSecret = mapped.getAppSecret();
-				url = mapped.getUrl() + "/app/index.html#/wjQuestion/index?id=" + id;
-			}
-			if(StringUtils.isNotBlank(userIds)){
-				userIds = userIds.substring(1,userIds.length());
-				System.out.println(userIds);
-				System.out.println(url);
-				msgUtil.sendMsg("您有一份调查问卷未填写，请尽快填写","您有一份调查问卷未填写，请尽快填写", url, userIds, gwclAppId,
-						gwclAppSecret, "", "", "","true");
-			}
+			BaseAppUser user = iterator.next();
+			userIds += "," + user.getId();
+			iterator.remove();
+			i++;
+		}
+		String gwclAppId = "";
+		String gwclAppSecret = "";
+		String url="";
+		BaseAppOrgMapped mapped = (BaseAppOrgMapped)baseAppOrgMappedService.orgMappedByOrgId("", "root", "xlgl");
+		if (mapped != null) {
+			gwclAppId = mapped.getAppId();
+			gwclAppSecret = mapped.getAppSecret();
+			url = "/app/index.html/?wjQuestion/index&id=" + id;
+
+		}
+		if(StringUtils.isNotBlank(userIds)){
+			userIds = userIds.substring(1,userIds.length());
+			System.out.println(userIds);
+			System.out.println(url);
+			msgUtil.sendMsg("您有一份调查问卷未填写，请尽快填写","您有一份调查问卷未填写，请尽快填写", url, userIds, gwclAppId,
+					gwclAppSecret, "", "", "","true");
+		}
+		if(baseAppUsersList.size()>0){
+			sendMsg(baseAppUsersList,id);
 		}
 	}
 	public Date addDay(Date date,int num){
@@ -88,6 +103,7 @@ public class MsgTimer implements InitializingBean {
 		calendar.set(Calendar.SECOND,0);
 		Date date = calendar.getTime();
 		if(date.before(new Date())){
+
 			date = this.addDay(date,1);
 		}
 		Timer timer = new Timer();
