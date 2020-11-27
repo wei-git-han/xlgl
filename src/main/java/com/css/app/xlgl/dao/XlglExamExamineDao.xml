@@ -134,7 +134,18 @@
 		from
 			XLGL_EXAM_MAIN_ANSWER 
 		where 
-			EXAMINE_ID = #{examineId} and STATUS = '0'
+		STATUS = '0' 
+		<if test="examineId != null and examineId !=''">
+			and EXAMINE_ID = #{examineId}
+		</if>
+		<if test="organIdList != null">
+			and ORGAN_ID in
+			<foreach item="id" collection="organIdList" open="(" separator=","
+			close=")">
+				#{id}
+			</foreach>
+		</if>
+			
 	</select>
 
 	<select id="queryVerifyList" resultType="com.css.app.xlgl.entity.XlglExamExamine">

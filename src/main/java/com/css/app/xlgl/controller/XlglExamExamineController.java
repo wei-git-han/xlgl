@@ -1,5 +1,9 @@
 package com.css.app.xlgl.controller;
 
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,6 +13,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +28,7 @@ import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
+import com.css.addbase.apporgan.util.OrgUtil;
 import com.css.app.xlgl.dao.XlglExamExamineDao;
 import com.css.app.xlgl.dto.ExamMainAnswerAnalyseDto;
 import com.css.app.xlgl.dto.XlglExamExaminetopicDto;
@@ -99,40 +106,47 @@ public class XlglExamExamineController {
 		PageUtils pageUtil = new PageUtils(xlglExamExamineList);
 		DecimalFormat format = new DecimalFormat("0.00");
 		for (XlglExamExamine xlglExamExamine : xlglExamExamineList) {
-			int queryTotal = xlglExamExamineService.findCount(xlglExamExamine.getId());// 总用户人数
+			map.put("examineId", xlglExamExamine.getId());
+			int queryTotal = xlglExamExamineService.findCount(map);// 总用户人数
 			HashMap<String, Object> mapAll = new HashMap<String, Object>();
 			Map<String, Object> mapAnswer = new HashMap<>();
 			mapAll.put("examineId", xlglExamExamine.getId());
 			mapAll.put("isNotExam", "1");
 			String number = xlglExamMainAnswerService.queryUserCount(mapAll);// 每个试卷的参考人数
 
-			// 当前用户考试状态 UserStatus 1:已参加 2开始考试  3:超时未考  4:无法考试，无成绩单	//overStatus  考试是否结束 0：没结束进行中，1：已结束已完结 2 :补考开始，99：未开始
+			// 当前用户考试状态 UserStatus 1:已参加 2开始考试 3:超时未考 4:无法考试，无成绩单 //overStatus 考试是否结束
+			// 0：没结束进行中，1：已结束已完结 2 :补考开始，99：未开始
 			mapAnswer.put("examineId", xlglExamExamine.getId());
 			mapAnswer.put("replyUserId", userId);
 			List<XlglExamMainAnswer> queryList = xlglExamMainAnswerService.queryList(mapAnswer);
 			if (queryList.size() > 0) {
 				XlglExamMainAnswer xlglExamMainAnswer = queryList.get(0);
-				if (xlglExamExamine.getOverStatus().equals("0") && xlglExamMainAnswer.getIsNotExam().equals("0") ) {
+				if (xlglExamExamine.getOverStatus().equals("0") && xlglExamMainAnswer.getIsNotExam().equals("0")) {
 					xlglExamExamine.setUserStatus("2");
-				} else if (xlglExamExamine.getOverStatus().equals("0") && xlglExamMainAnswer.getIsNotExam().equals("1") ) {
+				} else if (xlglExamExamine.getOverStatus().equals("0")
+						&& xlglExamMainAnswer.getIsNotExam().equals("1")) {
 					xlglExamExamine.setUserStatus("1");
-				} else if (xlglExamExamine.getOverStatus().equals("1") && xlglExamMainAnswer.getIsNotExam().equals("0") ) {
+				} else if (xlglExamExamine.getOverStatus().equals("1")
+						&& xlglExamMainAnswer.getIsNotExam().equals("0")) {
 					xlglExamExamine.setUserStatus("3");
-				}else if(xlglExamExamine.getOverStatus().equals("1") && xlglExamMainAnswer.getIsNotExam().equals("1")) {
+				} else if (xlglExamExamine.getOverStatus().equals("1")
+						&& xlglExamMainAnswer.getIsNotExam().equals("1")) {
 					xlglExamExamine.setUserStatus("1");
-				}else if(xlglExamExamine.getOverStatus().equals("2")&& xlglExamMainAnswer.getIsNotExam().equals("0")){
+				} else if (xlglExamExamine.getOverStatus().equals("2")
+						&& xlglExamMainAnswer.getIsNotExam().equals("0")) {
 					xlglExamExamine.setUserStatus("2");
-				}else if(xlglExamExamine.getOverStatus().equals("2")&& xlglExamMainAnswer.getIsNotExam().equals("1")) {
+				} else if (xlglExamExamine.getOverStatus().equals("2")
+						&& xlglExamMainAnswer.getIsNotExam().equals("1")) {
 					xlglExamExamine.setUserStatus("1");
-				}else if(xlglExamExamine.getOverStatus().equals("99")) {
+				} else if (xlglExamExamine.getOverStatus().equals("99")) {
 					xlglExamExamine.setUserStatus("2");
-				}else {
+				} else {
 					xlglExamExamine.setUserStatus("2");
 				}
 			} else {
 				xlglExamExamine.setUserStatus("4");
 			}
-			
+
 			// 当前考试是否发起补考
 			List<XlglExamExamineMakeup> makeupList = xlglExamExamineMakeupService.queryList(mapAnswer);
 			if (makeupList.size() > 0 && xlglExamExamine.getOverStatus().equals("2")) {
@@ -162,7 +176,8 @@ public class XlglExamExamineController {
 			// 更改状态
 			if (makeupList.size() > 0) {// 查看是否有补考，如果有补考则以补考结束时间为准
 				XlglExamExamineMakeup xlglExamExamineMakeup = makeupList.get(0);
-				if (xlglExamExamineMakeup.getMakeUpEndDate() != null && xlglExamExamineMakeup.getMakeUpStartDate() != null) {
+				if (xlglExamExamineMakeup.getMakeUpEndDate() != null
+						&& xlglExamExamineMakeup.getMakeUpStartDate() != null) {
 					xlglExamExamine.setExamineEndDate(xlglExamExamineMakeup.getMakeUpEndDate());
 					xlglExamExamine.setExamineStartDate(xlglExamExamineMakeup.getMakeUpStartDate());
 				}
@@ -207,7 +222,8 @@ public class XlglExamExamineController {
 					xlglExamExamineService.update(ex);
 				}
 			}
-			//XlglExamExamine queryObject = xlglExamExamineService.queryObject(xlglExamExamine.getId());
+			// XlglExamExamine queryObject =
+			// xlglExamExamineService.queryObject(xlglExamExamine.getId());
 		}
 		Response.json("page", pageUtil);
 	}
@@ -417,7 +433,7 @@ public class XlglExamExamineController {
 		if (queryList.size() > 0) {
 			XlglExamMainAnswer xlglExamMainAnswer = queryList.get(0);
 			jsonObject.put("MainAnswerID", xlglExamMainAnswer.getId());
-		}else {
+		} else {
 			XlglExamExamine queryObject = xlglExamExamineService.queryObject(examineId);
 			XlglExamMainAnswer xlglExamMainAnswer = new XlglExamMainAnswer();
 			String random = UUIDUtils.random();
@@ -435,7 +451,7 @@ public class XlglExamExamineController {
 			xlglExamMainAnswer.setCreateUser(CurrentUser.getUserId());
 			xlglExamMainAnswer.setUpdateUser(CurrentUser.getUserId());
 			xlglExamMainAnswerService.save(xlglExamMainAnswer);
-			jsonObject.put("MainAnswerID",random);
+			jsonObject.put("MainAnswerID", random);
 		}
 		Response.json(jsonObject);
 	}
@@ -681,7 +697,9 @@ public class XlglExamExamineController {
 						xlglExamMainAnswer.setIsNotExam("0");
 						xlglExamMainAnswer.setCreateUser(CurrentUser.getUserId());
 						xlglExamMainAnswer.setUpdateUser(CurrentUser.getUserId());
-						mainExaminelist.add(xlglExamMainAnswer);
+						if(StringUtils.isNotBlank(xlglExamMainAnswer.getOrganId()) && !xlglExamMainAnswer.getOrganId().equals("root")) {
+							mainExaminelist.add(xlglExamMainAnswer);
+						}
 						if (mainExaminelist.size() == 10) {
 							xlglExamMainAnswerService.saveBatch(mainExaminelist);
 							mainExaminelist = new ArrayList<XlglExamMainAnswer>();
@@ -728,11 +746,17 @@ public class XlglExamExamineController {
 	 */
 	@ResponseBody
 	@RequestMapping("/examineTotal")
-	public void examineTotal(String examineId) {
+	public void examineTotal(String examineId, String organId) {
 		JSONObject jsonObject = new JSONObject();
-		int queryTotal = xlglExamExamineService.findCount(examineId);// 需要参考的人数
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("examineId", examineId);
+		if (StringUtils.isNotBlank(organId)) {
+			List<BaseAppOrgan> organs = baseAppOrganService.queryList(null);
+			List<String> arrayList = new ArrayList<String>();
+			arrayList = OrgUtil.getOrganTreeList(organs, organId, true, true, arrayList);
+			map.put("organIdList", arrayList);
+		}
+		int queryTotal = xlglExamExamineService.findCount(map);// 需要参考的人数
 		map.put("isNotExam", "1");
 		map.put("status", "0");
 		String number = xlglExamMainAnswerService.queryUserCount(map);// 试卷的参考人数
@@ -763,28 +787,24 @@ public class XlglExamExamineController {
 			total1Raio = format.format(((float) total1 / numberInto) * 100);// 优秀率
 		}
 		String total2Raio;
-		if (numberInto == 0 || (total2+total1) == 0) {
+		if (numberInto == 0 || (total2 + total1) == 0) {
 			total2Raio = "0";
 		} else {
-			total2Raio = format.format((((float) total2 +(float) total1)/ numberInto) * 100);// 优良率
+			total2Raio = format.format((((float) total2 + (float) total1) / numberInto) * 100);// 优良率
 		}
 
 		String total3Raio;
-		if (numberInto == 0 || (total3+total2+total1) == 0) {
+		if (numberInto == 0 || (total3 + total2 + total1) == 0) {
 			total3Raio = "0";
 		} else {
-			total3Raio = format.format((((float) total3+(float) total2 +(float) total1) / numberInto) * 100);// 及格率
+			total3Raio = format.format((((float) total3 + (float) total2 + (float) total1) / numberInto) * 100);// 及格率
 		}
-		/*
-		 * Integer total1Raio = (total1/numberInto) *100; Integer total2Raio =
-		 * (total2/numberInto) *100; Integer total2Raio = (total3/numberInto) *100;
-		 */
-		jsonObject.put("raioAll", Float.valueOf(raio));
-		jsonObject.put("peopleNum", numberInto);
-		jsonObject.put("fillUpNum", numberIntoNot);
-		jsonObject.put("excellent", Float.valueOf(total1Raio));
-		jsonObject.put("fine", Float.valueOf(total2Raio));
-		jsonObject.put("pass", Float.valueOf(total3Raio));
+		jsonObject.put("raioAll", Float.valueOf(raio));// 参考率
+		jsonObject.put("peopleNum", numberInto);// 试卷的已考人数
+		jsonObject.put("fillUpNum", numberIntoNot);// 需要补考人数
+		jsonObject.put("excellent", Float.valueOf(total1Raio));// 优秀率
+		jsonObject.put("fine", Float.valueOf(total2Raio));// 优良率
+		jsonObject.put("pass", Float.valueOf(total3Raio));// 及格率
 		XlglExamExamine queryObject = xlglExamExamineService.queryObject(examineId);
 		jsonObject.put("examine", queryObject);
 		Response.json(jsonObject);
@@ -904,25 +924,58 @@ public class XlglExamExamineController {
 			Response.error();
 		}
 	}
+
 	/**
-	 * 局单位的组织的参考率、参考人数、待考人数、优秀率
-	 * */
+	 * 局单位的组织的参考率、参考人数、待考人数、优秀率、优良率、及格率
+	 * @param examineId 试卷的基本信息表id
+	 * @param organId  部门id  部门id为空时统计各局数据，不为空时统计某局下的处数据
+	 */
 	@ResponseBody
 	@RequestMapping("/examAnalyse")
-	public void examAnalyse(String examineId,String organId) {
+	public void examAnalyse(String examineId, String organId) {
 		JSONObject jsonObject = new JSONObject();
+		List<ExamMainAnswerAnalyseDto> list = this.getLv(examineId,organId);
+		if (list.size() > 0) {
+			jsonObject.put("code", "0");
+			jsonObject.put("msg", "success");
+			jsonObject.put("list", list);
+		} else {
+			jsonObject.put("code", "500");
+			jsonObject.put("msg", "错误!无返回数据");
+		}
+
+		Response.json(jsonObject);
+	}
+	
+	private List<ExamMainAnswerAnalyseDto> getLv(String examineId, String organId){
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("parentId", "root");
-		List<BaseAppOrgan> queryList = baseAppOrganService.queryList(map);
+		List<BaseAppOrgan> queryList = new ArrayList<BaseAppOrgan>();
+		if (StringUtils.isNotBlank(organId)) {
+			List<BaseAppOrgan> organs = baseAppOrganService.queryList(null);
+			List<String> arrayList = new ArrayList<String>();
+			arrayList = OrgUtil.getOrganTreeList(organs, organId, true, true, arrayList);
+			String[] arr = new String[arrayList.size()];
+			for (int i = 0; i < arr.length; i++) {
+				arr[i] = arrayList.get(i);
+			}
+			queryList = baseAppOrganService.queryListByIds(arr);
+		} else {
+			map.put("parentId", "root");
+			queryList = baseAppOrganService.queryList(map);
+		}
 		DecimalFormat format = new DecimalFormat("0.00");
 		ArrayList<ExamMainAnswerAnalyseDto> list = new ArrayList<ExamMainAnswerAnalyseDto>();
 		for (BaseAppOrgan baseAppOrgan : queryList) {
-			Integer fillUpNum = 0; //待考人数
-			Integer peopleNum = 0; //参考人数
-			Integer total = 0; //优秀人数
-			String excellent = ""; //优秀率
-			String raioAll = ""; //参考率
-			//传参实体
+			Integer fillUpNum = 0; // 待考人数
+			Integer peopleNum = 0; // 已(参)考人数
+			Integer total = 0; // 优秀人数
+			Integer fine = 0;// 优良人数
+			Integer pass = 0;// 及格人数
+			String excellent = ""; // 优秀率
+			String finelv = ""; // 优良率
+			String passlv = ""; // 及格率
+			String raioAll = ""; // 参考率
+			// 传参实体
 			ExamMainAnswerAnalyseDto analyseDto = new ExamMainAnswerAnalyseDto();
 			analyseDto.setOrganId(baseAppOrgan.getId());
 			analyseDto.setOrganName(baseAppOrgan.getName());
@@ -932,12 +985,18 @@ public class XlglExamExamineController {
 			List<XlglExamMainAnswer> findExamByOrganId = xlglExamMainAnswerService.findExamByOrganId(map);
 			for (XlglExamMainAnswer xlglExamMainAnswer : findExamByOrganId) {
 				// IsNotExam 考试状态 0:没考，1:考了
-				if(xlglExamMainAnswer.getIsNotExam().equals("0")) {
+				if (xlglExamMainAnswer.getIsNotExam().equals("0")) {
 					fillUpNum++;
-				}else if(xlglExamMainAnswer.getIsNotExam().equals("1")) {
-					if(StringUtils.isNotBlank(xlglExamMainAnswer.getLevel())
-							&&xlglExamMainAnswer.getLevel().equals("优秀")) {
+				} else if (xlglExamMainAnswer.getIsNotExam().equals("1")) {
+					if (StringUtils.isNotBlank(xlglExamMainAnswer.getLevel())
+							&& xlglExamMainAnswer.getLevel().equals("优秀")) {
 						total++;
+					}else if(StringUtils.isNotBlank(xlglExamMainAnswer.getLevel())
+							&& xlglExamMainAnswer.getLevel().equals("优良")) {
+						fine++;
+					}else if(StringUtils.isNotBlank(xlglExamMainAnswer.getLevel())
+							&& xlglExamMainAnswer.getLevel().equals("及格")) {
+						pass ++;
 					}
 					peopleNum++;
 				}
@@ -947,27 +1006,117 @@ public class XlglExamExamineController {
 			} else {
 				excellent = format.format(((float) total / peopleNum) * 100);// 优秀率
 			}
-			if (peopleNum == 0 ) {
+			if (peopleNum == 0 || fine == 0) {
+				finelv = "0";
+			} else {
+				finelv = format.format(((float) fine / peopleNum) * 100);// 优秀率
+			}
+			if (peopleNum == 0 || pass == 0) {
+				passlv = "0";
+			} else {
+				passlv = format.format(((float) pass / peopleNum) * 100);// 优秀率
+			}
+			if (peopleNum == 0) {
 				raioAll = "0";
 			} else {
 				raioAll = format.format(((float) peopleNum / findExamByOrganId.size()) * 100);// 参考率
 			}
-			analyseDto.setExcellent(excellent);//优秀率
-			analyseDto.setFillUpNum(fillUpNum);//待考人数
-			analyseDto.setRaioAll(raioAll);//参考率
-			analyseDto.setPeopleNum(peopleNum);	//参考人数
+			analyseDto.setExcellentlv(excellent);// 优秀率
+			analyseDto.setExcellent(total); //优秀人数
+			analyseDto.setFinelv(finelv);//优良率
+			analyseDto.setFine(fine);//优良人数
+			analyseDto.setPasslv(passlv);//及格率
+			analyseDto.setPass(pass);//及格人数
+			analyseDto.setFillUpNum(fillUpNum);// 待考人数
+			analyseDto.setRaioAll(raioAll);// 参考率
+			analyseDto.setPeopleNum(peopleNum); // 已(参)考人数
 			list.add(analyseDto);
 		}
-		if(list.size()>0) {
-			jsonObject.put("code", "0");
-			jsonObject.put("msg", "success");
-			jsonObject.put("list", list);
-		}else {
-			jsonObject.put("code", "500");
-			jsonObject.put("msg", "错误!无返回数据");
+		return list;
+	}
+	/**
+	 * 导出各局数据和已考人员或未考人员列表xls
+	 * @param type 0 ：按部门 1： 按人员
+	 * @param examineId 试卷的基本信息表id
+	 * */
+	@ResponseBody
+	@RequestMapping("/importExcel")
+	public void importExcel(HttpServletResponse response,String type,String examineId, String makeupStatus, String level,
+			String replyUserName, String organId, String isNotExam, String status, String deptId) {
+		String fileName = "";
+		InputStream is = null;
+		String[] titles = { "单位名称", "参考率", "已考人数", "待考人数", "优秀率", "优良率", "及格率" };
+		if(StringUtils.isBlank(type) && StringUtils.isBlank(deptId)) {
+			
+			fileName = "各局单位参考情况统计.xls";
+			List<ExamMainAnswerAnalyseDto> list = this.getLv(examineId, null);
+			try {
+				is = xlglExamExamineService.createExcelInfoFlie(list, titles, fileName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}else if(StringUtils.isNotBlank(type) && type.equals("0") && StringUtils.isNotBlank(deptId)) {
+			fileName = "各处单位参考情况统计.xls";
+			List<ExamMainAnswerAnalyseDto> list = this.getLv(examineId, deptId);
+			try {
+				 is = xlglExamExamineService.createExcelInfoFlie(list, titles, fileName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			};
+		}else if(StringUtils.isNotBlank(type) && type.equals("1") && StringUtils.isNotBlank(deptId)) {
+			if(StringUtils.isNotBlank(isNotExam) && isNotExam.equals("0")) {
+				String[] title = { "姓名", "部门名称"};
+				fileName = "未考人员清单.xls";
+				List<XlglExamMainAnswer> list = xlglExamMainAnswerService.getListing(examineId, makeupStatus, level, replyUserName, 
+						organId, isNotExam, status, deptId);
+				try {
+					is = xlglExamMainAnswerService.createExcelNotExam(list, title, fileName);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}else if(StringUtils.isNotBlank(isNotExam) && isNotExam.equals("1")) {
+				String[] title = { "姓名", "部门名称","成绩","考试方式","等级"};
+				fileName = "已考人员清单.xls";
+				List<XlglExamMainAnswer> list = xlglExamMainAnswerService.getListing(examineId, makeupStatus, level, replyUserName, 
+						organId, isNotExam, status, deptId);
+				try {
+					is = xlglExamMainAnswerService.createExcelNotExam(list, title, fileName);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 		}
-
-		Response.json(jsonObject);
+		try {
+			String string = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
+			response.reset();
+			response.setContentType("application/octet-stream");
+			response.setCharacterEncoding("UTF-8");
+			response.setHeader("Content-Disposition", "attachment;filename=" + string);
+			OutputStream os = response.getOutputStream();
+			if(is !=null) {
+				BufferedInputStream bis = new BufferedInputStream(is);
+				byte[] buff = new byte[1024];
+				int i = 0;
+				try {
+					while ((i = bis.read(buff)) != -1) {
+						os.write(buff, 0, i);
+						os.flush();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					Response.error();
+					return;
+				} finally {
+					bis.close();
+					os.close();
+				}
+			}
+		} catch (Exception e) {
+			Response.error();
+			e.printStackTrace();
+			return;
+		}
+		Response.ok();
 	}
 	
 }

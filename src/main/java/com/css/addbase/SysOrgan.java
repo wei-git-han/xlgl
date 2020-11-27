@@ -52,9 +52,13 @@ public class SysOrgan {
 	
 	@RequestMapping(value = "/currenttree")
 	@ResponseBody
-	public Object getDeptCurrentTree(HttpServletRequest request) {
-		String orgid = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
-		JSONObject list=  getOrganTree("root");
+	public Object getDeptCurrentTree(HttpServletRequest request,String organId) {
+		JSONObject list = new JSONObject();
+		if(StringUtils.isNotBlank(organId)) {
+			 list=  getOrganTree(organId);
+		}else {
+			 list=  getOrganTree("root");
+		}
 		JSONObject json = new JSONObject();
 		json.put("opened", true);
 		list.put("state", json);

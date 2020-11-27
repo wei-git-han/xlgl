@@ -37,6 +37,13 @@
 			<if test="status != null and status !=''">
 			  and STATUS = #{status}
 			</if>
+			<if test="deptList != null">
+			  and ORGAN_ID in
+			<foreach item="id" collection="deptList" open="(" separator=","
+			close=")">
+				#{id}
+			</foreach>
+		</if>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
@@ -47,17 +54,23 @@
 		 where 1 = 1 
 		 <if test="examineId != null and examineId != ''">
 			and EXAMINE_ID = #{examineId}
-		</if>
-		<if test="isNotExam != null and isNotExam != ''">
+		 </if>
+		 <if test="isNotExam != null and isNotExam != ''">
 			and ISNOTEXAM = #{isNotExam}
-		</if>
-		<if test="status != null and status !=''">
+		 </if>
+		 <if test="status != null and status !=''">
 			  and STATUS = #{status}
-		</if>
-		<if test="level != null and level !=''">
+		 </if>
+		 <if test="level != null and level !=''">
 			  and LEVEL = #{level}
+		 </if>
+		 <if test="organIdList != null">
+			and ORGAN_ID in
+			<foreach item="id" collection="organIdList" open="(" separator=","
+			close=")">
+				#{id}
+			</foreach>
 		</if>
-		
 	</select>
 	 
 	<insert id="save" parameterType="com.css.app.xlgl.entity.XlglExamMainAnswer">
@@ -149,6 +162,14 @@
 		<if test="status != null and status !=''">
 			  and STATUS = #{status}
 		</if>
+		<if test="organIdList != null">
+			and ORGAN_ID in
+			<foreach item="id" collection="organIdList" open="(" separator=","
+			close=")">
+				#{id}
+			</foreach>
+		</if>
+		
 	</select>
 	
 	<insert id="saveBatch" parameterType="com.css.app.xlgl.entity.XlglExamMainAnswer">
