@@ -78,7 +78,7 @@ public class XlglExamMainAnswerController {
 		if(StringUtils.isNotBlank(deptId)) {
 			List<BaseAppOrgan> organs = baseAppOrganService.queryList(null);
 			List<String> arrayList = new ArrayList<String>();
-			arrayList = OrgUtil.getOrganTreeList(organs,organId,true,true,arrayList);
+			arrayList = OrgUtil.getOrganTreeList(organs,deptId,true,true,arrayList);
 			map.put("deptList", arrayList);
 		}
 		PageHelper.startPage(page, limit);
