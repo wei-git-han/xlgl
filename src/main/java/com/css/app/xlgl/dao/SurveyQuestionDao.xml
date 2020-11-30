@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.SurveyQuestionDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.SurveyQuestion">
+		select * from SURVEY_QUESTION where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.SurveyQuestion">
+		select * from SURVEY_QUESTION 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="surveyQuestionList" resultType="com.css.app.xlgl.entity.SurveyQuestion">
+		select
+			tt.*,
+			(
+				select
+				count(bau.user_id)
+				from base_app_user bau
+				where bau.ISDELETE=0 and bau.user_id not in (select s.create_user_id from SURVEY_QUESTION_ANSWER s where s.SURVER_QUESTION_ID = tt.id)
+			) as waitFillCount,
+			case
+			when (
+				select
+				count(s.create_user_id)
+				from SURVEY_QUESTION_ANSWER s
+				where s.create_user_id = #{userId}
+			) > 0
+			then 1 else 0 end as fillFlag
+		from (
+			select
+				sq.id,
+				sq.survey_name as surveyName,
+				sq.start_time as startTime,
+				sq.end_time as endTime,
+				sq.remark,
+				count(distinct(sqa.CREATE_USER_ID)) as collectedCount
+			from survey_question sq
+			left join SURVEY_QUESTION_ANSWER sqa on sq.id = sqa.SURVER_QUESTION_ID
+			group by sq.id, sq.remark, sq.survey_name, sq.start_time, sq.end_time
+		) tt
+	</select>
+
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from SURVEY_QUESTION 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.SurveyQuestion">
+		insert into SURVEY_QUESTION
+		(
+			"ID", 
+			"SURVEY_NAME", 
+			"CREATE_TIME", 
+			"REMARK", 
+			"END_TIME", 
+			"START_TIME"
+		)
+		values
+		(
+			#{id}, 
+			#{surveyName}, 
+			#{createTime}, 
+			#{remark}, 
+			#{endTime}, 
+			#{startTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.SurveyQuestion">
+		update SURVEY_QUESTION 
+		<set>
+			<if test="surveyName != null">"SURVEY_NAME" = #{surveyName}, </if>
+			<if test="createTime != null">"CREATE_TIME" = #{createTime}, </if>
+			<if test="remark != null">"REMARK" = #{remark}, </if>
+			<if test="endTime != null">"END_TIME" = #{endTime}, </if>
+			<if test="startTime != null">"START_TIME" = #{startTime}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from SURVEY_QUESTION where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from SURVEY_QUESTION where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

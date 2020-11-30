@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.SurveyQuestionAnswerDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.SurveyQuestionAnswer">
+		select * from SURVEY_QUESTION_ANSWER where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.SurveyQuestionAnswer">
+		select * from SURVEY_QUESTION_ANSWER 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="queryCountAnswerList" resultType="com.css.app.xlgl.entity.SurveyQuestionTopic">
+		select topic.*,agswer.zong, sqtt.name as questionTopicTypeName  from ( select count(*) zong,SURVER_QUESTION_ID,QUESTION_TOPIC_ID from SURVEY_QUESTION_ANSWER
+		group by SURVER_QUESTION_ID,QUESTION_TOPIC_ID) agswer left join SURVEY_QUESTION_TOPIC topic on agswer.QUESTION_TOPIC_ID = topic.id
+		left join SURVEY_QUESTION_TOPIC_type sqtt on topic.question_topic_type_id = sqtt.id
+		where sqtt.id !='easay' and sqtt.id !='fill_blanks'
+		order by question_sequence
+	</select>
+
+	<select id="queryCountOptionList" resultType="com.css.app.xlgl.entity.SurveyQuestionTopic">
+		select agswer.*,OPTION_CONTENT from ( select count(*) piao,SURVER_QUESTION_ID,QUESTION_TOPIC_ID,QUESTION_TOPIC_OPTION_ID from SURVEY_QUESTION_ANSWER
+		group by SURVER_QUESTION_ID,QUESTION_TOPIC_OPTION_ID,QUESTION_TOPIC_ID ) agswer left join SURVEY_QUESTION_TOPIC_OPTION topopic
+		on agswer.QUESTION_TOPIC_OPTION_ID = topopic.id  where 1=1
+		<if test="questionTopicOptionId != null and questionTopicOptionId != ''">
+			 and agswer.QUESTION_TOPIC_ID = #{id}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from SURVEY_QUESTION_ANSWER 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.SurveyQuestionAnswer">
+		insert into SURVEY_QUESTION_ANSWER
+		(
+			"ID", 
+			"CREATE_USER_ID", 
+			"QUESTION_TOPIC_OPTION_ID", 
+			"CREATE_TIME", 
+			"QUESTION_TOPIC_ID", 
+			"CREATE_USER_NAME", 
+			"SURVER_QUESTION_ID"
+		)
+		values
+		(
+			#{id}, 
+			#{createUserId}, 
+			#{questionTopicOptionId}, 
+			#{createTime}, 
+			#{questionTopicId}, 
+			#{createUserName}, 
+			#{surverQuestionId}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.SurveyQuestionAnswer">
+		update SURVEY_QUESTION_ANSWER 
+		<set>
+			<if test="createUserId != null">"CREATE_USER_ID" = #{createUserId}, </if>
+			<if test="questionTopicOptionId != null">"QUESTION_TOPIC_OPTION_ID" = #{questionTopicOptionId}, </if>
+			<if test="createTime != null">"CREATE_TIME" = #{createTime}, </if>
+			<if test="questionTopicId != null">"QUESTION_TOPIC_ID" = #{questionTopicId}, </if>
+			<if test="createUserName != null">"CREATE_USER_NAME" = #{createUserName}, </if>
+			<if test="surverQuestionId != null">"SURVER_QUESTION_ID" = #{surverQuestionId}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from SURVEY_QUESTION_ANSWER where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from SURVEY_QUESTION_ANSWER where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

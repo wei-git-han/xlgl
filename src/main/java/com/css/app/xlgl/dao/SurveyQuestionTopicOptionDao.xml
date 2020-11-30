@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.SurveyQuestionTopicOptionDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.SurveyQuestionTopicOption">
+		select * from SURVEY_QUESTION_TOPIC_OPTION where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.SurveyQuestionTopicOption">
+		select * from SURVEY_QUESTION_TOPIC_OPTION 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="queryOptionListByTopicId" resultType="com.css.app.xlgl.entity.SurveyQuestionTopicOption">
+		select * from SURVEY_QUESTION_TOPIC_OPTION
+		<where>
+			QUESTION_TOPIC_ID = #{questionTopicId}
+		</where>
+		order by option_sequence
+	</select>
+
+	<select id="queryCountOptionList" resultType="com.css.app.xlgl.entity.SurveyQuestionTopicOption">
+		select topopic.*,agswer.piao from ( select count(*) piao,SURVER_QUESTION_ID,QUESTION_TOPIC_ID,QUESTION_TOPIC_OPTION_ID from SURVEY_QUESTION_ANSWER
+		where CREATE_USER_ID in
+		(select create_user_id from  ( select a.*, b.extend_info_id sex, c.extend_info_id olds, d.extend_info_id area from
+		 SURVEY_QUESTION_ANSWER a left join SURVEY_QUESTION_EXTEND_INFO_ANSWER b on a.create_user_id=b.current_user_id
+		 left join SURVEY_QUESTION_EXTEND_INFO_ANSWER c on a.create_user_id=c.current_user_id left join SURVEY_QUESTION_EXTEND_INFO_ANSWER d
+		 on a.create_user_id=d.current_user_id where b.extend_info_id in('cb7fe77e-763c-c76d-a3a7-983ab7ab34a0', 'cb7fe77e-763c-c76d-a3a7-983ab7ab34a1')
+		 and c.extend_info_id in('cb7fe77e-763c-c76d-a3a7-983ab7ab34a2', 'cb7fe77e-763c-c76d-a3a7-983ab7ab34a3')
+		 and d.extend_info_id in('cb7fe77e-763c-c76d-a3a7-983ab7ab34a4', 'cb7fe77e-763c-c76d-a3a7-983ab7ab34a5', 'cb7fe77e-763c-c76d-a3a7-983ab7ab34a6')
+		) a where 1=1
+		<if test="sex!=null and sex!='' ">
+			and a.sex in
+			<foreach item="item" collection="sex" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="olds!=null and olds!='' ">
+            and a.olds in
+			<foreach item="item" collection="olds" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="area!=null and area!='' ">
+            and a.area in
+			<foreach item="item" collection="area" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		 group by create_user_id,QUESTION_TOPIC_ID,QUESTION_TOPIC_OPTION_ID)
+		group by SURVER_QUESTION_ID,QUESTION_TOPIC_OPTION_ID,QUESTION_TOPIC_ID ) agswer left join SURVEY_QUESTION_TOPIC_OPTION topopic
+		on agswer.QUESTION_TOPIC_OPTION_ID = topopic.id  where id is not null
+		<if test="questionTopicId!=null and questionTopicId!='' ">
+			and agswer.QUESTION_TOPIC_ID = #{questionTopicId}
+		</if>
+		order by option_sequence
+	</select>
+
+    <select id="queryCountOptionObject" resultType="com.css.app.xlgl.entity.SurveyQuestionTopicOption">
+        select topopic.*,agswer.piao from ( select count(*) piao,SURVER_QUESTION_ID,QUESTION_TOPIC_ID,QUESTION_TOPIC_OPTION_ID from SURVEY_QUESTION_ANSWER
+        where CREATE_USER_ID in
+        (select create_user_id from  ( select a.*, b.extend_info_id sex, c.extend_info_id olds, d.extend_info_id area from
+        SURVEY_QUESTION_ANSWER a left join SURVEY_QUESTION_EXTEND_INFO_ANSWER b on a.create_user_id=b.current_user_id
+        left join SURVEY_QUESTION_EXTEND_INFO_ANSWER c on a.create_user_id=c.current_user_id left join SURVEY_QUESTION_EXTEND_INFO_ANSWER d
+        on a.create_user_id=d.current_user_id where b.extend_info_id in('cb7fe77e-763c-c76d-a3a7-983ab7ab34a0', 'cb7fe77e-763c-c76d-a3a7-983ab7ab34a1')
+        and c.extend_info_id in('cb7fe77e-763c-c76d-a3a7-983ab7ab34a2', 'cb7fe77e-763c-c76d-a3a7-983ab7ab34a3')
+        and d.extend_info_id in('cb7fe77e-763c-c76d-a3a7-983ab7ab34a4', 'cb7fe77e-763c-c76d-a3a7-983ab7ab34a5', 'cb7fe77e-763c-c76d-a3a7-983ab7ab34a6')
+        ) a where 1=1
+        <if test="sex!=null and sex!='' ">
+            and a.sex in
+            <foreach item="item" collection="sex" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="olds!=null and olds!='' ">
+            and a.olds in
+            <foreach item="item" collection="olds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="area!=null and area!='' ">
+            and a.area in
+            <foreach item="item" collection="area" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        group by create_user_id,QUESTION_TOPIC_ID,QUESTION_TOPIC_OPTION_ID)
+        group by SURVER_QUESTION_ID,QUESTION_TOPIC_OPTION_ID,QUESTION_TOPIC_ID ) agswer left join SURVEY_QUESTION_TOPIC_OPTION topopic
+        on agswer.QUESTION_TOPIC_OPTION_ID = topopic.id  where id is not null
+        <if test="questionTopicId!=null and questionTopicId!='' ">
+            and agswer.QUESTION_TOPIC_ID = #{questionTopicId}
+        </if>
+        <if test="questionTopicOptionId!=null and questionTopicOptionId!='' ">
+            and topopic.id = #{questionTopicOptionId}
+        </if>
+        order by option_sequence
+    </select>
+
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from SURVEY_QUESTION_TOPIC_OPTION 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.SurveyQuestionTopicOption">
+		insert into SURVEY_QUESTION_TOPIC_OPTION
+		(
+			"ID", 
+			"OPTION_SEQUENCE", 
+			"OPTION_CONTENT", 
+			"CREATE_TIME", 
+			"REMARK", 
+			"QUESTION_TOPIC_ID"
+		)
+		values
+		(
+			#{id}, 
+			#{optionSequence}, 
+			#{optionContent}, 
+			#{createTime}, 
+			#{remark}, 
+			#{questionTopicId}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.SurveyQuestionTopicOption">
+		update SURVEY_QUESTION_TOPIC_OPTION 
+		<set>
+			<if test="optionSequence != null">"OPTION_SEQUENCE" = #{optionSequence}, </if>
+			<if test="optionContent != null">"OPTION_CONTENT" = #{optionContent}, </if>
+			<if test="createTime != null">"CREATE_TIME" = #{createTime}, </if>
+			<if test="remark != null">"REMARK" = #{remark}, </if>
+			<if test="questionTopicId != null">"QUESTION_TOPIC_ID" = #{questionTopicId}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from SURVEY_QUESTION_TOPIC_OPTION where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from SURVEY_QUESTION_TOPIC_OPTION where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
