@@ -7375,7 +7375,8 @@
                 var root = UE.htmlparser(html);
                 me.filterInputRule(root);
                 html = root.toHtml();
-
+                const regExp = new RegExp('<img', 'gi')
+                html = html.replace(regExp, `<img style="max-width:100px;height:100px;"`)
                 me.body.innerHTML = (isAppendTo ? me.body.innerHTML : '') + html;
 
 
