@@ -46,9 +46,9 @@ public interface XlglExamMainAnswerService {
 	
 	List<XlglExamMainAnswer> findExamByOrganId(Map<String, Object> map);
 	
-	InputStream createExcelInfoFlie(List<XlglExamMainAnswer> list,String[] title,String fileName,JSONObject json,String totalName) throws Exception;
+	InputStream createExcelInfoFlie(List<XlglExamMainAnswer> list,String[] title,String fileName,JSONObject json,String totalName,String listName) throws Exception;
 	List<XlglExamMainAnswer> getListing(String examineId,String makeupStatus,String level,String replyUserName
 			,String organId,String isNotExam,String status,String deptId);
 	
-	InputStream	createExcelNotExam(List<XlglExamMainAnswer> list,String[] title,String fileName,JSONObject json,String totalName)throws Exception;
+	InputStream	createExcelNotExam(List<XlglExamMainAnswer> list,String[] title,String fileName,JSONObject json,String totalName,String listName)throws Exception;
 }

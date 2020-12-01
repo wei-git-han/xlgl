@@ -417,6 +417,37 @@ public class XlglExamAnswerController {
 	}
 	
 	/**
+	 * 判断用户答题是否有遗漏
+	 * @param xlglExamAnswer 前端传jsonarray,
+	 * @param mainAnswerId 成绩单id
+	 * @param status 0：考试，1：练习
+	 * @param makeupStatus  0：没补考考，1:补考了
+	 */
+	@ResponseBody
+	@RequestMapping("/getReplyLack")
+	public void getReplyLack(String xlglExamAnswer,String mainAnswerId,String status,String makeupStatus){
+		JSONObject jsonObject = new JSONObject();
+		List<XlglExamAnswer> parseArray = JSONArray.parseArray(xlglExamAnswer, XlglExamAnswer.class);
+		StringBuffer strbuffer = new StringBuffer();
+		int i = 1;
+		for (XlglExamAnswer xlglExamAnswer2 : parseArray) {
+			if(StringUtils.isBlank(xlglExamAnswer2.getReply())) {
+				strbuffer.append("第"+xlglExamAnswer2.getNumber()+"题,");
+				i++;
+			}
+		}
+		if(strbuffer!=null) {
+			strbuffer.append("等等"+i+"题未答，您确认提交试卷吗");
+		}else {
+			strbuffer.append("您确认提交试卷吗？");
+		}
+		jsonObject.put("code","0");
+		jsonObject.put("msg", strbuffer.toString());
+		Response.json(jsonObject);
+	}
+	
+	
+	/**
 	 * 用户练习考试完成保存
 	 * @param xlglExamAnswer 前端传jsonarray,
 	 * @param mainAnswerId 成绩单id

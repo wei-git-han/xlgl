@@ -1056,7 +1056,9 @@ public class XlglExamExamineController {
 			fileName = examine.getExamineName()+"考试各局单位参考情况统计.xls";
 			List<ExamMainAnswerAnalyseDto> list = this.getLv(examineId, null);
 			try {
-				is = xlglExamExamineService.createExcelInfoFlie(list, titles, fileName,total,"考试总体情况统计");
+				String totalName = examine.getExamineName()+"考试总体情况统计";
+				String listName = examine.getExamineName()+"考试总体情况各局统计";
+				is = xlglExamExamineService.createExcelInfoFlie(list, titles, fileName,total,totalName,listName);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -1065,7 +1067,9 @@ public class XlglExamExamineController {
 			fileName = examine.getExamineName()+"考试"+queryObject.getName()+"局参考情况统计.xls";
 			List<ExamMainAnswerAnalyseDto> list = this.getLv(examineId, deptId);
 			try {
-				 is = xlglExamExamineService.createExcelInfoFlie(list, titles, fileName,total,queryObject.getName()+"局参考情况统计");
+				String totalName = examine.getExamineName()+"考试"+queryObject.getName()+"局参考情况统计";
+				String listName = examine.getExamineName()+"考试"+queryObject.getName()+"局各处参考情况统计";
+				 is = xlglExamExamineService.createExcelInfoFlie(list, titles, fileName,total,totalName,listName);
 			} catch (Exception e) {
 				e.printStackTrace();
 			};
@@ -1077,7 +1081,9 @@ public class XlglExamExamineController {
 				List<XlglExamMainAnswer> list = xlglExamMainAnswerService.getListing(examineId, makeupStatus, level, replyUserName, 
 						organId, isNotExam, status, deptId);
 				try {
-					is = xlglExamMainAnswerService.createExcelNotExam(list, title, fileName,total,queryObject.getName()+"局参考情况统计");
+					String totalName = examine.getExamineName()+"考试"+queryObject.getName()+"局参考情况统计";
+					String listName = examine.getExamineName()+"考试"+queryObject.getName()+"局各处未考人员情况统计";
+					is = xlglExamMainAnswerService.createExcelNotExam(list, title, fileName,total,totalName,listName);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -1087,7 +1093,9 @@ public class XlglExamExamineController {
 				List<XlglExamMainAnswer> list = xlglExamMainAnswerService.getListing(examineId, makeupStatus, level, replyUserName, 
 						organId, isNotExam, status, deptId);
 				try {
-					is = xlglExamMainAnswerService.createExcelInfoFlie(list, title, fileName,total,queryObject.getName()+"局参考情况统计");
+					String totalName = examine.getExamineName()+"考试"+queryObject.getName()+"局参考情况统计";
+					String listName = examine.getExamineName()+"考试"+queryObject.getName()+"局各处已考人员情况统计";
+					is = xlglExamMainAnswerService.createExcelInfoFlie(list, title, fileName,total,totalName,listName);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

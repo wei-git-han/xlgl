@@ -71,7 +71,7 @@ public class XlglExamExamineServiceImpl implements XlglExamExamineService {
 	}
 
 	@Override
-	public InputStream createExcelInfoFlie(List<ExamMainAnswerAnalyseDto> list, String[] title, String fileName,JSONObject json,String totalName) throws Exception {
+	public InputStream createExcelInfoFlie(List<ExamMainAnswerAnalyseDto> list, String[] title, String fileName,JSONObject json,String totalName,String listName) throws Exception {
 		FileOutputStream fout = null;
 		String[] totalTitle = new String [] {"参考率","已考人数","待考人数","优秀率","优良率","及格率"};
 		try {
@@ -83,6 +83,9 @@ public class XlglExamExamineServiceImpl implements XlglExamExamineService {
 			HSSFSheet sheet = wb.createSheet();
 			CellRangeAddress region = new CellRangeAddress(0,0,0,6);//起始行，结束行，起始列，结束列
 			sheet.addMergedRegion(region);
+			
+			CellRangeAddress region2 = new CellRangeAddress(3,3,0,7);//起始行，结束行，起始列，结束列
+			sheet.addMergedRegion(region2);
 			
 			HSSFRow row = sheet.createRow(0);
 			HSSFCell totalCell = row.createCell(0);
@@ -120,12 +123,17 @@ public class XlglExamExamineServiceImpl implements XlglExamExamineService {
 			row2cell5.setCellValue(pass+"%");
 			
 			HSSFRow row3 = sheet.createRow(3);
+			HSSFCell row3cell0 = row3.createCell(0);
+			row3cell0.setCellValue(listName);
+			row3cell0.setCellStyle(style);
+			
+			HSSFRow row4 = sheet.createRow(4);
 			for (int i = 0; i < title.length; i++) {
-				HSSFCell createCell = row3.createCell(i);
+				HSSFCell createCell = row4.createCell(i);
 				createCell.setCellValue(title[i]);
 			}
 			for (int i = 1; i < list.size(); i++) {
-				HSSFRow rows = sheet.createRow(i+3);
+				HSSFRow rows = sheet.createRow(i+4);
 				HSSFCell cell0 = rows.createCell(0);// 单位名称
 				cell0.setCellValue(list.get(i-1).getOrganName());
 				
