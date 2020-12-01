@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
 import com.css.app.xlgl.dto.ExamMainAnswerAnalyseDto;
 import com.css.app.xlgl.entity.XlglExamMainAnswer;
 
@@ -45,9 +46,9 @@ public interface XlglExamMainAnswerService {
 	
 	List<XlglExamMainAnswer> findExamByOrganId(Map<String, Object> map);
 	
-	InputStream createExcelInfoFlie(List<XlglExamMainAnswer> list,String[] title,String fileName) throws Exception;
+	InputStream createExcelInfoFlie(List<XlglExamMainAnswer> list,String[] title,String fileName,JSONObject json,String totalName) throws Exception;
 	List<XlglExamMainAnswer> getListing(String examineId,String makeupStatus,String level,String replyUserName
 			,String organId,String isNotExam,String status,String deptId);
 	
-	InputStream	createExcelNotExam(List<XlglExamMainAnswer> list,String[] title,String fileName)throws Exception;
+	InputStream	createExcelNotExam(List<XlglExamMainAnswer> list,String[] title,String fileName,JSONObject json,String totalName)throws Exception;
 }

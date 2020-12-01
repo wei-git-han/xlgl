@@ -747,6 +747,10 @@ public class XlglExamExamineController {
 	@ResponseBody
 	@RequestMapping("/examineTotal")
 	public void examineTotal(String examineId, String organId) {
+		JSONObject jsonObject = this.getTotal(examineId, organId);
+		Response.json(jsonObject);
+	}
+	private JSONObject getTotal(String examineId, String organId) {
 		JSONObject jsonObject = new JSONObject();
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("examineId", examineId);
@@ -801,15 +805,15 @@ public class XlglExamExamineController {
 		}
 		jsonObject.put("raioAll", Float.valueOf(raio));// 参考率
 		jsonObject.put("peopleNum", numberInto);// 试卷的已考人数
-		jsonObject.put("fillUpNum", numberIntoNot);// 需要补考人数
+		jsonObject.put("fillUpNum", numberIntoNot);// 待考人数
 		jsonObject.put("excellent", Float.valueOf(total1Raio));// 优秀率
 		jsonObject.put("fine", Float.valueOf(total2Raio));// 优良率
 		jsonObject.put("pass", Float.valueOf(total3Raio));// 及格率
 		XlglExamExamine queryObject = xlglExamExamineService.queryObject(examineId);
 		jsonObject.put("examine", queryObject);
-		Response.json(jsonObject);
+		return jsonObject;
 	}
-
+	
 	/**
 	 * 原考题四项题型比例
 	 * 
@@ -1045,42 +1049,45 @@ public class XlglExamExamineController {
 			String replyUserName, String organId, String isNotExam, String status, String deptId) {
 		String fileName = "";
 		InputStream is = null;
+		XlglExamExamine examine = xlglExamExamineService.queryObject(examineId);
 		String[] titles = { "单位名称", "参考率", "已考人数", "待考人数", "优秀率", "优良率", "及格率" };
+		JSONObject total = this.getTotal(examineId, deptId);
 		if(StringUtils.isBlank(type) && StringUtils.isBlank(deptId)) {
-			
-			fileName = "各局单位参考情况统计.xls";
+			fileName = examine.getExamineName()+"考试各局单位参考情况统计.xls";
 			List<ExamMainAnswerAnalyseDto> list = this.getLv(examineId, null);
 			try {
-				is = xlglExamExamineService.createExcelInfoFlie(list, titles, fileName);
+				is = xlglExamExamineService.createExcelInfoFlie(list, titles, fileName,total,"考试总体情况统计");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}else if(StringUtils.isNotBlank(type) && type.equals("0") && StringUtils.isNotBlank(deptId)) {
-			fileName = "各处单位参考情况统计.xls";
+			BaseAppOrgan queryObject = baseAppOrganService.queryObject(deptId);
+			fileName = examine.getExamineName()+"考试"+queryObject.getName()+"局参考情况统计.xls";
 			List<ExamMainAnswerAnalyseDto> list = this.getLv(examineId, deptId);
 			try {
-				 is = xlglExamExamineService.createExcelInfoFlie(list, titles, fileName);
+				 is = xlglExamExamineService.createExcelInfoFlie(list, titles, fileName,total,queryObject.getName()+"局参考情况统计");
 			} catch (Exception e) {
 				e.printStackTrace();
 			};
 		}else if(StringUtils.isNotBlank(type) && type.equals("1") && StringUtils.isNotBlank(deptId)) {
+			BaseAppOrgan queryObject = baseAppOrganService.queryObject(deptId);
 			if(StringUtils.isNotBlank(isNotExam) && isNotExam.equals("0")) {
 				String[] title = { "姓名", "部门名称"};
-				fileName = "未考人员清单.xls";
+				fileName = examine.getExamineName()+"考试"+queryObject.getName()+"局未考人员清单.xls";
 				List<XlglExamMainAnswer> list = xlglExamMainAnswerService.getListing(examineId, makeupStatus, level, replyUserName, 
 						organId, isNotExam, status, deptId);
 				try {
-					is = xlglExamMainAnswerService.createExcelNotExam(list, title, fileName);
+					is = xlglExamMainAnswerService.createExcelNotExam(list, title, fileName,total,queryObject.getName()+"局参考情况统计");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}else if(StringUtils.isNotBlank(isNotExam) && isNotExam.equals("1")) {
 				String[] title = { "姓名", "部门名称","成绩","考试方式","等级"};
-				fileName = "已考人员清单.xls";
+				fileName = examine.getExamineName()+"考试"+queryObject.getName()+"局已考人员清单.xls";
 				List<XlglExamMainAnswer> list = xlglExamMainAnswerService.getListing(examineId, makeupStatus, level, replyUserName, 
 						organId, isNotExam, status, deptId);
 				try {
-					is = xlglExamMainAnswerService.createExcelNotExam(list, title, fileName);
+					is = xlglExamMainAnswerService.createExcelInfoFlie(list, title, fileName,total,queryObject.getName()+"局参考情况统计");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
