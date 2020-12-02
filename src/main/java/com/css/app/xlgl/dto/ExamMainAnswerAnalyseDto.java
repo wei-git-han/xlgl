@@ -1,6 +1,6 @@
 package com.css.app.xlgl.dto;
 
-public class ExamMainAnswerAnalyseDto {
+public class ExamMainAnswerAnalyseDto /*implements Comparable<ExamMainAnswerAnalyseDto>*/ {
 		//部门id
 		private String organId; 
 		//部门名称
@@ -98,5 +98,14 @@ public class ExamMainAnswerAnalyseDto {
 		public void setStatus(boolean status) {
 			this.status = status;
 		}
+		/*@Override
+		public int compareTo(ExamMainAnswerAnalyseDto o) {
+			Float valueOf = Float.valueOf(this.raioAll);
+			Float valueOf2 = Float.valueOf(o.getRaioAll());
+			if(valueOf >= valueOf2) {
+				return 1;
+			}
+			return -1;
+		}*/
 		
 }

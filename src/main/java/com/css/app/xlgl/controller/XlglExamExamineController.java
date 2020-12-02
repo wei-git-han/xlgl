@@ -9,6 +9,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -819,6 +822,12 @@ public class XlglExamExamineController {
 		jsonObject.put("fine", Float.valueOf(total2Raio));// 优良率
 		jsonObject.put("pass", Float.valueOf(total3Raio));// 及格率
 		XlglExamExamine queryObject = xlglExamExamineService.queryObject(examineId);
+		if(StringUtils.isNotBlank(queryObject.getMakeupId())&&
+				queryObject.getMakeupId().equals("1")) {
+			List<XlglExamExamineMakeup> queryList = xlglExamExamineMakeupService.queryList(map);
+			queryObject.setExamineMakeUpEndDate(queryList.get(0).getMakeUpEndDate());
+			queryObject.setExamineMakeUpStartDate(queryList.get(0).getMakeUpStartDate());
+		}
 		jsonObject.put("examine", queryObject);
 		return jsonObject;
 	}
@@ -942,12 +951,15 @@ public class XlglExamExamineController {
 	 * 局单位的组织的参考率、参考人数、待考人数、优秀率、优良率、及格率
 	 * @param examineId 试卷的基本信息表id
 	 * @param organId  部门id  部门id为空时统计各局数据，不为空时统计某局下的处数据
+	 * @param orderBy 排序字段。 1：参考率，2：优秀率，3：优良率，4：及格率。 asc 正序排序，从小到大，desc 倒序排序，从大到小
+	 * 		  例  1-desc 参考率，倒序排序  不支持多个率排序
 	 */
 	@ResponseBody
 	@RequestMapping("/examAnalyse")
-	public void examAnalyse(String examineId, String organId) {
+	public void examAnalyse(String examineId, String organId,
+			String orderBy) {
 		JSONObject jsonObject = new JSONObject();
-		List<ExamMainAnswerAnalyseDto> list = this.getLv(examineId,organId);
+		List<ExamMainAnswerAnalyseDto> list = this.getLv(examineId,organId,orderBy);
 		if (list.size() > 0) {
 			jsonObject.put("code", "0");
 			jsonObject.put("msg", "success");
@@ -960,7 +972,7 @@ public class XlglExamExamineController {
 		Response.json(jsonObject);
 	}
 	
-	private List<ExamMainAnswerAnalyseDto> getLv(String examineId, String organId){
+	private List<ExamMainAnswerAnalyseDto> getLv(String examineId, String organId,String orderBy){
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<BaseAppOrgan> queryList = new ArrayList<BaseAppOrgan>();
 		boolean userInfo = this.getUserInfo();
@@ -1064,17 +1076,56 @@ public class XlglExamExamineController {
 			analyseDto.setPeopleNum(peopleNum); // 已(参)考人数
 			list.add(analyseDto);
 		}
+		if(StringUtils.isNotBlank(orderBy)) {
+			if(orderBy.contains("-")) {
+				String[] split = orderBy.split("-");
+				if(split[0].equals("1")) {
+					if(split[1].equals("asc")) {
+						list.sort(Comparator.comparing(ExamMainAnswerAnalyseDto :: getRaioAll));
+					}else if(split[1].equals("desc")) {
+						list.sort(Comparator.comparing(ExamMainAnswerAnalyseDto :: getRaioAll).reversed());
+					}
+				}else if(split[0].equals("2")){
+					if(split[1].equals("asc")) {
+						list.sort(Comparator.comparing(ExamMainAnswerAnalyseDto :: getExcellentlv));
+					}else if(split[1].equals("desc")) {
+						list.sort(Comparator.comparing(ExamMainAnswerAnalyseDto :: getExcellentlv).reversed());
+					}
+				}else if(split[0].equals("3")){
+					if(split[1].equals("asc")) {
+						list.sort(Comparator.comparing(ExamMainAnswerAnalyseDto :: getFinelv));
+					}else if(split[1].equals("desc")) {
+						list.sort(Comparator.comparing(ExamMainAnswerAnalyseDto :: getFinelv).reversed());
+					}
+				}else if(split[0].equals("4")){
+					if(split[1].equals("asc")) {
+						list.sort(Comparator.comparing(ExamMainAnswerAnalyseDto :: getPasslv));
+					}else if(split[1].equals("desc")) {
+						list.sort(Comparator.comparing(ExamMainAnswerAnalyseDto :: getPasslv).reversed());
+					}
+				}
+			}
+		}
 		return list;
 	}
 	/**
 	 * 导出各局数据和已考人员或未考人员列表xls
 	 * @param type 0 ：按部门 1： 按人员
 	 * @param examineId 试卷的基本信息表id
+	 * @param makeupStatus 补考状态 0考试，1补考
+	 * @param level 等级 查询条件
+	 * @param replyUserName 用户名称
+	 * @param organId 部门id
+	 * @param isNotExam 考试状态 0:没考，1:考了
+	 * @param status 状态 0：考试，1：练习
+	 * @param deptId 查看部门id
+	 * @param raiolv 排序字段
 	 * */
 	@ResponseBody
 	@RequestMapping("/importExcel")
 	public void importExcel(HttpServletResponse response,String type,String examineId, String makeupStatus, String level,
-			String replyUserName, String organId, String isNotExam, String status, String deptId) {
+			String replyUserName, String organId, String isNotExam, String status, String deptId,
+			String orderBy) {
 		String fileName = "";
 		InputStream is = null;
 		XlglExamExamine examine = xlglExamExamineService.queryObject(examineId);
@@ -1082,7 +1133,7 @@ public class XlglExamExamineController {
 		JSONObject total = this.getTotal(examineId, deptId);
 		if(StringUtils.isBlank(type) && StringUtils.isBlank(deptId)) {
 			fileName = examine.getExamineName()+"考试各局单位参考情况统计.xls";
-			List<ExamMainAnswerAnalyseDto> list = this.getLv(examineId, null);
+			List<ExamMainAnswerAnalyseDto> list = this.getLv(examineId, null,orderBy);
 			try {
 				String totalName = examine.getExamineName()+"考试总体情况统计";
 				String listName = examine.getExamineName()+"考试总体情况各局统计";
@@ -1092,37 +1143,57 @@ public class XlglExamExamineController {
 			}
 		}else if(StringUtils.isNotBlank(type) && type.equals("0") && StringUtils.isNotBlank(deptId)) {
 			BaseAppOrgan queryObject = baseAppOrganService.queryObject(deptId);
-			fileName = examine.getExamineName()+"考试"+queryObject.getName()+"局参考情况统计.xls";
-			List<ExamMainAnswerAnalyseDto> list = this.getLv(examineId, deptId);
+			fileName ="《"+ examine.getExamineName()+"》"+queryObject.getName()+"参考情况统计.xls";
+			List<ExamMainAnswerAnalyseDto> list = this.getLv(examineId, deptId,orderBy);
 			try {
-				String totalName = examine.getExamineName()+"考试"+queryObject.getName()+"局参考情况统计";
-				String listName = examine.getExamineName()+"考试"+queryObject.getName()+"局各处参考情况统计";
+				String totalName = "《"+ examine.getExamineName()+"》"+queryObject.getName()+"参考情况统计";
+				String listName = "《"+ examine.getExamineName()+"》"+queryObject.getName()+"各处参考情况统计";
 				 is = xlglExamExamineService.createExcelInfoFlie(list, titles, fileName,total,totalName,listName);
 			} catch (Exception e) {
 				e.printStackTrace();
 			};
 		}else if(StringUtils.isNotBlank(type) && type.equals("1") && StringUtils.isNotBlank(deptId)) {
+			String strCha = "(查询条件"; //导出文件的查询条件
+			if(StringUtils.isNotBlank(organId)) {
+				BaseAppOrgan queryObject = baseAppOrganService.queryObject(organId);
+				strCha =strCha+",部门:"+queryObject.getName();
+				}
+			if(StringUtils.isNotBlank(makeupStatus)) {
+				if(makeupStatus.equals("0")) {
+					strCha =strCha+",考试方式:正常";
+				}else if(makeupStatus.equals("1")){
+					strCha =strCha+",考试方式:补考";
+				}
+			}
+			if(StringUtils.isNotBlank(level)) {
+				strCha =strCha+",等级:"+level;
+			}
+			if(StringUtils.isNotBlank(replyUserName)) {
+				strCha =strCha+",用户名称:"+replyUserName;
+			}
+			strCha = strCha +")";
 			BaseAppOrgan queryObject = baseAppOrganService.queryObject(deptId);
 			if(StringUtils.isNotBlank(isNotExam) && isNotExam.equals("0")) {
 				String[] title = { "姓名", "部门名称"};
-				fileName = examine.getExamineName()+"考试"+queryObject.getName()+"局未考人员清单.xls";
+				fileName = "《"+ examine.getExamineName()+"》"+queryObject.getName()+"未考人员清单.xls";
 				List<XlglExamMainAnswer> list = xlglExamMainAnswerService.getListing(examineId, makeupStatus, level, replyUserName, 
 						organId, isNotExam, status, deptId);
 				try {
-					String totalName = examine.getExamineName()+"考试"+queryObject.getName()+"局参考情况统计";
-					String listName = examine.getExamineName()+"考试"+queryObject.getName()+"局各处未考人员情况统计";
+					String totalName = "《"+ examine.getExamineName()+"》"+queryObject.getName()+"参考情况统计";
+					String listName = "《"+ examine.getExamineName()+"》"+queryObject.getName()+"各处未考人员情况统计"+strCha;
+					
 					is = xlglExamMainAnswerService.createExcelNotExam(list, title, fileName,total,totalName,listName);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}else if(StringUtils.isNotBlank(isNotExam) && isNotExam.equals("1")) {
 				String[] title = { "姓名", "部门名称","成绩","考试方式","等级"};
-				fileName = examine.getExamineName()+"考试"+queryObject.getName()+"局已考人员清单.xls";
+				fileName = "《"+ examine.getExamineName()+"》"+queryObject.getName()+"已考人员清单.xls";
 				List<XlglExamMainAnswer> list = xlglExamMainAnswerService.getListing(examineId, makeupStatus, level, replyUserName, 
 						organId, isNotExam, status, deptId);
 				try {
-					String totalName = examine.getExamineName()+"考试"+queryObject.getName()+"局参考情况统计";
-					String listName = examine.getExamineName()+"考试"+queryObject.getName()+"局各处已考人员情况统计";
+					String totalName = "《"+ examine.getExamineName()+"》"+queryObject.getName()+"参考情况统计";
+					String listName = "《"+ examine.getExamineName()+"》"+queryObject.getName()+"各处已考人员情况统计"+strCha;
 					is = xlglExamMainAnswerService.createExcelInfoFlie(list, title, fileName,total,totalName,listName);
 				} catch (Exception e) {
 					e.printStackTrace();

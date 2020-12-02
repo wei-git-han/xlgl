@@ -72,7 +72,10 @@ public class XlglExamExamine implements Serializable {
 	//编辑人名称
 	private String updateUserName;
 	
-
+	//补考结束时间
+	private Date examineMakeUpEndDate;
+	//补考开始时间
+	private Date examineMakeUpStartDate;
 	
 
 	/**
@@ -308,6 +311,18 @@ public class XlglExamExamine implements Serializable {
 	}
 	public void setTypeNumStr(String typeNumStr) {
 		this.typeNumStr = typeNumStr;
+	}
+	public Date getExamineMakeUpEndDate() {
+		return examineMakeUpEndDate;
+	}
+	public void setExamineMakeUpEndDate(Date examineMakeUpEndDate) {
+		this.examineMakeUpEndDate = examineMakeUpEndDate;
+	}
+	public Date getExamineMakeUpStartDate() {
+		return examineMakeUpStartDate;
+	}
+	public void setExamineMakeUpStartDate(Date examineMakeUpStartDate) {
+		this.examineMakeUpStartDate = examineMakeUpStartDate;
 	}
 	
 
