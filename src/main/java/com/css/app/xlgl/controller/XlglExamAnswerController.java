@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
@@ -421,19 +422,33 @@ public class XlglExamAnswerController {
 	 * @param xlglExamAnswer 前端传jsonarray,
 	 */
 	@ResponseBody
-	@RequestMapping("/getReplyLack")
+	@RequestMapping(path="/getReplyLack",method=RequestMethod.POST)
 	public void getReplyLack(String xlglExamAnswer){
 		JSONObject jsonObject = new JSONObject();
 		List<XlglExamAnswer> parseArray = JSONArray.parseArray(xlglExamAnswer, XlglExamAnswer.class);
 		StringBuffer strbuffer = new StringBuffer();
-		int i = 1;
+		int i = 0;
 		for (XlglExamAnswer xlglExamAnswer2 : parseArray) {
-			if(StringUtils.isBlank(xlglExamAnswer2.getReply())) {
-				strbuffer.append("第"+xlglExamAnswer2.getNumber()+"题,");
-				i++;
-			}
+				if(StringUtils.isBlank(xlglExamAnswer2.getReply())) {
+					String topicType = "";
+					if(StringUtils.isNotBlank(xlglExamAnswer2.getTopicType())) {
+						if(xlglExamAnswer2.getTopicType().equals("1")) {
+							topicType = "单选题";
+						}else if(xlglExamAnswer2.getTopicType().equals("2")) {
+							topicType = "多选题";
+						}else if(xlglExamAnswer2.getTopicType().equals("3")) {
+							topicType = "判断题";
+						}else if(xlglExamAnswer2.getTopicType().equals("4")) {
+							topicType = "填空题";
+						}
+					}
+					if(i<5) {
+						strbuffer.append(topicType+"第"+xlglExamAnswer2.getNumber()+"题,");
+					}
+					i++;
+				}
 		}
-		if(strbuffer!=null) {
+		if(strbuffer!=null && strbuffer.length() >0) {
 			strbuffer.append("等等"+i+"题未答，您确认提交试卷吗");
 		}else {
 			strbuffer.append("您确认提交试卷吗？");
