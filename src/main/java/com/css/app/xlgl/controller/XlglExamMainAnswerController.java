@@ -19,12 +19,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
+import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.addbase.apporgan.util.OrgUtil;
+import com.css.app.xlgl.config.entity.XlglRoleSet;
+import com.css.app.xlgl.config.service.XlglRoleSetService;
+import com.css.app.xlgl.entity.XlglAdminSet;
 import com.css.app.xlgl.entity.XlglExamExamine;
 import com.css.app.xlgl.entity.XlglExamMainAnswer;
+import com.css.app.xlgl.service.XlglAdminSetService;
 import com.css.app.xlgl.service.XlglExamExamineService;
 import com.css.app.xlgl.service.XlglExamMainAnswerService;
 import com.css.base.entity.SSOUser;
+import com.css.base.filter.SSOAuthFilter;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.PageUtils;
 import com.css.base.utils.Response;
@@ -51,6 +57,12 @@ public class XlglExamMainAnswerController {
 	private XlglExamExamineService xlglExamExamineService;
 	@Autowired
 	private BaseAppOrganService baseAppOrganService;
+	@Autowired
+	private XlglRoleSetService xlglRoleSetService;
+	@Autowired
+	private XlglAdminSetService adminSetService;
+	@Autowired
+	private BaseAppUserService baseAppUserService;
 	
 	/**
 	 *考核清单-参考人员/未考人员清单 列表
@@ -187,4 +199,6 @@ public class XlglExamMainAnswerController {
 		jsonObject.put("examineName", queryObject2.getExamineName());
 		Response.json(jsonObject);
 	}
+	
+
 }

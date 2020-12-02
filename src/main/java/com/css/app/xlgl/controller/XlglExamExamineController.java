@@ -8,6 +8,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -16,6 +17,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +31,18 @@ import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.addbase.apporgan.util.OrgUtil;
+import com.css.app.xlgl.config.entity.XlglRoleSet;
+import com.css.app.xlgl.config.service.XlglRoleSetService;
 import com.css.app.xlgl.dao.XlglExamExamineDao;
 import com.css.app.xlgl.dto.ExamMainAnswerAnalyseDto;
 import com.css.app.xlgl.dto.XlglExamExaminetopicDto;
+import com.css.app.xlgl.entity.XlglAdminSet;
 import com.css.app.xlgl.entity.XlglExamExamine;
 import com.css.app.xlgl.entity.XlglExamExamineMakeup;
 import com.css.app.xlgl.entity.XlglExamExaminetopic;
 import com.css.app.xlgl.entity.XlglExamMainAnswer;
 import com.css.app.xlgl.entity.XlglExamTopic;
+import com.css.app.xlgl.service.XlglAdminSetService;
 import com.css.app.xlgl.service.XlglExamExamineMakeupService;
 import com.css.app.xlgl.service.XlglExamExamineService;
 import com.css.app.xlgl.service.XlglExamExaminetopicService;
@@ -78,7 +84,10 @@ public class XlglExamExamineController {
 	private BaseAppOrganService baseAppOrganService;
 	@Autowired
 	private XlglExamExamineMakeupService xlglExamExamineMakeupService;
-
+	@Autowired
+	private XlglAdminSetService adminSetService;
+	@Autowired
+	private XlglRoleSetService xlglRoleSetService;
 	/**
 	 * 考核清单列表
 	 * 
@@ -954,6 +963,7 @@ public class XlglExamExamineController {
 	private List<ExamMainAnswerAnalyseDto> getLv(String examineId, String organId){
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<BaseAppOrgan> queryList = new ArrayList<BaseAppOrgan>();
+		boolean userInfo = this.getUserInfo();
 		if (StringUtils.isNotBlank(organId)) {
 			List<BaseAppOrgan> organs = baseAppOrganService.queryList(null);
 			List<String> arrayList = new ArrayList<String>();
@@ -981,6 +991,24 @@ public class XlglExamExamineController {
 			String raioAll = ""; // 参考率
 			// 传参实体
 			ExamMainAnswerAnalyseDto analyseDto = new ExamMainAnswerAnalyseDto();
+			if(userInfo) {
+				analyseDto.setStatus(userInfo);
+			}else {
+				String organId2 = CurrentUser.getSSOUser().getOrganId();
+				BaseAppOrgan queryObject = baseAppOrganService.queryObject(organId2);
+				String treePath = queryObject.getTreePath();
+				if(treePath.contains(",")) {
+					String[] split = treePath.split(",");
+					List<String> asList = Arrays.asList(split);
+					if(asList.contains(baseAppOrgan.getId())) {
+						analyseDto.setStatus(true);
+					}else {
+						analyseDto.setStatus(false);
+					}
+				}else {
+					analyseDto.setStatus(false);
+				}
+			}
 			analyseDto.setOrganId(baseAppOrgan.getId());
 			analyseDto.setOrganName(baseAppOrgan.getName());
 			map.put("examId", examineId);
@@ -1134,4 +1162,29 @@ public class XlglExamExamineController {
 		Response.ok();
 	}
 	
+	/**
+	 * 获取当前登录用户信息
+	 * @return
+	 */
+    private boolean getUserInfo(){
+		//0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员;4:处管理员
+		XlglAdminSet queryByUserId = adminSetService.queryByUserId(CurrentUser.getUserId());
+		boolean flag = false;
+		if(queryByUserId!=null) {
+			if(queryByUserId.getAdminType().equals("1")) {
+				flag = true;
+			}
+		}
+    	XlglRoleSet  xlglRoleSet =xlglRoleSetService.queryByuserId(CurrentUser.getUserId());
+    	if(xlglRoleSet != null){
+    		if(StringUtils.isNotBlank(xlglRoleSet.getRoleFlag())){
+    			String roleFlag = xlglRoleSet.getRoleFlag();
+    			if("1".equals(roleFlag)){//首长和局长
+    				flag = true;
+				}
+			}
+    	}
+		
+    	return flag;
+    }
 }

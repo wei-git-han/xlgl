@@ -47,6 +47,7 @@
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
+		order by ORGAN_ID
 	</select>
 	
  	<select id="queryTotal" resultType="int">

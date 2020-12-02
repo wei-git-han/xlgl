@@ -132,7 +132,7 @@ public class XlglExamExamineServiceImpl implements XlglExamExamineService {
 				HSSFCell createCell = row4.createCell(i);
 				createCell.setCellValue(title[i]);
 			}
-			for (int i = 1; i < list.size(); i++) {
+			for (int i = 1; i < list.size()+1; i++) {
 				HSSFRow rows = sheet.createRow(i+4);
 				HSSFCell cell0 = rows.createCell(0);// 单位名称
 				cell0.setCellValue(list.get(i-1).getOrganName());

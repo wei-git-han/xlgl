@@ -23,6 +23,8 @@ public class ExamMainAnswerAnalyseDto {
 		private String finelv;
 		//及格率
 		private String passlv;
+		//权限字段 部管理员和首长有查看其他局的权限
+		private boolean status;
 		
 		public String getOrganId() {
 			return organId;
@@ -89,6 +91,12 @@ public class ExamMainAnswerAnalyseDto {
 		}
 		public void setPasslv(String passlv) {
 			this.passlv = passlv;
+		}
+		public boolean isStatus() {
+			return status;
+		}
+		public void setStatus(boolean status) {
+			this.status = status;
 		}
 		
 }

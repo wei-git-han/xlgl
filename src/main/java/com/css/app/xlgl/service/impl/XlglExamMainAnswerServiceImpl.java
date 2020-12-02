@@ -167,7 +167,7 @@ public class XlglExamMainAnswerServiceImpl implements XlglExamMainAnswerService 
 				HSSFCell createCell = row4.createCell(i);
 				createCell.setCellValue(title[i]);
 			}
-			for (int i = 1; i < list.size(); i++) {
+			for (int i = 1; i < list.size()+1; i++) {
 				HSSFRow rows = sheet.createRow(i+4);
 				HSSFCell cell0 = rows.createCell(0);// 姓名
 				cell0.setCellValue(list.get(i-1).getReplyUserName());
@@ -217,8 +217,8 @@ public class XlglExamMainAnswerServiceImpl implements XlglExamMainAnswerService 
 		if(StringUtils.isNotBlank(deptId)) {
 			List<BaseAppOrgan> organs = baseAppOrganService.queryList(null);
 			List<String> arrayList = new ArrayList<String>();
-			arrayList = OrgUtil.getOrganTreeList(organs,organId,true,true,arrayList);
-			map.put("deptList", arrayList);
+			List<String> organTreeList = OrgUtil.getOrganTreeList(organs,deptId,true,true,arrayList);
+			map.put("deptList", organTreeList);
 		}
 		//查询列表数据
 		List<XlglExamMainAnswer> xlglExamMainAnswerList = this.queryList(map);
@@ -289,7 +289,7 @@ public class XlglExamMainAnswerServiceImpl implements XlglExamMainAnswerService 
 				HSSFCell createCell = row4.createCell(i);
 				createCell.setCellValue(title[i]);
 			}
-			for (int i = 1; i < list.size(); i++) {
+			for (int i = 1; i < list.size()+1; i++) {
 				HSSFRow rows = sheet.createRow(i+4);
 				HSSFCell cell0 = rows.createCell(0);// 姓名
 				cell0.setCellValue(list.get(i-1).getReplyUserName());
