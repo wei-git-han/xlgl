@@ -449,7 +449,12 @@ public class XlglExamAnswerController {
 				}
 		}
 		if(strbuffer!=null && strbuffer.length() >0) {
-			strbuffer.append("等等"+i+"题未答，您确认提交试卷吗");
+			if( i <=5) {
+				strbuffer.append(i+"道题未答，您确认提交试卷吗");
+			}else {
+				strbuffer.append("等"+i+"道题未答，您确认提交试卷吗");
+			}
+			
 		}else {
 			strbuffer.append("您确认提交试卷吗？");
 		}

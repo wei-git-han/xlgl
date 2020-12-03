@@ -188,11 +188,22 @@ public class XlglExamMainAnswerController {
 			}
 
 		}
-	
+		String orgName = "";
+		BaseAppOrgan queryObject3 = baseAppOrganService.queryObject(queryObject.getOrganId());
+		if(StringUtils.isNotBlank(queryObject3.getTreePath())) {
+			String[] split = queryObject3.getTreePath().split(",");
+			List<BaseAppOrgan> queryListByIds = baseAppOrganService.queryListByIds(split);
+			for (BaseAppOrgan baseAppOrgan : queryListByIds) {
+				if(baseAppOrgan.getParentId().equals("root")) {
+					orgName = baseAppOrgan.getName()+"-";
+					break;
+				}
+			}
+		}
 		jsonObject.put("time", queryObject.getUpdateDate());
 		jsonObject.put("userName", queryObject.getReplyUserName());
 		jsonObject.put("userId", queryObject.getReplyUserId());
-		jsonObject.put("orgName", queryObject.getOrganName());
+		jsonObject.put("orgName", orgName+queryObject.getOrganName());
 		jsonObject.put("orgId", queryObject.getOrganId());
 		jsonObject.put("level", queryObject.getLevel());
 		jsonObject.put("fractionsum", queryObject.getFractionsum());
