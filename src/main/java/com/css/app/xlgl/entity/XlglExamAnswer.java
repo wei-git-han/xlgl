@@ -71,6 +71,8 @@ public class XlglExamAnswer implements Serializable {
 	private Map<String,String> map;
 	
 	private Map<String,Object> topicOptionMap;
+	//序号
+	private String number;
 	/**
 	 * 设置：
 	 */
@@ -322,6 +324,12 @@ public class XlglExamAnswer implements Serializable {
 	}
 	public void setMap(Map<String, String> map) {
 		this.map = map;
+	}
+	public String getNumber() {
+		return number;
+	}
+	public void setNumber(String number) {
+		this.number = number;
 	}
 	
 	

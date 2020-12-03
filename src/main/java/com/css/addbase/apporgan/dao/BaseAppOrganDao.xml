@@ -15,7 +15,10 @@
 			and NAME=#{name}
 		</if>
 		<if test="parentId != null and parentId != ''">
-			and PARENT_ID=#{parentId}
+			and PARENT_ID = #{parentId}
+		</if>
+		<if test="id != null and id != ''">
+			or ID=#{id}
 		</if>
 		order by SORT asc
 		<if test="offset != null and limit != null">

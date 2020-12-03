@@ -12,7 +12,7 @@
 			and TYPE = #{type}
 		</if>
 		<if test="orgId != null and orgId != ''">
-			and ORG_ID = #{orgId}
+			<!-- and ORG_ID = #{orgId} -->
 		</if>
 		<if test="appLevel != null and appLevel != ''">
 			and APP_LEVEL = #{appLevel}

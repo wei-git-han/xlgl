@@ -1,8 +1,11 @@
 package com.css.app.xlgl.service;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
+import com.css.app.xlgl.dto.ExamMainAnswerAnalyseDto;
 import com.css.app.xlgl.entity.XlglExamExamine;
 
 
@@ -26,7 +29,9 @@ public interface XlglExamExamineService {
 	void delete(String id);
 	
 	void deleteBatch(String[] ids);
-	int findCount(String id);
+	int findCount(Map<String, Object> map);
 	
 	List<XlglExamExamine> queryVerifyList(Map<String, Object> map);
+	
+	InputStream createExcelInfoFlie(List<ExamMainAnswerAnalyseDto> list,String[] title,String fileName,JSONObject json,String totalName,String listName) throws Exception;
 }

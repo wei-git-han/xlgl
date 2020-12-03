@@ -143,7 +143,7 @@ public class XlglRoleSetController {
 			}
 		}
 		if (StringUtils.isNotBlank(dbRoleSet.getId())) {
-			if (!StringUtils.equals(XlglDefined.ROLE_1, dbRoleSet.getRoleFlag())) {
+			if (StringUtils.equals(XlglDefined.ROLE_1, dbRoleSet.getRoleFlag())) {
 				dbRoleSet.setDeptId(orgId);
 				dbRoleSet.setDeptName(orgName);
 			}
@@ -151,7 +151,7 @@ public class XlglRoleSetController {
 		} else {
 			xlglRoleSetService.deleteByUserId(userId);
 			dbRoleSet.setId(UUIDUtils.random());
-			if (!StringUtils.equals(XlglDefined.ROLE_1, dbRoleSet.getRoleFlag())) {
+			if (StringUtils.equals(XlglDefined.ROLE_1, dbRoleSet.getRoleFlag())) {
 				dbRoleSet.setDeptId(orgId);
 				dbRoleSet.setDeptName(orgName);
 			}

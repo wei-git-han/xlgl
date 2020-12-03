@@ -377,6 +377,7 @@ public class PeopleManagementController {
 			List<BaseAppUser> queryListByOrganid = baseAppUserService.queryByOrganidTREEPATH(map);
 			for (int j = 0; j < list.size(); j++) {
 			for (BaseAppUser baseAppUser : queryListByOrganid) {
+					String string = list.get(j);
 					if(baseAppUser.getAccount().equals(list.get(j))) {
 						i++;
 					}
@@ -402,7 +403,7 @@ public class PeopleManagementController {
 		try {
 			// 请假人数远程服务地址(获取在线人数)
 			String reJson = RestTemplateUtil.postJSONString(url, infoMap);
-			String accounts = reJson.substring(1, reJson.length() - 1).replace("\"", "");
+			String accounts = reJson.substring(1, reJson.length() - 1).replace("\"", "").replace("]", "");
 			String[] accountArray = accounts.split("\\s*,\\s*");
 			accountList = new ArrayList<String>(Arrays.asList(accountArray));
 		} catch (Exception e) {
