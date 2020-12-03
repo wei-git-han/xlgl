@@ -138,7 +138,7 @@ public class XlglExamExamineServiceImpl implements XlglExamExamineService {
 				cell0.setCellValue(list.get(i-1).getOrganName());
 				
 				HSSFCell cell1 = rows.createCell(1);// 参考率
-				cell1.setCellValue(list.get(i - 1).getRaioAll());
+				cell1.setCellValue(list.get(i - 1).getRaioAll()+"%");
 				
 				HSSFCell cell2 = rows.createCell(2);// 已(参)考人数
 				cell2.setCellValue(list.get(i - 1).getPeopleNum());
@@ -150,10 +150,10 @@ public class XlglExamExamineServiceImpl implements XlglExamExamineService {
 				cell4.setCellValue(list.get(i - 1).getExcellentlv()+"%");
 				
 				HSSFCell cell5 = rows.createCell(5);// 优良率
-				cell5.setCellValue(list.get(i - 1).getFinelv());
+				cell5.setCellValue(list.get(i - 1).getFinelv()+"%");
 				
 				HSSFCell cell6 = rows.createCell(6);// 及格率
-				cell6.setCellValue(list.get(i - 1).getPasslv());
+				cell6.setCellValue(list.get(i - 1).getPasslv()+"%");
 			}
 			fout = new FileOutputStream(fileName);
 			wb.write(fout);
