@@ -6,11 +6,11 @@ public class ExamMainAnswerAnalyseDto /*implements Comparable<ExamMainAnswerAnal
 		//部门名称
 		private String organName;
 		//优秀率
-		private String excellentlv;
+		private Float excellentlv;
 		//待考人数
 		private Integer fillUpNum;
 		//参考率
-		private String raioAll;
+		private Float raioAll;
 		//已(参)考人数
 		private Integer peopleNum;
 		//优秀人数
@@ -20,9 +20,9 @@ public class ExamMainAnswerAnalyseDto /*implements Comparable<ExamMainAnswerAnal
 		// 及格人数
 		private Integer pass ;
 		//优良率
-		private String finelv;
+		private Float finelv;
 		//及格率
-		private String passlv;
+		private Float passlv;
 		//权限字段 部管理员和首长有查看其他局的权限
 		private boolean status;
 		
@@ -44,24 +44,14 @@ public class ExamMainAnswerAnalyseDto /*implements Comparable<ExamMainAnswerAnal
 		public void setFillUpNum(Integer fillUpNum) {
 			this.fillUpNum = fillUpNum;
 		}
-		public String getRaioAll() {
-			return raioAll;
-		}
-		public void setRaioAll(String raioAll) {
-			this.raioAll = raioAll;
-		}
+	
 		public Integer getPeopleNum() {
 			return peopleNum;
 		}
 		public void setPeopleNum(Integer peopleNum) {
 			this.peopleNum = peopleNum;
 		}
-		public String getExcellentlv() {
-			return excellentlv;
-		}
-		public void setExcellentlv(String excellentlv) {
-			this.excellentlv = excellentlv;
-		}
+		
 		public Integer getExcellent() {
 			return excellent;
 		}
@@ -80,32 +70,35 @@ public class ExamMainAnswerAnalyseDto /*implements Comparable<ExamMainAnswerAnal
 		public void setPass(Integer pass) {
 			this.pass = pass;
 		}
-		public String getFinelv() {
-			return finelv;
-		}
-		public void setFinelv(String finelv) {
-			this.finelv = finelv;
-		}
-		public String getPasslv() {
-			return passlv;
-		}
-		public void setPasslv(String passlv) {
-			this.passlv = passlv;
-		}
 		public boolean isStatus() {
 			return status;
 		}
 		public void setStatus(boolean status) {
 			this.status = status;
 		}
-		/*@Override
-		public int compareTo(ExamMainAnswerAnalyseDto o) {
-			Float valueOf = Float.valueOf(this.raioAll);
-			Float valueOf2 = Float.valueOf(o.getRaioAll());
-			if(valueOf >= valueOf2) {
-				return 1;
-			}
-			return -1;
-		}*/
+		public Float getExcellentlv() {
+			return excellentlv;
+		}
+		public void setExcellentlv(Float excellentlv) {
+			this.excellentlv = excellentlv;
+		}
+		public Float getRaioAll() {
+			return raioAll;
+		}
+		public void setRaioAll(Float raioAll) {
+			this.raioAll = raioAll;
+		}
+		public Float getFinelv() {
+			return finelv;
+		}
+		public void setFinelv(Float finelv) {
+			this.finelv = finelv;
+		}
+		public Float getPasslv() {
+			return passlv;
+		}
+		public void setPasslv(Float passlv) {
+			this.passlv = passlv;
+		}
 		
 }

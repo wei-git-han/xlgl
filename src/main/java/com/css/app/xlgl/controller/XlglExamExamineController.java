@@ -822,8 +822,8 @@ public class XlglExamExamineController {
 		jsonObject.put("fine", Float.valueOf(total2Raio));// 优良率
 		jsonObject.put("pass", Float.valueOf(total3Raio));// 及格率
 		XlglExamExamine queryObject = xlglExamExamineService.queryObject(examineId);
-		if(StringUtils.isNotBlank(queryObject.getMakeupId())&&
-				queryObject.getMakeupId().equals("1")) {
+		if(StringUtils.isNotBlank(queryObject.getMakeupStatus())&&
+				queryObject.getMakeupStatus().equals("1")) {
 			List<XlglExamExamineMakeup> queryList = xlglExamExamineMakeupService.queryList(map);
 			queryObject.setExamineMakeUpEndDate(queryList.get(0).getMakeUpEndDate());
 			queryObject.setExamineMakeUpStartDate(queryList.get(0).getMakeUpStartDate());
@@ -1065,14 +1065,14 @@ public class XlglExamExamineController {
 			} else {
 				raioAll = format.format(((float) peopleNum / findExamByOrganId.size()) * 100);// 参考率
 			}
-			analyseDto.setExcellentlv(excellent);// 优秀率
+			analyseDto.setExcellentlv(Float.valueOf(excellent));// 优秀率
 			analyseDto.setExcellent(total); //优秀人数
-			analyseDto.setFinelv(finelv);//优良率
+			analyseDto.setFinelv(Float.valueOf(finelv));//优良率
 			analyseDto.setFine(fine);//优良人数
-			analyseDto.setPasslv(passlv);//及格率
+			analyseDto.setPasslv(Float.valueOf(passlv));//及格率
 			analyseDto.setPass(pass);//及格人数
 			analyseDto.setFillUpNum(fillUpNum);// 待考人数
-			analyseDto.setRaioAll(raioAll);// 参考率
+			analyseDto.setRaioAll(Float.valueOf(raioAll));// 参考率
 			analyseDto.setPeopleNum(peopleNum); // 已(参)考人数
 			list.add(analyseDto);
 		}
