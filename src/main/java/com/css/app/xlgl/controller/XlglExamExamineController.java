@@ -1132,22 +1132,22 @@ public class XlglExamExamineController {
 		String[] titles = { "单位名称", "参考率", "已考人数", "待考人数", "优秀率", "优良率", "及格率" };
 		JSONObject total = this.getTotal(examineId, deptId);
 		if(StringUtils.isBlank(type) && StringUtils.isBlank(deptId)) {
-			fileName = examine.getExamineName()+"考试各局单位参考情况统计.xls";
+			fileName = "《"+ examine.getExamineName()+"》"+"总体参考情况统计清单.xls";
 			List<ExamMainAnswerAnalyseDto> list = this.getLv(examineId, null,orderBy);
 			try {
-				String totalName = examine.getExamineName()+"考试总体情况统计";
-				String listName = examine.getExamineName()+"考试总体情况各局统计";
+				String totalName = "《"+ examine.getExamineName()+"》"+"总体情况统计";
+				String listName = "《"+ examine.getExamineName()+"》"+"总体情况各局统计";
 				is = xlglExamExamineService.createExcelInfoFlie(list, titles, fileName,total,totalName,listName);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}else if(StringUtils.isNotBlank(type) && type.equals("0") && StringUtils.isNotBlank(deptId)) {
 			BaseAppOrgan queryObject = baseAppOrganService.queryObject(deptId);
-			fileName ="《"+ examine.getExamineName()+"》"+queryObject.getName()+"参考情况统计.xls";
+			fileName ="《"+ examine.getExamineName()+"》"+queryObject.getName()+"各部门参考情况统计.xls";
 			List<ExamMainAnswerAnalyseDto> list = this.getLv(examineId, deptId,orderBy);
 			try {
 				String totalName = "《"+ examine.getExamineName()+"》"+queryObject.getName()+"参考情况统计";
-				String listName = "《"+ examine.getExamineName()+"》"+queryObject.getName()+"各处参考情况统计";
+				String listName = "《"+ examine.getExamineName()+"》"+queryObject.getName()+"各部门参考情况统计";
 				 is = xlglExamExamineService.createExcelInfoFlie(list, titles, fileName,total,totalName,listName);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -1180,7 +1180,7 @@ public class XlglExamExamineController {
 						organId, isNotExam, status, deptId);
 				try {
 					String totalName = "《"+ examine.getExamineName()+"》"+queryObject.getName()+"参考情况统计";
-					String listName = "《"+ examine.getExamineName()+"》"+queryObject.getName()+"各处未考人员情况统计"+strCha;
+					String listName = "《"+ examine.getExamineName()+"》"+queryObject.getName()+"各部门未考人员情况统计"+strCha;
 					
 					is = xlglExamMainAnswerService.createExcelNotExam(list, title, fileName,total,totalName,listName);
 				} catch (Exception e) {
@@ -1193,7 +1193,7 @@ public class XlglExamExamineController {
 						organId, isNotExam, status, deptId);
 				try {
 					String totalName = "《"+ examine.getExamineName()+"》"+queryObject.getName()+"参考情况统计";
-					String listName = "《"+ examine.getExamineName()+"》"+queryObject.getName()+"各处已考人员情况统计"+strCha;
+					String listName = "《"+ examine.getExamineName()+"》"+queryObject.getName()+"各部门已考人员情况统计"+strCha;
 					is = xlglExamMainAnswerService.createExcelInfoFlie(list, title, fileName,total,totalName,listName);
 				} catch (Exception e) {
 					e.printStackTrace();
