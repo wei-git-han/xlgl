@@ -82,8 +82,6 @@ public class XlglExamExamineController {
 	@Autowired
 	private BaseAppUserService baseAppUserService;
 	@Autowired
-	private XlglExamExamineDao xlglExamExamineDao;
-	@Autowired
 	private BaseAppOrganService baseAppOrganService;
 	@Autowired
 	private XlglExamExamineMakeupService xlglExamExamineMakeupService;
@@ -107,7 +105,6 @@ public class XlglExamExamineController {
 		Map<String, Object> map = new HashMap<>();
 		Date date = new Date();
 		String userId = CurrentUser.getUserId();
-
 		map.put("issueDate", time);
 		map.put("examineName", examineName);
 		map.put("issueStatus", "1");
@@ -234,8 +231,6 @@ public class XlglExamExamineController {
 					xlglExamExamineService.update(ex);
 				}
 			}
-			// XlglExamExamine queryObject =
-			// xlglExamExamineService.queryObject(xlglExamExamine.getId());
 		}
 		Response.json("page", pageUtil);
 	}
@@ -302,11 +297,11 @@ public class XlglExamExamineController {
 		}
 		map.put("status", "0");
 		map.put("overStatus", "0");
-		int into = xlglExamExamineDao.queryTotal(map);// 进行中
+		int into = xlglExamExamineService.queryTotal(map);// 进行中
 		map.put("overStatus", "2");
-		int makeUp = xlglExamExamineDao.queryTotal(map);// 补考中
+		int makeUp = xlglExamExamineService.queryTotal(map);// 补考中
 		map.put("overStatus", "1");
-		int intoNot = xlglExamExamineDao.queryTotal(map);// 已结束
+		int intoNot = xlglExamExamineService.queryTotal(map);// 已结束
 		jsonObject.put("into", into + makeUp);
 		jsonObject.put("intoNot", intoNot);
 		Response.json(jsonObject);

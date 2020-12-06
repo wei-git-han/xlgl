@@ -8,7 +8,18 @@
 	</select>
 
 	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglExamMainAnswer">
-		select * from XLGL_EXAM_MAIN_ANSWER 
+	select * from (
+		select x.* from XLGL_EXAM_MAIN_ANSWER x
+		left join  BASE_APP_ORGAN o on x.organ_id = o.id
+		where o.parent_id = 'root'
+		union all
+		select * from (
+				select x.* from XLGL_EXAM_MAIN_ANSWER x
+				left join  BASE_APP_ORGAN o on x.organ_id = o.id
+				where o.parent_id != 'root'
+				order by o.sort asc
+			)
+		)
 		where 1=1
 			<if test="examineId != null and examineId !=''">
 			  and EXAMINE_ID = #{examineId}
@@ -47,7 +58,6 @@
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
-		order by ORGAN_ID
 	</select>
 	
  	<select id="queryTotal" resultType="int">

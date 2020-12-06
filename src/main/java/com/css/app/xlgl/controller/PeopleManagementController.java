@@ -35,6 +35,7 @@ import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
+import com.css.addbase.apporgmapped.entity.BaseAppOrgMapped;
 import com.css.addbase.apporgmapped.service.BaseAppOrgMappedService;
 import com.css.addbase.constant.AppConstant;
 import com.css.addbase.constant.AppInterfaceConstant;
@@ -351,16 +352,18 @@ public class PeopleManagementController {
 	}
 
 	private JSONObject getTXL(LinkedMultiValueMap<String, Object> map) {
+		BaseAppOrgMapped orgMapped = (BaseAppOrgMapped)baseAppOrgMappedService.orgMappedByOrgId("","root",AppConstant.APP_QXJGL);
 		// 获取清销假app的接口
-		String elecPath = baseAppOrgMappedService.getWebUrl(AppConstant.APP_TXL, AppInterfaceConstant.WEB_TXL);
+		String elecPath = orgMapped.getUrl()+ AppInterfaceConstant.WEB_TXL;
 		JSONObject jsonData = CrossDomainUtil.getJsonData(elecPath, map);
 		return jsonData;
 	}
 
 	private JSONObject getNumber(LinkedMultiValueMap<String, Object> map) {
+		BaseAppOrgMapped orgMapped = (BaseAppOrgMapped)baseAppOrgMappedService.orgMappedByOrgId("","root",AppConstant.APP_QXJGL);
+		
 		// 获取清销假app的接口
-		String elecPath = baseAppOrgMappedService.getWebUrl(AppConstant.APP_QXJGL,
-				AppInterfaceConstant.WEB_INTERFACE_QXJ_statistics);
+		String elecPath = orgMapped.getUrl() + AppInterfaceConstant.WEB_INTERFACE_QXJ_statistics;
 		JSONObject jsonData = CrossDomainUtil.getJsonData(elecPath, map);
 		return jsonData;
 	}

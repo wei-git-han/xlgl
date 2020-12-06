@@ -96,10 +96,20 @@
 	</delete>
 	
 	<select id="queryListByIds" resultType="com.css.addbase.apporgan.entity.BaseAppOrgan" >
-		select  *  from BASE_APP_ORGAN where ID in 
+		select  a.*  from BASE_APP_ORGAN a where a.ID in 
 		<foreach item="ids" collection="array" open="(" separator="," close=")">
 			#{ids}
 		</foreach>
+		 and a.parent_id = 'root'
+		 union all
+		 select * from (
+		 select  b.*  from BASE_APP_ORGAN b where b.ID in 
+		<foreach item="ids" collection="array" open="(" separator="," close=")">
+			#{ids}
+		</foreach>
+		 and b.parent_id != 'root'
+		 order by b.sort asc
+		 )
 	</select>
 	
 	<select id="queryListByTREEPATH" resultType="String">

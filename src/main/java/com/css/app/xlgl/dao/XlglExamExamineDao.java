@@ -21,4 +21,6 @@ public interface XlglExamExamineDao extends BaseDao<XlglExamExamine> {
 	
 	List<XlglExamExamine> queryVerifyList(Map<String, Object> map);
 	
+	List<XlglExamExamine> queryListAndTotal(Map<String, Object> map);
+	
 }

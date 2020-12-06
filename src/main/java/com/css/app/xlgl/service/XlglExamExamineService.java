@@ -34,4 +34,8 @@ public interface XlglExamExamineService {
 	List<XlglExamExamine> queryVerifyList(Map<String, Object> map);
 	
 	InputStream createExcelInfoFlie(List<ExamMainAnswerAnalyseDto> list,String[] title,String fileName,JSONObject json,String totalName,String listName) throws Exception;
+	
+	int queryTotal(Map<String,Object> map);
+
+	List<XlglExamExamine> queryListAndTotal(Map<String, Object> map);
 }

@@ -29,6 +29,52 @@
 		</if>
 	</select>
 
+	<select id="queryListAndTotal" resultType="com.css.app.xlgl.entity.XlglExamExamine">
+		select x.*,
+		case
+		when
+		x.OVER_STATUS = '0' and m.ISNOTEXAM= '0'
+		then '2'
+		when x.OVER_STATUS = '0' and m.ISNOTEXAM= '1'
+		then '1'
+		when x.OVER_STATUS = '1' and m.ISNOTEXAM= '0'
+		then '3'
+		when x.OVER_STATUS = '1' and m.ISNOTEXAM= '1'
+		then '1'
+		when x.OVER_STATUS = '1' and m.ISNOTEXAM= '1'
+		then '1'
+		when x.OVER_STATUS = '2' and m.ISNOTEXAM= '0'
+		then '2'
+		when x.OVER_STATUS = '2' and m.ISNOTEXAM= '1'
+		then '1'
+		when x.OVER_STATUS = '99'
+		then '2'
+		else '4' end as UserStatus
+		from XLGL_EXAM_EXAMINE x
+
+		left outer join XLGL_EXAM_MAIN_ANSWER m on x.id =
+		m.EXAMINE_ID
+		where 1=1
+		<if test="issueStatus != null and issueStatus !=''">
+			and x.ISSUE_STATUS = #{issueStatus}
+		</if>
+		<if test="issueDate != null and issueDate !=''">
+			and x.ISSUE_DATE &gt;= #{issueDate}
+		</if>
+		<if test="examineName != null and examineName !=''">
+			and x.EXAMINE_NAME like '%'||#{examineName}||'%'
+		</if>
+		<if test="status != null and status !=''">
+			and x.STATUS = #{status}
+		</if>
+		<if test="replyUserId != null and replyUserId !=''">
+			and m.reply_user_id = #{replyUserId}
+		</if>
+		order by x.UPDATE_DATE desc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
 	<select id="queryTotal" resultType="int">
 		select count(*) from XLGL_EXAM_EXAMINE
 		where 1=1
@@ -129,28 +175,29 @@
 	</delete>
 
 	<select id="findCount" resultType="int">
-		select 
-			count(*) 
+		select
+		count(*)
 		from
-			XLGL_EXAM_MAIN_ANSWER 
-		where 
-		STATUS = '0' 
+		XLGL_EXAM_MAIN_ANSWER
+		where
+		STATUS = '0'
 		<if test="examineId != null and examineId !=''">
 			and EXAMINE_ID = #{examineId}
 		</if>
 		<if test="organIdList != null">
 			and ORGAN_ID in
-			<foreach item="id" collection="organIdList" open="(" separator=","
-			close=")">
+			<foreach item="id" collection="organIdList" open="("
+				separator="," close=")">
 				#{id}
 			</foreach>
 		</if>
-			
+
 	</select>
 
 	<select id="queryVerifyList" resultType="com.css.app.xlgl.entity.XlglExamExamine">
 		select * from XLGL_EXAM_EXAMINE
-		where STATUS = '0' and ISSUE_STATUS = '1'
+		where STATUS = '0' and ISSUE_STATUS =
+		'1'
 		<if test="examineName != null and examineName !=''">
 			and EXAMINE_NAME = #{examineName}
 		</if>
