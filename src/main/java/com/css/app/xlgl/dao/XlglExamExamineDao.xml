@@ -23,7 +23,22 @@
 		<if test="status != null and status !=''">
 			and STATUS = #{status}
 		</if>
-		order by UPDATE_DATE desc
+				order by 
+			(
+				case 
+					when 
+						OVER_STATUS = '0' 
+						then 0 
+					when 
+						OVER_STATUS = '2' then 1 
+					when 
+						OVER_STATUS = '99' then 2 
+					when 
+						OVER_STATUS = '1' then 3 
+					else 4 
+				end
+				),
+			UPDATE_DATE desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
@@ -49,11 +64,16 @@
 		then '1'
 		when x.OVER_STATUS = '99'
 		then '2'
-		else '4' end as UserStatus
+		else '4' end as UserStatus ,
+		u.id as MakeupId ,	
+		u.MAKEUP_START_DATE as examineMakeUpStartDate ,
+		u.MAKEUP_END_DATE as examineMakeUpEndDate
 		from XLGL_EXAM_EXAMINE x
 
-		left outer join XLGL_EXAM_MAIN_ANSWER m on x.id =
+		left  join XLGL_EXAM_MAIN_ANSWER m on x.id =
 		m.EXAMINE_ID
+		
+		left  join XLGL_EXAM_EXAMINE_MAKEUP u on x.id  = u.EXAMINE_ID
 		where 1=1
 		<if test="issueStatus != null and issueStatus !=''">
 			and x.ISSUE_STATUS = #{issueStatus}
@@ -70,7 +90,22 @@
 		<if test="replyUserId != null and replyUserId !=''">
 			and m.reply_user_id = #{replyUserId}
 		</if>
-		order by x.UPDATE_DATE desc
+		order by 
+			(
+				case 
+					when 
+						x.OVER_STATUS = '0' 
+						then 0 
+					when 
+						x.OVER_STATUS = '2' then 1 
+					when 
+						x.OVER_STATUS = '99' then 2 
+					when 
+						x.OVER_STATUS = '1' then 3 
+					else 4 
+				end
+				),
+			x.UPDATE_DATE desc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
