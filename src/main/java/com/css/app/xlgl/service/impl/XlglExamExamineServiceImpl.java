@@ -165,5 +165,15 @@ public class XlglExamExamineServiceImpl implements XlglExamExamineService {
 		}
 		return new FileInputStream(fileName);
 	}
+
+	@Override
+	public int queryTotal(Map<String, Object> map) {
+		return xlglExamExamineDao.queryTotal(map);
+	}
+
+	@Override
+	public List<XlglExamExamine> queryListAndTotal(Map<String, Object> map) {
+		return xlglExamExamineDao.queryListAndTotal(map);
+	}
 	
 }

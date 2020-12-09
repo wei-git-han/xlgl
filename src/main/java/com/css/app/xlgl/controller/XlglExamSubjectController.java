@@ -1,6 +1,7 @@
 package com.css.app.xlgl.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -194,15 +194,28 @@ public class XlglExamSubjectController {
 	@ResponseBody
 	@RequestMapping("/findTopicBySubId")
 	public void findTopicBySubId(String subjectId){
+		JSONObject jsonbject = this.getTopicTypeNumber(subjectId);
 		XlglExamSubject queryObject = xlglExamSubjectService.queryObject(subjectId);
 		Map<String ,Object> map =new HashMap<String ,Object>();
 		if(queryObject.getSubjectType()!=null && queryObject.getSubjectType().contains(",")) {
+			ArrayList<String> arrayList = new ArrayList<String>();
 			String[] split = queryObject.getSubjectType().split(",");
-			map.put("type", split);
+			for (int i = 0; i < split.length; i++) {
+				String string = jsonbject.getString(split[i]);
+				if(Integer.valueOf(string)>0) {
+					arrayList.add(split[i]);
+				}
+			}
+			map.put("type", arrayList);
 		}else if(StringUtils.isNotBlank(queryObject.getSubjectType())) {
 			String[] split = new String[queryObject.getSubjectType().length()];
 			split[0]=queryObject.getSubjectType();
-			map.put("type", split);
+			String string = jsonbject.getString(split[0]);
+			ArrayList<String> arrayList = new ArrayList<String>();
+			if(Integer.valueOf(string)>0) {
+				arrayList.add(split[0]);
+			}
+			map.put("type", arrayList);
 		}
 		
 		Response.json("findList", map);
@@ -230,6 +243,11 @@ public class XlglExamSubjectController {
 	@ResponseBody
 	@RequestMapping("/getTopicNumber")
 	public void getTopicNumber(String id){
+		JSONObject jsonbject = this.getTopicTypeNumber(id);
+		Response.json(jsonbject);
+	}
+	
+	private JSONObject getTopicTypeNumber(String id) {
 		Map<String ,Object> map =new HashMap<String ,Object>();
 		JSONObject jsonbject = new JSONObject();
 		XlglExamSubject queryObject = xlglExamSubjectService.queryObject(id);
@@ -279,7 +297,7 @@ public class XlglExamSubjectController {
 		jsonbject.put("2", type2);
 		jsonbject.put("3", type3);
 		jsonbject.put("4", type4);
-		Response.json(jsonbject);
+		return jsonbject;
 	}
 	/**
 	 * 限制上传模板权限
