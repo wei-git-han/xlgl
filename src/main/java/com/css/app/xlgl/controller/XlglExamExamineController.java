@@ -954,7 +954,7 @@ public class XlglExamExamineController {
 	public void examAnalyse(String examineId, String organId,
 			String orderBy) {
 		JSONObject jsonObject = new JSONObject();
-		List<ExamMainAnswerAnalyseDto> list = this.getLv(examineId,organId,orderBy);
+		List<ExamMainAnswerAnalyseDto> list = this.getLv1(examineId,organId,orderBy);
 		if (list.size() > 0) {
 			jsonObject.put("code", "0");
 			jsonObject.put("msg", "success");
@@ -977,6 +977,147 @@ public class XlglExamExamineController {
 			arrayList = OrgUtil.getOrganTreeList(organs, organId, true, true, arrayList);
 			String[] arr = new String[arrayList.size()];
 			for (int i = 0; i < arr.length; i++) {
+				arr[i] = arrayList.get(i);
+			}
+			queryList = baseAppOrganService.queryListByIds(arr);
+		} else {
+			map.put("parentId", "root");
+			queryList = baseAppOrganService.queryList(map);
+		}
+		DecimalFormat format = new DecimalFormat("0.00");
+		ArrayList<ExamMainAnswerAnalyseDto> list = new ArrayList<ExamMainAnswerAnalyseDto>();
+		for (BaseAppOrgan baseAppOrgan : queryList) {
+			Integer fillUpNum = 0; // 待考人数
+			Integer peopleNum = 0; // 已(参)考人数
+			Integer total = 0; // 优秀人数
+			Integer fine = 0;// 优良人数
+			Integer pass = 0;// 及格人数
+			String excellent = ""; // 优秀率
+			String finelv = ""; // 优良率
+			String passlv = ""; // 及格率
+			String raioAll = ""; // 参考率
+			// 传参实体
+			ExamMainAnswerAnalyseDto analyseDto = new ExamMainAnswerAnalyseDto();
+			if(userInfo) {
+				analyseDto.setStatus(userInfo);
+			}else {
+				String organId2 = CurrentUser.getSSOUser().getOrganId();
+				BaseAppOrgan queryObject = baseAppOrganService.queryObject(organId2);
+				String treePath = queryObject.getTreePath();
+				if(treePath.contains(",")) {
+					String[] split = treePath.split(",");
+					List<String> asList = Arrays.asList(split);
+					if(asList.contains(baseAppOrgan.getId())) {
+						analyseDto.setStatus(true);
+					}else {
+						analyseDto.setStatus(false);
+					}
+				}else {
+					analyseDto.setStatus(false);
+				}
+			}
+			analyseDto.setOrganId(baseAppOrgan.getId());
+			analyseDto.setOrganName(baseAppOrgan.getName());
+			map.put("examId", examineId);
+			map.put("status", "0");
+			map.put("organId", baseAppOrgan.getId());
+			List<XlglExamMainAnswer> findExamByOrganId = xlglExamMainAnswerService.findExamByOrganId(map);
+			for (XlglExamMainAnswer xlglExamMainAnswer : findExamByOrganId) {
+				// IsNotExam 考试状态 0:没考，1:考了
+				if (xlglExamMainAnswer.getIsNotExam().equals("0")) {
+					fillUpNum++;
+				} else if (xlglExamMainAnswer.getIsNotExam().equals("1")) {
+					if (StringUtils.isNotBlank(xlglExamMainAnswer.getLevel())
+							&& xlglExamMainAnswer.getLevel().equals("优秀")) {
+						total++;
+					}else if(StringUtils.isNotBlank(xlglExamMainAnswer.getLevel())
+							&& xlglExamMainAnswer.getLevel().equals("优良")) {
+						fine++;
+					}else if(StringUtils.isNotBlank(xlglExamMainAnswer.getLevel())
+							&& xlglExamMainAnswer.getLevel().equals("及格")) {
+						pass ++;
+					}
+					peopleNum++;
+				}
+			}
+			if (peopleNum == 0 || total == 0) {
+				excellent = "0";
+			} else {
+				excellent = format.format(((float) total / peopleNum) * 100);// 优秀率
+			}
+			if (peopleNum == 0 || fine == 0) {
+				finelv = "0";
+			} else {
+				finelv = format.format(((float) fine / peopleNum) * 100);// 优秀率
+			}
+			if (peopleNum == 0 || pass == 0) {
+				passlv = "0";
+			} else {
+				passlv = format.format(((float) pass / peopleNum) * 100);// 优秀率
+			}
+			if (peopleNum == 0) {
+				raioAll = "0";
+			} else {
+				raioAll = format.format(((float) peopleNum / findExamByOrganId.size()) * 100);// 参考率
+			}
+			if("100.00".equals(excellent)){
+				finelv = "100.00";
+				passlv = "100.00";
+			}
+			analyseDto.setExcellentlv(Float.valueOf(excellent));// 优秀率
+			analyseDto.setExcellent(total); //优秀人数
+			analyseDto.setFinelv(Float.valueOf(finelv));//优良率
+			analyseDto.setFine(fine);//优良人数
+			analyseDto.setPasslv(Float.valueOf(passlv));//及格率
+			analyseDto.setPass(pass);//及格人数
+			analyseDto.setFillUpNum(fillUpNum);// 待考人数
+			analyseDto.setRaioAll(Float.valueOf(raioAll));// 参考率
+			analyseDto.setPeopleNum(peopleNum); // 已(参)考人数
+			list.add(analyseDto);
+		}
+		if(StringUtils.isNotBlank(orderBy)) {
+			if(orderBy.contains("-")) {
+				String[] split = orderBy.split("-");
+				if(split[0].equals("1")) {
+					if(split[1].equals("asc")) {
+						list.sort(Comparator.comparing(ExamMainAnswerAnalyseDto :: getRaioAll));
+					}else if(split[1].equals("desc")) {
+						list.sort(Comparator.comparing(ExamMainAnswerAnalyseDto :: getRaioAll).reversed());
+					}
+				}else if(split[0].equals("2")){
+					if(split[1].equals("asc")) {
+						list.sort(Comparator.comparing(ExamMainAnswerAnalyseDto :: getExcellentlv));
+					}else if(split[1].equals("desc")) {
+						list.sort(Comparator.comparing(ExamMainAnswerAnalyseDto :: getExcellentlv).reversed());
+					}
+				}else if(split[0].equals("3")){
+					if(split[1].equals("asc")) {
+						list.sort(Comparator.comparing(ExamMainAnswerAnalyseDto :: getFinelv));
+					}else if(split[1].equals("desc")) {
+						list.sort(Comparator.comparing(ExamMainAnswerAnalyseDto :: getFinelv).reversed());
+					}
+				}else if(split[0].equals("4")){
+					if(split[1].equals("asc")) {
+						list.sort(Comparator.comparing(ExamMainAnswerAnalyseDto :: getPasslv));
+					}else if(split[1].equals("desc")) {
+						list.sort(Comparator.comparing(ExamMainAnswerAnalyseDto :: getPasslv).reversed());
+					}
+				}
+			}
+		}
+		return list;
+	}
+
+	private List<ExamMainAnswerAnalyseDto> getLv1(String examineId, String organId,String orderBy){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<BaseAppOrgan> queryList = new ArrayList<BaseAppOrgan>();
+		boolean userInfo = this.getUserInfo();
+		if (StringUtils.isNotBlank(organId)) {
+			List<BaseAppOrgan> organs = baseAppOrganService.queryList(null);
+			List<String> arrayList = new ArrayList<String>();
+			arrayList = OrgUtil.getOrganTreeList(organs, organId, true, true, arrayList);
+			String[] arr = new String[arrayList.size()];
+			for (int i = 1; i < arr.length; i++) {
 				arr[i] = arrayList.get(i);
 			}
 			queryList = baseAppOrganService.queryListByIds(arr);
