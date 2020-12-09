@@ -1060,6 +1060,10 @@ public class XlglExamExamineController {
 			} else {
 				raioAll = format.format(((float) peopleNum / findExamByOrganId.size()) * 100);// 参考率
 			}
+			if("100.00".equals(excellent)){
+				finelv = "100.00";
+				passlv = "100.00";
+			}
 			analyseDto.setExcellentlv(Float.valueOf(excellent));// 优秀率
 			analyseDto.setExcellent(total); //优秀人数
 			analyseDto.setFinelv(Float.valueOf(finelv));//优良率
