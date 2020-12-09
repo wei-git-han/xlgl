@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.css.addbase.apporgan.entity.BaseAppUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -188,6 +189,7 @@ public class XlglExamMainAnswerController {
 			}
 
 		}
+		String currentOrgId = baseAppUserService.queryByUserId(CurrentUser.getUserId());
 		String orgName = "";
 		BaseAppOrgan queryObject3 = baseAppOrganService.queryObject(queryObject.getOrganId());
 		if(StringUtils.isNotBlank(queryObject3.getTreePath())) {
@@ -195,7 +197,12 @@ public class XlglExamMainAnswerController {
 			List<BaseAppOrgan> queryListByIds = baseAppOrganService.queryListByIds(split);
 			for (BaseAppOrgan baseAppOrgan : queryListByIds) {
 				if(baseAppOrgan.getParentId().equals("root")) {
-					orgName = baseAppOrgan.getName()+"-";
+					if(currentOrgId.equals(baseAppOrgan.getId())){
+						orgName = baseAppOrgan.getName();
+					}else{
+						orgName = baseAppOrgan.getName()+"-"+queryObject.getOrganName();
+					}
+
 					break;
 				}
 			}
@@ -203,7 +210,7 @@ public class XlglExamMainAnswerController {
 		jsonObject.put("time", queryObject.getUpdateDate());
 		jsonObject.put("userName", queryObject.getReplyUserName());
 		jsonObject.put("userId", queryObject.getReplyUserId());
-		jsonObject.put("orgName", orgName+queryObject.getOrganName());
+		jsonObject.put("orgName", orgName);
 		jsonObject.put("orgId", queryObject.getOrganId());
 		jsonObject.put("level", queryObject.getLevel());
 		jsonObject.put("fractionsum", queryObject.getFractionsum());
