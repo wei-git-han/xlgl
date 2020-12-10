@@ -1,1 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d0b23f2"],{"22fb":function(n,o,p){n.exports=p.p+"static/img/youliang.b71ed53b.svg"}}]);

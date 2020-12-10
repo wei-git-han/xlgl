@@ -1,1 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d21672c"],{c306:function(c,n,i){c.exports=i.p+"static/img/tixing.cbc0ccf8.svg"}}]);
