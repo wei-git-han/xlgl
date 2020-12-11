@@ -1053,12 +1053,12 @@ public class XlglExamExamineController {
 			if (peopleNum == 0 || pass == 0) {
 				passlv = "0";
 			} else {
-				passlv = format.format(((float) pass / peopleNum) * 100);// 优秀率
+				passlv = format.format(((float) (pass+fine) / peopleNum) * 100);// 优秀率
 			}
 			if (peopleNum == 0) {
 				raioAll = "0";
 			} else {
-				raioAll = format.format(((float) peopleNum / findExamByOrganId.size()) * 100);// 参考率
+				raioAll = format.format(((float) (peopleNum+pass+fine) / findExamByOrganId.size()) * 100);// 参考率
 			}
 			if("100.00".equals(excellent)){
 				finelv = "100.00";
@@ -1189,17 +1189,17 @@ public class XlglExamExamineController {
 			if (peopleNum == 0 || fine == 0) {
 				finelv = "0";
 			} else {
-				finelv = format.format(((float) fine / peopleNum) * 100);// 优秀率
+				finelv = format.format(((float) fine / peopleNum) * 100);// 优良率
 			}
 			if (peopleNum == 0 || pass == 0) {
 				passlv = "0";
 			} else {
-				passlv = format.format(((float) pass / peopleNum) * 100);// 优秀率
+				passlv = format.format(((float) (pass+fine) / peopleNum) * 100);// 及格率
 			}
 			if (peopleNum == 0) {
 				raioAll = "0";
 			} else {
-				raioAll = format.format(((float) peopleNum / findExamByOrganId.size()) * 100);// 参考率
+				raioAll = format.format(((float) (peopleNum+pass+fine) / findExamByOrganId.size()) * 100);// 参考率
 			}
 			if("100.00".equals(excellent)){
 				finelv = "100.00";
