@@ -123,8 +123,8 @@ public class XlglExamExamineController {
 			mapAll.put("isNotExam", "1");
 			String number = xlglExamMainAnswerService.queryUserCount(mapAll);// 每个试卷的参考人数
 
-			// 当前用户考试状态 UserStatus 1:已参加 2开始考试 3:超时未考 4:无法考试，无成绩单 //overStatus 考试是否结束
-			// 0：没结束进行中，1：已结束已完结 2 :补考开始，99：未开始
+			// 当前用户考试状态 UserStatus 1:已参加 2开始考试 3:超时未考 4:无法考试，无成绩单 
+			//overStatus 考试是否结束    0：没结束进行中，1：已结束已完结 2 :补考开始， 3：补考已参加，99：未开始
 			mapAnswer.put("examineId", xlglExamExamine.getId());
 			mapAnswer.put("replyUserId", userId);
 			List<XlglExamMainAnswer> queryList = xlglExamMainAnswerService.queryList(mapAnswer);
@@ -148,7 +148,11 @@ public class XlglExamExamineController {
 						&& xlglExamMainAnswer.getIsNotExam().equals("1")) {
 					xlglExamExamine.setUserStatus("1");
 				} else if (xlglExamExamine.getOverStatus().equals("99")) {
-					xlglExamExamine.setUserStatus("2");
+					if(xlglExamMainAnswer.getIsNotExam().equals("1")) {
+						xlglExamExamine.setUserStatus("1");
+					}else {
+						xlglExamExamine.setUserStatus("2");
+					}
 				} else {
 					xlglExamExamine.setUserStatus("2");
 				}
@@ -204,6 +208,7 @@ public class XlglExamExamineController {
 					XlglExamExamine ex = new XlglExamExamine();
 					ex.setId(xlglExamExamine.getId());
 					ex.setOverStatus("2");
+					xlglExamExamine.setOverStatus("2");
 					xlglExamExamineService.update(ex);
 				} else if (xlglExamExamineMakeup.getMakeUpStartDate() != null
 						&& xlglExamExamineMakeup.getMakeUpEndDate() != null
@@ -211,6 +216,7 @@ public class XlglExamExamineController {
 					XlglExamExamine ex = new XlglExamExamine();
 					ex.setId(xlglExamExamine.getId());
 					ex.setOverStatus("99");
+					xlglExamExamine.setOverStatus("99");
 					xlglExamExamineService.update(ex);
 				}
 			} else {
@@ -228,7 +234,14 @@ public class XlglExamExamineController {
 					XlglExamExamine ex = new XlglExamExamine();
 					ex.setId(xlglExamExamine.getId());
 					ex.setOverStatus("0");
+					xlglExamExamine.setOverStatus("0");
 					xlglExamExamineService.update(ex);
+				}
+			}
+			if(xlglExamExamine.getOverStatus().equals("2")) {
+				XlglExamMainAnswer xlglExamMainAnswer = queryList.get(0);
+				if(xlglExamMainAnswer.getIsNotExam().equals("1")) {
+					xlglExamExamine.setOverStatus("3");//新增字段状态 3：补考中已参加
 				}
 			}
 		}
