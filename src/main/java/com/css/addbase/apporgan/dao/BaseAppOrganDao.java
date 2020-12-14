@@ -73,4 +73,10 @@ public interface BaseAppOrganDao extends BaseDao<BaseAppOrgan> {
 	BaseAppOrgan queryDeptNameByUserId(String orgId);
 	
 	List<String> queryListByTREEPATH(String orgId);
+	
+	/**
+	 * 根据父Id获取部门信息，判断业务配置是否有效
+	 * @author gengds
+	 */
+	List<BaseAppOrgan> findByParentIdAndIsinvalid(Map<String, Object> map);
 }

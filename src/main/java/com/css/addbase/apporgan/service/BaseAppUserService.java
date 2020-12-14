@@ -142,6 +142,9 @@ public interface BaseAppUserService {
 	List<BaseAppUser>  queryByOrganidTREEPATH(Map<String,Object> map);
 
 	List<BaseAppUser> queryAllUsers();
-
+	
+	List<BaseAppUser> queryByOrgList(String[] deptIds);
+	
+	List<String> queryByOrgListUserID(String[] deptIds);
 
 }

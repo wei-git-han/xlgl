@@ -290,5 +290,23 @@
 		</if>
 		
 	</select>
+	
+		<select id="queryByOrgList" resultType="com.css.addbase.apporgan.entity.BaseAppUser">
+		select  * from BASE_APP_USER where ISDELETE = 0 and SFYX = '1' and ORGANID in
+		<foreach item="deptIds" collection="array" open="(" separator=","
+			close=")">
+			#{userIds}
+		</foreach>
+	</select>
+	
+	<select id="queryByOrgListUserID" resultType="java.lang.String">
+		select  * from BASE_APP_USER where ISDELETE = 0 and SFYX = '1' and ORGANID in
+		<foreach item="deptIds" collection="array" open="(" separator=","
+			close=")">
+			#{userIds}
+		</foreach>
+	</select>
+	
+	
 
 </mapper>

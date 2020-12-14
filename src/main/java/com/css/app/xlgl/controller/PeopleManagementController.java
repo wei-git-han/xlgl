@@ -212,114 +212,137 @@ public class PeopleManagementController {
 	 */
 	@ResponseBody
 	@RequestMapping("/qxjUserInfoList")
-	public void qxjUserInfoList(String page, String limit, String organId) {
-		JSONObject jsonObject = new JSONObject();
+	public void qxjUserInfoList(String parentId,String organId,String userName) {
+		List<String> userList = getUserArray();
 		LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		map.add("orgid", organId);
-		map.add("page", page);
-		map.add("rows", limit);
-		JSONObject txl = getTXL(map);
-		String jsonArray = txl.getJSONArray("rows").toString();
-		List<TxlUserDto> parseArray = JSONArray.parseArray(jsonArray, TxlUserDto.class);
-		List<TxlUserDto> list = new ArrayList<TxlUserDto>();
-		List<String> userArray = getUserArray();
-		for (TxlUserDto txlUserDto : parseArray) {
-			LinkedMultiValueMap<String, Object> hashmap = new LinkedMultiValueMap<String, Object>();
-			hashmap.add("userId", txlUserDto.getUserid());
-			// 获取办件开放的接口
-			String elecPath = baseAppOrgMappedService.getWebUrl(AppConstant.APP_QXJGL,
-					AppInterfaceConstant.WEB_INTERFACE_QXJ_USER_INFO_QJDAYS);
-			JSONObject jsonData = CrossDomainUtil.getJsonData(elecPath, map);
-			String string = jsonData.toString();
-			QXJPeopleManagementDto parseObject = JSONObject.parseObject(string, QXJPeopleManagementDto.class);
-			txlUserDto.setQXJweixiujiaDays(parseObject.getWeixiujiaDays());
-			txlUserDto.setQXJtotalDays(parseObject.getTotalDays());
-			txlUserDto.setQXJxiuJiaDays(parseObject.getXiuJiaDays());
-			if (parseObject.getType() != null) {
-				txlUserDto.setQXJtype(parseObject.getType());
-				txlUserDto.setQXJstartDate(parseObject.getStartDate());
-				txlUserDto.setQXJendDate(parseObject.getEndDate());
-			}
-			if (userArray.contains(txlUserDto.getAccount())) {
-				txlUserDto.setIsShow("1");
-			} else {
-				txlUserDto.setIsShow("0");
-			}
-			list.add(txlUserDto);
+		LinkedMultiValueMap<String, Object> hashmap = new LinkedMultiValueMap<String, Object>();
+		HashMap<String,Object> hashMap2 = new HashMap<String, Object>();
+		BaseAppOrgMapped orgMapped = (BaseAppOrgMapped)baseAppOrgMappedService.orgMappedByOrgId("","root",AppConstant.APP_QXJGL);
+		// 获取清销假app的接口
+		String elecPath = orgMapped.getUrl() + AppInterfaceConstant.WEB_INTERFACE_QXJ_USER_INFO_QJDAYS;
+		hashMap2.put("parentId", parentId);
+		hashMap2.put("organId", organId);
+		hashMap2.put("userName", userName);
+		List<BaseAppOrgan> organList = baseAppOrganService.findByParentIdAndIsinvalid(hashMap2);
+		String[] array =new String[organList.size()];
+		for (int i = 0; i < organList.size(); i++) {
+			array[i] = organList.get(i).getId();
 		}
-		txl.put("rows", list);
-
-		jsonObject.put("rows", list);
-		jsonObject.put("pageSize", limit);
-		String string = txl.getString("total");
-		Integer valueOf = Integer.valueOf(string);
-		Integer valueOf2 = Integer.valueOf(limit);
-		String string2 = txl.getString("page");
-		Integer valueOf3 = Integer.valueOf(string2);
-		PageUtils pageUtils = new PageUtils(list, valueOf, valueOf2, valueOf3);
-
-		Response.json("page", pageUtils);
+		List<String> queryByOrgListUserID = baseAppUserService.queryByOrgListUserID(array);
+		for (BaseAppOrgan baseAppOrgan : organList) {
+			ArrayList<TxlUserDto> arrayList = new ArrayList<>();
+			Integer yzxrs = 0; //应在线人数 需等请销假开发完毕
+			Integer userIdList=this.userIdNumber(baseAppOrgan.getId(), userList);// 在线人数
+			baseAppOrgan.setZxrs(userIdList);
+			baseAppOrgan.setYzwrs(yzxrs);
+			map.add("orgid", organId);
+			JSONObject txl = getTXL(map);
+			String jsonArray = txl.getJSONArray("rows").toString();
+			List<TxlUserDto> parseArray = JSONArray.parseArray(jsonArray, TxlUserDto.class);
+			for (TxlUserDto txlUserDto : parseArray) {
+				hashmap.add("userId", txlUserDto.getUserid());
+				JSONObject jsonData = CrossDomainUtil.getJsonData(elecPath, hashmap);
+				String string = jsonData.toString();
+				QXJPeopleManagementDto parseObject = JSONObject.parseObject(string, QXJPeopleManagementDto.class);
+				txlUserDto.setQXJweixiujiaDays(parseObject.getWeixiujiaDays());
+				txlUserDto.setQXJtotalDays(parseObject.getTotalDays());
+				txlUserDto.setQXJxiuJiaDays(parseObject.getXiuJiaDays());
+				if (parseObject.getType() != null) {
+					txlUserDto.setQXJtype(parseObject.getType());
+					txlUserDto.setQXJstartDate(parseObject.getStartDate());
+					txlUserDto.setQXJendDate(parseObject.getEndDate());
+				}
+				//isShow 1： 在线 ， 2：请假 ，3：出差，4：异常
+				if (userList.contains(txlUserDto.getAccount())) {
+					txlUserDto.setIsShow("1");
+				} else {
+					txlUserDto.setIsShow("0");
+				}
+				if(txlUserDto.getOrganid().equals(baseAppOrgan.getId()) 
+						&& !queryByOrgListUserID.contains(txlUserDto.getUserid())) {
+					arrayList.add(txlUserDto);
+				}
+				
+			}
+			baseAppOrgan.setList(arrayList);
+		}
+		
+		Response.json(organList);
 	}
 
 	/**
-	 * 全局人员情况-统计全局休假人数、请假人数、应在位人数(总人数-请假人数-休假人数)、人员在位率(实际在位人数/应在位人数)
-	 * 
+	 * 人员管理新需求 2020-12-11 修改接口
+	 * 全局人员情况和当前用户所在局的人员情况统计 
 	 * @param status
-	 *            0:全部，1：一个部门
+	 *            0:全部权限，1：当前用户所属局的权限
 	 */
 	@ResponseBody
 	@RequestMapping("/statistics")
 	public void statistics(String status,String organId) {
+		int userAllYx = baseAppUserService.queryListAllYxCount(); //注册人数
 		LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		if (status.equals("1") ) {
+		if(status.equals("0") && StringUtils.isBlank(organId)) {
+			organId = "root";
+		}else if (status.equals("1") &&  StringUtils.isBlank(organId)) {
 			if(StringUtils.isBlank(organId)) {
 				organId = CurrentUser.getSSOUser().getOrganId();
+				BaseAppOrgan queryObject3 = baseAppOrganService.queryObject(organId);
+				if(StringUtils.isNotBlank(queryObject3.getTreePath())) {
+					String[] split = queryObject3.getTreePath().split(",");
+					List<BaseAppOrgan> queryListByIds = baseAppOrganService.queryListByIds(split);
+					for (BaseAppOrgan baseAppOrgan : queryListByIds) {
+						if(baseAppOrgan.getParentId().equals("root")) {
+							organId = baseAppOrgan.getId();
+							break;
+						}
+					}
+				}
 			}
 			map.add("organId", organId);
+		}else {
+			
 		}
 		List<String> list = getUserArray();
 		JSONObject jsonData = this.getNumber(map);
 		int userIdList = 0;
 		if(status.equals("1")) {
-			userIdList=this.userIdNumber(organId, list);// 实际在位人数
+			userIdList=this.userIdNumber(organId, list);// 在线人数
 		}else {
-			userIdList=this.userIdNumber(null, list);// 实际在位人数
+			userIdList=this.userIdNumber(null, list);// 在线人数
 		}
-		Integer object = 0;
-		Integer num = 0;
+		Integer userShouldNumber = 0; //应在线人数
+		Integer qjNum = 0; //请假人数
+		Integer evectionNum = 0; //出差人数
+		Integer otherPlacesNum = 0 ; //京外人数
+
 		if (jsonData != null) {
-			Object object2 = jsonData.get("yzwrs");
-			object = (Integer) object2;// 应在位人数
-			Object object3 = jsonData.get("qjrs");
-			num = (Integer) object3;
+			qjNum =(Integer) jsonData.get("qjrs");
+			evectionNum = 10; //现请销假无出差人数，等请销假开发完毕
+			otherPlacesNum = 10; //现请销假京外人数，等请销假开发完毕
 		}
-		jsonData.put("sjzwrs", userIdList);
-		Integer sum = object - num;
-		if (userIdList == 0 && object == 0 && object != null) {
-			jsonData.put("zwlv", "0");
+		userShouldNumber = userAllYx -qjNum -evectionNum;
+
+		if (userIdList == 0) {
+			jsonData.put("zwlv", "0");//在线率
 		} else {
 			DecimalFormat decimalFormat = new DecimalFormat("0.00");
 			if (userIdList > 0) {
-				if (sum > 0) {
-					// float zwRate = (float) ((new BigDecimal((float) object /
-					// userIdList).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()) * 100);
-					float zwRate = ((float) userIdList / (float) sum) * 100;
+					float zwRate = ((float) userIdList / (float) userAllYx) * 100;
 					String format = decimalFormat.format(zwRate);
 					if (zwRate > 0) {
 						jsonData.put("zwlv", format);
 					} else {
 						jsonData.put("zwlv", "0");
 					}
-				}else {
-					jsonData.put("zwlv", "0");
-				}
-				// long zwr =((long)userIdList /(long)yzwrs);
-				// float zwRate = zwr*100; //人员在位率
-
 			} else {
 				jsonData.put("zwlv", "0");
 			}
 		}
+		jsonData.put("userAllYx", userAllYx);//注册人数
+		jsonData.put("userShouldNumber", userShouldNumber);//应在线人数
+		jsonData.put("userIdList", userIdList);// 在线人数
+		jsonData.put("qjNum", qjNum);  //请假人数
+		jsonData.put("otherPlacesNum", otherPlacesNum);//京外人数
 		Response.json(jsonData);
 	}
 
@@ -352,7 +375,7 @@ public class PeopleManagementController {
 	}
 
 	private JSONObject getTXL(LinkedMultiValueMap<String, Object> map) {
-		BaseAppOrgMapped orgMapped = (BaseAppOrgMapped)baseAppOrgMappedService.orgMappedByOrgId("","root",AppConstant.APP_QXJGL);
+		BaseAppOrgMapped orgMapped = (BaseAppOrgMapped)baseAppOrgMappedService.orgMappedByOrgId("","root",AppConstant.APP_TXL);
 		// 获取清销假app的接口
 		String elecPath = orgMapped.getUrl()+ AppInterfaceConstant.WEB_TXL;
 		JSONObject jsonData = CrossDomainUtil.getJsonData(elecPath, map);

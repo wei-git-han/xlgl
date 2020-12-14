@@ -129,4 +129,9 @@ public class BaseAppOrganServiceImpl implements BaseAppOrganService {
 		return baseAppOrganDao.queryPerDept(deptId);
 	}
 
+	@Override
+	public List<BaseAppOrgan> findByParentIdAndIsinvalid(Map<String, Object> map) {
+		return baseAppOrganDao.findByParentIdAndIsinvalid(map);
+	}
+
 }
