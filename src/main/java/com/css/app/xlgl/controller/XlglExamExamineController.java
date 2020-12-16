@@ -99,142 +99,6 @@ public class XlglExamExamineController {
 	 * @param status
 	 *            0：考试，1:练习xlglexamanswer
 	 */
-//	@ResponseBody
-//	@RequestMapping("/list")
-//	public void list(Integer page, Integer limit, String time, String examineName, String status) {
-//		Map<String, Object> map = new HashMap<>();
-//		Date date = new Date();
-//		String userId = CurrentUser.getUserId();
-//		map.put("issueDate", time);
-//		map.put("examineName", examineName);
-//		map.put("issueStatus", "1");
-//		map.put("status", status);
-//		PageHelper.startPage(page, limit);
-//		// 查询列表数据
-//		List<XlglExamExamine> xlglExamExamineList = xlglExamExamineService.queryList(map);
-//		PageUtils pageUtil = new PageUtils(xlglExamExamineList);
-//		DecimalFormat format = new DecimalFormat("0.00");
-//		for (XlglExamExamine xlglExamExamine : xlglExamExamineList) {
-//			map.put("examineId", xlglExamExamine.getId());
-//			int queryTotal = xlglExamExamineService.findCount(map);// 总用户人数
-//			HashMap<String, Object> mapAll = new HashMap<String, Object>();
-//			Map<String, Object> mapAnswer = new HashMap<>();
-//			mapAll.put("examineId", xlglExamExamine.getId());
-//			mapAll.put("isNotExam", "1");
-//			String number = xlglExamMainAnswerService.queryUserCount(mapAll);// 每个试卷的参考人数
-//
-//			// 当前用户考试状态 UserStatus 1:已参加 2开始考试 3:超时未考 4:无法考试，无成绩单 //overStatus 考试是否结束
-//			// 0：没结束进行中，1：已结束已完结 2 :补考开始，99：未开始
-//			mapAnswer.put("examineId", xlglExamExamine.getId());
-//			mapAnswer.put("replyUserId", userId);
-//			List<XlglExamMainAnswer> queryList = xlglExamMainAnswerService.queryList(mapAnswer);
-//			if (queryList.size() > 0) {
-//				XlglExamMainAnswer xlglExamMainAnswer = queryList.get(0);
-//				if (xlglExamExamine.getOverStatus().equals("0") && xlglExamMainAnswer.getIsNotExam().equals("0")) {
-//					xlglExamExamine.setUserStatus("2");
-//				} else if (xlglExamExamine.getOverStatus().equals("0")
-//						&& xlglExamMainAnswer.getIsNotExam().equals("1")) {
-//					xlglExamExamine.setUserStatus("1");
-//				} else if (xlglExamExamine.getOverStatus().equals("1")
-//						&& xlglExamMainAnswer.getIsNotExam().equals("0")) {
-//					xlglExamExamine.setUserStatus("3");
-//				} else if (xlglExamExamine.getOverStatus().equals("1")
-//						&& xlglExamMainAnswer.getIsNotExam().equals("1")) {
-//					xlglExamExamine.setUserStatus("1");
-//				} else if (xlglExamExamine.getOverStatus().equals("2")
-//						&& xlglExamMainAnswer.getIsNotExam().equals("0")) {
-//					xlglExamExamine.setUserStatus("2");
-//				} else if (xlglExamExamine.getOverStatus().equals("2")
-//						&& xlglExamMainAnswer.getIsNotExam().equals("1")) {
-//					xlglExamExamine.setUserStatus("1");
-//				} else if (xlglExamExamine.getOverStatus().equals("99")) {
-//					xlglExamExamine.setUserStatus("2");
-//				} else {
-//					xlglExamExamine.setUserStatus("2");
-//				}
-//			} else {
-//				xlglExamExamine.setUserStatus("4");
-//			}
-//
-//			// 当前考试是否发起补考
-//			List<XlglExamExamineMakeup> makeupList = xlglExamExamineMakeupService.queryList(mapAnswer);
-//			if (makeupList.size() > 0 && xlglExamExamine.getOverStatus().equals("2")) {
-//				String id = makeupList.get(0).getId();
-//				xlglExamExamine.setMakeupId(id);
-//			}
-//
-//			// 当前考试参考人员人数，未参考人员人数、参考率计算
-//			Integer numberInto = 0;
-//			if (StringUtils.isNotBlank(number)) {
-//				numberInto = Integer.parseInt(number);
-//			}
-//			xlglExamExamine.setNumberInto(numberInto);
-//			Integer numberIntoNot = queryTotal - numberInto;
-//			if (numberIntoNot < 0) {
-//				xlglExamExamine.setNumberIntoNot(0);
-//			} else {
-//				xlglExamExamine.setNumberIntoNot(numberIntoNot);
-//			}
-//			String raio;
-//			if (numberInto == 0 || queryTotal == 0) {
-//				raio = "0";
-//			} else {
-//				raio = format.format(((float) numberInto / queryTotal) * 100);// 参考率
-//			}
-//			xlglExamExamine.setRatio(raio + "%");
-//			// 更改状态
-//			if (makeupList.size() > 0) {// 查看是否有补考，如果有补考则以补考结束时间为准
-//				XlglExamExamineMakeup xlglExamExamineMakeup = makeupList.get(0);
-//				if (xlglExamExamineMakeup.getMakeUpEndDate() != null
-//						&& xlglExamExamineMakeup.getMakeUpStartDate() != null) {
-//					xlglExamExamine.setExamineEndDate(xlglExamExamineMakeup.getMakeUpEndDate());
-//					xlglExamExamine.setExamineStartDate(xlglExamExamineMakeup.getMakeUpStartDate());
-//				}
-//				if (xlglExamExamineMakeup.getMakeUpEndDate() != null
-//						&& xlglExamExamineMakeup.getMakeUpEndDate().before(date)) {
-//					XlglExamExamine ex = new XlglExamExamine();
-//					ex.setId(xlglExamExamine.getId());
-//					ex.setOverStatus("1");
-//					xlglExamExamine.setOverStatus("1");
-//					xlglExamExamineService.update(ex);
-//				} else if (xlglExamExamineMakeup.getMakeUpEndDate() != null
-//						&& xlglExamExamineMakeup.getMakeUpStartDate().before(date)
-//						&& xlglExamExamineMakeup.getMakeUpEndDate().after(date)
-//						&& !xlglExamExamine.getOverStatus().equals("0")) {
-//					XlglExamExamine ex = new XlglExamExamine();
-//					ex.setId(xlglExamExamine.getId());
-//					ex.setOverStatus("2");
-//					xlglExamExamineService.update(ex);
-//				} else if (xlglExamExamineMakeup.getMakeUpStartDate() != null
-//						&& xlglExamExamineMakeup.getMakeUpEndDate() != null
-//						&& xlglExamExamineMakeup.getMakeUpStartDate().after(date)) {
-//					XlglExamExamine ex = new XlglExamExamine();
-//					ex.setId(xlglExamExamine.getId());
-//					ex.setOverStatus("99");
-//					xlglExamExamineService.update(ex);
-//				}
-//			} else {
-//				if (xlglExamExamine.getExamineEndDate() != null && xlglExamExamine.getIssueStatus() != null
-//						&& xlglExamExamine.getExamineEndDate().before(date)) {
-//					XlglExamExamine ex = new XlglExamExamine();
-//					ex.setId(xlglExamExamine.getId());
-//					ex.setOverStatus("1");
-//					xlglExamExamine.setOverStatus("1");
-//					xlglExamExamineService.update(ex);
-//				} else if (xlglExamExamine.getExamineEndDate() != null && xlglExamExamine.getIssueStatus() != null
-//						&& xlglExamExamine.getExamineStartDate().before(date)
-//						&& xlglExamExamine.getExamineEndDate().after(date)
-//						&& !xlglExamExamine.getOverStatus().equals("0")) {
-//					XlglExamExamine ex = new XlglExamExamine();
-//					ex.setId(xlglExamExamine.getId());
-//					ex.setOverStatus("0");
-//					xlglExamExamineService.update(ex);
-//				}
-//			}
-//		}
-//		Response.json("page", pageUtil);
-//	}
-
 	@ResponseBody
 	@RequestMapping("/list")
 	public void list(Integer page, Integer limit, String time, String examineName, String status) {
@@ -259,8 +123,8 @@ public class XlglExamExamineController {
 			mapAll.put("isNotExam", "1");
 			String number = xlglExamMainAnswerService.queryUserCount(mapAll);// 每个试卷的参考人数
 
-			// 当前用户考试状态 UserStatus 1:已参加 2开始考试 3:超时未考 4:无法考试，无成绩单 //overStatus 考试是否结束
-			// 0：没结束进行中，1：已结束已完结 2 :补考开始，99：未开始
+			// 当前用户考试状态 UserStatus 1:已参加 2开始考试 3:超时未考 4:无法考试，无成绩单 
+			//overStatus 考试是否结束    0：没结束进行中，1：已结束已完结 2 :补考开始， 3：补考已参加，99：未开始
 			mapAnswer.put("examineId", xlglExamExamine.getId());
 			mapAnswer.put("replyUserId", userId);
 			List<XlglExamMainAnswer> queryList = xlglExamMainAnswerService.queryList(mapAnswer);
@@ -284,7 +148,11 @@ public class XlglExamExamineController {
 						&& xlglExamMainAnswer.getIsNotExam().equals("1")) {
 					xlglExamExamine.setUserStatus("1");
 				} else if (xlglExamExamine.getOverStatus().equals("99")) {
-					xlglExamExamine.setUserStatus("2");
+					if(xlglExamMainAnswer.getIsNotExam().equals("1")) {
+						xlglExamExamine.setUserStatus("1");
+					}else {
+						xlglExamExamine.setUserStatus("2");
+					}
 				} else {
 					xlglExamExamine.setUserStatus("2");
 				}
@@ -340,6 +208,7 @@ public class XlglExamExamineController {
 					XlglExamExamine ex = new XlglExamExamine();
 					ex.setId(xlglExamExamine.getId());
 					ex.setOverStatus("2");
+					xlglExamExamine.setOverStatus("2");
 					xlglExamExamineService.update(ex);
 				} else if (xlglExamExamineMakeup.getMakeUpStartDate() != null
 						&& xlglExamExamineMakeup.getMakeUpEndDate() != null
@@ -347,6 +216,7 @@ public class XlglExamExamineController {
 					XlglExamExamine ex = new XlglExamExamine();
 					ex.setId(xlglExamExamine.getId());
 					ex.setOverStatus("99");
+					xlglExamExamine.setOverStatus("99");
 					xlglExamExamineService.update(ex);
 				}
 			} else {
@@ -364,13 +234,19 @@ public class XlglExamExamineController {
 					XlglExamExamine ex = new XlglExamExamine();
 					ex.setId(xlglExamExamine.getId());
 					ex.setOverStatus("0");
+					xlglExamExamine.setOverStatus("0");
 					xlglExamExamineService.update(ex);
+				}
+			}
+			if(xlglExamExamine.getOverStatus().equals("2")) {
+				XlglExamMainAnswer xlglExamMainAnswer = queryList.get(0);
+				if(xlglExamMainAnswer.getIsNotExam().equals("1")) {
+					xlglExamExamine.setOverStatus("3");//新增字段状态 3：补考中已参加
 				}
 			}
 		}
 		Response.json("page", pageUtil);
 	}
-
 
 	/**
 	 * 统计已结束的考试和进行中的考试数量
