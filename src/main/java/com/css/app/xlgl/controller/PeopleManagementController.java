@@ -224,14 +224,22 @@ public class PeopleManagementController {
 		// 获取清销假app的接口
 		String elecPath = orgMapped.getUrl() + AppInterfaceConstant.WEB_INTERFACE_QXJ_USER_INFO_QJDAYS;
 		hashMap2.put("parentId", parentId);
-		hashMap2.put("organId", organId);
-		hashMap2.put("userName", userName);
+		if(StringUtils.isNotBlank(organId)) {
+			hashMap2.put("organId", organId);
+		}
+		if(StringUtils.isNotBlank(userName)) {
+			hashMap2.put("userName", userName);
+		}
 		List<BaseAppOrgan> organList = baseAppOrganService.findByParentIdAndIsinvalid(hashMap2);
 		String[] array =new String[organList.size()];
 		for (int i = 0; i < organList.size(); i++) {
 			array[i] = organList.get(i).getId();
 		}
-		List<String> queryByOrgListUserID = baseAppUserService.queryByOrgListUserID(array);
+		List<String> queryByOrgListUserID = new ArrayList<String>();
+		if(array.length >0) {
+		 queryByOrgListUserID = baseAppUserService.queryByOrgListUserID(array);
+		}
+		
 		for (BaseAppOrgan baseAppOrgan : organList) {
 			LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			ArrayList<TxlUserNEWDto> arrayList = new ArrayList<>();
@@ -260,7 +268,7 @@ public class PeopleManagementController {
 				if (userList.contains(txlUserDto.getAccount())) {
 					txlUserDto.setIsShow("1");
 				} else {
-					txlUserDto.setIsShow("0");
+					txlUserDto.setIsShow("4");
 				}
 				if(txlUserDto.getOrganid().equals(baseAppOrgan.getId())) {
 					if(queryByOrgListUserID.size()>0) {
@@ -271,7 +279,6 @@ public class PeopleManagementController {
 						arrayList.add(txlUserDto);
 					}
 				}
-				
 			}
 			baseAppOrgan.setList(arrayList);
 		}
@@ -330,21 +337,21 @@ public class PeopleManagementController {
 			otherPlacesNum = 10; //现请销假京外人数，等请销假开发完毕
 		}
 		userShouldNumber = userAllYx -qjNum -evectionNum;
-
+		float zwlv= 0;
 		if (userIdList == 0) {
-			jsonData.put("zwlv", "0");//在线率
+			jsonData.put("zwlv", zwlv);//在线率
 		} else {
 			DecimalFormat decimalFormat = new DecimalFormat("0.00");
 			if (userIdList > 0) {
-					float zwRate = ((float) userIdList / (float) userAllYx) * 100;
-					String format = decimalFormat.format(zwRate);
-					if (zwRate > 0) {
-						jsonData.put("zwlv", format);
+					zwlv = ((float) userIdList / (float) userAllYx) * 100;
+					float zwlvs=(float)(Math.round(zwlv*100))/100;
+					if (zwlv > 0) {
+						jsonData.put("zwlv", zwlvs);
 					} else {
-						jsonData.put("zwlv", "0");
+						jsonData.put("zwlv", zwlv);
 					}
 			} else {
-				jsonData.put("zwlv", "0");
+				jsonData.put("zwlv", zwlv);
 			}
 		}
 		jsonData.put("userAllYx", userAllYx);//注册人数

@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -15,8 +16,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
+import com.css.addbase.apporgmapped.entity.BaseAppOrgMapped;
 import com.css.addbase.apporgmapped.service.BaseAppOrgMappedService;
+import com.css.addbase.constant.AppConstant;
+import com.css.addbase.constant.AppInterfaceConstant;
 import com.css.app.xlgl.service.XlglAdminSetService;
+import com.css.base.utils.CrossDomainUtil;
 import com.css.base.utils.Response;
 
 @Controller
@@ -56,4 +61,20 @@ public class PeopleManagementNewController {
 		Response.json(jsonArray);
 	}
 	
+    /**
+     * 训练管理-人员管理-地图人员接口
+     * @author 李振楠 2020-12-16
+     * */
+    @ResponseBody
+    @RequestMapping("/getPlatNumber")
+    public void getPlatNumber(String organId,String timeStr){
+    	LinkedMultiValueMap<String, Object> hashmap = new LinkedMultiValueMap<String, Object>();
+    	hashmap.add("organId", organId);
+    	hashmap.add("timeStr", timeStr);
+    	BaseAppOrgMapped orgMapped = (BaseAppOrgMapped)baseAppOrgMappedService.orgMappedByOrgId("","root",AppConstant.APP_QXJGL);
+		// 获取清销假app的接口
+		String elecPath = orgMapped.getUrl() + AppInterfaceConstant.WEB_QXJ_XLGLAPICONTROLLER_GETPLATNUMBER;
+		JSONObject jsonData = CrossDomainUtil.getJsonData(elecPath, hashmap);
+		Response.json(jsonData);
+    }
 }

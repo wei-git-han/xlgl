@@ -683,4 +683,11 @@ public class AppInterfaceConstant {
      * */
     public final static String WEB_TXL = "/txlUser/listuserXLGL";
     
+    /**
+     * @author 李振楠
+     * @date 2020年12月16日
+     * */
+    public final static String WEB_QXJ_XLGLAPICONTROLLER_GETPLATNUMBER = "/app/qxjgl/api/getPlatNumber";
+   
+    
 }
