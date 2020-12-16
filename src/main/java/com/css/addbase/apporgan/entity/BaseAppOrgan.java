@@ -3,7 +3,7 @@ package com.css.addbase.apporgan.entity;
 import java.io.Serializable;
 import java.util.List;
 
-import com.css.app.xlgl.dto.TxlUserDto;
+import com.css.app.xlgl.dto.TxlUserNEWDto;
 
 /**
  * 部门表
@@ -57,7 +57,7 @@ public class BaseAppOrgan implements Serializable {
 	//在线人数
 	private Integer zxrs;
 	
-	private List<TxlUserDto> list;
+	private List<TxlUserNEWDto> list;
 	/**
 	 * 设置：
 	 */
@@ -232,12 +232,13 @@ public class BaseAppOrgan implements Serializable {
 	public void setZxrs(Integer zxrs) {
 		this.zxrs = zxrs;
 	}
-	public List<TxlUserDto> getList() {
+	public List<TxlUserNEWDto> getList() {
 		return list;
 	}
-	public void setList(List<TxlUserDto> list) {
+	public void setList(List<TxlUserNEWDto> list) {
 		this.list = list;
 	}
+
 	
 	
 	

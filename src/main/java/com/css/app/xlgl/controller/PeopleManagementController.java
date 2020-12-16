@@ -41,6 +41,7 @@ import com.css.addbase.constant.AppConstant;
 import com.css.addbase.constant.AppInterfaceConstant;
 import com.css.app.xlgl.dto.QXJPeopleManagementDto;
 import com.css.app.xlgl.dto.TxlUserDto;
+import com.css.app.xlgl.dto.TxlUserNEWDto;
 import com.css.app.xlgl.entity.XlglAdminSet;
 import com.css.app.xlgl.service.XlglAdminSetService;
 import com.css.base.utils.CrossDomainUtil;
@@ -207,14 +208,16 @@ public class PeopleManagementController {
 		return queryList;
 	}
 
-	/**
+	/**人员管理新需求
 	 * 单位人员统计列表
+	 * @param parentId 各局的id
+	 * @param organId 查询条件-各处的id
+	 * @param userName 人员名称
 	 */
 	@ResponseBody
 	@RequestMapping("/qxjUserInfoList")
 	public void qxjUserInfoList(String parentId,String organId,String userName) {
 		List<String> userList = getUserArray();
-		LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 		LinkedMultiValueMap<String, Object> hashmap = new LinkedMultiValueMap<String, Object>();
 		HashMap<String,Object> hashMap2 = new HashMap<String, Object>();
 		BaseAppOrgMapped orgMapped = (BaseAppOrgMapped)baseAppOrgMappedService.orgMappedByOrgId("","root",AppConstant.APP_QXJGL);
@@ -230,16 +233,17 @@ public class PeopleManagementController {
 		}
 		List<String> queryByOrgListUserID = baseAppUserService.queryByOrgListUserID(array);
 		for (BaseAppOrgan baseAppOrgan : organList) {
-			ArrayList<TxlUserDto> arrayList = new ArrayList<>();
+			LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			ArrayList<TxlUserNEWDto> arrayList = new ArrayList<>();
 			Integer yzxrs = 0; //应在线人数 需等请销假开发完毕
 			Integer userIdList=this.userIdNumber(baseAppOrgan.getId(), userList);// 在线人数
 			baseAppOrgan.setZxrs(userIdList);
 			baseAppOrgan.setYzwrs(yzxrs);
-			map.add("orgid", organId);
+			map.add("orgid", baseAppOrgan.getId());
 			JSONObject txl = getTXL(map);
 			String jsonArray = txl.getJSONArray("rows").toString();
-			List<TxlUserDto> parseArray = JSONArray.parseArray(jsonArray, TxlUserDto.class);
-			for (TxlUserDto txlUserDto : parseArray) {
+			List<TxlUserNEWDto> parseArray = JSONArray.parseArray(jsonArray, TxlUserNEWDto.class);
+			for (TxlUserNEWDto txlUserDto : parseArray) {
 				hashmap.add("userId", txlUserDto.getUserid());
 				JSONObject jsonData = CrossDomainUtil.getJsonData(elecPath, hashmap);
 				String string = jsonData.toString();
@@ -258,9 +262,14 @@ public class PeopleManagementController {
 				} else {
 					txlUserDto.setIsShow("0");
 				}
-				if(txlUserDto.getOrganid().equals(baseAppOrgan.getId()) 
-						&& !queryByOrgListUserID.contains(txlUserDto.getUserid())) {
-					arrayList.add(txlUserDto);
+				if(txlUserDto.getOrganid().equals(baseAppOrgan.getId())) {
+					if(queryByOrgListUserID.size()>0) {
+						if(!queryByOrgListUserID.contains(txlUserDto.getUserid())) {
+							arrayList.add(txlUserDto);
+						}
+					}else {
+						arrayList.add(txlUserDto);
+					}
 				}
 				
 			}

@@ -3,13 +3,15 @@ package com.css.app.xlgl.controller;
 import java.util.HashMap;
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
@@ -35,15 +37,23 @@ public class PeopleManagementNewController {
 	private String urls;
 	
 	/**局单位树
+	 * @throws JSONException 
 	 * 
 	 * */
 	@ResponseBody
 	@RequestMapping("/organTreeList")
-	public void organTreeList() {
+	public void organTreeList(){
+		JSONArray jsonArray = new JSONArray();
 		HashMap<String,Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("parentId", "root");
-		List<BaseAppOrgan> findByParentIdAndIsinvalid = baseAppOrganService.findByParentIdAndIsinvalid(hashMap);
-		Response.json(findByParentIdAndIsinvalid);
+		List<BaseAppOrgan> queryList = baseAppOrganService.queryList(hashMap);
+		for (BaseAppOrgan baseAppOrgan : queryList) {
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("id", baseAppOrgan.getId());
+			jsonObject.put("name", baseAppOrgan.getName());
+			jsonArray.add(jsonObject);
+		}
+		Response.json(jsonArray);
 	}
 	
 }

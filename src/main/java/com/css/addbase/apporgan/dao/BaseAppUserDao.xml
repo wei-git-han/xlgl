@@ -303,7 +303,7 @@
 		select  * from BASE_APP_USER where ISDELETE = 0 and SFYX = '1' and ORGANID in
 		<foreach item="deptIds" collection="array" open="(" separator=","
 			close=")">
-			#{userIds}
+			#{deptIds}
 		</foreach>
 	</select>
 	

@@ -72,8 +72,7 @@ public class TxlUserDto implements Serializable {
 	// 地址
 	private String address;
 	
-	private String dept;
-	
+	private String dept;	
 	// 组织机构Name
 	private String organName;
 	private String orgName;
