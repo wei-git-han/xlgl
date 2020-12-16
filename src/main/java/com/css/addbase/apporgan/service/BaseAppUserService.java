@@ -143,5 +143,7 @@ public interface BaseAppUserService {
 
 	List<BaseAppUser> queryAllUsers();
 
+	List<BaseAppUser> queryData(String id);
+
 
 }
