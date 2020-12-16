@@ -238,9 +238,9 @@ public class XlglExamExamineController {
 					xlglExamExamineService.update(ex);
 				}
 			}
-			if(xlglExamExamine.getOverStatus().equals("2")) {
+			if(xlglExamExamine.getOverStatus().equals("99")) {
 				XlglExamMainAnswer xlglExamMainAnswer = queryList.get(0);
-				if(xlglExamMainAnswer.getIsNotExam().equals("1")) {
+				if(xlglExamMainAnswer.getIsNotExam().equals("1") && xlglExamExamine.getUserStatus().equals("1")) {
 					xlglExamExamine.setOverStatus("3");//新增字段状态 3：补考中已参加
 				}
 			}
