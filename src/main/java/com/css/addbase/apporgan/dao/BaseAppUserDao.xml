@@ -77,6 +77,7 @@
 
 	</select>
 
+
 	<select id="queryListAllYx" resultType="int">
 		select count(1) from BASE_APP_USER T
 		left join BASE_APP_ORGAN O on O.ID

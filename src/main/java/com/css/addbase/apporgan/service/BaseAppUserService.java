@@ -147,4 +147,9 @@ public interface BaseAppUserService {
 	
 	List<String> queryByOrgListUserID(String[] deptIds);
 
+
+	List<BaseAppUser> queryData(String id);
+
+
+
 }

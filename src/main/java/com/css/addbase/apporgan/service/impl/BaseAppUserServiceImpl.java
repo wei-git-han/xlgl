@@ -242,6 +242,10 @@ public class BaseAppUserServiceImpl implements BaseAppUserService {
 	public List<String> queryByOrgListUserID(String[] deptIds) {
 		return baseAppUserDao.queryByOrgListUserID(deptIds);
 	}
+	@Override
+	public List<BaseAppUser> queryData(String id){
+		return baseAppUserDao.queryData(id);
+	}
 
 
 
