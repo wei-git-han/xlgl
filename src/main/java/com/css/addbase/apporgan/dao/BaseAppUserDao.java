@@ -154,5 +154,8 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 
 	@Select("select  * from BASE_APP_USER")
 	List<BaseAppUser> queryAllUsers();
+
+	@Select("select * from BASE_APP_USER where USER_ID not in (select REPLY_USER_ID from XLGL_EXAM_MAIN_ANSWER where EXAMINE_ID = #{0})")
+	List<BaseAppUser> queryData(String id);
 	
 }

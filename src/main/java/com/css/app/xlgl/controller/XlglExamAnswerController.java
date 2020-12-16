@@ -8,6 +8,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.css.addbase.apporgan.entity.BaseAppOrgan;
+import com.css.addbase.apporgan.entity.BaseAppUser;
+import com.css.addbase.apporgan.service.BaseAppOrganService;
+import com.css.addbase.apporgan.service.BaseAppUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +66,11 @@ public class XlglExamAnswerController {
 	private XlglExamExaminetopicService xlglExamExaminetopicService;
 	@Autowired
 	private XlglExamExamineMakeupService xlglExamExamineMakeupService;
+	@Autowired
+	private BaseAppUserService baseAppUserService;
+
+	@Autowired
+	private BaseAppOrganService baseAppOrganService;
 	/**
 	 * 列表
 	 */
@@ -553,6 +562,42 @@ public class XlglExamAnswerController {
 			e.printStackTrace();
 			Response.error();
 		}
+	}
+
+	@ResponseBody
+	@RequestMapping("/insertData")
+	public void insertData(String id) {
+		JSONObject jsonObject = new JSONObject();
+		List<BaseAppUser> baseAppUsers = baseAppUserService.queryData(id);
+		if (baseAppUsers != null && baseAppUsers.size() > 0) {
+			for (int i = 0; i < baseAppUsers.size(); i++) {
+				BaseAppUser baseAppUser = baseAppUsers.get(i);
+				XlglExamMainAnswer xlglExamMainAnswer = new XlglExamMainAnswer();
+				xlglExamMainAnswer.setId(UUIDUtils.random());
+				xlglExamMainAnswer.setExamineId(id);
+				xlglExamMainAnswer.setOrganId(baseAppUser.getOrganid());
+				BaseAppOrgan baseAppOrgan = baseAppOrganService.queryObject(baseAppUser.getOrganid());
+				String name = "";
+				if (baseAppOrgan != null) {
+					name = baseAppOrgan.getName();
+				}
+				xlglExamMainAnswer.setOrganName(name);
+				xlglExamMainAnswer.setReplyUserId(baseAppUser.getId());
+				xlglExamMainAnswer.setReplyUserName(baseAppUser.getTruename());
+				xlglExamMainAnswer.setCreateDate(new Date());
+				xlglExamMainAnswer.setUpdateDate(new Date());
+				xlglExamMainAnswer.setMakeupStatus("0");
+				xlglExamMainAnswer.setStatus("0");
+				xlglExamMainAnswer.setIsNotExam("0");
+				xlglExamMainAnswer.setCreateUser(CurrentUser.getUserId());
+				xlglExamMainAnswer.setUpdateUser(CurrentUser.getUserId());
+				xlglExamMainAnswerService.save(xlglExamMainAnswer);
+
+			}
+		}
+		jsonObject.put("result","success");
+		jsonObject.put("num",baseAppUsers.size());
+		Response.json(jsonObject);
 	}
 	
 }

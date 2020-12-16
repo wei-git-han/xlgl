@@ -233,6 +233,11 @@ public class BaseAppUserServiceImpl implements BaseAppUserService {
 		return baseAppUserDao.queryAllUsers();
 	}
 
+	@Override
+	public List<BaseAppUser> queryData(String id){
+		return baseAppUserDao.queryData(id);
+	}
+
 
 
 
