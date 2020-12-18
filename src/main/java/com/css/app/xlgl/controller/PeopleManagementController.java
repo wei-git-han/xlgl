@@ -32,6 +32,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.apporgan.entity.BaseAppOrgan;
@@ -77,141 +78,15 @@ public class PeopleManagementController {
 	private BaseAppUserService baseAppUserService;
 	@Autowired
 	private XlglAdminSetService adminSetService;
+	
+	@Autowired
+	private RedisUtil redisUtil;
 
 	@Value("${filePath}")
 	private String filePath;
 	@Value("${csse.mircoservice.zaiwei}")
 	private String urls;
 
-	/**
-	 * 
-	 * 各单位人员情况统计列表
-	 */
-	/*@ResponseBody
-	@RequestMapping("/list")
-	public void list(Integer page, Integer limit) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("parentId", "root");
-		PageHelper.startPage(page, limit);
-		List<BaseAppOrgan> queryList = baseAppOrganService.queryList(map);
-		PageUtils pageUtil = new PageUtils(queryList);
-
-		String userId = CurrentUser.getUserId();
-		Map<String, Object> hashmap = new HashMap<>();
-		hashmap.put("userId", userId);
-		List<XlglAdminSet> queryList2 = adminSetService.queryList(hashmap);
-		String status = "";
-		// 0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员;4:处管理员
-		if (queryList2.size() > 0) {
-			XlglAdminSet xlglAdminSet = queryList2.get(0);
-			if (xlglAdminSet != null) {
-				status = xlglAdminSet.getAdminType();
-			}
-		}
-		List<String> list = getUserArray();
-		boolean str = false;
-		for (BaseAppOrgan baseAppOrgan : queryList) {
-			LinkedMultiValueMap<String, Object> linkeMap = new LinkedMultiValueMap<String, Object>();
-			if (StringUtils.isNotBlank(status)) {
-				List<String> queryListByTREEPATH = baseAppOrganService.queryListByTREEPATH(baseAppOrgan.getId());
-				if (status.equals("4") && queryListByTREEPATH.contains(CurrentUser.getSSOUser().getOrganId())) {// 4:处管理员权限
-					baseAppOrgan.setStatus("1");
-				} else if (status.equals("2")&& queryListByTREEPATH.contains(CurrentUser.getSSOUser().getOrganId())) {// 2：局管理员；
-					baseAppOrgan.setStatus("1");
-				} else if (status.equals("0") || status.equals("1") || status.equals("3")) {// 0:超级管理员
-					str = true; // ;1：部管理员；3：即是部管理员又是局管理员;给予部管理全权限
-				} else {
-					baseAppOrgan.setStatus("0");
-				}
-
-			} else {
-				baseAppOrgan.setStatus("0");
-			}
-			if (str) {
-				baseAppOrgan.setStatus("1");
-			}
-			linkeMap.add("organId", baseAppOrgan.getId());
-			JSONObject jsonData = this.getNumber(linkeMap);
-			Integer yzwrs = 0;
-			Integer qjrs = 0;
-			Integer xjrs = 0;
-			if (jsonData != null) {
-				Object object = jsonData.get("yzwrs");
-				Object object2 = jsonData.get("qjrs");
-				Object object3 = jsonData.get("xjrs");
-				if (object != null) {
-					yzwrs = (Integer) object;
-				}
-				if (object2 != null) {
-					qjrs = (Integer) object2;
-				}
-				if (object3 != null) {
-					xjrs = (Integer) object3;
-				}
-			}
-
-			int userIdList = this.userIdNumber(baseAppOrgan.getId(), list);// 实际在位人数
-			if (userIdList == 0 || yzwrs == 0) {
-				baseAppOrgan.setZwrate("0");
-			} else {
-				DecimalFormat decimalFormat = new DecimalFormat("0.00");
-				String zwRate = decimalFormat.format(((float) userIdList / yzwrs) * 100);
-				// long zwr =((long)userIdList /(long)yzwrs);
-				// float zwRate = zwr*100; //人员在位率
-				baseAppOrgan.setZwrate(zwRate);
-			}
-			baseAppOrgan.setYzwrs(yzwrs);
-			baseAppOrgan.setQjrs(qjrs);
-			baseAppOrgan.setXjrs(xjrs);
-			baseAppOrgan.setSjzwrs(userIdList);
-
-		}
-		Response.json("page", pageUtil);
-	}*/
-
-	/*private List<BaseAppOrgan> getBaseAppOrganList(List<BaseAppOrgan> queryList, List<XlglAdminSet> queryList2,
-			Boolean status) {
-		List<String> list = getUserArray();
-		for (BaseAppOrgan baseAppOrgan : queryList) {
-			LinkedMultiValueMap<String, Object> linkeMap = new LinkedMultiValueMap<String, Object>();
-			linkeMap.add("organId", baseAppOrgan.getId());
-			JSONObject jsonData = this.getNumber(linkeMap);
-			Integer yzwrs = 0;
-			Integer qjrs = 0;
-			Integer xjrs = 0;
-			if (jsonData != null) {
-				Object object = jsonData.get("yzwrs");
-				Object object2 = jsonData.get("qjrs");
-				Object object3 = jsonData.get("xjrs");
-				if (object != null) {
-					yzwrs = (Integer) object;
-				}
-				if (object2 != null) {
-					qjrs = (Integer) object2;
-				}
-				if (object3 != null) {
-					xjrs = (Integer) object3;
-				}
-			}
-
-			int userIdList = this.userIdNumber(baseAppOrgan.getId(), list);// 实际在位人数
-			if (userIdList == 0 || yzwrs == 0) {
-				baseAppOrgan.setZwrate("0");
-			} else {
-				DecimalFormat decimalFormat = new DecimalFormat("0.00");
-				String zwRate = decimalFormat.format(((float) userIdList / yzwrs) * 100);
-				// long zwr =((long)userIdList /(long)yzwrs);
-				// float zwRate = zwr*100; //人员在位率
-				baseAppOrgan.setZwrate(zwRate);
-			}
-			baseAppOrgan.setYzwrs(yzwrs);
-			baseAppOrgan.setQjrs(qjrs);
-			baseAppOrgan.setXjrs(xjrs);
-			baseAppOrgan.setSjzwrs(userIdList);
-
-		}
-		return queryList;
-	}*/
 
 	/**人员管理新需求
 	 * 单位人员统计列表
@@ -222,13 +97,15 @@ public class PeopleManagementController {
 	@ResponseBody
 	@RequestMapping("/qxjUserInfoList")
 	public void qxjUserInfoList(String parentId,String organId,String userName) {
-		RedisUtil redisUtil = new RedisUtil();
-		List<BaseAppOrgan> organList = this.getQxjUserInfoList(parentId, organId, userName);
+		JSONObject qxjUserInfoList = this.getQxjUserInfoList(parentId, organId, userName);
+		String jsonArray = qxjUserInfoList.getJSONArray("list").toString();
+		redisUtil.setString("xlgl-UserInfoList", jsonArray);
+		List<BaseAppOrgan> organList =(List<BaseAppOrgan>) qxjUserInfoList.get("list");
 		Response.json(organList);
 	}
 	
-	private List<BaseAppOrgan> getQxjUserInfoList(String parentId,String organId,String userName) {
-		RedisUtil redisUtil = new RedisUtil();
+	private JSONObject getQxjUserInfoList(String parentId,String organId,String userName) {
+		JSONObject jsonObject = new JSONObject();
 		List<String> userList = getUserArray();
 		HashMap<String,Object> hashMap2 = new HashMap<String, Object>();
 		hashMap2.put("parentId", parentId);
@@ -275,9 +152,11 @@ public class PeopleManagementController {
 					//isShow 1： 在线 ， 2：请假 ，3：出差，4：异常
 					if (userList.contains(txlUserDto.getAccount())) {
 						txlUserDto.setIsShow("1");
-					} else if(txlUserDto.getQXJtype().contains("假")){
+					} else if(StringUtils.isNotBlank(txlUserDto.getQXJtype())
+							&&txlUserDto.getQXJtype().contains("假")){
 						txlUserDto.setIsShow("2");
-					}else if(txlUserDto.getQXJtype().equals("出差")) {
+					}else if(StringUtils.isNotBlank(txlUserDto.getQXJtype()) &&
+							txlUserDto.getQXJtype().equals("出差")) {
 						txlUserDto.setIsShow("3");
 					}else {
 						txlUserDto.setIsShow("4");
@@ -295,7 +174,8 @@ public class PeopleManagementController {
 			}
 			baseAppOrgan.setList(arrayList);
 		}
-		return organList;
+		jsonObject.put("list", organList);
+		return jsonObject;
 	}
 
 	/**
@@ -308,6 +188,12 @@ public class PeopleManagementController {
 	@RequestMapping("/statistics")
 	public void statistics(String status,String organId) {
 		JSONObject jsonObject = this.getStatistics(status, organId);
+		if(status.equals("0")) {
+			redisUtil.setString("statistics-0",jsonObject.toString() );
+			redisUtil.setString("statistics-0-"+organId,jsonObject.toString() );
+		}else {
+			redisUtil.setString("statistics-1-"+organId,jsonObject.toString() );
+		}
 		Response.json(jsonObject);
 	}
 	
@@ -380,23 +266,36 @@ public class PeopleManagementController {
 	}
 	
 	
-	 
+	/**
+	 *  人员管理新需求 2020-12-11 修改接口
+	 *  人员管理-各局下-各处单位数据统计和人员-在线状态
+	 * @param status
+	 *           0:全部权限，1：当前用户所属局的权限
+	 * @param organId 
+	 * 			当 status 为 0时  organId 为空
+	 * 			status 为 1时 organId 传各局的id
+	 * 
+	 * */ 
     @ResponseBody
    	@RequestMapping("/export")
        public void export(HttpServletResponse response,String status,String organId) {
- 
-       	BaseAppOrgan queryObject = baseAppOrganService.queryObject(organId);
-       	String strName = queryObject.getName();
+       	BaseAppOrgan queryObject =  new BaseAppOrgan();
      	JSONObject statistics = new JSONObject();
        	JSONObject jsonObject = new JSONObject();
-
        	if(status.equals("0")) {
-       	 statistics = this.getStatistics(status, null);
-       	 jsonObject = this.getStatistics(status, organId);
+       		queryObject = baseAppOrganService.queryObject("root");
+       		String string = redisUtil.getString("statistics-0");
+       		statistics = JSON.parseObject(string);
+       		String strOrgan = redisUtil.getString("statistics-0-"+organId);
+       		jsonObject = JSON.parseObject(strOrgan);
        	}else {
-       		jsonObject = this.getStatistics(status, organId);
+       		queryObject = baseAppOrganService.queryObject(organId);
+       		String strOrgan = redisUtil.getString("statistics-1-"+organId);
+       		jsonObject = JSON.parseObject(strOrgan);
        	}
-       	List<BaseAppOrgan> list = this.getQxjUserInfoList(organId,null,null);
+    	String strName = queryObject.getName();
+       	String userInfoList = redisUtil.getString("xlgl-UserInfoList");
+		List<BaseAppOrgan> list = JSONArray.parseArray(userInfoList, BaseAppOrgan.class);
        	
    		String format = new SimpleDateFormat("yyyy-MM-ddHHmmss").format(new Date());
    		String fileName = strName + format + ".xls";
@@ -407,7 +306,7 @@ public class PeopleManagementController {
    			tempFile.getParentFile().mkdirs();
    		}
    		Map<String, Object> resultMap = new HashMap<String, Object>();
-   		InputStream is;
+   		InputStream is = null;
    		try {
    			if(status.equals("0")) {
    				is = createExcelInfoFlie(list, statistics,jsonObject,fileName, strName);
@@ -415,26 +314,30 @@ public class PeopleManagementController {
    				is = createExcelInfoFlie(list, jsonObject,fileName, strName);
    			}
    			
-   			String string = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
-   			response.reset();
-   			response.setContentType("application/octet-stream");
-   			response.setCharacterEncoding("UTF-8");
-   			response.setHeader("Content-Disposition", "attachment;filename=" + string);
-   			OutputStream os = response.getOutputStream();
-   			BufferedInputStream bis = new BufferedInputStream(is);
-   			byte[] buff = new byte[1024];
-   			int i = 0;
-   			try {
-   				while ((i = bis.read(buff)) != -1) {
-   					os.write(buff, 0, i);
-   					os.flush();
-   				}
-   			} catch (Exception e) {
-   				e.printStackTrace();
-   			} finally {
-   				bis.close();
-   				os.close();
-   			}
+			String string = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
+			response.reset();
+			response.setContentType("application/octet-stream");
+			response.setCharacterEncoding("UTF-8");
+			response.setHeader("Content-Disposition", "attachment;filename=" + string);
+			OutputStream os = response.getOutputStream();
+			if(is !=null) {
+				BufferedInputStream bis = new BufferedInputStream(is);
+				byte[] buff = new byte[1024];
+				int i = 0;
+				try {
+					while ((i = bis.read(buff)) != -1) {
+						os.write(buff, 0, i);
+						os.flush();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					Response.error();
+					return;
+				} finally {
+					bis.close();
+					os.close();
+				}
+			}
    		} catch (Exception e) {
    			e.printStackTrace();
    		}
@@ -511,6 +414,10 @@ public class PeopleManagementController {
 
 	  /**
      * @param 权限为 普通用户，不是部管理员
+     * @param list 数据 各处统计和人员-在线状态
+     * @Param jsonObject 页面 选中 局的数据
+     * @param fileName 文件名称
+     * @param strName 表头
      * */
 	private InputStream createExcelInfoFlie(List<BaseAppOrgan> list, 
 			JSONObject jsonObject,String fileName,String strName) throws Exception {
@@ -536,10 +443,12 @@ public class PeopleManagementController {
 		
 		HSSFRow row = sheet.createRow(0);
 		HSSFCell createCell = row.createCell(0);
+   		createCell.setCellStyle(style);
 		createCell.setCellValue(titilName);
 		
 		HSSFRow row1 = sheet.createRow(1);
 		HSSFCell row1Cell0 = row1.createCell(0);
+		row1Cell0.setCellStyle(style);
 		row1Cell0.setCellValue(strName+"人员在线情况");
 		
 		HSSFRow row2 = sheet.createRow(2);
@@ -573,6 +482,7 @@ public class PeopleManagementController {
 			sheet.addMergedRegion(region4);
 			HSSFRow row5 = sheet.createRow(rowNumber);
 			HSSFCell row5Cell0 = row5.createCell(0);
+			row5Cell0.setCellStyle(style);
 			row5Cell0.setCellValue(baseAppOrgan.getName()+"人员在线情况");
 			rowNumber =rowNumber+1;
 			HSSFRow row6 = sheet.createRow(rowNumber);
@@ -623,6 +533,11 @@ public class PeopleManagementController {
 
 	
     /**
+     * 有权限的导出
+     * @param list 数据 各处统计和人员-在线状态
+     * @param statistics 页面 全部数据统计
+     * @Param jsonObject 页面 选中 局的数据
+     * @param fileName 文件名称
      * @param strName 表头
      * */
 	private InputStream createExcelInfoFlie(List<BaseAppOrgan> list, JSONObject statistics,

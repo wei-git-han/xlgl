@@ -12,7 +12,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
+import com.alibaba.fastjson.JSONObject;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 
@@ -62,7 +62,7 @@ public class SyncPeopleManagementRedis {
 		if (timer == null) {
 			 timer = new Timer();
 		}
-		timer.scheduleAtFixedRate(getInstance(), 12000,600000);
+		timer.scheduleAtFixedRate(getInstance(), 300000,3600000);
 	}
 	
 	
@@ -121,21 +121,39 @@ public class SyncPeopleManagementRedis {
 		}
 	}
 	/**
-	 * 刷新
+	 * 刷新训练管理-人员管理-redis 缓存
 	 */
 	@ResponseBody
 	@RequestMapping("/shuaxin")
 	public void SyncRedis() {
-		peopleManagementService.setTxlRedis();
-		peopleManagementService.setQxjRedis();
-		
+		try {
+			boolean setTxlRedis = peopleManagementService.setTxlRedis();
+			boolean setQxjRedis = peopleManagementService.setQxjRedis();
+			if(setTxlRedis && setQxjRedis) {
+				Response.ok();
+			}else {
+				Response.error();
+			}
+		}catch (Exception e) {
+			Response.error();
+			e.printStackTrace();
+		}
 	}
 	/**
 	 * 实现增量同步接口
 	 */
 	public void SyncTxlUserDto() {
-		peopleManagementService.setTxlRedis();
-		peopleManagementService.setQxjRedis();
-		
+		boolean setTxlRedis = peopleManagementService.setTxlRedis();
+		if(setTxlRedis) {
+			System.err.println("训练管理-人员管理-通讯录-数据缓存:成功！！！！！！");
+		}else {
+			System.err.println("训练管理-人员管理-通讯录-数据缓存:失败！！！！！！");
+		}
+		boolean setQxjRedis = peopleManagementService.setQxjRedis();
+		if(setQxjRedis) {
+			System.err.println("训练管理-人员管理-请销假-数据缓存:成功！！！！！！");
+		}else {
+			System.err.println("训练管理-人员管理-请销假-数据缓存:失败！！！！！！");
+		}
 	}
 }

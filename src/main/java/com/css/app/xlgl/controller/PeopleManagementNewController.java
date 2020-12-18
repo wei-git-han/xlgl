@@ -36,14 +36,16 @@ import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.addbase.apporgan.util.OrgUtil;
+import com.css.addbase.apporgan.util.RedisUtil;
 import com.css.addbase.apporgmapped.entity.BaseAppOrgMapped;
 import com.css.addbase.apporgmapped.service.BaseAppOrgMappedService;
 import com.css.addbase.constant.AppConstant;
 import com.css.addbase.constant.AppInterfaceConstant;
 import com.css.app.xlgl.config.entity.XlglRoleSet;
 import com.css.app.xlgl.config.service.XlglRoleSetService;
+import com.css.app.xlgl.dto.LeaveorbackPlatDto;
 import com.css.app.xlgl.dto.LeaveorbackUserPlatDto;
-import com.css.app.xlgl.dto.TxlUserDto;
+import com.css.app.xlgl.dto.TxlUserNEWDto;
 import com.css.app.xlgl.service.XlglAdminSetService;
 import com.css.base.utils.CrossDomainUtil;
 import com.css.base.utils.CurrentUser;
@@ -64,6 +66,8 @@ public class PeopleManagementNewController {
 	private XlglAdminSetService adminSetService;
 	@Autowired
 	private XlglRoleSetService xlglRoleSetService;
+	@Autowired
+	private RedisUtil redisUtil;
 	
 
 	@Value("${filePath}")
@@ -109,6 +113,17 @@ public class PeopleManagementNewController {
 		// 获取清销假app的接口
 		String elecPath = orgMapped.getUrl() + AppInterfaceConstant.WEB_QXJ_XLGLAPICONTROLLER_GETPLATNUMBER;
 		JSONObject jsonData = CrossDomainUtil.getJsonData(elecPath, hashmap);
+		String jsonArray = jsonData.getJSONArray("list").toString();
+		if(StringUtils.isNotBlank(parentId)) {
+			if(StringUtils.isNotBlank(timeStr)) {
+				redisUtil.setString("xlgl-getPlatNumber-"+parentId+"-"+timeStr, jsonArray);
+			}else {
+				redisUtil.setString("xlgl-getPlatNumber-"+parentId, jsonArray);
+			}
+		}else {
+			redisUtil.setString("xlgl-getPlatNumber", jsonArray);
+		}
+		
 		Response.json(jsonData);
     }
     
@@ -125,7 +140,18 @@ public class PeopleManagementNewController {
     @RequestMapping("/platList")
     public void platList(String parentId,String province,String organId,String timeStr,String userName){
     	JSONObject jsonObject = this.platListAndExport(parentId,province,organId,timeStr,userName);
-		Response.json(jsonObject);
+    	String jsonArray = jsonObject.getJSONArray("list").toString();
+    	if(StringUtils.isNotBlank(parentId)) {
+			if(StringUtils.isNotBlank(timeStr)) {
+				redisUtil.setString("xlgl-getPlatNumber-"+parentId+"-"+timeStr+"-"+province, jsonArray);
+			}else {
+				redisUtil.setString("xlgl-getPlatNumber-"+parentId+"-"+province, jsonArray);
+			}
+		}else {
+			redisUtil.setString("xlgl-getPlatNumber-"+province, jsonArray);
+		}
+ 
+    	Response.json(jsonObject);
     }
    
     private JSONObject platListAndExport(String parentId,String province,String organId,
@@ -229,7 +255,12 @@ public class PeopleManagementNewController {
 		return list;
 	
     }
-    
+  /**  训练管理-人员管理-地图人员详情 导出 接口
+    * @author 李振楠 2020-12-16
+    * @param parentId 当前用户所能看的局id，部管理不传值默认为 root ,不是部管理员传当前局id
+    * @param province 省份 为必填 不能为空
+    * @param timeStr 查询条件时间
+    */
     @ResponseBody
    	@RequestMapping("/exportPlat")
        public void export(HttpServletResponse response,String parentId,String province,
@@ -240,14 +271,23 @@ public class PeopleManagementNewController {
        	}else {
        		time = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
        	}
-       	BaseAppOrgan queryObject = baseAppOrganService.queryObject(parentId);
-       	String strName = queryObject.getName()+"单位人员分布清单("+province+"-"+time+")";
-       	
-       	JSONObject jsonObject = this.platListAndExport(parentId,province,null,timeStr,null);
-       	String jsonArray = jsonObject.getJSONArray("list").toString();
+       	BaseAppOrgan queryObject = new BaseAppOrgan();
+       	String jsonArray = "";
+    	if(StringUtils.isNotBlank(parentId)) {
+    	 	 queryObject = baseAppOrganService.queryObject(parentId);
+			if(StringUtils.isNotBlank(timeStr)) {
+				 jsonArray = redisUtil.getString("xlgl-getPlatNumber-"+parentId+"-"+timeStr+"-"+province);
+			}else {
+				jsonArray = redisUtil.getString("xlgl-getPlatNumber-"+parentId+"-"+province);
+			}
+		}else {
+			queryObject = baseAppOrganService.queryObject("root");
+			jsonArray = redisUtil.getString("xlgl-getPlatNumber-"+province);
+		}
+    	String strName = queryObject.getName()+"单位人员分布清单("+province+"-"+time+")";
        	List<LeaveorbackUserPlatDto> list = JSONArray.parseArray(jsonArray, LeaveorbackUserPlatDto.class);
    		String format = new SimpleDateFormat("yyyy-MM-ddHHmmss").format(new Date());
-   		String fileName = strName + format + ".xls";
+   		String fileName = queryObject.getName() +"单位人员分布详情"+ format + ".xls";
    		File tempFile = new File(filePath, fileName);
    		if (tempFile.exists()) {
    			tempFile.delete();
@@ -255,31 +295,35 @@ public class PeopleManagementNewController {
    			tempFile.getParentFile().mkdirs();
    		}
    		Map<String, Object> resultMap = new HashMap<String, Object>();
-   		InputStream is;
+		InputStream is = null;
    		String[] title = { "序号", "人员姓名", "单位名称", "部门名称", "联系电话", "当前位置", "详细地址","在位状态","事由说明" };
    		try {
    			is = createExcelInfoFlie(list, title, fileName, strName);
    			
-   			String string = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
+   			String fileNameStr = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
    			response.reset();
    			response.setContentType("application/octet-stream");
    			response.setCharacterEncoding("UTF-8");
-   			response.setHeader("Content-Disposition", "attachment;filename=" + string);
+   			response.setHeader("Content-Disposition", "attachment;filename=" + fileNameStr);
    			OutputStream os = response.getOutputStream();
-   			BufferedInputStream bis = new BufferedInputStream(is);
-   			byte[] buff = new byte[1024];
-   			int i = 0;
-   			try {
-   				while ((i = bis.read(buff)) != -1) {
-   					os.write(buff, 0, i);
-   					os.flush();
-   				}
-   			} catch (Exception e) {
-   				e.printStackTrace();
-   			} finally {
-   				bis.close();
-   				os.close();
-   			}
+			if(is !=null) {
+				BufferedInputStream bis = new BufferedInputStream(is);
+				byte[] buff = new byte[1024];
+				int i = 0;
+				try {
+					while ((i = bis.read(buff)) != -1) {
+						os.write(buff, 0, i);
+						os.flush();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					Response.error();
+					return;
+				} finally {
+					bis.close();
+					os.close();
+				}
+			}
    		} catch (Exception e) {
    			e.printStackTrace();
    		}
@@ -287,7 +331,13 @@ public class PeopleManagementNewController {
        	
        }
        /**
-        * @param strName 表头
+        *   训练管理-人员管理-地图人员详情 导出 接口
+        * @author 李振楠 2020-12-16
+        * @param list 导出数据
+        * @param title 表头
+        * @param fileName 文件名称
+        * @param strName 表标题
+        * 
         * */
    	private InputStream createExcelInfoFlie(List<LeaveorbackUserPlatDto> list, String[] title, String fileName,String strName) throws Exception {
    	FileOutputStream fout = null;
@@ -304,13 +354,14 @@ public class PeopleManagementNewController {
    		
    		HSSFRow row = sheet.createRow(0);
    		HSSFCell createCell = row.createCell(0);
+   		createCell.setCellStyle(style);
    		createCell.setCellValue(strName);
    		
+   		HSSFRow row1 = sheet.createRow(1);
    		for (int i = 1; i < title.length+1; i++) {
-   			HSSFCell createCell2 = row.createCell(i-1);
+   			HSSFCell createCell2 = row1.createCell(i-1);
    			createCell2.setCellValue(title[i-1]);
    		}
-   		// "在位状态","事由说明" };
    		for (int i = 2; i < list.size() + 2; i++) {
    			HSSFRow rows = sheet.createRow(i);
    			HSSFCell cell0 = rows.createCell(0);// 序号
@@ -350,4 +401,130 @@ public class PeopleManagementNewController {
    	}
    	return new FileInputStream(fileName);
    }
+   	
+   /**
+   	*训练管理-人员管理-地图人数  导出 接口
+    * @author 李振楠 2020-12-16
+    * @param parentId 当前用户所能看的局id，部管理不传值默认为 root ,不是部管理员传当前局id
+    * @param timeStr 查询条件时间
+   	 * 
+   	 * */
+    @ResponseBody
+   	@RequestMapping("/exportPlatAndNumber")
+       public void exportPlatAndNumber(HttpServletResponse response,String parentId,String timeStr) {
+       	String time = "";
+       	if(StringUtils.isNotBlank(timeStr)) {
+       		time =timeStr;
+       	}else {
+       		time = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+       	}
+    	BaseAppOrgan queryObject = new BaseAppOrgan();
+       	String jsonArray = "";
+       	if(StringUtils.isNotBlank(parentId)) {
+       		queryObject = baseAppOrganService.queryObject(parentId);
+			if(StringUtils.isNotBlank(timeStr)) {
+				jsonArray = redisUtil.getString("xlgl-getPlatNumber-"+parentId+"-"+timeStr);
+			}else {
+				jsonArray = redisUtil.getString("xlgl-getPlatNumber-"+parentId);
+			}
+		}else {
+			queryObject = baseAppOrganService.queryObject("root");
+			jsonArray = redisUtil.getString("xlgl-getPlatNumber");
+		}
+       	String strName = queryObject.getName()+"单位人员分布清单("+time+")";
+		List<LeaveorbackPlatDto> list = JSONArray.parseArray(jsonArray, LeaveorbackPlatDto.class);
+		 
+   		String format = new SimpleDateFormat("yyyy-MM-ddHHmmss").format(new Date());
+   		String fileName = queryObject.getName()+"单位人员分布清单"+format+".xls";
+   		File tempFile = new File(filePath, fileName);
+   		if (tempFile.exists()) {
+   			tempFile.delete();
+   		} else {
+   			tempFile.getParentFile().mkdirs();
+   		}
+   		Map<String, Object> resultMap = new HashMap<String, Object>();
+   		InputStream is = null;
+   		String[] title = { "序号", "地图", "人数" };
+   		try {
+   			is = createExcelPlatFlie(list, title, fileName, strName);
+
+			String string = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
+			response.reset();
+			response.setContentType("application/octet-stream");
+			response.setCharacterEncoding("UTF-8");
+			response.setHeader("Content-Disposition", "attachment;filename=" + string);
+			OutputStream os = response.getOutputStream();
+			if(is !=null) {
+				BufferedInputStream bis = new BufferedInputStream(is);
+				byte[] buff = new byte[1024];
+				int i = 0;
+				try {
+					while ((i = bis.read(buff)) != -1) {
+						os.write(buff, 0, i);
+						os.flush();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					Response.error();
+					return;
+				} finally {
+					bis.close();
+					os.close();
+				}
+			}
+   		} catch (Exception e) {
+   			e.printStackTrace();
+   		}
+   		Response.json(resultMap);
+       	
+       }
+    /**
+     * @param strName 表头
+     * */
+	private InputStream createExcelPlatFlie(List<LeaveorbackPlatDto> list, String[] title, String fileName,String strName) throws Exception {
+	FileOutputStream fout = null;
+	int titleInt = title.length;
+	try {
+		HSSFWorkbook wb = new HSSFWorkbook();
+		
+		HSSFCellStyle style = wb.createCellStyle();
+		style.setAlignment(HorizontalAlignment.CENTER);//样式左右居中
+		
+		HSSFSheet sheet = wb.createSheet();
+		CellRangeAddress region = new CellRangeAddress(0,0,0,titleInt);//起始行，结束行，起始列，结束列
+		sheet.addMergedRegion(region);
+		
+		HSSFRow row = sheet.createRow(0);
+		HSSFCell createCell = row.createCell(0);
+   		createCell.setCellStyle(style);
+		createCell.setCellValue(strName);
+		
+		HSSFRow row1 = sheet.createRow(1);
+		for (int i = 1; i < title.length+1; i++) {
+			HSSFCell createCell2 = row1.createCell(i-1);
+			createCell2.setCellValue(title[i-1]);
+		}
+		for (int i = 2; i < list.size() + 2; i++) {
+			HSSFRow rows = sheet.createRow(i);
+			HSSFCell cell0 = rows.createCell(0);// 序号
+			cell0.setCellValue(i-1);
+
+			HSSFCell cell1 = rows.createCell(1);// 地图
+			cell1.setCellValue(list.get(i - 2).getPlat());
+
+			HSSFCell cell2 = rows.createCell(2);// 人数
+			cell2.setCellValue(list.get(i - 2).getNumber());
+		}
+		fout = new FileOutputStream(fileName);
+		wb.write(fout);
+		fout.flush();
+	} catch (Exception e) {
+		e.printStackTrace();
+	} finally {
+		fout.close();
+	}
+	return new FileInputStream(fileName);
+}
+   	
+   	
 }

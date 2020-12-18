@@ -30,37 +30,49 @@ public class PeopleManagementServiceImpl implements PeopleManagementService {
 	private BaseAppOrganService baseAppOrganService;
 	@Autowired
 	private BaseAppOrgMappedService baseAppOrgMappedService;
+	@Autowired
+	private RedisUtil redisUtil;
 	
 	@Override
 	public boolean setTxlRedis() {
-		RedisUtil redisUtil = new RedisUtil();
-		HashMap<String,Object> hashMap = new HashMap<String, Object>();
-		hashMap.put("parentId", "root");
-		List<BaseAppOrgan> queryList = baseAppOrganService.queryList(hashMap);
-		BaseAppOrgMapped orgMapped = (BaseAppOrgMapped)baseAppOrgMappedService.orgMappedByOrgId("","root",AppConstant.APP_TXL);
-		// 获取清销假app的接口
-		String elecPath = orgMapped.getUrl()+ AppInterfaceConstant.WEB_TXL;
-		for (BaseAppOrgan baseAppOrgan : queryList) {
-			LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-			map.add("orgid", baseAppOrgan.getId());
-			JSONObject jsonData = CrossDomainUtil.getJsonData(elecPath, map);
-			String jsonArray = jsonData.getJSONArray("rows").toString();
-			String str = "xlgl-txlUsetNEWDto-" +baseAppOrgan.getId();
-			redisUtil.setString(str, jsonArray);
+		try {
+			HashMap<String,Object> hashMap = new HashMap<String, Object>();
+			hashMap.put("parentId", "root");
+			List<BaseAppOrgan> queryList = baseAppOrganService.queryList(hashMap);
+			BaseAppOrgMapped orgMapped = (BaseAppOrgMapped)baseAppOrgMappedService.orgMappedByOrgId("","root",AppConstant.APP_TXL);
+			// 获取清销假app的接口
+			String elecPath = orgMapped.getUrl()+ AppInterfaceConstant.WEB_TXL;
+			for (BaseAppOrgan baseAppOrgan : queryList) {
+				LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+				map.add("orgid", baseAppOrgan.getId());
+				JSONObject jsonData = CrossDomainUtil.getJsonData(elecPath, map);
+				String jsonArray = jsonData.getJSONArray("rows").toString();
+				String str = "xlgl-txlUsetNEWDto-" +baseAppOrgan.getId();
+				redisUtil.setString(str, jsonArray);
+				System.out.println("redis:"+str+"，缓存成功！！！！！！！");
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+			return false;
 		}
 		return true;
 	}
 
 	@Override
 	public boolean setQxjRedis() {
-		LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		RedisUtil redisUtil = new RedisUtil();
-		BaseAppOrgMapped orgMapped = (BaseAppOrgMapped)baseAppOrgMappedService.orgMappedByOrgId("","root",AppConstant.APP_QXJGL);
-		// 获取清销假app的接口
-		String elecPath = orgMapped.getUrl() + AppInterfaceConstant.WEB_INTERFACE_QXJ_USER_INFO_QJDAYS;
-		JSONObject jsonData = CrossDomainUtil.getJsonData(elecPath, map);
-		String jsonArray = jsonData.getJSONArray("list").toString();
-		redisUtil.setString("xlgl-qxl-people", jsonArray);
+		try {
+			LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			BaseAppOrgMapped orgMapped = (BaseAppOrgMapped)baseAppOrgMappedService.orgMappedByOrgId("","root",AppConstant.APP_QXJGL);
+			// 获取清销假app的接口
+			String elecPath = orgMapped.getUrl() + AppInterfaceConstant.WEB_INTERFACE_QXJ_USER_INFO_QJDAYS;
+			JSONObject jsonData = CrossDomainUtil.getJsonData(elecPath, map);
+			String jsonArray = jsonData.getJSONArray("list").toString();
+			redisUtil.setString("xlgl-qxl-people", jsonArray);
+			System.out.println("redis:xlgl-qxl-people，缓存成功！！！！！！！");
+		}catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 		return true;
 	}
 

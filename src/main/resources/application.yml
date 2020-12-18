@@ -1,5 +1,6 @@
 server:
   port: 11009
+  max-http-header-size: 100000
 app:
   ConnectTimeout: 100
   ReadTimeout: 5000
@@ -29,20 +30,31 @@ logging:
 #    root: info
     com:
       css: debug
-
+      
+pagehelper:
+    helperDialect: mysql
+    reasonable: true
+    supportMethodsArguments: true
+    params: count=countSql
 spring:
   application:
     name: legacycpk.csse.zbfzbbgt_zyyy
   redis:
-    host: redis.appservice.marathon.mesos
-    port: 6379
+    host: 10.1.150.10
+    port: 10007
     timeout: 3000
     lettuce:
       pool:
+#连接池最大链接数
         max-active: -1
+#连接池最大阻塞等待时间
         max-wait: -1
+#连接池最大空闲连接数
         max-idle: 8
+#连接池最小空闲连接数
         min-idle: 3
+        
+        
 eureka:
   instance:
     prefer-ip-address: true
@@ -59,12 +71,6 @@ eureka:
       max-request-size: 2048MB
       maxFileSize: 10240MB
       maxRequestSize: 10240MB
-
-pagehelper:
-    helperDialect: mysql
-    reasonable: true
-    supportMethodsArguments: true
-    params: count=countSql
 
 #单点登录配置（新）
 csse:
