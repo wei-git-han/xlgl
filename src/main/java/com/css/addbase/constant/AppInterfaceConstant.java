@@ -686,8 +686,16 @@ public class AppInterfaceConstant {
     /**
      * @author 李振楠
      * @date 2020年12月16日
+     * 训练管理-人员管理-地图人数接口
      * */
     public final static String WEB_QXJ_XLGLAPICONTROLLER_GETPLATNUMBER = "/app/qxjgl/api/getPlatNumber";
+   
+    /**
+     * @author 李振楠
+     * @date 2020年12月16日
+     * 训练管理-人员管理-地图人员详情接口
+     * */
+    public final static String WEB_QXJ_XLGLAPICONTROLLER_PLATLIST = "/app/qxjgl/api/platList";
    
     
 }
