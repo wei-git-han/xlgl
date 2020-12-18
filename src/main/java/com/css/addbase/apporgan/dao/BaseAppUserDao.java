@@ -162,4 +162,6 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 	List<BaseAppUser> queryByOrgList(String[] deptIds);
 	
 	List<String> queryByOrgListUserID(String[] deptIds);
+	
+	int queryYXNumber(String[] deptIds);
 }

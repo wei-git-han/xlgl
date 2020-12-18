@@ -150,6 +150,6 @@ public interface BaseAppUserService {
 
 	List<BaseAppUser> queryData(String id);
 
-
+	int queryYXNumber(String[] deptIds);
 
 }

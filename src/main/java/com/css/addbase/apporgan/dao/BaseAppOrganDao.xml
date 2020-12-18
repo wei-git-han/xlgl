@@ -142,7 +142,7 @@
 		</if>
 		<if test="userName != null">
 			and a.ID in 
-			(select ORGANID from BASE_APP_USER  where TRUENAME like '%'||#{orgId}||'%' )
+			(select ORGANID from BASE_APP_USER  where TRUENAME like '%'||#{userName}||'%' )
 		</if>
  			order by a.SORT
 	</select>

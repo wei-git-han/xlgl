@@ -39,6 +39,7 @@ import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
+import com.css.addbase.apporgan.util.OrgUtil;
 import com.css.addbase.apporgan.util.RedisUtil;
 import com.css.addbase.apporgmapped.entity.BaseAppOrgMapped;
 import com.css.addbase.apporgmapped.service.BaseAppOrgMappedService;
@@ -188,25 +189,31 @@ public class PeopleManagementController {
 	@RequestMapping("/statistics")
 	public void statistics(String status,String organId) {
 		JSONObject jsonObject = this.getStatistics(status, organId);
-		if(status.equals("0")) {
-			redisUtil.setString("statistics-0",jsonObject.toString() );
-			if(StringUtils.isNotBlank(organId)) {
-				JSONObject jsonObject2 = this.getStatistics(status, organId);
-				redisUtil.setString("statistics-0-"+organId,jsonObject2.toString() );
-			}	
-		}else {
-			redisUtil.setString("statistics-1-"+organId,jsonObject.toString() );
-		}
+		redisUtil.setString("statistics-0",jsonObject.toString() );
+		
+		Response.json(jsonObject);
+	}
+	
+	/**
+	 * 人员管理新需求 2020-12-11 修改接口
+	 * 局的人员情况统计 
+	 * 
+	 */
+	@ResponseBody
+	@RequestMapping("/getStatisticsByDept")
+	public void getStatisticsByDept(String organId) {
+		JSONObject jsonObject = this.getStatistics(null, organId);
+		redisUtil.setString("statistics-"+organId,jsonObject.toString() );
+		
 		Response.json(jsonObject);
 	}
 	
 	
 	private JSONObject getStatistics(String status,String organId) {
-		int userAllYx = baseAppUserService.queryListAllYxCount(); //注册人数
 		LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		if(status.equals("0") && StringUtils.isBlank(organId)) {
+		if(StringUtils.isNotBlank(status) && status.equals("0") && StringUtils.isBlank(organId)) {
 			organId = "root";
-		}else if (status.equals("1") &&  StringUtils.isBlank(organId)) {
+		}else if (StringUtils.isNotBlank(status) &&status.equals("1") &&  StringUtils.isBlank(organId)) {
 			if(StringUtils.isBlank(organId)) {
 				organId = CurrentUser.getSSOUser().getOrganId();
 				BaseAppOrgan queryObject3 = baseAppOrganService.queryObject(organId);
@@ -222,14 +229,25 @@ public class PeopleManagementController {
 				}
 			}
 		}
+		List<BaseAppOrgan> organs = baseAppOrganService.queryList(null);
+		List<String> arrayList = new ArrayList<String>();
+		arrayList = OrgUtil.getOrganTreeList(organs, organId, true, true, arrayList);
+		String[] arr = new String[arrayList.size()];
+		for (int i = 0; i < arr.length; i++) {
+			arr[i] = arrayList.get(i);
+		}
+		int userAllYx = baseAppUserService.queryYXNumber(arr); //注册人数
+		
 		map.add("organId", organId);
 		List<String> list = getUserArray();
 		JSONObject jsonData = this.getNumber(map);
 		int userIdList = 0;
-		if(status.equals("1")) {
+		if(StringUtils.isNotBlank(status) && status.equals("1")) {
 			userIdList=this.userIdNumber(organId, list);// 在线人数
-		}else {
+		}else if(StringUtils.isNotBlank(status) && status.equals("0")){
 			userIdList=this.userIdNumber(null, list);// 在线人数
+		}else {
+			userIdList=this.userIdNumber(organId, list);// 在线人数
 		}
 		Integer userShouldNumber = 0; //应在线人数
 		Integer qjNum = 0; //请假人数
@@ -238,10 +256,10 @@ public class PeopleManagementController {
 
 		if (jsonData != null) {
 			qjNum =(Integer) jsonData.get("qjrs");
-			evectionNum = 10; //现请销假无出差人数，等请销假开发完毕
-			otherPlacesNum = 10; //现请销假京外人数，等请销假开发完毕
+			evectionNum = jsonData.getInteger("chucai"); //现请销假无出差人数，等请销假开发完毕
+			otherPlacesNum = jsonData.getInteger("jingwai"); //现请销假京外人数，等请销假开发完毕
 		}
-		userShouldNumber = userAllYx -qjNum -evectionNum;
+		userShouldNumber = userAllYx -qjNum -evectionNum-otherPlacesNum;
 		float zwlv= 0;
 		if (userIdList == 0) {
 			jsonData.put("zwlv", zwlv);//在线率
@@ -288,12 +306,15 @@ public class PeopleManagementController {
        		queryObject = baseAppOrganService.queryObject("root");
        		String string = redisUtil.getString("statistics-0");
        		statistics = JSON.parseObject(string);
-       		String strOrgan = redisUtil.getString("statistics-0-"+organId);
+       		String strOrgan = redisUtil.getString("statistics-"+organId);
        		jsonObject = JSON.parseObject(strOrgan);
        	}else {
        		queryObject = baseAppOrganService.queryObject(organId);
-       		String strOrgan = redisUtil.getString("statistics-1-"+organId);
+       		String strOrgan = redisUtil.getString("statistics-"+organId);
        		jsonObject = JSON.parseObject(strOrgan);
+       	}
+       	if(jsonObject == null) {
+       		jsonObject = this.getStatistics(null, organId);
        	}
     	String strName = queryObject.getName();
        	String userInfoList = redisUtil.getString("xlgl-UserInfoList");

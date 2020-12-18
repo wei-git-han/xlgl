@@ -247,6 +247,11 @@ public class BaseAppUserServiceImpl implements BaseAppUserService {
 		return baseAppUserDao.queryData(id);
 	}
 
+	@Override
+	public int queryYXNumber(String[] deptIds) {
+		return baseAppUserDao.queryYXNumber(deptIds);
+	}
+
 
 
 
