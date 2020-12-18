@@ -190,12 +190,16 @@ public class PeopleManagementController {
 		JSONObject jsonObject = this.getStatistics(status, organId);
 		if(status.equals("0")) {
 			redisUtil.setString("statistics-0",jsonObject.toString() );
-			redisUtil.setString("statistics-0-"+organId,jsonObject.toString() );
+			if(StringUtils.isNotBlank(organId)) {
+				JSONObject jsonObject2 = this.getStatistics(status, organId);
+				redisUtil.setString("statistics-0-"+organId,jsonObject2.toString() );
+			}	
 		}else {
 			redisUtil.setString("statistics-1-"+organId,jsonObject.toString() );
 		}
 		Response.json(jsonObject);
 	}
+	
 	
 	private JSONObject getStatistics(String status,String organId) {
 		int userAllYx = baseAppUserService.queryListAllYxCount(); //注册人数
@@ -217,10 +221,8 @@ public class PeopleManagementController {
 					}
 				}
 			}
-			map.add("organId", organId);
-		}else {
-			
 		}
+		map.add("organId", organId);
 		List<String> list = getUserArray();
 		JSONObject jsonData = this.getNumber(map);
 		int userIdList = 0;
@@ -636,7 +638,12 @@ public class PeopleManagementController {
 			HSSFCell row6Cell0 = row6.createCell(0);
 			row6Cell0.setCellValue("注册人数："+baseAppOrgan.getZcrs());
 			HSSFCell row6Cell1 = row6.createCell(1);
-			row6Cell1.setCellValue("应在线："+baseAppOrgan.getYzxrs());
+			if(baseAppOrgan.getYzxrs() == null) {
+				row6Cell1.setCellValue("应在线：0");
+			}else {
+				row6Cell1.setCellValue("应在线："+baseAppOrgan.getYzxrs());
+			}
+			
 			HSSFCell row6Cell2 = row6.createCell(2);
 			row6Cell2.setCellValue("在线："+baseAppOrgan.getZxrs());
 			List<TxlUserNEWDto> userList = baseAppOrgan.getList();
