@@ -696,6 +696,18 @@ public class AppInterfaceConstant {
      * 训练管理-人员管理-地图人员详情接口
      * */
     public final static String WEB_QXJ_XLGLAPICONTROLLER_PLATLIST = "/app/qxjgl/api/platList";
-   
+    
+    
+    /**
+     * @author 李振楠
+     * @date 2020年8月28日
+     * */
+    public final static String WEB_TXL_REDIS = "/txlUser/listXLGL";
+    
+    /**
+     * @author 李振楠
+     * @date 2020年8月13日
+     * */
+    public final static String WEB_INTERFACE_QXJ_USER_INFO_QJDAYS_REDIS = "/leave/apply/countXLGL";
     
 }

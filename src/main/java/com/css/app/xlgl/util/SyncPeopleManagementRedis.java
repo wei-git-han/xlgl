@@ -58,7 +58,7 @@ public class SyncPeopleManagementRedis {
 	 * 启动程序时默认启动定时同步
 	 *
 	 */
-	public void SyncOrganUtil() {
+	public  SyncPeopleManagementRedis() {
 		if (timer == null) {
 			 timer = new Timer();
 		}
@@ -92,7 +92,7 @@ public class SyncPeopleManagementRedis {
 		if (!status) {
 			timer.purge();
 			timer = new Timer();
-			timer.scheduleAtFixedRate(getInstance(), 120000,120000);
+			timer.scheduleAtFixedRate(getInstance(), 180000,3600000);
 		}
 	}
 	
