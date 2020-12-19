@@ -153,5 +153,6 @@ public interface BaseAppUserService {
 	int queryYXNumber(String[] deptIds);
 
 	int queryZc(String orgId);
-
+	
+	void updateAllSFYX(Map<String, Object> map);
 }

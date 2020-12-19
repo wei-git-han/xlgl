@@ -318,7 +318,17 @@
 		</foreach>
 	</select>
 	
-
+	<update id="updateAllSFYX">
+		update BASE_APP_USER
+		<set>
+			<if test="sfyx != null">"SFYX" = #{sfyx}</if>
+		</set>
+		where ORGANID in 	
+		<foreach item="ids" collection="array" open="(" separator=","
+			close=")">
+			#{ids}
+		</foreach>
+	</update>
 	
 
 </mapper>

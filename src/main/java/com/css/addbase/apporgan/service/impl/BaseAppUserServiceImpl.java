@@ -257,6 +257,11 @@ public class BaseAppUserServiceImpl implements BaseAppUserService {
 		return baseAppUserDao.queryZc(orgId);
 	}
 
+	@Override
+	public void updateAllSFYX(Map<String, Object> map) {
+		 baseAppUserDao.updateAllSFYX(map);
+	}
+
 
 
 

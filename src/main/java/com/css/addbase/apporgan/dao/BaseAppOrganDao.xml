@@ -28,7 +28,7 @@
 	</select>
 
 	<select id="getSubOrgSync" resultType="com.css.addbase.apporgan.entity.BaseAppOrgan">
-		select ID, NAME,
+		select ID, NAME,IS_INVALID,
 		PARENT_ID, SORT,(select count(0) from BASE_APP_ORGAN a WHERE
 		a.PARENT_ID=b.ID and a.ISDELETE = 0) AS CODE, TREE_PATH
 		from BASE_APP_ORGAN b where PARENT_ID = #{id} and b.ISDELETE = 0
@@ -82,6 +82,7 @@
 			<if test="type != null">"TYPE" = #{type}, </if>
 			<if test="code != null">"CODE" = #{code}, </if>
 			<if test="parentId != null">"PARENT_ID" = #{parentId},</if>
+			<if test="IsInvalId != null">"IS_INVALID" = #{IsInvalId},</if>
 			<if test="deptOfficer != null">"DEPT_OFFICER" = #{deptOfficer}</if>
 		</set>
 		where ID = #{id}
@@ -118,6 +119,7 @@
 		)
 	</select>
 
+	
 	<select id="queryListByTREEPATH" resultType="String">
 		select
 		id
@@ -146,6 +148,19 @@
 		</if>
  			order by a.SORT
 	</select>
+	
+	<update id="updateIsInvalId">
+		update BASE_APP_ORGAN
+		<set>
+			<if test="IsInvalId != null">"IS_INVALID" = #{IsInvalId}</if>
+		</set>
+		where ID  in 	
+		<foreach item="ids" collection="array" open="(" separator=","
+			close=")">
+			#{ids}
+		</foreach>
+	</update>
+	
 
 
 </mapper>

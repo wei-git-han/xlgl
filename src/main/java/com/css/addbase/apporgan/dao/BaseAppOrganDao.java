@@ -79,4 +79,7 @@ public interface BaseAppOrganDao extends BaseDao<BaseAppOrgan> {
 	 * @author gengds
 	 */
 	List<BaseAppOrgan> findByParentIdAndIsinvalid(Map<String, Object> map);
+	
+	
+	void updateIsInvalId(Map<String, Object> map);
 }

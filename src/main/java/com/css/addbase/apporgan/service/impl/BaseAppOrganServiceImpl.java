@@ -134,4 +134,11 @@ public class BaseAppOrganServiceImpl implements BaseAppOrganService {
 		return baseAppOrganDao.findByParentIdAndIsinvalid(map);
 	}
 
+	@Override
+	public void updateIsInvalId(Map<String, Object> map) {
+		 baseAppOrganDao.updateIsInvalId(map);
+	}
+
+
+
 }

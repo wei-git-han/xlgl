@@ -195,6 +195,11 @@ public class BaseAppOrganController {
 			jo.put("id",organ.getId());
 			jo.put("parent","#");
 			jo.put("text",organ.getName());
+			if(StringUtils.isNotBlank(organ.getIsInvalid())) {
+				jo.put("isInvalid", organ.getIsInvalid());
+			}else {
+				jo.put("isInvalid", "0");
+			}
 			jo.put("children",true);
 			ja.add(jo);
 		}else{
@@ -212,10 +217,34 @@ public class BaseAppOrganController {
 				jo.put("parent",organ.getParentId());
 				jo.put("text",organ.getName());
 				jo.put("children",!"0".equals(organ.getCode()));
+				if(StringUtils.isNotBlank(organ.getIsInvalid())) {
+					jo.put("isInvalid", organ.getIsInvalid());
+				}else {
+					jo.put("isInvalid", "0");
+				}
+				
 				ja.add(jo);
 			}
 		}
 		return ja;
 	}
-
+	
+	/**
+	 * 部门设置无效
+	 * */
+	@ResponseBody
+	@RequestMapping(value = "/updateIsInval")
+	public void setOrganIsInvalId(String organId,String isInvalid) {
+		Map<String, Object> map = new HashMap<String, Object>();
+    	List<BaseAppOrgan> organs = baseAppOrganService.queryList(null);
+		List<String> arrayList = new ArrayList<String>();
+		arrayList = OrgUtil.getOrganTreeList(organs, organId, true, true, arrayList);
+		map.put("IsInvalId", isInvalid);
+		map.put("array", arrayList);
+		baseAppOrganService.updateIsInvalId(map);
+		map.put("sfyx", isInvalid);
+		baseAppUserService.updateAllSFYX(map);
+		Response.ok();
+		
+	}
 }
