@@ -154,7 +154,7 @@ public class PeopleManagementController {
 					if (userList.contains(txlUserDto.getAccount())) {
 						txlUserDto.setIsShow("1");
 					} else if(StringUtils.isNotBlank(txlUserDto.getQXJtype())
-							&&txlUserDto.getQXJtype().contains("假")){
+							&&txlUserDto.getQXJtype().equals("请假")){
 						txlUserDto.setIsShow("2");
 					}else if(StringUtils.isNotBlank(txlUserDto.getQXJtype()) &&
 							txlUserDto.getQXJtype().equals("出差")) {
