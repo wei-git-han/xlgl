@@ -152,4 +152,6 @@ public interface BaseAppUserService {
 
 	int queryYXNumber(String[] deptIds);
 
+	int queryZc(String orgId);
+
 }

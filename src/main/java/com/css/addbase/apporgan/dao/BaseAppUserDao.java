@@ -164,4 +164,7 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 	List<String> queryByOrgListUserID(String[] deptIds);
 	
 	int queryYXNumber(String[] deptIds);
+
+	@Select("select count(*) from BASE_APP_USER where ORGANID in (select id from BASE_APP_ORGAN start with ID = #{0} and ISDELETE=0 connect by prior ID = PARENT_ID)")
+	int queryZc(String orgId);
 }

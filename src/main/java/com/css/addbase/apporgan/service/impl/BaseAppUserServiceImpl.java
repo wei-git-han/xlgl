@@ -252,6 +252,11 @@ public class BaseAppUserServiceImpl implements BaseAppUserService {
 		return baseAppUserDao.queryYXNumber(deptIds);
 	}
 
+	@Override
+	public int queryZc(String orgId){
+		return baseAppUserDao.queryZc(orgId);
+	}
+
 
 
 

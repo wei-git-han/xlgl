@@ -132,10 +132,14 @@ public class PeopleManagementController {
 		List<QXJPeopleManagementDto> parseArrayQxj = JSONArray.parseArray(jsonArrayQxj, QXJPeopleManagementDto.class);
 		for (BaseAppOrgan baseAppOrgan : organList) {
 			ArrayList<TxlUserNEWDto> arrayList = new ArrayList<>();
-			Integer yzxrs = 0; //应在线人数 需等请销假开发完毕
+			LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			map.add("organId", baseAppOrgan.getId());
+			JSONObject jsonObject1 = getNumber(map);
+			Integer yzxrs = (Integer)jsonObject1.get("yzwrs"); //应在线人数 需等请销假开发完毕
 			Integer userIdList=this.userIdNumber(baseAppOrgan.getId(), userList);// 在线人数
 			baseAppOrgan.setZxrs(userIdList);
 			baseAppOrgan.setYzwrs(yzxrs);
+			baseAppOrgan.setYzxrs(yzxrs);
 			for (TxlUserNEWDto txlUserDto : parseArrayTxl) {
 				if(baseAppOrgan.getId().equals(txlUserDto.getOrganid())) {
 					for (QXJPeopleManagementDto parseObject : parseArrayQxj) {
@@ -236,8 +240,13 @@ public class PeopleManagementController {
 		for (int i = 0; i < arr.length; i++) {
 			arr[i] = arrayList.get(i);
 		}
-		int userAllYx = baseAppUserService.queryYXNumber(arr); //注册人数
-		
+		int userAllYx = 0;
+		if(StringUtils.isNotBlank(organId) && !"root".equals(organId)){
+			userAllYx = baseAppUserService.queryZc(organId); //注册人数
+		}else {
+			userAllYx = baseAppUserService.queryYXNumber(arr); //注册人数
+		}
+
 		map.add("organId", organId);
 		List<String> list = getUserArray();
 		JSONObject jsonData = this.getNumber(map);
