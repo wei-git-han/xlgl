@@ -100,7 +100,7 @@ public class PeopleManagementController {
 	public void qxjUserInfoList(String parentId,String organId,String userName) {
 		JSONObject qxjUserInfoList = this.getQxjUserInfoList(parentId, organId, userName);
 		String jsonArray = qxjUserInfoList.getJSONArray("list").toString();
-		redisUtil.setString("xlgl-UserInfoList", jsonArray);
+		redisUtil.setString("xlgl-UserInfoList-"+organId+CurrentUser.getUserId(), jsonArray);
 		List<BaseAppOrgan> organList =(List<BaseAppOrgan>) qxjUserInfoList.get("list");
 		Response.json(organList);
 	}
@@ -317,8 +317,14 @@ public class PeopleManagementController {
        		jsonObject = this.getStatistics(null, organId);
        	}
     	String strName = queryObject.getName();
-       	String userInfoList = redisUtil.getString("xlgl-UserInfoList");
-		List<BaseAppOrgan> list = JSONArray.parseArray(userInfoList, BaseAppOrgan.class);
+       	String userInfoList = redisUtil.getString("xlgl-UserInfoList-"+organId+CurrentUser.getUserId());
+       	List<BaseAppOrgan> list = new ArrayList<BaseAppOrgan>();
+		if(StringUtils.isNotBlank(userInfoList)) {
+			 list = JSONArray.parseArray(userInfoList, BaseAppOrgan.class);
+		}else {
+			JSONObject qxjUserInfoList = this.getQxjUserInfoList(organId, null, null);
+			 list =(List<BaseAppOrgan>) qxjUserInfoList.get("list");
+		}
        	
    		String format = new SimpleDateFormat("yyyy-MM-ddHHmmss").format(new Date());
    		String fileName = strName + format + ".xls";
@@ -461,9 +467,6 @@ public class PeopleManagementController {
 		sheet.addMergedRegion(region2);
 		
 		
-		CellRangeAddress region3 = new CellRangeAddress(3,3,0,6);//起始行，结束行，起始列，结束列
-		sheet.addMergedRegion(region3);
-		
 		HSSFRow row = sheet.createRow(0);
 		HSSFCell createCell = row.createCell(0);
    		createCell.setCellStyle(style);
@@ -512,7 +515,11 @@ public class PeopleManagementController {
 			HSSFCell row6Cell0 = row6.createCell(0);
 			row6Cell0.setCellValue("注册人数："+baseAppOrgan.getZcrs());
 			HSSFCell row6Cell1 = row6.createCell(1);
-			row6Cell1.setCellValue("应在线："+baseAppOrgan.getYzxrs());
+			if(baseAppOrgan.getYzxrs() == null) {
+				row6Cell1.setCellValue("应在线：0");
+			}else {
+				row6Cell1.setCellValue("应在线："+baseAppOrgan.getYzxrs());
+			}
 			HSSFCell row6Cell2 = row6.createCell(2);
 			row6Cell2.setCellValue("在线："+baseAppOrgan.getZxrs());
 			List<TxlUserNEWDto> userList = baseAppOrgan.getList();
@@ -587,12 +594,13 @@ public class PeopleManagementController {
 		
 		HSSFRow row = sheet.createRow(0);
 		HSSFCell createCell = row.createCell(0);
+   		createCell.setCellStyle(style);
 		createCell.setCellValue(titilName);
 		
 		HSSFRow row1 = sheet.createRow(1);
 		HSSFCell row1Cell0 = row1.createCell(0);
+		row1Cell0.setCellStyle(style);
 		row1Cell0.setCellValue("全局在线人员");
-		
 		
 		HSSFRow row2 = sheet.createRow(2);
 		HSSFCell row2Cell0 = row2.createCell(0);
@@ -621,6 +629,7 @@ public class PeopleManagementController {
 		
 		HSSFRow row3 = sheet.createRow(3);
 		HSSFCell row3Cell0 = row3.createCell(0);
+		row3Cell0.setCellStyle(style);
 		row3Cell0.setCellValue(strName+"人员在线情况");
 		
 		HSSFRow row4 = sheet.createRow(4);
@@ -653,6 +662,7 @@ public class PeopleManagementController {
 			sheet.addMergedRegion(region4);
 			HSSFRow row5 = sheet.createRow(rowNumber);
 			HSSFCell row5Cell0 = row5.createCell(0);
+			row5Cell0.setCellStyle(style);
 			row5Cell0.setCellValue(baseAppOrgan.getName()+"人员在线情况");
 			rowNumber =rowNumber+1;
 			HSSFRow row6 = sheet.createRow(rowNumber);
