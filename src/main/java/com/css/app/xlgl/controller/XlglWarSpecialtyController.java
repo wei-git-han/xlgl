@@ -279,25 +279,4 @@ public class XlglWarSpecialtyController {
 		Response.ok();
 	}
 
-	/**
-	 * 上传预览文件
-	 * @param pdf
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/insertPreView")
-	public void insertPreView(@RequestParam(required = false) MultipartFile[] pdf){
-		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
-		if(pdf.length >0) {
-			com.alibaba.fastjson.JSONObject file = XlglWarTacticController.getFile(pdf);
-			jsonObject = file;
-			XlglWarSpecialty xlglWarSpecialty = new XlglWarSpecialty();
-			xlglWarSpecialty.setId(UUIDUtils.random());
-			xlglWarSpecialty.setCreateDate(new Date());
-			xlglWarSpecialty.setPreViewName(file.get("fileName").toString());
-			xlglWarSpecialty.setPreViewId(file.get("fileId").toString());
-			xlglWarSpecialtyService.save(xlglWarSpecialty);
-		}
-		jsonObject.put("result","success");
-		Response.json(jsonObject);
-	}
 }
