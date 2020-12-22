@@ -74,6 +74,19 @@ public class TxlUserNEWDto implements Serializable {
 	//在线状态
 	private String status;
 	
+	//查询状态
+	private String isSelect;
+	
+	public String getIsSelect() {
+		return isSelect;
+	}
+
+
+	public void setIsSelect(String isSelect) {
+		this.isSelect = isSelect;
+	}
+
+
 	public TxlUserNEWDto() {
 		super();
 		// TODO Auto-generated constructor stub
