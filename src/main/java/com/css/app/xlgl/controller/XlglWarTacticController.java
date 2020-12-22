@@ -1,5 +1,7 @@
 package com.css.app.xlgl.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,12 +11,18 @@ import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
+import com.css.addbase.AppConfig;
+import com.css.addbase.FileBaseUtil;
+import com.css.addbase.suwell.OfdTransferUtil;
 import com.css.app.xlgl.entity.*;
 import com.css.app.xlgl.service.*;
 import net.sf.json.JSONObject;
+import org.apache.commons.io.FileUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.css.app.xlgl.dto.AccessoryFileDto;
@@ -27,6 +35,7 @@ import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 
 import cn.com.css.filestore.impl.HTTPFile;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 军事训练-战略训练
@@ -52,6 +61,8 @@ public class XlglWarTacticController {
 	private XlglExamExamineService xlglExamExamineService;
 	@Autowired
 	private XlglXlzzInfoService xlglXlzzInfoService;
+	@Autowired
+	private static AppConfig appConfig;
 
 	/**
 	 * 列表

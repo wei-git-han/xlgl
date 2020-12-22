@@ -40,7 +40,9 @@
 			"TACTIC_TITLE", 
 			"VIDEO_FILE", 
 			"CREATE_ORGAN_ID",
-			"VIEW_NUMBER"
+			"VIEW_NUMBER",
+			"PREVIEWID",
+			"PREVIEWNAME"
 		)
 		values
 		(
@@ -58,7 +60,9 @@
 			#{tacticTitle}, 
 			#{videoFile}, 
 			#{createOrganId},
-			#{viewNumber}
+			#{viewNumber},
+			#{preViewId},
+			#{preViewName}
 		)
 	</insert>
 	 
@@ -78,7 +82,9 @@
 			<if test="tacticTitle != null">"TACTIC_TITLE" = #{tacticTitle}, </if>
 			<if test="videoFile != null">"VIDEO_FILE" = #{videoFile}, </if>
 			<if test="viewNumber != null">"VIEW_NUMBER" = #{viewNumber}, </if>
-			<if test="createOrganId != null">"CREATE_ORGAN_ID" = #{createOrganId}</if>
+			<if test="createOrganId != null">"CREATE_ORGAN_ID" = #{createOrganId},</if>
+			<if test="preViewId != null">"PREVIEWID" = #{preViewId},</if>
+			<if test="preViewName != null">"PREVIEWNAME" = #{preViewName}</if>
 		</set>
 		where id = #{id}
 	</update>
