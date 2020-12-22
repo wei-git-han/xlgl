@@ -169,15 +169,18 @@ public class PeopleManagementController {
 					if(!StringUtils.equals("", userName)&&txlUserDto.getFullname().contains(userName)) {
 						txlUserDto.setIsSelect("1");
 					}
-					if(txlUserDto.getOrganid().equals(baseAppOrgan.getId())) {
-						if(queryByOrgListUserID.size()>0) {
-							if(!queryByOrgListUserID.contains(txlUserDto.getUserid())) {
+					if(!StringUtils.equals(txlUserDto.getIsdelete(),"1")) {
+						if(txlUserDto.getOrganid().equals(baseAppOrgan.getId())) {
+							if(queryByOrgListUserID.size()>0) {
+								if(!queryByOrgListUserID.contains(txlUserDto.getUserid())) {
+									arrayList.add(txlUserDto);
+								}
+							}else {
 								arrayList.add(txlUserDto);
 							}
-						}else {
-							arrayList.add(txlUserDto);
 						}
 					}
+					
 				}
 			}
 			baseAppOrgan.setList(arrayList);
