@@ -20,11 +20,14 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.css.addbase.appconfig.entity.BaseAppConfig;
+import com.css.addbase.appconfig.service.BaseAppConfigService;
 import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -89,6 +92,9 @@ public class XlglExamExamineController {
 	private XlglAdminSetService adminSetService;
 	@Autowired
 	private XlglRoleSetService xlglRoleSetService;
+
+	@Autowired
+	private BaseAppConfigService baseAppConfigService;
 	/**
 	 * 考核清单列表
 	 * 
@@ -968,7 +974,22 @@ public class XlglExamExamineController {
 			String orderBy) {
 		JSONObject jsonObject = new JSONObject();
 		List<ExamMainAnswerAnalyseDto> list = this.getLv(examineId,organId,orderBy);
+		String noDepts = baseAppConfigService.objectValue("noDepts");
+		String[] depts =null;
+		if(noDepts != null){
+			depts = noDepts.split(",");
+		}
+		List list1 = CollectionUtils.arrayToList(depts);
 		if (list.size() > 0) {
+			if(depts != null) {
+				for (int i = 0; i < list.size(); i++) {
+					String orgId = list.get(i).getOrganId();
+					if (list1.contains(orgId)) {
+						list.remove(i);
+						i--;
+					}
+				}
+			}
 			jsonObject.put("code", "0");
 			jsonObject.put("msg", "success");
 			jsonObject.put("list", list);
