@@ -166,7 +166,7 @@ public class PeopleManagementController {
 					}else {
 						txlUserDto.setIsShow("4");
 					}
-					if(txlUserDto.getFullname().contains(userName)) {
+					if(!StringUtils.equals("", userName)&&txlUserDto.getFullname().contains(userName)) {
 						txlUserDto.setIsSelect("1");
 					}
 					if(txlUserDto.getOrganid().equals(baseAppOrgan.getId())) {
