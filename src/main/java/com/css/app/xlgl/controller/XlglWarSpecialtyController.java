@@ -8,12 +8,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.css.app.xlgl.entity.*;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 
 import com.css.base.entity.SSOUser;
@@ -27,13 +25,10 @@ import cn.com.css.filestore.impl.HTTPFile;
 import com.css.base.utils.Response;
 import com.css.base.utils.StringUtils;
 import com.css.app.xlgl.dto.AccessoryFileDto;
-import com.css.app.xlgl.entity.XlglPicture;
-import com.css.app.xlgl.entity.XlglWarCommonQueueRead;
-import com.css.app.xlgl.entity.XlglWarSpecialty;
-import com.css.app.xlgl.entity.XlglWarSpecialtyRead;
 import com.css.app.xlgl.service.XlglPictureService;
 import com.css.app.xlgl.service.XlglWarSpecialtyReadService;
 import com.css.app.xlgl.service.XlglWarSpecialtyService;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 军事训练-专业训练
@@ -284,4 +279,25 @@ public class XlglWarSpecialtyController {
 		Response.ok();
 	}
 
+	/**
+	 * 上传预览文件
+	 * @param pdf
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/insertPreView")
+	public void insertPreView(@RequestParam(required = false) MultipartFile[] pdf){
+		com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
+		if(pdf.length >0) {
+			com.alibaba.fastjson.JSONObject file = XlglWarTacticController.getFile(pdf);
+			jsonObject = file;
+			XlglWarSpecialty xlglWarSpecialty = new XlglWarSpecialty();
+			xlglWarSpecialty.setId(UUIDUtils.random());
+			xlglWarSpecialty.setCreateDate(new Date());
+			xlglWarSpecialty.setPreViewName(file.get("fileName").toString());
+			xlglWarSpecialty.setPreViewId(file.get("fileId").toString());
+			xlglWarSpecialtyService.save(xlglWarSpecialty);
+		}
+		jsonObject.put("result","success");
+		Response.json(jsonObject);
+	}
 }

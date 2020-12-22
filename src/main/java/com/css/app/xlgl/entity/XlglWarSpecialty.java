@@ -60,6 +60,33 @@ public class XlglWarSpecialty implements Serializable {
 	private String readStatus;
 	//附件上传
 	private List<AccessoryFileDto> accessoryFileArray;
+
+	//预览文件id
+	private String preViewId;
+	//预览文件名称
+	private String preViewName;
+
+
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
+	public String getPreViewId() {
+		return preViewId;
+	}
+
+	public void setPreViewId(String preViewId) {
+		this.preViewId = preViewId;
+	}
+
+	public String getPreViewName() {
+		return preViewName;
+	}
+
+	public void setPreViewName(String preViewName) {
+		this.preViewName = preViewName;
+	}
+
 	/**
 	 * 设置：
 	 */
