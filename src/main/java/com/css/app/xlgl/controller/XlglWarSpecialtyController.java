@@ -137,10 +137,6 @@ public class XlglWarSpecialtyController {
 		}else {
 			xlglWarSpecialty.setViewNumber(1);
 		}
-		if(null!= xlglWarSpecialty.getPreViewId()) {
-			HTTPFile httpFile = new HTTPFile(xlglWarSpecialty.getPreViewId());
-			xlglWarSpecialty.setPreViewName(httpFile.getFileName());
-		}
 		//xlglWarSpecialty.setViewNumber(1);
 			xlglWarSpecialtyService.update(xlglWarSpecialty);
 

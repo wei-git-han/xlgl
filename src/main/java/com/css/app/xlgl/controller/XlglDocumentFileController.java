@@ -171,6 +171,7 @@ public class XlglDocumentFileController{
 		String retFormatId = null;// 返回的版式文件id
 		String streamId = null;// 流式文件id
 		String formatId = null;// 版式文件id
+		
 		JSONObject json = new JSONObject();
 			if (pdf != null && pdf.length > 0) {
 				for (int i = 0; i < pdf.length; i++) {
@@ -218,6 +219,7 @@ public class XlglDocumentFileController{
 						file.setFileServerFormatId(formatId);
 						xlglDocumentFileService.save(file);
 					}
+					json.put("fileName", fileName);
 				}
 				json.put("smjId", retFormatId);
 				json.put("smjFilePath", formatDownPath);
