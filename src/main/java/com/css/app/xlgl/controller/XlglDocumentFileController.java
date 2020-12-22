@@ -326,14 +326,14 @@ public class XlglDocumentFileController{
 
 	@ResponseBody
 	@RequestMapping("/downLoad")
-	public void downLoad(String fileId,HttpServletResponse response) throws IOException {
+	public void downLoad(String fileId,HttpServletResponse response,String fileName) throws IOException {
 		OutputStream os = null;
 		BufferedInputStream bis = null;
 		byte[] buff = new byte[1024];
 		if(StringUtils.isNotBlank(fileId)){
 			try {
 				HTTPFile httpFile = new HTTPFile(fileId);
-				String fileName = httpFile.getFileName();
+//				String fileName = httpFile.getFileName();
 				String sufName = fileName.substring(fileName.indexOf(".")+1,fileName.length());
 				if("mp4".equals(sufName) || "ogg".equals(sufName) || "webm".equals(sufName)){
 					response.reset();
@@ -343,9 +343,10 @@ public class XlglDocumentFileController{
 
 				}else {
 					response.reset();
-					response.setContentType("application/octet-stream");
+					response.setContentType("application/x-msdownload;charset=UTF-8");
 					response.setCharacterEncoding("UTF-8");
-					response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+					String string = new String(fileName.getBytes(),"ISO-8859-1");
+					response.setHeader("Content-Disposition", "attachment;filename=" + string);
 				}
 				os = response.getOutputStream();
 				bis = new BufferedInputStream(httpFile.getInputSteam());
