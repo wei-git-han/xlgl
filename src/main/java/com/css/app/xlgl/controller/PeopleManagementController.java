@@ -104,6 +104,9 @@ public class PeopleManagementController {
 		}
 		List<String> list = getUserArray();
 		boolean str = false;
+		/*
+		 * xiayj,多次循环查询
+		 */
 		for (BaseAppOrgan baseAppOrgan : queryList) {
 			LinkedMultiValueMap<String, Object> linkeMap = new LinkedMultiValueMap<String, Object>();
 			if (StringUtils.isNotBlank(status)) {
@@ -162,7 +165,7 @@ public class PeopleManagementController {
 		}
 		Response.json("page", pageUtil);
 	}
-
+    // xiayj 循环查询
 	private List<BaseAppOrgan> getBaseAppOrganList(List<BaseAppOrgan> queryList, List<XlglAdminSet> queryList2,
 			Boolean status) {
 		List<String> list = getUserArray();
@@ -223,6 +226,7 @@ public class PeopleManagementController {
 		List<TxlUserDto> parseArray = JSONArray.parseArray(jsonArray, TxlUserDto.class);
 		List<TxlUserDto> list = new ArrayList<TxlUserDto>();
 		List<String> userArray = getUserArray();
+		//xiayj 循环查询
 		for (TxlUserDto txlUserDto : parseArray) {
 			LinkedMultiValueMap<String, Object> hashmap = new LinkedMultiValueMap<String, Object>();
 			hashmap.add("userId", txlUserDto.getUserid());
