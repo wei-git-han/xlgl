@@ -155,6 +155,10 @@ public class XlglWarTacticController {
 		} else {
 			xlglWarTactic.setViewNumber(1);
 		}
+		if(null!= xlglWarTactic.getPreViewId()) {
+			HTTPFile httpFile = new HTTPFile(xlglWarTactic.getPreViewId());
+			xlglWarTactic.setPreViewName(httpFile.getFileName());
+		}
 		xlglWarTacticService.update(xlglWarTactic);
 		Response.json("xlglWarTactic", xlglWarTactic);
 	}
