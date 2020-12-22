@@ -62,7 +62,7 @@
 			#{createOrganId},
 			#{viewNumber},
 			#{preViewId},
-			#{PreViewName}
+			#{preViewName}
 		)
 	</insert>
 	 
@@ -82,8 +82,8 @@
 			<if test="tacticTitle != null">"TACTIC_TITLE" = #{tacticTitle}, </if>
 			<if test="videoFile != null">"VIDEO_FILE" = #{videoFile}, </if>
 			<if test="viewNumber != null">"VIEW_NUMBER" = #{viewNumber},</if>
-			<if test="createOrganId != null">"CREATE_ORGAN_ID" = #{createOrganId}</if>
-			<if test="preViewId !=null">"PREVIEWID" = #{preViewId}</if>
+			<if test="createOrganId != null">"CREATE_ORGAN_ID" = #{createOrganId},</if>
+			<if test="preViewId !=null">"PREVIEWID" = #{preViewId},</if>
 			<if test="preViewName !=null">"PREVIEWNAME" = #{preViewName}</if>
 		</set>
 		where id = #{id}
