@@ -333,7 +333,9 @@ public class XlglDocumentFileController{
 		if(StringUtils.isNotBlank(fileId)){
 			try {
 				HTTPFile httpFile = new HTTPFile(fileId);
-//				String fileName = httpFile.getFileName();
+				if(StringUtils.isBlank(fileName)){
+					fileName = httpFile.getFileName();
+				}
 				String sufName = fileName.substring(fileName.indexOf(".")+1,fileName.length());
 				if("mp4".equals(sufName) || "ogg".equals(sufName) || "webm".equals(sufName)){
 					response.reset();
