@@ -168,7 +168,7 @@ public class PeopleManagementController {
 					}else {
 						txlUserDto.setIsShow("4");
 					}
-					if(StringUtils.isNotBlank(userName)&&txlUserDto.getFullname().contains(userName)) {
+					if(StringUtils.isNotBlank(userName) && txlUserDto.getFullname().contains(userName)) {
 						txlUserDto.setIsSelect("1");
 					}
 					if(!StringUtils.equals(txlUserDto.getIsdelete(),"1")) {
