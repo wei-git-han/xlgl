@@ -136,7 +136,7 @@ public class PeopleManagementController {
 			map.add("organId", baseAppOrgan.getId());
 			JSONObject jsonObject1 = getNumber(map);
 			Integer yzxrs = (Integer)jsonObject1.get("yzwrs"); //应在线人数 需等请销假开发完毕
-			
+		
 			Integer userIdList=this.userIdNumber(baseAppOrgan.getId(), userList);// 在线人数
 			baseAppOrgan.setZxrs(userIdList);
 			baseAppOrgan.setYzwrs(baseAppOrgan.getZcrs());
@@ -742,5 +742,3 @@ public class PeopleManagementController {
 }
 
 }
-
-
