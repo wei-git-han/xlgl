@@ -82,4 +82,9 @@ public interface BaseAppOrganDao extends BaseDao<BaseAppOrgan> {
 	
 	
 	void updateIsInvalId(Map<String, Object> map);
+	
+	
+	List<BaseAppOrgan> queryListAndIsInvalId (Map<String, Object> map);
 }
+
+

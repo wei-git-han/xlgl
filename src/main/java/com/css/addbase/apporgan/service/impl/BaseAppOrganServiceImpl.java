@@ -139,6 +139,12 @@ public class BaseAppOrganServiceImpl implements BaseAppOrganService {
 		 baseAppOrganDao.updateIsInvalId(map);
 	}
 
+	@Override
+	public List<BaseAppOrgan> queryListAndIsInvalId(Map<String, Object> map) {
+		
+		return baseAppOrganDao.queryListAndIsInvalId(map);
+	}
+
 
 
 }

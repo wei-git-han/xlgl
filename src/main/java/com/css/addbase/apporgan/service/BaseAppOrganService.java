@@ -81,4 +81,6 @@ public interface BaseAppOrganService {
 	List<BaseAppOrgan> findByParentIdAndIsinvalid(Map<String, Object> map);
 	
 	void updateIsInvalId(Map<String, Object> map);
+	
+	List<BaseAppOrgan> queryListAndIsInvalId (Map<String, Object> map);
 }

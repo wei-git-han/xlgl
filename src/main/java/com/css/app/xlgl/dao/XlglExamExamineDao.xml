@@ -213,14 +213,15 @@
 		select
 		count(*)
 		from
-		XLGL_EXAM_MAIN_ANSWER
+		XLGL_EXAM_MAIN_ANSWER x
+		left join  BASE_APP_USER u on x.REPLY_USER_ID = u.id
 		where
-		STATUS = '0'
+		x.STATUS = '0' and (u.sfyx is null or u.sfyx = '0')
 		<if test="examineId != null and examineId !=''">
-			and EXAMINE_ID = #{examineId}
+			and x.EXAMINE_ID = #{examineId}
 		</if>
 		<if test="organIdList != null">
-			and ORGAN_ID in
+			and x.ORGAN_ID in
 			<foreach item="id" collection="organIdList" open="("
 				separator="," close=")">
 				#{id}

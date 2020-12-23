@@ -236,7 +236,7 @@ public class BaseAppOrganController {
 	@RequestMapping(value = "/updateIsInval")
 	public void setOrganIsInvalId(String organId,String isInvalid) {
 		Map<String, Object> map = new HashMap<String, Object>();
-    	List<BaseAppOrgan> organs = baseAppOrganService.queryList(null);
+    	List<BaseAppOrgan> organs = baseAppOrganService.queryListAndIsInvalId(null);
 		List<String> arrayList = new ArrayList<String>();
 		arrayList = OrgUtil.getOrganTreeList(organs, organId, true, true, arrayList);
 		map.put("IsInvalId", isInvalid);
