@@ -136,10 +136,11 @@ public class PeopleManagementController {
 			map.add("organId", baseAppOrgan.getId());
 			JSONObject jsonObject1 = getNumber(map);
 			Integer yzxrs = (Integer)jsonObject1.get("yzwrs"); //应在线人数 需等请销假开发完毕
+			
 			Integer userIdList=this.userIdNumber(baseAppOrgan.getId(), userList);// 在线人数
 			baseAppOrgan.setZxrs(userIdList);
-			baseAppOrgan.setYzwrs(yzxrs);
-			baseAppOrgan.setYzxrs(yzxrs);
+			baseAppOrgan.setYzwrs(baseAppOrgan.getZcrs());
+			baseAppOrgan.setYzxrs(baseAppOrgan.getZcrs());
 			for (TxlUserNEWDto txlUserDto : parseArrayTxl) {
 				if(baseAppOrgan.getId().equals(txlUserDto.getOrganid())) {
 					for (QXJPeopleManagementDto parseObject : parseArrayQxj) {
@@ -147,7 +148,7 @@ public class PeopleManagementController {
 							txlUserDto.setQXJweixiujiaDays(parseObject.getWeixiujiaDays());
 							txlUserDto.setQXJtotalDays(parseObject.getTotalDays());
 							txlUserDto.setQXJxiuJiaDays(parseObject.getXiuJiaDays());
-							if (parseObject.getType() != null) {
+							if (StringUtils.isNotBlank(parseObject.getType())) {
 								txlUserDto.setQXJtype(parseObject.getType());
 								txlUserDto.setQXJstartDate(parseObject.getStartDate());
 								txlUserDto.setQXJendDate(parseObject.getEndDate());
@@ -166,17 +167,15 @@ public class PeopleManagementController {
 					}else {
 						txlUserDto.setIsShow("4");
 					}
-					if(!StringUtils.equals("", userName)&&txlUserDto.getFullname().contains(userName)) {
+					if(StringUtils.isNotBlank(userName)&&txlUserDto.getFullname().contains(userName)) {
 						txlUserDto.setIsSelect("1");
 					}
 					if(!StringUtils.equals(txlUserDto.getIsdelete(),"1")) {
 						if(txlUserDto.getOrganid().equals(baseAppOrgan.getId())) {
 							if(queryByOrgListUserID.size()>0) {
-								if(!queryByOrgListUserID.contains(txlUserDto.getUserid())) {
+								if(queryByOrgListUserID.contains(txlUserDto.getUserid())) {
 									arrayList.add(txlUserDto);
 								}
-							}else {
-								arrayList.add(txlUserDto);
 							}
 						}
 					}
@@ -477,6 +476,13 @@ public class PeopleManagementController {
 		HSSFSheet sheet = wb.createSheet();
 		CellRangeAddress region = new CellRangeAddress(0,0,0,6);//起始行，结束行，起始列，结束列
 		sheet.addMergedRegion(region);
+		sheet.setColumnWidth(0, 20*256);
+		sheet.setColumnWidth(1, 20*256);
+		sheet.setColumnWidth(2, 20*256);
+		sheet.setColumnWidth(3, 20*256);
+		sheet.setColumnWidth(4, 20*256);
+		sheet.setColumnWidth(5, 20*256);
+		sheet.setColumnWidth(6, 20*256);
 		
 		CellRangeAddress region2 = new CellRangeAddress(1,1,0,6);//起始行，结束行，起始列，结束列
 		sheet.addMergedRegion(region2);
@@ -489,7 +495,6 @@ public class PeopleManagementController {
 		
 		HSSFRow row1 = sheet.createRow(1);
 		HSSFCell row1Cell0 = row1.createCell(0);
-		row1Cell0.setCellStyle(style);
 		row1Cell0.setCellValue(strName+"人员在线情况");
 		
 		HSSFRow row2 = sheet.createRow(2);
@@ -523,7 +528,6 @@ public class PeopleManagementController {
 			sheet.addMergedRegion(region4);
 			HSSFRow row5 = sheet.createRow(rowNumber);
 			HSSFCell row5Cell0 = row5.createCell(0);
-			row5Cell0.setCellStyle(style);
 			row5Cell0.setCellValue(baseAppOrgan.getName()+"人员在线情况");
 			rowNumber =rowNumber+1;
 			HSSFRow row6 = sheet.createRow(rowNumber);
@@ -600,6 +604,14 @@ public class PeopleManagementController {
 		CellRangeAddress region = new CellRangeAddress(0,0,0,6);//起始行，结束行，起始列，结束列
 		sheet.addMergedRegion(region);
 		
+		sheet.setColumnWidth(0, 20*256);
+		sheet.setColumnWidth(1, 20*256);
+		sheet.setColumnWidth(2, 20*256);
+		sheet.setColumnWidth(3, 20*256);
+		sheet.setColumnWidth(4, 20*256);
+		sheet.setColumnWidth(5, 20*256);
+		sheet.setColumnWidth(6, 20*256);
+		
 		CellRangeAddress region2 = new CellRangeAddress(1,1,0,6);//起始行，结束行，起始列，结束列
 		sheet.addMergedRegion(region2);
 		
@@ -614,7 +626,6 @@ public class PeopleManagementController {
 		
 		HSSFRow row1 = sheet.createRow(1);
 		HSSFCell row1Cell0 = row1.createCell(0);
-		row1Cell0.setCellStyle(style);
 		row1Cell0.setCellValue("全局在线人员");
 		
 		HSSFRow row2 = sheet.createRow(2);
@@ -644,7 +655,6 @@ public class PeopleManagementController {
 		
 		HSSFRow row3 = sheet.createRow(3);
 		HSSFCell row3Cell0 = row3.createCell(0);
-		row3Cell0.setCellStyle(style);
 		row3Cell0.setCellValue(strName+"人员在线情况");
 		
 		HSSFRow row4 = sheet.createRow(4);
@@ -677,7 +687,6 @@ public class PeopleManagementController {
 			sheet.addMergedRegion(region4);
 			HSSFRow row5 = sheet.createRow(rowNumber);
 			HSSFCell row5Cell0 = row5.createCell(0);
-			row5Cell0.setCellStyle(style);
 			row5Cell0.setCellValue(baseAppOrgan.getName()+"人员在线情况");
 			rowNumber =rowNumber+1;
 			HSSFRow row6 = sheet.createRow(rowNumber);

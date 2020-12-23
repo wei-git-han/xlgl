@@ -132,19 +132,19 @@
 
 	<select id="findByParentIdAndIsinvalid" resultType="com.css.addbase.apporgan.entity.BaseAppOrgan">
 		select a.*,(select count(*) from BASE_APP_USER where
-		ORGANID = a.id ) as zcrs
+		ORGANID = a.id and (sfyx is null or sfyx = '0')) as zcrs
 		from BASE_APP_ORGAN a
 		where
 		a.ISDELETE=0 and (a.IS_INVALID is null or a.IS_INVALID = '0' )
 		<if test="parentId != null">
-				and a.PARENT_ID = #{parentId}
+				and (a.PARENT_ID = #{parentId} or a.id =#{parentId})
 		</if>
 		<if test="organId != null">
 				and a.ID = #{organId}
 		</if>
 		<if test="userName != null">
 			and a.ID in 
-			(select ORGANID from BASE_APP_USER  where TRUENAME like '%'||#{userName}||'%' and ISDELETE=0)
+			(select ORGANID from BASE_APP_USER  where TRUENAME like '%'||#{userName}||'%' and ISDELETE=0 and (a.IS_INVALID is null or a.IS_INVALID = '0' ))
 		</if>
  			order by a.SORT
 	</select>

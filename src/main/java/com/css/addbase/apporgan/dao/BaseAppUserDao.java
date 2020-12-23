@@ -165,7 +165,7 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 	
 	int queryYXNumber(String[] deptIds);
 
-	@Select("select count(*) from BASE_APP_USER where ORGANID in (select id from BASE_APP_ORGAN start with ID = #{0} and ISDELETE=0 connect by prior ID = PARENT_ID)")
+	@Select("select count(*) from BASE_APP_USER where ORGANID in (select id from BASE_APP_ORGAN start with ID = #{0} and ISDELETE=0 and (IS_INVALID is null or IS_INVALID = '0') connect by prior ID = PARENT_ID) and (sfyx is null or sfyx = '0')")
 	int queryZc(String orgId);
 	
 	
