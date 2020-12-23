@@ -11,7 +11,7 @@
 
 
 	<select id="queryList" resultType="com.css.addbase.apporgan.entity.BaseAppOrgan">
-		select * from BASE_APP_ORGAN where ISDELETE = 0
+		select * from BASE_APP_ORGAN where ISDELETE = 0 and  (IS_INVALID is null or IS_INVALID = '0')
 		<if test="name != null and name != ''">
 			and NAME=#{name}
 		</if>
@@ -106,7 +106,7 @@
 			close=")">
 			#{ids}
 		</foreach>
-		and a.parent_id = 'root'
+		and a.parent_id = 'root' and a.ISDELETE = 0 and  (a.IS_INVALID is null or a.IS_INVALID = '0')
 		union all
 		select * from (
 		select b.* from BASE_APP_ORGAN b where b.ID in
@@ -114,7 +114,7 @@
 			close=")">
 			#{ids}
 		</foreach>
-		and b.parent_id != 'root'
+		and b.parent_id != 'root' and b.ISDELETE = 0 and  (b.IS_INVALID is null or b.IS_INVALID = '0')
 		order by b.sort asc
 		)
 	</select>
@@ -127,7 +127,7 @@
 		BASE_APP_ORGAN
 		where
 		TREE_PATH like '%'||#{orgId}||'%'
-		and isdelete = 0
+		and  ISDELETE = 0 and  (IS_INVALID is null or IS_INVALID = '0')
 	</select>
 
 	<select id="findByParentIdAndIsinvalid" resultType="com.css.addbase.apporgan.entity.BaseAppOrgan">
@@ -161,6 +161,19 @@
 		</foreach>
 	</update>
 	
+		<select id="queryListAndIsInvalId" resultType="com.css.addbase.apporgan.entity.BaseAppOrgan">
+		select * from BASE_APP_ORGAN where ISDELETE = 0 
+		<if test="name != null and name != ''">
+			and NAME=#{name}
+		</if>
+		<if test="parentId != null and parentId != ''">
+			and PARENT_ID = #{parentId}
+		</if>
+		<if test="id != null and id != ''">
+			or ID=#{id}
+		</if>
+		order by SORT asc
+	</select>
 
 
 </mapper>

@@ -8,7 +8,7 @@
 	</select>
 
 	<select id="queryList" resultType="com.css.app.xlgl.entity.XlglExamMainAnswer">
-	select * from (
+	select xx.* from (
 		select x.* from XLGL_EXAM_MAIN_ANSWER x
 		left join  BASE_APP_ORGAN o on x.organ_id = o.id
 		where o.parent_id = 'root'
@@ -19,37 +19,38 @@
 				where o.parent_id != 'root'
 				order by o.sort asc
 			)
-		)
-		where 1=1
+		)xx
+		left join  BASE_APP_USER u on xx.REPLY_USER_ID = u.id
+		where 1=1 and (u.sfyx is null or u.sfyx = '0')
 			<if test="examineId != null and examineId !=''">
-			  and EXAMINE_ID = #{examineId}
+			  and xx.EXAMINE_ID = #{examineId}
 			</if>
 			<if test="makeupStatus != null and makeupStatus !=''">
-			  and MAKEUP_STATUS = #{makeupStatus}
+			  and xx.MAKEUP_STATUS = #{makeupStatus}
 			</if>
 			<if test="replyUserName != null and replyUserName !=''">
-			  and REPLY_USER_NAME like '%'||#{replyUserName}||'%'
+			  and xx.REPLY_USER_NAME like '%'||#{replyUserName}||'%'
 			</if>
 			<if test="level != null and level !=''">
-			  and LEVEL = #{level}
+			  and xx.LEVEL = #{level}
 			</if>
 			<if test="organName != null and organName !=''">
-			  and ORGAN_NAME like '%'||#{organName}||'%'
+			  and xx.ORGAN_NAME like '%'||#{organName}||'%'
 			</if>
 			<if test="organId != null and organId !=''">
-			 and ORGAN_ID = #{organId}
+			 and xx.ORGAN_ID = #{organId}
 			</if>
 			<if test="replyUserId != null and replyUserId !=''">
-			  and REPLY_USER_ID = #{replyUserId}
+			  and xx.REPLY_USER_ID = #{replyUserId}
 			</if>
 			<if test="isNotExam != null and isNotExam !=''">
-			  and ISNOTEXAM = #{isNotExam}
+			  and xx.ISNOTEXAM = #{isNotExam}
 			</if>
 			<if test="status != null and status !=''">
-			  and STATUS = #{status}
+			  and xx.STATUS = #{status}
 			</if>
 			<if test="deptList != null">
-			  and ORGAN_ID in
+			  and xx.ORGAN_ID in
 			<foreach item="id" collection="deptList" open="(" separator=","
 			close=")">
 				#{id}
@@ -61,22 +62,23 @@
 	</select>
 	
  	<select id="queryTotal" resultType="int">
-		select count(*) from XLGL_EXAM_MAIN_ANSWER 
-		 where 1 = 1 
+		select count(*) from XLGL_EXAM_MAIN_ANSWER x
+		left join  BASE_APP_USER u on x.REPLY_USER_ID = u.id
+		where 1=1 and (u.sfyx is null or u.sfyx = '0')
 		 <if test="examineId != null and examineId != ''">
-			and EXAMINE_ID = #{examineId}
+			and x.EXAMINE_ID = #{examineId}
 		 </if>
 		 <if test="isNotExam != null and isNotExam != ''">
-			and ISNOTEXAM = #{isNotExam}
+			and x.ISNOTEXAM = #{isNotExam}
 		 </if>
 		 <if test="status != null and status !=''">
-			  and STATUS = #{status}
+			  and x.STATUS = #{status}
 		 </if>
 		 <if test="level != null and level !=''">
-			  and LEVEL = #{level}
+			  and x.LEVEL = #{level}
 		 </if>
 		 <if test="organIdList != null">
-			and ORGAN_ID in
+			and x.ORGAN_ID in
 			<foreach item="id" collection="organIdList" open="(" separator=","
 			close=")">
 				#{id}
@@ -162,19 +164,20 @@
 	</delete>
 
 	<select id="queryUserCount" resultType="String">
-		select IFNULL(count(distinct REPLY_USER_ID),0)  from XLGL_EXAM_MAIN_ANSWER
-		 where 1 = 1 
+		select IFNULL(count(distinct REPLY_USER_ID),0)  from XLGL_EXAM_MAIN_ANSWER x
+		left join  BASE_APP_USER u on x.REPLY_USER_ID = u.id
+		 where 1 = 1 and (u.sfyx is null or u.sfyx = '0')
 		 <if test="examineId != null and examineId != ''">
-			and EXAMINE_ID = #{examineId}
+			and x.EXAMINE_ID = #{examineId}
 		</if>
 		<if test="isNotExam != null and isNotExam != ''">
-			and ISNOTEXAM = #{isNotExam}
+			and x.ISNOTEXAM = #{isNotExam}
 		</if>
 		<if test="status != null and status !=''">
-			  and STATUS = #{status}
+			  and x.STATUS = #{status}
 		</if>
 		<if test="organIdList != null">
-			and ORGAN_ID in
+			and x.ORGAN_ID in
 			<foreach item="id" collection="organIdList" open="(" separator=","
 			close=")">
 				#{id}
@@ -302,10 +305,11 @@
 	</select>
 	
 	<select id="findExamByOrganId" resultType="com.css.app.xlgl.entity.XlglExamMainAnswer">
-    select * from 
-    	XLGL_EXAM_MAIN_ANSWER
-    	where	
-    		ORGAN_ID in
+    select x.* from 
+    	XLGL_EXAM_MAIN_ANSWER x
+		left join  BASE_APP_USER u on x.REPLY_USER_ID = u.id
+    	where	 1=1 and (u.sfyx is null or u.sfyx = '0') and
+    		x.ORGAN_ID in
     		(
 			select 
 				id 
@@ -315,13 +319,13 @@
 				TREE_PATH like  '%'||#{organId}||'%'
 			) 
 			<if test="examId != null and examId !=''">
-				and EXAMINE_ID = #{examId}
+				and x.EXAMINE_ID = #{examId}
 			</if>
 			<if test="status != null and status !=''">
-				and STATUS = #{status}
+				and x.STATUS = #{status}
 			</if>
 			<if test="isnotexam != null and isnotexam !=''">
-				and ISNOTEXAM = #{isnotexam}
+				and x.ISNOTEXAM = #{isnotexam}
 			</if>
 	</select>
 	
