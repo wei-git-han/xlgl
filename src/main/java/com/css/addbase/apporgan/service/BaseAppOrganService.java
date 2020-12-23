@@ -77,4 +77,8 @@ public interface BaseAppOrganService {
 	BaseAppOrgan queryDeptNameByUserId(String orgId);
 	
 	List<String> queryListByTREEPATH(String orgId);
+	
+	List<BaseAppOrgan> findByParentIdAndIsinvalid(Map<String, Object> map);
+	
+	void updateIsInvalId(Map<String, Object> map);
 }

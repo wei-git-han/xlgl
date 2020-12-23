@@ -291,5 +291,44 @@
 		</if>
 		
 	</select>
+	
+		<select id="queryByOrgList" resultType="com.css.addbase.apporgan.entity.BaseAppUser">
+		select  * from BASE_APP_USER where ISDELETE = 0 and SFYX = '1' and ORGANID in
+		<foreach item="deptIds" collection="array" open="(" separator=","
+			close=")">
+			#{userIds}
+		</foreach>
+	</select>
+	
+	<select id="queryByOrgListUserID" resultType="java.lang.String">
+		select  * from BASE_APP_USER where ISDELETE = 0 and SFYX = '1' and ORGANID in
+		<foreach item="deptIds" collection="array" open="(" separator=","
+			close=")">
+			#{deptIds}
+		</foreach>
+	</select>
+	
+	
+	<select id="queryYXNumber" resultType="int">
+		select  count(*) from BASE_APP_USER where ISDELETE = 0 and SFYX = '0'
+		 and ORGANID in
+		<foreach item="deptIds" collection="array" open="(" separator=","
+			close=")">
+			#{deptIds}
+		</foreach>
+	</select>
+	
+	<update id="updateAllSFYX">
+		update BASE_APP_USER
+		<set>
+			<if test="sfyx != null">"SFYX" = #{sfyx}</if>
+		</set>
+		where ORGANID in 	
+		<foreach item="ids" collection="array" open="(" separator=","
+			close=")">
+			#{ids}
+		</foreach>
+	</update>
+	
 
 </mapper>

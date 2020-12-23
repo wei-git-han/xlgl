@@ -234,8 +234,32 @@ public class BaseAppUserServiceImpl implements BaseAppUserService {
 	}
 
 	@Override
+	public List<BaseAppUser> queryByOrgList(String[] deptIds) {
+		return baseAppUserDao.queryByOrgList(deptIds);
+	}
+
+	@Override
+	public List<String> queryByOrgListUserID(String[] deptIds) {
+		return baseAppUserDao.queryByOrgListUserID(deptIds);
+	}
+	@Override
 	public List<BaseAppUser> queryData(String id){
 		return baseAppUserDao.queryData(id);
+	}
+
+	@Override
+	public int queryYXNumber(String[] deptIds) {
+		return baseAppUserDao.queryYXNumber(deptIds);
+	}
+
+	@Override
+	public int queryZc(String orgId){
+		return baseAppUserDao.queryZc(orgId);
+	}
+
+	@Override
+	public void updateAllSFYX(Map<String, Object> map) {
+		 baseAppUserDao.updateAllSFYX(map);
 	}
 
 

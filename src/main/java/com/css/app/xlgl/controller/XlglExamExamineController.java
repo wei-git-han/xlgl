@@ -1141,6 +1141,9 @@ public class XlglExamExamineController {
 		}
 		return list;
 	}
+
+
+
 	/**
 	 * 导出各局数据和已考人员或未考人员列表xls
 	 * @param type 0 ：按部门 1： 按人员

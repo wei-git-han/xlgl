@@ -4,7 +4,8 @@
 <mapper namespace="com.css.addbase.apporgan.dao.BaseAppOrganDao">
 
 	<select id="queryObject" resultType="com.css.addbase.apporgan.entity.BaseAppOrgan">
-		select * from BASE_APP_ORGAN where ID = #{value}
+		select * from BASE_APP_ORGAN
+		where ID = #{value}
 		order by SORT asc
 	</select>
 
@@ -25,51 +26,53 @@
 			limit #{offset}, #{limit}
 		</if>
 	</select>
-	
+
 	<select id="getSubOrgSync" resultType="com.css.addbase.apporgan.entity.BaseAppOrgan">
-		select ID, NAME, PARENT_ID, SORT,(select count(0) from BASE_APP_ORGAN a   WHERE a.PARENT_ID=b.ID and a.ISDELETE = 0) AS  CODE, TREE_PATH  
-		  from BASE_APP_ORGAN b where PARENT_ID = #{id} and b.ISDELETE = 0
-		   order by SORT
+		select ID, NAME,IS_INVALID,
+		PARENT_ID, SORT,(select count(0) from BASE_APP_ORGAN a WHERE
+		a.PARENT_ID=b.ID and a.ISDELETE = 0) AS CODE, TREE_PATH
+		from BASE_APP_ORGAN b where PARENT_ID = #{id} and b.ISDELETE = 0
+		order by SORT
 	</select>
-	
- 	<select id="queryTotal" resultType="int">
+
+	<select id="queryTotal" resultType="int">
 		select count(*) from BASE_APP_ORGAN where ISDELETE = 0
 		<if test="parentId != null and parentId != null">
 			and PARENT_ID = #{parentId}
 		</if>
 	</select>
-	 
+
 	<insert id="save" parameterType="com.css.addbase.apporgan.entity.BaseAppOrgan">
 		insert into BASE_APP_ORGAN
 		(
-			"ID", 
-			"TREE_PATH", 
-			"ISDELETE", 
-			"NAME", 
-			"TIMESTAMP", 
-			"SORT", 
-			"TYPE", 
-			"CODE", 
-			"PARENT_ID",
-			"DEPT_OFFICER"
+		"ID",
+		"TREE_PATH",
+		"ISDELETE",
+		"NAME",
+		"TIMESTAMP",
+		"SORT",
+		"TYPE",
+		"CODE",
+		"PARENT_ID",
+		"DEPT_OFFICER"
 		)
 		values
 		(
-			#{id}, 
-			#{treePath}, 
-			#{isdelete}, 
-			#{name}, 
-			#{timestamp}, 
-			#{sort}, 
-			#{type}, 
-			#{code}, 
-			#{parentId},
-			#{deptOfficer}
+		#{id},
+		#{treePath},
+		#{isdelete},
+		#{name},
+		#{timestamp},
+		#{sort},
+		#{type},
+		#{code},
+		#{parentId},
+		#{deptOfficer}
 		)
 	</insert>
-	 
+
 	<update id="update" parameterType="com.css.addbase.apporgan.entity.BaseAppOrgan">
-		update BASE_APP_ORGAN 
+		update BASE_APP_ORGAN
 		<set>
 			<if test="treePath != null">"TREE_PATH" = #{treePath}, </if>
 			<if test="isdelete != null">"ISDELETE" = #{isdelete}, </if>
@@ -79,47 +82,85 @@
 			<if test="type != null">"TYPE" = #{type}, </if>
 			<if test="code != null">"CODE" = #{code}, </if>
 			<if test="parentId != null">"PARENT_ID" = #{parentId},</if>
+			<if test="IsInvalId != null">"IS_INVALID" = #{IsInvalId},</if>
 			<if test="deptOfficer != null">"DEPT_OFFICER" = #{deptOfficer}</if>
 		</set>
 		where ID = #{id}
 	</update>
-	
+
 	<delete id="delete">
 		delete from BASE_APP_ORGAN where ID = #{value}
 	</delete>
-	
+
 	<delete id="deleteBatch">
-		delete from BASE_APP_ORGAN where ID in 
-		<foreach item="id" collection="array" open="(" separator="," close=")">
+		delete from BASE_APP_ORGAN where ID in
+		<foreach item="id" collection="array" open="(" separator=","
+			close=")">
 			#{id}
 		</foreach>
 	</delete>
-	
-	<select id="queryListByIds" resultType="com.css.addbase.apporgan.entity.BaseAppOrgan" >
-		select  a.*  from BASE_APP_ORGAN a where a.ID in 
-		<foreach item="ids" collection="array" open="(" separator="," close=")">
+
+	<select id="queryListByIds" resultType="com.css.addbase.apporgan.entity.BaseAppOrgan">
+		select a.* from BASE_APP_ORGAN a where a.ID in
+		<foreach item="ids" collection="array" open="(" separator=","
+			close=")">
 			#{ids}
 		</foreach>
-		 and a.parent_id = 'root'
-		 union all
-		 select * from (
-		 select  b.*  from BASE_APP_ORGAN b where b.ID in 
-		<foreach item="ids" collection="array" open="(" separator="," close=")">
+		and a.parent_id = 'root'
+		union all
+		select * from (
+		select b.* from BASE_APP_ORGAN b where b.ID in
+		<foreach item="ids" collection="array" open="(" separator=","
+			close=")">
 			#{ids}
 		</foreach>
-		 and b.parent_id != 'root'
-		 order by b.sort asc
-		 )
+		and b.parent_id != 'root'
+		order by b.sort asc
+		)
 	</select>
+
 	
 	<select id="queryListByTREEPATH" resultType="String">
-			select 
- 				id 
- 			from 
- 				BASE_APP_ORGAN 
- 			where 
- 				TREE_PATH like '%'||#{orgId}||'%'
- 				and isdelete = 0
+		select
+		id
+		from
+		BASE_APP_ORGAN
+		where
+		TREE_PATH like '%'||#{orgId}||'%'
+		and isdelete = 0
 	</select>
+
+	<select id="findByParentIdAndIsinvalid" resultType="com.css.addbase.apporgan.entity.BaseAppOrgan">
+		select a.*,(select count(*) from BASE_APP_USER where
+		ORGANID = a.id ) as zcrs
+		from BASE_APP_ORGAN a
+		where
+		a.ISDELETE=0 and (a.IS_INVALID is null or a.IS_INVALID = '0' )
+		<if test="parentId != null">
+				and a.PARENT_ID = #{parentId}
+		</if>
+		<if test="organId != null">
+				and a.ID = #{organId}
+		</if>
+		<if test="userName != null">
+			and a.ID in 
+			(select ORGANID from BASE_APP_USER  where TRUENAME like '%'||#{userName}||'%' )
+		</if>
+ 			order by a.SORT
+	</select>
+	
+	<update id="updateIsInvalId">
+		update BASE_APP_ORGAN
+		<set>
+			<if test="IsInvalId != null">"IS_INVALID" = #{IsInvalId}</if>
+		</set>
+		where ID  in 	
+		<foreach item="ids" collection="array" open="(" separator=","
+			close=")">
+			#{ids}
+		</foreach>
+	</update>
+	
+
 
 </mapper>

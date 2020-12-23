@@ -1,6 +1,9 @@
 package com.css.addbase.apporgan.entity;
 
 import java.io.Serializable;
+import java.util.List;
+
+import com.css.app.xlgl.dto.TxlUserNEWDto;
 
 /**
  * 部门表
@@ -31,6 +34,8 @@ public class BaseAppOrgan implements Serializable {
 	private String parentId;
 	//更新类型
 	private Integer deptOfficer;
+	//业务配置-是否有效0或null是有效，1：为无效
+	private String isInvalid;
 	
 	//应在位人数
 	private Integer yzwrs;
@@ -44,7 +49,15 @@ public class BaseAppOrgan implements Serializable {
 	private Integer xjrs;
 	//查看权限 0:不能看，1：能看
 	private String status;
-
+	
+	//注册人数
+	private Integer zcrs;
+	//应在线人数
+	private Integer yzxrs;
+	//在线人数
+	private Integer zxrs;
+	
+	private List<TxlUserNEWDto> list;
 	/**
 	 * 设置：
 	 */
@@ -195,7 +208,38 @@ public class BaseAppOrgan implements Serializable {
 	public void setZwrate(String zwrate) {
 		this.zwrate = zwrate;
 	}
+	public String getIsInvalid() {
+		return isInvalid;
+	}
+	public void setIsInvalid(String isInvalid) {
+		this.isInvalid = isInvalid;
+	}
+	public Integer getZcrs() {
+		return zcrs;
+	}
+	public void setZcrs(Integer zcrs) {
+		this.zcrs = zcrs;
+	}
+	public Integer getYzxrs() {
+		return yzxrs;
+	}
+	public void setYzxrs(Integer yzxrs) {
+		this.yzxrs = yzxrs;
+	}
+	public Integer getZxrs() {
+		return zxrs;
+	}
+	public void setZxrs(Integer zxrs) {
+		this.zxrs = zxrs;
+	}
+	public List<TxlUserNEWDto> getList() {
+		return list;
+	}
+	public void setList(List<TxlUserNEWDto> list) {
+		this.list = list;
+	}
 
+	
 	
 	
 }

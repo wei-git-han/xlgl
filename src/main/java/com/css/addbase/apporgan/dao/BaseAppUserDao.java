@@ -158,4 +158,16 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 	@Select("select * from BASE_APP_USER where USER_ID not in (select REPLY_USER_ID from XLGL_EXAM_MAIN_ANSWER where EXAMINE_ID = #{0})")
 	List<BaseAppUser> queryData(String id);
 	
+
+	List<BaseAppUser> queryByOrgList(String[] deptIds);
+	
+	List<String> queryByOrgListUserID(String[] deptIds);
+	
+	int queryYXNumber(String[] deptIds);
+
+	@Select("select count(*) from BASE_APP_USER where ORGANID in (select id from BASE_APP_ORGAN start with ID = #{0} and ISDELETE=0 connect by prior ID = PARENT_ID)")
+	int queryZc(String orgId);
+	
+	
+	void updateAllSFYX(Map<String, Object> map);
 }

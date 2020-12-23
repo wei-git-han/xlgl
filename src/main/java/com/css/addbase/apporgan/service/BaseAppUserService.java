@@ -142,8 +142,17 @@ public interface BaseAppUserService {
 	List<BaseAppUser>  queryByOrganidTREEPATH(Map<String,Object> map);
 
 	List<BaseAppUser> queryAllUsers();
+	
+	List<BaseAppUser> queryByOrgList(String[] deptIds);
+	
+	List<String> queryByOrgListUserID(String[] deptIds);
+
 
 	List<BaseAppUser> queryData(String id);
 
+	int queryYXNumber(String[] deptIds);
 
+	int queryZc(String orgId);
+	
+	void updateAllSFYX(Map<String, Object> map);
 }
