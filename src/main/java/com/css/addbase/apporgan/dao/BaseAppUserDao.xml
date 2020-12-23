@@ -200,6 +200,8 @@
 		"USEREMAIL",
 		"SECLEVEL",
 		"SEX",
+		"SFZB",
+		"SFYX",
 		"TELEPHONE"
 		)
 		values
@@ -217,6 +219,8 @@
 		#{useremail},
 		#{seclevel},
 		#{sex},
+		#{sfzb},
+		#{sfyx},
 		#{telephone}
 		)
 	</insert>

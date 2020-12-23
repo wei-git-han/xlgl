@@ -175,6 +175,7 @@ public class SyncOrganUtil {
     			baseAppOrgan.setTreePath(organ.getP());
     			baseAppOrgan.setSort(organ.getOrderId());
     			baseAppOrgan.setIsdelete(organ.getIsDelete());
+    			baseAppOrgan.setIsInvalid("0");
     			if(baseAppOrgantemp!=null){
     				baseAppOrganService.update(baseAppOrgan);
     			}else{
@@ -210,6 +211,8 @@ public class SyncOrganUtil {
     			baseAppUser.setSex(userInfo.getSex());
     			baseAppUser.setTelephone(userInfo.getTel());
     			baseAppUser.setIsdelete(userInfo.getIsDelete());
+    			baseAppUser.setSfyx("0");
+    			baseAppUser.setSfzb("0");
     			if(baseAppUsertemp!=null){
     				baseAppUserService.update(baseAppUser);
     			}else{

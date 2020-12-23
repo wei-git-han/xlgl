@@ -54,6 +54,7 @@
 		"TYPE",
 		"CODE",
 		"PARENT_ID",
+		"IS_INVALID",
 		"DEPT_OFFICER"
 		)
 		values
@@ -67,6 +68,7 @@
 		#{type},
 		#{code},
 		#{parentId},
+		#{IsInvalId},
 		#{deptOfficer}
 		)
 	</insert>
