@@ -148,6 +148,7 @@ public class PeopleManagementController {
 							txlUserDto.setQXJtotalDays(parseObject.getTotalDays());
 							txlUserDto.setQXJxiuJiaDays(parseObject.getXiuJiaDays());
 							if (parseObject.getType() != null) {
+								txlUserDto.setQXJmatters(parseObject.getType());
 								txlUserDto.setQXJtype(parseObject.getType());
 								txlUserDto.setQXJstartDate(parseObject.getStartDate());
 								txlUserDto.setQXJendDate(parseObject.getEndDate());
