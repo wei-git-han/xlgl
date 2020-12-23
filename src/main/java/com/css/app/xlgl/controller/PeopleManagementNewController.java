@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +44,7 @@ import com.css.addbase.constant.AppConstant;
 import com.css.addbase.constant.AppInterfaceConstant;
 import com.css.app.xlgl.config.entity.XlglRoleSet;
 import com.css.app.xlgl.config.service.XlglRoleSetService;
+import com.css.app.xlgl.dto.ExamMainAnswerAnalyseDto;
 import com.css.app.xlgl.dto.LeaveorbackPlatDto;
 import com.css.app.xlgl.dto.LeaveorbackUserPlatDto;
 import com.css.app.xlgl.dto.TxlUserNEWDto;
@@ -114,6 +116,21 @@ public class PeopleManagementNewController {
 		String elecPath = orgMapped.getUrl() + AppInterfaceConstant.WEB_QXJ_XLGLAPICONTROLLER_GETPLATNUMBER;
 		JSONObject jsonData = CrossDomainUtil.getJsonData(elecPath, hashmap);
 		String jsonArray = jsonData.getJSONArray("list").toString();
+		List<LeaveorbackPlatDto> parseArray = JSONArray.parseArray(jsonArray, LeaveorbackPlatDto.class);
+		List<LeaveorbackPlatDto> arrayList = new ArrayList<LeaveorbackPlatDto>();
+		List<LeaveorbackPlatDto> listjingWai = new ArrayList<LeaveorbackPlatDto>();
+		for (LeaveorbackPlatDto leaveorbackPlatDto : parseArray) {
+			if(leaveorbackPlatDto.getPlat().equals("北京")) {
+				arrayList.add(leaveorbackPlatDto);
+			}else {
+				listjingWai.add(leaveorbackPlatDto);
+			}
+		}
+		listjingWai.sort(Comparator.comparing(LeaveorbackPlatDto :: getNumber).reversed());
+		for (LeaveorbackPlatDto leaveorbackPlatDto : listjingWai) {
+			arrayList.add(leaveorbackPlatDto);
+		}
+		jsonData.put("list", arrayList);
 		if(StringUtils.isNotBlank(parentId)) {
 			if(StringUtils.isNotBlank(timeStr)) {
 				redisUtil.setString("xlgl-getPlatNumber-"+parentId+"-"+timeStr, jsonArray);
