@@ -413,15 +413,26 @@ public class PeopleManagementController {
 	private int userIdNumber(String organId, List<String> list) {
 		int i = 0;
 		if (StringUtils.isNotBlank(organId)) {
+			BaseAppOrgan queryObject = baseAppOrganService.queryObject(organId);
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("orgId", organId);
 			map.put("departmentId", organId);
-			List<BaseAppUser> queryListByOrganid = baseAppUserService.queryByOrganidTREEPATH(map);
-			for (int j = 0; j < list.size(); j++) {
-			for (BaseAppUser baseAppUser : queryListByOrganid) {
-					String string = list.get(j);
-					if(baseAppUser.getAccount().equals(list.get(j))) {
-						i++;
+			if(queryObject.getParentId().equals("root")) {
+				List<BaseAppUser> queryListByOrganid = baseAppUserService.queryUsers(organId);
+				for (int j = 0; j < list.size(); j++) {
+				for (BaseAppUser baseAppUser : queryListByOrganid) {
+						if(baseAppUser.getAccount().equals(list.get(j))) {
+							i++;
+						}
+					}
+				}
+			}else {
+				List<BaseAppUser> queryListByOrganid = baseAppUserService.queryByOrganidTREEPATH(map);
+				for (int j = 0; j < list.size(); j++) {
+				for (BaseAppUser baseAppUser : queryListByOrganid) {
+						if(baseAppUser.getAccount().equals(list.get(j))) {
+							i++;
+						}
 					}
 				}
 			}
@@ -430,7 +441,6 @@ public class PeopleManagementController {
 				i = list.size();
 			}
 		}
-
 		return i;
 	}
 

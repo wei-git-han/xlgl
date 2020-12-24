@@ -103,7 +103,7 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 	@Select("select count(1) from BASE_APP_USER where ORGANID = #{0}")
 	int queryUserNum(String deptId);
 
-	@Select("select * from BASE_APP_USER where ORGANID = #{0}")
+	@Select("select * from BASE_APP_USER where ORGANID = #{0} and  (sfyx is null or sfyx = '0')")
 	List<BaseAppUser> queryUsers(String deptId);
 
 	List<BaseAppUser> queryAllUserIdAndName(Map<String,Object> map);

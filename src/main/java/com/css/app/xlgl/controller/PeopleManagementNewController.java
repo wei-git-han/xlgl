@@ -450,6 +450,19 @@ public class PeopleManagementNewController {
 		}
        	String strName = queryObject.getName()+"单位人员分布清单("+time+")";
 		List<LeaveorbackPlatDto> list = JSONArray.parseArray(jsonArray, LeaveorbackPlatDto.class);
+		List<LeaveorbackPlatDto> arrayList = new ArrayList<LeaveorbackPlatDto>();
+		List<LeaveorbackPlatDto> listjingWai = new ArrayList<LeaveorbackPlatDto>();
+		for (LeaveorbackPlatDto leaveorbackPlatDto : list) {
+			if(leaveorbackPlatDto.getPlat().equals("北京")) {
+				arrayList.add(leaveorbackPlatDto);
+			}else {
+				listjingWai.add(leaveorbackPlatDto);
+			}
+		}
+		listjingWai.sort(Comparator.comparing(LeaveorbackPlatDto :: getNumber).reversed());
+		for (LeaveorbackPlatDto leaveorbackPlatDto : listjingWai) {
+			arrayList.add(leaveorbackPlatDto);
+		}
 		 
    		String format = new SimpleDateFormat("yyyy-MM-ddHHmmss").format(new Date());
    		String fileName = queryObject.getName()+"单位人员分布清单"+format+".xls";
@@ -463,7 +476,7 @@ public class PeopleManagementNewController {
    		InputStream is = null;
    		String[] title = { "序号", "地图", "人数" };
    		try {
-   			is = createExcelPlatFlie(list, title, fileName, strName);
+   			is = createExcelPlatFlie(arrayList, title, fileName, strName);
 
 			String string = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
 			response.reset();
