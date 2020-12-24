@@ -1,4 +1,5 @@
 package com.css.addbase.apporgan.controller;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -434,9 +435,52 @@ public class BaseAppUserController {
 	@ResponseBody
 	@RequestMapping("/updateSfyx")
 	public void updateSfyx(BaseAppUser baseAppUser){
-		//删掉的代码没有调用到
 		JSONObject json = new JSONObject();
 		baseAppUserService.update(baseAppUser);
+		Map<String, Object> map = new HashMap<String, Object>();
+		BaseAppUser queryObject = baseAppUserService.queryObject(baseAppUser.getId());
+		List<String> arrayList = new ArrayList<String>();
+		String chu = "2"; // 0 改为 有效 ，1 改为无效，2 为默认不改  
+		String ju = "2"; // 0 改为 有效 ，1 改为无效，2 为默认不改  
+		if(queryObject !=null) {
+			List<BaseAppUser> queryUsers = baseAppUserService.queryUsers(queryObject.getOrganid());
+			BaseAppOrgan baseAppOrganChu = new BaseAppOrgan();
+			baseAppOrganChu.setId(queryObject.getOrganid());
+			if(queryUsers.size() <=0) {
+				chu = "1";
+				baseAppOrganChu.setIsInvalId("1");
+				baseAppOrganService.update(baseAppOrganChu);
+			}else if(queryUsers.size() ==1){
+				chu = "0";
+				baseAppOrganChu.setIsInvalId("0");
+				baseAppOrganService.update(baseAppOrganChu);
+			}
+			BaseAppOrgan queryObject2 = baseAppOrganService.queryObject(queryObject.getOrganid());
+			if(StringUtils.isNotBlank(queryObject2.getTreePath())) {
+				String parentId = queryObject2.getTreePath();
+				if(parentId.contains(",")) {
+					String[] split = parentId.split(",");
+					for (int i = 0; i < split.length; i++) {
+						if(i>1) {
+							arrayList.add(split[i]);
+						}
+					}
+				}
+			}
+			String string = arrayList.get(0);
+			List<BaseAppOrgan> findOrganByParentIdAll = baseAppOrganService.findOrganByParentIdAll(string);
+			BaseAppOrgan baseAppOrgan = new BaseAppOrgan();
+			baseAppOrgan.setId(string);
+			if(findOrganByParentIdAll.size()<=0) {
+				ju = "1";
+				baseAppOrgan.setIsInvalId("1");
+				baseAppOrganService.update(baseAppOrgan);
+			}else if(findOrganByParentIdAll.size()==1){
+				ju = "0";
+				baseAppOrgan.setIsInvalId("0");
+				baseAppOrganService.update(baseAppOrgan);
+			}
+		}
 		Response.json("result","success");
 	}
 	

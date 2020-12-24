@@ -175,7 +175,7 @@ public class SyncOrganUtil {
     			baseAppOrgan.setTreePath(organ.getP());
     			baseAppOrgan.setSort(organ.getOrderId());
     			baseAppOrgan.setIsdelete(organ.getIsDelete());
-    			baseAppOrgan.setIsInvalid("0");
+    			baseAppOrgan.setIsInvalId("0");
     			if(baseAppOrgantemp!=null){
     				baseAppOrganService.update(baseAppOrgan);
     			}else{

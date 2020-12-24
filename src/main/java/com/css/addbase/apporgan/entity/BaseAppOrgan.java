@@ -35,7 +35,7 @@ public class BaseAppOrgan implements Serializable {
 	//更新类型
 	private Integer deptOfficer;
 	//业务配置-是否有效0或null是有效，1：为无效
-	private String isInvalid;
+	private String IsInvalId;
 	
 	//应在位人数
 	private Integer yzwrs;
@@ -208,12 +208,6 @@ public class BaseAppOrgan implements Serializable {
 	public void setZwrate(String zwrate) {
 		this.zwrate = zwrate;
 	}
-	public String getIsInvalid() {
-		return isInvalid;
-	}
-	public void setIsInvalid(String isInvalid) {
-		this.isInvalid = isInvalid;
-	}
 	public Integer getZcrs() {
 		return zcrs;
 	}
@@ -237,6 +231,12 @@ public class BaseAppOrgan implements Serializable {
 	}
 	public void setList(List<TxlUserNEWDto> list) {
 		this.list = list;
+	}
+	public String getIsInvalId() {
+		return IsInvalId;
+	}
+	public void setIsInvalId(String isInvalId) {
+		IsInvalId = isInvalId;
 	}
 
 	

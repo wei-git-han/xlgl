@@ -195,8 +195,8 @@ public class BaseAppOrganController {
 			jo.put("id",organ.getId());
 			jo.put("parent","#");
 			jo.put("text",organ.getName());
-			if(StringUtils.isNotBlank(organ.getIsInvalid())) {
-				jo.put("isInvalid", organ.getIsInvalid());
+			if(StringUtils.isNotBlank(organ.getIsInvalId())) {
+				jo.put("isInvalid", organ.getIsInvalId());
 			}else {
 				jo.put("isInvalid", "0");
 			}
@@ -217,8 +217,8 @@ public class BaseAppOrganController {
 				jo.put("parent",organ.getParentId());
 				jo.put("text",organ.getName());
 				jo.put("children",!"0".equals(organ.getCode()));
-				if(StringUtils.isNotBlank(organ.getIsInvalid())) {
-					jo.put("isInvalid", organ.getIsInvalid());
+				if(StringUtils.isNotBlank(organ.getIsInvalId())) {
+					jo.put("isInvalid", organ.getIsInvalId());
 				}else {
 					jo.put("isInvalid", "0");
 				}

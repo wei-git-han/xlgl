@@ -85,6 +85,13 @@ public interface BaseAppOrganDao extends BaseDao<BaseAppOrgan> {
 	
 	
 	List<BaseAppOrgan> queryListAndIsInvalId (Map<String, Object> map);
+	
+	/**
+	 * 根据父Id获取部门信息
+	 * @author gengds
+	 */
+	@Select("select * from ( select * from BASE_APP_ORGAN start with ID  = #{parentId} and ISDELETE=0  connect by prior ID = PARENT_ID) where  PARENT_ID != 'root' and (IS_INVALID = '0' or IS_INVALID is null) ")
+	List<BaseAppOrgan> findOrganByParentIdAll(String parentId);
 }
 
 

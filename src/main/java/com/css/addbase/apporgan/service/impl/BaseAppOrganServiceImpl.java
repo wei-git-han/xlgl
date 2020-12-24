@@ -141,8 +141,12 @@ public class BaseAppOrganServiceImpl implements BaseAppOrganService {
 
 	@Override
 	public List<BaseAppOrgan> queryListAndIsInvalId(Map<String, Object> map) {
-		
 		return baseAppOrganDao.queryListAndIsInvalId(map);
+	}
+
+	@Override
+	public List<BaseAppOrgan> findOrganByParentIdAll(String parentId) {
+		return baseAppOrganDao.findOrganByParentIdAll(parentId);
 	}
 
 
