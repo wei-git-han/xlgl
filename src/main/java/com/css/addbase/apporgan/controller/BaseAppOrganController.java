@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,7 +20,11 @@ import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.addbase.apporgan.util.OrgUtil;
+import com.css.addbase.apporgmapped.entity.BaseAppOrgMapped;
 import com.css.addbase.apporgmapped.service.BaseAppOrgMappedService;
+import com.css.addbase.constant.AppConstant;
+import com.css.addbase.constant.AppInterfaceConstant;
+import com.css.base.utils.CrossDomainUtil;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.GwPageUtils;
 import com.css.base.utils.Response;
@@ -244,7 +249,18 @@ public class BaseAppOrganController {
 		baseAppOrganService.updateIsInvalId(map);
 		map.put("sfyx", isInvalid);
 		baseAppUserService.updateAllSFYX(map);
+		LinkedMultiValueMap<String, Object> hashmap = new LinkedMultiValueMap<String, Object>();
+    	hashmap.add("organId", organId);
+    	hashmap.add("isInvalId", isInvalid);
+		this.updateIsInvalIdAndSfyxQXJ(hashmap);
 		Response.ok();
 		
+	}
+	private JSONObject updateIsInvalIdAndSfyxQXJ(LinkedMultiValueMap<String, Object> map) {
+		BaseAppOrgMapped orgMapped = (BaseAppOrgMapped)baseAppOrgMappedService.orgMappedByOrgId("","root",AppConstant.APP_QXJGL);
+		// 获取清销假app的接口
+		String elecPath = orgMapped.getUrl() + AppInterfaceConstant.WEB_INTERFACE_QXJ_UPDATE_ORGANISINCALID;
+		JSONObject jsonData = CrossDomainUtil.getJsonData(elecPath, map);
+		return jsonData;
 	}
 }

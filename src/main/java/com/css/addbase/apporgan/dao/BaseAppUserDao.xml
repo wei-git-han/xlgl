@@ -31,7 +31,7 @@
                         BASE_APP_ORGAN start
                 with ID         = #{orgId}
                     and ISDELETE=0  and (IS_INVALID is null or IS_INVALID = '0' ) connect by prior ID = PARENT_ID
-        ) and ISDELETE=0 and  (sfyx is null or sfyx = '0')
+        ) and ISDELETE=0 and  sfyx = '0'
 	</select>
 
 	<select id="queryAllUserIdAndName" resultType="com.css.addbase.apporgan.entity.BaseAppUser">
@@ -46,7 +46,7 @@
         with ID  = #{organId}
         and ISDELETE=0 and (IS_INVALID is null or IS_INVALID = '0' )
         connect by prior ID = PARENT_ID
-        )  and ISDELETE=0 and   (sfyx is null or sfyx = '0')
+        )  and ISDELETE=0 and   sfyx = '0'
         <if  test="userNames != null and userNames != ''">
         and TRUENAME  like '%'||#{userNames}||'%'
         </if>
@@ -82,7 +82,7 @@
 		select count(1) from BASE_APP_USER T
 		left join BASE_APP_ORGAN O on O.ID
 		= T.ORGANID
-		where 1=1 and T.ISDELETE =0 and O.ISDELETE =0 and  (T.sfyx is null or T.sfyx = '0') 
+		where 1=1 and T.ISDELETE =0 and O.ISDELETE =0 and  T.sfyx = '0'
 		and (O.IS_INVALID is null or O.IS_INVALID = '0' )
 		<if test="orgIds != null and orgIds !=''">
 			and T.ORGANID = #{orgIds}
@@ -94,13 +94,13 @@
 	</select>
 	<select id="selectUserByNameAndUnitId" resultType="com.css.addbase.apporgan.entity.BaseAppUser">
 		select * from
-		BASE_APP_USER where ISDELETE = 0 and  (sfyx is null or sfyx = '0')  and truename=#{0} and organid in (
+		BASE_APP_USER where ISDELETE = 0 and  sfyx = '0' and truename=#{0} and organid in (
 		select ID from BASE_APP_ORGAN start with id=#{1} and ISDELETE=0 and (IS_INVALID is null or IS_INVALID = '0' )
 		connect by prior id=parent_Id)
 	</select>
 	<select id="queryListBySet" resultType="com.css.addbase.apporgan.entity.BaseAppUser">
 		select u.* from BASE_APP_USER u inner join DOCUMENT_BANJIAN_TREE_SET s
-		on u.user_id=s.user_id where u.ISDELETE=0 and  (u.sfyx is null or u.sfyx = '0')
+		on u.user_id=s.user_id where u.ISDELETE=0 and  u.sfyx = '0'
 		<if test="organid != null">
 			and u.ORGANID = #{organid}
 		</if>
@@ -111,14 +111,14 @@
 	</select>
 
 	<select id="queryTotal" resultType="int">
-		select count(*) from BASE_APP_USER where ISDELETE=0 and  (sfyx is null or sfyx = '0')
+		select count(*) from BASE_APP_USER where ISDELETE=0 and  sfyx = '0'
 		<if test="departmentId != null and departmentId != null">
 			and ORGANID = #{departmentId}
 		</if>
 	</select>
 
 	<select id="queryObjectByUserIds" resultType="com.css.addbase.apporgan.entity.BaseAppUser">
-		select * from BASE_APP_USER where ISDELETE=0 and  (sfyx is null or sfyx = '0') and USER_ID in
+		select * from BASE_APP_USER where ISDELETE=0 and  sfyx = '0' and USER_ID in
 		<foreach item="userIds" collection="array" open="(" separator=","
 			close=")">
 			#{userIds}
@@ -132,7 +132,7 @@
 	</select>
 
 	<select id="queryObjectByDeptIds" resultType="com.css.addbase.apporgan.entity.BaseAppUser">
-		select * from BASE_APP_USER where ISDELETE=0  and  (sfyx is null or sfyx = '0') and ORGANID in
+		select * from BASE_APP_USER where ISDELETE=0  and  sfyx = '0' and ORGANID in
 		<foreach item="deptIds" collection="array" open="(" separator=","
 			close=")">
 			#{deptIds}
@@ -241,8 +241,8 @@
 			<if test="seclevel != null">"SECLEVEL" = #{seclevel}, </if>
 			<if test="sex != null">"SEX" = #{sex}, </if>
 			<if test="telephone != null">"TELEPHONE" = #{telephone},</if>
-			<if test="sfzb != null">"SFZB" = #{sfzb}</if>
-			<if test="sfyx != null">"SFYX" = #{sfyx}</if>
+			<if test="sfzb != null">"SFZB" = #{sfzb},</if>
+			<if test="sfyx != null">"SFYX" = #{sfyx},</if>
 			<if test="startTime != null">"START_TIME" = #{startTime}</if>
 			<if test="endTime != null">"END_TIME" = #{endTime}</if>
 		</set>
@@ -268,7 +268,7 @@
 		from
 			BASE_APP_USER T
 		where 
-			T.ISDELETE =0 and  (T.sfyx is null or T.sfyx = '0')
+			T.ISDELETE =0 and  T.sfyx = '0'
 		<if test="organid != null and organid !=''">
 			and T.ORGANID=#{organid}
 		</if>
@@ -279,7 +279,7 @@
 	</select>
 	
 	<select id="queryByOrganidTREEPATH" resultType="com.css.addbase.apporgan.entity.BaseAppUser">			 
-		select * from BASE_APP_USER where ISDELETE = 0  and  ORGANID  != 'root'  and  (sfyx is null or sfyx = '0')
+		select * from BASE_APP_USER where ISDELETE = 0  and  ORGANID  != 'root'  and  sfyx = '0'
 		<if test="departmentId != null and departmentId != null">
 		  and ORGANID in(
  						select 
@@ -306,7 +306,7 @@
 	</select>
 	
 	<select id="queryByOrgListUserID" resultType="java.lang.String">
-		select  * from BASE_APP_USER where ISDELETE = 0 and   (sfyx is null or sfyx = '0') and ORGANID in
+		select  * from BASE_APP_USER where ISDELETE = 0 and  sfyx = '0' and ORGANID in
 		<foreach item="deptIds" collection="array" open="(" separator=","
 			close=")">
 			#{deptIds}
@@ -315,7 +315,7 @@
 	
 	
 	<select id="queryYXNumber" resultType="int">
-		select  count(*) from BASE_APP_USER where ISDELETE = 0 and  (sfyx is null or sfyx = '0')
+		select  count(*) from BASE_APP_USER where ISDELETE = 0 and  sfyx = '0'
 		 and ORGANID in
 		<foreach item="deptIds" collection="array" open="(" separator=","
 			close=")">

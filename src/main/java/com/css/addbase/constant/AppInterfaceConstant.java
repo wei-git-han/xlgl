@@ -710,4 +710,16 @@ public class AppInterfaceConstant {
      * */
     public final static String WEB_INTERFACE_QXJ_USER_INFO_QJDAYS_REDIS = "/leave/apply/countXLGL";
     
+    /**
+     * @author 李振楠
+     * @date 2020年12月25日
+     * */
+    public final static String WEB_INTERFACE_QXJ_UPDATE_SFYX = "/app/qxjgl/api/updateUserSfyx";
+    
+    /**
+     * @author 李振楠
+     * @date 2020年12月25日
+     * */
+    public final static String WEB_INTERFACE_QXJ_UPDATE_ORGANISINCALID = "/app/qxjgl/api/updateOrganIsInvalId";
+    
 }

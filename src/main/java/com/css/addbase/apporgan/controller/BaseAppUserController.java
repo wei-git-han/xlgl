@@ -14,6 +14,7 @@ import com.github.pagehelper.PageHelper;
 import freemarker.cache.StrongCacheStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONArray;
@@ -26,13 +27,16 @@ import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.addbase.apporgan.util.OrgUtil;
+import com.css.addbase.apporgmapped.entity.BaseAppOrgMapped;
 import com.css.addbase.apporgmapped.service.BaseAppOrgMappedService;
 import com.css.addbase.constant.AppConstant;
+import com.css.addbase.constant.AppInterfaceConstant;
 import com.css.addbase.orgservice.OrgService;
 import com.css.addbase.orgservice.Organ;
 import com.css.addbase.orgservice.UserInfo;
 import com.css.base.entity.SSOUser;
 import com.css.base.filter.SSOAuthFilter;
+import com.css.base.utils.CrossDomainUtil;
 import com.css.base.utils.CurrentUser;
 import com.css.base.utils.Response;
 import com.css.base.utils.StringUtils;
@@ -481,6 +485,10 @@ public class BaseAppUserController {
 				baseAppOrganService.update(baseAppOrgan);
 			}
 		}
+		LinkedMultiValueMap<String, Object> hashmap = new LinkedMultiValueMap<String, Object>();
+    	hashmap.add("id", baseAppUser.getId());
+    	hashmap.add("sfyx", baseAppUser.getSfyx());
+    	this.updateSfyxQXJ(hashmap);
 		Response.json("result","success");
 	}
 	
@@ -499,5 +507,13 @@ public class BaseAppUserController {
 			}
 		}
 		return ret;
+	}
+
+	private JSONObject updateSfyxQXJ(LinkedMultiValueMap<String, Object> map) {
+		BaseAppOrgMapped orgMapped = (BaseAppOrgMapped)baseAppOrgMappedService.orgMappedByOrgId("","root",AppConstant.APP_QXJGL);
+		// 获取清销假app的接口
+		String elecPath = orgMapped.getUrl() + AppInterfaceConstant.WEB_INTERFACE_QXJ_UPDATE_SFYX;
+		JSONObject jsonData = CrossDomainUtil.getJsonData(elecPath, map);
+		return jsonData;
 	}
 }

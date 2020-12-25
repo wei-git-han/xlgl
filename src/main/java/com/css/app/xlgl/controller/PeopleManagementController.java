@@ -130,13 +130,15 @@ public class PeopleManagementController {
 		List<TxlUserNEWDto> parseArrayTxl = JSONArray.parseArray(jsonArrayTxl, TxlUserNEWDto.class);
 		String jsonArrayQxj = redisUtil.getString("xlgl-qxl-people");
 		List<QXJPeopleManagementDto> parseArrayQxj = JSONArray.parseArray(jsonArrayQxj, QXJPeopleManagementDto.class);
+		List<BaseAppOrgan> list = new ArrayList<BaseAppOrgan>();
+		List<BaseAppOrgan> listNotRoot = new ArrayList<BaseAppOrgan>();
 		for (BaseAppOrgan baseAppOrgan : organList) {
 			ArrayList<TxlUserNEWDto> arrayList = new ArrayList<>();
 			LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			map.add("organId", baseAppOrgan.getId());
 			JSONObject jsonObject1 = getNumber(map);
 			Integer yzxrs = (Integer)jsonObject1.get("yzwrs"); //应在线人数 需等请销假开发完毕
-		
+	
 			Integer userIdList=this.userIdNumber(baseAppOrgan.getId(), userList);// 在线人数
 			baseAppOrgan.setZxrs(userIdList);
 			baseAppOrgan.setYzwrs(baseAppOrgan.getZcrs());
@@ -184,8 +186,16 @@ public class PeopleManagementController {
 				}
 			}
 			baseAppOrgan.setList(arrayList);
+			if(baseAppOrgan.getParentId().equals("root") && baseAppOrgan.getList().size()>0) {
+				list.add(baseAppOrgan);
+			}else if(!baseAppOrgan.getParentId().equals("root") && baseAppOrgan.getList().size()>0) {
+				listNotRoot.add(baseAppOrgan);
+			}
 		}
-		jsonObject.put("list", organList);
+		for (BaseAppOrgan baseAppOrgan2 : listNotRoot) {
+			list.add(baseAppOrgan2);
+		}
+		jsonObject.put("list", list);
 		return jsonObject;
 	}
 

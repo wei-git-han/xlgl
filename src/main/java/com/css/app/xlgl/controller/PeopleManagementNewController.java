@@ -223,13 +223,11 @@ public class PeopleManagementNewController {
 			}
 			 List<BaseAppOrgan> queryListByIds = baseAppOrganService.queryListByIds(arr);
 			 for (BaseAppOrgan baseAppOrgan : queryListByIds) {
-				 if(!baseAppOrgan.getParentId().equals("root")) {
 					 JSONObject jsonObject = new JSONObject();
 					 jsonObject.put("id", baseAppOrgan.getId());
 					 jsonObject.put("name", baseAppOrgan.getName());
 					 jsonArray.add(jsonObject);
-				 }
-				
+				 
 			}
 			 json.put("list", jsonArray);
 		}
