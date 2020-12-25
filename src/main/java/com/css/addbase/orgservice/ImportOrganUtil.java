@@ -127,7 +127,7 @@ public class ImportOrganUtil {
 			baseAppUser.setTelephone(userInfo.getTel());
 			baseAppUser.setIsdelete(userInfo.getIsDelete());
 			baseAppUser.setSfyx("0");
-			baseAppUser.setSfzb("0");
+			baseAppUser.setSfzb("1");
 			if(userInfo.getRelations() != null) {
 				Map map=(Map) userInfo.getRelations().get(0);
 				baseAppUser.setOrganid((String)map.get("organId"));

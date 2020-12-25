@@ -212,7 +212,7 @@ public class SyncOrganUtil {
     			baseAppUser.setTelephone(userInfo.getTel());
     			baseAppUser.setIsdelete(userInfo.getIsDelete());
     			baseAppUser.setSfyx("0");
-    			baseAppUser.setSfzb("0");
+    			baseAppUser.setSfzb("1");
     			if(baseAppUsertemp!=null){
     				baseAppUserService.update(baseAppUser);
     			}else{
