@@ -271,11 +271,11 @@ public class PeopleManagementController {
 		JSONObject jsonData = this.getNumber(map);
 		int userIdList = 0;
 		if(StringUtils.isNotBlank(status) && status.equals("1")) {
-			userIdList=this.userIdNumber(organId, list);// 在线人数
+			userIdList=this.userIdNumberAllRoot(organId, list);// 在线人数
 		}else if(StringUtils.isNotBlank(status) && status.equals("0")){
-			userIdList=this.userIdNumber(null, list);// 在线人数
+			userIdList=this.userIdNumberAllRoot(null, list);// 在线人数
 		}else {
-			userIdList=this.userIdNumber(organId, list);// 在线人数
+			userIdList=this.userIdNumberAllRoot(organId, list);// 在线人数
 		}
 		Integer userShouldNumber = 0; //应在线人数
 		Integer qjNum = 0; //请假人数
@@ -423,6 +423,34 @@ public class PeopleManagementController {
 	/**
 	 * 在线人
 	 */
+	private int userIdNumberAllRoot(String organId, List<String> list) {
+		int i = 0;
+		if (StringUtils.isNotBlank(organId)) {
+			BaseAppOrgan queryObject = baseAppOrganService.queryObject(organId);
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("orgId", organId);
+			map.put("departmentId", organId);
+			if(queryObject.getParentId().equals("root")) {
+				 List<String> queryAccount = baseAppUserService.queryAccount(organId);
+				for (int j = 0; j < list.size(); j++) {
+					System.out.println(list.get(j));
+						if(queryAccount.contains(list.get(j))) {
+							i++;
+						}
+					
+				}
+			}
+		} else {
+			if (list.size() > 0) {
+				i = list.size();
+			}
+		}
+		return i;
+	}
+	
+	/**
+	 * 在线人
+	 */
 	private int userIdNumber(String organId, List<String> list) {
 		int i = 0;
 		if (StringUtils.isNotBlank(organId)) {
@@ -433,6 +461,7 @@ public class PeopleManagementController {
 			if(queryObject.getParentId().equals("root")) {
 				List<BaseAppUser> queryListByOrganid = baseAppUserService.queryUsers(organId);
 				for (int j = 0; j < list.size(); j++) {
+					System.out.println(list.get(j));
 				for (BaseAppUser baseAppUser : queryListByOrganid) {
 						if(baseAppUser.getAccount().equals(list.get(j))) {
 							i++;

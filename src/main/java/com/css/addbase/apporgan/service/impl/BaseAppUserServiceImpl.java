@@ -267,6 +267,11 @@ public class BaseAppUserServiceImpl implements BaseAppUserService {
 		return baseAppUserDao.queryUserOrganId(deptIds);
 	}
 
+	@Override
+	public List<String> queryAccount(String orgId) {
+		return baseAppUserDao.queryAccount(orgId);
+	}
+
 
 
 
