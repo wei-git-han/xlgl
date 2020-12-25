@@ -11,6 +11,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +46,7 @@ import com.css.addbase.apporgmapped.entity.BaseAppOrgMapped;
 import com.css.addbase.apporgmapped.service.BaseAppOrgMappedService;
 import com.css.addbase.constant.AppConstant;
 import com.css.addbase.constant.AppInterfaceConstant;
+import com.css.app.xlgl.dto.ExamMainAnswerAnalyseDto;
 import com.css.app.xlgl.dto.LeaveorbackUserPlatDto;
 import com.css.app.xlgl.dto.QXJPeopleManagementDto;
 import com.css.app.xlgl.dto.TxlUserDto;
@@ -192,6 +194,7 @@ public class PeopleManagementController {
 				listNotRoot.add(baseAppOrgan);
 			}
 		}
+		listNotRoot.sort(Comparator.comparing(BaseAppOrgan :: getSort));
 		for (BaseAppOrgan baseAppOrgan2 : listNotRoot) {
 			list.add(baseAppOrgan2);
 		}

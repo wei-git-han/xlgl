@@ -170,4 +170,7 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 	
 	
 	void updateAllSFYX(Map<String, Object> map);
+	
+	List<String> queryUserOrganId(String[] deptIds);
+	
 }

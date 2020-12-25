@@ -222,12 +222,14 @@ public class PeopleManagementNewController {
 				arr[i] = arrayList.get(i);
 			}
 			 List<BaseAppOrgan> queryListByIds = baseAppOrganService.queryListByIds(arr);
+			 List<String> queryUserOrganId = baseAppUserService.queryUserOrganId(arr);
 			 for (BaseAppOrgan baseAppOrgan : queryListByIds) {
+				 if(queryUserOrganId.size()>0 && queryUserOrganId.contains(baseAppOrgan.getId())) {
 					 JSONObject jsonObject = new JSONObject();
 					 jsonObject.put("id", baseAppOrgan.getId());
 					 jsonObject.put("name", baseAppOrgan.getName());
 					 jsonArray.add(jsonObject);
-				 
+				 }	
 			}
 			 json.put("list", jsonArray);
 		}

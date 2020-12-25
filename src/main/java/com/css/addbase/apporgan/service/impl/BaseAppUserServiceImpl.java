@@ -262,6 +262,11 @@ public class BaseAppUserServiceImpl implements BaseAppUserService {
 		 baseAppUserDao.updateAllSFYX(map);
 	}
 
+	@Override
+	public List<String> queryUserOrganId(String[] deptIds) {
+		return baseAppUserDao.queryUserOrganId(deptIds);
+	}
+
 
 
 

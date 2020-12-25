@@ -306,7 +306,15 @@
 	</select>
 	
 	<select id="queryByOrgListUserID" resultType="java.lang.String">
-		select  * from BASE_APP_USER where ISDELETE = 0 and  sfyx = '0' and ORGANID in
+		select  id from BASE_APP_USER where ISDELETE = 0 and  sfyx = '0' and ORGANID in
+		<foreach item="deptIds" collection="array" open="(" separator=","
+			close=")">
+			#{deptIds}
+		</foreach>
+	</select>
+	
+	<select id="queryUserOrganId" resultType="java.lang.String">
+		select  ORGANID from BASE_APP_USER where ISDELETE = 0 and  sfyx = '0' and ORGANID in
 		<foreach item="deptIds" collection="array" open="(" separator=","
 			close=")">
 			#{deptIds}
