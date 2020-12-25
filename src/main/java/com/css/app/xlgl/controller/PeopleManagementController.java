@@ -153,24 +153,28 @@ public class PeopleManagementController {
 							txlUserDto.setQXJtotalDays(parseObject.getTotalDays());
 							txlUserDto.setQXJxiuJiaDays(parseObject.getXiuJiaDays());
 							if (StringUtils.isNotBlank(parseObject.getType())) {
-								txlUserDto.setQXJmatters(parseObject.getType());
 								txlUserDto.setQXJtype(parseObject.getType());
-								txlUserDto.setQXJstartDate(parseObject.getStartDate());
-								txlUserDto.setQXJendDate(parseObject.getEndDate());
+								txlUserDto.setQXJmatters(parseObject.getOrigin());
+								txlUserDto.setQXJcities(parseObject.getPlace());
+								txlUserDto.setQXJaddress(parseObject.getAddress());
 							}
 						}
 					}
 					//isShow 1： 在线 ， 2：请假 ，3：出差，4：异常
 					if (userList.contains(txlUserDto.getAccount())) {
 						txlUserDto.setIsShow("1");
+						txlUserDto.setStatus("在线");
 					} else if(StringUtils.isNotBlank(txlUserDto.getQXJtype())
 							&&txlUserDto.getQXJtype().equals("请假")){
 						txlUserDto.setIsShow("2");
+						txlUserDto.setStatus("请假");
 					}else if(StringUtils.isNotBlank(txlUserDto.getQXJtype()) &&
 							txlUserDto.getQXJtype().equals("出差")) {
 						txlUserDto.setIsShow("3");
+						txlUserDto.setStatus("出差");
 					}else {
 						txlUserDto.setIsShow("4");
+						txlUserDto.setStatus("异常");
 					}
 					if(StringUtils.isNotBlank(userName) && txlUserDto.getFullname().contains(userName)) {
 						txlUserDto.setIsSelect("1");

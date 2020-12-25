@@ -594,11 +594,12 @@ public class XlglExamExamineController {
 	 *            题类型，题数量，题分数
 	 * @param lianxiType
 	 *            0：模拟练习，1：自主练习
+	 * @throws ParseException 
 	 */
 	@ResponseBody
 	@RequestMapping("/saveOrUpdate")
 	public void saveExamineAndTopic(XlglExamExamine xlglExamExamine, String IssueStatus, String[] typeAndNum,
-			String status) {
+			String status) throws ParseException {
 		try {
 			JSONObject jsonObject = new JSONObject();
 			String random = UUIDUtils.random();
@@ -729,7 +730,7 @@ public class XlglExamExamineController {
 						if (mainExaminelist.size() == 10) {
 							xlglExamMainAnswerService.saveBatch(mainExaminelist);
 							mainExaminelist = new ArrayList<XlglExamMainAnswer>();
-						} else if (queryList.size() - i == 0) {
+						} else if (queryList.size() - i == 0 && mainExaminelist.size()>0) {
 							xlglExamMainAnswerService.saveBatch(mainExaminelist);
 						}
 						i++;
