@@ -252,7 +252,21 @@ public class BaseAppOrganController {
 		LinkedMultiValueMap<String, Object> hashmap = new LinkedMultiValueMap<String, Object>();
     	hashmap.add("organId", organId);
     	hashmap.add("isInvalId", isInvalid);
-		this.updateIsInvalIdAndSfyxQXJ(hashmap);
+    	BaseAppOrgan queryObject = baseAppOrganService.queryObject(organId);
+    	List<BaseAppOrgan> findOrganByParentIdAll = baseAppOrganService.findOrganByParentIdAll(queryObject.getParentId());
+    	BaseAppOrgan baseAppOrgan = new BaseAppOrgan();
+		baseAppOrgan.setId(queryObject.getParentId());
+		String ju = "";
+		if(findOrganByParentIdAll.size()<=0 ) {
+			ju = "1";
+			baseAppOrgan.setIsInvalId("1");
+			baseAppOrganService.update(baseAppOrgan);
+		}else if(findOrganByParentIdAll.size()==1 ){
+			ju = "0";
+			baseAppOrgan.setIsInvalId("0");
+			baseAppOrganService.update(baseAppOrgan);
+		}
+    	this.updateIsInvalIdAndSfyxQXJ(hashmap);
 		Response.ok();
 		
 	}
