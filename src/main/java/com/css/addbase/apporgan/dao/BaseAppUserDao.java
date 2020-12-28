@@ -103,7 +103,7 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 	@Select("select count(1) from BASE_APP_USER where ORGANID = #{0}")
 	int queryUserNum(String deptId);
 
-	@Select("select * from BASE_APP_USER where ORGANID = #{0} and  (sfyx is null or sfyx = '0')")
+	@Select("select * from BASE_APP_USER where ORGANID = #{0} and sfyx = '0'")
 	List<BaseAppUser> queryUsers(String deptId);
 
 	List<BaseAppUser> queryAllUserIdAndName(Map<String,Object> map);
@@ -165,10 +165,10 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 	
 	int queryYXNumber(String[] deptIds);
 
-	@Select("select count(*) from BASE_APP_USER where ORGANID in (select id from BASE_APP_ORGAN start with ID = #{0} and ISDELETE=0 and (IS_INVALID is null or IS_INVALID = '0') connect by prior ID = PARENT_ID) and (sfyx is null or sfyx = '0')")
+	@Select("select count(*) from BASE_APP_USER where ORGANID in (select id from BASE_APP_ORGAN start with ID = #{0} and ISDELETE=0 and  IS_INVALID = '0' connect by prior ID = PARENT_ID) and  sfyx = '0'")
 	int queryZc(String orgId);
 	
-	@Select("select ACCOUNT from BASE_APP_USER where ORGANID in (select id from BASE_APP_ORGAN start with ID = #{0} and ISDELETE=0 and (IS_INVALID is null or IS_INVALID = '0') connect by prior ID = PARENT_ID) and (sfyx is null or sfyx = '0')")
+	@Select("select ACCOUNT from BASE_APP_USER where ORGANID in (select id from BASE_APP_ORGAN start with ID = #{0} and ISDELETE=0 and  IS_INVALID = '0' connect by prior ID = PARENT_ID) and  sfyx = '0'")
 	List<String> queryAccount(String orgId);
 	
 	
