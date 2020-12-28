@@ -63,7 +63,7 @@ public class XlglHomepageSportsController {
 		if (StringUtils.isNotBlank(updateDate)) {
 			map.put("time", updateDate);
 		}else {
-			//map.put("time",simpleDateFormat.format(new Date()));
+			map.put("time",simpleDateFormat.format(new Date()));
 		}
 		if (StringUtils.isNotBlank(sportsName)) {
 			map.put("projectName", sportsName);
@@ -137,8 +137,9 @@ public class XlglHomepageSportsController {
 				xlglHomepageSports.setRead("0");
 			}
 			BaseAppUser queryObject = baseAppUserService.queryObject(xlglHomepageSports.getCreateUser());
-			xlglHomepageSports.setCreateUser(queryObject.getTruename());
-			
+			if(queryObject != null) {
+				xlglHomepageSports.setCreateUser(queryObject.getTruename());
+			}
 		}
 			PageUtils pageUtil = new PageUtils(xlglHomepageSportsList);
 			Response.json("page", pageUtil);
@@ -207,6 +208,7 @@ public class XlglHomepageSportsController {
 				jsonObject.put("isOpen",false);
 			}
 			//xlglHomepageSports.setUpdateDate(curDay);
+			xlglHomepageSports.setCreateUser(ssoUser.getUserId());
 			xlglHomepageSportsService.update(xlglHomepageSports);
 			//每次更新后，删除已读表的该体育活动的人员已读信息
 			xlglHomepageSportsReadService.deleteBySportId(id);
