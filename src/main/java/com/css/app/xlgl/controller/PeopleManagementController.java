@@ -291,7 +291,7 @@ public class PeopleManagementController {
 			evectionNum = jsonData.getInteger("chucai"); //现请销假无出差人数，等请销假开发完毕
 			otherPlacesNum = jsonData.getInteger("jingwai"); //现请销假京外人数，等请销假开发完毕
 		}
-		userShouldNumber = userAllYx -qjNum -evectionNum-otherPlacesNum;
+		userShouldNumber = userAllYx -qjNum ;
 		float zwlv= 0;
 		if (userIdList == 0) {
 			jsonData.put("zwlv", zwlv);//在线率
