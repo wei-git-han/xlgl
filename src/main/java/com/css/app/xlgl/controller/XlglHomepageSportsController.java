@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.css.addbase.apporgan.entity.BaseAppUser;
+import com.css.addbase.apporgan.service.BaseAppUserService;
 import com.css.app.xlgl.entity.XlglHomepageSports;
 import com.css.app.xlgl.entity.XlglHomepageSportsPerson;
 import com.css.app.xlgl.service.XlglHomepageSportsPersonService;
@@ -36,6 +38,8 @@ public class XlglHomepageSportsController {
 	private XlglHomepageSportsPersonService xlglHomepageSportsPersonService;
 	@Autowired
 	private XlglHomepageSportsReadService xlglHomepageSportsReadService;
+	@Autowired
+	private BaseAppUserService baseAppUserService;
 	
 	/**
 	 * 列表
@@ -59,7 +63,7 @@ public class XlglHomepageSportsController {
 		if (StringUtils.isNotBlank(updateDate)) {
 			map.put("time", updateDate);
 		}else {
-			map.put("time",simpleDateFormat.format(new Date()));
+			//map.put("time",simpleDateFormat.format(new Date()));
 		}
 		if (StringUtils.isNotBlank(sportsName)) {
 			map.put("projectName", sportsName);
@@ -132,6 +136,9 @@ public class XlglHomepageSportsController {
 			}else{
 				xlglHomepageSports.setRead("0");
 			}
+			BaseAppUser queryObject = baseAppUserService.queryObject(xlglHomepageSports.getCreateUser());
+			xlglHomepageSports.setCreateUser(queryObject.getTruename());
+			
 		}
 			PageUtils pageUtil = new PageUtils(xlglHomepageSportsList);
 			Response.json("page", pageUtil);
