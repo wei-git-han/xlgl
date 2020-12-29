@@ -146,12 +146,18 @@ public class XlglRoleSetController {
 			if (StringUtils.equals(XlglDefined.ROLE_1, dbRoleSet.getRoleFlag())) {
 				dbRoleSet.setDeptId(orgId);
 				dbRoleSet.setDeptName(orgName);
+			}else {
+				dbRoleSet.setDeptId(orgId);
+				dbRoleSet.setDeptName(orgName);
 			}
 			xlglRoleSetService.update(dbRoleSet);
 		} else {
 			xlglRoleSetService.deleteByUserId(userId);
 			dbRoleSet.setId(UUIDUtils.random());
 			if (StringUtils.equals(XlglDefined.ROLE_1, dbRoleSet.getRoleFlag())) {
+				dbRoleSet.setDeptId(orgId);
+				dbRoleSet.setDeptName(orgName);
+			}else {
 				dbRoleSet.setDeptId(orgId);
 				dbRoleSet.setDeptName(orgName);
 			}

@@ -225,6 +225,7 @@ public class TaskMenuController {
                 jsonArray.remove(0);//这么写的原因是，每次删除一个，集合长度就变了，得按新的集合来删
                 jsonArray.remove(2);
                 jsonArray.remove(2);
+                jsonArray.remove(jsonArray.size()-1);
                 System.out.println(jsonArray);
             } else if ("1".equals(adminFlag) || "".equals(adminFlag)) {//部管理员显示所有
                 jsons = jsons;

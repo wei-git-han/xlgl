@@ -35,12 +35,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 
-
 /**
  * 军事体育训练
  * 
  * @author 中软信息系统工程有限公司
- * @email 
+ * @email
  * @date 2020-08-20 19:38:37
  */
 @Controller
@@ -55,57 +54,56 @@ public class XlglPhysicalController {
 	private BaseAppUserService baseAppUserService;
 	@Autowired
 	private XlglPhysicalRecordService xlglPhysicalRecordService;
-	
+
 	/**
 	 * 列表
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	public void list(Integer page, Integer limit){
+	public void list(Integer page, Integer limit) {
 		Map<String, Object> map = new HashMap<>();
-		map.put("userId",CurrentUser.getUserId());
+		map.put("userId", CurrentUser.getUserId());
 		PageHelper.startPage(page, limit);
-		
-		//查询列表数据
+		// 查询列表数据
 		List<XlglPhysical> xlglPhysicalList = xlglPhysicalService.queryList(map);
-		
+		for (XlglPhysical xlglPhysical : xlglPhysicalList) {
+			System.out.println(xlglPhysical.getName());
+		}
 		PageUtils pageUtil = new PageUtils(xlglPhysicalList);
-		Response.json("page",pageUtil);
+		Response.json("page", pageUtil);
 	}
-	
-	
+
 	/**
 	 * 信息
 	 */
 	@ResponseBody
 	@RequestMapping("/info")
-	public void info(String id){
+	public void info(String id) {
 		XlglPhysical xlglPhysical = xlglPhysicalService.queryObject(id);
 		Response.json("xlglPhysical", xlglPhysical);
 	}
 
 	@ResponseBody
 	@RequestMapping("/getUserInfo")
-	public void getUserInfo(){
+	public void getUserInfo() {
 		JSONObject jsonObject = new JSONObject();
 		String userId = CurrentUser.getUserId();
 		String userName = CurrentUser.getUsername();
-		jsonObject.put("userId",userId);
-		jsonObject.put("userName",userName);
+		jsonObject.put("userId", userId);
+		jsonObject.put("userName", userName);
 		Response.json(jsonObject);
 	}
 
-	//(int age,int up,int sit,int sRun,int tRun,int sex,int type )
+	// (int age,int up,int sit,int sRun,int tRun,int sex,int type )
 	/**
-	 * 保存
-	 * 页面输入分数，会自动算出所有的分数，按照不同字段传进来就行
+	 * 保存 页面输入分数，会自动算出所有的分数，按照不同字段传进来就行
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
 	public void save(XlglPhysical xlglPhysical) {
 		Calendar calendar = Calendar.getInstance();
 		String year = String.valueOf(calendar.get(Calendar.YEAR));
-		Map<String,Object> map = new HashedMap();
+		Map<String, Object> map = new HashedMap();
 		JSONObject jsonObject = new JSONObject();
 		String id = UUIDUtils.random();
 		xlglPhysical.setId(id);
@@ -113,7 +111,7 @@ public class XlglPhysicalController {
 		xlglPhysical.setName(CurrentUser.getUsername());
 		xlglPhysical.setCreatedTime(new Date());
 		xlglPhysical.setUserId(CurrentUser.getUserId());
-		xlglPhysical.setNormal("0");//1是正式导入，0是自己保存
+		xlglPhysical.setNormal("0");// 1是正式导入，0是自己保存
 		xlglPhysical.setLastYear(String.valueOf(Integer.parseInt(year) - 1));
 		xlglPhysical.setCurentYear(String.valueOf(Integer.parseInt(year)));
 		xlglPhysicalService.save(xlglPhysical);
@@ -123,36 +121,36 @@ public class XlglPhysicalController {
 			jsonObject.put("dj", xlglPhysical1.getAllJudge());
 		}
 
-		map.put("age",xlglPhysical.getAge());
-		map.put("score",xlglPhysical.getAllScore());
-		map.put("year",String.valueOf(Integer.parseInt(year) - 1));
+		map.put("age", xlglPhysical.getAge());
+		map.put("score", xlglPhysical.getAllScore());
+		map.put("year", String.valueOf(Integer.parseInt(year) - 1));
 		String sort = xlglPhysicalService.querySort(map);
-		jsonObject.put("sort",sort);
+		jsonObject.put("sort", sort);
 		jsonObject.put("result", "success");
 		Response.json(jsonObject);
 	}
-	
+
 	/**
 	 * 修改
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
 	@RequiresPermissions("xlglphysical:update")
-	public void update(@RequestBody XlglPhysical xlglPhysical){
+	public void update(@RequestBody XlglPhysical xlglPhysical) {
 		xlglPhysicalService.update(xlglPhysical);
-		
+
 		Response.ok();
 	}
-	
+
 	/**
 	 * 删除
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	public void delete(String id){
+	public void delete(String id) {
 		String[] ids = id.split(",");
 		xlglPhysicalService.deleteBatch(ids);
-		Response.json("result","success");
+		Response.json("result", "success");
 	}
 
 	public void downloadFile(String fileId) {
@@ -166,10 +164,10 @@ public class XlglPhysicalController {
 	 */
 	@ResponseBody
 	@RequestMapping("/exportList")
-	public void exportList(String fileId,HttpServletResponse response){
+	public void exportList(String fileId, HttpServletResponse response) {
 		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
-		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("orgId",fileId);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("orgId", fileId);
 		List<BaseAppUser> infoList = baseAppUserService.queryAllExcelList(map);
 		File tempFile = new File(filePath, "军事体育成绩清单.xls");
 		if (tempFile.exists()) {
@@ -181,31 +179,30 @@ public class XlglPhysicalController {
 		InputStream is;
 		try {
 			is = xlglPhysicalService.createExcelInfoFile(infoList, tempFile.getAbsolutePath());
-            OutputStream os = null;
-            byte[] buff = new byte[1024];
-            response.reset();
-            response.setContentType("application/octet-stream");
-            response.setCharacterEncoding("UTF-8");
-            response.addHeader("Content-Disposition", "attachment;filename="
-                    + new String(tempFile.getName().getBytes(),"ISO-8859-1"));
-            os = response.getOutputStream();
-            BufferedInputStream bis = new BufferedInputStream(is);
-            int i = 0;
-            try {
-                while ((i = bis.read(buff)) != -1) {
-                    os.write(buff, 0, i);
-                    os.flush();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                bis.close();
-            }
+			OutputStream os = null;
+			byte[] buff = new byte[1024];
+			response.reset();
+			response.setContentType("application/octet-stream");
+			response.setCharacterEncoding("UTF-8");
+			response.addHeader("Content-Disposition",
+					"attachment;filename=" + new String(tempFile.getName().getBytes(), "ISO-8859-1"));
+			os = response.getOutputStream();
+			BufferedInputStream bis = new BufferedInputStream(is);
+			int i = 0;
+			try {
+				while ((i = bis.read(buff)) != -1) {
+					os.write(buff, 0, i);
+					os.flush();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				bis.close();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
 
 	/**
 	 * 军事体育成绩导入
@@ -213,10 +210,10 @@ public class XlglPhysicalController {
 
 	@ResponseBody
 	@RequestMapping("/importExcel")
-	public void importExcel(@RequestParam(required = false) MultipartFile file,String year) {
+	public void importExcel(@RequestParam(required = false) MultipartFile file, String year) {
 		JSONObject jsonObject = new JSONObject();
 		try {
-			//文件上传记录
+			// 文件上传记录
 			XlglPhysicalRecord xlglPhysicalRecord = new XlglPhysicalRecord();
 			String id = UUIDUtils.random();
 			xlglPhysicalRecord.setId(id);
@@ -226,35 +223,36 @@ public class XlglPhysicalController {
 			String fileId = FileBaseUtil.fileServiceUpload(file);
 			HTTPFile httpFile = new HTTPFile(fileId);
 			InputStream inputStream = httpFile.getInputSteam();
-			List<XlglPhysical> list = xlglPhysicalService.importExcle(inputStream,id,year);
+			List<XlglPhysical> list = xlglPhysicalService.importExcle(inputStream, id, year);
 			if (list != null && list.size() > 0) {
 				for (XlglPhysical xlglPhysical : list) {
 					XlglPhysicalController xlglPhysicalController = new XlglPhysicalController();
 					String age = xlglPhysical.getAge();
-					String age1 = age.substring(0,age.indexOf("."));
+					String age1 = age.substring(0, age.indexOf("."));
 					String ytxs = xlglPhysical.getYtxs();
-					String ytxs1 = ytxs.substring(0,ytxs.indexOf("."));
+					String ytxs1 = ytxs.substring(0, ytxs.indexOf("."));
 					String ywqz = xlglPhysical.getYwqz();
-					String ywqz1 = ywqz.substring(0,ywqz.indexOf("."));
+					String ywqz1 = ywqz.substring(0, ywqz.indexOf("."));
 					String sRun = xlglPhysical.getSxp();
 					String tRun = xlglPhysical.getCpf();
 					String t = "";
 					String sex = xlglPhysical.getSex();
 					String weiht = xlglPhysical.getWight();
-					String weiht1 = weiht.substring(0,weiht.indexOf("."));
+					String weiht1 = weiht.substring(0, weiht.indexOf("."));
 					String high1 = xlglPhysical.getHigh();
-					//String high1 = high.substring(0,high.indexOf("."));
+					// String high1 = high.substring(0,high.indexOf("."));
 					String type = xlglPhysical.getType();
-					String type1 = type.substring(0,type.indexOf("."));
-					JSONObject jsonObject1 = xlglPhysicalController.getPerSumCore(age1,ytxs1,ywqz1,sRun,tRun,t,sex,type1,weiht1,high1);
-					int score = (int)jsonObject1.get("score");
-					String dj = (String)jsonObject1.get("dj");
+					String type1 = type.substring(0, type.indexOf("."));
+					JSONObject jsonObject1 = xlglPhysicalController.getPerSumCore(age1, ytxs1, ywqz1, sRun, tRun, t,
+							sex, type1, weiht1, high1);
+					int score = (int) jsonObject1.get("score");
+					String dj = (String) jsonObject1.get("dj");
 					float BMI = (Float) jsonObject1.get("BMI");
-					String hg = (String)jsonObject1.get("hg");
-					int shang = (int)jsonObject1.get("shang");
-					int zuo = (int)jsonObject1.get("zuo");
-					int pao = (int)jsonObject1.get("pao");
-					int changpao = (int)jsonObject1.get("changpao");
+					String hg = (String) jsonObject1.get("hg");
+					int shang = (int) jsonObject1.get("shang");
+					int zuo = (int) jsonObject1.get("zuo");
+					int pao = (int) jsonObject1.get("pao");
+					int changpao = (int) jsonObject1.get("changpao");
 					xlglPhysical.setUp(String.valueOf(shang));
 					xlglPhysical.setSit(String.valueOf(zuo));
 					xlglPhysical.setSrun(String.valueOf(pao));
@@ -270,26 +268,36 @@ public class XlglPhysicalController {
 
 			xlglPhysicalRecord.setCreatedTime(new Date());
 			xlglPhysicalRecordService.save(xlglPhysicalRecord);
-			Response.json("fileId",fileId);
+			Response.json("fileId", fileId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-
 	}
 
 	/**
-	 *  @param age 年龄
-	 * @param up  引体向上
-	 * @param sit  仰卧起坐
-	 * @param sRun 30*2跑
-	 * @param tRun 3000米跑
-	 * @param sex 性别  0男，1女
-	 * @param type 1:一类人员；2：二类人员；3：三类人员
+	 * @param age
+	 *            年龄
+	 * @param up
+	 *            引体向上
+	 * @param sit
+	 *            仰卧起坐
+	 * @param sRun
+	 *            30*2跑
+	 * @param tRun
+	 *            3000米跑
+	 * @param sex
+	 *            性别 0男，1女
+	 * @param type
+	 *            1:一类人员；2：二类人员；3：三类人员
 	 */
 	@ResponseBody
 	@RequestMapping("/getSumCore")
-	public void getSumCore(@RequestParam(required = false) String age,@RequestParam(required = false) String ytxs,@RequestParam(required = false) String ywqz,@RequestParam(required = false) String sxp,@RequestParam(required = false) String cpf,@RequestParam(required = false) String cpm,@RequestParam(required = false) String sex,@RequestParam(required = false) String type,@RequestParam(required = false) String wight,@RequestParam(required = false) String high ){
+	public void getSumCore(@RequestParam(required = false) String age, @RequestParam(required = false) String ytxs,
+			@RequestParam(required = false) String ywqz, @RequestParam(required = false) String sxp,
+			@RequestParam(required = false) String cpf, @RequestParam(required = false) String cpm,
+			@RequestParam(required = false) String sex, @RequestParam(required = false) String type,
+			@RequestParam(required = false) String wight, @RequestParam(required = false) String high) {
 		JSONObject jsonObject = new JSONObject();
 		int sum = 0;
 		int shang = 0;
@@ -300,193 +308,198 @@ public class XlglPhysicalController {
 		String hg = "";
 		int age1 = Integer.parseInt(age);
 		float s = 0.0f;
-		if(StringUtils.isNotBlank(sxp)){
+		if (StringUtils.isNotBlank(sxp)) {
 			s = Float.parseFloat(sxp) * 10;
 		}
 		int sxp1 = Math.round(s);
 		float f = 0.0f;
 		String string = "";
-		if(StringUtils.isNotBlank(cpf)){
-			string = cpf+"."+cpm;
+		if (StringUtils.isNotBlank(cpf)) {
+			string = cpf + "." + cpm;
 			f = Float.parseFloat(string) * 100;
 		}
 		int cp1 = Math.round(f);
 		int ytxs1 = 0;
-		if(StringUtils.isNotBlank(ytxs)){
+		if (StringUtils.isNotBlank(ytxs)) {
 			ytxs1 = Integer.parseInt(ytxs);
 		}
 		int ywqz1 = 0;
-		if(StringUtils.isNotBlank(ywqz)){
+		if (StringUtils.isNotBlank(ywqz)) {
 			ywqz1 = Integer.parseInt(ywqz);
 		}
-		if("0".equals(sex)){
+		if ("0".equals(sex)) {
 			JSONObject js = new JSONObject();
-			js = getManSumCore(age1,ytxs1,ywqz1,sxp1,cp1);
+			js = getManSumCore(age1, ytxs1, ywqz1, sxp1, cp1);
 			sum = (int) js.get("sum");
-			shang = (int)js.get("y");
-			zuo = (int)js.get("z");
-			pao = (int)js.get("s");
-			changpao = (int)js.get("r");
+			shang = (int) js.get("y");
+			zuo = (int) js.get("z");
+			pao = (int) js.get("s");
+			changpao = (int) js.get("r");
 			float t = Float.parseFloat(wight);
 			int w = Math.round(t);
 			float h1 = Float.parseFloat(high);
 			int h = Math.round(h1);
 			float j = h1 * h1;
-			BMI = (int) ((new BigDecimal((float) w / j).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()));;
-			if(age1 <= 24){
-				if(BMI >= 18.5 && BMI <=25.9){
+			BMI = (int) ((new BigDecimal((float) w / j).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()));
+			;
+			if (age1 <= 24) {
+				if (BMI >= 18.5 && BMI <= 25.9) {
 					hg = "合格";
-				}else {
+				} else {
 					hg = "不合格";
 				}
-			}else if(age1 >= 25 && age1 <=29){
-				if(BMI >= 18.5 && BMI <=26.9){
+			} else if (age1 >= 25 && age1 <= 29) {
+				if (BMI >= 18.5 && BMI <= 26.9) {
 					hg = "合格";
-				}else {
+				} else {
 					hg = "不合格";
 				}
-			}else if(age1 >= 30 && age1 <=39){
-				if(BMI >= 18.5 && BMI <=27.9){
+			} else if (age1 >= 30 && age1 <= 39) {
+				if (BMI >= 18.5 && BMI <= 27.9) {
 					hg = "合格";
-				}else {
+				} else {
 					hg = "不合格";
 				}
-			}else if(age1 >= 40 && age1 <=49){
-				if(BMI >= 18.5 && BMI <=28.9){
+			} else if (age1 >= 40 && age1 <= 49) {
+				if (BMI >= 18.5 && BMI <= 28.9) {
 					hg = "合格";
-				}else {
+				} else {
 					hg = "不合格";
 				}
-			}else if(age1 >= 50 && age1 <=59){
-				if(BMI >= 18.5 && BMI <=29.4){
+			} else if (age1 >= 50 && age1 <= 59) {
+				if (BMI >= 18.5 && BMI <= 29.4) {
 					hg = "合格";
-				}else {
+				} else {
 					hg = "不合格";
 				}
-			}else if(age1 >= 60){
-				if(BMI >= 18.5 && BMI <=29.9){
+			} else if (age1 >= 60) {
+				if (BMI >= 18.5 && BMI <= 29.9) {
 					hg = "合格";
-				}else {
+				} else {
 					hg = "不合格";
 				}
 			}
-		}else {
+		} else {
 			JSONObject js = new JSONObject();
-			js  = getWomanSumCore(age1,ytxs1,ywqz1,sxp1,cp1);
+			js = getWomanSumCore(age1, ytxs1, ywqz1, sxp1, cp1);
 			sum = (int) js.get("sum");
-			shang = (int)js.get("o");
-			zuo = (int)js.get("m");
-			pao = (int)js.get("a");
-			changpao = (int)js.get("w");
+			shang = (int) js.get("o");
+			zuo = (int) js.get("m");
+			pao = (int) js.get("a");
+			changpao = (int) js.get("w");
 			float t = Float.parseFloat(wight);
 			int w = Math.round(t);
 			float h = Float.parseFloat(high);
 			float j = h * h;
-			BMI = w/j;
-			if(age1 <= 24){
-				if(BMI >= 18.5 && BMI <=23.9){
+			BMI = w / j;
+			if (age1 <= 24) {
+				if (BMI >= 18.5 && BMI <= 23.9) {
 					hg = "合格";
-				}else {
+				} else {
 					hg = "不合格";
 				}
-			}else if(age1 >= 25 && age1 <=29){
-				if(BMI >= 18.5 && BMI <=24.9){
+			} else if (age1 >= 25 && age1 <= 29) {
+				if (BMI >= 18.5 && BMI <= 24.9) {
 					hg = "合格";
-				}else {
+				} else {
 					hg = "不合格";
 				}
-			}else if(age1 >= 30 && age1 <=39){
-				if(BMI >= 18.5 && BMI <=25.9){
+			} else if (age1 >= 30 && age1 <= 39) {
+				if (BMI >= 18.5 && BMI <= 25.9) {
 					hg = "合格";
-				}else {
+				} else {
 					hg = "不合格";
 				}
-			}else if(age1 >= 40 && age1 <=49){
-				if(BMI >= 18.5 && BMI <=26.9){
+			} else if (age1 >= 40 && age1 <= 49) {
+				if (BMI >= 18.5 && BMI <= 26.9) {
 					hg = "合格";
-				}else {
+				} else {
 					hg = "不合格";
 				}
-			}else if(age1 >= 50 && age1 <=59){
-				if(BMI >= 18.5 && BMI <=27.4){
+			} else if (age1 >= 50 && age1 <= 59) {
+				if (BMI >= 18.5 && BMI <= 27.4) {
 					hg = "合格";
-				}else {
+				} else {
 					hg = "不合格";
 				}
-			}else if(age1 >= 60){
-				if(BMI >= 18.5 && BMI <=27.9){
+			} else if (age1 >= 60) {
+				if (BMI >= 18.5 && BMI <= 27.9) {
 					hg = "合格";
-				}else {
+				} else {
 					hg = "不合格";
 				}
 			}
 		}
 		String dj = null;
-		if("1".equals(type)){
-			if(shang < 65 || zuo < 65 || pao < 65 || changpao < 65 || sum < 260){
+		if ("1".equals(type)) {
+			if (shang < 65 || zuo < 65 || pao < 65 || changpao < 65 || sum < 260) {
 				dj = "不及格";
-			}else if(sum >= 260 && sum < 340){
+			} else if (sum >= 260 && sum < 340) {
 				dj = "及格";
-			}else if(sum >= 340 && sum < 380){
+			} else if (sum >= 340 && sum < 380) {
 				dj = "良好";
-			}else if(sum >= 380 && sum < 440){
+			} else if (sum >= 380 && sum < 440) {
 				dj = "优秀";
-			}else if(sum >= 440 && sum < 480){
+			} else if (sum >= 440 && sum < 480) {
 				dj = "特3级";
-			}else if(sum >= 480 && sum < 500){
+			} else if (sum >= 480 && sum < 500) {
 				dj = "特2级";
-			}else if(sum > 500){
+			} else if (sum > 500) {
 				dj = "特1级";
 			}
-		}else if("2".equals(type)){
-			if(shang < 60 || zuo < 60 || pao < 60 || changpao < 60 || sum < 240){
+		} else if ("2".equals(type)) {
+			if (shang < 60 || zuo < 60 || pao < 60 || changpao < 60 || sum < 240) {
 				dj = "不及格";
-			}else if(sum >= 240 && sum < 320){
+			} else if (sum >= 240 && sum < 320) {
 				dj = "及格";
-			}else if(sum >= 320 && sum < 360){
+			} else if (sum >= 320 && sum < 360) {
 				dj = "良好";
-			}else if(sum >= 360 && sum < 440){
+			} else if (sum >= 360 && sum < 440) {
 				dj = "优秀";
-			}else if(sum >= 440 && sum < 480){
+			} else if (sum >= 440 && sum < 480) {
 				dj = "特3级";
-			}else if(sum >= 480 && sum < 500){
+			} else if (sum >= 480 && sum < 500) {
 				dj = "特2级";
-			}else if(sum > 500){
+			} else if (sum > 500) {
 				dj = "特1级";
 			}
-		}else if("3".equals(type)){
-			if(shang < 55 || zuo < 55 || pao < 55 || changpao < 55 || sum < 220){
+		} else if ("3".equals(type)) {
+			if (shang < 55 || zuo < 55 || pao < 55 || changpao < 55 || sum < 220) {
 				dj = "不及格";
-			}else if(sum >= 220 && sum < 300){
+			} else if (sum >= 220 && sum < 300) {
 				dj = "及格";
-			}else if(sum >= 300 && sum < 340){
+			} else if (sum >= 300 && sum < 340) {
 				dj = "良好";
-			}else if(sum >= 340 && sum < 440){
+			} else if (sum >= 340 && sum < 440) {
 				dj = "优秀";
-			}else if(sum >= 440 && sum < 480){
+			} else if (sum >= 440 && sum < 480) {
 				dj = "特3级";
-			}else if(sum >= 480 && sum < 500){
+			} else if (sum >= 480 && sum < 500) {
 				dj = "特2级";
-			}else if(sum > 500){
+			} else if (sum > 500) {
 				dj = "特1级";
 			}
 		}
 
-
-		jsonObject.put("score",sum);
-		jsonObject.put("dj",dj);
-		jsonObject.put("BMI",BMI);
-		jsonObject.put("hg",hg);
-		jsonObject.put("shang",shang);
-		jsonObject.put("zuo",zuo);
-		jsonObject.put("pao",pao);
-		jsonObject.put("changpao",changpao);
-		jsonObject.put("result","success");
+		jsonObject.put("score", sum);
+		jsonObject.put("dj", dj);
+		jsonObject.put("BMI", BMI);
+		jsonObject.put("hg", hg);
+		jsonObject.put("shang", shang);
+		jsonObject.put("zuo", zuo);
+		jsonObject.put("pao", pao);
+		jsonObject.put("changpao", changpao);
+		jsonObject.put("result", "success");
 		Response.json(jsonObject);
 
 	}
 
-	public JSONObject getPerSumCore(@RequestParam(required = false) String age,@RequestParam(required = false) String ytxs,@RequestParam(required = false) String ywqz,@RequestParam(required = false) String sxp,@RequestParam(required = false) String cpf,@RequestParam(required = false) String cpm,@RequestParam(required = false) String sex,@RequestParam(required = false) String type,@RequestParam(required = false) String wight,@RequestParam(required = false) String high ){
+	public JSONObject getPerSumCore(@RequestParam(required = false) String age,
+			@RequestParam(required = false) String ytxs, @RequestParam(required = false) String ywqz,
+			@RequestParam(required = false) String sxp, @RequestParam(required = false) String cpf,
+			@RequestParam(required = false) String cpm, @RequestParam(required = false) String sex,
+			@RequestParam(required = false) String type, @RequestParam(required = false) String wight,
+			@RequestParam(required = false) String high) {
 		JSONObject jsonObject = new JSONObject();
 		int sum = 0;
 		int shang = 0;
@@ -497,221 +510,223 @@ public class XlglPhysicalController {
 		String hg = "";
 		int age1 = Integer.parseInt(age);
 		float s = 0.0f;
-		if(StringUtils.isNotBlank(sxp)){
+		if (StringUtils.isNotBlank(sxp)) {
 			s = Float.parseFloat(sxp) * 10;
 		}
 		int sxp1 = Math.round(s);
 		float f = 0.0f;
 		String string = "";
-		if(StringUtils.isNotBlank(cpm) && StringUtils.isNotBlank(cpf)){
-			string = cpf+"."+cpm;
+		if (StringUtils.isNotBlank(cpm) && StringUtils.isNotBlank(cpf)) {
+			string = cpf + "." + cpm;
 			f = Float.parseFloat(string) * 100;
 		}
 		int cp1 = Math.round(f);
 		int ytxs1 = 0;
-		if(StringUtils.isNotBlank(ytxs)){
+		if (StringUtils.isNotBlank(ytxs)) {
 			ytxs1 = Integer.parseInt(ytxs);
 		}
 		int ywqz1 = 0;
-		if(StringUtils.isNotBlank(ywqz)){
+		if (StringUtils.isNotBlank(ywqz)) {
 			ywqz1 = Integer.parseInt(ywqz);
 		}
-		if("0".equals(sex)){
+		if ("0".equals(sex)) {
 			JSONObject js = new JSONObject();
-			js = getManSumCore(age1,ytxs1,ywqz1,sxp1,cp1);
+			js = getManSumCore(age1, ytxs1, ywqz1, sxp1, cp1);
 			sum = (int) js.get("sum");
-			shang = (int)js.get("y");
-			zuo = (int)js.get("z");
-			pao = (int)js.get("s");
-			changpao = (int)js.get("r");
+			shang = (int) js.get("y");
+			zuo = (int) js.get("z");
+			pao = (int) js.get("s");
+			changpao = (int) js.get("r");
 			float t = Float.parseFloat(wight);
 			int w = Math.round(t);
 			float h1 = Float.parseFloat(high);
 			int h = Math.round(h1);
 			float j = h1 * h1;
-			BMI = (int) ((new BigDecimal((float) w / j).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()));;
-			if(age1 <= 24){
-				if(BMI >= 18.5 && BMI <=25.9){
+			BMI = (int) ((new BigDecimal((float) w / j).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()));
+			;
+			if (age1 <= 24) {
+				if (BMI >= 18.5 && BMI <= 25.9) {
 					hg = "合格";
-				}else {
+				} else {
 					hg = "不合格";
 				}
-			}else if(age1 >= 25 && age1 <=29){
-				if(BMI >= 18.5 && BMI <=26.9){
+			} else if (age1 >= 25 && age1 <= 29) {
+				if (BMI >= 18.5 && BMI <= 26.9) {
 					hg = "合格";
-				}else {
+				} else {
 					hg = "不合格";
 				}
-			}else if(age1 >= 30 && age1 <=39){
-				if(BMI >= 18.5 && BMI <=27.9){
+			} else if (age1 >= 30 && age1 <= 39) {
+				if (BMI >= 18.5 && BMI <= 27.9) {
 					hg = "合格";
-				}else {
+				} else {
 					hg = "不合格";
 				}
-			}else if(age1 >= 40 && age1 <=49){
-				if(BMI >= 18.5 && BMI <=28.9){
+			} else if (age1 >= 40 && age1 <= 49) {
+				if (BMI >= 18.5 && BMI <= 28.9) {
 					hg = "合格";
-				}else {
+				} else {
 					hg = "不合格";
 				}
-			}else if(age1 >= 50 && age1 <=59){
-				if(BMI >= 18.5 && BMI <=29.4){
+			} else if (age1 >= 50 && age1 <= 59) {
+				if (BMI >= 18.5 && BMI <= 29.4) {
 					hg = "合格";
-				}else {
+				} else {
 					hg = "不合格";
 				}
-			}else if(age1 >= 60){
-				if(BMI >= 18.5 && BMI <=29.9){
+			} else if (age1 >= 60) {
+				if (BMI >= 18.5 && BMI <= 29.9) {
 					hg = "合格";
-				}else {
+				} else {
 					hg = "不合格";
 				}
 			}
-		}else {
+		} else {
 			JSONObject js = new JSONObject();
-			js  = getWomanSumCore(age1,ytxs1,ywqz1,sxp1,cp1);
+			js = getWomanSumCore(age1, ytxs1, ywqz1, sxp1, cp1);
 			sum = (int) js.get("sum");
-			shang = (int)js.get("o");
-			zuo = (int)js.get("m");
-			pao = (int)js.get("a");
-			changpao = (int)js.get("w");
+			shang = (int) js.get("o");
+			zuo = (int) js.get("m");
+			pao = (int) js.get("a");
+			changpao = (int) js.get("w");
 			float t = Float.parseFloat(wight);
 			int w = Math.round(t);
 			float h = Float.parseFloat(high);
 			float j = h * h;
-			BMI = w/j;
-			if(age1 <= 24){
-				if(BMI >= 18.5 && BMI <=23.9){
+			BMI = w / j;
+			if (age1 <= 24) {
+				if (BMI >= 18.5 && BMI <= 23.9) {
 					hg = "合格";
-				}else {
+				} else {
 					hg = "不合格";
 				}
-			}else if(age1 >= 25 && age1 <=29){
-				if(BMI >= 18.5 && BMI <=24.9){
+			} else if (age1 >= 25 && age1 <= 29) {
+				if (BMI >= 18.5 && BMI <= 24.9) {
 					hg = "合格";
-				}else {
+				} else {
 					hg = "不合格";
 				}
-			}else if(age1 >= 30 && age1 <=39){
-				if(BMI >= 18.5 && BMI <=25.9){
+			} else if (age1 >= 30 && age1 <= 39) {
+				if (BMI >= 18.5 && BMI <= 25.9) {
 					hg = "合格";
-				}else {
+				} else {
 					hg = "不合格";
 				}
-			}else if(age1 >= 40 && age1 <=49){
-				if(BMI >= 18.5 && BMI <=26.9){
+			} else if (age1 >= 40 && age1 <= 49) {
+				if (BMI >= 18.5 && BMI <= 26.9) {
 					hg = "合格";
-				}else {
+				} else {
 					hg = "不合格";
 				}
-			}else if(age1 >= 50 && age1 <=59){
-				if(BMI >= 18.5 && BMI <=27.4){
+			} else if (age1 >= 50 && age1 <= 59) {
+				if (BMI >= 18.5 && BMI <= 27.4) {
 					hg = "合格";
-				}else {
+				} else {
 					hg = "不合格";
 				}
-			}else if(age1 >= 60){
-				if(BMI >= 18.5 && BMI <=27.9){
+			} else if (age1 >= 60) {
+				if (BMI >= 18.5 && BMI <= 27.9) {
 					hg = "合格";
-				}else {
+				} else {
 					hg = "不合格";
 				}
 			}
 		}
 		String dj = null;
-		if("1".equals(type)){
-			if(shang < 65 || zuo < 65 || pao < 65 || changpao < 65 || sum < 260){
+		if ("1".equals(type)) {
+			if (shang < 65 || zuo < 65 || pao < 65 || changpao < 65 || sum < 260) {
 				dj = "不及格";
-			}else if(sum >= 260 && sum < 340){
+			} else if (sum >= 260 && sum < 340) {
 				dj = "及格";
-			}else if(sum >= 340 && sum < 380){
+			} else if (sum >= 340 && sum < 380) {
 				dj = "良好";
-			}else if(sum >= 380 && sum < 440){
+			} else if (sum >= 380 && sum < 440) {
 				dj = "优秀";
-			}else if(sum >= 440 && sum < 480){
+			} else if (sum >= 440 && sum < 480) {
 				dj = "特3级";
-			}else if(sum >= 480 && sum < 500){
+			} else if (sum >= 480 && sum < 500) {
 				dj = "特2级";
-			}else if(sum > 500){
+			} else if (sum > 500) {
 				dj = "特1级";
 			}
-		}else if("2".equals(type)){
-			if(shang < 60 || zuo < 60 || pao < 60 || changpao < 60 || sum < 240){
+		} else if ("2".equals(type)) {
+			if (shang < 60 || zuo < 60 || pao < 60 || changpao < 60 || sum < 240) {
 				dj = "不及格";
-			}else if(sum >= 240 && sum < 320){
+			} else if (sum >= 240 && sum < 320) {
 				dj = "及格";
-			}else if(sum >= 320 && sum < 360){
+			} else if (sum >= 320 && sum < 360) {
 				dj = "良好";
-			}else if(sum >= 360 && sum < 440){
+			} else if (sum >= 360 && sum < 440) {
 				dj = "优秀";
-			}else if(sum >= 440 && sum < 480){
+			} else if (sum >= 440 && sum < 480) {
 				dj = "特3级";
-			}else if(sum >= 480 && sum < 500){
+			} else if (sum >= 480 && sum < 500) {
 				dj = "特2级";
-			}else if(sum > 500){
+			} else if (sum > 500) {
 				dj = "特1级";
 			}
-		}else if("3".equals(type)){
-			if(shang < 55 || zuo < 55 || pao < 55 || changpao < 55 || sum < 220){
+		} else if ("3".equals(type)) {
+			if (shang < 55 || zuo < 55 || pao < 55 || changpao < 55 || sum < 220) {
 				dj = "不及格";
-			}else if(sum >= 220 && sum < 300){
+			} else if (sum >= 220 && sum < 300) {
 				dj = "及格";
-			}else if(sum >= 300 && sum < 340){
+			} else if (sum >= 300 && sum < 340) {
 				dj = "良好";
-			}else if(sum >= 340 && sum < 440){
+			} else if (sum >= 340 && sum < 440) {
 				dj = "优秀";
-			}else if(sum >= 440 && sum < 480){
+			} else if (sum >= 440 && sum < 480) {
 				dj = "特3级";
-			}else if(sum >= 480 && sum < 500){
+			} else if (sum >= 480 && sum < 500) {
 				dj = "特2级";
-			}else if(sum > 500){
+			} else if (sum > 500) {
 				dj = "特1级";
 			}
 		}
 
-
-		jsonObject.put("score",sum);
-		jsonObject.put("dj",dj);
-		jsonObject.put("BMI",BMI);
-		jsonObject.put("hg",hg);
-		jsonObject.put("shang",shang);
-		jsonObject.put("zuo",zuo);
-		jsonObject.put("pao",pao);
-		jsonObject.put("changpao",changpao);
-		jsonObject.put("result","success");
+		jsonObject.put("score", sum);
+		jsonObject.put("dj", dj);
+		jsonObject.put("BMI", BMI);
+		jsonObject.put("hg", hg);
+		jsonObject.put("shang", shang);
+		jsonObject.put("zuo", zuo);
+		jsonObject.put("pao", pao);
+		jsonObject.put("changpao", changpao);
+		jsonObject.put("result", "success");
 		return jsonObject;
 
 	}
 
 	/**
 	 * 男子的成绩
+	 * 
 	 * @param up
 	 * @param sit
 	 * @param sRun
 	 * @param tRun
 	 * @return
 	 */
-	public JSONObject getManSumCore(int age,int up,int sit,int sRun,int tRun){
+	public JSONObject getManSumCore(int age, int up, int sit, int sRun, int tRun) {
 		JSONObject jsonObject = new JSONObject();
-		int y =  getManCore(age, up);//男子引体向上
+		int y = getManCore(age, up);// 男子引体向上
 		System.out.println(y);
-		int z =  getManywqz(age,sit);//男子仰卧起坐
+		int z = getManywqz(age, sit);// 男子仰卧起坐
 		System.out.println(z);
-		int s =  getManSxRun(age,sRun);//男子 30*2蛇形跑
+		int s = getManSxRun(age, sRun);// 男子 30*2蛇形跑
 		System.out.println(s);
-		int r =  getManRunCore(age,tRun);//男子3000米跑
+		int r = getManRunCore(age, tRun);// 男子3000米跑
 		System.out.println(r);
-		int sum = y+r+s+z;
-		jsonObject.put("y",y);
-		jsonObject.put("z",z);
-		jsonObject.put("s",s);
-		jsonObject.put("r",r);
-		jsonObject.put("sum",sum);
+		int sum = y + r + s + z;
+		jsonObject.put("y", y);
+		jsonObject.put("z", z);
+		jsonObject.put("s", s);
+		jsonObject.put("r", r);
+		jsonObject.put("sum", sum);
 		return jsonObject;
 	}
 
 	/**
 	 * 女子成绩
+	 * 
 	 * @param age
 	 * @param up
 	 * @param sit
@@ -719,23 +734,23 @@ public class XlglPhysicalController {
 	 * @param tRun
 	 * @return
 	 */
-	public JSONObject getWomanSumCore(int age,int up,int sit,int sRun,int tRun){
+	public JSONObject getWomanSumCore(int age, int up, int sit, int sRun, int tRun) {
 		JSONObject jsonObject = new JSONObject();
-		int o = getWoMenDgqbCore(age,up);//女子单杠曲臂悬垂
+		int o = getWoMenDgqbCore(age, up);// 女子单杠曲臂悬垂
 		System.out.println(o);
-		int m = getWomenCore(age,sit);//女子仰卧起坐
+		int m = getWomenCore(age, sit);// 女子仰卧起坐
 		System.out.println(m);
-		int a = getWomenRun(age,sRun);//女子蛇形跑
+		int a = getWomenRun(age, sRun);// 女子蛇形跑
 		System.out.println(a);
-		int w = getWomen3Run(age,tRun);//女子3000米跑
+		int w = getWomen3Run(age, tRun);// 女子3000米跑
 		System.out.println(w);
-		jsonObject.put("o",o);
-		jsonObject.put("m",m);
-		jsonObject.put("a",a);
-		jsonObject.put("w",w);
+		jsonObject.put("o", o);
+		jsonObject.put("m", m);
+		jsonObject.put("a", a);
+		jsonObject.put("w", w);
 
-		int sum = o+m+a+w;
-		jsonObject.put("sum",sum);
+		int sum = o + m + a + w;
+		jsonObject.put("sum", sum);
 		return jsonObject;
 	}
 
@@ -751,9 +766,9 @@ public class XlglPhysicalController {
 		int s = 0;
 		int c = 0;
 		if (age <= 24) {
-			if(num < 10){
+			if (num < 10) {
 				c = 0;
-			}else if ((num >= 10 && num <= 12)) {
+			} else if ((num >= 10 && num <= 12)) {
 				int t = 12 - num;
 				int d = t * 5 % 1;
 				if (d == 0) {
@@ -786,9 +801,9 @@ public class XlglPhysicalController {
 				c = num - 30 + 100;
 			}
 		} else if (age >= 25 && age <= 27) {
-			if(num < 9){
+			if (num < 9) {
 				c = 0;
-			}else if (num >= 9 && num <= 11) {
+			} else if (num >= 9 && num <= 11) {
 				int t = 11 - num;
 				int d = t * 5 % 1;
 				if (d == 0) {
@@ -828,9 +843,9 @@ public class XlglPhysicalController {
 				c = num - 28 + 100;
 			}
 		} else if (age >= 28 && age <= 30) {
-			if(num < 8){
+			if (num < 8) {
 				c = 0;
-			}else if (num >= 8 && num <= 12) {
+			} else if (num >= 8 && num <= 12) {
 				int t = 12 - num;
 				int d = t * 5 % 1;
 				if (d == 0) {
@@ -861,9 +876,9 @@ public class XlglPhysicalController {
 				c = num - 26 + 100;
 			}
 		} else if (age >= 31 && age <= 33) {
-			if(num < 7){
+			if (num < 7) {
 				c = 0;
-			}else if (num >= 7 && num <= 11) {
+			} else if (num >= 7 && num <= 11) {
 				int t = 11 - num;
 				int d = t * 5 % 1;
 				if (d == 0) {
@@ -895,9 +910,9 @@ public class XlglPhysicalController {
 				c = num - 23 + 100;
 			}
 		} else if (age >= 34 && age <= 36) {
-			if(num < 6){
+			if (num < 6) {
 				c = 0;
-			}else if (num >= 6 && num <= 12) {
+			} else if (num >= 6 && num <= 12) {
 				int t = 12 - num;
 				int d = t * 5 % 1;
 				if (d == 0) {
@@ -928,9 +943,9 @@ public class XlglPhysicalController {
 				c = num - 20 + 100;
 			}
 		} else if (age >= 37 && age <= 39) {
-			if(num < 5){
+			if (num < 5) {
 				c = 0;
-			}else if (num >= 5 && num <= 11) {
+			} else if (num >= 5 && num <= 11) {
 				int t = 11 - num;
 				int d = t * 5 % 1;
 				if (d == 0) {
@@ -952,9 +967,9 @@ public class XlglPhysicalController {
 				c = num - 17 + 100;
 			}
 		} else if (age >= 40 && age <= 42) {
-			if(num < 27){
+			if (num < 27) {
 				c = 0;
-			}else if (num >= 27 && num <= 29) {
+			} else if (num >= 27 && num <= 29) {
 				int t = 29 - num;
 				int d = t * 5 % 1;
 				if (d == 0) {
@@ -989,246 +1004,272 @@ public class XlglPhysicalController {
 				} else {
 					s = t * 5 / 8 + 1;
 				}
-				c = 90 - s;
-			} else if (age >= 43 && age <= 45) {
-				if (num >= 26 && num <= 28) {
-					int t = 28 - num;
-					int d = (28 - num) * 5 % 1;
-					if (d == 0) {
-						s = (28 - num) * 5 / 1;
-					} else {
-						s = (28 - num) * 5 / 1 + 1;
-					}
-					c = 65 - s;
-				} else if (num > 28 && num <= 31) {
-					int t = 31 - num;
-					int d = t * 5 % 3;
-					if (d == 0) {
-						s = t * 5 / 3;
-					} else {
-						s = t * 5 / 3 + 1;
-					}
-					c = 70 - s;
-				} else if (num > 32 && num <= 55) {
-					int t = 55 - num;
-					int d = t * 5 % 6;
-					if (d == 0) {
-						s = t * 5 / 6;
-					} else {
-						s = t * 5 / 6 + 1;
-					}
-					c = 90 - s;
-				} else if (num > 56 && num <= 69) {
-					int t = 69 - num;
-					int d = t * 5 % 7;
-					if (d == 0) {
-						s = t * 5 / 7;
-					} else {
-						s = t * 5 / 7 + 1;
-					}
-					c = 100 - s;
-				}
-			} else if (age >= 46 && age <= 48) {
-				if (num >= 23 && num <= 25) {
-					int t = 25 - num;
-					int d = t * 5 % 1;
-					if (d == 0) {
-						s = t * 5 / 1;
-					} else {
-						s = t * 5 / 1 + 1;
-					}
-					c = 65 - s;
-				} else if (num > 25 && num <= 30) {
-					int t = 30 - num;
-					int d = t * 5 % 5;
-					if (d == 0) {
-						s = t * 5 / 5;
-					} else {
-						s = t * 5 / 5 + 1;
-					}
-					c = 70 - s;
-				} else if (num > 31 && num <= 54) {
-					int t = 54 - num;
-					int d = t * 5 % 6;
-					if (d == 0) {
-						s = t * 5 / 6;
-					} else {
-						s = t * 5 / 6 + 1;
-					}
-					c = 90 - s;
-				} else if (num > 55 && num <= 68) {
-					int t = 68 - num;
-					int d = t * 5 % 7;
-					if (d == 0) {
-						s = t * 5 / 7;
-					} else {
-						s = t * 5 / 7 + 1;
-					}
-					c = 100 - s;
-				}
-			} else if (age >= 49 && age <= 51) {
-				if (num >= 21 && num <= 23) {
-					int t = 23 - num;
-					int d = t * 5 % 1;
-					if (d == 0) {
-						s = t * 5 / 1;
-					} else {
-						s = t * 5 / 1 + 1;
-					}
-					c = 65 - s;
-				} else if (num > 23 && num <= 28) {
-					int t = 28 - num;
-					int d = t * 5 % 5;
-					if (d == 0) {
-						s = t * 5 / 5;
-					} else {
-						s = t * 5 / 5 + 1;
-					}
-					c = 70 - s;
-				} else if (num > 29 && num <= 52) {
-					int t = 52 - num;
-					int d = t * 5 % 6;
-					if (d == 0) {
-						s = t * 5 / 6;
-					} else {
-						s = t * 5 / 6 + 1;
-					}
-					c = 90 - s;
-				} else if (num > 53 && num <= 66) {
-					int t = 66 - num;
-					int d = t * 5 % 7;
-					if (d == 0) {
-						s = t * 5 / 7;
-					} else {
-						s = t * 5 / 7 + 1;
-					}
-					c = 100 - s;
-				}
-			} else if (age >= 52 && age <= 54) {
-				if (num >= 18 && num <= 20) {
-					int t = 20 - num;
-					int d = t * 5 % 1;
-					if (d == 0) {
-						s = t * 5 / 1;
-					} else {
-						s = t * 5 / 1 + 1;
-					}
-					c = 65 - s;
-				} else if (num > 20 && num <= 44) {
-					int t = 44 - num;
-					int d = t * 5 % 6;
-					if (d == 0) {
-						s = t * 5 / 6;
-					} else {
-						s = t * 5 / 6 + 1;
-					}
-					c = 85 - s;
-				} else if (num > 44 && num <= 65) {
-					int t = 65 - num;
-					int d = t * 5 % 7;
-					if (d == 0) {
-						s = t * 5 / 7;
-					} else {
-						s = t * 5 / 7 + 1;
-					}
-					c = 100 - s;
-				} else if (num > 44 && num <= 65) {
-					int t = 65 - num;
-					int d = t * 5 % 7;
-					if (d == 0) {
-						s = t * 5 / 7;
-					} else {
-						s = t * 5 / 7 + 1;
-					}
-					c = 100 - s;
-				}
-			} else if (age >= 55 && age <= 57) {
-				if (num >= 16 && num <= 18) {
-					int t = 18 - num;
-					int d = t * 5 % 1;
-					if (d == 0) {
-						s = t * 5 / 1;
-					} else {
-						s = t * 5 / 1 + 1;
-					}
-					c = 65 - s;
-				} else if (num > 18 && num <= 48) {
-					int t = 48 - num;
-					int d = t * 5 % 6;
-					if (d == 0) {
-						s = t * 5 / 6;
-					} else {
-						s = t * 5 / 6 + 1;
-					}
-					c = 90 - s;
-				} else if (num > 49 && num <= 62) {
-					int t = 62 - num;
-					int d = t * 5 % 7;
-					if (d == 0) {
-						s = t * 5 / 7;
-					} else {
-						s = t * 5 / 7 + 1;
-					}
-					c = 100 - s;
-				} else if (num > 49 && num <= 62) {
-					int t = 62 - num;
-					int d = t * 5 % 7;
-					if (d == 0) {
-						s = t * 5 / 7;
-					} else {
-						s = t * 5 / 7 + 1;
-					}
-					c = 100 - s;
-				}
-			} else if (age >= 58 && age <= 60) {
-				if (num >= 10 && num <= 12) {
-					int t = 12 - num;
-					int d = t * 5 % 1;
-					if (d == 0) {
-						s = t * 5 / 1;
-					} else {
-						s = t * 5 / 1 + 1;
-					}
-					c = 65 - s;
-				} else if (num > 12 && num <= 15) {
-					int t = 15 - num;
-					int d = t * 5 % 3;
-					if (d == 0) {
-						s = t * 5 / 3;
-					} else {
-						s = t * 5 / 3 + 1;
-					}
-					c = 70 - s;
-				} else if (num > 15 && num <= 25) {
-					int t = 25 - num;
-					int d = t * 5 % 5;
-					if (d == 0) {
-						s = t * 5 / 5;
-					} else {
-						s = t * 5 / 5 + 1;
-					}
-					c = 80 - s;
-				} else if (num > 25 && num <= 29) {
-					int t = 29 - num;
-					int d = t * 5 % 4;
-					if (d == 0) {
-						s = t * 5 / 4;
-					} else {
-						s = t * 5 / 4 + 1;
-					}
-					c = 85 - s;
-				} else if (num > 29 && num <= 44) {
-					int t = 44 - num;
-					int d = t * 5 % 5;
-					if (d == 0) {
-						s = t * 5 / 5;
-					} else {
-						s = t * 5 / 5 + 1;
-					}
-					c = 100 - s;
-				}
+				c = 100 - s;
+			} else {
+				c = 100 + (num - 73) / 2;
 			}
+		} else if (age >= 43 && age <= 45) {
+			if (num < 26) {
+				c = 0;
+			} else if (num >= 26 && num <= 28) {
+				int t = 28 - num;
+				int d = (28 - num) * 5 % 1;
+				if (d == 0) {
+					s = (28 - num) * 5 / 1;
+				} else {
+					s = (28 - num) * 5 / 1 + 1;
+				}
+				c = 65 - s;
+			} else if (num > 28 && num <= 31) {
+				int t = 31 - num;
+				int d = t * 5 % 3;
+				if (d == 0) {
+					s = t * 5 / 3;
+				} else {
+					s = t * 5 / 3 + 1;
+				}
+				c = 70 - s;
+			} else if (num > 32 && num <= 55) {
+				int t = 55 - num;
+				int d = t * 5 % 6;
+				if (d == 0) {
+					s = t * 5 / 6;
+				} else {
+					s = t * 5 / 6 + 1;
+				}
+				c = 90 - s;
+			} else if (num > 56 && num <= 69) {
+				int t = 69 - num;
+				int d = t * 5 % 7;
+				if (d == 0) {
+					s = t * 5 / 7;
+				} else {
+					s = t * 5 / 7 + 1;
+				}
+				c = 100 - s;
+			} else {
+				c = 100 + (num - 69) / 2;
+			}
+		} else if (age >= 46 && age <= 48) {
+			if (num < 23) {
+				c = 0;
+			} else if (num >= 23 && num <= 25) {
+				int t = 25 - num;
+				int d = t * 5 % 1;
+				if (d == 0) {
+					s = t * 5 / 1;
+				} else {
+					s = t * 5 / 1 + 1;
+				}
+				c = 65 - s;
+			} else if (num > 25 && num <= 30) {
+				int t = 30 - num;
+				int d = t * 5 % 5;
+				if (d == 0) {
+					s = t * 5 / 5;
+				} else {
+					s = t * 5 / 5 + 1;
+				}
+				c = 70 - s;
+			} else if (num > 31 && num <= 54) {
+				int t = 54 - num;
+				int d = t * 5 % 6;
+				if (d == 0) {
+					s = t * 5 / 6;
+				} else {
+					s = t * 5 / 6 + 1;
+				}
+				c = 90 - s;
+			} else if (num > 55 && num <= 68) {
+				int t = 68 - num;
+				int d = t * 5 % 7;
+				if (d == 0) {
+					s = t * 5 / 7;
+				} else {
+					s = t * 5 / 7 + 1;
+				}
+				c = 100 - s;
+			} else {
+				c = 100 + (num - 68) / 2;
+			}
+		} else if (age >= 49 && age <= 51) {
+			if (num < 21) {
+				c = 0;
+			} else if (num >= 21 && num <= 23) {
+				int t = 23 - num;
+				int d = t * 5 % 1;
+				if (d == 0) {
+					s = t * 5 / 1;
+				} else {
+					s = t * 5 / 1 + 1;
+				}
+				c = 65 - s;
+			} else if (num > 23 && num <= 28) {
+				int t = 28 - num;
+				int d = t * 5 % 5;
+				if (d == 0) {
+					s = t * 5 / 5;
+				} else {
+					s = t * 5 / 5 + 1;
+				}
+				c = 70 - s;
+			} else if (num > 29 && num <= 52) {
+				int t = 52 - num;
+				int d = t * 5 % 6;
+				if (d == 0) {
+					s = t * 5 / 6;
+				} else {
+					s = t * 5 / 6 + 1;
+				}
+				c = 90 - s;
+			} else if (num > 53 && num <= 66) {
+				int t = 66 - num;
+				int d = t * 5 % 7;
+				if (d == 0) {
+					s = t * 5 / 7;
+				} else {
+					s = t * 5 / 7 + 1;
+				}
+				c = 100 - s;
+			} else {
+				c = 100 + (num - 66) / 2;
 
+			}
+		} else if (age >= 52 && age <= 54) {
+			if (num < 18) {
+				c = 0;
+			} else if (num >= 18 && num <= 20) {
+				int t = 20 - num;
+				int d = t * 5 % 1;
+				if (d == 0) {
+					s = t * 5 / 1;
+				} else {
+					s = t * 5 / 1 + 1;
+				}
+				c = 65 - s;
+			} else if (num > 20 && num <= 44) {
+				int t = 44 - num;
+				int d = t * 5 % 6;
+				if (d == 0) {
+					s = t * 5 / 6;
+				} else {
+					s = t * 5 / 6 + 1;
+				}
+				c = 85 - s;
+			} else if (num > 44 && num <= 65) {
+				int t = 65 - num;
+				int d = t * 5 % 7;
+				if (d == 0) {
+					s = t * 5 / 7;
+				} else {
+					s = t * 5 / 7 + 1;
+				}
+				c = 100 - s;
+			} else if (num > 44 && num <= 65) {
+				int t = 65 - num;
+				int d = t * 5 % 7;
+				if (d == 0) {
+					s = t * 5 / 7;
+				} else {
+					s = t * 5 / 7 + 1;
+				}
+				c = 100 - s;
+			} else {
+				c = 100 + (num - 65) / 2;
+			}
+		} else if (age >= 55 && age <= 57) {
+			if (num < 16) {
+				c = 0;
+			} else if (num >= 16 && num <= 18) {
+				int t = 18 - num;
+				int d = t * 5 % 1;
+				if (d == 0) {
+					s = t * 5 / 1;
+				} else {
+					s = t * 5 / 1 + 1;
+				}
+				c = 65 - s;
+			} else if (num > 18 && num <= 48) {
+				int t = 48 - num;
+				int d = t * 5 % 6;
+				if (d == 0) {
+					s = t * 5 / 6;
+				} else {
+					s = t * 5 / 6 + 1;
+				}
+				c = 90 - s;
+			} else if (num > 49 && num <= 62) {
+				int t = 62 - num;
+				int d = t * 5 % 7;
+				if (d == 0) {
+					s = t * 5 / 7;
+				} else {
+					s = t * 5 / 7 + 1;
+				}
+				c = 100 - s;
+			} else if (num > 49 && num <= 62) {
+				int t = 62 - num;
+				int d = t * 5 % 7;
+				if (d == 0) {
+					s = t * 5 / 7;
+				} else {
+					s = t * 5 / 7 + 1;
+				}
+				c = 100 - s;
+			} else {
+				c = 100 + (num - 62) / 2;
+			}
+		} else if (age >= 58 && age <= 60) {
+			if (num < 10) {
+				c = 0;
+			} else if (num >= 10 && num <= 12) {
+				int t = 12 - num;
+				int d = t * 5 % 1;
+				if (d == 0) {
+					s = t * 5 / 1;
+				} else {
+					s = t * 5 / 1 + 1;
+				}
+				c = 65 - s;
+			} else if (num > 12 && num <= 15) {
+				int t = 15 - num;
+				int d = t * 5 % 3;
+				if (d == 0) {
+					s = t * 5 / 3;
+				} else {
+					s = t * 5 / 3 + 1;
+				}
+				c = 70 - s;
+			} else if (num > 15 && num <= 25) {
+				int t = 25 - num;
+				int d = t * 5 % 5;
+				if (d == 0) {
+					s = t * 5 / 5;
+				} else {
+					s = t * 5 / 5 + 1;
+				}
+				c = 80 - s;
+			} else if (num > 25 && num <= 29) {
+				int t = 29 - num;
+				int d = t * 5 % 4;
+				if (d == 0) {
+					s = t * 5 / 4;
+				} else {
+					s = t * 5 / 4 + 1;
+				}
+				c = 85 - s;
+			} else if (num > 29 && num <= 44) {
+				int t = 44 - num;
+				int d = t * 5 % 5;
+				if (d == 0) {
+					s = t * 5 / 5;
+				} else {
+					s = t * 5 / 5 + 1;
+				}
+				c = 100 - s;
+			} else {
+				c = 100 + (num - 44) / 2;
+			}
 		}
 		return c;
 
@@ -1242,13 +1283,13 @@ public class XlglPhysicalController {
 	public int getManywqz(int age, int num) {
 		int s = 0;
 		int c = 0;
-		if(num == 0){
+		if (num == 0) {
 			c = 0;
-		}else {
+		} else {
 			if (age <= 24) {
-				if(num < 46){
+				if (num < 46) {
 					c = 0;
-				}else if (num >= 46 && num <= 62) {
+				} else if (num >= 46 && num <= 62) {
 					int t = 62 - num;
 					int d = t * 5 % 4;
 					if (d == 0) {
@@ -1271,9 +1312,9 @@ public class XlglPhysicalController {
 				}
 
 			} else if (age >= 25 && age <= 27) {
-				if(num < 43){
+				if (num < 43) {
 					c = 0;
-				}else if (num >= 43 && num <= 67) {
+				} else if (num >= 43 && num <= 67) {
 					int t = 67 - num;
 					int d = t * 5 % 4;
 					if (d == 0) {
@@ -1295,9 +1336,9 @@ public class XlglPhysicalController {
 					c = 100 + (num - 100) / 2;
 				}
 			} else if (age >= 28 && age <= 30) {
-				if(num < 41){
+				if (num < 41) {
 					c = 0;
-				}else if (num >= 41 && num <= 65) {
+				} else if (num >= 41 && num <= 65) {
 					int t = 65 - num;
 					int d = t * 5 % 4;
 					if (d == 0) {
@@ -1319,9 +1360,9 @@ public class XlglPhysicalController {
 					c = 100 + (num - 100) / 2;
 				}
 			} else if (age >= 31 && age <= 33) {
-				if(num < 39){
+				if (num < 39) {
 					c = 0;
-				}else if (num >= 39 && num <= 63) {
+				} else if (num >= 39 && num <= 63) {
 					int t = 63 - num;
 					int d = t * 5 % 4;
 					if (d == 0) {
@@ -1343,9 +1384,9 @@ public class XlglPhysicalController {
 					c = 100 + (num - 80) / 2;
 				}
 			} else if (age >= 34 && age <= 36) {
-				if(num < 35){
+				if (num < 35) {
 					c = 0;
-				}else if (num >= 35 && num <= 55) {
+				} else if (num >= 35 && num <= 55) {
 					int t = 55 - num;
 					int d = t * 5 % 4;
 					if (d == 0) {
@@ -1367,9 +1408,9 @@ public class XlglPhysicalController {
 					c = 100 + (num - 75) / 2;
 				}
 			} else if (age >= 37 && age <= 39) {
-				if(num < 30){
+				if (num < 30) {
 					c = 0;
-				}else if (num >= 30 && num <= 45) {
+				} else if (num >= 30 && num <= 45) {
 					int t = 45 - num;
 					int d = t * 5 % 5;
 					if (d == 0) {
@@ -1400,9 +1441,9 @@ public class XlglPhysicalController {
 					c = (num - 74) / 2 + 100;
 				}
 			} else if (age >= 40 && age <= 42) {
-				if(num < 28){
+				if (num < 28) {
 					c = 0;
-				}else if (num >= 28 && num <= 38) {
+				} else if (num >= 28 && num <= 38) {
 					int t = 38 - num;
 					int d = t * 5 % 5;
 					if (d == 0) {
@@ -1433,9 +1474,9 @@ public class XlglPhysicalController {
 					c = (num - 71) / 2 + 100;
 				}
 			} else if (age >= 43 && age <= 45) {
-				if(num < 25){
+				if (num < 25) {
 					c = 0;
-				}else if (num >= 25 && num <= 35) {
+				} else if (num >= 25 && num <= 35) {
 					int t = 35 - num;
 					int d = t * 5 % 5;
 					if (d == 0) {
@@ -1466,9 +1507,9 @@ public class XlglPhysicalController {
 					c = (num - 69) / 2 + 100;
 				}
 			} else if (age >= 46 && age <= 48) {
-				if(num < 23){
+				if (num < 23) {
 					c = 0;
-				}else if (num >= 23 && num <= 33) {
+				} else if (num >= 23 && num <= 33) {
 					int t = 33 - num;
 					int d = t * 5 % 5;
 					if (d == 0) {
@@ -1517,9 +1558,9 @@ public class XlglPhysicalController {
 					c = (num - 69) / 2 + 100;
 				}
 			} else if (age >= 49 && age <= 51) {
-				if(num < 21){
+				if (num < 21) {
 					c = 0;
-				}else if (num >= 21 && num <= 26) {
+				} else if (num >= 21 && num <= 26) {
 					int t = 26 - num;
 					int d = t * 5 % 5;
 					if (d == 0) {
@@ -1586,9 +1627,9 @@ public class XlglPhysicalController {
 					c = (num - 63) / 2 + 100;
 				}
 			} else if (age >= 52 && age <= 54) {
-				if(num < 19){
+				if (num < 19) {
 					c = 0;
-				}else if (num >= 19 && num <= 29) {
+				} else if (num >= 19 && num <= 29) {
 					int t = 29 - num;
 					int d = t * 5 % 5;
 					if (d == 0) {
@@ -1637,9 +1678,9 @@ public class XlglPhysicalController {
 					c = (num - 61) / 2 + 100;
 				}
 			} else if (age >= 55 && age <= 57) {
-				if(num < 17){
+				if (num < 17) {
 					c = 0;
-				}else if (num >= 17 && num <= 22) {
+				} else if (num >= 17 && num <= 22) {
 					int t = 22 - num;
 					int d = t * 5 % 5;
 					if (d == 0) {
@@ -1688,9 +1729,9 @@ public class XlglPhysicalController {
 					c = (num - 59) / 2 + 100;
 				}
 			} else if (age >= 58 && age <= 60) {
-				if(num < 15){
+				if (num < 15) {
 					c = 0;
-				}else if (num >= 15 && num <= 17) {
+				} else if (num >= 15 && num <= 17) {
 					int t = 17 - num;
 					int d = t * 5 % 2;
 					if (d == 0) {
@@ -1718,6 +1759,7 @@ public class XlglPhysicalController {
 
 	/**
 	 * 男子 30*2蛇形跑
+	 * 
 	 * @param m
 	 * @param age
 	 */
@@ -1725,12 +1767,14 @@ public class XlglPhysicalController {
 	@RequestMapping("/getManSxRun")
 	public int getManSxRun(int age, int m) {
 		int core = 0;
-		if(m == 0){
+		if (m == 0) {
 			core = 0;
-		}else {
+		} else {
 
 			if (age < 24) {
-				if (m <= 212 && m >= 204) {
+				if (m > 212) {
+					core = 0;
+				} else if (m <= 212 && m >= 204) {
 					int t = m - 204;
 					int d = t * 5 % 8;
 					if (d == 0) {
@@ -1786,12 +1830,14 @@ public class XlglPhysicalController {
 					} else {
 						core = 100 - (t * 5 / 6 + 1);
 					}
-				}else if(m < 181){
+				} else if (m < 181) {
 					int t = 181 - m;
 					core = 100 + t;
 				}
 			} else if (age >= 25 && age <= 27) {
-				if (m <= 215 && m >= 208) {
+				if (m > 215) {
+					core = 0;
+				} else if (m <= 215 && m >= 208) {
 					int t = m - 208;
 					int d = t * 5 % 7;
 					if (d == 0) {
@@ -1850,76 +1896,80 @@ public class XlglPhysicalController {
 				} else if (m < 183) {
 					core = 100 + 183 - m;
 				}
-				} else if (age >= 28 && age <= 30) {
-					if (m <= 219 && m >= 211) {
-						int t = m - 211;
-						int d = t * 5 % 8;
-						if (d == 0) {
-							core = 60 - (t * 5 / 8);
-						} else {
-							core = 60 - (t * 5 / 8 + 1);
-						}
-					} else if (m < 211 && m >= 207) {
-						int t = m - 207;
-						int d = t * 5 % 4;
-						if (d == 0) {
-							core = 65 - (t * 5 / 4);
-						} else {
-							core = 65 - (t * 5 / 4 + 1);
-						}
-					} else if (m < 207 && m >= 204) {
-						int t = m - 204;
-						int d = t * 5 % 3;
-						if (d == 0) {
-							core = 70 - (t * 5 / 3);
-						} else {
-							core = 70 - (t * 5 / 3 + 1);
-						}
-					} else if (m < 204 && m >= 200) {
-						int t = m - 200;
-						int d = t * 5 % 2;
-						if (d == 0) {
-							core = 80 - (t * 5 / 2);
-						} else {
-							core = 80 - (t * 5 / 2 + 1);
-						}
-					} else if (m < 200 && m >= 197) {
-						int t = m - 197;
-						int d = t * 5 % 3;
-						if (d == 0) {
-							core = 85 - (t * 5 / 3);
-						} else {
-							core = 85 - (t * 5 / 3 + 1);
-						}
-					} else if (m < 197 && m >= 195) {
-						int t = m - 195;
-						int d = t * 5 % 2;
-						if (d == 0) {
-							core = 90 - (t * 5 / 2);
-						} else {
-							core = 90 - (t * 5 / 2 + 1);
-						}
-					} else if (m < 195 && m >= 191) {
-						int t = m - 191;
-						int d = t * 5 % 4;
-						if (d == 0) {
-							core = 95 - (t * 5 / 4);
-						} else {
-							core = 95 - (t * 5 / 4 + 1);
-						}
-					} else if (m < 191 && m >= 185) {
-						int t = m - 185;
-						int d = t * 5 % 6;
-						if (d == 0) {
-							core = 100 - (t * 5 / 6);
-						} else {
-							core = 100 - (t * 5 / 6 + 1);
-						}
-					} else if (m < 185) {
-						core = 100 + 185 - m;
+			} else if (age >= 28 && age <= 30) {
+				if (m > 219) {
+					core = 0;
+				} else if (m <= 219 && m >= 211) {
+					int t = m - 211;
+					int d = t * 5 % 8;
+					if (d == 0) {
+						core = 60 - (t * 5 / 8);
+					} else {
+						core = 60 - (t * 5 / 8 + 1);
 					}
-				} else if (age >= 31 && age <= 33) {
-				if (m <= 222 && m >= 213) {
+				} else if (m < 211 && m >= 207) {
+					int t = m - 207;
+					int d = t * 5 % 4;
+					if (d == 0) {
+						core = 65 - (t * 5 / 4);
+					} else {
+						core = 65 - (t * 5 / 4 + 1);
+					}
+				} else if (m < 207 && m >= 204) {
+					int t = m - 204;
+					int d = t * 5 % 3;
+					if (d == 0) {
+						core = 70 - (t * 5 / 3);
+					} else {
+						core = 70 - (t * 5 / 3 + 1);
+					}
+				} else if (m < 204 && m >= 200) {
+					int t = m - 200;
+					int d = t * 5 % 2;
+					if (d == 0) {
+						core = 80 - (t * 5 / 2);
+					} else {
+						core = 80 - (t * 5 / 2 + 1);
+					}
+				} else if (m < 200 && m >= 197) {
+					int t = m - 197;
+					int d = t * 5 % 3;
+					if (d == 0) {
+						core = 85 - (t * 5 / 3);
+					} else {
+						core = 85 - (t * 5 / 3 + 1);
+					}
+				} else if (m < 197 && m >= 195) {
+					int t = m - 195;
+					int d = t * 5 % 2;
+					if (d == 0) {
+						core = 90 - (t * 5 / 2);
+					} else {
+						core = 90 - (t * 5 / 2 + 1);
+					}
+				} else if (m < 195 && m >= 191) {
+					int t = m - 191;
+					int d = t * 5 % 4;
+					if (d == 0) {
+						core = 95 - (t * 5 / 4);
+					} else {
+						core = 95 - (t * 5 / 4 + 1);
+					}
+				} else if (m < 191 && m >= 185) {
+					int t = m - 185;
+					int d = t * 5 % 6;
+					if (d == 0) {
+						core = 100 - (t * 5 / 6);
+					} else {
+						core = 100 - (t * 5 / 6 + 1);
+					}
+				} else if (m < 185) {
+					core = 100 + 185 - m;
+				}
+			} else if (age >= 31 && age <= 33) {
+				if (m > 222) {
+					core = 0;
+				} else if (m <= 222 && m >= 213) {
 					int t = m - 213;
 					int d = t * 5 % 9;
 					if (d == 0) {
@@ -1971,7 +2021,9 @@ public class XlglPhysicalController {
 					core = 100 + 187 - m;
 				}
 			} else if (age >= 34 && age <= 36) {
-				if (m <= 226 && m >= 217) {
+				if (m > 226) {
+					core = 0;
+				} else if (m <= 226 && m >= 217) {
 					int t = m - 217;
 					int d = t * 5 % 9;
 					if (d == 0) {
@@ -2028,10 +2080,12 @@ public class XlglPhysicalController {
 						core = 100 - (t * 5 / 6 + 1);
 					}
 				} else if (m < 189) {
-					core = 100 + 189 -m;
+					core = 100 + 189 - m;
 				}
 			} else if (age >= 37 && age <= 39) {
-				if (m <= 227 && m >= 218) {
+				if (m > 227) {
+					core = 0;
+				} else if (m <= 227 && m >= 218) {
 					int t = m - 218;
 					int d = t * 5 % 9;
 					if (d == 0) {
@@ -2083,7 +2137,9 @@ public class XlglPhysicalController {
 					core = 100 + 191 - m;
 				}
 			} else if (age >= 40 && age <= 42) {
-				if (m <= 229 && m >= 223) {
+				if (m > 229) {
+					core = 0;
+				} else if (m <= 229 && m >= 223) {
 					int t = m - 223;
 					int d = t * 5 % 6;
 					if (d == 0) {
@@ -2143,7 +2199,9 @@ public class XlglPhysicalController {
 					core = 100 + 193 - m;
 				}
 			} else if (age >= 43 && age <= 45) {
-				if (m <= 233 && m >= 224) {
+				if (m > 233) {
+					core = 0;
+				} else if (m <= 233 && m >= 224) {
 					int t = m - 224;
 					int d = t * 5 % 9;
 					if (d == 0) {
@@ -2205,7 +2263,9 @@ public class XlglPhysicalController {
 					core = 100 + 195 - m;
 				}
 			} else if (age >= 46 && age <= 48) {
-				if (m <= 239 && m >= 226) {
+				if (m > 239) {
+					core = 0;
+				} else if (m <= 239 && m >= 226) {
 					int t = m - 226;
 					int d = t * 5 % 13;
 					if (d == 0) {
@@ -2264,10 +2324,12 @@ public class XlglPhysicalController {
 						core = 100 - (t * 5 / 7 + 1);
 					}
 				} else if (m < 197) {
-					core = 100 + 197 -m;
+					core = 100 + 197 - m;
 				}
 			} else if (age >= 49 && age <= 51) {
-				if (m <= 240 && m >= 228) {
+				if (m > 240) {
+					core = 0;
+				} else if (m <= 240 && m >= 228) {
 					int t = m - 228;
 					int d = t * 5 % 12;
 					if (d == 0) {
@@ -2321,7 +2383,9 @@ public class XlglPhysicalController {
 					core = 100 + 199 - m;
 				}
 			} else if (age >= 52 && age <= 54) {
-				if (m <= 245 && m >= 234) {
+				if (m > 245) {
+					core = 0;
+				} else if (m <= 245 && m >= 234) {
 					int t = m - 234;
 					int d = t * 5 % 11;
 					if (d == 0) {
@@ -2381,7 +2445,9 @@ public class XlglPhysicalController {
 					core = 100 + 206 - m;
 				}
 			} else if (age >= 55 && age <= 57) {
-				if (m <= 248 && m >= 238) {
+				if (m > 248) {
+					core = 0;
+				} else if (m <= 248 && m >= 238) {
 					int t = m - 238;
 					int d = t * 5 % 10;
 					if (d == 0) {
@@ -2449,7 +2515,9 @@ public class XlglPhysicalController {
 					core = 100 + 211 - m;
 				}
 			} else if (age >= 58 && age <= 60) {
-				if (m <= 254 && m >= 245) {
+				if (m > 254) {
+					core = 0;
+				} else if (m <= 254 && m >= 245) {
 					int t = m - 245;
 					int d = t * 5 % 9;
 					if (d == 0) {
@@ -2528,12 +2596,12 @@ public class XlglPhysicalController {
 
 	@ResponseBody
 	@RequestMapping("/getManRunCore")
-	public int  getManRunCore(int age, int meter) {
+	public int getManRunCore(int age, int meter) {
 		int c = 0;
 		int s = 0;
-		if(meter == 0){
+		if (meter == 0) {
 			c = 0;
-		}else {
+		} else {
 			if (age < 24) {
 				if (meter <= 1340 && meter >= 1330) {
 					int t = meter - 1330;
@@ -3366,23 +3434,21 @@ public class XlglPhysicalController {
 	}
 
 	/**
-	 * 女子单杠曲臂悬垂
-	 * age 年龄
-	 * m 秒数
+	 * 女子单杠曲臂悬垂 age 年龄 m 秒数
 	 */
 
 	@ResponseBody
 	@RequestMapping("/getWoMenDgqbCore")
-	public int getWoMenDgqbCore(int age,int m){
+	public int getWoMenDgqbCore(int age, int m) {
 		int c = 0;
 		int s = 0;
-		if(m == 0){
+		if (m == 0) {
 			c = 0;
-		}else {
+		} else {
 			if (age <= 24) {
-				if(m < 30){
-					c= 0;
-				}else if (m >= 30 && m <= 36) {
+				if (m < 30) {
+					c = 0;
+				} else if (m >= 30 && m <= 36) {
 					int t = 36 - m;
 					int d = t * 5 % 4;
 					if (d == 0) {
@@ -3413,9 +3479,9 @@ public class XlglPhysicalController {
 					c = (m - 70) / 5 + 100;
 				}
 			} else if (age >= 25 && age <= 27) {
-				if(m < 29){
-					c= 0;
-				}else if (m >= 29 && m <= 35) {
+				if (m < 29) {
+					c = 0;
+				} else if (m >= 29 && m <= 35) {
 					int t = 35 - m;
 					int d = t * 5 % 6;
 					if (d == 0) {
@@ -3446,9 +3512,9 @@ public class XlglPhysicalController {
 					c = (m - 65) / 5 + 100;
 				}
 			} else if (age >= 28 && age <= 30) {
-				if(m < 27){
-					c= 0;
-				}else if (m >= 27 && m <= 33) {
+				if (m < 27) {
+					c = 0;
+				} else if (m >= 27 && m <= 33) {
 					int t = 33 - m;
 					int d = t * 5 % 6;
 					if (d == 0) {
@@ -3479,9 +3545,9 @@ public class XlglPhysicalController {
 					c = (m - 63) / 5 + 100;
 				}
 			} else if (age >= 31 && age <= 33) {
-				if(m < 24){
-					c= 0;
-				}else if (m >= 24 && m <= 30) {
+				if (m < 24) {
+					c = 0;
+				} else if (m >= 24 && m <= 30) {
 					int t = 30 - m;
 					int d = t * 5 % 6;
 					if (d == 0) {
@@ -3512,9 +3578,9 @@ public class XlglPhysicalController {
 					c = (m - 60) / 5 + 100;
 				}
 			} else if (age >= 34 && age <= 36) {
-				if(m < 21){
-					c= 0;
-				}else if (m >= 21 && m <= 27) {
+				if (m < 21) {
+					c = 0;
+				} else if (m >= 21 && m <= 27) {
 					int t = 27 - m;
 					int d = t * 5 % 6;
 					if (d == 0) {
@@ -3545,9 +3611,9 @@ public class XlglPhysicalController {
 					c = (m - 57) / 5 + 100;
 				}
 			} else if (age >= 37 && age <= 39) {
-				if(m < 18){
-					c= 0;
-				}else if (m >= 18 && m <= 24) {
+				if (m < 18) {
+					c = 0;
+				} else if (m >= 18 && m <= 24) {
 					int t = 24 - m;
 					int d = t * 5 % 6;
 					if (d == 0) {
@@ -3578,9 +3644,9 @@ public class XlglPhysicalController {
 					c = (m - 54) / 5 + 100;
 				}
 			} else if (age >= 40 && age <= 42) {
-				if(m < 13){
-					c= 0;
-				}else if (m >= 13 && m <= 17) {
+				if (m < 13) {
+					c = 0;
+				} else if (m >= 13 && m <= 17) {
 					int t = 17 - m;
 					int d = t * 5 % 1;
 					if (d == 0) {
@@ -3611,9 +3677,9 @@ public class XlglPhysicalController {
 					c = (m - 30) / 2 + 100;
 				}
 			} else if (age >= 43 && age <= 45) {
-				if(m < 11){
-					c= 0;
-				}else if (m >= 11 && m <= 13) {
+				if (m < 11) {
+					c = 0;
+				} else if (m >= 11 && m <= 13) {
 					int t = 13 - m;
 					int d = t * 5 % 1;
 					if (d == 0) {
@@ -3662,9 +3728,9 @@ public class XlglPhysicalController {
 					c = (m - 27) / 2 + 100;
 				}
 			} else if (age >= 46 && age <= 48) {
-				if(m < 11){
-					c= 0;
-				}else if (m >= 11 && m <= 17) {
+				if (m < 11) {
+					c = 0;
+				} else if (m >= 11 && m <= 17) {
 					int t = 17 - m;
 					int d = t * 5 % 1;
 					if (d == 0) {
@@ -3695,9 +3761,9 @@ public class XlglPhysicalController {
 					c = (m - 24) / 2 + 100;
 				}
 			} else if (age >= 49 && age <= 51) {
-				if(m < 9){
-					c= 0;
-				}else if (m >= 9 && m <= 12) {
+				if (m < 9) {
+					c = 0;
+				} else if (m >= 9 && m <= 12) {
 					int t = 12 - m;
 					int d = t * 5 % 1;
 					if (d == 0) {
@@ -3737,9 +3803,9 @@ public class XlglPhysicalController {
 					c = (m - 21) / 2 + 100;
 				}
 			} else if (age >= 52 && age <= 54) {
-				if(m < 8){
-					c= 0;
-				}else if (m >= 8 && m <= 12) {
+				if (m < 8) {
+					c = 0;
+				} else if (m >= 8 && m <= 12) {
 					int t = 12 - m;
 					int d = t * 5 % 1;
 					if (d == 0) {
@@ -3779,9 +3845,9 @@ public class XlglPhysicalController {
 					c = (m - 19) / 2 + 100;
 				}
 			} else if (age >= 55 && age <= 57) {
-				if(m < 7){
-					c= 0;
-				}else if (m >= 7 && m <= 12) {
+				if (m < 7) {
+					c = 0;
+				} else if (m >= 7 && m <= 12) {
 					int t = 12 - m;
 					int d = t * 5 % 1;
 					if (d == 0) {
@@ -3812,9 +3878,9 @@ public class XlglPhysicalController {
 					c = (m - 17) / 2 + 100;
 				}
 			} else if (age >= 58 && age <= 60) {
-				if(m < 3){
-					c= 0;
-				}else if (m >= 3 && m <= 5) {
+				if (m < 3) {
+					c = 0;
+				} else if (m >= 3 && m <= 5) {
 					int t = 5 - m;
 					int d = t * 5 % 1;
 					if (d == 0) {
@@ -3881,16 +3947,16 @@ public class XlglPhysicalController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getWomenCore")
-	public int  getWomenCore(int age,int num){
+	public int getWomenCore(int age, int num) {
 		int c = 0;
 		int s = 0;
-		if(num == 0){
+		if (num == 0) {
 			c = 0;
-		}else {
+		} else {
 			if (age <= 24) {
-				if(num < 41){
+				if (num < 41) {
 					c = 0;
-				}else if (num >= 41 && num <= 43) {
+				} else if (num >= 41 && num <= 43) {
 					int t = 43 - num;
 					int d = t * 5 % 1;
 					if (d == 0) {
@@ -3921,9 +3987,9 @@ public class XlglPhysicalController {
 					c = (num - 71) / 2 + 100;
 				}
 			} else if (age >= 25 && age <= 27) {
-				if(num < 38){
+				if (num < 38) {
 					c = 0;
-				}else if (num >= 38 && num <= 40) {
+				} else if (num >= 38 && num <= 40) {
 					int t = 40 - num;
 					int d = t * 5 % 1;
 					if (d == 0) {
@@ -3963,9 +4029,9 @@ public class XlglPhysicalController {
 					c = (num - 69) / 2 + num;
 				}
 			} else if (age >= 28 && age <= 30) {
-				if(num < 36){
+				if (num < 36) {
 					c = 0;
-				}else if (num >= 36 && num <= 38) {
+				} else if (num >= 36 && num <= 38) {
 					int t = 38 - num;
 					int d = t * 5 % 1;
 					if (d == 0) {
@@ -4005,9 +4071,9 @@ public class XlglPhysicalController {
 					c = (num - 67) / 2 + num;
 				}
 			} else if (age >= 31 && age <= 33) {
-				if(num < 34){
+				if (num < 34) {
 					c = 0;
-				}else if (num >= 34 && num <= 36) {
+				} else if (num >= 34 && num <= 36) {
 					int t = 36 - num;
 					int d = t * 5 % 1;
 					if (d == 0) {
@@ -4047,9 +4113,9 @@ public class XlglPhysicalController {
 					c = (num - 66) / 2 + num;
 				}
 			} else if (age >= 34 && age <= 36) {
-				if(num < 32){
+				if (num < 32) {
 					c = 0;
-				}else if (num >= 32 && num <= 34) {
+				} else if (num >= 32 && num <= 34) {
 					int t = 34 - num;
 					int d = t * 5 % 1;
 					if (d == 0) {
@@ -4080,9 +4146,9 @@ public class XlglPhysicalController {
 					c = (num - 64) / 2 + num;
 				}
 			} else if (age >= 37 && age <= 39) {
-				if(num < 29){
+				if (num < 29) {
 					c = 0;
-				}else if (num >= 29 && num <= 31) {
+				} else if (num >= 29 && num <= 31) {
 					int t = 31 - num;
 					int d = t * 5 % 2;
 					if (d == 0) {
@@ -4131,9 +4197,9 @@ public class XlglPhysicalController {
 					c = (num - 63) / 2 + num;
 				}
 			} else if (age >= 40 && age <= 42) {
-				if(num < 27){
+				if (num < 27) {
 					c = 0;
-				}else if (num >= 27 && num <= 29) {
+				} else if (num >= 27 && num <= 29) {
 					int t = 29 - num;
 					int d = t * 5 % 2;
 					if (d == 0) {
@@ -4182,9 +4248,9 @@ public class XlglPhysicalController {
 					c = (num - 62) / 2 + num;
 				}
 			} else if (age >= 43 && age <= 45) {
-				if(num < 24){
+				if (num < 24) {
 					c = 0;
-				}else if (num >= 24 && num <= 27) {
+				} else if (num >= 24 && num <= 27) {
 					int t = 27 - num;
 					int d = t * 5 % 3;
 					if (d == 0) {
@@ -4224,9 +4290,9 @@ public class XlglPhysicalController {
 					c = (num - 61) / 2 + num;
 				}
 			} else if (age >= 46 && age <= 48) {
-				if(num < 22){
+				if (num < 22) {
 					c = 0;
-				}else if (num >= 22 && num <= 25) {
+				} else if (num >= 22 && num <= 25) {
 					int t = 25 - num;
 					int d = t * 5 % 3;
 					if (d == 0) {
@@ -4266,9 +4332,9 @@ public class XlglPhysicalController {
 					c = (num - 60) / 2 + num;
 				}
 			} else if (age >= 49 && age <= 51) {
-				if(num < 19){
+				if (num < 19) {
 					c = 0;
-				}else if (num >= 19 && num <= 23) {
+				} else if (num >= 19 && num <= 23) {
 					int t = 23 - num;
 					int d = t * 5 % 4;
 					if (d == 0) {
@@ -4335,9 +4401,9 @@ public class XlglPhysicalController {
 					c = (num - 59) / 2 + num;
 				}
 			} else if (age >= 52 && age <= 54) {
-				if(num < 17){
+				if (num < 17) {
 					c = 0;
-				}else if (num >= 17 && num <= 21) {
+				} else if (num >= 17 && num <= 21) {
 					int t = 21 - num;
 					int d = t * 5 % 4;
 					if (d == 0) {
@@ -4395,9 +4461,9 @@ public class XlglPhysicalController {
 					c = (num - 57) / 2 + num;
 				}
 			} else if (age >= 55 && age <= 57) {
-				if(num < 15){
+				if (num < 15) {
 					c = 0;
-				}else if (num >= 15 && num <= 19) {
+				} else if (num >= 15 && num <= 19) {
 					int t = 19 - num;
 					int d = t * 5 % 4;
 					if (d == 0) {
@@ -4437,9 +4503,9 @@ public class XlglPhysicalController {
 					c = (num - 56) / 2 + num;
 				}
 			} else if (age >= 58 && age <= 60) {
-				if(num < 13){
+				if (num < 13) {
 					c = 0;
-				}else if (num >= 13 && num <= 17) {
+				} else if (num >= 13 && num <= 17) {
 					int t = 17 - num;
 					int d = t * 5 % 4;
 					if (d == 0) {
@@ -4533,12 +4599,12 @@ public class XlglPhysicalController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getWomenRun")
-	public int getWomenRun(int age,int m){
+	public int getWomenRun(int age, int m) {
 		int c = 0;
 		int s = 0;
-		if(m ==0 ){
+		if (m == 0) {
 			c = 0;
-		}else {
+		} else {
 			if (age <= 24) {
 				if (m <= 226 && m >= 222) {
 					int t = m - 222;
@@ -5613,11 +5679,11 @@ public class XlglPhysicalController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getWomen3Run")
-	public int getWomen3Run(int age ,int m){
+	public int getWomen3Run(int age, int m) {
 		int s = 0;
 		int c = 0;
-		if(age <= 24){
-			if(m <= 1610 && m >= 1600){
+		if (age <= 24) {
+			if (m <= 1610 && m >= 1600) {
 				int t = m - 1600;
 				int d = t * 5 % 5;
 				if (d == 0) {
@@ -5626,8 +5692,8 @@ public class XlglPhysicalController {
 					s = t * 5 / 5 + 1;
 				}
 				c = 65 - s;
-			}else if( m < 1600 && m >= 1540){
-				int t = m -40 - 1540;
+			} else if (m < 1600 && m >= 1540) {
+				int t = m - 40 - 1540;
 				int d = t * 5 % 20;
 				if (d == 0) {
 					s = t * 5 / 20;
@@ -5635,8 +5701,8 @@ public class XlglPhysicalController {
 					s = t * 5 / 20 + 1;
 				}
 				c = 70 - s;
-			}else if( m < 1540 && m >= 1425){
-				int t = m -40 - 1425;
+			} else if (m < 1540 && m >= 1425) {
+				int t = m - 40 - 1425;
 				int d = t * 5 % 15;
 				if (d == 0) {
 					s = t * 5 / 15;
@@ -5644,7 +5710,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 15 + 1;
 				}
 				c = 95 - s;
-			}else if(m < 1425 && m >= 1400){
+			} else if (m < 1425 && m >= 1400) {
 				int t = m - 1400;
 				int d = t * 5 % 25;
 				if (d == 0) {
@@ -5653,11 +5719,11 @@ public class XlglPhysicalController {
 					s = t * 5 / 25 + 1;
 				}
 				c = 100 - s;
-			}else if(m < 1400){
-				c = (1400-m) / 5 + 100;
+			} else if (m < 1400) {
+				c = (1400 - m) / 5 + 100;
 			}
-		}else if(age >=25 && age <=27){
-			if(m <= 1623 && m >= 1613){
+		} else if (age >= 25 && age <= 27) {
+			if (m <= 1623 && m >= 1613) {
 				int t = m - 1613;
 				int d = t * 5 % 5;
 				if (d == 0) {
@@ -5666,7 +5732,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 5 + 1;
 				}
 				c = 65 - s;
-			}else if(m < 1613 && m >= 1553){
+			} else if (m < 1613 && m >= 1553) {
 				int t = m - 40 - 1553;
 				int d = t * 5 % 20;
 				if (d == 0) {
@@ -5675,7 +5741,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 20 + 1;
 				}
 				c = 70 - s;
-			}else if(m < 1553 && m >= 1438){
+			} else if (m < 1553 && m >= 1438) {
 				int t = m - 40 - 1438;
 				int d = t * 5 % 15;
 				if (d == 0) {
@@ -5684,7 +5750,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 15 + 1;
 				}
 				c = 95 - s;
-			}else if(m < 1438 && m >= 1413){
+			} else if (m < 1438 && m >= 1413) {
 				int t = m - 1413;
 				int d = t * 5 % 25;
 				if (d == 0) {
@@ -5693,11 +5759,11 @@ public class XlglPhysicalController {
 					s = t * 5 / 25 + 1;
 				}
 				c = 100 - s;
-			}else if(m < 1413){
-				c = (1413-m) / 5 + 100;
+			} else if (m < 1413) {
+				c = (1413 - m) / 5 + 100;
 			}
-		}else if(age >=28 && age <=30){
-			if(m <= 1702 && m >= 1652){
+		} else if (age >= 28 && age <= 30) {
+			if (m <= 1702 && m >= 1652) {
 				int t = m - 40 - 1652;
 				int d = t * 5 % 5;
 				if (d == 0) {
@@ -5706,7 +5772,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 5 + 1;
 				}
 				c = 65 - s;
-			}else if(m < 1652 && m >= 1632){
+			} else if (m < 1652 && m >= 1632) {
 				int t = m - 1632;
 				int d = t * 5 % 20;
 				if (d == 0) {
@@ -5715,7 +5781,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 20 + 1;
 				}
 				c = 70 - s;
-			}else if(m < 1632 && m >= 1517){
+			} else if (m < 1632 && m >= 1517) {
 				int t = m - 40 - 1517;
 				int d = t * 5 % 15;
 				if (d == 0) {
@@ -5724,7 +5790,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 15 + 1;
 				}
 				c = 95 - s;
-			}else if(m < 1517 && m >= 1452){
+			} else if (m < 1517 && m >= 1452) {
 				int t = m - 1452;
 				int d = t * 5 % 25;
 				if (d == 0) {
@@ -5733,11 +5799,11 @@ public class XlglPhysicalController {
 					s = t * 5 / 25 + 1;
 				}
 				c = 100 - s;
-			}else if(m < 1452){
-				c = (1452-m) / 5 + 100;
+			} else if (m < 1452) {
+				c = (1452 - m) / 5 + 100;
 			}
-		}else if(age >=31 && age <=33){
-			if(m <= 1741 && m >= 1731){
+		} else if (age >= 31 && age <= 33) {
+			if (m <= 1741 && m >= 1731) {
 				int t = m - 1731;
 				int d = t * 5 % 5;
 				if (d == 0) {
@@ -5746,7 +5812,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 5 + 1;
 				}
 				c = 65 - s;
-			}else if(m < 1731 && m >= 1711){
+			} else if (m < 1731 && m >= 1711) {
 				int t = m - 1711;
 				int d = t * 5 % 20;
 				if (d == 0) {
@@ -5755,7 +5821,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 20 + 1;
 				}
 				c = 70 - s;
-			}else if(m < 1711 && m >= 1661){
+			} else if (m < 1711 && m >= 1661) {
 				int t = m - 40 - 1661;
 				int d = t * 5 % 15;
 				if (d == 0) {
@@ -5764,8 +5830,8 @@ public class XlglPhysicalController {
 					s = t * 5 / 15 + 1;
 				}
 				c = 85 - s;
-			}else if(m < 1661 && m >= 1556){
-				int t = m -40 - 1556;
+			} else if (m < 1661 && m >= 1556) {
+				int t = m - 40 - 1556;
 				int d = t * 5 % 15;
 				if (d == 0) {
 					s = t * 5 / 15;
@@ -5773,7 +5839,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 15 + 1;
 				}
 				c = 95 - s;
-			}else if(m < 1556 && m >= 1531){
+			} else if (m < 1556 && m >= 1531) {
 				int t = m - 1531;
 				int d = t * 5 % 25;
 				if (d == 0) {
@@ -5782,11 +5848,11 @@ public class XlglPhysicalController {
 					s = t * 5 / 25 + 1;
 				}
 				c = 100 - s;
-			}else if(m < 1531){
-				c = (1531-m) / 5 + 100;
+			} else if (m < 1531) {
+				c = (1531 - m) / 5 + 100;
 			}
-		}else if(age >=34 && age <=36){
-			if(m <= 1820 && m >= 1810){
+		} else if (age >= 34 && age <= 36) {
+			if (m <= 1820 && m >= 1810) {
 				int t = m - 1810;
 				int d = t * 5 % 5;
 				if (d == 0) {
@@ -5795,8 +5861,8 @@ public class XlglPhysicalController {
 					s = t * 5 / 5 + 1;
 				}
 				c = 65 - s;
-			}else if(m < 1810 && m >= 1750){
-				int t = m - 40- 1750;
+			} else if (m < 1810 && m >= 1750) {
+				int t = m - 40 - 1750;
 				int d = t * 5 % 20;
 				if (d == 0) {
 					s = t * 5 / 20;
@@ -5804,7 +5870,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 20 + 1;
 				}
 				c = 70 - s;
-			}else if(m < 1750 && m >= 1635){
+			} else if (m < 1750 && m >= 1635) {
 				int t = m - 40 - 1635;
 				int d = t * 5 % 15;
 				if (d == 0) {
@@ -5813,7 +5879,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 15 + 1;
 				}
 				c = 95 - s;
-			}else if(m < 1635 && m >= 1610){
+			} else if (m < 1635 && m >= 1610) {
 				int t = m - 1610;
 				int d = t * 5 % 25;
 				if (d == 0) {
@@ -5822,11 +5888,11 @@ public class XlglPhysicalController {
 					s = t * 5 / 25 + 1;
 				}
 				c = 100 - s;
-			}else if(m < 1610){
-				c = (1610-m) / 5 + 100;
+			} else if (m < 1610) {
+				c = (1610 - m) / 5 + 100;
 			}
-		}else if(age >=37 && age <=39){
-			if(m <= 1859 && m >= 1849){
+		} else if (age >= 37 && age <= 39) {
+			if (m <= 1859 && m >= 1849) {
 				int t = m - 1849;
 				int d = t * 5 % 5;
 				if (d == 0) {
@@ -5835,7 +5901,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 5 + 1;
 				}
 				c = 65 - s;
-			}else if(m < 1849 && m >= 1829){
+			} else if (m < 1849 && m >= 1829) {
 				int t = m - 1829;
 				int d = t * 5 % 20;
 				if (d == 0) {
@@ -5844,7 +5910,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 20 + 1;
 				}
 				c = 70 - s;
-			}else if(m < 1829 && m >= 1714){
+			} else if (m < 1829 && m >= 1714) {
 				int t = m - 40 - 1714;
 				int d = t * 5 % 15;
 				if (d == 0) {
@@ -5853,8 +5919,8 @@ public class XlglPhysicalController {
 					s = t * 5 / 15 + 1;
 				}
 				c = 95 - s;
-			}else if(m < 1714 && m >= 1649){
-				int t = m -40 - 1649;
+			} else if (m < 1714 && m >= 1649) {
+				int t = m - 40 - 1649;
 				int d = t * 5 % 25;
 				if (d == 0) {
 					s = t * 5 / 25;
@@ -5862,11 +5928,11 @@ public class XlglPhysicalController {
 					s = t * 5 / 25 + 1;
 				}
 				c = 95 - s;
-			}else if(m < 1649){
-				c = (1649-m) / 5 + 100;
+			} else if (m < 1649) {
+				c = (1649 - m) / 5 + 100;
 			}
-		}else if(age >=40 && age <=42){
-			if(m <= 1938 && m >= 1928){
+		} else if (age >= 40 && age <= 42) {
+			if (m <= 1938 && m >= 1928) {
 				int t = m - 1928;
 				int d = t * 5 % 5;
 				if (d == 0) {
@@ -5875,7 +5941,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 5 + 1;
 				}
 				c = 65 - s;
-			}else if(m < 1928 && m >= 1908){
+			} else if (m < 1928 && m >= 1908) {
 				int t = m - 1908;
 				int d = t * 5 % 20;
 				if (d == 0) {
@@ -5884,7 +5950,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 20 + 1;
 				}
 				c = 70 - s;
-			}else if(m < 1908 && m >= 1808){
+			} else if (m < 1908 && m >= 1808) {
 				int t = m - 40 - 1808;
 				int d = t * 5 % 15;
 				if (d == 0) {
@@ -5893,8 +5959,8 @@ public class XlglPhysicalController {
 					s = t * 5 / 15 + 1;
 				}
 				c = 90 - s;
-			}else if(m < 1808 && m >= 1753){
-				int t = m -40 - 1753;
+			} else if (m < 1808 && m >= 1753) {
+				int t = m - 40 - 1753;
 				int d = t * 5 % 15;
 				if (d == 0) {
 					s = t * 5 / 15;
@@ -5902,7 +5968,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 15 + 1;
 				}
 				c = 95 - s;
-			}else if(m < 1753 && m >= 1728){
+			} else if (m < 1753 && m >= 1728) {
 				int t = m - 1728;
 				int d = t * 5 % 25;
 				if (d == 0) {
@@ -5911,11 +5977,11 @@ public class XlglPhysicalController {
 					s = t * 5 / 25 + 1;
 				}
 				c = 100 - s;
-			}else if(m < 1728){
-				c = (1728-m) / 5 + 100;
+			} else if (m < 1728) {
+				c = (1728 - m) / 5 + 100;
 			}
-		}else if(age >=43 && age <=45){
-			if(m <= 2017 && m >= 2007){
+		} else if (age >= 43 && age <= 45) {
+			if (m <= 2017 && m >= 2007) {
 				int t = m - 2007;
 				int d = t * 5 % 5;
 				if (d == 0) {
@@ -5924,7 +5990,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 5 + 1;
 				}
 				c = 65 - s;
-			}else if(m < 2007 && m >= 1947){
+			} else if (m < 2007 && m >= 1947) {
 				int t = m - 40 - 1947;
 				int d = t * 5 % 20;
 				if (d == 0) {
@@ -5933,7 +5999,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 20 + 1;
 				}
 				c = 70 - s;
-			}else if(m < 1947 && m >= 1832){
+			} else if (m < 1947 && m >= 1832) {
 				int t = m - 40 - 1832;
 				int d = t * 5 % 15;
 				if (d == 0) {
@@ -5942,7 +6008,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 15 + 1;
 				}
 				c = 95 - s;
-			}else if(m < 1832 && m >= 1807){
+			} else if (m < 1832 && m >= 1807) {
 				int t = m - 1807;
 				int d = t * 5 % 15;
 				if (d == 0) {
@@ -5951,11 +6017,11 @@ public class XlglPhysicalController {
 					s = t * 5 / 15 + 1;
 				}
 				c = 100 - s;
-			}else if(m < 1807){
-				c = (1807-m) / 5 + 100;
+			} else if (m < 1807) {
+				c = (1807 - m) / 5 + 100;
 			}
-		}else if(age >=46 && age <=48){
-			if(m <= 2056 && m >= 2046){
+		} else if (age >= 46 && age <= 48) {
+			if (m <= 2056 && m >= 2046) {
 				int t = m - 2046;
 				int d = t * 5 % 5;
 				if (d == 0) {
@@ -5964,7 +6030,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 5 + 1;
 				}
 				c = 65 - s;
-			}else if(m < 2046 && m >= 2026){
+			} else if (m < 2046 && m >= 2026) {
 				int t = m - 2026;
 				int d = t * 5 % 20;
 				if (d == 0) {
@@ -5973,7 +6039,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 20 + 1;
 				}
 				c = 70 - s;
-			}else if(m < 2026 && m >= 1911){
+			} else if (m < 2026 && m >= 1911) {
 				int t = m - 40 - 2922;
 				int d = t * 5 % 15;
 				if (d == 0) {
@@ -5982,8 +6048,8 @@ public class XlglPhysicalController {
 					s = t * 5 / 15 + 1;
 				}
 				c = 95 - s;
-			}else if(m < 1911 && m >= 1846){
-				int t = m -40 - 1846;
+			} else if (m < 1911 && m >= 1846) {
+				int t = m - 40 - 1846;
 				int d = t * 5 % 25;
 				if (d == 0) {
 					s = t * 5 / 25;
@@ -5991,11 +6057,11 @@ public class XlglPhysicalController {
 					s = t * 5 / 25 + 1;
 				}
 				c = 100 - s;
-			}else if(m < 1846){
-				c = (1846-m) / 5 + 100;
+			} else if (m < 1846) {
+				c = (1846 - m) / 5 + 100;
 			}
-		}else if(age >=49 && age <=51){
-			if(m <= 2135 && m >= 2125){
+		} else if (age >= 49 && age <= 51) {
+			if (m <= 2135 && m >= 2125) {
 				int t = m - 2125;
 				int d = t * 5 % 5;
 				if (d == 0) {
@@ -6004,7 +6070,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 5 + 1;
 				}
 				c = 65 - s;
-			}else if(m < 2125 && m >= 2105){
+			} else if (m < 2125 && m >= 2105) {
 				int t = m - 2105;
 				int d = t * 5 % 20;
 				if (d == 0) {
@@ -6013,7 +6079,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 20 + 1;
 				}
 				c = 70 - s;
-			}else if(m < 2105 && m >= 2005){
+			} else if (m < 2105 && m >= 2005) {
 				int t = m - 40 - 2005;
 				int d = t * 5 % 15;
 				if (d == 0) {
@@ -6022,8 +6088,8 @@ public class XlglPhysicalController {
 					s = t * 5 / 15 + 1;
 				}
 				c = 90 - s;
-			}else if(m < 2005 && m >= 1950){
-				int t = m -40 - 1950;
+			} else if (m < 2005 && m >= 1950) {
+				int t = m - 40 - 1950;
 				int d = t * 5 % 15;
 				if (d == 0) {
 					s = t * 5 / 15;
@@ -6031,7 +6097,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 15 + 1;
 				}
 				c = 95 - s;
-			}else if(m < 1950 && m >= 1925){
+			} else if (m < 1950 && m >= 1925) {
 				int t = m - 1925;
 				int d = t * 5 % 25;
 				if (d == 0) {
@@ -6040,11 +6106,11 @@ public class XlglPhysicalController {
 					s = t * 5 / 25 + 1;
 				}
 				c = 100 - s;
-			}else if(m < 1925){
-				c = (1925-m) / 5 + 100;
+			} else if (m < 1925) {
+				c = (1925 - m) / 5 + 100;
 			}
-		}else if(age >=52 && age <=54){
-			if(m <= 2214 && m >= 2204){
+		} else if (age >= 52 && age <= 54) {
+			if (m <= 2214 && m >= 2204) {
 				int t = m - 2204;
 				int d = t * 5 % 5;
 				if (d == 0) {
@@ -6053,7 +6119,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 5 + 1;
 				}
 				c = 65 - s;
-			}else if(m < 2204 && m >= 2144){
+			} else if (m < 2204 && m >= 2144) {
 				int t = m - 40 - 2144;
 				int d = t * 5 % 20;
 				if (d == 0) {
@@ -6062,7 +6128,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 20 + 1;
 				}
 				c = 70 - s;
-			}else if(m < 2144 && m >= 2004){
+			} else if (m < 2144 && m >= 2004) {
 				int t = m - 40 - 2004;
 				int d = t * 5 % 15;
 				if (d == 0) {
@@ -6071,11 +6137,11 @@ public class XlglPhysicalController {
 					s = t * 5 / 15 + 1;
 				}
 				c = 100 - s;
-			}else if(m < 2004){
-				c = (2004-m) / 5 + 100;
+			} else if (m < 2004) {
+				c = (2004 - m) / 5 + 100;
 			}
-		}else if(age >=55 && age <=57){
-			if(m <= 2253 && m >= 2243){
+		} else if (age >= 55 && age <= 57) {
+			if (m <= 2253 && m >= 2243) {
 				int t = m - 2243;
 				int d = t * 5 % 5;
 				if (d == 0) {
@@ -6084,7 +6150,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 5 + 1;
 				}
 				c = 65 - s;
-			}else if(m < 2243 && m >= 2223){
+			} else if (m < 2243 && m >= 2223) {
 				int t = m - 2223;
 				int d = t * 5 % 20;
 				if (d == 0) {
@@ -6093,7 +6159,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 20 + 1;
 				}
 				c = 70 - s;
-			}else if(m < 2223 && m >= 2108){
+			} else if (m < 2223 && m >= 2108) {
 				int t = m - 40 - 2108;
 				int d = t * 5 % 15;
 				if (d == 0) {
@@ -6102,8 +6168,8 @@ public class XlglPhysicalController {
 					s = t * 5 / 15 + 1;
 				}
 				c = 95 - s;
-			}else if(m < 2108 && m >= 2043){
-				int t = m -40 - 2043;
+			} else if (m < 2108 && m >= 2043) {
+				int t = m - 40 - 2043;
 				int d = t * 5 % 25;
 				if (d == 0) {
 					s = t * 5 / 25;
@@ -6111,11 +6177,11 @@ public class XlglPhysicalController {
 					s = t * 5 / 25 + 1;
 				}
 				c = 100 - s;
-			}else if(m < 2043){
-				c = (2043-m) / 5 + 100;
+			} else if (m < 2043) {
+				c = (2043 - m) / 5 + 100;
 			}
-		}else if(age >=58 && age <=60){
-			if(m <= 2332 && m >= 2322){
+		} else if (age >= 58 && age <= 60) {
+			if (m <= 2332 && m >= 2322) {
 				int t = m - 2322;
 				int d = t * 5 % 5;
 				if (d == 0) {
@@ -6124,7 +6190,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 5 + 1;
 				}
 				c = 65 - s;
-			}else if(m < 2322 && m >= 2302){
+			} else if (m < 2322 && m >= 2302) {
 				int t = m - 2302;
 				int d = t * 5 % 20;
 				if (d == 0) {
@@ -6133,7 +6199,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 20 + 1;
 				}
 				c = 70 - s;
-			}else if(m < 2302 && m >= 2202){
+			} else if (m < 2302 && m >= 2202) {
 				int t = m - 40 - 2202;
 				int d = t * 5 % 15;
 				if (d == 0) {
@@ -6142,8 +6208,8 @@ public class XlglPhysicalController {
 					s = t * 5 / 15 + 1;
 				}
 				c = 90 - s;
-			}else if(m < 2202 && m >= 2147){
-				int t = m -40 - 2147;
+			} else if (m < 2202 && m >= 2147) {
+				int t = m - 40 - 2147;
 				int d = t * 5 % 15;
 				if (d == 0) {
 					s = t * 5 / 15;
@@ -6151,7 +6217,7 @@ public class XlglPhysicalController {
 					s = t * 5 / 15 + 1;
 				}
 				c = 95 - s;
-			}else if(m < 2147 && m >= 2122){
+			} else if (m < 2147 && m >= 2122) {
 				int t = m - 2122;
 				int d = t * 5 % 25;
 				if (d == 0) {
@@ -6160,8 +6226,8 @@ public class XlglPhysicalController {
 					s = t * 5 / 25 + 1;
 				}
 				c = 100 - s;
-			}else if(m < 2122){
-				c = (2122-m) / 5 + 100;
+			} else if (m < 2122) {
+				c = (2122 - m) / 5 + 100;
 			}
 		}
 
