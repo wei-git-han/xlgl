@@ -14,8 +14,10 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -501,9 +503,19 @@ public class PeopleManagementController {
 		try {
 			// 请假人数远程服务地址(获取在线人数)
 			String reJson = RestTemplateUtil.postJSONString(url, infoMap);
-			String accounts = reJson.substring(1, reJson.length() - 1).replace("\"", "").replace("]", "");
+			JSONObject jsonObject = JSONObject.parseObject(reJson);
+			Map  map1 = new HashMap();
+			map1 = (Map) jsonObject.get("onlineUser");
+			Set<String> keySet = map1.keySet();
+			Iterator<String> iterator = keySet.iterator();
+			while (iterator.hasNext()){
+			    String key = iterator.next();
+			    String value = (String) map1.get(key);
+			    accountList.add(key);
+			}
+		/*	String accounts = reJson.substring(1, reJson.length() - 1).replace("\"", "").replace("]", "");
 			String[] accountArray = accounts.split("\\s*,\\s*");
-			accountList = new ArrayList<String>(Arrays.asList(accountArray));
+			accountList = new ArrayList<String>(Arrays.asList(accountArray));*/
 		} catch (Exception e) {
 			// logger.info("PersonManagementController在线人员ID-LIST");
 			e.printStackTrace();

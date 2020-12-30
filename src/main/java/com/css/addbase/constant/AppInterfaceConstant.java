@@ -654,7 +654,7 @@ public class AppInterfaceConstant {
     
     public final static String WEB_INTERFACE_QXJ = "/app/qxjgl/api//getQjNum";
     
-    public final static String WEB_INTERFACE_XLGLZXR = "/api/online/";
+    public final static String WEB_INTERFACE_XLGLZXR = "/api/sso/onlineUser";
     
     public final static String APP_QXJGL = "xlglqxj";
     
