@@ -175,10 +175,10 @@ public class SyncOrganUtil {
     			baseAppOrgan.setTreePath(organ.getP());
     			baseAppOrgan.setSort(organ.getOrderId());
     			baseAppOrgan.setIsdelete(organ.getIsDelete());
-    			baseAppOrgan.setIsInvalId("0");
     			if(baseAppOrgantemp!=null){
     				baseAppOrganService.update(baseAppOrgan);
     			}else{
+        			baseAppOrgan.setIsInvalId("0");
     				baseAppOrganService.save(baseAppOrgan);
     			}
     		} 
@@ -211,11 +211,11 @@ public class SyncOrganUtil {
     			baseAppUser.setSex(userInfo.getSex());
     			baseAppUser.setTelephone(userInfo.getTel());
     			baseAppUser.setIsdelete(userInfo.getIsDelete());
-    			baseAppUser.setSfyx("0");
-    			baseAppUser.setSfzb("1");
     			if(baseAppUsertemp!=null){
     				baseAppUserService.update(baseAppUser);
     			}else{
+        			baseAppUser.setSfyx("0");
+        			baseAppUser.setSfzb("1");
     				baseAppUserService.save(baseAppUser);
     			}
     		} 
