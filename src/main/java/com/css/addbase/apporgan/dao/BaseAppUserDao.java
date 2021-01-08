@@ -171,6 +171,9 @@ public interface BaseAppUserDao extends BaseDao<BaseAppUser> {
 	@Select("select ACCOUNT from BASE_APP_USER where ORGANID in (select id from BASE_APP_ORGAN start with ID = #{0} and ISDELETE=0 and (IS_INVALID is null or IS_INVALID = '0') connect by prior ID = PARENT_ID) and (sfyx is null or sfyx = '0')")
 	List<String> queryAccount(String orgId);
 	
+	@Select("select ACCOUNT from BASE_APP_USER where ORGANID in (select id from BASE_APP_ORGAN start with ID = #{0} and ISDELETE=0 and (IS_INVALID is null or IS_INVALID = '0') connect by prior ID = PARENT_ID) and (sfyx is null or sfyx = '0') and ORGANID !='root' ")
+	List<String> queryAccountByNotRoot(String orgId);
+	
 	
 	void updateAllSFYX(Map<String, Object> map);
 	

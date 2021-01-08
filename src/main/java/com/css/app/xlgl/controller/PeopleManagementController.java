@@ -439,16 +439,19 @@ public class PeopleManagementController {
 			if(queryObject.getParentId().equals("root")) {
 				 List<String> queryAccount = baseAppUserService.queryAccount(organId);
 				for (int j = 0; j < list.size(); j++) {
-					System.out.println(list.get(j));
 						if(queryAccount.contains(list.get(j))) {
 							i++;
 						}
-					
 				}
 			}
 		} else {
 			if (list.size() > 0) {
-				i = list.size();
+				 List<String> queryAccount = baseAppUserService.queryAccountByNotRoot("root");
+				for (int j = 0; j < list.size(); j++) {
+						if(queryAccount.contains(list.get(j))) {
+							i++;
+						}
+				}
 			}
 		}
 		return i;

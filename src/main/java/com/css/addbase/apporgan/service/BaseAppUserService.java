@@ -159,4 +159,6 @@ public interface BaseAppUserService {
 	List<String> queryUserOrganId(String[] deptIds);
 	
 	List<String> queryAccount(String orgId);
+	
+	List<String> queryAccountByNotRoot(String orgId);
 }

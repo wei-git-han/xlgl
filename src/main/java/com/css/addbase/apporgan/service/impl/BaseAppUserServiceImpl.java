@@ -272,6 +272,11 @@ public class BaseAppUserServiceImpl implements BaseAppUserService {
 		return baseAppUserDao.queryAccount(orgId);
 	}
 
+	@Override
+	public List<String> queryAccountByNotRoot(String orgId) {
+		return baseAppUserDao.queryAccountByNotRoot(orgId);
+	}
+
 
 
 
