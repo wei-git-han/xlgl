@@ -676,7 +676,14 @@ public class AppInterfaceConstant {
      * @author 李振楠
      * @date 2020年8月19日
      * */
-    public final static String WEB_INTERFACE_QXJ_statistics = "/app/qxjgl/api/getXLGLNumber";
+    //public final static String WEB_INTERFACE_QXJ_statistics = "/app/qxjgl/api/getXLGLNumber";
+    
+    /**
+     * @author 李振楠
+     * @date 2020年8月19日
+     * */
+    public final static String WEB_INTERFACE_QXJ_statistics = "/app/qxjgl/leaveOrBack/getXLGLNumber";
+    
     /**
      * @author 李振楠
      * @date 2020年8月28日
@@ -708,7 +715,13 @@ public class AppInterfaceConstant {
      * @author 李振楠
      * @date 2020年8月13日
      * */
-    public final static String WEB_INTERFACE_QXJ_USER_INFO_QJDAYS_REDIS = "/app/qxjgl/api/countXLGL";
+    //public final static String WEB_INTERFACE_QXJ_USER_INFO_QJDAYS_REDIS = "/app/qxjgl/api/countXLGL";
+    
+    /**
+     * @author 李振楠
+     * @date 2020年8月13日
+     * */
+    public final static String WEB_INTERFACE_QXJ_USER_INFO_QJDAYS_REDIS = "/leave/apply/countXLGL";
     
     /**
      * @author 李振楠
