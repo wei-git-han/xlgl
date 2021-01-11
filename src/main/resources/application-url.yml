@@ -7,5 +7,5 @@ csse.mircoservice.org: /api/org
 
 csse.mircoservice.msg: /api/msg
 
-csse.mircoservice.zaiwei: http://10.1.150.10:10040
+csse.mircoservice.zaiwei: http://10.1.150.10:10005
 

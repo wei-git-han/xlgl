@@ -473,13 +473,14 @@ public class BaseAppUserController {
 			}
 			String string = arrayList.get(0);
 			List<BaseAppOrgan> findOrganByParentIdAll = baseAppOrganService.findOrganByParentIdAll(string);
+			List<BaseAppUser> queryUsers2 = baseAppUserService.queryUsers(string);
 			BaseAppOrgan baseAppOrgan = new BaseAppOrgan();
 			baseAppOrgan.setId(string);
-			if(findOrganByParentIdAll.size()<=0) {
+			if(findOrganByParentIdAll.size()<=0 && queryUsers2.size()<=0) {
 				ju = "1";
 				baseAppOrgan.setIsInvalId("1");
 				baseAppOrganService.update(baseAppOrgan);
-			}else if(findOrganByParentIdAll.size()==1){
+			}else if(findOrganByParentIdAll.size()==1 && queryUsers2.size() ==1){
 				ju = "0";
 				baseAppOrgan.setIsInvalId("0");
 				baseAppOrganService.update(baseAppOrgan);

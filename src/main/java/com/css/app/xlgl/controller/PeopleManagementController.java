@@ -14,8 +14,10 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -291,7 +293,7 @@ public class PeopleManagementController {
 			evectionNum = jsonData.getInteger("chucai"); //现请销假无出差人数，等请销假开发完毕
 			otherPlacesNum = jsonData.getInteger("jingwai"); //现请销假京外人数，等请销假开发完毕
 		}
-		userShouldNumber = userAllYx -qjNum -evectionNum-otherPlacesNum;
+		userShouldNumber = userAllYx -qjNum ;
 		float zwlv= 0;
 		if (userIdList == 0) {
 			jsonData.put("zwlv", zwlv);//在线率
@@ -437,16 +439,19 @@ public class PeopleManagementController {
 			if(queryObject.getParentId().equals("root")) {
 				 List<String> queryAccount = baseAppUserService.queryAccount(organId);
 				for (int j = 0; j < list.size(); j++) {
-					System.out.println(list.get(j));
 						if(queryAccount.contains(list.get(j))) {
 							i++;
 						}
-					
 				}
 			}
 		} else {
 			if (list.size() > 0) {
-				i = list.size();
+				 List<String> queryAccount = baseAppUserService.queryAccountByNotRoot("root");
+				for (int j = 0; j < list.size(); j++) {
+						if(queryAccount.contains(list.get(j))) {
+							i++;
+						}
+				}
 			}
 		}
 		return i;
@@ -501,9 +506,19 @@ public class PeopleManagementController {
 		try {
 			// 请假人数远程服务地址(获取在线人数)
 			String reJson = RestTemplateUtil.postJSONString(url, infoMap);
-			String accounts = reJson.substring(1, reJson.length() - 1).replace("\"", "").replace("]", "");
+			JSONObject jsonObject = JSONObject.parseObject(reJson);
+			Map  map1 = new HashMap();
+			map1 = (Map) jsonObject.get("onlineUser");
+			Set<String> keySet = map1.keySet();
+			Iterator<String> iterator = keySet.iterator();
+			while (iterator.hasNext()){
+			    String key = iterator.next();
+			    String value = (String) map1.get(key);
+			    accountList.add(key);
+			}
+		/*	String accounts = reJson.substring(1, reJson.length() - 1).replace("\"", "").replace("]", "");
 			String[] accountArray = accounts.split("\\s*,\\s*");
-			accountList = new ArrayList<String>(Arrays.asList(accountArray));
+			accountList = new ArrayList<String>(Arrays.asList(accountArray));*/
 		} catch (Exception e) {
 			// logger.info("PersonManagementController在线人员ID-LIST");
 			e.printStackTrace();

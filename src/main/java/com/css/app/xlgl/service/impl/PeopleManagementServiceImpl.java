@@ -45,7 +45,7 @@ public class PeopleManagementServiceImpl implements PeopleManagementService {
 			for (BaseAppOrgan baseAppOrgan : queryList) {
 				LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 				map.add("orgid", baseAppOrgan.getId());
-				JSONObject jsonData = CrossDomainUtil.getJsonData(elecPath, map);
+				JSONObject jsonData = CrossDomainUtil.getJsonDataNotTolen(elecPath, map);
 				String jsonArray = jsonData.getJSONArray("rows").toString();
 				String str = "xlgl-txlUsetNEWDto-" +baseAppOrgan.getId();
 				redisUtil.setString(str, jsonArray);
@@ -65,7 +65,7 @@ public class PeopleManagementServiceImpl implements PeopleManagementService {
 			BaseAppOrgMapped orgMapped = (BaseAppOrgMapped)baseAppOrgMappedService.orgMappedByOrgId("","root",AppConstant.APP_QXJGL);
 			// 获取清销假app的接口
 			String elecPath = orgMapped.getUrl() + AppInterfaceConstant.WEB_INTERFACE_QXJ_USER_INFO_QJDAYS_REDIS;
-			JSONObject jsonData = CrossDomainUtil.getJsonData(elecPath, map);
+			JSONObject jsonData = CrossDomainUtil.getJsonDataNotTolen(elecPath, map);
 			String jsonArray = jsonData.getJSONArray("list").toString();
 			redisUtil.setString("xlgl-qxl-people", jsonArray);
 			System.out.println("请销假-redis:xlgl-qxl-people，缓存成功！！！！！！！");

@@ -1,0 +1,1 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d2311d5"],{eeba:function(n,i,p){n.exports=p.p+"static/img/beijing.0d44ada8.svg"}}]);

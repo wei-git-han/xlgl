@@ -1308,7 +1308,7 @@ public class XlglPhysicalController {
 					}
 					c = 100 - s;
 				} else if (num > 87) {
-					c = 100 + (num - 100) / 2;
+					c = 100 + (num - 87) / 2;
 				}
 
 			} else if (age >= 25 && age <= 27) {
@@ -1333,7 +1333,7 @@ public class XlglPhysicalController {
 					}
 					c = 100 - s;
 				} else if (num > 82) {
-					c = 100 + (num - 100) / 2;
+					c = 100 + (num - 82) / 2;
 				}
 			} else if (age >= 28 && age <= 30) {
 				if (num < 41) {
@@ -1357,7 +1357,7 @@ public class XlglPhysicalController {
 					}
 					c = 100 - s;
 				} else if (num > 80) {
-					c = 100 + (num - 100) / 2;
+					c = 100 + (num - 80) / 2;
 				}
 			} else if (age >= 31 && age <= 33) {
 				if (num < 39) {
@@ -1371,7 +1371,7 @@ public class XlglPhysicalController {
 						s = t * 5 / 4 + 1;
 					}
 					c = 85 - s;
-				} else if (num > 65 && num <= 80) {
+				} else if (num > 63 && num <= 78) {
 					int t = 80 - num;
 					int d = t * 5 % 5;
 					if (d == 0) {
@@ -1380,8 +1380,8 @@ public class XlglPhysicalController {
 						s = t * 5 / 5 + 1;
 					}
 					c = 100 - s;
-				} else if (num > 80) {
-					c = 100 + (num - 80) / 2;
+				} else if (num > 78) {
+					c = 100 + (num - 78) / 2;
 				}
 			} else if (age >= 34 && age <= 36) {
 				if (num < 35) {
