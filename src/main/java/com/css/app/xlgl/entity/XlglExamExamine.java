@@ -76,7 +76,14 @@ public class XlglExamExamine implements Serializable {
 	private Date examineMakeUpEndDate;
 	//补考开始时间
 	private Date examineMakeUpStartDate;
-	
+	// 总人数
+	private Integer queryTotal;
+	//每个试卷的参考人数
+	private Integer number;
+	//补考考试结束时间
+	private Date makeUpEndDate;
+	//补考考试开始时间
+	private Date makeUpStartDate;
 
 	/**
 	 * 设置：
@@ -323,6 +330,30 @@ public class XlglExamExamine implements Serializable {
 	}
 	public void setExamineMakeUpStartDate(Date examineMakeUpStartDate) {
 		this.examineMakeUpStartDate = examineMakeUpStartDate;
+	}
+	public Integer getQueryTotal() {
+		return queryTotal;
+	}
+	public void setQueryTotal(Integer queryTotal) {
+		this.queryTotal = queryTotal;
+	}
+	public Integer getNumber() {
+		return number;
+	}
+	public void setNumber(Integer number) {
+		this.number = number;
+	}
+	public Date getMakeUpEndDate() {
+		return makeUpEndDate;
+	}
+	public void setMakeUpEndDate(Date makeUpEndDate) {
+		this.makeUpEndDate = makeUpEndDate;
+	}
+	public Date getMakeUpStartDate() {
+		return makeUpStartDate;
+	}
+	public void setMakeUpStartDate(Date makeUpStartDate) {
+		this.makeUpStartDate = makeUpStartDate;
 	}
 	
 

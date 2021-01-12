@@ -178,6 +178,7 @@ public class XlglCarsManagerController {
 						file1.setFileName(fileName);
 						file1.setFileServerFormatId(formatId);
 						file1.setCreatedTime(new Date());
+						file1.setUploadUser(CurrentUser.getUsername());
 						xlglCarsManagerService.save(file1);
 					}
 				}

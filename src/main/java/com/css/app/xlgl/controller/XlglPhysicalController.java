@@ -708,13 +708,9 @@ public class XlglPhysicalController {
 	public JSONObject getManSumCore(int age, int up, int sit, int sRun, int tRun) {
 		JSONObject jsonObject = new JSONObject();
 		int y = getManCore(age, up);// 男子引体向上
-		System.out.println(y);
 		int z = getManywqz(age, sit);// 男子仰卧起坐
-		System.out.println(z);
 		int s = getManSxRun(age, sRun);// 男子 30*2蛇形跑
-		System.out.println(s);
 		int r = getManRunCore(age, tRun);// 男子3000米跑
-		System.out.println(r);
 		int sum = y + r + s + z;
 		jsonObject.put("y", y);
 		jsonObject.put("z", z);
@@ -737,13 +733,9 @@ public class XlglPhysicalController {
 	public JSONObject getWomanSumCore(int age, int up, int sit, int sRun, int tRun) {
 		JSONObject jsonObject = new JSONObject();
 		int o = getWoMenDgqbCore(age, up);// 女子单杠曲臂悬垂
-		System.out.println(o);
 		int m = getWomenCore(age, sit);// 女子仰卧起坐
-		System.out.println(m);
 		int a = getWomenRun(age, sRun);// 女子蛇形跑
-		System.out.println(a);
 		int w = getWomen3Run(age, tRun);// 女子3000米跑
-		System.out.println(w);
 		jsonObject.put("o", o);
 		jsonObject.put("m", m);
 		jsonObject.put("a", a);
@@ -4026,7 +4018,7 @@ public class XlglPhysicalController {
 					}
 					c = 100 - s;
 				} else if (num > 69) {
-					c = (num - 69) / 2 + num;
+					c = (num - 69) / 2 + 100;
 				}
 			} else if (age >= 28 && age <= 30) {
 				if (num < 36) {
@@ -4068,7 +4060,7 @@ public class XlglPhysicalController {
 					}
 					c = 100 - s;
 				} else if (num > 67) {
-					c = (num - 67) / 2 + num;
+					c = (num - 67) / 2 + 100;
 				}
 			} else if (age >= 31 && age <= 33) {
 				if (num < 34) {
@@ -4110,7 +4102,7 @@ public class XlglPhysicalController {
 					}
 					c = 100 - s;
 				} else if (num > 66) {
-					c = (num - 66) / 2 + num;
+					c = (num - 66) / 2 + 100;
 				}
 			} else if (age >= 34 && age <= 36) {
 				if (num < 32) {
@@ -4143,7 +4135,7 @@ public class XlglPhysicalController {
 					}
 					c = 100 - s;
 				} else if (num > 64) {
-					c = (num - 64) / 2 + num;
+					c = (num - 64) / 2 + 100;
 				}
 			} else if (age >= 37 && age <= 39) {
 				if (num < 29) {
@@ -4194,7 +4186,7 @@ public class XlglPhysicalController {
 					}
 					c = 100 - s;
 				} else if (num > 63) {
-					c = (num - 63) / 2 + num;
+					c = (num - 63) / 2 + 100;
 				}
 			} else if (age >= 40 && age <= 42) {
 				if (num < 27) {
@@ -4245,7 +4237,7 @@ public class XlglPhysicalController {
 					}
 					c = 100 - s;
 				} else if (num > 62) {
-					c = (num - 62) / 2 + num;
+					c = (num - 62) / 2 + 100;
 				}
 			} else if (age >= 43 && age <= 45) {
 				if (num < 24) {
@@ -4287,7 +4279,7 @@ public class XlglPhysicalController {
 					}
 					c = 100 - s;
 				} else if (num > 61) {
-					c = (num - 61) / 2 + num;
+					c = (num - 61) / 2 + 100;
 				}
 			} else if (age >= 46 && age <= 48) {
 				if (num < 22) {
@@ -4329,7 +4321,7 @@ public class XlglPhysicalController {
 					}
 					c = 100 - s;
 				} else if (num > 60) {
-					c = (num - 60) / 2 + num;
+					c = (num - 60) / 2 + 100;
 				}
 			} else if (age >= 49 && age <= 51) {
 				if (num < 19) {
@@ -4398,7 +4390,7 @@ public class XlglPhysicalController {
 					}
 					c = 100 - s;
 				} else if (num > 59) {
-					c = (num - 59) / 2 + num;
+					c = (num - 59) / 2 + 100;
 				}
 			} else if (age >= 52 && age <= 54) {
 				if (num < 17) {
@@ -4458,7 +4450,7 @@ public class XlglPhysicalController {
 					}
 					c = 100 - s;
 				} else if (num > 57) {
-					c = (num - 57) / 2 + num;
+					c = (num - 57) / 2 + 100;
 				}
 			} else if (age >= 55 && age <= 57) {
 				if (num < 15) {
@@ -4500,7 +4492,7 @@ public class XlglPhysicalController {
 					}
 					c = 100 - s;
 				} else if (num > 56) {
-					c = (num - 56) / 2 + num;
+					c = (num - 56) / 2 + 100;
 				}
 			} else if (age >= 58 && age <= 60) {
 				if (num < 13) {
@@ -4587,7 +4579,7 @@ public class XlglPhysicalController {
 					}
 					c = 100 - s;
 				} else if (num > 55) {
-					c = (num - 55) / 2 + num;
+					c = (num - 55) / 2 + 100;
 				}
 			}
 		}
@@ -5742,12 +5734,11 @@ public class XlglPhysicalController {
 				}
 				c = 70 - s;
 			} else if (m < 1553 && m >= 1438) {
-				int t = m - 40 - 1438;
-				int d = t * 5 % 15;
-				if (d == 0) {
-					s = t * 5 / 15;
+				int t = m  - 1438;
+				if (t == 0) {
+					s = 0;
 				} else {
-					s = t * 5 / 15 + 1;
+					s = t / 5 ;
 				}
 				c = 95 - s;
 			} else if (m < 1438 && m >= 1413) {

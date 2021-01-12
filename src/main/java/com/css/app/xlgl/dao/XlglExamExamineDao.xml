@@ -45,35 +45,52 @@
 	</select>
 
 	<select id="queryListAndTotal" resultType="com.css.app.xlgl.entity.XlglExamExamine">
-		select x.*,
-		case
-		when
-		x.OVER_STATUS = '0' and m.ISNOTEXAM= '0'
-		then '2'
-		when x.OVER_STATUS = '0' and m.ISNOTEXAM= '1'
-		then '1'
-		when x.OVER_STATUS = '1' and m.ISNOTEXAM= '0'
-		then '3'
-		when x.OVER_STATUS = '1' and m.ISNOTEXAM= '1'
-		then '1'
-		when x.OVER_STATUS = '1' and m.ISNOTEXAM= '1'
-		then '1'
-		when x.OVER_STATUS = '2' and m.ISNOTEXAM= '0'
-		then '2'
-		when x.OVER_STATUS = '2' and m.ISNOTEXAM= '1'
-		then '1'
-		when x.OVER_STATUS = '99'
-		then '2'
-		else '4' end as UserStatus ,
-		u.id as MakeupId ,	
-		u.MAKEUP_START_DATE as examineMakeUpStartDate ,
-		u.MAKEUP_END_DATE as examineMakeUpEndDate
-		from XLGL_EXAM_EXAMINE x
-
-		left  join XLGL_EXAM_MAIN_ANSWER m on x.id =
-		m.EXAMINE_ID
-		
-		left  join XLGL_EXAM_EXAMINE_MAKEUP u on x.id  = u.EXAMINE_ID
+		select 
+			x.*,
+			q.queryTotal,
+			w.number,
+			p.MAKEUP_START_DATE,
+			p.MAKEUP_END_DATE,
+			p.id as makeupId 
+		from 
+			XLGL_EXAM_EXAMINE x
+		left join
+		(	select
+			IFNULL(count(EXAMINE_ID),0) as queryTotal ,
+			x.EXAMINE_ID
+		from
+			XLGL_EXAM_MAIN_ANSWER x
+		left join  
+			BASE_APP_USER u on x.REPLY_USER_ID = u.id
+		where
+			x.STATUS = '0' and (u.sfyx is null or u.sfyx = '0') group by x.EXAMINE_ID
+		) q
+			on q.EXAMINE_ID = x.id 
+		left join
+		(	select
+        		IFNULL(count(REPLY_USER_ID), 0) as number ,x.EXAMINE_ID
+			from
+        		XLGL_EXAM_MAIN_ANSWER x
+			left join 
+				BASE_APP_USER u
+			on
+      		    x.REPLY_USER_ID = u.id
+		where 1 = 1
+			 and
+       		(
+                u.sfyx is null
+             or u.sfyx  = '0'
+        	)
+      		<if test="isNotExam != null and isNotExam != ''">
+			and x.ISNOTEXAM = #{isNotExam}
+			</if>
+			group by x.EXAMINE_ID
+		) w
+			on w.EXAMINE_ID = x.id
+		left join
+			XLGL_EXAM_EXAMINE_MAKEUP p
+		on
+		p.EXAMINE_ID = x.id
 		where 1=1
 		<if test="issueStatus != null and issueStatus !=''">
 			and x.ISSUE_STATUS = #{issueStatus}
