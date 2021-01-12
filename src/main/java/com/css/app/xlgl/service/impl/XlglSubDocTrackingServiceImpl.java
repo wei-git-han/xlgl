@@ -206,8 +206,8 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 	}
 
 	@Override
-	public int queryAllWcByInfoIdAndOrgId(String infoId,String orgId){
-		return xlglSubDocTrackingDao.queryAllWcByInfoIdAndOrgId(infoId,orgId);
+	public int queryAllWcByInfoIdAndOrgId(String infoId,String orgId,String year){
+		return xlglSubDocTrackingDao.queryAllWcByInfoIdAndOrgId(infoId,orgId,year);
 	}
 
 

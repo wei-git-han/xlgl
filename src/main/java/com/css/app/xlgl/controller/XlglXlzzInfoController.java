@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.css.base.utils.*;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -42,11 +43,6 @@ import com.css.app.xlgl.service.XlglSubDocInfoService;
 import com.css.app.xlgl.service.XlglSubDocTrackingService;
 import com.css.app.xlgl.service.XlglXlzzInfoService;
 import com.css.base.filter.SSOAuthFilter;
-import com.css.base.utils.CurrentUser;
-import com.css.base.utils.GwPageUtils;
-import com.css.base.utils.PageUtils;
-import com.css.base.utils.Response;
-import com.css.base.utils.UUIDUtils;
 import com.github.pagehelper.PageHelper;
 
 import cn.com.css.filestore.impl.HTTPFile;
@@ -87,6 +83,9 @@ public class XlglXlzzInfoController {
 	private XlglConfirmService xlglConfirmService;
 	@Autowired
 	private XlglHuijianService xlglHuijianService;
+	int yxsum = 0;// 总的有效人数
+
+	List<BaseAppOrgan> allDeptlist = new ArrayList<>();
 
 	/**
 	 * 列表
@@ -954,9 +953,11 @@ public class XlglXlzzInfoController {
 		int count1 = 0;// 每一个课程在有效期内所有参训人员相加
 		JSONArray jsonArray = new JSONArray();
 		JSONObject jsonObject1 = new JSONObject();
-		List<BaseAppOrgan> allDepts = baseAppOrganService.queryAllDeptIds();
-		if (allDepts != null && allDepts.size() > 0) {
-			for (BaseAppOrgan baseAppOrgan : allDepts) {
+		if(allDeptlist.size() < 0){
+			allDeptlist = baseAppOrganService.queryAllDeptIds();
+		}
+		if (allDeptlist != null && allDeptlist.size() > 0) {
+			for (BaseAppOrgan baseAppOrgan : allDeptlist) {
 				String CurrentOrganId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
 				JSONObject jsonObject = new JSONObject();
 				String organId = baseAppOrgan.getId();
@@ -1314,9 +1315,11 @@ public class XlglXlzzInfoController {
 	public void getAllDeptDoneInfo(String infoId) {
 		List listAll = new ArrayList();
 		JSONObject json = new JSONObject();
-		List<BaseAppOrgan> list = baseAppOrganService.queryAllDeptIds();
-		if (list != null && list.size() > 0) {
-			for (BaseAppOrgan baseAppOrgan : list) {
+		if(allDeptlist.size() < 0){
+			allDeptlist = baseAppOrganService.queryAllDeptIds();
+		}
+		if (allDeptlist != null && allDeptlist.size() > 0) {
+			for (BaseAppOrgan baseAppOrgan : allDeptlist) {
 				JSONObject jsonObject = new JSONObject();
 				String orgId = baseAppOrgan.getId();
 				String orgName = baseAppOrgan.getName();
@@ -1335,15 +1338,18 @@ public class XlglXlzzInfoController {
 	@ResponseBody
 	@RequestMapping("/getAllDeptAllDoneInfo")
 	public void getAllDeptAllDoneInfo(String allInfoIds) {
+		String  year = String.valueOf(DateUtil.getCurrentYear());
 		JSONObject json = new JSONObject();
 		List listAll = new ArrayList();
-		List<BaseAppOrgan> list = baseAppOrganService.queryAllDeptIds();
-		if (list != null && list.size() > 0) {
-			for (BaseAppOrgan baseAppOrgan : list) {
+		if(allDeptlist.size() < 0){
+			allDeptlist = baseAppOrganService.queryAllDeptIds();
+		}
+		if (allDeptlist != null && allDeptlist.size() > 0) {
+			for (BaseAppOrgan baseAppOrgan : allDeptlist) {
 				JSONObject jsonObject = new JSONObject();
 				String orgId = baseAppOrgan.getId();
 				String orgName = baseAppOrgan.getName();
-				String f = getSum(orgId);
+				String f = getSum(orgId,year);
 				jsonObject.put("name", orgName);
 				if(StringUtils.isNotBlank(f)){
 					jsonObject.put("wcl", f);
@@ -1359,23 +1365,25 @@ public class XlglXlzzInfoController {
 
 	}
 
-	public String getSum(String orgId) {
-		int sum = 0;// 总的有效人数
+	public String getSum(String orgId,String year) {
 		int cxNum = 0;
-		List<XlglSubDocInfo> list = xlglSubDocInfoService.queryByDeptId(orgId);
+		List<XlglSubDocInfo> list = xlglSubDocInfoService.queryByDeptId(orgId,year);
 		if(list != null && list.size() > 0){
 			for(XlglSubDocInfo xlglSubDocInfo : list){
 				String infoId = xlglSubDocInfo.getInfoId();
-				int num = xlglSubDocTrackingService.queryAllWcByInfoIdAndOrgId(infoId,orgId);//查出某视频某单位参训完成情况
+				int num = xlglSubDocTrackingService.queryAllWcByInfoIdAndOrgId(infoId,orgId,year);//查出某视频某单位参训完成情况
 				cxNum += num;
 			}
 		}
-		sum = baseAppUserService.queryListAllYxCount() * list.size();
+		//设置全局变量，不用每次都查询
+		if(yxsum < 0){
+			yxsum = baseAppUserService.queryListAllYxCount() * list.size();
+		}
 		float DoneLv = 0.0f;
 		String raio = "";
-		if (sum > 0) {
+		if (yxsum > 0) {
 			DecimalFormat format = new DecimalFormat("0.00");
-			raio = format.format(((float) cxNum / sum) * 100);
+			raio = format.format(((float) cxNum / yxsum) * 100);
 		}
 
 		return raio;

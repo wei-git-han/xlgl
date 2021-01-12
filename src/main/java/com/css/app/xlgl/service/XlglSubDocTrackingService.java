@@ -90,5 +90,5 @@ public interface XlglSubDocTrackingService {
 	XlglSubDocTracking queryDjtInfo(String infoId,String userId);
     List<XlglSubDocTracking>   queryMsgRemind();
 
-    int queryAllWcByInfoIdAndOrgId(String infoId,String orgId);
+    int queryAllWcByInfoIdAndOrgId(String infoId,String orgId,String year);
 }
