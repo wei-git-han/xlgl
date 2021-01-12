@@ -46,5 +46,5 @@ public interface XlglSubDocInfoService {
 
 	void deleteByInfoId(String id);
 
-	List<XlglSubDocInfo> queryByDeptId(String orgId);
+	List<XlglSubDocInfo> queryByDeptId(String orgId,String year);
 }

@@ -95,8 +95,8 @@ public class XlglSubDocInfoServiceImpl implements XlglSubDocInfoService {
 	}
 
 	@Override
-	public List<XlglSubDocInfo> queryByDeptId(String orgId){
-		return xlglSubDocInfoDao.queryByDept(orgId);
+	public List<XlglSubDocInfo> queryByDeptId(String orgId,String year){
+		return xlglSubDocInfoDao.queryByDept(orgId,year);
 	}
 
 }

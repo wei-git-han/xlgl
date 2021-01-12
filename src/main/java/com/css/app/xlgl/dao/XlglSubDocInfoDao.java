@@ -44,6 +44,6 @@ public interface XlglSubDocInfoDao extends BaseDao<XlglSubDocInfo> {
     @Delete("delete from XLGL_SUB_DOC_TRACKING where INFO_ID = #{0}")
     void deleteByInfoId(String id);
 
-    @Select("select * from XLGL_SUB_DOC_INFO where SUB_DEPT_ID = #{0}")
-    List<XlglSubDocInfo> queryByDept(String orgId);
+    @Select("select * from XLGL_SUB_DOC_INFO where SUB_DEPT_ID = #{0} and CREATED_TIME like '%'||#{1}||'%'")
+    List<XlglSubDocInfo> queryByDept(String orgId,String year);
 }
