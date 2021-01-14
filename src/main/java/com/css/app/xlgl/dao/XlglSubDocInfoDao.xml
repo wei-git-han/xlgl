@@ -193,7 +193,7 @@ left join
                 on
                         g.sub_dept_id=h.id
         )
-        e on a.INFO_ID = e.info_id
+        e on a.INFO_ID = e.info_id left join (select * from XLGL_PICTURE where PICTURE_TYPE = '4' ) c on a.INFO_ID = c.FILE_ID
 where
         1=1 and a.IS_SEND = '0'
         <if test="orgId != null and orgId != ''">

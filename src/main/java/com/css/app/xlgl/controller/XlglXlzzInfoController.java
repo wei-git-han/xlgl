@@ -1263,7 +1263,7 @@ public class XlglXlzzInfoController {
 		//int ycx = xlglSubDocTrackingService.queryCxCount(map);// 已参训的大讲堂数和日常军事训练数(已完成),日常军事训练的已报名就代表已参训
 		//int bk = xlglSubDocTrackingService.queryBkCount(map);// 延后参训数（补考数）
 		long endTime = System.currentTimeMillis();
-		System.out.println("app/base/user/userInfo接口执行时间："+(endTime-starTime)+"毫秒!!!!!!!!!");
+		System.out.println("app/xlgl/xlglxlzzinfo/getCxwcl接口执行时间："+(endTime-starTime)+"毫秒!!!!!!!!!");
 		Response.json(jsonObject);
 	}
 
