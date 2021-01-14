@@ -1043,6 +1043,7 @@ public class XlglXlzzInfoController {
 	@ResponseBody
 	@RequestMapping("/getDjtList")
 	public void getDjtList(Integer page, Integer limit, String type, String flag, String search) {
+		long starTime = System.currentTimeMillis();
 		Map<String, Object> map1 = new HashMap<>();
 		String userId = CurrentUser.getUserId();
 		JSONArray jsonArray = new JSONArray();
@@ -1122,6 +1123,8 @@ public class XlglXlzzInfoController {
 		// }
 		// }
 		PageUtils pageUtil = new PageUtils(listInfoIds);
+		long endTime = System.currentTimeMillis();
+		System.out.println("app/xlgl/xlglxlzzinfo/getDjtList接口执行时间："+(endTime-starTime)+"毫秒!!!!!!!!!");
 		// pageUtil.setTotalCount(sum);
 		Response.json("page", pageUtil);
 		// Response.json("result", jsonArray);
