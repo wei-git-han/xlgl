@@ -48,8 +48,8 @@ public class XlglUrgentNoticeServiceImpl implements XlglUrgentNoticeService {
 	}
 
 	@Override
-	public XlglUrgentNotice queryNotice(){
-		return xlglUrgentNoticeDao.queryNotice();
+	public XlglUrgentNotice queryNotice(String orgId){
+		return xlglUrgentNoticeDao.queryNotice(orgId);
 	}
 
 	@Override
