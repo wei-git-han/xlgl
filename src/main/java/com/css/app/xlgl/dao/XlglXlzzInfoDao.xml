@@ -23,7 +23,7 @@
 
 	<select id="queryByType" resultType="com.css.app.xlgl.entity.XlglXlzzInfo">
 		select
-		*
+		b.*,f.PICTURE_ID as picturePath
 		from
 		XLGL_XLZZ_INFO b
 		left join
