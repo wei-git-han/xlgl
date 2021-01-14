@@ -111,8 +111,6 @@ public class OfdTransferUtil{
 		try {
 			if (StringUtils.isNotBlank(filePath)) {
 				System.out.println("**********【单文件转换】开始转换（convertLocalFileToOFD）***********" + System.currentTimeMillis());
-				String ofdName = System.currentTimeMillis() + ".ofd";
-				String ofdPath = tmpFilePath + "/" + ofdName;
 //				ha.officeToOFD(new File(filePath), new FileOutputStream(ofdPath));
 //				ha.close();
 				PackEntry filePack = PackEntry.wrap(new FileInputStream(filePath), MessageDigest.getInstance("MD5"));
@@ -120,6 +118,9 @@ public class OfdTransferUtil{
 				// 获取文件的后缀
 				File file = new File(filePath);
 				String filename = file.getName();
+				String fileName = filename.substring(0,filename.lastIndexOf("."));
+				String ofdName = fileName+"-"+System.currentTimeMillis() + ".ofd";
+				String ofdPath = tmpFilePath + "/" + ofdName;
 				String suffix = filename.substring(filename.lastIndexOf(".") + 1);
 	            // 2018-12-26 数科的转版服务要求知晓待转换文件的格式，将suffix传递过去
 				packet.file(new Common("流式文件转版式文件", suffix, 0, filePack));

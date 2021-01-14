@@ -390,12 +390,13 @@ public class XlglNoticeController {
 		String formatId = null;// 版式文件id
 		String originalFilename = file.getOriginalFilename();
 		String fileType = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
+		String fileName = originalFilename.substring(0,originalFilename.lastIndexOf("."));
 		try {
 			if (!StringUtils.equals("ofd", fileType)) {
 				streamId = FileBaseUtil.fileServiceUpload(file);
 				HTTPFile hf = new HTTPFile(streamId);
 				try {
-					String path = appConfig.getLocalFilePath() + UUIDUtils.random() + "." + hf.getSuffix();
+					String path = appConfig.getLocalFilePath() + fileName+ "." + hf.getSuffix();
 					try {
 						FileUtils.moveFile(new File(hf.getFilePath()), new File(path));
 					} catch (IOException e) {
@@ -423,9 +424,9 @@ public class XlglNoticeController {
 					}
 			}
 			 HTTPFile httpFile=HTTPFile.save( file.getInputStream(),file.getOriginalFilename());
-			// String filePath = httpFile.getFilePath();
+			 String filePath = httpFile.getFilePath();
 			 json.put("fileName", originalFilename);
-			 json.put("filePath", formatDownPath);
+			 json.put("filePath", filePath);
 			 json.put("fileid", retFormatId);
 			 Response.json(json);
 		} catch (IOException e) {
