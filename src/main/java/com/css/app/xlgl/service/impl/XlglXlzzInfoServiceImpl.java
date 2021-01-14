@@ -26,6 +26,11 @@ public class XlglXlzzInfoServiceImpl implements XlglXlzzInfoService {
 	public List<XlglXlzzInfo> queryList(Map<String, Object> map){
 		return xlglXlzzInfoDao.queryList(map);
 	}
+
+	@Override
+	public List<XlglXlzzInfo> queryByType(Map<String, Object> map){
+		return xlglXlzzInfoDao.queryByType(map);
+	}
 	
 	@Override
 	public void save(XlglXlzzInfo xlglXlzzInfo){

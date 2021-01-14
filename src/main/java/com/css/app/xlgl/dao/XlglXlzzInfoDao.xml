@@ -21,6 +21,30 @@
 		</if>
 	</select>
 
+	<select id="queryByType" resultType="com.css.app.xlgl.entity.XlglXlzzInfo">
+		select
+		*
+		from
+		XLGL_XLZZ_INFO b
+		left join
+		(
+		select * from XLGL_PICTURE where PICTURE_TYPE = '4'
+		)
+		f
+		on
+		b.id = f.FILE_ID  where 1=1
+		<if test="search != null and search !=''">
+			and b.TITLE like '%'||#{search}||'%'
+		</if>
+		<if test="xltype != null and xltype !=''">
+			and b.XLTYPE = #{xltype}
+		</if>
+		order by b.CREATE_TIME desc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
 	<select id="queryDelete" resultType="com.css.app.xlgl.entity.XlglXlzzInfo">
 		select * from XLGL_XLZZ_INFO where 1 = 1
 		<if test="id != null and id !=''">

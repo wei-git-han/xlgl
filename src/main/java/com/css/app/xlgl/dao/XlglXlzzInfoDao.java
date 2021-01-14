@@ -29,5 +29,7 @@ public interface XlglXlzzInfoDao extends BaseDao<XlglXlzzInfo> {
 
     List<XlglXlzzInfo> queryBySort(Map<String,Object> map);
 
+    List<XlglXlzzInfo> queryByType(Map<String,Object> map);
+
     XlglXlzzInfo queryDelete(Map<String,Object> map);
 }

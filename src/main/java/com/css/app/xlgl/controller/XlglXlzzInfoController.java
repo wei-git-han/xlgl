@@ -93,32 +93,35 @@ public class XlglXlzzInfoController {
 	@ResponseBody
 	@RequestMapping("/list")
 	public void list(Integer page, Integer pagesize, String search, String xltype) {
+		long starTime = System.currentTimeMillis();
 		Map<String, Object> map = new HashMap<>();
 		map.put("search", search);
 		map.put("xltype", xltype);
 		PageHelper.startPage(page, pagesize);
 
 		// 查询列表数据
-		List<XlglXlzzInfo> xlglXlzzInfoList = xlglXlzzInfoService.queryList(map);
-		if (xlglXlzzInfoList != null && xlglXlzzInfoList.size() > 0) {
-			for (XlglXlzzInfo xlglXlzzInfo : xlglXlzzInfoList) {
-				xlglXlzzInfo.setInfoId(xlglXlzzInfo.getId());
-				Map<String, Object> hashmap = new HashMap<String, Object>();
-				hashmap.put("id", xlglXlzzInfo.getId());
-				hashmap.put("type", "4");
-				List<XlglPicture> queryList = xlglPictureService.queryListByType(hashmap);
-				if (queryList.size() > 0) {
-					if (queryList.get(0).getFileId().equals(xlglXlzzInfo.getId())) {
-						xlglXlzzInfo.setPicturePath(queryList.get(0).getPictureId());
-					}
-				}
-			}
-		}
+		List<XlglXlzzInfo> xlglXlzzInfoList = xlglXlzzInfoService.queryByType(map);
+//		if (xlglXlzzInfoList != null && xlglXlzzInfoList.size() > 0) {
+//			for (XlglXlzzInfo xlglXlzzInfo : xlglXlzzInfoList) {
+//				xlglXlzzInfo.setInfoId(xlglXlzzInfo.getId());
+//				Map<String, Object> hashmap = new HashMap<String, Object>();
+//				hashmap.put("id", xlglXlzzInfo.getId());
+//				hashmap.put("type", "4");
+//				List<XlglPicture> queryList = xlglPictureService.queryListByType(hashmap);
+//				if (queryList.size() > 0) {
+//					if (queryList.get(0).getFileId().equals(xlglXlzzInfo.getId())) {
+//						xlglXlzzInfo.setPicturePath(queryList.get(0).getPictureId());
+//					}
+//				}
+//			}
+//		}
 
 		// PageUtils pageUtil = new PageUtils(xlglXlzzInfoList);
 		// Response.json("page",pageUtil);
 
 		GwPageUtils pageUtil = new GwPageUtils(xlglXlzzInfoList);
+		long endTime = System.currentTimeMillis();
+		System.out.println("app/xlgl/xlglxlzzinfo/list接口执行时间："+(endTime-starTime)+"毫秒!!!!!!!!!");
 		Response.json(pageUtil);
 	}
 
