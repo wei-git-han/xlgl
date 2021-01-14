@@ -1223,6 +1223,7 @@ public class XlglXlzzInfoController {
 	@ResponseBody
 	@RequestMapping("/getCxwcl")
 	public void getCxwcl() {
+		long starTime = System.currentTimeMillis();
 		JSONObject jsonObject = new JSONObject();
 		Map<String, Object> map = new HashMap<>();
 		String userId = CurrentUser.getUserId();
@@ -1231,17 +1232,38 @@ public class XlglXlzzInfoController {
 		String year = sd.format(date);
 		map.put("userId", userId);
 		map.put("year", year);
-		int count = xlglSubDocTrackingService.queryCurrentYear(map);// 本年度大讲堂数+日常训练数
-		int ycx = xlglSubDocTrackingService.queryCxCount(map);// 已参训的大讲堂数和日常军事训练数(已完成),日常军事训练的已报名就代表已参训
-		int bk = xlglSubDocTrackingService.queryBkCount(map);// 延后参训数（补考数）
-		double f = 0;
-		if (count > 0) {
-			f =  ((new BigDecimal((float) ycx / count).doubleValue()) * 100);
+		int count = 0;
+		int ycx = 0;
+		int bk = 0;
+		List<XlglSubDocTracking> list = xlglSubDocTrackingService.queryList(map);
+		if(list != null && list.size() > 0){
+			for(int i = 0;i<list.size();i++){
+				XlglSubDocTracking xlglSubDocTracking = list.get(i);
+				if("1".equals(xlglSubDocTracking.getIsWork())){
+					ycx += 1;
+				}else if("2".equals(xlglSubDocTracking.getBaoming())){
+					bk += 1;
+				}
+			}
+			count = list.size();
+			double f = 0;
+			if (count > 0) {
+				f =  ((new BigDecimal((float) ycx / count).doubleValue()) * 100);
+			}
+			String wcl = String.valueOf(f);
+			jsonObject.put("wcl", wcl.substring(0,wcl.indexOf(".")+2));
+			jsonObject.put("ywc", ycx);
+			jsonObject.put("bk", bk);
+		}else {
+			jsonObject.put("wcl", "0");
+			jsonObject.put("ywc", ycx);
+			jsonObject.put("bk", bk);
 		}
-		String wcl = String.valueOf(f);
-		jsonObject.put("wcl", wcl.substring(0,wcl.indexOf(".")+2));
-		jsonObject.put("ywc", ycx);
-		jsonObject.put("bk", bk);
+		//int count = xlglSubDocTrackingService.queryCurrentYear(map);// 本年度大讲堂数+日常训练数
+		//int ycx = xlglSubDocTrackingService.queryCxCount(map);// 已参训的大讲堂数和日常军事训练数(已完成),日常军事训练的已报名就代表已参训
+		//int bk = xlglSubDocTrackingService.queryBkCount(map);// 延后参训数（补考数）
+		long endTime = System.currentTimeMillis();
+		System.out.println("app/base/user/userInfo接口执行时间："+(endTime-starTime)+"毫秒!!!!!!!!!");
 		Response.json(jsonObject);
 	}
 

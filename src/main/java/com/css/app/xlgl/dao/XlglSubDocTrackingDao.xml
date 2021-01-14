@@ -132,6 +132,14 @@
         <select id="queryList" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
             select * from XLGL_SUB_DOC_TRACKING  where 1=1
 
+            <if test="userId != null and userId !=''">
+                and RECEIVER_ID =#{userId}
+            </if>
+
+            <if test="year != null and year !=''">
+                and CREATED_TIME like '%'||#{year}||'%'
+            </if>
+
             <if test="INFO_ID != null and INFO_ID !=''">
                 and INFO_ID = #{INFO_ID}
             </if>
