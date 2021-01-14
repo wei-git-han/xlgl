@@ -75,6 +75,8 @@ public interface BaseAppOrganService {
 	List<BaseAppOrgan> queryPerDept(String deptId);
 
 	BaseAppOrgan queryDeptNameByUserId(String orgId);
+
+	BaseAppOrgan queryDeptByUserId(Map<String,Object> map);
 	
 	List<String> queryListByTREEPATH(String orgId);
 	

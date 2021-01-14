@@ -18,8 +18,8 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface XlglUrgentNoticeDao extends BaseDao<XlglUrgentNotice> {
 
-    @Select("select * from XLGL_URGENT_NOTICE")
-    XlglUrgentNotice queryNotice();
+    @Select("select * from XLGL_URGENT_NOTICE where RE_DEPT_ID like '%'||#{0}||'%'")
+    XlglUrgentNotice queryNotice(String orgId);
 
     @Delete("delete from XLGL_URGENT_NOTICE")
     void deleteAll();

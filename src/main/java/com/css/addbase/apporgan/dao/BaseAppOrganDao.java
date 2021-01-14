@@ -71,6 +71,9 @@ public interface BaseAppOrganDao extends BaseDao<BaseAppOrgan> {
 
 	@Select("select * from BASE_APP_ORGAN where id = #{0}")
 	BaseAppOrgan queryDeptNameByUserId(String orgId);
+
+
+	BaseAppOrgan queryDeptByUserId(Map<String,Object> map);
 	
 	List<String> queryListByTREEPATH(String orgId);
 	

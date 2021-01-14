@@ -62,24 +62,11 @@ public class XlglUrgentNoticeController {
 	@ResponseBody
 	@RequestMapping("/info")
 	public void info() {
-		Boolean b = false;
 		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
-		XlglUrgentNotice xlglUrgentNotice = xlglUrgentNoticeService.queryNotice();
+		XlglUrgentNotice xlglUrgentNotice = xlglUrgentNoticeService.queryNotice(orgId);
 		if (xlglUrgentNotice != null) {
-			String reDeptId = xlglUrgentNotice.getReDeptId();
-			String[] deptIds = reDeptId.split(",");
-			for (String deptId : deptIds) {
-				if (orgId.equals(deptId)) {
-					b = true;
-					break;
-				}
-			}
-		}
-
-		if (b) {
 			Response.json("xlglUrgentNotice", xlglUrgentNotice);
 		}
-
 	}
 	
 	/**
