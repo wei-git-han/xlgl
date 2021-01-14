@@ -8,9 +8,9 @@
 	</select>
 
 	<select id="queryAllInfos" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
-		select * from XLGL_SUB_DOC_TRACKING where 1=1 and XLTYPE = '0'
+		select *,b.creatorName from XLGL_SUB_DOC_TRACKING t left join (select *,CREATOR_NAME as creatorName from XLGL_XLZZ_INFO) b on t.INFO_ID = b.ID where 1=1 and t.XLTYPE = '0'
 		<if test="userId != null and userId !=''">
-			and RECEIVER_ID = #{userId}
+			and t.RECEIVER_ID = #{userId}
 		</if>
 		<!--<if test='type == "0"'>-->
 		<!--and EXERCISE_TIME > to_date(#{time},'yyyy-mm-dd HH24:mi:ss')-->
@@ -19,32 +19,32 @@
 		<!--and EXERCISE_TIME &lt; to_date(#{time},'yyyy-mm-dd HH24:mi:ss')-->
 		<!--</if>-->
 
-		and BAOMING = '1' and IS_WORK = '0'
+		and t.BAOMING = '1' and t.IS_WORK = '0'
 
 		<if test="search != null and search !=''">
-			and TITLE  like '%'||#{search}||'%'
+			and t.TITLE  like '%'||#{search}||'%'
 		</if>
 		<!--<if test="offset != null and limit != null">-->
 			<!--limit #{offset}, #{limit}-->
 		<!--</if>-->
 
 		union  all
-		select * from XLGL_SUB_DOC_TRACKING where 1=1 and XLTYPE = '0'
+		select *,b.creatorName from XLGL_SUB_DOC_TRACKING t left join (select *, CREATOR_NAME AS creatorName from XLGL_XLZZ_INFO) b on t.INFO_ID = b.id where 1=1 and t.XLTYPE = '0'
 		<if test="userId != null and userId !=''">
-			and RECEIVER_ID = #{userId}
+			and t.RECEIVER_ID = #{userId}
 		</if>
-		and BAOMING = '2'
+		and t.BAOMING = '2'
 		<if test="search != null and search !=''">
-			and TITLE  like '%'||#{search}||'%'
+			and t.TITLE  like '%'||#{search}||'%'
 		</if>
 
 
 		UNION  ALL
-		select * from XLGL_SUB_DOC_TRACKING where 1=1 and XLTYPE = '0'
+		select *,b.creatorName from XLGL_SUB_DOC_TRACKING t left join (select *, CREATOR_NAME AS creatorName from XLGL_XLZZ_INFO) b on t.INFO_ID = b.id where 1=1 and t.XLTYPE = '0'
 		<if test="userId != null and userId !=''">
-			and RECEIVER_ID = #{userId}
+			and t.RECEIVER_ID = #{userId}
 		</if>
-		AND BAOMING = '0' and IS_WORK = '0' AND EXERCISE_TIME &lt; to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
+		AND t.BAOMING = '0' and t.IS_WORK = '0' AND t.EXERCISE_TIME &lt; to_date(#{time},'yyyy-mm-dd HH24:mi:ss')
         order by CREATED_TIME desc
 		<if test="offset != null and limit != null">-->
 			limit #{offset}, #{limit}
@@ -52,19 +52,19 @@
         </select>
 
         <select id="queryAllInfoHistory" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
-            select * from XLGL_SUB_DOC_TRACKING where 1=1 and XLTYPE = '0'
+            select *,b.creatorName from XLGL_SUB_DOC_TRACKING t left join (select *, CREATOR_NAME AS creatorName from XLGL_XLZZ_INFO) b on t.INFO_ID = b.id where 1=1 and XLTYPE = '0'
             <if test="userId != null and userId !=''">
-                and RECEIVER_ID = #{userId}
+                and t.RECEIVER_ID = #{userId}
             </if>
-                and IS_WORK = '1'
+                and t.IS_WORK = '1'
 
             <if test="search != null and search !=''">
-                and TITLE  like '%'||#{search}||'%'
+                and t.TITLE  like '%'||#{search}||'%'
             </if>
             <if test="offset != null and limit != null">
                 limit #{offset}, #{limit}
             </if>
-            order by CREATED_TIME desc
+            order by t.CREATED_TIME desc
         </select>
 
         <select id="queryBySort" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
@@ -110,20 +110,20 @@
         </select>
 
         <select id="queryAllYear" resultType="com.css.app.xlgl.entity.XlglSubDocTracking">
-            select * from XLGL_SUB_DOC_TRACKING where 1=1
+            select *,b.creatorName from XLGL_SUB_DOC_TRACKING t left join (select *, CREATOR_NAME AS creatorName from XLGL_XLZZ_INFO) b on t.INFO_ID = b.id where 1=1
             <if test="userId != null and userId !=''">
-                and RECEIVER_ID = #{userId}
+                and t.RECEIVER_ID = #{userId}
             </if>
             <if test="search != null and search !=''">
-                and TITLE  like '%'||#{search}||'%'
+                and t.TITLE  like '%'||#{search}||'%'
             </if>
             <if test="year != null and year !=''">
-                and CREATED_TIME not like '%'||#{year}||'%'
+                and t.CREATED_TIME not like '%'||#{year}||'%'
             </if>
             <if test="offset != null and limit != null">
                 limit #{offset}, #{limit}
             </if>
-            order by CREATED_TIME desc
+            order by t.CREATED_TIME desc
         </select>
 
 

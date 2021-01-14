@@ -1104,10 +1104,10 @@ public class XlglXlzzInfoController {
 				jsonObject.put("startTime", xlglSubDocTracking.getExerciseTime());
 				jsonObject.put("sendPeople", xlglSubDocTracking.getSenderName());
 				jsonObject.put("infoId", xlglSubDocTracking.getInfoId());
-				XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(xlglSubDocTracking.getInfoId());
-				if (xlglXlzzInfo != null) {
-					xlglSubDocTracking.setCreatorName(xlglXlzzInfo.getCreatorName());
-				}
+//				XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(xlglSubDocTracking.getInfoId());
+//				if (xlglXlzzInfo != null) {
+//					xlglSubDocTracking.setCreatorName(xlglXlzzInfo.getCreatorName());
+//				}
 				jsonArray.add(jsonObject);
 
 				xlglSubDocTracking.setType(type);
