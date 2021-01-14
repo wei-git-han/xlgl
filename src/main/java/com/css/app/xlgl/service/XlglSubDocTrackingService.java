@@ -91,4 +91,8 @@ public interface XlglSubDocTrackingService {
     List<XlglSubDocTracking>   queryMsgRemind();
 
     int queryAllWcByInfoIdAndOrgId(String infoId,String orgId,String year);
+    
+    Map<String,Object> queryAllCountList(String year);
+    
+    Map<String,Object> quereyWcCountList(String year);
 }

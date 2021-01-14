@@ -300,7 +300,11 @@
 	<select id="findListAllExam" resultType="com.css.app.xlgl.entity.XlglExamMainAnswer">
      select   distinct examineName as examineName,EXAMINE_ID as examineId from ( select  e.EXAMINE_NAME as examineName,  m.*
       from XLGL_EXAM_MAIN_ANSWER m join XLGL_EXAM_EXAMINE e on e.id = m.EXAMINE_ID where
-        m.STATUS    = '0' and m.ISNOTEXAM = '1'  order by CREATE_DATE desc
+        m.STATUS    = '0' and m.ISNOTEXAM = '1' 
+        <if test="year != null and year !=''">
+			and to_char(m.CREATE_DATE,'yyyy') = #{year}
+		</if>
+         order by CREATE_DATE desc
         )
 	</select>
 	
@@ -327,6 +331,22 @@
 			<if test="isnotexam != null and isnotexam !=''">
 				and x.ISNOTEXAM = #{isnotexam}
 			</if>
+	</select>
+	
+	<select id="queryExamineIdAndReplyUserId" resultType="com.css.app.xlgl.entity.XlglExamMainAnswer">
+		select 
+			EXAMINE_ID,
+			FRACTIONSUM,
+			REPLY_USER_ID,
+			LEVEL
+		from 
+			XLGL_EXAM_MAIN_ANSWER  
+		where     
+			STATUS    = '0' and ISNOTEXAM = '1' 
+		<if test="year != null and year !=''">
+			and to_char(CREATE_DATE,'yyyy') = #{year}
+		</if>
+			order by update_date desc
 	</select>
 	
 </mapper>

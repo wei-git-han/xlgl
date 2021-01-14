@@ -18,6 +18,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -178,6 +179,16 @@ public class XlglMineStudyServiceImpl implements XlglMineStudyService {
 	@Override
 	public XlglMineStudy queryByUserId(String userId,String year){
 		return xlglMineStudyDao.queryByUserId(userId,year);
+	}
+
+	@Override
+	public Map<String,XlglMineStudy> queryByUserIdList(String year) {
+	 Map<String,XlglMineStudy> map = new HashMap<String,XlglMineStudy>();
+	 List<XlglMineStudy> queryByUserIdList = xlglMineStudyDao.queryByUserIdList(year);
+	 for (XlglMineStudy xlglMineStudy : queryByUserIdList) {
+		 map.put(xlglMineStudy.getUserId(), xlglMineStudy);
+	}
+		return map;
 	}
 	
 }

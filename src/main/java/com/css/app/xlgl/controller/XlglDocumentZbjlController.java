@@ -11,6 +11,7 @@ import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppOrganService;
 import com.css.addbase.apporgan.service.BaseAppUserService;
+import com.css.addbase.apporgan.util.RedisUtil;
 import com.css.addbase.apporgmapped.service.BaseAppOrgMappedService;
 import com.css.addbase.msg.MSGTipDefined;
 import com.css.addbase.msg.MsgTipUtil;
@@ -85,6 +86,8 @@ public class XlglDocumentZbjlController {
 	private XlglRoleSetService xlglRoleSetService;
 	@Autowired
 	private XlglHuijianService xlglHuijianService;
+	@Autowired
+	private RedisUtil redisUtil;
 	@Value("${csse.meeting.appid}")
 	private String huiJianAppId;
 	@Value("${csse.meeting.appSecret}")
@@ -588,24 +591,32 @@ public class XlglDocumentZbjlController {
 		}
 
 		hashmap.put("userNames", userNames);
-
+		//hashmap.put("year", year);
 		// 获取局内所有的人
 		List<BaseAppUser> list = baseAppUserService.queryAllUserIdAndName(hashmap);
+		Map<String, Object> countMap = xlglSubDocTrackingService.queryAllCountList(year);
+		Map<String, Object> wcCountMap = xlglSubDocTrackingService.quereyWcCountList(year);
+		Map<String, XlglPhysical> queryPhysicalMap = xlglPhysicalService.queryByUserIdList(year);//所有用户的军事导入成绩
+		Map<String, XlglMineStudy> queryMineStudyMap = xlglMineStudyService.queryByUserIdList(year);//所有用户的自学成绩
+		List<XlglExamMainAnswer> commonList1 = xlglExamMainAnswerService.findListAllExam(hashmap);	//所有的考试科目
+		Map<String, XlglExamMainAnswer> queryExamineMap= xlglExamMainAnswerService.queryExamineIdAndReplyUserId(hashmap);//所有考试每个已考人员的成绩
 		JSONArray jsonArray = new JSONArray();
 		if (list != null && list.size() > 0) {
 			for (BaseAppUser baseAppUser : list) {
 				JSONObject jsonObject = new JSONObject();
-				String userOrganId = baseAppUser.getOrganid();
 				String userName = baseAppUser.getTruename();// 名字
 				jsonObject.put("userName", userName);
-				BaseAppOrgan organ = baseAppOrganService.queryObject(userOrganId);
-				String deptName = organ.getName();// 部门名称
-				jsonObject.put("deptName", deptName);
-				String userId = CurrentUser.getUserId();
+				jsonObject.put("deptName", baseAppUser.getDeptName());
 
 				// 强装兴装大讲堂得分 ------------------start
-				int sum = xlglSubDocTrackingService.queryAllCount(baseAppUser.getUserId(), year);
-				int count = xlglSubDocTrackingService.quereyWcCount(baseAppUser.getUserId(), year);
+				int sum = 0;
+				if(countMap.containsKey(baseAppUser.getUserId())) {
+					sum =(Integer) countMap.get(baseAppUser.getUserId());
+				}
+				int count = 0;
+				if(wcCountMap.containsKey(baseAppUser.getUserId())) {
+					count =(Integer) wcCountMap.get(baseAppUser.getUserId());
+				}
 				String dj = "--";
 				float f = 0;
 				if (count == 0) {
@@ -628,7 +639,10 @@ public class XlglDocumentZbjlController {
 				// 强装兴装大讲堂得分 ------------------end
 
 				// 军事体育成绩得分----------------------start
-				XlglPhysical xlglPhysical = xlglPhysicalService.queryByUserId(baseAppUser.getUserId(), year);
+				XlglPhysical xlglPhysical = new XlglPhysical();
+				if(queryPhysicalMap.containsKey(baseAppUser.getId())) {
+					xlglPhysical = queryPhysicalMap.get(baseAppUser.getId());
+				}
 				String jtScore = "0";
 				String jtDj = "--";
 				String up = "";//引体向上
@@ -770,7 +784,10 @@ public class XlglDocumentZbjlController {
 				// 军事体育成绩得分-----------------------end
 
 				// 自学成绩得分------------------------------start
-				XlglMineStudy xlglMineStudy = xlglMineStudyService.queryByUserId(baseAppUser.getUserId(), year);
+				XlglMineStudy xlglMineStudy = new XlglMineStudy();
+				if(queryMineStudyMap.containsKey(baseAppUser.getId())) {
+					xlglMineStudy = queryMineStudyMap.get(baseAppUser.getId());
+				}
 				String studyScore = "0";
 				String studyDj = "--";
 				if (xlglMineStudy != null) {
@@ -780,100 +797,45 @@ public class XlglDocumentZbjlController {
 					if (StringUtils.isNotBlank(xlglMineStudy.getDj())) {
 						studyDj = xlglMineStudy.getDj();// 自学成绩等级
 					}
-
 				}
 				jsonObject.put("studyScore", studyScore);
 				jsonObject.put("studyDj", studyDj);
 				// 自学成绩得分-------------------------------end
 				//训练管理-当前用户已经考过考试-----------------start
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("replyUserId", baseAppUser.getUserId());
-				//List<XlglExamMainAnswer> commonList = xlglExamMainAnswerService.findListBySubjectId(map);
-				List<XlglExamMainAnswer> commonList1 = xlglExamMainAnswerService.findListAllExam(map);//所有的考试科目
-				JSONArray jsonArray2 = new JSONArray();
-//				if(commonList.size()>0) {
-//					for (XlglExamMainAnswer xlglExamMainAnswer : commonList) {
-//					    JSONObject jsonObject2 = new JSONObject();
-//						jsonObject2.put("xlglName", xlglExamMainAnswer.getExamineName());
-//						jsonObject2.put("xlglSum", xlglExamMainAnswer.getFractionsum());
-//						jsonObject2.put("xlglLevel", xlglExamMainAnswer.getLevel());
-//						jsonArray2.add(jsonObject2);
-//					}
-//				}
 				JSONArray jsonArrayExam = new JSONArray();
 				if(commonList1 != null && commonList1.size() > 0){
 					for(XlglExamMainAnswer xlglExamMainAnswer : commonList1){
+						JSONObject jsonExam = new JSONObject();
 						String examId  = xlglExamMainAnswer.getExamineId();
-						Map<String,Object> examMap = new HashMap<>();
-						examMap.put("replyUserId",baseAppUser.getUserId());
-						examMap.put("examId",examId);
-						List<XlglExamMainAnswer> examMainAnswerList = xlglExamMainAnswerService.queryExamByUserIdAndExamId(examMap);
-						if(examMainAnswerList != null && examMainAnswerList.size() > 0){
-							JSONObject jsonExam = new JSONObject();
-							jsonExam.put("xlglExamName",examMainAnswerList.get(0).getExamineName());
-							jsonExam.put("xlglCore",examMainAnswerList.get(0).getFractionsum());
-							jsonExam.put("xlglLevel",examMainAnswerList.get(0).getLevel());
+						if(redisUtil.getString(examId+"-"+baseAppUser.getUserId()+"-getXlCoreList") !=null) {
+							String string = redisUtil.getString(examId+"-"+baseAppUser.getUserId()+"-getXlCoreList");
+							JSONObject parseObject = JSONObject.parseObject(string);
+							jsonExam.put("xlglExamName",parseObject.get("xlglExamName"));
+							jsonExam.put("xlglCore",parseObject.get("xlglCore"));
+							jsonExam.put("xlglLevel",parseObject.get("xlglLevel"));
 							jsonArrayExam.add(jsonExam);
 						}else {
-							JSONObject jsonExam = new JSONObject();
-							jsonExam.put("xlglExamName","--");
-							jsonExam.put("xlglCore","--");
-							jsonExam.put("xlglLevel","--");
-							jsonArrayExam.add(jsonExam);
+							if(queryExamineMap != null && queryExamineMap.containsKey(examId+"-"+baseAppUser.getUserId())){
+								XlglExamMainAnswer xlglExamMainAnswer2 = queryExamineMap.get(examId+"-"+baseAppUser.getUserId());
+								jsonExam.put("xlglExamName",xlglExamMainAnswer.getExamineName());
+								jsonExam.put("xlglCore",xlglExamMainAnswer2.getFractionsum());
+								jsonExam.put("xlglLevel",xlglExamMainAnswer2.getLevel());
+								jsonArrayExam.add(jsonExam);
+								redisUtil.setString(examId+"-"+baseAppUser.getUserId()+"-getXlCoreList",JSONObject.toJSONString(jsonExam) ,7200);
+							}else {
+								jsonExam.put("xlglExamName","--");
+								jsonExam.put("xlglCore","--");
+								jsonExam.put("xlglLevel","--");
+								jsonArrayExam.add(jsonExam);
+							}
 						}
-
 					}
 				}
 				jsonObject.put("examine", jsonArrayExam);
-				//训练管理-当前用户已经考过考试-----------------end
-				// 共同训练，专业训练，战略训练，军事训练 ------------------start
-				/*Map<String, Object> map = new HashMap<String, Object>();
-				map.put("replyUserId", baseAppUser.getUserId());
-				map.put("examineSubjectName", "共同训练");
-				map.put("year",time);
-				List<XlglExamMainAnswer> commonList = xlglExamMainAnswerService.findListBySubjectId(map);
-				map.put("examineSubjectName", "专业训练");
-				List<XlglExamMainAnswer> specialtyList = xlglExamMainAnswerService.findListBySubjectId(map);
-				map.put("examineSubjectName", "战略训练");
-				List<XlglExamMainAnswer> tacticalList = xlglExamMainAnswerService.findListBySubjectId(map);
-				map.put("examineSubjectName", "军事职业教育");
-				List<XlglExamMainAnswer> warList = xlglExamMainAnswerService.findListBySubjectId(map);
-				if (commonList != null && commonList.size() > 0) {
-					jsonObject.put("commonSum", commonList.get(0).getFractionsum());
-					jsonObject.put("commonLevel", commonList.get(0).getLevel());
-				} else {
-					jsonObject.put("commonSum", "0");
-					jsonObject.put("commonLevel", "--");
-				}
-				if (specialtyList != null && specialtyList.size() > 0) {
-					jsonObject.put("specialtySum", specialtyList.get(0).getFractionsum());
-					jsonObject.put("specialtyLevel", specialtyList.get(0).getLevel());
-				} else {
-					jsonObject.put("specialtySum", "0");
-					jsonObject.put("specialtyLevel", "--");
-				}
-				if (tacticalList != null && tacticalList.size() > 0) {
-					jsonObject.put("tacticalSum", tacticalList.get(0).getFractionsum());
-					jsonObject.put("tacticalLevel", tacticalList.get(0).getLevel());
-				} else {
-					jsonObject.put("tacticalSum", "0");
-					jsonObject.put("tacticalLevel", "--");
-				}
-				if (warList != null && warList.size() > 0) {
-					jsonObject.put("warSum", warList.get(0).getFractionsum());
-					jsonObject.put("warLevel", warList.get(0).getLevel());
-				} else {
-					jsonObject.put("warSum", "0");
-					jsonObject.put("warLevel", "--");
-				}
-*/
 				// 共同训练，专业训练，战略训练，军事训练 ------------------end
 				jsonArray.add(jsonObject);
-
 			}
 		}
-
-		//JSONArray jsonArray = new JSONArray();
 		Response.json(jsonArray);
 
 	}
@@ -883,8 +845,14 @@ public class XlglDocumentZbjlController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getExam")
-	public void getExam(){
+	public void getExam(String time){
+		Calendar calendar = Calendar.getInstance();
+		String year = String.valueOf(calendar.get(Calendar.YEAR));//默认查询的是当前年，若time有值，查对应的年份
 		Map<String,Object> map = new HashMap<>();
+		if(StringUtils.isNotBlank(time)) {
+			year = time;
+		}
+		//map.put("year",year);
 		List list = new ArrayList();
 		JSONObject jsonObject = new JSONObject();
 		List<XlglExamMainAnswer> commonList = xlglExamMainAnswerService.findListAllExam(map);

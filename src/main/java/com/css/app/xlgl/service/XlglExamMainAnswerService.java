@@ -51,4 +51,6 @@ public interface XlglExamMainAnswerService {
 			,String organId,String isNotExam,String status,String deptId);
 	
 	InputStream	createExcelNotExam(List<XlglExamMainAnswer> list,String[] title,String fileName,JSONObject json,String totalName,String listName)throws Exception;
+
+	Map<String,XlglExamMainAnswer> queryExamineIdAndReplyUserId(Map<String, Object> map);
 }

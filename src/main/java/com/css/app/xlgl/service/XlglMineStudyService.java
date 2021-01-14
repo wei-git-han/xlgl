@@ -37,4 +37,6 @@ public interface XlglMineStudyService {
 	void deleteAllRecord(String[] ids);
 
 	XlglMineStudy queryByUserId(String userId,String year);
+	
+   Map<String,XlglMineStudy> queryByUserIdList(String year);
 }

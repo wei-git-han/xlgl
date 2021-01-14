@@ -308,5 +308,15 @@ public class XlglExamMainAnswerServiceImpl implements XlglExamMainAnswerService 
 		return new FileInputStream(fileName);
 	}
 
+	@Override
+	public Map<String, XlglExamMainAnswer> queryExamineIdAndReplyUserId(Map<String, Object> map) {
+		Map<String,XlglExamMainAnswer> hashMap = new HashMap<String, XlglExamMainAnswer>();
+		List<XlglExamMainAnswer> queryExamineIdAndReplyUserId = xlglExamMainAnswerDao.queryExamineIdAndReplyUserId(map);
+		for (XlglExamMainAnswer xlglExamMainAnswer : queryExamineIdAndReplyUserId) {
+			hashMap.put(xlglExamMainAnswer.getExamineId()+"-"+xlglExamMainAnswer.getReplyUserId(), xlglExamMainAnswer);
+		}
+		return hashMap;
+	}
+
 	
 }

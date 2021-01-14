@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -244,6 +245,16 @@ public class XlglPhysicalServiceImpl implements XlglPhysicalService {
 	@Override
 	public String querySort(Map<String,Object> map){
 		return xlglPhysicalDao.querySort(map);
+	}
+
+	@Override
+	public Map<String, XlglPhysical> queryByUserIdList(String year) {
+		Map<String,XlglPhysical> map = new HashMap<String, XlglPhysical>();
+		List<XlglPhysical> queryByUserIdList = xlglPhysicalDao.queryByUserIdList(year);
+		for (XlglPhysical xlglPhysical : queryByUserIdList) {
+			map.put(xlglPhysical.getUserId(), xlglPhysical);
+		}
+		return map;
 	}
 	
 }

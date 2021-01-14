@@ -6,6 +6,7 @@ import com.css.app.xlgl.service.XlglSubDocTrackingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -208,6 +209,26 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 	@Override
 	public int queryAllWcByInfoIdAndOrgId(String infoId,String orgId,String year){
 		return xlglSubDocTrackingDao.queryAllWcByInfoIdAndOrgId(infoId,orgId,year);
+	}
+
+	@Override
+	public Map<String, Object> queryAllCountList(String year) {
+		Map<String,Object> map = new HashMap<String,Object>();
+		List<Map<String,Object>> queryAllCountList = xlglSubDocTrackingDao.queryAllCountList(year);
+		for (Map<String, Object> map2 : queryAllCountList) {
+			map.put((String) map2.get("userId"),map2.get("sum"));
+		}
+		return map;
+	}
+
+	@Override
+	public Map<String, Object> quereyWcCountList(String year) {
+		Map<String,Object> map = new HashMap<String,Object>();
+		List<Map<String,Object>> queryAllCountList = xlglSubDocTrackingDao.queryAllCountList(year);
+		for (Map<String, Object> map2 : queryAllCountList) {
+			map.put((String) map2.get("userId"),map2.get("sum"));
+		}
+		return map;
 	}
 
 

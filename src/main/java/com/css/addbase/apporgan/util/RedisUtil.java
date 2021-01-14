@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
 /**
  * redis使用工具类
@@ -38,6 +39,18 @@ public class RedisUtil {
 //		redisTemplate.setStringSerializer();
 	}
 	
+	/**
+	 * String 类型插值,修改方法
+	 * @param key
+	 * @param value
+	 * @param time 设置失效时间 单位（秒）
+	 * @return 插入成功返回  "OK"
+	 */
+	public void setString(String key,String value,Integer time){
+//		return jedis.set(key, value);
+		redisTemplate.opsForValue().set(key, value,time,TimeUnit.SECONDS);
+//		redisTemplate.setStringSerializer();
+	}
 	/**
 	 * String 类型取值方法
 	 * @param key

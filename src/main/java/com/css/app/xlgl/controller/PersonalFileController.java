@@ -574,7 +574,6 @@ public class PersonalFileController {
 		jsonObject.put("midSum",midSum);//优良人数
 		jsonObject.put("lowSum",lowSum);//不及格人数
 
-//		Response.json(jsonObject);
 		return jsonObject;
 	}
 
@@ -612,19 +611,6 @@ public class PersonalFileController {
 				listAll.add(jsonObject);
 			}
 		}
-		//当前局
-////		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());//当前登录人的局id
-////		JSONObject js = getAllYxl(orgId);
-////		JSONObject jsCurrentDept = new JSONObject();
-//
-////		jsCurrentDept.put("name",js.get("name"));
-////		jsCurrentDept.put("highSum",js.get("highSum"));//优秀人数
-////		jsCurrentDept.put("midSum",js.get("midSum"));//优良人数
-////		jsCurrentDept.put("lowSum",js.get("lowSum"));//及格人数
-////		jsCurrentDept.put("yxLv",js.get("yxLv"));//优秀率
-////		jsCurrentDept.put("ylLv",js.get("ylLv"));//优良率
-////		jsCurrentDept.put("jgLv",js.get("jgLv"));//及格率
-//
 		JSONObject result = new JSONObject();
 		result.put("listAll",listAll);
 		result.put("listCurrent",list2);

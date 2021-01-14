@@ -26,4 +26,7 @@ public interface XlglPhysicalDao extends BaseDao<XlglPhysical> {
     XlglPhysical queryByUserId(String userId, String year);
 
     String querySort(Map<String,Object> map);
+    
+    @Select("select * from XLGL_PHYSICAL as a where not exists (select * from XLGL_PHYSICAL as b where a.user_id = b.user_id and a.created_time < b.created_time) and a.NORMAL = '1' AND a.CURENT_YEAR like '%'||#{0}||'%'")
+    List<XlglPhysical> queryByUserIdList(String year);
 }

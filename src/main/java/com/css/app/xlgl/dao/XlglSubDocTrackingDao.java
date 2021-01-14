@@ -108,5 +108,11 @@ public interface XlglSubDocTrackingDao extends BaseDao<XlglSubDocTracking> {
 
     @Select("select count(*) from XLGL_SUB_DOC_TRACKING where  INFO_ID = #{0} and IS_WORK = '1' and ORG_ID = #{1} and CREATED_TIME like '%'||#{2}||'%'")
     int queryAllWcByInfoIdAndOrgId(String infoId,String orgId,String year);
+    
+    @Select("select RECEIVER_ID as userId , count(RECEIVER_ID) as sum from XLGL_SUB_DOC_TRACKING where  EXERCISE_TIME like '%'||#{1}||'%' GROUP BY RECEIVER_ID" )
+    List<Map<String,Object>> queryAllCountList(String year);
+    
+    @Select("select RECEIVER_ID as userId , count(RECEIVER_ID) as sum from XLGL_SUB_DOC_TRACKING where  XLTYPE = '0' and IS_WORK = '1' and EXERCISE_TIME like '%'||#{1}||'%' GROUP BY RECEIVER_ID")
+    List<Map<String,Object>> quereyWcCountList(String userId,String year);
   
 }

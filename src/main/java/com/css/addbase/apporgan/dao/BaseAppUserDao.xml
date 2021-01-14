@@ -35,9 +35,17 @@
 	</select>
 
 	<select id="queryAllUserIdAndName" resultType="com.css.addbase.apporgan.entity.BaseAppUser">
-		select * from 
-		BASE_APP_USER where
-        ORGANID in
+		select 
+			u.*,
+			o.name as deptName
+		from 
+			BASE_APP_USER u
+		left join 
+			BASE_APP_ORGAN o
+		on
+			u.organid = o.id
+		where
+        u.ORGANID in
         (
         select
         id
@@ -46,12 +54,12 @@
         with ID  = #{organId}
         and ISDELETE=0 and (IS_INVALID is null or IS_INVALID = '0' )
         connect by prior ID = PARENT_ID
-        )  and ISDELETE=0 and   sfyx = '0'
+        )  and u.ISDELETE=0 and   u.sfyx = '0'
         <if  test="userNames != null and userNames != ''">
-        and TRUENAME  like '%'||#{userNames}||'%'
+        and u.TRUENAME  like '%'||#{userNames}||'%'
         </if>
          <if test="sort != null and sort != ''">
-               order by ORGANID desc
+               order by u.ORGANID desc
           </if>
         <if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
