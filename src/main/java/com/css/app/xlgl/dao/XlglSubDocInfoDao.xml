@@ -149,7 +149,7 @@
 
     <select id="queryListForJu" resultType="com.css.app.xlgl.entity.XlglSubDocInfo">
 		select
-        *
+        *,c.PICTURE_ID as picturePath
 from
         XLGL_SUB_DOC_INFO a
 inner join XLGL_XLZZ_INFO b
