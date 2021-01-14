@@ -231,17 +231,19 @@ public class BaseAppUserController {
 	@ResponseBody
 	@RequestMapping("/userInfo")
     public void getUserInfo(){
+		long starTime = System.currentTimeMillis();
+	 	SSOUser ssoUser = SSOAuthFilter.getSUser();
+	 	String userId = ssoUser.getUserId();
 		//0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员;4:处管理员
-		String adminFlag = adminSetService.getAdminTypeByUserId(CurrentUser.getUserId());
+		String adminFlag = adminSetService.getAdminTypeByUserId(userId);
 		JSONObject userJson = new JSONObject();
-    	SSOUser ssoUser = SSOAuthFilter.getSUser();
     	userJson.put("result","error");
     	if(ssoUser != null){
     		userJson = (JSONObject) JSONObject.toJSON(ssoUser);
     		userJson.put("result","success");
     		userJson.put("adminFlag",adminFlag);
     	}
-    	XlglRoleSet  xlglRoleSet =xlglRoleSetService.queryByuserId(CurrentUser.getUserId());
+    	XlglRoleSet  xlglRoleSet =xlglRoleSetService.queryByuserId(userId);
     	if(xlglRoleSet != null){
     		if(StringUtils.isNotBlank(xlglRoleSet.getRoleFlag())){
     			String roleFlag = xlglRoleSet.getRoleFlag();
@@ -256,14 +258,15 @@ public class BaseAppUserController {
 		}else {
 			userJson.put("roleFlag",false);
 		}
-
-		String orgId = baseAppUserService.getBareauByUserId(CurrentUser.getUserId());
+		String orgId = baseAppUserService.getBareauByUserId(userId);
     	BaseAppOrgan baseAppOrgan = baseAppOrganService.queryDeptNameByUserId(orgId);
     	if(baseAppOrgan != null){
 			String orgName = baseAppOrgan.getName();
 			userJson.put("juId",orgId);
 			userJson.put("juName",orgName);
 		}
+		long endTime = System.currentTimeMillis();
+		System.out.println("app/base/user/userInfo接口执行时间："+(endTime-starTime)+"毫秒!!!!!!!!!");
     	Response.json(userJson);
     }
 	

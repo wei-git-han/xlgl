@@ -599,7 +599,12 @@ public class XlglDocumentZbjlController {
 		Map<String, XlglPhysical> queryPhysicalMap = xlglPhysicalService.queryByUserIdList(year);//所有用户的军事导入成绩
 		Map<String, XlglMineStudy> queryMineStudyMap = xlglMineStudyService.queryByUserIdList(year);//所有用户的自学成绩
 		List<XlglExamMainAnswer> commonList1 = xlglExamMainAnswerService.findListAllExam(hashmap);	//所有的考试科目
-		Map<String, XlglExamMainAnswer> queryExamineMap= xlglExamMainAnswerService.queryExamineIdAndReplyUserId(hashmap);//所有考试每个已考人员的成绩
+		String string2 = redisUtil.getString("queryExamineMap-getXlCoreList");
+		Map<String, XlglExamMainAnswer> queryExamineMap = new HashMap<String, XlglExamMainAnswer>();
+		if(StringUtils.isBlank(string2)) {
+			 queryExamineMap = xlglExamMainAnswerService.queryExamineIdAndReplyUserId(hashmap);//所有考试每个已考人员的成绩
+		}
+		 
 		JSONArray jsonArray = new JSONArray();
 		if (list != null && list.size() > 0) {
 			for (BaseAppUser baseAppUser : list) {
@@ -822,6 +827,7 @@ public class XlglDocumentZbjlController {
 								jsonExam.put("xlglLevel",xlglExamMainAnswer2.getLevel());
 								jsonArrayExam.add(jsonExam);
 								redisUtil.setString(examId+"-"+baseAppUser.getUserId()+"-getXlCoreList",JSONObject.toJSONString(jsonExam) ,7200);
+								redisUtil.setString("queryExamineMap-getXlCoreList","queryExamineMap",7200);
 							}else {
 								jsonExam.put("xlglExamName","--");
 								jsonExam.put("xlglCore","--");
