@@ -176,11 +176,8 @@ public class TaskMenuController {
     @RequestMapping(value = "/menutree4role")
     @ResponseBody
     public Object getMenuTree() {
-    	long starTime = System.currentTimeMillis();
     	List<TaskMenu> queryList = taskMenuService.queryList(null);
         JSONArray list = getOrganTree(queryList,"root");
-    	long endTime = System.currentTimeMillis();
-    	System.out.println("/app/xlgl/taskmenu/menutree4role接口执行时间:------------------"+(starTime - endTime)+"(毫秒)--------------------------------");
         return list;
     }
 
@@ -207,7 +204,6 @@ public class TaskMenuController {
     @RequestMapping(value = "/auth")
     @ResponseBody
     public void authMenu() {
-    	long starTime = System.currentTimeMillis();
     	String userId = CurrentUser.getUserId();
         List<TaskMenu> menus = taskMenuService.queryAuthList(userId);
         JSONArray jsons = getMenuChildren(menus, "root");
@@ -288,8 +284,6 @@ public class TaskMenuController {
                 jsonArray6.remove(1);
                 jsons.remove(4);
             }
-            long endTime = System.currentTimeMillis();
-            System.out.println("/app/xlgl/taskmenu/auth接口执行时间:------------------"+(starTime - endTime)+"(毫秒)--------------------------------");
             Response.json(jsons);
         }
     }

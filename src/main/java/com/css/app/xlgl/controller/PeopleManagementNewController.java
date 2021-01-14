@@ -202,8 +202,7 @@ public class PeopleManagementNewController {
         	jsonObject =this.allOrgTree(baseAppOrgan.getId());
     		jsonObject.put("status", organStatus);
     	}
-    	Response.json(jsonObject);
-    	
+    	Response.json(jsonObject);	
     }
     /**
      * 训练管理-人员管理-列表单位树

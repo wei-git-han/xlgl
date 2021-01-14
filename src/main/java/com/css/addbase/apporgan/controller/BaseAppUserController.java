@@ -231,7 +231,6 @@ public class BaseAppUserController {
 	@ResponseBody
 	@RequestMapping("/userInfo")
     public void getUserInfo(){
-		long starTime = System.currentTimeMillis();
 	 	SSOUser ssoUser = SSOAuthFilter.getSUser();
 	 	String userId = ssoUser.getUserId();
 		//0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员;4:处管理员
@@ -270,8 +269,6 @@ public class BaseAppUserController {
 			userJson.put("juId",orgId);
 			userJson.put("juName",orgName);
 		}
-		long endTime = System.currentTimeMillis();
-		System.out.println("app/base/user/userInfo接口执行时间："+(endTime-starTime)+"毫秒!!!!!!!!!");
     	Response.json(userJson);
     }
 	
