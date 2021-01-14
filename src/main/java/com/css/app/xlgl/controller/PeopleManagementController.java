@@ -110,6 +110,7 @@ public class PeopleManagementController {
 	}
 	
 	private JSONObject getQxjUserInfoList(String parentId,String organId,String userName) {
+		long starTime = System.currentTimeMillis();
 		JSONObject jsonObject = new JSONObject();
 		List<String> userList = getUserArray();
 		HashMap<String,Object> hashMap2 = new HashMap<String, Object>();
@@ -138,10 +139,10 @@ public class PeopleManagementController {
 		List<BaseAppOrgan> listNotRoot = new ArrayList<BaseAppOrgan>();
 		for (BaseAppOrgan baseAppOrgan : organList) {
 			ArrayList<TxlUserNEWDto> arrayList = new ArrayList<>();
-			LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-			map.add("organId", baseAppOrgan.getId());
-			JSONObject jsonObject1 = getNumber(map);
-			Integer yzxrs = (Integer)jsonObject1.get("yzwrs"); //应在线人数 需等请销假开发完毕
+			//LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			//map.add("organId", baseAppOrgan.getId());
+			//JSONObject jsonObject1 = getNumber(map);
+			//Integer yzxrs = (Integer)jsonObject1.get("yzwrs"); //应在线人数 需等请销假开发完毕
 	
 			Integer userIdList=this.userIdNumber(baseAppOrgan.getId(), userList);// 在线人数
 			baseAppOrgan.setZxrs(userIdList);
@@ -190,7 +191,6 @@ public class PeopleManagementController {
 							}
 						}
 					}
-					
 				}
 			}
 			baseAppOrgan.setList(arrayList);
@@ -205,6 +205,8 @@ public class PeopleManagementController {
 			list.add(baseAppOrgan2);
 		}
 		jsonObject.put("list", list);
+		long endTime = System.currentTimeMillis();
+		System.out.println("app/xlgl/peopleManagement/qxjUserInfoList接口执行时间：--------------------"+(starTime - endTime)+"-----------------------------");
 		return jsonObject;
 	}
 
@@ -427,7 +429,7 @@ public class PeopleManagementController {
 	}
 
 	/**
-	 * 在线人
+	 * 在线人人数
 	 */
 	private int userIdNumberAllRoot(String organId, List<String> list) {
 		int i = 0;
@@ -470,7 +472,6 @@ public class PeopleManagementController {
 			if(queryObject.getParentId().equals("root")) {
 				List<BaseAppUser> queryListByOrganid = baseAppUserService.queryUsers(organId);
 				for (int j = 0; j < list.size(); j++) {
-					System.out.println(list.get(j));
 				for (BaseAppUser baseAppUser : queryListByOrganid) {
 						if(baseAppUser.getAccount().equals(list.get(j))) {
 							i++;
