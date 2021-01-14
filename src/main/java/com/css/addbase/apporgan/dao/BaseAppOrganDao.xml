@@ -27,6 +27,21 @@
 		</if>
 	</select>
 
+	<select id="queryDeptByUserId" resultType="com.css.addbase.apporgan.entity.BaseAppOrgan">
+		select t3.* from
+        (
+                select
+                        t1.*
+                from
+                        BASE_APP_ORGAN t1,
+                        BASE_APP_USER t2
+                where
+                        t2.ORGANID = t1.id
+                    and t2.user_id = #{userId}
+        )
+        b,BASE_APP_ORGAN t3 where b.PARENT_ID  = t3.id and t3.PARENT_ID = 'root'
+	</select>
+
 	<select id="getSubOrgSync" resultType="com.css.addbase.apporgan.entity.BaseAppOrgan">
 		select ID, NAME,IS_INVALID,
 		PARENT_ID, SORT,(select count(0) from BASE_APP_ORGAN a WHERE

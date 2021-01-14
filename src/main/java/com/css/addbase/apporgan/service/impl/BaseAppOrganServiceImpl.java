@@ -119,6 +119,11 @@ public class BaseAppOrganServiceImpl implements BaseAppOrganService {
 	}
 
 	@Override
+	public BaseAppOrgan queryDeptByUserId(Map<String,Object> map){
+		return baseAppOrganDao.queryDeptByUserId(map);
+	}
+
+	@Override
 	public List<String> queryListByTREEPATH(String orgId) {
 		// TODO Auto-generated method stub
 		return baseAppOrganDao.queryListByTREEPATH(orgId);

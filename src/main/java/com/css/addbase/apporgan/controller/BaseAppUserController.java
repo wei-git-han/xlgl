@@ -258,9 +258,14 @@ public class BaseAppUserController {
 		}else {
 			userJson.put("roleFlag",false);
 		}
-		String orgId = baseAppUserService.getBareauByUserId(userId);
-    	BaseAppOrgan baseAppOrgan = baseAppOrganService.queryDeptNameByUserId(orgId);
+		//注释掉下面两行是为了简化查询，一次就能查出，下面两行也是对的
+		//String orgId = baseAppUserService.getBareauByUserId(userId);
+    	//BaseAppOrgan baseAppOrgan = baseAppOrganService.queryDeptNameByUserId(orgId);
+		Map<String,Object> map = new HashMap<>();
+    	map.put("userId",userId);
+		BaseAppOrgan baseAppOrgan = baseAppOrganService.queryDeptByUserId(map);
     	if(baseAppOrgan != null){
+    		String orgId = baseAppOrgan.getId();
 			String orgName = baseAppOrgan.getName();
 			userJson.put("juId",orgId);
 			userJson.put("juName",orgName);
