@@ -206,7 +206,7 @@ public class PeopleManagementController {
 		}
 		jsonObject.put("list", list);
 		long endTime = System.currentTimeMillis();
-		System.out.println("app/xlgl/peopleManagement/qxjUserInfoList接口执行时间：--------------------"+(starTime - endTime)+"-----------------------------");
+		System.out.println("app/xlgl/peopleManagement/qxjUserInfoList接口执行时间：--------------------"+(starTime - endTime)+"(毫秒)-----------------------------");
 		return jsonObject;
 	}
 

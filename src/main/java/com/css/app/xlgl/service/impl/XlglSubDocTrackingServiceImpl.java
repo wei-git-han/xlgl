@@ -216,7 +216,9 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 		Map<String,Object> map = new HashMap<String,Object>();
 		List<Map<String,Object>> queryAllCountList = xlglSubDocTrackingDao.queryAllCountList(year);
 		for (Map<String, Object> map2 : queryAllCountList) {
-			map.put((String) map2.get("userId"),map2.get("sum"));
+			if(map2.get("sum") !=null) {
+				map.put((String) map2.get("userId"),map2.get("sum"));
+			}
 		}
 		return map;
 	}
@@ -226,7 +228,10 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 		Map<String,Object> map = new HashMap<String,Object>();
 		List<Map<String,Object>> queryAllCountList = xlglSubDocTrackingDao.queryAllCountList(year);
 		for (Map<String, Object> map2 : queryAllCountList) {
-			map.put((String) map2.get("userId"),map2.get("sum"));
+			if(map2.get("sum") !=null) {
+				map.put((String) map2.get("userId"),map2.get("sum"));
+			}
+		
 		}
 		return map;
 	}
