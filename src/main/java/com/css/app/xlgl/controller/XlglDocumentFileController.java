@@ -176,6 +176,7 @@ public class XlglDocumentFileController{
 			if (pdf != null && pdf.length > 0) {
 				for (int i = 0; i < pdf.length; i++) {
 					String fileName = pdf[i].getOriginalFilename();
+					String fileName1 = fileName.substring(0,fileName.lastIndexOf("."));
 					// 获取文件后缀
 					String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
 					// 如果文件是流式则流式转换为版式
@@ -183,7 +184,7 @@ public class XlglDocumentFileController{
 						streamId = FileBaseUtil.fileServiceUpload(pdf[i]);
 						HTTPFile hf = new HTTPFile(streamId);
 						try {
-							String path = appConfig.getLocalFilePath() + UUIDUtils.random() + "." + hf.getSuffix();
+							String path = appConfig.getLocalFilePath() + fileName1 + "." + hf.getSuffix();
 							try {
 								FileUtils.moveFile(new File(hf.getFilePath()), new File(path));
 							} catch (IOException e) {
