@@ -790,10 +790,10 @@ public class XlglExamExamineController {
 		int queryTotal = xlglExamExamineService.findCount(map);// 需要参考的人数
 		map.put("isNotExam", "1");
 		map.put("status", "0");
-		String number = xlglExamMainAnswerService.queryUserCount(map);// 试卷的参考人数
+		Map<String, Object> queryUserCountMap = xlglExamMainAnswerService.queryUserCount(map);// 试卷的参考人数
 		Integer numberInto = 0;
-		if (StringUtils.isNotBlank(number)) {
-			numberInto = Integer.parseInt(number);
+		if (queryUserCountMap.get("numberInto") !=null) {
+			numberInto = Integer.parseInt(queryUserCountMap.get("numberInto").toString());
 		}
 		DecimalFormat format = new DecimalFormat("0.00");
 		String raio;
@@ -804,13 +804,18 @@ public class XlglExamExamineController {
 		}
 
 		Integer numberIntoNot = queryTotal - numberInto;// 需要补考人数
-		// Integer raio =(numberInto/queryTotal)*100;
-		map.put("level", "优秀");
-		int total1 = xlglExamMainAnswerService.queryTotal(map);// 优秀人数
-		map.put("level", "优良");
-		int total2 = xlglExamMainAnswerService.queryTotal(map);// 优良人数
-		map.put("level", "及格");
-		int total3 = xlglExamMainAnswerService.queryTotal(map);// 及格人数
+		int total1 = 0;// 优秀人数
+		int total2 = 0;// 优良人数
+		int total3 = 0;// 及格人数
+		if (queryUserCountMap.get("total1") !=null) {
+			total1 = Integer.parseInt(queryUserCountMap.get("total1").toString());
+		}
+		if (queryUserCountMap.get("total2") !=null) {
+			total2 = Integer.parseInt(queryUserCountMap.get("total2").toString());
+		}
+		if (queryUserCountMap.get("total3") !=null) {
+			total3 = Integer.parseInt(queryUserCountMap.get("total3").toString());
+		}
 		String total1Raio;
 		if (numberInto == 0 || total1 == 0) {
 			total1Raio = "0";
