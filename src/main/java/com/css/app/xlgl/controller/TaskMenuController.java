@@ -185,7 +185,11 @@ public class TaskMenuController {
         //JSONArray list = getOrganTree("root");
         long endTime = System.currentTimeMillis();
         String value  = redisUtil.getString("xlgl-taskMenu");
-        list = JSONArray.parseArray(value);
+        if(StringUtils.isNotBlank(value)){
+            list = JSONArray.parseArray(value);
+        }else{
+            list = getOrganTree("root");
+        }
         System.out.println("app/xlgl/taskmenu/menutree4role接口执行时间："+(endTime-starTime)+"毫秒!!!!!!!!!");
         return list;
     }
