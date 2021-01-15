@@ -53,6 +53,8 @@ public interface XlglSubDocTrackingService {
 
 	int queryAllCount(String userId,String year);
 
+	List<XlglSubDocTracking> queryByUserIdAndYear(String userId,String year);
+
 	int quereyWcCount(String userId,String year);
 
 	int queryYhCount(String userId,String year);

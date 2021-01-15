@@ -112,6 +112,11 @@ public class XlglSubDocTrackingServiceImpl implements XlglSubDocTrackingService 
 	public int queryAllCount(String userId,String year){
 		return xlglSubDocTrackingDao.queryAllCount(userId,year);
 	}
+
+	@Override
+	public List<XlglSubDocTracking> queryByUserIdAndYear(String userId,String year){
+		return xlglSubDocTrackingDao.queryByUserIdAndYear(userId,year);
+	}
 	@Override
 	public int quereyWcCount(String userId,String year){
 		return xlglSubDocTrackingDao.quereyWcCount(userId,year);

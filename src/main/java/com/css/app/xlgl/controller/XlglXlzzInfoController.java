@@ -1203,17 +1203,37 @@ public class XlglXlzzInfoController {
 		String year = String.valueOf(calendar.get(Calendar.YEAR));
 		JSONObject jsonObject = new JSONObject();
 		String userId = CurrentUser.getUserId();
-		sum = xlglSubDocTrackingService.queryAllCount(userId, year);// 所有的课程
-		count = xlglSubDocTrackingService.quereyWcCount(userId, year);// 已参训的课程
-		yhCount = xlglSubDocTrackingService.queryYhCount(userId, year);
-		if (sum > 0) {
-			// bk = sum - count;
-			double f = ((new BigDecimal((float) count / sum).doubleValue())
-					* 100);
-			String wcl = String.valueOf(f);
-			jsonObject.put("wcl", wcl.substring(0,wcl.indexOf(".")+2));
-			jsonObject.put("ywc", count);
-			jsonObject.put("bk", yhCount);
+		//sum = xlglSubDocTrackingService.queryAllCount(userId, year);// 所有的课程
+		//count = xlglSubDocTrackingService.quereyWcCount(userId, year);// 已参训的课程
+		//yhCount = xlglSubDocTrackingService.queryYhCount(userId, year);
+		List<XlglSubDocTracking> list = xlglSubDocTrackingService.queryByUserIdAndYear(userId, year);
+		if (list != null && list.size() > 0) {
+			sum = list.size();
+			for (int i = 0; i < list.size(); i++) {
+				XlglSubDocTracking xlglSubDocTracking = list.get(i);
+				String xlType = xlglSubDocTracking.getXltype();
+				String isWork = xlglSubDocTracking.getIsWork();
+				String baoming = xlglSubDocTracking.getBaoming();
+				if ("0".equals(xlType) && "1".equals(isWork)) {
+					count += 1;
+				}
+				if ("2".equals(baoming)) {
+					yhCount += 1;
+				}
+			}
+			if (sum > 0) {
+				// bk = sum - count;
+				double f = ((new BigDecimal((float) count / sum).doubleValue())
+						* 100);
+				String wcl = String.valueOf(f);
+				jsonObject.put("wcl", wcl.substring(0, wcl.indexOf(".") + 2));
+				jsonObject.put("ywc", count);
+				jsonObject.put("bk", yhCount);
+			} else {
+				jsonObject.put("wcl", "0");
+				jsonObject.put("ywc", "0");
+				jsonObject.put("bk", "0");
+			}
 		} else {
 			jsonObject.put("wcl", "0");
 			jsonObject.put("ywc", "0");
