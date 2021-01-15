@@ -93,32 +93,35 @@ public class XlglXlzzInfoController {
 	@ResponseBody
 	@RequestMapping("/list")
 	public void list(Integer page, Integer pagesize, String search, String xltype) {
+		long starTime = System.currentTimeMillis();
 		Map<String, Object> map = new HashMap<>();
 		map.put("search", search);
 		map.put("xltype", xltype);
 		PageHelper.startPage(page, pagesize);
 
 		// 查询列表数据
-		List<XlglXlzzInfo> xlglXlzzInfoList = xlglXlzzInfoService.queryList(map);
-		if (xlglXlzzInfoList != null && xlglXlzzInfoList.size() > 0) {
-			for (XlglXlzzInfo xlglXlzzInfo : xlglXlzzInfoList) {
-				xlglXlzzInfo.setInfoId(xlglXlzzInfo.getId());
-				Map<String, Object> hashmap = new HashMap<String, Object>();
-				hashmap.put("id", xlglXlzzInfo.getId());
-				hashmap.put("type", "4");
-				List<XlglPicture> queryList = xlglPictureService.queryListByType(hashmap);
-				if (queryList.size() > 0) {
-					if (queryList.get(0).getFileId().equals(xlglXlzzInfo.getId())) {
-						xlglXlzzInfo.setPicturePath(queryList.get(0).getPictureId());
-					}
-				}
-			}
-		}
+		List<XlglXlzzInfo> xlglXlzzInfoList = xlglXlzzInfoService.queryByType(map);
+//		if (xlglXlzzInfoList != null && xlglXlzzInfoList.size() > 0) {
+//			for (XlglXlzzInfo xlglXlzzInfo : xlglXlzzInfoList) {
+//				xlglXlzzInfo.setInfoId(xlglXlzzInfo.getId());
+//				Map<String, Object> hashmap = new HashMap<String, Object>();
+//				hashmap.put("id", xlglXlzzInfo.getId());
+//				hashmap.put("type", "4");
+//				List<XlglPicture> queryList = xlglPictureService.queryListByType(hashmap);
+//				if (queryList.size() > 0) {
+//					if (queryList.get(0).getFileId().equals(xlglXlzzInfo.getId())) {
+//						xlglXlzzInfo.setPicturePath(queryList.get(0).getPictureId());
+//					}
+//				}
+//			}
+//		}
 
 		// PageUtils pageUtil = new PageUtils(xlglXlzzInfoList);
 		// Response.json("page",pageUtil);
 
 		GwPageUtils pageUtil = new GwPageUtils(xlglXlzzInfoList);
+		long endTime = System.currentTimeMillis();
+		System.out.println("app/xlgl/xlglxlzzinfo/list接口执行时间："+(endTime-starTime)+"毫秒!!!!!!!!!");
 		Response.json(pageUtil);
 	}
 
@@ -1040,6 +1043,7 @@ public class XlglXlzzInfoController {
 	@ResponseBody
 	@RequestMapping("/getDjtList")
 	public void getDjtList(Integer page, Integer limit, String type, String flag, String search) {
+		long starTime = System.currentTimeMillis();
 		Map<String, Object> map1 = new HashMap<>();
 		String userId = CurrentUser.getUserId();
 		JSONArray jsonArray = new JSONArray();
@@ -1100,10 +1104,10 @@ public class XlglXlzzInfoController {
 				jsonObject.put("startTime", xlglSubDocTracking.getExerciseTime());
 				jsonObject.put("sendPeople", xlglSubDocTracking.getSenderName());
 				jsonObject.put("infoId", xlglSubDocTracking.getInfoId());
-				XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(xlglSubDocTracking.getInfoId());
-				if (xlglXlzzInfo != null) {
-					xlglSubDocTracking.setCreatorName(xlglXlzzInfo.getCreatorName());
-				}
+//				XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(xlglSubDocTracking.getInfoId());
+//				if (xlglXlzzInfo != null) {
+//					xlglSubDocTracking.setCreatorName(xlglXlzzInfo.getCreatorName());
+//				}
 				jsonArray.add(jsonObject);
 
 				xlglSubDocTracking.setType(type);
@@ -1119,6 +1123,8 @@ public class XlglXlzzInfoController {
 		// }
 		// }
 		PageUtils pageUtil = new PageUtils(listInfoIds);
+		long endTime = System.currentTimeMillis();
+		System.out.println("app/xlgl/xlglxlzzinfo/getDjtList接口执行时间："+(endTime-starTime)+"毫秒!!!!!!!!!");
 		// pageUtil.setTotalCount(sum);
 		Response.json("page", pageUtil);
 		// Response.json("result", jsonArray);
@@ -1189,6 +1195,7 @@ public class XlglXlzzInfoController {
 	@ResponseBody
 	@RequestMapping("/getWcl")
 	public void getWcl() {
+		long starTime = System.currentTimeMillis();
 		int sum = 0;
 		int count = 0;
 		int bk = 0;
@@ -1197,22 +1204,44 @@ public class XlglXlzzInfoController {
 		String year = String.valueOf(calendar.get(Calendar.YEAR));
 		JSONObject jsonObject = new JSONObject();
 		String userId = CurrentUser.getUserId();
-		sum = xlglSubDocTrackingService.queryAllCount(userId, year);// 所有的课程
-		count = xlglSubDocTrackingService.quereyWcCount(userId, year);// 已参训的课程
-		yhCount = xlglSubDocTrackingService.queryYhCount(userId, year);
-		if (sum > 0) {
-			// bk = sum - count;
-			double f = ((new BigDecimal((float) count / sum).doubleValue())
-					* 100);
-			String wcl = String.valueOf(f);
-			jsonObject.put("wcl", wcl.substring(0,wcl.indexOf(".")+2));
-			jsonObject.put("ywc", count);
-			jsonObject.put("bk", yhCount);
+		//sum = xlglSubDocTrackingService.queryAllCount(userId, year);// 所有的课程
+		//count = xlglSubDocTrackingService.quereyWcCount(userId, year);// 已参训的课程
+		//yhCount = xlglSubDocTrackingService.queryYhCount(userId, year);
+		List<XlglSubDocTracking> list = xlglSubDocTrackingService.queryByUserIdAndYear(userId, year);
+		if (list != null && list.size() > 0) {
+			sum = list.size();
+			for (int i = 0; i < list.size(); i++) {
+				XlglSubDocTracking xlglSubDocTracking = list.get(i);
+				String xlType = xlglSubDocTracking.getXltype();
+				String isWork = xlglSubDocTracking.getIsWork();
+				String baoming = xlglSubDocTracking.getBaoming();
+				if ("0".equals(xlType) && "1".equals(isWork)) {
+					count += 1;
+				}
+				if ("2".equals(baoming)) {
+					yhCount += 1;
+				}
+			}
+			if (sum > 0) {
+				// bk = sum - count;
+				double f = ((new BigDecimal((float) count / sum).doubleValue())
+						* 100);
+				String wcl = String.valueOf(f);
+				jsonObject.put("wcl", wcl.substring(0, wcl.indexOf(".") + 2));
+				jsonObject.put("ywc", count);
+				jsonObject.put("bk", yhCount);
+			} else {
+				jsonObject.put("wcl", "0");
+				jsonObject.put("ywc", "0");
+				jsonObject.put("bk", "0");
+			}
 		} else {
 			jsonObject.put("wcl", "0");
 			jsonObject.put("ywc", "0");
 			jsonObject.put("bk", "0");
 		}
+		long endTime = System.currentTimeMillis();
+		System.out.println("app/xlgl/xlglxlzzinfo/getWcl接口执行时间："+(endTime-starTime)+"毫秒!!!!!!!!!");
 		Response.json(jsonObject);
 
 	}
@@ -1223,6 +1252,7 @@ public class XlglXlzzInfoController {
 	@ResponseBody
 	@RequestMapping("/getCxwcl")
 	public void getCxwcl() {
+		long starTime = System.currentTimeMillis();
 		JSONObject jsonObject = new JSONObject();
 		Map<String, Object> map = new HashMap<>();
 		String userId = CurrentUser.getUserId();
@@ -1231,17 +1261,38 @@ public class XlglXlzzInfoController {
 		String year = sd.format(date);
 		map.put("userId", userId);
 		map.put("year", year);
-		int count = xlglSubDocTrackingService.queryCurrentYear(map);// 本年度大讲堂数+日常训练数
-		int ycx = xlglSubDocTrackingService.queryCxCount(map);// 已参训的大讲堂数和日常军事训练数(已完成),日常军事训练的已报名就代表已参训
-		int bk = xlglSubDocTrackingService.queryBkCount(map);// 延后参训数（补考数）
-		double f = 0;
-		if (count > 0) {
-			f =  ((new BigDecimal((float) ycx / count).doubleValue()) * 100);
+		int count = 0;
+		int ycx = 0;
+		int bk = 0;
+		List<XlglSubDocTracking> list = xlglSubDocTrackingService.queryList(map);
+		if(list != null && list.size() > 0){
+			for(int i = 0;i<list.size();i++){
+				XlglSubDocTracking xlglSubDocTracking = list.get(i);
+				if("1".equals(xlglSubDocTracking.getIsWork())){
+					ycx += 1;
+				}else if("2".equals(xlglSubDocTracking.getBaoming())){
+					bk += 1;
+				}
+			}
+			count = list.size();
+			double f = 0;
+			if (count > 0) {
+				f =  ((new BigDecimal((float) ycx / count).doubleValue()) * 100);
+			}
+			String wcl = String.valueOf(f);
+			jsonObject.put("wcl", wcl.substring(0,wcl.indexOf(".")+2));
+			jsonObject.put("ywc", ycx);
+			jsonObject.put("bk", bk);
+		}else {
+			jsonObject.put("wcl", "0");
+			jsonObject.put("ywc", ycx);
+			jsonObject.put("bk", bk);
 		}
-		String wcl = String.valueOf(f);
-		jsonObject.put("wcl", wcl.substring(0,wcl.indexOf(".")+2));
-		jsonObject.put("ywc", ycx);
-		jsonObject.put("bk", bk);
+		//int count = xlglSubDocTrackingService.queryCurrentYear(map);// 本年度大讲堂数+日常训练数
+		//int ycx = xlglSubDocTrackingService.queryCxCount(map);// 已参训的大讲堂数和日常军事训练数(已完成),日常军事训练的已报名就代表已参训
+		//int bk = xlglSubDocTrackingService.queryBkCount(map);// 延后参训数（补考数）
+		long endTime = System.currentTimeMillis();
+		System.out.println("app/xlgl/xlglxlzzinfo/getCxwcl接口执行时间："+(endTime-starTime)+"毫秒!!!!!!!!!");
 		Response.json(jsonObject);
 	}
 

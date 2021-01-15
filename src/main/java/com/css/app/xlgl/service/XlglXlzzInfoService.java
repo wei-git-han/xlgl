@@ -18,7 +18,9 @@ public interface XlglXlzzInfoService {
 	XlglXlzzInfo queryObject(String id);
 	
 	List<XlglXlzzInfo> queryList(Map<String, Object> map);
-	
+
+	List<XlglXlzzInfo> queryByType(Map<String, Object> map);
+
 	void save(XlglXlzzInfo xlglXlzzInfo);
 	
 	void update(XlglXlzzInfo xlglXlzzInfo);

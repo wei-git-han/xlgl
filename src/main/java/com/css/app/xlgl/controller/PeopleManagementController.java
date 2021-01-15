@@ -31,6 +31,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -241,6 +242,7 @@ public class PeopleManagementController {
 	
 	
 	private JSONObject getStatistics(String status,String organId) {
+		long starTime = System.currentTimeMillis();
 		LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 		if(StringUtils.isNotBlank(status) && status.equals("0") && StringUtils.isBlank(organId)) {
 			organId = "root";
@@ -248,25 +250,27 @@ public class PeopleManagementController {
 			if(StringUtils.isBlank(organId)) {
 				organId = CurrentUser.getSSOUser().getOrganId();
 				BaseAppOrgan queryObject3 = baseAppOrganService.queryObject(organId);
-				if(StringUtils.isNotBlank(queryObject3.getTreePath())) {
-					String[] split = queryObject3.getTreePath().split(",");
-					List<BaseAppOrgan> queryListByIds = baseAppOrganService.queryListByIds(split);
-					for (BaseAppOrgan baseAppOrgan : queryListByIds) {
-						if(baseAppOrgan.getParentId().equals("root")) {
-							organId = baseAppOrgan.getId();
-							break;
-						}
-					}
-				}
+//				if(StringUtils.isNotBlank(queryObject3.getTreePath())) {
+//					String[] split = queryObject3.getTreePath().split(",");
+//					List<BaseAppOrgan> queryListByIds = baseAppOrganService.queryListByIds(split);
+//					for (BaseAppOrgan baseAppOrgan : queryListByIds) {
+//						if(baseAppOrgan.getParentId().equals("root")) {
+//							organId = baseAppOrgan.getId();
+//							break;
+//						}
+//					}
+//				}
+				organId = queryObject3.getParentId();
 			}
 		}
 		List<BaseAppOrgan> organs = baseAppOrganService.queryList(null);
 		List<String> arrayList = new ArrayList<String>();
 		arrayList = OrgUtil.getOrganTreeList(organs, organId, true, true, arrayList);
-		String[] arr = new String[arrayList.size()];
-		for (int i = 0; i < arr.length; i++) {
-			arr[i] = arrayList.get(i);
-		}
+		String [] arr = arrayList.toArray(new String[arrayList.size()]);
+//		String[] arr1 = new String[arrayList.size()];
+//		for (int i = 0; i < arr1.length; i++) {
+//			arr1[i] = arrayList.get(i);
+//		}
 		int userAllYx = 0;
 		if(StringUtils.isNotBlank(organId) && !"root".equals(organId)){
 			userAllYx = baseAppUserService.queryZc(organId); //注册人数
@@ -318,6 +322,8 @@ public class PeopleManagementController {
 		jsonData.put("userIdList", userIdList);// 在线人数
 		jsonData.put("qjNum", qjNum);  //请假人数
 		jsonData.put("otherPlacesNum", otherPlacesNum);//京外人数
+		long endTime = System.currentTimeMillis();
+		System.out.println("app/xlgl/peopleManagement/getStatisticsByDept接口执行时间："+(endTime-starTime)+"毫秒!!!!!!!!!");
 		return jsonData;
 	}
 	
