@@ -133,20 +133,20 @@ public class XlglDocumentZbjlController {
 	@RequestMapping("/send")
 	public void send(String fileId, String idAndNames, String deptIds, String deptNames) {
 		if (StringUtils.isNotBlank(fileId) && StringUtils.isNotBlank(idAndNames)) {
-			String organId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
-			BaseAppOrgan org = baseAppOrganService.queryObject(organId);
+			//String organId = baseAppOrgMappedService.getBareauByUserId(CurrentUser.getUserId());
+			//BaseAppOrgan org = baseAppOrganService.queryObject(organId);
 			// 添加转办记录
-			XlglDocumentZbjl xlglDocumentZbjl1 = xlglDocumentZbjlService.queryByInfoId(fileId);
-			if (xlglDocumentZbjl1 != null) {
-				xlglDocumentZbjlService.deleteByInfoId(fileId);
-			}
-			XlglDocumentZbjl xlglDocumentZbjl = new XlglDocumentZbjl();
-			xlglDocumentZbjl.setId(UUIDUtils.random());
-			xlglDocumentZbjl.setInfoId(fileId);
-			xlglDocumentZbjl.setReceiverIds(deptIds);
-			xlglDocumentZbjl.setReceiverNames(deptNames);
-			xlglDocumentZbjl.setCreatedTime(new Date());
-			xlglDocumentZbjl.setOrgName(org.getName());
+//			XlglDocumentZbjl xlglDocumentZbjl1 = xlglDocumentZbjlService.queryByInfoId(fileId);
+//			if (xlglDocumentZbjl1 != null) {
+//				xlglDocumentZbjlService.deleteByInfoId(fileId);
+//			}
+//			XlglDocumentZbjl xlglDocumentZbjl = new XlglDocumentZbjl();
+//			xlglDocumentZbjl.setId(UUIDUtils.random());
+//			xlglDocumentZbjl.setInfoId(fileId);
+//			xlglDocumentZbjl.setReceiverIds(deptIds);
+//			xlglDocumentZbjl.setReceiverNames(deptNames);
+//			xlglDocumentZbjl.setCreatedTime(new Date());
+//			xlglDocumentZbjl.setOrgName(org.getName());
 			// xlglDocumentZbjlService.save(xlglDocumentZbjl);
 
 			XlglXlzzInfo xlglXlzzInfo = xlglXlzzInfoService.queryObject(fileId);
@@ -176,9 +176,10 @@ public class XlglDocumentZbjlController {
 				}
 				// 获取局管理员,给局管理员发送消息提醒
 				List<String> userIds = adminSetService.queryUserIdByOrgId(deptId);
+				MsgTip msg = msgService.queryObject(MSGTipDefined.XLGL);
 				if (userIds != null && userIds.size() > 0) {
 					for (String userId : userIds) {
-						MsgTip msg = msgService.queryObject(MSGTipDefined.XLGL);
+						//MsgTip msg = msgService.queryObject(MSGTipDefined.XLGL);
 						if (msg != null) {
 							String msgUrl ="";// msg.getMsgRedirect() + "&fileId=" + infoId + "&subId=" + subId;
 							if (StringUtils.isNotBlank(userId)) {
