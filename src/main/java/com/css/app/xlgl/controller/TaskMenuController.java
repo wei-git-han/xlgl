@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.alibaba.fastjson.JSON;
 import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppUserService;
+import com.css.addbase.apporgan.util.RedisUtil;
 import com.css.app.xlgl.service.XlglAdminSetService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,9 @@ public class TaskMenuController {
 
     @Autowired
     private BaseAppUserService baseAppUserService;
+
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * 列表
@@ -176,7 +180,13 @@ public class TaskMenuController {
     @RequestMapping(value = "/menutree4role")
     @ResponseBody
     public Object getMenuTree() {
-        JSONArray list = getOrganTree("root");
+        long starTime = System.currentTimeMillis();
+        JSONArray list = new JSONArray();
+        //JSONArray list = getOrganTree("root");
+        long endTime = System.currentTimeMillis();
+        String value  = redisUtil.getString("xlgl-taskMenu");
+        list = JSONArray.parseArray(value);
+        System.out.println("app/xlgl/taskmenu/menutree4role接口执行时间："+(endTime-starTime)+"毫秒!!!!!!!!!");
         return list;
     }
 
