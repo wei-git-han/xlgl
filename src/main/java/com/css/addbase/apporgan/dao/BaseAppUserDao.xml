@@ -322,7 +322,7 @@
 	</select>
 	
 	<select id="queryUserOrganId" resultType="java.lang.String">
-		select  ORGANID from BASE_APP_USER where ISDELETE = 0 and  sfyx = '0' and ORGANID in
+		select distinct  ORGANID from BASE_APP_USER where ISDELETE = 0 and  sfyx = '0' and ORGANID in
 		<foreach item="deptIds" collection="array" open="(" separator=","
 			close=")">
 			#{deptIds}

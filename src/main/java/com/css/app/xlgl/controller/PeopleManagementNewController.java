@@ -210,16 +210,18 @@ public class PeopleManagementNewController {
     @ResponseBody
     @RequestMapping("/organTreeListALL")
     public void organTreeALL(String organId) {
+		long starTime = System.currentTimeMillis();
     	JSONObject json = new JSONObject();
     	JSONArray jsonArray = new JSONArray();
     	if(StringUtils.isNotBlank(organId)) {
 			List<BaseAppOrgan> organs = baseAppOrganService.queryList(null);
 			List<String> arrayList = new ArrayList<String>();
 			arrayList = OrgUtil.getOrganTreeList(organs, organId, true, true, arrayList);
-			String[] arr = new String[arrayList.size()];
-			for (int i = 0; i < arr.length; i++) {
-				arr[i] = arrayList.get(i);
-			}
+			String [] arr = arrayList.toArray(new String[arrayList.size()]);
+//			String[] arr = new String[arrayList.size()];
+//			for (int i = 0; i < arr.length; i++) {
+//				arr[i] = arrayList.get(i);
+//			}
 			 List<BaseAppOrgan> queryListByIds = baseAppOrganService.queryListByIds(arr);
 			 List<String> queryUserOrganId = baseAppUserService.queryUserOrganId(arr);
 			 for (BaseAppOrgan baseAppOrgan : queryListByIds) {
@@ -232,6 +234,8 @@ public class PeopleManagementNewController {
 			}
 			 json.put("list", jsonArray);
 		}
+		long endTime = System.currentTimeMillis();
+		System.out.println("app/xlgl/peopleManagementNew/organTreeListALL接口执行时间："+(endTime-starTime)+"毫秒!!!!!!!!!");
     	Response.json(json);
     	
     }

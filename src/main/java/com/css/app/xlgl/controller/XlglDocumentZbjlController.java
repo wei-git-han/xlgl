@@ -454,6 +454,7 @@ public class XlglDocumentZbjlController {
 	@ResponseBody
 	@RequestMapping("/juList")
 	public void juList(Integer page, Integer pagesize, String search, String xltype) {
+		long starTime = System.currentTimeMillis();
 		Map<String, Object> map = new HashMap<String, Object>();
 		String loginUserId = CurrentUser.getUserId();
 		String orgId = baseAppUserService.getBareauByUserId(loginUserId);
@@ -468,19 +469,21 @@ public class XlglDocumentZbjlController {
 		}
 		PageHelper.startPage(page, pagesize);
 		List<XlglSubDocInfo> list = xlglSubDocInfoService.queryListForJu(map);
-		for (XlglSubDocInfo xlglSubDocInfo : list) {
-			Map<String, Object> hashmap = new HashMap<String, Object>();
-			hashmap.put("id", xlglSubDocInfo.getInfoId());
-			hashmap.put("type", "4");
-			List<XlglPicture> queryList = xlglPictureService.queryListByType(hashmap);
-			if (queryList.size() > 0) {
-				if (queryList.get(0).getFileId().equals(xlglSubDocInfo.getInfoId())) {
-					xlglSubDocInfo.setPicturePath(queryList.get(0).getPictureId());
-				}
-			}
-		
-		}
+//		for (XlglSubDocInfo xlglSubDocInfo : list) {
+//			Map<String, Object> hashmap = new HashMap<String, Object>();
+//			hashmap.put("id", xlglSubDocInfo.getInfoId());
+//			hashmap.put("type", "4");
+//			List<XlglPicture> queryList = xlglPictureService.queryListByType(hashmap);
+//			if (queryList.size() > 0) {
+//				if (queryList.get(0).getFileId().equals(xlglSubDocInfo.getInfoId())) {
+//					xlglSubDocInfo.setPicturePath(queryList.get(0).getPictureId());
+//				}
+//			}
+//
+//		}
 		GwPageUtils pageUtil = new GwPageUtils(list);
+		long endTime = System.currentTimeMillis();
+		System.out.println("app/xlgl/xlgldocumentzbjl/juList接口执行时间："+(endTime-starTime)+"毫秒!!!!!!!!!");
 		Response.json(pageUtil);
 	}
 
