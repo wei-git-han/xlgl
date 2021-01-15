@@ -321,7 +321,7 @@ public class PeopleManagementController {
 		jsonData.put("qjNum", qjNum);  //请假人数
 		jsonData.put("otherPlacesNum", otherPlacesNum);//京外人数
 		long endTime = System.currentTimeMillis();
-		System.out.println("app/xlgl/xlglxlzzinfo/list接口执行时间："+(endTime-starTime)+"毫秒!!!!!!!!!");
+		System.out.println("app/xlgl/peopleManagement/getStatisticsByDept接口执行时间："+(endTime-starTime)+"毫秒!!!!!!!!!");
 		return jsonData;
 	}
 	
