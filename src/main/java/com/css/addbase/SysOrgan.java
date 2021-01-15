@@ -1,6 +1,8 @@
 package com.css.addbase;
 
 import javax.servlet.http.HttpServletRequest;
+
+import com.css.addbase.apporgan.util.RedisUtil;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.apache.commons.lang.StringUtils;
@@ -28,6 +30,9 @@ public class SysOrgan {
 	
 	@Autowired
 	private BaseAppOrgMappedService baseAppOrgMappedService;
+
+	@Autowired
+	private RedisUtil redisUtil;
 	
 	@RequestMapping(value = "/tree")
 	@ResponseBody
@@ -53,16 +58,37 @@ public class SysOrgan {
 	@RequestMapping(value = "/currenttree")
 	@ResponseBody
 	public Object getDeptCurrentTree(HttpServletRequest request,String organId) {
+		long starTime = System.currentTimeMillis();
 		JSONObject list = new JSONObject();
-		if(StringUtils.isNotBlank(organId)) {
-			 list=  getOrganTree(organId);
-		}else {
-			 list=  getOrganTree("root");
+		String value = redisUtil.getString("xlglCurrentTreeTask");
+		if (StringUtils.isNotBlank(value)) {
+			JSONArray listArray = JSONArray.parseArray(value);
+			if (listArray != null && listArray.size() > 0) {
+				for (int i = 0; i < listArray.size(); i++) {
+					JSONObject jsonObject = (JSONObject) listArray.get(i);
+					String deptId = (String) jsonObject.get("id");
+					if (organId.equals(deptId)) {
+						list = jsonObject;
+						break;
+					}
+					if(StringUtils.isBlank(organId)){
+						list = (JSONObject) listArray.get(list.size() - 1);
+					}
+				}
+			}
+		} else {
+			if (StringUtils.isNotBlank(organId)) {
+				list = getOrganTree(organId);
+			} else {
+				list = getOrganTree("root");
+			}
+			JSONObject json = new JSONObject();
+			json.put("opened", true);
+			list.put("state", json);
+			list.put("currentOrgId", "root");
 		}
-		JSONObject json = new JSONObject();
-		json.put("opened", true);
-		list.put("state", json);
-		list.put("currentOrgId", "root");
+		long endTime = System.currentTimeMillis();
+		System.out.println("app/xlgl/sysorgan/currenttree接口执行时间：" + (endTime - starTime) + "毫秒!!!!!!!!!");
 		return list;
 	}
 	

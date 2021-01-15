@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.alibaba.fastjson.JSON;
 import com.css.addbase.apporgan.entity.BaseAppUser;
 import com.css.addbase.apporgan.service.BaseAppUserService;
+import com.css.addbase.apporgan.util.RedisUtil;
 import com.css.app.xlgl.service.XlglAdminSetService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,9 @@ public class TaskMenuController {
 
     @Autowired
     private BaseAppUserService baseAppUserService;
+
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * 列表
@@ -176,27 +180,32 @@ public class TaskMenuController {
     @RequestMapping(value = "/menutree4role")
     @ResponseBody
     public Object getMenuTree() {
-    	long starTime = System.currentTimeMillis();
-    	List<TaskMenu> queryList = taskMenuService.queryList(null);
-        JSONArray list = getOrganTree(queryList,"root");
-    	long endTime = System.currentTimeMillis();
-    	System.out.println("/app/xlgl/taskmenu/menutree4role接口执行时间:------------------"+(starTime - endTime)+"(毫秒)--------------------------------");
+        long starTime = System.currentTimeMillis();
+        JSONArray list = new JSONArray();
+        //JSONArray list = getOrganTree("root");
+        long endTime = System.currentTimeMillis();
+        String value  = redisUtil.getString("xlgl-taskMenu");
+        if(StringUtils.isNotBlank(value)){
+            list = JSONArray.parseArray(value);
+        }else{
+            list = getOrganTree("root");
+        }
+        System.out.println("app/xlgl/taskmenu/menutree4role接口执行时间："+(endTime-starTime)+"毫秒!!!!!!!!!");
         return list;
     }
 
-    public JSONArray getOrganTree(List<TaskMenu> list,String id) {
+    public JSONArray getOrganTree(String id) {
         JSONArray jsons = new JSONArray();
-        for (TaskMenu menu : list) {
-        	if(StringUtils.isNotBlank(menu.getParentId()) && menu.getParentId().equals(id)) {
-        		 JSONObject json = new JSONObject();
-                 json.put("id", menu.getMenuId());
-                 json.put("text", menu.getDisplayName());
-                 JSONArray children = getOrganTree(list,menu.getMenuId());
-                 if (children.size() > 0) {
-                     json.put("children", children);
-                 }
-                 jsons.add(json);
-        	}   
+        List<TaskMenu> menus = taskMenuService.findByParentId(id);
+        for (TaskMenu menu : menus) {
+            JSONObject json = new JSONObject();
+            json.put("id", menu.getMenuId());
+            json.put("text", menu.getDisplayName());
+            JSONArray children = getOrganTree(menu.getMenuId());
+            if (children.size() > 0) {
+                json.put("children", children);
+            }
+            jsons.add(json);
         }
         return jsons;
     }
@@ -216,7 +225,7 @@ public class TaskMenuController {
         }else {
             JSONArray jsonArray = (JSONArray) jsons.getJSONObject(0).get("children");
             //获取当前人的管理员类型（0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员;4:处管理员）
-            String adminFlag = adminSetService.getAdminTypeByUserId(userId);
+            String adminFlag = adminSetService.getAdminTypeByUserId(CurrentUser.getUserId());
             if ("4".equals(adminFlag)) {//处管理员只显示处管理员配置菜单
                 JSONObject jsonObject = jsons.getJSONObject(4);
                 JSONArray jsonArray1 = (JSONArray) jsonObject.get("children");
@@ -293,7 +302,7 @@ public class TaskMenuController {
             Response.json(jsons);
         }
     }
-    
+
     public JSONArray getMenuChildren(List<TaskMenu> menus, String parentId) {
 
         JSONArray jsons = new JSONArray();

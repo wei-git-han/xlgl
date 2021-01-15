@@ -163,9 +163,18 @@
 		</foreach>
 	</delete>
 
-	<select id="queryUserCount" resultType="String">
-		select IFNULL(count(distinct REPLY_USER_ID),0)  from XLGL_EXAM_MAIN_ANSWER x
-		left join  BASE_APP_USER u on x.REPLY_USER_ID = u.id
+	<select id="queryUserCount" resultType="java.util.Map">
+		select 
+			count(distinct REPLY_USER_ID)  as numberInto,
+			count(case when  x.level = '优秀' then 1 else null end)  as total1,
+			count(case when  x.level = '优良' then 1 else null end)  as total2,
+			count(case when  x.level = '及格' then 1 else null end)  as total3
+		from 
+			XLGL_EXAM_MAIN_ANSWER x
+		left join  
+			BASE_APP_USER u 
+		on 
+			x.REPLY_USER_ID = u.id
 		 where 1 = 1 and (u.sfyx is null or u.sfyx = '0')
 		 <if test="examineId != null and examineId != ''">
 			and x.EXAMINE_ID = #{examineId}
@@ -308,11 +317,20 @@
         )
 	</select>
 	
-	<select id="findExamByOrganId" resultType="com.css.app.xlgl.entity.XlglExamMainAnswer">
-    select x.* from 
-    	XLGL_EXAM_MAIN_ANSWER x
-		left join  BASE_APP_USER u on x.REPLY_USER_ID = u.id
-    	where	 1=1 and (u.sfyx is null or u.sfyx = '0') and
+	<select id="findExamByOrganId" resultType="java.util.Map">
+   		select 
+   			count(1) as numberAll,
+    		count(case when x.isnotexam ='0' then 1 else null end) as fillUpNum,
+			count(case when x.isnotexam ='1' and x.level = '优秀' then 1 else null end) as total,
+			count(case when x.isnotexam ='1' and x.level = '优良' then 1 else null end) as fine,
+			count(case when x.isnotexam ='1' and x.level = '及格' then 1 else null end) as pass,
+			count(case when x.isnotexam ='1' then 1 else null end) as peopleNum
+    	from 
+    		XLGL_EXAM_MAIN_ANSWER x
+		left join  
+			BASE_APP_USER u on x.REPLY_USER_ID = u.id
+   		 where	
+    		1=1 and (u.sfyx is null or u.sfyx = '0') and
     		x.ORGAN_ID in
     		(
 			select 

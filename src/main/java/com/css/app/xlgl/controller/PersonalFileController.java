@@ -226,10 +226,15 @@ public class PersonalFileController {
 	 * */
 	@ResponseBody
 	@RequestMapping("/count")
-	public void count() {
+	public void count(String year) {
 		JSONObject jsonObject = new JSONObject();
+		Calendar calendar = Calendar.getInstance();
+		if(StringUtils.isBlank(year)) {
+			 year = String.valueOf(calendar.get(Calendar.YEAR));
+		}
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		map.put("replyUserId", CurrentUser.getUserId());
+		map.put("year", year);
 		int total = personalFileService.queryTotal(map);
 		map.put("level", "优秀");
 		int levelTotal = personalFileService.queryTotal(map);
@@ -320,9 +325,11 @@ public class PersonalFileController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getUserPerXlInfo")
-	public void getUserPerXlInfo(){
+	public void getUserPerXlInfo(String year){
 		Calendar calendar = Calendar.getInstance();
-		String year = String.valueOf(calendar.get(Calendar.YEAR));
+		if(StringUtils.isBlank(year)) {
+			 year = String.valueOf(calendar.get(Calendar.YEAR));
+		}
 		String userId = CurrentUser.getUserId();
 		//只查出导入的数据，且只取最新的一次的
 		XlglPhysical xlglPhysical = xlglPhysicalService.queryByUserId(userId,year);
@@ -401,9 +408,11 @@ public class PersonalFileController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getUserPerZxInfo")
-	public void getUserPerZxInfo(){
+	public void getUserPerZxInfo(String year){
 		Calendar calendar = Calendar.getInstance();
-		String year = String.valueOf(calendar.get(Calendar.YEAR));
+		if(StringUtils.isBlank(year)) {
+			 year = String.valueOf(calendar.get(Calendar.YEAR));
+		}
 		String userId = CurrentUser.getUserId();
 		XlglMineStudy xlglMineStudy = xlglMineStudyService.queryByUserId(userId,year);
 		Response.json("xlglMineStudy",xlglMineStudy);

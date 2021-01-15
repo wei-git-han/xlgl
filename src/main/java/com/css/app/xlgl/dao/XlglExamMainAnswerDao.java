@@ -19,7 +19,7 @@ import com.css.base.dao.BaseDao;
 @Mapper
 public interface XlglExamMainAnswerDao extends BaseDao<XlglExamMainAnswer> {
 	
-	String queryUserCount(HashMap<String, Object> mapAll);
+	Map<String,Object> queryUserCount(HashMap<String, Object> mapAll);
 	void saveBatch(List<XlglExamMainAnswer> list);
 	
 	List<XlglExamMainAnswer> findListBySubjectId(Map<String, Object> map);
@@ -30,7 +30,7 @@ public interface XlglExamMainAnswerDao extends BaseDao<XlglExamMainAnswer> {
 
 	List<XlglExamMainAnswer> queryExamByUserIdAndExamId(Map<String, Object> map);
 	
-	List<XlglExamMainAnswer> findExamByOrganId(Map<String, Object> map);
+	Map<String,Object> findExamByOrganId(Map<String, Object> map);
 	
 	List<XlglExamMainAnswer> queryExamineIdAndReplyUserId(Map<String, Object> map);
 	

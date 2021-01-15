@@ -74,7 +74,7 @@ public class XlglExamMainAnswerServiceImpl implements XlglExamMainAnswerService 
 	}
 
 	@Override
-	public String queryUserCount(HashMap<String, Object> mapAll) {
+	public Map<String,Object> queryUserCount(HashMap<String, Object> mapAll) {
 		// TODO Auto-generated method stub
 		return xlglExamMainAnswerDao.queryUserCount(mapAll);
 	}
@@ -99,10 +99,6 @@ public class XlglExamMainAnswerServiceImpl implements XlglExamMainAnswerService 
 		return xlglExamMainAnswerDao.queryExamByUserIdAndExamId(map);
 	}
 
-	@Override
-	public List<XlglExamMainAnswer> findExamByOrganId(Map<String, Object> map) {
-		return xlglExamMainAnswerDao.findExamByOrganId(map);
-	}
 
 	@Override
 	public InputStream createExcelInfoFlie(List<XlglExamMainAnswer> list, String[] title, String fileName,JSONObject json,String totalName
@@ -316,6 +312,11 @@ public class XlglExamMainAnswerServiceImpl implements XlglExamMainAnswerService 
 			hashMap.put(xlglExamMainAnswer.getExamineId()+"-"+xlglExamMainAnswer.getReplyUserId(), xlglExamMainAnswer);
 		}
 		return hashMap;
+	}
+
+	@Override
+	public Map<String, Object> findExamByOrganId(Map<String, Object> map) {
+		return xlglExamMainAnswerDao.findExamByOrganId(map);
 	}
 
 	
