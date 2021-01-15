@@ -44,7 +44,7 @@ public interface XlglExamMainAnswerService {
 
 	List<XlglExamMainAnswer> findListAllExam(Map<String, Object> map);
 	
-	List<XlglExamMainAnswer> findExamByOrganId(Map<String, Object> map);
+	Map<String,Object> findExamByOrganId(Map<String, Object> map);
 	
 	InputStream createExcelInfoFlie(List<XlglExamMainAnswer> list,String[] title,String fileName,JSONObject json,String totalName,String listName) throws Exception;
 	List<XlglExamMainAnswer> getListing(String examineId,String makeupStatus,String level,String replyUserName
