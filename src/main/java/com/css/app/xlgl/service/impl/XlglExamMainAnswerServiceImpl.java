@@ -74,7 +74,7 @@ public class XlglExamMainAnswerServiceImpl implements XlglExamMainAnswerService 
 	}
 
 	@Override
-	public String queryUserCount(HashMap<String, Object> mapAll) {
+	public Map<String,Object> queryUserCount(HashMap<String, Object> mapAll) {
 		// TODO Auto-generated method stub
 		return xlglExamMainAnswerDao.queryUserCount(mapAll);
 	}

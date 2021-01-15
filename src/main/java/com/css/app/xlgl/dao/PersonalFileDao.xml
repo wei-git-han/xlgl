@@ -27,7 +27,7 @@
 			and b.REPLY_USER_ID = #{replyUserId}
 		</if>
 		<if test="year != null and year !=''">
-			and a.CREATE_DATE like '%'||#{year}||'%'
+			and to_char(a.CREATE_DATE,'yyyy') = #{year}
 		</if>
 		order by b.UPDATE_DATE desc
 	</select>
