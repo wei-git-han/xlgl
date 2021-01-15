@@ -1195,6 +1195,7 @@ public class XlglXlzzInfoController {
 	@ResponseBody
 	@RequestMapping("/getWcl")
 	public void getWcl() {
+		long starTime = System.currentTimeMillis();
 		int sum = 0;
 		int count = 0;
 		int bk = 0;
@@ -1239,6 +1240,8 @@ public class XlglXlzzInfoController {
 			jsonObject.put("ywc", "0");
 			jsonObject.put("bk", "0");
 		}
+		long endTime = System.currentTimeMillis();
+		System.out.println("app/xlgl/xlglxlzzinfo/getWcl接口执行时间："+(endTime-starTime)+"毫秒!!!!!!!!!");
 		Response.json(jsonObject);
 
 	}
