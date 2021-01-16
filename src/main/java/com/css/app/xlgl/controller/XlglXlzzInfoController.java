@@ -101,23 +101,6 @@ public class XlglXlzzInfoController {
 
 		// 查询列表数据
 		List<XlglXlzzInfo> xlglXlzzInfoList = xlglXlzzInfoService.queryByType(map);
-//		if (xlglXlzzInfoList != null && xlglXlzzInfoList.size() > 0) {
-//			for (XlglXlzzInfo xlglXlzzInfo : xlglXlzzInfoList) {
-//				xlglXlzzInfo.setInfoId(xlglXlzzInfo.getId());
-//				Map<String, Object> hashmap = new HashMap<String, Object>();
-//				hashmap.put("id", xlglXlzzInfo.getId());
-//				hashmap.put("type", "4");
-//				List<XlglPicture> queryList = xlglPictureService.queryListByType(hashmap);
-//				if (queryList.size() > 0) {
-//					if (queryList.get(0).getFileId().equals(xlglXlzzInfo.getId())) {
-//						xlglXlzzInfo.setPicturePath(queryList.get(0).getPictureId());
-//					}
-//				}
-//			}
-//		}
-
-		// PageUtils pageUtil = new PageUtils(xlglXlzzInfoList);
-		// Response.json("page",pageUtil);
 
 		GwPageUtils pageUtil = new GwPageUtils(xlglXlzzInfoList);
 		long endTime = System.currentTimeMillis();

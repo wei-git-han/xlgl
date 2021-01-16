@@ -23,14 +23,15 @@
 
 	<select id="queryByType" resultType="com.css.app.xlgl.entity.XlglXlzzInfo">
 		select
-		b.*,f.PICTURE_ID as picturePath
+			b.*,
+			f.PICTURE_ID as picturePath,
+			b.id as infoId
 		from
-		XLGL_XLZZ_INFO b
+			XLGL_XLZZ_INFO b
 		left join
-		(
-		select * from XLGL_PICTURE where PICTURE_TYPE = '4'
-		)
-		f
+			(
+			select * from XLGL_PICTURE where PICTURE_TYPE = '4'
+			)f
 		on
 		b.id = f.FILE_ID  where 1=1
 		<if test="search != null and search !=''">
