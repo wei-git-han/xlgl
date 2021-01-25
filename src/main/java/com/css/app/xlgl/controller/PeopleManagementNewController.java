@@ -218,10 +218,6 @@ public class PeopleManagementNewController {
 			List<String> arrayList = new ArrayList<String>();
 			arrayList = OrgUtil.getOrganTreeList(organs, organId, true, true, arrayList);
 			String [] arr = arrayList.toArray(new String[arrayList.size()]);
-//			String[] arr = new String[arrayList.size()];
-//			for (int i = 0; i < arr.length; i++) {
-//				arr[i] = arrayList.get(i);
-//			}
 			 List<BaseAppOrgan> queryListByIds = baseAppOrganService.queryListByIds(arr);
 			 List<String> queryUserOrganId = baseAppUserService.queryUserOrganId(arr);
 			 for (BaseAppOrgan baseAppOrgan : queryListByIds) {

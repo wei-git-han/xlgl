@@ -358,18 +358,6 @@ public class XlglExamAnswerController {
 		xlglExamMainAnswer.setUpdateDate(date);
 		xlglExamMainAnswer.setId(mainAnswerId);
 		xlglExamMainAnswerService.update(xlglExamMainAnswer);
-		/*List<XlglExamAnswer> list =	new ArrayList<XlglExamAnswer>();
-		for (int i = 0; i < parseArray.size(); i++) {
-			xlglExamAnswerService.save(parseArray.get(i));
-			
-			list.add(parseArray.get(i));
-			if(list.size() == 1) {
-				xlglExamAnswerService.saveBatch(list);
-				list = new ArrayList<XlglExamAnswer>();
-			}else if(parseArray.size()-1 -i ==0){
-				xlglExamAnswerService.saveBatch(list);
-			}
-		}*/
 	
 		jsonObject.put("mainAnswer", queryObject);
 		jsonObject.put("answerList", parseArray);
@@ -379,7 +367,6 @@ public class XlglExamAnswerController {
 		List<XlglExamExaminetopicDto> listCount = xlglExamExaminetopicService.findCountBySubjectId(map);
 		jsonObject.put("listCount", listCount);
 		jsonObject.put("code", 0);
-		//Response.json(jsonObject);
 		Response.ok();
 	}
 	/**

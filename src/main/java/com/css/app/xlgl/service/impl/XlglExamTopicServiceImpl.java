@@ -79,7 +79,6 @@ public class XlglExamTopicServiceImpl implements XlglExamTopicService {
 		List<XlglExamTopic> list =new ArrayList<XlglExamTopic>();
 		try {
 		Workbook wb =new HSSFWorkbook(is);
-		//int numberOfSheets = wb.getNumberOfSheets();
 		Sheet sheet = wb.getSheetAt(0); // 遍历第一个Sheet
 		String title = sheet.getRow(0).getCell(0).getStringCellValue();//标题，用于判断是哪一类题
 		String titleType ="";

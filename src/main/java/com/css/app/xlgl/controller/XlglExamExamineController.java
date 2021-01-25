@@ -125,8 +125,6 @@ public class XlglExamExamineController {
 		mapAnswer.put("replyUserId", userId);
 		List<XlglExamMainAnswer> queryList = xlglExamMainAnswerService.queryList(mapAnswer);
 		for (XlglExamExamine xlglExamExamine : xlglExamExamineList) {
-			//map.put("examineId", xlglExamExamine.getId());
-			//int queryTotal = xlglExamExamineService.findCount(map);// 总用户人数
 			Integer queryTotal = 0;
 			Integer number = xlglExamExamine.getNumber();
 			if(xlglExamExamine.getQueryTotal() != null) {
@@ -265,55 +263,6 @@ public class XlglExamExamineController {
 		map.put("issueStatus", "1");
 		Date date = new Date();
 		// 查询列表数据
-		/*List<XlglExamExamine> xlglExamExamineList = xlglExamExamineService.queryList(map);
-		for (XlglExamExamine xlglExamExamine : xlglExamExamineList) {
-			map.put("examineId", xlglExamExamine.getId());
-			// 当前考试是否发起补考
-			List<XlglExamExamineMakeup> makeupList = xlglExamExamineMakeupService.queryList(map);
-			if (makeupList.size() > 0) {// 查看是否有补考，如果有补考则以补考结束时间为准
-				XlglExamExamineMakeup xlglExamExamineMakeup = makeupList.get(0);
-				if (xlglExamExamineMakeup.getMakeUpEndDate() != null
-						&& xlglExamExamineMakeup.getMakeUpEndDate().before(date)) {
-					XlglExamExamine ex = new XlglExamExamine();
-					ex.setId(xlglExamExamine.getId());
-					ex.setOverStatus("1");
-					xlglExamExamine.setOverStatus("1");
-					xlglExamExamineService.update(ex);
-				} else if (xlglExamExamineMakeup.getMakeUpEndDate() != null
-						&& xlglExamExamineMakeup.getMakeUpStartDate().before(date)
-						&& xlglExamExamineMakeup.getMakeUpEndDate().after(date)
-						&& !xlglExamExamine.getOverStatus().equals("0")) {
-					XlglExamExamine ex = new XlglExamExamine();
-					ex.setId(xlglExamExamine.getId());
-					ex.setOverStatus("2");
-					xlglExamExamineService.update(ex);
-				} else if (xlglExamExamineMakeup.getMakeUpStartDate() != null
-						&& xlglExamExamineMakeup.getMakeUpEndDate() != null
-						&& xlglExamExamineMakeup.getMakeUpStartDate().after(date)) {
-					XlglExamExamine ex = new XlglExamExamine();
-					ex.setId(xlglExamExamine.getId());
-					ex.setOverStatus("99");
-					xlglExamExamineService.update(ex);
-				}
-			} else {
-				if (xlglExamExamine.getExamineEndDate() != null && xlglExamExamine.getIssueStatus() != null
-						&& xlglExamExamine.getExamineEndDate().before(new Date())) {
-					XlglExamExamine ex = new XlglExamExamine();
-					ex.setId(xlglExamExamine.getId());
-					ex.setOverStatus("1");
-					xlglExamExamine.setOverStatus("1");
-					xlglExamExamineService.update(ex);
-				} else if (xlglExamExamine.getExamineEndDate() != null && xlglExamExamine.getIssueStatus() != null
-						&& date.after(xlglExamExamine.getExamineStartDate())
-						&& date.before(xlglExamExamine.getExamineEndDate())
-						&& !xlglExamExamine.getOverStatus().equals("0")) {
-					XlglExamExamine ex = new XlglExamExamine();
-					ex.setId(xlglExamExamine.getId());
-					ex.setOverStatus("0");
-					xlglExamExamineService.update(ex);
-				}
-			}
-		}*/
 		map.put("status", "0");
 		map.put("overStatus", "0");
 		int into = xlglExamExamineService.queryTotal(map);// 进行中
@@ -416,10 +365,7 @@ public class XlglExamExamineController {
 		}
 		String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		logger.info("当前删除操作人：" + CurrentUser.getUsername() + "---id:" + CurrentUser.getUserId() + "--时间是：" + date);
-		/*
-		 * for (int i = 0; i < ids.length; i++) {
-		 * xlglExamExaminetopicService.deleteByExamineId(ids[i]); }
-		 */
+
 		Response.ok();
 	}
 
@@ -1017,10 +963,7 @@ public class XlglExamExamineController {
 			List<BaseAppOrgan> organs = baseAppOrganService.queryList(null);
 			List<String> arrayList = new ArrayList<String>();
 			arrayList = OrgUtil.getOrganTreeList(organs, organId, true, true, arrayList);
-			String[] arr = new String[arrayList.size()];
-			for (int i = 0; i < arr.length; i++) {
-				arr[i] = arrayList.get(i);
-			}
+			String [] arr = arrayList.toArray(new String[arrayList.size()]);
 			queryList = baseAppOrganService.queryListByIds(arr);
 		} else {
 			map.put("parentId", "root");
