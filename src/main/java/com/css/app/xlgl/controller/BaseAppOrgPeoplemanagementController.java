@@ -1,5 +1,6 @@
 package com.css.app.xlgl.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,7 @@ import com.css.app.xlgl.service.BaseAppOrgPeoplemanagementService;
  * @date 2021-01-25 10:47:51
  */
 @Controller
-@RequestMapping("/baseapporgpeoplemanagement")
+@RequestMapping("/app/xlgl/baseapporgpeoplemanagement")
 public class BaseAppOrgPeoplemanagementController {
 	@Autowired
 	private BaseAppOrgPeoplemanagementService baseAppOrgPeoplemanagementService;
@@ -55,11 +56,10 @@ public class BaseAppOrgPeoplemanagementController {
 	 * 信息
 	 */
 	@ResponseBody
-	@RequestMapping("/info/{answerReignNumber}")
-	@RequiresPermissions("baseapporgpeoplemanagement:info")
-	public void info(@PathVariable("answerReignNumber") Integer answerReignNumber){
-		BaseAppOrgPeoplemanagement baseAppOrgPeoplemanagement = baseAppOrgPeoplemanagementService.queryObject(answerReignNumber);
-		Response.json("baseAppOrgPeoplemanagement", baseAppOrgPeoplemanagement);
+	@RequestMapping("/info")
+	public void info(String id){
+		BaseAppOrgPeoplemanagement queryObject = baseAppOrgPeoplemanagementService.queryObject(id);
+		Response.json("baseAppOrgPeoplemanagement", queryObject);
 	}
 	
 	/**
@@ -80,7 +80,8 @@ public class BaseAppOrgPeoplemanagementController {
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	public void update(@RequestBody BaseAppOrgPeoplemanagement baseAppOrgPeoplemanagement){
+	public void update(BaseAppOrgPeoplemanagement baseAppOrgPeoplemanagement){
+		baseAppOrgPeoplemanagement.setUpdateDate(new Date());
 		baseAppOrgPeoplemanagementService.update(baseAppOrgPeoplemanagement);
 		Response.ok();
 	}

@@ -124,7 +124,6 @@ public class PeopleManagementController {
 	}
 	
 	private JSONObject getQxjUserInfoList(String parentId,String organId,String userName) {
-		long starTime = System.currentTimeMillis();
 		JSONObject jsonObject = new JSONObject();
 		List<String> userList = getUserArray();
 		HashMap<String,Object> hashMap2 = new HashMap<String, Object>();
@@ -236,8 +235,6 @@ public class PeopleManagementController {
 			jsonObject.put("baseAppOrgPeoplemanagement", baseAppOrgPeoplemanagement);
 		}
 		jsonObject.put("list", list);
-		long endTime = System.currentTimeMillis();
-		System.out.println("app/xlgl/peopleManagement/qxjUserInfoList接口执行时间：--------------------"+(starTime - endTime)+"(毫秒)-----------------------------");
 		return jsonObject;
 	}
 
@@ -270,7 +267,6 @@ public class PeopleManagementController {
 		Response.json(jsonObject);
 	}
 	
-	
 	private JSONObject getStatistics(String status,String organId) {
 		LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 		if(StringUtils.isNotBlank(status) && status.equals("0") && StringUtils.isBlank(organId)) {
@@ -282,11 +278,23 @@ public class PeopleManagementController {
 				organId = queryObject3.getParentId();
 			}
 		}
+		BaseAppOrgPeoplemanagement baseAppOrgPeoplemanagement = new BaseAppOrgPeoplemanagement();
+		if(StringUtils.isBlank(organId)||organId.equals("root")) {
+			List<BaseAppOrgPeoplemanagement> queryList = baseAppOrgPeoplemanagementService.queryList(null);
+			baseAppOrgPeoplemanagement = queryList.get(0);
+		}else {
+			Map<String,Object> hashMap = new HashMap<String,Object>();
+			hashMap.put("deptId", organId);
+			List<BaseAppOrgPeoplemanagement> queryList = baseAppOrgPeoplemanagementService.queryList(hashMap);
+			if(queryList != null && queryList.size()>0) {
+				baseAppOrgPeoplemanagement = queryList.get(0);
+			}
+		}
 		List<BaseAppOrgan> organs = baseAppOrganService.queryList(null);
 		List<String> arrayList = new ArrayList<String>();
 		arrayList = OrgUtil.getOrganTreeList(organs, organId, true, true, arrayList);
 		String [] arr = arrayList.toArray(new String[arrayList.size()]);
-		int userAllYx = 0;
+		int userAllYx = 0; 
 		if(StringUtils.isNotBlank(organId) && !"root".equals(organId)){
 			userAllYx = baseAppUserService.queryZc(organId); //注册人数
 		}else {
@@ -306,13 +314,35 @@ public class PeopleManagementController {
 		}
 		Integer userShouldNumber = 0; //应在线人数
 		Integer qjNum = 0; //请假人数
-		Integer evectionNum = 0; //出差人数
+		Integer evectionNum = 0; //因公请假人数
 		Integer otherPlacesNum = 0 ; //京外人数
+		Integer chuJingNum = 0;//出京人数
+		Integer ysNum = 0;//因私请假人数
+		if(baseAppOrgPeoplemanagement !=null) {
+			if(baseAppOrgPeoplemanagement.getRegisterNumber() !=null)
+			userAllYx += baseAppOrgPeoplemanagement.getRegisterNumber();
+			if(baseAppOrgPeoplemanagement.getReignNumber() !=null)
+			userIdList += baseAppOrgPeoplemanagement.getReignNumber();
+			if(baseAppOrgPeoplemanagement.getAnswerReignNumber() !=null)
+			userShouldNumber += baseAppOrgPeoplemanagement.getAnswerReignNumber();
+			if(baseAppOrgPeoplemanagement.getLeaveNumber() !=null
+					&& baseAppOrgPeoplemanagement.getEvectionNumber() !=null)
+			qjNum += baseAppOrgPeoplemanagement.getLeaveNumber()+baseAppOrgPeoplemanagement.getEvectionNumber();
+			if(baseAppOrgPeoplemanagement.getEvectionNumber() !=null)
+			evectionNum += baseAppOrgPeoplemanagement.getEvectionNumber();
+			if(baseAppOrgPeoplemanagement.getRegisterNumber() != null)
+			otherPlacesNum += baseAppOrgPeoplemanagement.getRegisterNumber();
+		}
 
 		if (jsonData != null) {
-			qjNum =(Integer) jsonData.get("qjrs");
-			evectionNum = jsonData.getInteger("chucai"); //现请销假无出差人数，等请销假开发完毕
-			otherPlacesNum = jsonData.getInteger("jingwai"); //现请销假京外人数，等请销假开发完毕
+			if(jsonData.get("qjrs")!=null)
+			qjNum +=(Integer) jsonData.get("qjrs");
+			if(jsonData.getInteger("chucai") !=null)
+			evectionNum += jsonData.getInteger("chucai"); //因公请假人数
+			if(jsonData.getInteger("jingwai") !=null)
+			chuJingNum += jsonData.getInteger("jingwai"); //现请销假京外人数，等请销假开发完毕	
+			if(jsonData.getInteger("qingjia") !=null);
+			ysNum += jsonData.getInteger("qingjia");//因私请假人数
 		}
 		userShouldNumber = userAllYx -qjNum ;
 		float zwlv= 0;
@@ -331,12 +361,14 @@ public class PeopleManagementController {
 				jsonData.put("zwlv", zwlv);
 			}
 		}
+		jsonData.put("ysNum", ysNum);//因私请假人数
+		jsonData.put("ygNum", evectionNum);//因公出差人数
 		jsonData.put("userAllYx", userAllYx);//注册人数
 		jsonData.put("userShouldNumber", userShouldNumber);//应在线人数
 		jsonData.put("userIdList", userIdList);// 在线人数
 		jsonData.put("qjNum", qjNum);  //请假人数
+		jsonData.put("chuJingNum", chuJingNum);//出京人数
 		jsonData.put("otherPlacesNum", otherPlacesNum);//京外人数
-		long endTime = System.currentTimeMillis();
 		return jsonData;
 	}
 	

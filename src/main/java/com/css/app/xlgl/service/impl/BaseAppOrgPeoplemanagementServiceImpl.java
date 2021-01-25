@@ -18,7 +18,7 @@ public class BaseAppOrgPeoplemanagementServiceImpl implements BaseAppOrgPeoplema
 	private BaseAppOrgPeoplemanagementDao baseAppOrgPeoplemanagementDao;
 	
 	@Override
-	public BaseAppOrgPeoplemanagement queryObject(Integer answerReignNumber){
+	public BaseAppOrgPeoplemanagement queryObject(String answerReignNumber){
 		return baseAppOrgPeoplemanagementDao.queryObject(answerReignNumber);
 	}
 	

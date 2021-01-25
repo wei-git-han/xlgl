@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public interface BaseAppOrgPeoplemanagementService {
 	
-	BaseAppOrgPeoplemanagement queryObject(Integer answerReignNumber);
+	BaseAppOrgPeoplemanagement queryObject(String answerReignNumber);
 	
 	List<BaseAppOrgPeoplemanagement> queryList(Map<String, Object> map);
 	

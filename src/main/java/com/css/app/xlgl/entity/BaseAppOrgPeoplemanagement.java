@@ -37,7 +37,7 @@ public class BaseAppOrgPeoplemanagement implements Serializable {
 	private Integer evectionNumber;
 	//请假人数
 	private Integer leaveNumber;
-	//编辑按钮权限
+	//编辑按钮权限 updateState ：1 显示编辑按钮
 	private String updateState;
 
 	/**
