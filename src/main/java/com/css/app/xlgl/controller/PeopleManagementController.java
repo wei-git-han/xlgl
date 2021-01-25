@@ -220,7 +220,7 @@ public class PeopleManagementController {
 			map.put("deptId", organId);
 		}
 		String userId = CurrentUser.getUserId();
-		List<BaseAppOrgPeoplemanagement> queryList = baseAppOrgPeoplemanagementService.queryList(hashMap2);
+		List<BaseAppOrgPeoplemanagement> queryList = baseAppOrgPeoplemanagementService.queryList(map);
 		String orgId = baseAppOrgMappedService.getBareauByUserId(userId);
 		//0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员;4:处管理员
 		String adminFlag = adminSetService.getAdminTypeByUserId(userId);
@@ -272,7 +272,6 @@ public class PeopleManagementController {
 	
 	
 	private JSONObject getStatistics(String status,String organId) {
-		long starTime = System.currentTimeMillis();
 		LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 		if(StringUtils.isNotBlank(status) && status.equals("0") && StringUtils.isBlank(organId)) {
 			organId = "root";
@@ -280,16 +279,6 @@ public class PeopleManagementController {
 			if(StringUtils.isBlank(organId)) {
 				organId = CurrentUser.getSSOUser().getOrganId();
 				BaseAppOrgan queryObject3 = baseAppOrganService.queryObject(organId);
-//				if(StringUtils.isNotBlank(queryObject3.getTreePath())) {
-//					String[] split = queryObject3.getTreePath().split(",");
-//					List<BaseAppOrgan> queryListByIds = baseAppOrganService.queryListByIds(split);
-//					for (BaseAppOrgan baseAppOrgan : queryListByIds) {
-//						if(baseAppOrgan.getParentId().equals("root")) {
-//							organId = baseAppOrgan.getId();
-//							break;
-//						}
-//					}
-//				}
 				organId = queryObject3.getParentId();
 			}
 		}
@@ -297,10 +286,6 @@ public class PeopleManagementController {
 		List<String> arrayList = new ArrayList<String>();
 		arrayList = OrgUtil.getOrganTreeList(organs, organId, true, true, arrayList);
 		String [] arr = arrayList.toArray(new String[arrayList.size()]);
-//		String[] arr1 = new String[arrayList.size()];
-//		for (int i = 0; i < arr1.length; i++) {
-//			arr1[i] = arrayList.get(i);
-//		}
 		int userAllYx = 0;
 		if(StringUtils.isNotBlank(organId) && !"root".equals(organId)){
 			userAllYx = baseAppUserService.queryZc(organId); //注册人数
@@ -334,7 +319,6 @@ public class PeopleManagementController {
 		if (userIdList == 0) {
 			jsonData.put("zwlv", zwlv);//在线率
 		} else {
-			DecimalFormat decimalFormat = new DecimalFormat("0.00");
 			if (userIdList > 0) {
 					zwlv = ((float) userIdList / (float) userAllYx) * 100;
 					float zwlvs=(float)(Math.round(zwlv*100))/100;
@@ -353,7 +337,6 @@ public class PeopleManagementController {
 		jsonData.put("qjNum", qjNum);  //请假人数
 		jsonData.put("otherPlacesNum", otherPlacesNum);//京外人数
 		long endTime = System.currentTimeMillis();
-		System.out.println("app/xlgl/peopleManagement/getStatisticsByDept接口执行时间："+(endTime-starTime)+"毫秒!!!!!!!!!");
 		return jsonData;
 	}
 	
