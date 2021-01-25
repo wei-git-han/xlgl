@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.css.app.xlgl.dao.BaseAppOrgPeoplemanagementDao">
+
+	<select id="queryObject" resultType="com.css.app.xlgl.entity.BaseAppOrgPeoplemanagement">
+		select * from BASE_APP_ORG_PEOPLEMANAGEMENT where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.css.app.xlgl.entity.BaseAppOrgPeoplemanagement">
+		select * from BASE_APP_ORG_PEOPLEMANAGEMENT 
+		where 1 = 1
+		<if test="deptId != null and deptId != ''">
+		 and DEPT_ID = #{deptId}
+		</if>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from BASE_APP_ORG_PEOPLEMANAGEMENT 
+	</select>
+	 
+	<insert id="save" parameterType="com.css.app.xlgl.entity.BaseAppOrgPeoplemanagement">
+		insert into BASE_APP_ORG_PEOPLEMANAGEMENT
+		(
+			"ID", 
+			"ANSWER_REIGN_NUMBER", 
+			"DEPT_NAME", 
+			"DEPT_ID", 
+			"NAME", 
+			"REIGN_NUMBER", 
+			"UPDATE_DATE", 
+			"REGISTER_NUMBER", 
+			"CREATE_DATE", 
+			"EVECTION_NUMBER", 
+			"LEAVE_NUMBER"
+		)
+		values
+		(
+			#{id}, 
+			#{answerReignNumber}, 
+			#{deptName}, 
+			#{deptId}, 
+			#{name}, 
+			#{reignNumber}, 
+			#{updateDate}, 
+			#{registerNumber}, 
+			#{createDate}, 
+			#{evectionNumber}, 
+			#{leaveNumber}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.css.app.xlgl.entity.BaseAppOrgPeoplemanagement">
+		update BASE_APP_ORG_PEOPLEMANAGEMENT 
+		<set>
+			<if test="answerReignNumber != null">"ANSWER_REIGN_NUMBER" = #{answerReignNumber}, </if>
+			<if test="deptName != null">"DEPT_NAME" = #{deptName}, </if>
+			<if test="deptId != null">"DEPT_ID" = #{deptId}, </if>
+			<if test="name != null">"NAME" = #{name}, </if>
+			<if test="reignNumber != null">"REIGN_NUMBER" = #{reignNumber}, </if>
+			<if test="updateDate != null">"UPDATE_DATE" = #{updateDate}, </if>
+			<if test="registerNumber != null">"REGISTER_NUMBER" = #{registerNumber}, </if>
+			<if test="createDate != null">"CREATE_DATE" = #{createDate}, </if>
+			<if test="evectionNumber != null">"EVECTION_NUMBER" = #{evectionNumber}, </if>
+			<if test="leaveNumber != null">"LEAVE_NUMBER" = #{leaveNumber}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from BASE_APP_ORG_PEOPLEMANAGEMENT where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from BASE_APP_ORG_PEOPLEMANAGEMENT where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

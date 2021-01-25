@@ -54,7 +54,9 @@ import com.css.app.xlgl.dto.LeaveorbackUserPlatDto;
 import com.css.app.xlgl.dto.QXJPeopleManagementDto;
 import com.css.app.xlgl.dto.TxlUserDto;
 import com.css.app.xlgl.dto.TxlUserNEWDto;
+import com.css.app.xlgl.entity.BaseAppOrgPeoplemanagement;
 import com.css.app.xlgl.entity.XlglAdminSet;
+import com.css.app.xlgl.service.BaseAppOrgPeoplemanagementService;
 import com.css.app.xlgl.service.XlglAdminSetService;
 import com.css.base.utils.CrossDomainUtil;
 import com.css.base.utils.CurrentUser;
@@ -87,6 +89,8 @@ public class PeopleManagementController {
 	
 	@Autowired
 	private RedisUtil redisUtil;
+	@Autowired
+	private BaseAppOrgPeoplemanagementService baseAppOrgPeoplemanagementService;
 
 	@Value("${filePath}")
 	private String filePath;
@@ -107,7 +111,16 @@ public class PeopleManagementController {
 		String jsonArray = qxjUserInfoList.getJSONArray("list").toString();
 		redisUtil.setString("xlgl-UserInfoList-"+organId+CurrentUser.getUserId(), jsonArray);
 		List<BaseAppOrgan> organList =(List<BaseAppOrgan>) qxjUserInfoList.get("list");
-		Response.json(organList);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("list", organList);
+		JSONObject jsonObject2 = qxjUserInfoList.getJSONObject("baseAppOrgPeoplemanagement");
+		if(jsonObject2 !=null) {
+			BaseAppOrgPeoplemanagement parseObject = JSONObject.parseObject(jsonObject2.toString(), BaseAppOrgPeoplemanagement.class);
+			jsonObject.put("baseAppOrgPeoplemanagement", parseObject);
+		}
+		jsonObject.put("list", organList);
+	
+		Response.json(jsonObject);
 	}
 	
 	private JSONObject getQxjUserInfoList(String parentId,String organId,String userName) {
@@ -140,10 +153,6 @@ public class PeopleManagementController {
 		List<BaseAppOrgan> listNotRoot = new ArrayList<BaseAppOrgan>();
 		for (BaseAppOrgan baseAppOrgan : organList) {
 			ArrayList<TxlUserNEWDto> arrayList = new ArrayList<>();
-			//LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-			//map.add("organId", baseAppOrgan.getId());
-			//JSONObject jsonObject1 = getNumber(map);
-			//Integer yzxrs = (Integer)jsonObject1.get("yzwrs"); //应在线人数 需等请销假开发完毕
 	
 			Integer userIdList=this.userIdNumber(baseAppOrgan.getId(), userList);// 在线人数
 			baseAppOrgan.setZxrs(userIdList);
@@ -204,6 +213,27 @@ public class PeopleManagementController {
 		listNotRoot.sort(Comparator.comparing(BaseAppOrgan :: getSort));
 		for (BaseAppOrgan baseAppOrgan2 : listNotRoot) {
 			list.add(baseAppOrgan2);
+		}
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("deptId", parentId);
+		if(StringUtils.isNotBlank(organId)) {
+			map.put("deptId", organId);
+		}
+		String userId = CurrentUser.getUserId();
+		List<BaseAppOrgPeoplemanagement> queryList = baseAppOrgPeoplemanagementService.queryList(hashMap2);
+		String orgId = baseAppOrgMappedService.getBareauByUserId(userId);
+		//0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员;4:处管理员
+		String adminFlag = adminSetService.getAdminTypeByUserId(userId);
+		if(queryList != null && queryList.size()>0) {
+			BaseAppOrgPeoplemanagement baseAppOrgPeoplemanagement = queryList.get(0);
+			if(StringUtils.isNotBlank(adminFlag) && adminFlag.equals("1")) {
+				baseAppOrgPeoplemanagement.setUpdateState("1");
+			}else if(StringUtils.isNotBlank(adminFlag) && adminFlag.equals("2")) {
+				if(orgId.equals(parentId)) {
+					baseAppOrgPeoplemanagement.setUpdateState("1");
+				}
+			}
+			jsonObject.put("baseAppOrgPeoplemanagement", baseAppOrgPeoplemanagement);
 		}
 		jsonObject.put("list", list);
 		long endTime = System.currentTimeMillis();
