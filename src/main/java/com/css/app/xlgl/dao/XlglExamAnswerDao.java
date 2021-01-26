@@ -24,4 +24,5 @@ public interface XlglExamAnswerDao extends BaseDao<XlglExamAnswer> {
 	
 	int deleteByExamineId(Object id);
 	
+	int deleteByExamineIdAndUser(Map<String, Object> map);
 }

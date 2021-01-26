@@ -185,5 +185,15 @@
 			 and CORRECT_STATUS = #{correctStatus}
 		</if>
 	</select>
+	
+	<delete id="deleteByExamineIdAndUser">
+		delete from 
+			XLGL_EXAM_ANSWER 
+		where 
+			EXAMINE_ID = #{examineId}
+		<if test="replyUserId != null and replyUserId !=''">
+			 and REPLY_USER_ID = #{replyUserId}
+		</if>
+	</delete>
 
 </mapper>

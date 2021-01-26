@@ -65,5 +65,10 @@ public class XlglExamAnswerServiceImpl implements XlglExamAnswerService {
 		// TODO Auto-generated method stub
 		return xlglExamAnswerDao.deleteByExamineId(id);
 	}
+
+	@Override
+	public int deleteByExamineIdAndUser(Map<String, Object> map) {	
+		return xlglExamAnswerDao.deleteByExamineIdAndUser(map);
+	}
 	
 }

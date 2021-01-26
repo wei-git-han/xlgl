@@ -116,6 +116,11 @@ public class PeopleManagementNewController {
 		String elecPath = orgMapped.getUrl() + AppInterfaceConstant.WEB_QXJ_XLGLAPICONTROLLER_GETPLATNUMBER;
 		JSONObject jsonData = CrossDomainUtil.getJsonData(elecPath, hashmap);
 		String jsonArray = jsonData.getJSONArray("list").toString();
+		if(jsonData.getInteger("totalNum") !=null) {
+			String totalNum= jsonData.getInteger("totalNum").toString();
+			jsonData.put("totalNum", totalNum);
+		}
+		
 		List<LeaveorbackPlatDto> parseArray = JSONArray.parseArray(jsonArray, LeaveorbackPlatDto.class);
 		List<LeaveorbackPlatDto> arrayList = new ArrayList<LeaveorbackPlatDto>();
 		List<LeaveorbackPlatDto> listjingWai = new ArrayList<LeaveorbackPlatDto>();
@@ -140,7 +145,7 @@ public class PeopleManagementNewController {
 		}else {
 			redisUtil.setString("xlgl-getPlatNumber", jsonArray);
 		}
-		
+	
 		Response.json(jsonData);
     }
     

@@ -216,89 +216,94 @@ public class TaskMenuController {
     @RequestMapping(value = "/auth")
     @ResponseBody
     public void authMenu() {
-    	long starTime = System.currentTimeMillis();
-    	String userId = CurrentUser.getUserId();
-        List<TaskMenu> menus = taskMenuService.queryAuthList(userId);
+        List<TaskMenu> menus = taskMenuService.queryAuthList(CurrentUser.getUserId());
         JSONArray jsons = getMenuChildren(menus, "root");
         if(jsons.size() == 0){
             Response.json(jsons);
         }else {
-            JSONArray jsonArray = (JSONArray) jsons.getJSONObject(0).get("children");
             //获取当前人的管理员类型（0:超级管理员 ;1：部管理员；2：局管理员；3：即是部管理员又是局管理员;4:处管理员）
             String adminFlag = adminSetService.getAdminTypeByUserId(CurrentUser.getUserId());
             if ("4".equals(adminFlag)) {//处管理员只显示处管理员配置菜单
                 JSONObject jsonObject = jsons.getJSONObject(4);
-                JSONArray jsonArray1 = (JSONArray) jsonObject.get("children");
-                jsonArray1.remove(0);
-                jsonArray1.remove(0);
-                jsonArray1.remove(1);
-                jsonArray1.remove(1);
+                JSONArray jsonArray = (JSONArray) jsonObject.get("children");
+                jsonArray.remove(0);
+                jsonArray.remove(0);
+                jsonArray.remove(1);
+                jsonArray.remove(1);
                 //jsonArray.remove(1);
+                System.out.println(jsonArray);
             } else if ("2".equals(adminFlag) && !"1".equals(adminFlag)) {//局管理员显示局管理员配置和处管理员配置菜单
                 JSONObject jsonObject = jsons.getJSONObject(4);
-                JSONArray jsonArray1 = (JSONArray) jsonObject.get("children");
-                jsonArray1.remove(0);//这么写的原因是，每次删除一个，集合长度就变了，得按新的集合来删
-                jsonArray1.remove(2);
-                jsonArray1.remove(2);
-                jsonArray1.remove(jsonArray.size()-1);
+                JSONArray jsonArray = (JSONArray) jsonObject.get("children");
+                jsonArray.remove(0);//这么写的原因是，每次删除一个，集合长度就变了，得按新的集合来删
+                jsonArray.remove(2);
+                jsonArray.remove(2);
+                jsonArray.remove(jsonArray.size()-1);
+                System.out.println(jsonArray);
             } else if ("1".equals(adminFlag) || "".equals(adminFlag)) {//部管理员显示所有
                 jsons = jsons;
             }
             if (!"".equals(adminFlag)) {
                 if (!"1".equals(adminFlag)) {//非部管理员不显示体育成绩导入和自学成绩导入菜单
+                    JSONArray jsonArray = (JSONArray) jsons.getJSONObject(0).get("children");
                     JSONArray jsonArray1 = (JSONArray) jsonArray.getJSONObject(7).get("children");
-                    ListIterator<Object> it = jsonArray1.listIterator();
-                    while (it.hasNext()) {
-                        JSONObject o = (JSONObject) it.next();
+                    for (int i = 0; i < jsonArray1.size(); i++) {
+                        JSONObject o = (JSONObject) jsonArray1.get(i);
                         String test = (String) o.get("text");
                         if ("军事体育成绩导入".equals(test)) {
-                            jsonArray1.remove(it.nextIndex());
+                            jsonArray1.remove(i);
+                            i--;
                         }
                         if ("个人自学成绩录入".equals(test)) {
-                            jsonArray1.remove(it.nextIndex());
+                            jsonArray1.remove(i);
+                            i--;
                         }
-    				}
+                    }
                     if ("2".equals(adminFlag)) {
                         JSONArray jsonArray2 = (JSONArray) jsons.getJSONObject(4).get("children");
                     }
+
                 }
                 if (!"1".equals(adminFlag)) {//非部管理员，只显示考核清单菜单
+                    JSONArray jsonArray = (JSONArray) jsons.getJSONObject(0).get("children");
                     JSONArray jsonArray1 = (JSONArray) jsonArray.getJSONObject(6).get("children");
-                    ListIterator<Object> it = jsonArray1.listIterator();
-                    while (it.hasNext()) {
-                        JSONObject o = (JSONObject) it.next();
+                    for (int i = 0; i < jsonArray1.size(); i++) {
+                        JSONObject o = (JSONObject) jsonArray1.get(i);
                         String test = (String) o.get("text");
                         if ("考核组织".equals(test)) {
-                            jsonArray1.remove(it.nextIndex());
+                            jsonArray1.remove(i);
+                            i--;
                         }
                         if ("题库维护".equals(test)) {
-                            jsonArray1.remove(it.nextIndex());
+                            jsonArray1.remove(i);
+                            i--;
                         }
-    				}
+                    }
                 }
             } else {
                 //非部管理员不显示体育成绩导入和自学成绩导入菜单
+                JSONArray jsonArray = (JSONArray) jsons.getJSONObject(0).get("children");
                 JSONArray jsonArray1 = (JSONArray) jsonArray.getJSONObject(7).get("children");
-                ListIterator<Object> it = jsonArray1.listIterator();
-                while (it.hasNext()) {
-                    JSONObject o = (JSONObject) it.next();
+                for (int i = 0; i < jsonArray1.size(); i++) {
+                    JSONObject o = (JSONObject) jsonArray1.get(i);
                     String test = (String) o.get("text");
                     if ("军事体育成绩导入".equals(test)) {
-                        jsonArray1.remove(it.nextIndex());
+                        jsonArray1.remove(i);
+                        i--;
                     }
                     if ("个人自学成绩录入".equals(test)) {
-                        jsonArray1.remove(it.nextIndex());
+                        jsonArray1.remove(i);
+                        i--;
                     }
-				}
+                }
                 //非部管理员，只显示考核清单菜单
                 JSONArray jsonArraySix = (JSONArray) jsons.getJSONObject(0).get("children");
                 JSONArray jsonArray6 = (JSONArray) jsonArraySix.getJSONObject(6).get("children");
                 jsonArray6.remove(1);
                 jsonArray6.remove(1);
+
                 jsons.remove(4);
             }
-            long endTime = System.currentTimeMillis();
-            System.out.println("/app/xlgl/taskmenu/auth接口执行时间:------------------"+(starTime - endTime)+"(毫秒)--------------------------------");
             Response.json(jsons);
         }
     }
