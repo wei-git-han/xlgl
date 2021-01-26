@@ -284,8 +284,13 @@ public class XlglExamAnswerController {
 		Integer sum = 0;
 		SSOUser ssoUser = CurrentUser.getSSOUser();
 		Date date = new Date();
+
 		XlglExamMainAnswer queryObject = xlglExamMainAnswerService.queryObject(mainAnswerId);
 		XlglExamExamine xlglExamExamine = xlglExamExamineService.queryObject(queryObject.getExamineId());
+		Map<String, Object> hashmap = new HashMap<>();
+		hashmap.put("examineId", xlglExamExamine.getId());
+		hashmap.put("replyUserId", ssoUser.getUserId());
+		xlglExamAnswerService.deleteByExamineIdAndUser(hashmap);
 		for (XlglExamAnswer eanswer : parseArray) {
 			if(StringUtils.isNotBlank(eanswer.getPictureStatus()) && eanswer.getPictureStatus().equals("0")) {
 				XlglExamExaminetopic queryObject2 = xlglExamExaminetopicService.queryObject(eanswer.getExamineTopicId());

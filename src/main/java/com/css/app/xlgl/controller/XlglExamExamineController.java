@@ -244,7 +244,9 @@ public class XlglExamExamineController {
 				}
 			}
 			if(xlglExamExamine.getOverStatus().equals("99")) {
-				if(xlglExamMainAnswer2.getIsNotExam().equals("1") && xlglExamExamine.getUserStatus().equals("1")) {
+				if(StringUtils.isNotBlank(xlglExamMainAnswer2.getIsNotExam()) && 
+						StringUtils.isNotBlank(xlglExamExamine.getUserStatus())&&
+						xlglExamMainAnswer2.getIsNotExam().equals("1") && xlglExamExamine.getUserStatus().equals("1")) {
 					xlglExamExamine.setOverStatus("3");//新增字段状态 3：补考中已参加
 				}
 			}

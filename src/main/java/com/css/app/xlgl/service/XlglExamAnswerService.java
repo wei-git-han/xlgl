@@ -33,5 +33,7 @@ public interface XlglExamAnswerService {
 	
 	int queryCorrectStatus(Map<String, Object> map);
 	
+	int deleteByExamineIdAndUser(Map<String, Object> map);
+	
 	int deleteByExamineId(Object id);
 }
