@@ -155,8 +155,8 @@ public class PeopleManagementController {
 	
 			Integer userIdList=this.userIdNumber(baseAppOrgan.getId(), userList);// 在线人数
 			baseAppOrgan.setZxrs(userIdList);
+			Integer zcrs = baseAppOrgan.getZcrs();
 			baseAppOrgan.setYzwrs(baseAppOrgan.getZcrs());
-			baseAppOrgan.setYzxrs(baseAppOrgan.getZcrs());
 			for (TxlUserNEWDto txlUserDto : parseArrayTxl) {
 				if(baseAppOrgan.getId().equals(txlUserDto.getOrganid())) {
 					for (QXJPeopleManagementDto parseObject : parseArrayQxj) {
@@ -180,10 +180,12 @@ public class PeopleManagementController {
 							&&txlUserDto.getQXJtype().equals("请假")){
 						txlUserDto.setIsShow("2");
 						txlUserDto.setStatus("请假");
+						zcrs =zcrs-1;
 					}else if(StringUtils.isNotBlank(txlUserDto.getQXJtype()) &&
 							txlUserDto.getQXJtype().equals("出差")) {
 						txlUserDto.setIsShow("3");
 						txlUserDto.setStatus("出差");
+						zcrs =zcrs-1;
 					}else {
 						txlUserDto.setIsShow("4");
 						txlUserDto.setStatus("异常");
@@ -208,6 +210,7 @@ public class PeopleManagementController {
 			}else if(!baseAppOrgan.getParentId().equals("root") && baseAppOrgan.getList().size()>0) {
 				listNotRoot.add(baseAppOrgan);
 			}
+			baseAppOrgan.setYzxrs(zcrs);
 		}
 		listNotRoot.sort(Comparator.comparing(BaseAppOrgan :: getSort));
 		for (BaseAppOrgan baseAppOrgan2 : listNotRoot) {
