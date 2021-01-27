@@ -246,7 +246,7 @@ public class BaseAppUserController {
     	if(xlglRoleSet != null){
     		if(StringUtils.isNotBlank(xlglRoleSet.getRoleFlag())){
     			String roleFlag = xlglRoleSet.getRoleFlag();
-    			if("1".equals(roleFlag) || "3".equals(roleFlag)){//首长和局长
+    			if("1".equals(roleFlag)){//首长
     				userJson.put("roleFlag",true);
 				}else {
     				userJson.put("roleFlag",false);
