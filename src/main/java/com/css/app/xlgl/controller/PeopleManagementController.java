@@ -272,6 +272,7 @@ public class PeopleManagementController {
 	
 	private JSONObject getStatistics(String status,String organId) {
 		LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		boolean showOtherPlace = false;
 		if(StringUtils.isNotBlank(status) && status.equals("0") && StringUtils.isBlank(organId)) {
 			organId = "root";
 		}else if (StringUtils.isNotBlank(status) &&status.equals("1") &&  StringUtils.isBlank(organId)) {
@@ -291,6 +292,9 @@ public class PeopleManagementController {
 			List<BaseAppOrgPeoplemanagement> queryList = baseAppOrgPeoplemanagementService.queryList(hashMap);
 			if(queryList != null && queryList.size()>0) {
 				baseAppOrgPeoplemanagement = queryList.get(0);
+				if(StringUtils.isBlank(status) && organId.equals(baseAppOrgPeoplemanagement.getDeptId())) {
+					showOtherPlace = true;
+				}
 			}
 		}
 		List<BaseAppOrgan> organs = baseAppOrganService.queryList(null);
@@ -364,10 +368,7 @@ public class PeopleManagementController {
 				jsonData.put("zwlv", zwlv);
 			}
 		}
-		boolean showOtherPlace = false;
-		if(StringUtils.isBlank(status)) {
-			showOtherPlace = true;
-		}
+		
 		jsonData.put("showOtherPlace", showOtherPlace);
 		jsonData.put("ysNum", ysNum);//因私请假人数
 		jsonData.put("ygNum", evectionNum);//因公出差人数
