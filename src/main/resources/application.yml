@@ -41,7 +41,7 @@ spring:
     name: legacycpk.csse.zbfzbbgt_zyyy
   redis:
     host: 10.1.150.10
-    port: 10007
+    port: 11007
     timeout: 3000
     lettuce:
       pool:
