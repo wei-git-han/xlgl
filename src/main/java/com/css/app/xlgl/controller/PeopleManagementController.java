@@ -364,6 +364,11 @@ public class PeopleManagementController {
 				jsonData.put("zwlv", zwlv);
 			}
 		}
+		boolean showOtherPlace = false;
+		if(StringUtils.isBlank(status)) {
+			showOtherPlace = true;
+		}
+		jsonData.put("showOtherPlace", showOtherPlace);
 		jsonData.put("ysNum", ysNum);//因私请假人数
 		jsonData.put("ygNum", evectionNum);//因公出差人数
 		jsonData.put("userAllYx", userAllYx);//注册人数
