@@ -82,6 +82,12 @@ public class BaseAppOrgPeoplemanagementController {
 	@RequestMapping("/update")
 	public void update(BaseAppOrgPeoplemanagement baseAppOrgPeoplemanagement){
 		baseAppOrgPeoplemanagement.setUpdateDate(new Date());
+		Integer answerReignNumber = 0;
+		if(baseAppOrgPeoplemanagement.getRegisterNumber() !=null 
+				&& baseAppOrgPeoplemanagement.getRegisterNumber() >0) {
+			answerReignNumber = baseAppOrgPeoplemanagement.getRegisterNumber() - baseAppOrgPeoplemanagement.getEvectionNumber()-baseAppOrgPeoplemanagement.getLeaveNumber();
+		}
+		baseAppOrgPeoplemanagement.setAnswerReignNumber(answerReignNumber);
 		baseAppOrgPeoplemanagementService.update(baseAppOrgPeoplemanagement);
 		Response.ok();
 	}
