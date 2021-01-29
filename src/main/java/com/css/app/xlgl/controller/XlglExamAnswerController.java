@@ -2,11 +2,13 @@ package com.css.app.xlgl.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import com.css.addbase.apporgan.entity.BaseAppOrgan;
 import com.css.addbase.apporgan.entity.BaseAppUser;
@@ -386,6 +388,7 @@ public class XlglExamAnswerController {
 			String replyStr ="";
 			if(StringUtils.isNotBlank(eanswer.getReply())&&eanswer.getReply().contains(",")) {
 				String[] split = eanswer.getReply().split(",");
+				Arrays.sort(split);
 				for (String string : split) {
 					replyStr =replyStr+string;
 				}
